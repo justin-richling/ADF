@@ -1270,9 +1270,11 @@ class AdfDiag(AdfObs):
 
                             mean_html_info[category][var][ptype][season] = outputfile.name
                             mean_html_info_img = mean_html_info
+                            
                             #Initialize Ordered Dictionary for season:
                             if season not in mean_html_info_img[category][var][ptype][season]:
                                 mean_html_info_img[category][var][ptype][season][img_data] = OrderedDict()
+                            mean_html_info_img[category][var][ptype][season][img_data] = outputfile.name
                 #Loop over variables:
                 for var in var_list_alpha:
                     #Loop over seasons:
