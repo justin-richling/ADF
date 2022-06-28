@@ -1243,6 +1243,7 @@ class AdfDiag(AdfObs):
 
                             #Create output file (don't worry about analysis type for now):
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
+                            img_data = [os.pardir+os.sep+assets_dir.name+os.sep+img.name, alt_text]
 
                             # Search through all categories and see
                             # which one the current variable is part of
@@ -1269,6 +1270,9 @@ class AdfDiag(AdfObs):
 
                             mean_html_info[category][var][ptype][season] = outputfile.name
                             mean_html_info_img = mean_html_info
+                            #Initialize Ordered Dictionary for season:
+                            if season not in mean_html_info_img[category][var][ptype][season]:
+                                mean_html_info_img[category][var][ptype][season][img_data] = OrderedDict()
                 #Loop over variables:
                 for var in var_list_alpha:
                     #Loop over seasons:
@@ -1282,9 +1286,6 @@ class AdfDiag(AdfObs):
                             # Hacky - how to get the relative path in a better way?:
                             img_data = [os.pardir+os.sep+assets_dir.name+os.sep+img.name, alt_text]
 
-                            #Initialize Ordered Dictionary for season:
-                            if season not in mean_html_info_img[category][var][ptype][season]:
-                                mean_html_info_img[category][var][ptype][season][img_data] = OrderedDict()
 
                             #Create titles
                             var_title = f"Variable: {var}"
