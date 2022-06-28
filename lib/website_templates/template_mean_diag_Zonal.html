@@ -57,7 +57,9 @@
                     <div>
                       <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
                       <h1>CSS Modal</h1>
-                      <div><img src="{{seas}}"></div>
+                      {% for img in seas %}
+                      <div><img src="{{img}}"></div>
+                      {% endfor %}
                     </div>
                   </div>
                   
