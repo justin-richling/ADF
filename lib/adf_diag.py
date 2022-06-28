@@ -1240,7 +1240,7 @@ class AdfDiag(AdfObs):
 
                         #Create the data that will be fed into the template:
                         for img in assets_dir.glob(f"{var}_{season}_{ptype}_Mean*.png"):
-
+                            alt_text  = img.stem #Extract image file name text
                             #Create output file (don't worry about analysis type for now):
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
                             img_data = [os.pardir+os.sep+assets_dir.name+os.sep+img.name, alt_text]
