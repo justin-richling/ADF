@@ -1268,7 +1268,7 @@ class AdfDiag(AdfObs):
                                 mean_html_info[category][var][ptype][season] = OrderedDict()
 
                             mean_html_info[category][var][ptype][season] = outputfile.name
-
+                            mean_html_info_img = mean_html_info
                 #Loop over variables:
                 for var in var_list_alpha:
                     #Loop over seasons:
@@ -1281,6 +1281,10 @@ class AdfDiag(AdfObs):
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
                             # Hacky - how to get the relative path in a better way?:
                             img_data = [os.pardir+os.sep+assets_dir.name+os.sep+img.name, alt_text]
+
+                            #Initialize Ordered Dictionary for season:
+                            if season not in mean_html_info_img[category][var][ptype][season]:
+                                mean_html_info_img[category][var][ptype][season][img_data] = OrderedDict()
 
                             #Create titles
                             var_title = f"Variable: {var}"
@@ -1307,9 +1311,8 @@ class AdfDiag(AdfObs):
                             mean_rndr = mean_tmpl.render(title=main_title,
                                             case1=case_name,
                                             case2=data_name,
-                                            mydata=mean_html_info,
-                                            plot_types=plot_type_html,
-                                            imgs=img_data,)
+                                            mydata=mean_html_info_img,
+                                            plot_types=plot_type_html)
 
                             #Write mean diagnostic plots HTML file:
                             outputfile = img_pages_dir / f"mean_diag_{ptype}.html"
