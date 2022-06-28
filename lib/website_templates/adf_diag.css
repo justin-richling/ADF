@@ -57,40 +57,40 @@ nav.primary-navigation {
     transition: all 0.3s ease;
   }
 
-  #mypage a {
+a {
     text-decoration: none;
     color: navy;
 }
-#mypage a:visited {
+a:visited {
     color: pink;
 }
-#mypage a:hover {
+a:hover {
     color: #3ca0e7;
 }
 
-#mypage body {
+body {
   padding-bottom: 50px;
 }
 
-#mypage ul li ul li a {
+ul li ul li a {
     transition: all 0.5s ease;
 }
-#mypage h1 {
+h1 {
     color: rgb(67, 67, 67);
     font-family: Tahoma, Geneva, Verdana, sans-serif;
 }
-#mypage h2 {
+h2 {
     color: gray;
     font-family: Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#mypage h3 {
+h3 {
   color: black;
   font-family: Tahoma, Geneva, Verdana, sans-serif;
   text-decoration: underline;
 }
 
-#mypage img {
+img {
     max-width:100%;
     height:auto;
 }
@@ -119,14 +119,14 @@ table.dataframe td {
     padding-left: 10px;
 }
 
-#mypage .fixedDiv
+.fixedDiv
 {
     position:fixed;
     top:300px;
     right:150px;
 }
 
-#mypage #footer {
+#footer {
   width: 100%;
   height: auto;	
   text-align: center;
