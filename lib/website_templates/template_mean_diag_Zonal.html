@@ -52,6 +52,7 @@
                 {% for img, img_name in seas.items() %}
                 <td>
                   <a href="#open-modal">{{ season_name }}</a>
+                  {% print(img_name) %}
                   <div id="open-modal" class="modal-window">
                     <div>
                       <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
