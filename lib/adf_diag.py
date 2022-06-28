@@ -1293,7 +1293,7 @@ class AdfDiag(AdfObs):
 
                             #mean_html_info_img[category][var][ptype][season][img_file] = img_file
                             mean_html_info_img[category][var][ptype][season] = img_file
-                            print(mean_html_info_img[category][var][ptype][season])
+                            #print(mean_html_info_img[category][var][ptype][season])
                 #print(list(mean_html_info_img.keys()))
                 #Loop over variables:
                 for var in var_list_alpha:
