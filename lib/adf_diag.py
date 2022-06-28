@@ -1291,7 +1291,7 @@ class AdfDiag(AdfObs):
                             if season not in mean_html_info_img[category][var][ptype][season]:
                                 mean_html_info_img[category][var][ptype][season][img_file] = OrderedDict()
 
-                            mean_html_info_img[category][var][ptype][season][img_file] = outputfile.name
+                            mean_html_info_img[category][var][ptype][season][img_file] = img_file
                 print(list(mean_html_info_img.keys()))
                 #Loop over variables:
                 for var in var_list_alpha:
