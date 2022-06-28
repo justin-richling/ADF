@@ -145,7 +145,7 @@ html {
 *, *:before, *:after {
   box-sizing: border-box;
 }
-body {
+/*body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f9fafb;
@@ -154,7 +154,7 @@ body {
   font-family: "Inter", sans-serif;
   color: #6b7280;
   font-weight: 400;
-}
+}*/
 @media only screen and (min-width: 600px) {
   body {
     justify-content: center;
