@@ -144,3 +144,9 @@ table.dataframe td {
   padding: 10px;
   border: 5px solid black
 }
+
+#inner-div {
+  display: inline-block;
+  margin: 0 auto;
+  padding: 3px;
+}
