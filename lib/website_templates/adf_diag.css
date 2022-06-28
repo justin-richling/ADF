@@ -136,4 +136,11 @@ table.dataframe td {
 
 
 
-#container{width:560px;margin:auto;border:1px solid red;overflow:hiden;height:300px;}
+
+
+#screenFiller {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  padding: 10px;
+  border: 5px solid black
+}
