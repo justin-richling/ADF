@@ -1244,7 +1244,8 @@ class AdfDiag(AdfObs):
                             alt_text  = img.stem #Extract image file name text
                             #Create output file (don't worry about analysis type for now):
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
-                            img_data = [os.pardir+os.sep+assets_dir.name+os.sep+img.name, alt_text]
+                            img_file = os.pardir+os.sep+assets_dir.name+os.sep+img.name
+                            img_data = [img_file, alt_text]
 
                             # Search through all categories and see
                             # which one the current variable is part of
@@ -1288,9 +1289,9 @@ class AdfDiag(AdfObs):
                                 mean_html_info_img[category][var][ptype][season] = OrderedDict()
                             #Initialize Ordered Dictionary for season:
                             if season not in mean_html_info_img[category][var][ptype][season]:
-                                mean_html_info_img[category][var][ptype][season][img_data] = OrderedDict()
+                                mean_html_info_img[category][var][ptype][season][img_file] = OrderedDict()
 
-                            mean_html_info_img[category][var][ptype][season][img_data] = outputfile.name
+                            mean_html_info_img[category][var][ptype][season][img_file] = outputfile.name
 
                 #Loop over variables:
                 for var in var_list_alpha:
