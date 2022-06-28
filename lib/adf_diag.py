@@ -1268,8 +1268,9 @@ class AdfDiag(AdfObs):
                             if season not in mean_html_info[category][var][ptype]:
                                 mean_html_info[category][var][ptype][season] = OrderedDict()
 
+                            mean_html_info_img = mean_html_info
                             mean_html_info[category][var][ptype][season] = outputfile.name
-                            mean_html_info_img = mean_html_info[category][var][ptype][season]
+                            
                             
                             #Initialize Ordered Dictionary for season:
                             if season not in mean_html_info_img[category][var][ptype][season]:
