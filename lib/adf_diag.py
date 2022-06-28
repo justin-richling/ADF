@@ -1308,7 +1308,8 @@ class AdfDiag(AdfObs):
                                             case1=case_name,
                                             case2=data_name,
                                             mydata=mean_html_info,
-                                            plot_types=plot_type_html)
+                                            plot_types=plot_type_html,
+                                            imgs=img_data,)
 
                             #Write mean diagnostic plots HTML file:
                             outputfile = img_pages_dir / f"mean_diag_{ptype}.html"
