@@ -150,3 +150,7 @@ table.dataframe td {
   margin: 0 auto;
   padding: 3px;
 }
+
+.center {
+  text-align: center;
+  }
