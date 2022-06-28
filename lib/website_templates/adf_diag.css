@@ -57,42 +57,40 @@ nav.primary-navigation {
     transition: all 0.3s ease;
   }
 
-
-
-a {
-    text-decoration: none !important;
-    color: navy !important;
+  #mypage a {
+    text-decoration: none;
+    color: navy;
 }
-a:visited {
-    color: pink !important;
+#mypage a:visited {
+    color: pink;
 }
-a:hover {
-    color: #3ca0e7 !important;
+#mypage a:hover {
+    color: #3ca0e7;
 }
 
-body {
-  padding-bottom: 50px !important;
+#mypage body {
+  padding-bottom: 50px;
 }
 
-ul li ul li a {
-    transition: all 0.5s ease !important;
+#mypage ul li ul li a {
+    transition: all 0.5s ease;
 }
-h1 {
+#mypage h1 {
     color: rgb(67, 67, 67);
-    font-family: Tahoma, Geneva, Verdana, sans-serif !important;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
 }
-h2 {
+#mypage h2 {
     color: gray;
-    font-family: Tahoma, Geneva, Verdana, sans-serif !important;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h3 {
+#mypage h3 {
   color: black;
-  font-family: Tahoma, Geneva, Verdana, sans-serif !important;
+  font-family: Tahoma, Geneva, Verdana, sans-serif;
   text-decoration: underline;
 }
 
-img {
+#mypage img {
     max-width:100%;
     height:auto;
 }
@@ -121,14 +119,14 @@ table.dataframe td {
     padding-left: 10px;
 }
 
-.fixedDiv
+#mypage .fixedDiv
 {
     position:fixed;
     top:300px;
     right:150px;
 }
 
-#footer {
+#mypage #footer {
   width: 100%;
   height: auto;	
   text-align: center;
