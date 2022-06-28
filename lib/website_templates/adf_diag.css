@@ -138,7 +138,7 @@ table.dataframe td {
 
 
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+/*@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");*/
 /*html {
   box-sizing: border-box;
 }
@@ -155,7 +155,7 @@ table.dataframe td {
   color: #6b7280;
   font-weight: 400;
 }*/
-@media only screen and (min-width: 600px) {
+/*@media only screen and (min-width: 600px) {
   body {
     justify-content: center;
     align-items: center;
@@ -163,7 +163,7 @@ table.dataframe td {
     height: 100vh;
     font-size: 100%;
   }
-}
+}*/
 .button {
   appearance: none;
   background: #16a34a;
