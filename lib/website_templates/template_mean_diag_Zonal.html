@@ -50,11 +50,10 @@
               <tr>
                 {% for season_name, seas in season.items() %}
                 {% for img, img_name in seas.items() %}
-                <div id="open-modal" class="modal-window"></div>
                 <td>
                   <a href="#open-modal">{{ season_name }}</a>
                   {% print(img_name) %}
-                  <!--<div id="open-modal" class="modal-window">-->
+                  <div id="open-modal" class="modal-window">
                     <div>
                       <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
                       <h1>{{img_name}}</h1>
@@ -62,9 +61,8 @@
                         <a href="{{img}}" target="_blank"><img src="{{img}}"></a>
                       </div>
                     </div>
-                  <!--</div>-->               
+                  </div><!--open-modal-->                  
                 </td>
-              </div><!--open-modal--> 
                 {% endfor %}
                 {% endfor %}
               </tr>
