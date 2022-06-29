@@ -28,6 +28,7 @@
      <h2> Control Case: {{case2}}</h2>
     </div>
 
+    <div class="base"></div>
     <div class="center">
      <h2>Plot Types
      </h2>
@@ -37,9 +38,11 @@
      
       
       <div class="grid-item"> <a href=html_table/mean_table.html> &nbsp; Tables</a> </div>
-      <div class="grid-item">{% for type, html_file in plot_types.items() %}
+      {% for type, html_file in plot_types.items() %}
+      <div class="grid-item">
         <a href={{html_file}}> &nbsp; {{type}} </a>
-        {% endfor %}</div>
+      </div>
+      {% endfor %}
       <!--<div class="grid-item">3</div>  
       <div class="grid-item">4</div>
       <div class="grid-item">5</div>
