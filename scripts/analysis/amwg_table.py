@@ -413,7 +413,7 @@ def _df_comp_table(write_html,output_location,case_names):
     #Create the "comparison" dataframe:
     df_comp = pd.DataFrame(dtype=object)
     df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
-    df_comp['baseline'] = df_merge[['mean_y']]
+    df_comp['control'] = df_merge[['mean_y']]
     df_comp['diff'] = df_comp['case'].values-df_comp['baseline'].values
 
     #Write the comparison dataframe to a new CSV file:
