@@ -45,7 +45,7 @@
       {% for category, var_ptype_seas in mydata.items() %}
       <div class="grid-item">
           <a style="font-size: 30px;">{{category}}</a>
-          <table class="big-table">
+          <!--<table class="big-table">
             {% for var_name, ptype_seas in var_ptype_seas.items() %}
               <th colspan="100%"> {{var_name}} </th>
               {% for plot_type, season in ptype_seas.items() %}
@@ -58,7 +58,7 @@
               </tr>
               {% endfor %}
             {% endfor %}
-          </table>
+          </table>-->
         </div>
         {% endfor %}
       </div>
