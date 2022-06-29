@@ -29,24 +29,24 @@
     </div>
 
     <div class="center">
-     <h2>Plot Types: 
-      <a href=html_table/mean_table.html> &nbsp; Tables</a> 
-      {% for type, html_file in plot_types.items() %}
-      <a href={{html_file}}> &nbsp; {{type}} </a>
-      {% endfor %}
+     <h2>Plot Types
      </h2>
     </div>
 
     <div class="grid-container">
-      <div class="grid-item">1</div>
-      <div class="grid-item">2</div>
-      <div class="grid-item">3</div>  
+     
+      
+      <div class="grid-item"> <a href=html_table/mean_table.html> &nbsp; Tables</a> </div>
+      <div class="grid-item">{% for type, html_file in plot_types.items() %}
+        <a href={{html_file}}> &nbsp; {{type}} </a>
+        {% endfor %}</div>
+      <!--<div class="grid-item">3</div>  
       <div class="grid-item">4</div>
       <div class="grid-item">5</div>
       <div class="grid-item">6</div>  
       <div class="grid-item">7</div>
       <div class="grid-item">8</div>
-      <div class="grid-item">9</div>  
+      <div class="grid-item">9</div>-->  
     </div>
 
   </body>
