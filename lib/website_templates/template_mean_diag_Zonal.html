@@ -43,7 +43,7 @@
 
       {% for category, var_ptype_seas in mydata.items() %}
       <div class="grid-item">
-          <h3>{{category}}</h3>
+          <a>{{category}}</a>
           <table class="big-table">
             {% for var_name, ptype_seas in var_ptype_seas.items() %}
               <th colspan="100%"> {{var_name}} </th>
@@ -62,28 +62,7 @@
         {% endfor %}
     </div>
 
-     <div style="width: 100%;"> <!-- main div-->
-      <div style="width: 50%; height: 100px; float: left;"> 
-        {% for category, var_ptype_seas in mydata.items() %}
-          <h3>{{category}}</h3>
-          <table class="big-table">
-            {% for var_name, ptype_seas in var_ptype_seas.items() %}
-              <th colspan="100%"> {{var_name}} </th>
-              {% for plot_type, season in ptype_seas.items() %}
-              <tr>
-                {% for season_name, seas in season.items() %}
-                <td>
-                  <a href="{{ seas }}">{{ season_name }}</a>
-                </td>
-                {% endfor %}
-              </tr>
-              {% endfor %}
-            {% endfor %}
-          </table>
-        {% endfor %}
-        <div style="padding-bottom: 50px;"> 
-        </div>
-      </div> <!-- end left inner div -->
+     
           
       <div style="width: 70%; height: 100px; float: right; padding-right: 100px">
       </div> <!-- end right inner div -->
