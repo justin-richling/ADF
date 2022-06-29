@@ -44,9 +44,13 @@
       <div class="grid-container">
       {% for category, var_ptype_seas in mydata.items() %}
       <div class="grid-item">
-        <div class="dropdown">
-          <div class="dropdown-content">
           <a style="font-size: 30px;">{{category}}</a>
+          <div class="dropdown">
+            <div class="dropdown-content">
+
+          {% for var_name, ptype_seas in var_ptype_seas.items() %}
+                    <a> {{var_name}} </a>
+          {% endfor %}
           
           
           <!--<table class="big-table">
@@ -66,6 +70,7 @@
         </div>
         {% endfor %}
       </div>
+    </div>
     </div>
 
      
