@@ -49,28 +49,10 @@
             <!--<a style="font-size: 30px;">{{category}}</a>-->
             <div class="dropdown-content">
               {% for var_name, ptype_seas in var_ptype_seas.items() %}
-             
-              <a href="https://webext.cgd.ucar.edu/FWscHIST/f.c6_3_41d.FWscHIST.ne30_L58_macmic6_dribble.001/atm/f.c6_3_41d.FWscHIST.ne30_L58_macmic6_dribble.001-obs.1980_1989/"> {{var_name}} </a><br>
-             
+              <a href="../html_img/plot_page_FLNT_DJF_Zonal.html"> {{var_name}} </a><br>
           {% endfor %}
           </div>
           </div>
-          
-          
-          <!--<table class="big-table">
-            {% for var_name, ptype_seas in var_ptype_seas.items() %}
-              <th colspan="100%"> {{var_name}} </th>
-              {% for plot_type, season in ptype_seas.items() %}
-              <tr>
-                {% for season_name, seas in season.items() %}
-                <td>
-                  <a href="{{ seas }}">{{ season_name }}</a>
-                </td>
-                {% endfor %}
-              </tr>
-              {% endfor %}
-            {% endfor %}
-          </table>-->
         </div><!--grid-item-->
         {% endfor %}
       </div><!--grid-container-->
