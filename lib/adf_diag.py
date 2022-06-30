@@ -1305,6 +1305,24 @@ class AdfDiag(AdfObs):
                                 ofil.write(rndr)
                             #End with
 
+                            outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
+                            #Create titles
+                            tmpl = jinenv.get_template('template_var.html')  #Set template
+                            rndr = tmpl.render(title=main_title,
+                                               var_title=var,
+                                               season_title=season,
+                                               plottype_title=ptype,
+                                               imgs=img_data,
+                                               case1=case_name,
+                                               case2=data_name,
+                                               mydata=mean_html_info,
+                                               plot_types=plot_type_html) #The template rendered
+
+                            #Open HTML file:
+                            with open(outputfile2, 'w', encoding='utf-8') as ofil:
+                                ofil.write(rndr)
+                            #End with
+
                             #Construct individual plot type mean_diag html files
                             mean_tmpl = jinenv.get_template(f'template_mean_diag_{ptype}.html')
                             mean_rndr = mean_tmpl.render(title=main_title,
