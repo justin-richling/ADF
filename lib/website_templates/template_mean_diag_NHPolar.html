@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>ADF Mean Plots</title>
-    <link rel="stylesheet" href="../templates/adf_diag.css">
+  
+        <link rel="stylesheet" href="../templates/adf_diag.css">
   </head>
   <body >
     <div class="base">
@@ -40,33 +41,24 @@
         <h1>NH Polar Plots</h1>
        </div>
 
-     <div style="width: 100%;"> <!-- main div-->
-      <div style="width: 50%; height: 100px; float: left;"> 
-        {% for category, var_ptype_seas in mydata.items() %}
-          <h3>{{category}}</h3>
-          <table class="big-table">
-            {% for var_name, ptype_seas in var_ptype_seas.items() %}
-              <th colspan="100%"> {{var_name}} </th>
-              {% for plot_type, season in ptype_seas.items() %}
-              <tr>
-                {% for season_name, seas in season.items() %}
-                <td>
-                  <a href="{{ seas }}">{{ season_name }}</a>
-                </td>
-                {% endfor %}
-              </tr>
-              {% endfor %}
-            {% endfor %}
-          </table>
+      <div class="grid-container">
+      {% for category, var_ptype_seas in mydata.items() %}
+      <div class="grid-item">
+          <div class="dropdown">
+            <button class="dropbtn">{{category}}</button>
+            <div class="dropdown-content">
+              {% for var_name, ptype_seas in var_ptype_seas.items() %}
+              <a href="../html_img/plot_page_{{var_name}}_NHPolar.html"> {{var_name}} </a><br>
+          {% endfor %}
+          </div>
+          </div>
+        </div><!--grid-item-->
         {% endfor %}
-        <div style="padding-bottom: 50px;"> 
-        </div>
-      </div> <!-- end left inner div -->
-          
+      </div><!--grid-container-->
+
       <div style="width: 70%; height: 100px; float: right; padding-right: 100px">
       </div> <!-- end right inner div -->
     </div> <!-- end main div -->
-
 
   </body>
 </html>

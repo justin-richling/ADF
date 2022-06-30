@@ -46,7 +46,6 @@
       <div class="grid-item">
           <div class="dropdown">
             <button class="dropbtn">{{category}}</button>
-            <!--<a style="font-size: 30px;">{{category}}</a>-->
             <div class="dropdown-content">
               {% for var_name, ptype_seas in var_ptype_seas.items() %}
               <a href="../html_img/plot_page_{{var_name}}_Zonal.html"> {{var_name}} </a><br>
@@ -56,10 +55,7 @@
         </div><!--grid-item-->
         {% endfor %}
       </div><!--grid-container-->
-  
 
-     
-          
       <div style="width: 70%; height: 100px; float: right; padding-right: 100px">
       </div> <!-- end right inner div -->
     </div> <!-- end main div -->
