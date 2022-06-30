@@ -59,13 +59,13 @@ nav.primary-navigation {
 
 a {
     text-decoration: none;
-    color: navy;
+    color: black;
 }
 a:visited {
-    color: pink;
+    color: #0c578e;
 }
 a:hover {
-    color: #3ca0e7;
+    color: #3b7fc7;
 }
 
 body {
