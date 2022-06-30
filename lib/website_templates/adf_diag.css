@@ -145,7 +145,7 @@ table.dataframe td {
   column-gap: 50px;
   row-gap: 50px;
   /*grid-template-columns: auto auto auto;*/
-  grid-template-columns: fit-content(100%);
+  grid-template-columns: fit-content(20%);
   background-color: #e4eef0;
   padding: 10px;
 }
