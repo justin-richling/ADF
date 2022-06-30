@@ -1291,9 +1291,9 @@ class AdfDiag(AdfObs):
                             plottype_title = f"Plot: {ptype}"
                             tmpl = jinenv.get_template('template.html')  #Set template
                             rndr = tmpl.render(title=main_title,
-                                               var_title=var_title,
-                                               season_title=season_title,
-                                               plottype_title=plottype_title,
+                                               var_title=var,
+                                               season_title=season,
+                                               plottype_title=ptype,
                                                imgs=img_data,
                                                case1=case_name,
                                                case2=data_name,
