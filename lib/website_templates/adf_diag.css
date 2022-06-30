@@ -192,6 +192,14 @@ table.dataframe td {
     z-index: 4;
   }
 
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+  }
+
 .dropbtn {
     font-family: Tahoma, Geneva, Verdana, sans-serif;
     color: rgb(67, 67, 67);
