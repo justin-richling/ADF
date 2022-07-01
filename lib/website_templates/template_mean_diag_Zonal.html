@@ -47,9 +47,13 @@
           <div class="dropdown">
             <button class="dropbtn">{{category}}</button>
             <div class="dropdown-content">
+              <div class="grid-container">
+              <div class="grid-item">
               {% for var_name, ptype_seas in var_ptype_seas.items() %}
               <a href="../html_img/plot_page_{{var_name}}_Zonal.html"> {{var_name}} </a><br>
           {% endfor %}
+        </div>
+      </div>
           </div>
           </div>
         </div><!--grid-item-->
