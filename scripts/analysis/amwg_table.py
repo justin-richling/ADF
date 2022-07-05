@@ -307,7 +307,7 @@ def amwg_table(adf):
         else:
             #Print message to debug log:
             adf.debug_log("RESTOM not calculated because FSNT and/or FLNT variables not in dataset")
-
+        df = df.sort_values(by=['variable'], ascending=True)
     #End of model case loop
     #----------------------
 
