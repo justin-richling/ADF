@@ -210,6 +210,8 @@ table.dataframe td {
     text-decoration: none;
     display: block;
     white-space: nowrap;
+    position: absolute;
+    left: 0;
 }
 
 .dropbtn {
