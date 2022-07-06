@@ -302,7 +302,7 @@ table.dataframe td {
     padding: 12px 12px;
     text-decoration: none;
     display: block;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 
 .dropbtn {
