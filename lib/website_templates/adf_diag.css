@@ -201,11 +201,12 @@ table.dataframe td {
     vertical-align: middle;
 }*/
 
-.center {
+.center a{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 200px;
+    width: 175px;
     border: 3px solid green; 
 }
 
