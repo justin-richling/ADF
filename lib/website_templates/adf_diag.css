@@ -195,11 +195,11 @@ table.dataframe td {
   text-align: center;
 }
 
-/*.center a {
+.center2 a {
     line-height: 1.5;
     display: inline-block;
     vertical-align: middle;
-}*/
+}
 
 /*.center a{
     display: flex;
@@ -239,7 +239,7 @@ table.dataframe td {
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     padding: 12px 12px;
     z-index: 4;
-    right: 50px;
+    /*right: 50px;*/
 }
 
 .dropdown-content a {
