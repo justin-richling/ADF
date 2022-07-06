@@ -222,6 +222,14 @@ table.dataframe td {
     position: relative;
     display: inline-block;
 }
+
+.dropdown a {
+    color: black;
+    padding: 12px 12px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+}
   
 .dropdown-content {
     display: none;
