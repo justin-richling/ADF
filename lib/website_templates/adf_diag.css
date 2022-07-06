@@ -195,11 +195,11 @@ table.dataframe td {
   text-align: center;
 }
 
-.center a {
+/*.center a {
     line-height: 1.5;
     display: inline-block;
     vertical-align: middle;
-  }
+  }*/
 
 .dropdown {
     position: relative;
