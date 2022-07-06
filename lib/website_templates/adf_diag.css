@@ -101,9 +101,14 @@ h3 {
   text-decoration: underline;
 }
 
-img {
+/*img {
     max-width:100%;
     height:auto;
+}*/
+
+img.resize {
+    width:540px; /* you can use % */
+    height: auto;
 }
 
 table.big-table ul,ol,dl,p,th {
