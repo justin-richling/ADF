@@ -186,6 +186,22 @@ table.dataframe td {
     background-size: cover;*/
   }
 
+.grid-container3 {
+    display: grid;
+    column-gap: 50px;
+    row-gap: 50px;
+    /*grid-template-columns: 1fr 1fr 1fr;*/
+    /*grid-template-columns: 200px 200px 200px;*/
+    /*grid-template-columns: 150px 200px;*/
+    grid-template-columns: auto auto auto;
+    /*grid-template-columns: fit-content(20%);*/
+    background-color: #e4eef0;
+    /*background-image: url("https://news.ucar.edu/sites/default/files/styles/small_landscape/public/tadl-item/2019-02/NCAR-Waves.jpg?itok=l1Dzyvzt");
+    background-repeat: no-repeat;
+    background-size: cover;*/
+    padding: 50px;
+  }
+
 .grid-item {
   background-color: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(0, 0, 0, 0.8);
