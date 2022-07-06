@@ -199,15 +199,23 @@ table.dataframe td {
     line-height: 1.5;
     display: inline-block;
     vertical-align: middle;
-  }*/
+}*/
 
-.center a {
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    border: 3px solid green; 
+}
+
+/*.center a {
     margin: 0;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
+}*/
 
 .dropdown {
     position: relative;
@@ -220,7 +228,7 @@ table.dataframe td {
     background-color: #f9f9f9;
     min-width: 120px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    padding: 12px 12px;
+    /*padding: 12px 12px;*/
     z-index: 4;
     position: absolute;
     left: 50px;
