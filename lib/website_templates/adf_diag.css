@@ -176,7 +176,7 @@ table.dataframe td {
   padding: 10px;
   font-size: 16px;
   text-align: center;
-  margin: auto;
+  /*margin: auto;*/
 }
 
 #screenFiller {
