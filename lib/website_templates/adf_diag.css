@@ -191,15 +191,23 @@ table.dataframe td {
   padding: 3px;
 }
 
-.center {
+/*.center {
   text-align: center;
-}
+}*/
 
 /*.center a {
     line-height: 1.5;
     display: inline-block;
     vertical-align: middle;
   }*/
+
+.center a {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 .dropdown {
     position: relative;
