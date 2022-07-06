@@ -239,7 +239,7 @@ table.dataframe td {
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     padding: 12px 12px;
     z-index: 4;
-    /*right: 50px;*/
+    right: 65px;
 }
 
 .dropdown-content a {
