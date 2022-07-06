@@ -210,13 +210,13 @@ table.dataframe td {
     border: 3px solid green; 
 }*/
 
-.center a {
+/*.center a {
     margin: 0;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
+}*/
 
 .dropdown {
     position: relative;
@@ -227,7 +227,7 @@ table.dataframe td {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 120px;
+    max-width: 120px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     /*padding: 12px 12px;*/
     z-index: 4;
