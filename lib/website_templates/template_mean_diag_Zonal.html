@@ -44,11 +44,11 @@
       {% for category, var_ptype_seas in mydata.items() %}
       <div class="grid-item">
           <div class="dropdown">
-            <button class="dropbtn">{{category}}</button>
-            <div class="dropdown-content center">
+            <button class="block">{{category}}</button>
+            <div class="dropdown-content">
               <div class="grid-container" style="column-gap: 10px; row-gap: 10px; padding:2px">
               {% for var_name, ptype_seas in var_ptype_seas.items() %}
-              <div class="grid-item center">
+              <div class="grid-item">
               <a href="../html_img/plot_page_{{var_name}}_Zonal.html"> {{var_name}} </a><br>
             </div><!--inner grid-item-->
           {% endfor %}
