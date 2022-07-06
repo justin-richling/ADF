@@ -223,6 +223,16 @@ table.dataframe td {
     /*margin: auto;*/
   }
 
+
+.wrapper {
+    display: grid;
+    background-color: #e4eef0;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 200px;
+  }
+
+
+
 #screenFiller {
 /*  position: absolute;*/
   top: 0; right: 0; bottom: 0; left: 0;
