@@ -173,9 +173,10 @@ table.dataframe td {
 .grid-item {
   background-color: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 10px;
+  padding: 10px 5px;
   font-size: 16px;
   text-align: center;
+  margin: auto;
 }
 
 #screenFiller {
