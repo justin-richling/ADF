@@ -353,7 +353,7 @@ table.dataframe td {
 }
 
 .float-child {
-    width: 50%;
+    width: 75%;
     float: left;
     padding: 20px;
     /*border: 2px solid red;*/
