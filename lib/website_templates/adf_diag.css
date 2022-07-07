@@ -162,7 +162,7 @@ table.dataframe td {
   /*grid-template-columns: 1fr 1fr 1fr;*/
   /*grid-template-columns: 200px 200px 200px;*/
   /*grid-auto-flow: column;*/
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   /*grid-template-columns: 200px 200px 200px;*/
   /*grid-template-columns: auto auto auto;*/
   /*grid-template-columns: fit-content(20%);*/
