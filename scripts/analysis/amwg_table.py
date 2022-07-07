@@ -123,6 +123,7 @@ def amwg_table(adf):
             cmip = True
             print("CMIP files detected, skipping AMWG table (for now)...")
         else:
+            cmip = False
             case_names.append(baseline_name)
             input_ts_locs.append(input_ts_baseline)
 
