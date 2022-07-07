@@ -119,7 +119,7 @@ def amwg_table(adf):
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
 
         #Append to case list:
-        if "CMIP" in baseline_name:
+        if "CMIP".casefold() in baseline_name:
             cmip = True
             print("CMIP files detected, skipping AMWG table (for now)...")
         else:
