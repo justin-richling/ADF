@@ -40,17 +40,16 @@
       <div class="center">
         <h1>NH Polar Plots</h1>
        </div>
-
-       <div class="grid-container" style="padding: 85px;">
+       <div class="grid-container" ><!--style="padding-left: 150px; width: 750px;" padding: 85px;-->
         {% for category, var_ptype_seas in mydata.items() %}
         <div class="grid-item">
             <div class="dropdown">
-              <button class="dropbtn">{{category}}</button>
+              <button class="block">{{category}}</button>
               <div class="dropdown-content">
-                <div class="grid-container" style="column-gap: 10px; row-gap: 10px;">
+                <div class="grid-container" style="column-gap: 5px; row-gap: 5px; padding:2px"><!--class="wrapper"-->
                 {% for var_name, ptype_seas in var_ptype_seas.items() %}
-                <div class="grid-item">
-                <a href="../html_img/plot_page_{{var_name}}_NHPolar.html"> {{var_name}} </a><br>
+                <div class="grid-item2">
+                <a href="../html_img/plot_page_{{var_name}}_Zonal.html"> {{var_name}} </a><br>
               </div><!--inner grid-item-->
             {% endfor %}
             </div><!--inner grid-container-->
@@ -59,10 +58,6 @@
           </div><!--grid-item-->
           {% endfor %}
         </div><!--grid-container-->
-
-      <div style="width: 70%; height: 100px; float: right; padding-right: 100px">
-      </div> <!-- end right inner div -->
-    </div> <!-- end main div -->
-
+      </div> <!-- end main div -->
   </body>
 </html>
