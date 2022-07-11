@@ -1043,6 +1043,12 @@ class AdfDiag(AdfObs):
         case_names = self.read_config_var('cam_case_name',
                                          conf_dict=self.__cam_climo_info,
                                          required=True)
+        
+        #Start years (not currently required):
+        syears = self.get_cam_info('start_year')
+
+        #End year (not currently rquired):
+        eyears = self.get_cam_info('end_year')
 
         #Extract variable list:
         var_list = self.diag_var_list
@@ -1054,7 +1060,19 @@ class AdfDiag(AdfObs):
             data_name = self.read_config_var('cam_case_name',
                                              conf_dict=self.__cam_bl_climo_info,
                                              required=True)
+
+            #Attempt to grab baseline start_years (not currently required):
+            syear_baseline = self.get_baseline_info('start_year')
+            eyear_baseline = self.get_baseline_info('end_year')
+
+            #If years exist, then add them to the data_name string:
+            if syear_baseline and eyear_baseline:
+                data_yrs = f"{syear_baseline} - {eyear_baseline}"
+            else:
+                data_yrs = ""
+            #End if
         #End if
+
 
         #Set preferred order of seasons:
         season_order = ["ANN", "DJF", "MAM", "JJA", "SON"]
@@ -1198,6 +1216,10 @@ class AdfDiag(AdfObs):
 
         #Loop over model cases:
         for case_idx, case_name in enumerate(case_names):
+            #Set case name if start and end year are present:
+            if syears[case_idx] and eyears[case_idx]:
+                case_yrs = f"{syears[case_idx]} - {eyears[case_idx]}"
+            #End if
 
             #Create new path object from user-specified plot directory path:
             plot_path = Path(plot_location[case_idx])
@@ -1301,7 +1323,9 @@ class AdfDiag(AdfObs):
                                                plottype_title=ptype,
                                                imgs=img_data,
                                                case1=case_name,
+                                               case1_yrs=case_yrs,
                                                case2=data_name,
+                                               case2_yrs=data_yrs,
                                                mydata=mean_html_info,
                                                plot_types=plot_type_html) #The template rendered
 
@@ -1319,7 +1343,9 @@ class AdfDiag(AdfObs):
                                                plottype_title=ptype,
                                                imgs=img_data,
                                                case1=case_name,
+                                               case1_yrs=case_yrs,
                                                case2=data_name,
+                                               case2_yrs=data_yrs,
                                                mydata=mean_html_info,
                                                plot_types=plot_type_html) #The template rendered
 
@@ -1332,7 +1358,9 @@ class AdfDiag(AdfObs):
                             mean_tmpl = jinenv.get_template(f'template_mean_diag_{ptype}.html')
                             mean_rndr = mean_tmpl.render(title=main_title,
                                             case1=case_name,
+                                            case1_yrs=case_yrs,
                                             case2=data_name,
+                                            case2_yrs=data_yrs,
                                             mydata=mean_html_info,
                                             plot_types=plot_type_html)
 
@@ -1431,7 +1459,9 @@ class AdfDiag(AdfObs):
                 mean_rndr = mean_tmpl.render(title=main_title,
                                 value=amwg_table_data,
                                 case1=case_name,
+                                case1_yrs=case_yrs,
                                 case2=data_name,
+                                case2_yrs=data_yrs,
                                 amwg_tables=amwg_tables,
                                 plot_types=plot_type_html,
                                 )
@@ -1451,7 +1481,9 @@ class AdfDiag(AdfObs):
             index_tmpl = jinenv.get_template('template_index.html')
             index_rndr = index_tmpl.render(title=main_title,
                              case1=case_name,
+                             case1_yrs=case_yrs,
                              case2=data_name,
+                             case2_yrs=data_yrs,
                              gen_table_html=gen_table_html,
                              plot_types=plot_type_html,
                              )
