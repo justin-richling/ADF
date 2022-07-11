@@ -1056,6 +1056,7 @@ class AdfDiag(AdfObs):
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
             data_name = "obs"
+            data_yrs = ""
         else:
             data_name = self.read_config_var('cam_case_name',
                                              conf_dict=self.__cam_bl_climo_info,
