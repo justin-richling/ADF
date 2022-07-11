@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ADF Mean Plots</title>
+  
+        <link rel="stylesheet" href="../templates/adf_diag.css">
+  </head>
+  <body >
+    <div class="base">
+      <div id="screenFiller" style="background:url(https://webext.cgd.ucar.edu/AMWG/f.e21.FHIST_SSP370.f09_f09_mg17.CESM2-CLM4p5.LongRun001-f.e21.FHIST_SSP370.f09_f09_mg17.CESM2-CLM5.LongRun001/f.e21.FHIST_SSP370.f09_f09_mg17.CESM2-CLM4p5.LongRun001-f.e21.FHIST_SSP370.f09_f09_mg17.CESM2-CLM5.LongRun001/images/NCAR.gif) bottom right no-repeat; border:5px solid #555;">
+        <div class="center"><h1> {{title}}</h1></div><div class="center">
+          <nav role="navigation" class="primary-navigation">
+          <ul>
+            <li><a href="../">Case Home</a></li>
+            <li><a href="#">Plots &dtrif;</a>
+              <ul class="dropdown">
+                <li><a href=../html_table/mean_table.html> &nbsp; Tables</a></li>
+                {% for type, html_file in plot_types.items() %}
+                  <li><a href=../{{html_file}}> &nbsp; {{type}}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+            <li><a href="#">Links &dtrif;</a>
+              <ul class="dropdown2">
+                <li><a href="https://www.cesm.ucar.edu">CESM</a></li>
+                <li><a href="https://www.cesm.ucar.edu/working_groups/Atmosphere/?ref=nav">AMWG</a></li>
+                <li><a href="https://www.cgd.ucar.edu/amp/">AMP</a></li>
+              </ul>
+            </li>
+            <li><a href="https://github.com/NCAR/ADF">About</a></li>
+            <li><a href="https://github.com/NCAR/ADF/discussions">Contact</a></li>
+          </ul>
+        </nav>
+        </div>
+        <br>
+        <h2 style="display:inline; color:rgb(67, 67, 67);"> Test Case: </h2><h2 style="display:inline">{{case1}}  {{case1_yrs}}</h2><br>
+      <h2 style="display:inline; color:rgb(67, 67, 67);"> Control Case: </h2><h2 style="display:inline">{{case2}}  {{case2_yrs}}</h2>
+      </div>
+      </div>
+
+      <div class="center">
+        <h1>Time Series Plots</h1>
+       </div>
+       <div class="grid-container" ><!--style="padding-left: 150px; width: 750px;" padding: 85px;-->
+        {% for category, var_ptype_seas in mydata.items() %}
+        <div class="grid-item">
+            <div class="dropdown">
+              <button class="block">{{category}}</button>
+              <div class="dropdown-content">
+                <div class="grid-container" style="column-gap: 5px; row-gap: 5px; padding:2px"><!--class="wrapper"-->
+                {% for var_name, ptype_seas in var_ptype_seas.items() %}
+                <div class="grid-item2">
+                <a href="../html_img/plot_page_{{var_name}}_LatLon.html"> {{var_name}} </a><br>
+              </div><!--inner grid-item-->
+            {% endfor %}
+            </div><!--inner grid-container-->
+            </div>
+            </div>
+          </div><!--grid-item-->
+          {% endfor %}
+        </div><!--grid-container-->
+    </div> <!-- end main div -->
+
+  </body>
+</html>
