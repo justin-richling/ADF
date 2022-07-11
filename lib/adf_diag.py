@@ -1115,13 +1115,15 @@ class AdfDiag(AdfObs):
                            'global_latlon_vect_map': ['html_img/mean_diag_LatLon_Vector.html'],
                            'polar_map': ['html_img/mean_diag_NHPolar.html',
                                          'html_img/mean_diag_SHPolar.html'],
-                            'cam_taylor_diagram': ["html_img/mean_diag_TaylorDiag.html"]}
+                            'cam_taylor_diagram': ["html_img/mean_diag_TaylorDiag.html"],
+                            'time_series':['html_img/mean_diag_TimeSeries.html']}
 
         ptype_order_dict = {'global_latlon_map': ["LatLon"],
                             'zonal_mean': ["Zonal"],
                             'global_latlon_vect_map': ["LatLon_Vector"],
                             'polar_map': ["NHPolar","SHPolar"],
-                            'cam_taylor_diagram': ["TaylorDiag"]}
+                            'cam_taylor_diagram': ["TaylorDiag"],\
+                            'time_series':['TimeSeries']}
 
         #Grab the plot type functions form user
         plot_func_names = self.__plotting_scripts
