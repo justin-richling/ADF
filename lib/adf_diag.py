@@ -1068,7 +1068,7 @@ class AdfDiag(AdfObs):
 
             #If years exist, then add them to the data_name string:
             if syear_baseline and eyear_baseline:
-                data_yrs = f"{syear_baseline} - {eyear_baseline}"
+                data_yrs = f"(yrs {syear_baseline} - {eyear_baseline})"
             else:
                 data_yrs = ""
             #End if
@@ -1219,7 +1219,7 @@ class AdfDiag(AdfObs):
         for case_idx, case_name in enumerate(case_names):
             #Set case name if start and end year are present:
             if syears[case_idx] and eyears[case_idx]:
-                case_yrs = f"{syears[case_idx]} - {eyears[case_idx]}"
+                case_yrs = f"(yrs {syears[case_idx]} - {eyears[case_idx]})"
             #End if
 
             #Create new path object from user-specified plot directory path:
