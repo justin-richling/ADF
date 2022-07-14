@@ -1052,6 +1052,7 @@ class AdfDiag(AdfObs):
 
         #Extract variable list:
         var_list = self.diag_var_list
+        var_list.append("RESTOM")
 
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
@@ -1097,7 +1098,7 @@ class AdfDiag(AdfObs):
             'Budget': {'DCQ', 'DQCORE', 'DTCORE', 'MPDICE', 'MPDLIQ', 'PTEQ'},
             'Radiation': {'FLNS', 'FLNSC', 'FLNT', 'FLNTC', 'FLUT', 'FSDS',
                           'FSDSC', 'FSNS', 'FSNSC', 'FSNT', 'FSNTC', 'FSNTOA',
-                          'LHFLX', 'LWCF', 'QRL', 'QRS', 'SHFLX', 'SWCF'},
+                          'LHFLX', 'LWCF', 'QRL', 'QRS', "RESTOM", 'SHFLX', 'SWCF'},
             'State': {'OMEGA', 'OMEGA500', 'PINT', 'PMID', 'PS', 'PSL', 'Q',
                       'RELHUM', 'T', 'U', 'V', 'Z3', 'Wind'},
             'Surface': {'PBLH', 'QFLX', 'TAUX', 'TAUY', 'TREFHT', 'U10',
@@ -1122,7 +1123,7 @@ class AdfDiag(AdfObs):
                             'zonal_mean': ["Zonal"],
                             'global_latlon_vect_map': ["LatLon_Vector"],
                             'polar_map': ["NHPolar","SHPolar"],
-                            'cam_taylor_diagram': ["TaylorDiag"],\
+                            'cam_taylor_diagram': ["TaylorDiag"],
                             'time_series':['TimeSeries']}
 
         #Grab the plot type functions form user
