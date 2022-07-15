@@ -173,7 +173,7 @@ def ts_plot(ax, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs
     ax.plot(yrs_base, vals_base, "--", c="orange",label=data_name)
     ax.set_ylabel(unit,fontsize=15,labelpad=20)
     ax.set_xlabel("Years",fontsize=15,labelpad=20)
-    ax.set_xticks(yrs_case, yrs_case, rotation=45, ha='right', rotation_mode='anchor')
+    ax.set_xticks(yrs_base, yrs_base, rotation=45, ha='right', rotation_mode='anchor')
     ax.grid(color = 'grey', linestyle = '--', linewidth = 0.5)
     
     return ax
