@@ -167,13 +167,28 @@ def get_restom_data(case_ts_loc,data_ts_loc):
     return restom_case,restom_base,unit,yrs_case,yrs_base
 
 def ts_plot(ax, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs_base):
+    yrs_lists = []
     for _,val in enumerate(case_names):
         ax.plot(yrs_case, vals_case, c="b", label=val)
-
+        yrs_lists.append(yrs_case)
     ax.plot(yrs_base, vals_base, "--", c="orange",label=data_name)
     ax.set_ylabel(unit,fontsize=15,labelpad=20)
     ax.set_xlabel("Years",fontsize=15,labelpad=20)
-    ax.set_xticks(yrs_base, yrs_base, rotation=45, ha='right', rotation_mode='anchor')
+
+    yrs_lists.append(yrs_base)
+    #list1 = [1,2,4,5,7,6,5]
+    #ist2 = [1,4,5,6]
+    #list3 = [2,5,4,6,7,8,5,3]
+    #list4 = [5,7,3,7,5,2,3,8]
+
+    #lists = [list1, list2, list3, list4]
+
+    list_max = filter(lambda i: len(i) == max([len(l) for l in yrs_lists]), yrs_lists)
+    #print(list(list_max))
+    ax.set_xticks(list_max, list_max, rotation=45, ha='right', rotation_mode='anchor')
+    
+    
+    
     ax.grid(color = 'grey', linestyle = '--', linewidth = 0.5)
     
     return ax
