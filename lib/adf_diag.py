@@ -1224,6 +1224,9 @@ class AdfDiag(AdfObs):
             if syears and eyears != "NoneType":
                 case_yrs = f"(yrs {syears[case_idx]} - {eyears[case_idx]})"
             #End if
+            else:
+                case_yrs = ""
+                base_yrs= ""
 
             #Create new path object from user-specified plot directory path:
             plot_path = Path(plot_location[case_idx])
