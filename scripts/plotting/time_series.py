@@ -188,7 +188,7 @@ def ts_plot(ax, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs
     list_max = filter(lambda i: len(i) == max([len(l) for l in yrs_lists]), yrs_lists)
     print(list(list_max))
     #ax.set_xticks(list_max, list_max, rotation=45, ha='right', rotation_mode='anchor')
-    ax.set_xticks(yrs_base, yrs_base, rotation=45, ha='right', rotation_mode='anchor')
+    #ax.set_xticks(yrs_base, yrs_base, rotation=45, ha='right', rotation_mode='anchor')
     
     
     ax.grid(color = 'grey', linestyle = '--', linewidth = 0.5)
