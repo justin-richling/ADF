@@ -83,7 +83,7 @@ def time_series(adfobj):
     #Might be best as a list of variables in the config file?
     #var_list = ['TS', 'SST', 'FSNT', 'FLNT', "RESTOM"]
     var_list = ['TS', 'FSNT', 'FLNT',"RESTOM"]
-    var_list = ['TS']
+    #var_list = ['TS']
 
     #Loop over model cases:
     for case_idx, case_name in enumerate(case_names):
