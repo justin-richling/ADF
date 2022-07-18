@@ -149,6 +149,7 @@ def _load_dataset(fils):
         return xr.open_dataset(sfil)
 
 def get_data(case_ts_loc,data_ts_loc,var):
+    print(case_ts_loc[0])
     ave_case,unit,yrs_case = _data_calcs(case_ts_loc[0],var)
     ave_base,unit,yrs_base = _data_calcs(data_ts_loc,var)
 
@@ -196,7 +197,7 @@ def ts_plot(ax, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs
 def _data_calcs(ts_loc,var):
     fils = sorted(list(Path(ts_loc).glob(f"*{var}*.nc")))
     print(fils)
-    ts = xr.open_mfdataset(fils[0])[var].compute()
+    ts = xr.open_mfdataset(fils)[var].compute()
     w = np.cos(np.radians(ts.lat))  # area weighting
     ave  = ts.weighted(w).mean(dim=("lat","lon")) # global averaging
     unit = ts.units
