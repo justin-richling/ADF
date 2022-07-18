@@ -101,11 +101,11 @@ def time_series(adfobj):
                     plot_loc.mkdir(parents=True)
                 print(f"\t - Plotting Time Series, {var} {s}")
 
-                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                """# Check redo_plot. If set to True: remove old plot, if it already exists:
                 if (not redo_plot) and plot_name.is_file():
                     continue
                 elif (redo_plot) and plot_name.is_file():
-                    plot_name.unlink()
+                    plot_name.unlink()"""
                     
                 if var == "RESTOM":
                     ave_case,ave_base,unit,yrs_case,yrs_base = get_restom_data(case_ts_loc,data_ts_loc)
