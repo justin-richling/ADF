@@ -1221,7 +1221,7 @@ class AdfDiag(AdfObs):
         #Loop over model cases:
         for case_idx, case_name in enumerate(case_names):
             #Set case name if start and end year are present:
-            if syears[case_idx] and eyears[case_idx]:
+            if syears and eyears != "NoneType":
                 case_yrs = f"(yrs {syears[case_idx]} - {eyears[case_idx]})"
             #End if
 
