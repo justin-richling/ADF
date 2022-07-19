@@ -254,6 +254,13 @@ table.dataframe td {
   text-align: center;
 }
 
+.center22 {
+  text-align: center;
+  margin: 0 auto;
+}
+
+
+
 .center2 a {
     line-height: 1.5;
     display: inline-block;
