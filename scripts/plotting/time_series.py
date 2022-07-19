@@ -213,7 +213,6 @@ def ts_plot(ax, var, case_names, data_name, vals_case, vals_base, unit, yrs_case
 
 def _data_calcs(ts_loc,var):
     fils = sorted(list(Path(ts_loc).glob(f"*{var}*.nc")))
-    print(fils)
     ts = xr.open_mfdataset(fils)[var].compute()
     w = np.cos(np.radians(ts.lat))  # area weighting
     ave  = ts.weighted(w).mean(dim=("lat","lon")) # global averaging
