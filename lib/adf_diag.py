@@ -1163,11 +1163,6 @@ class AdfDiag(AdfObs):
         
         print(top_plots.keys())
 
-
-        'html_img/plot_page_T_Zonal.html'
-
-
-
         #Grab the plot type functions form user
         plot_func_names = self.__plotting_scripts
 
@@ -1345,12 +1340,6 @@ class AdfDiag(AdfObs):
                                 mean_html_info[category][var][ptype][season] = OrderedDict()
 
                             mean_html_info[category][var][ptype][season] = outputfile.name
-                            #print(outputfile.name)
-
-                            if ptype in top_plots.keys():
-                                print("ok")
-                                if var in top_plots[ptype]:
-                                    print(img_pages_dir / f"plot_page_{var}_{ptype}.html")
                             
                 #Loop over variables:
                 for var in var_list_alpha:
@@ -1560,6 +1549,49 @@ class AdfDiag(AdfObs):
             #End if
         #End for (model case loop)
 
+        
+        
+        
+        
+        
+        outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
+        #Create titles
+        tmpl = jinenv.get_template('template_Top10_index.html')  #Set template
+        rndr = tmpl.render(title=main_title,
+                            var_title=var,
+                            season_title=season,
+                            plottype_title=ptype,
+                            imgs=img_data,
+                            case1=case_name,
+                            case1_yrs=case_yrs,
+                            case2=data_name,
+                            case2_yrs=data_yrs,
+                            mydata=mean_html_info,
+                            plot_types=plot_type_html) #The template rendered
+
+        #Open HTML file:
+        with open(outputfile2, 'w', encoding='utf-8') as ofil:
+            ofil.write(rndr)
+        
+        # mean_html_info[category][var][ptype][season] = outputfile.name
+        mean_html_info
+        for ptype in top_plots.keys():
+            print("ok")
+            if var in top_plots[ptype]:
+                print(img_pages_dir / f"plot_page_{var}_{ptype}.html")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         #Create multi-case site, if needed:
         if main_site_path:
             main_title = "ADF Diagnostics"
