@@ -1155,8 +1155,7 @@ class AdfDiag(AdfObs):
 
         for top in ptype_order_dict.keys():  
             plot_type = self.get_top_plots_info(top)
-            print(plot_type,type(plot_type))
-
+            
             if plot_type != None:
                 top_plots[top] = plot_type
         
