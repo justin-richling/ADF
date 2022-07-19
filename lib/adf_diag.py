@@ -1063,9 +1063,7 @@ class AdfDiag(AdfObs):
         case_names = self.read_config_var('cam_case_name',
                                          conf_dict=self.__cam_climo_info,
                                          required=True)
-
-        top_plots = self.get_top_plots_info('time_series')
-        print(top_plots)
+        
         
         #Start years (not currently required):
         syears = self.get_cam_info('start_year')
@@ -1148,6 +1146,27 @@ class AdfDiag(AdfObs):
                             'polar_map': ["NHPolar","SHPolar"],
                             'cam_taylor_diagram': ["TaylorDiag"],
                             'time_series':['TimeSeries']}
+
+
+
+
+        top_plots = []
+        """t_s = self.get_top_plots_info('time_series')
+        l_l = self.get_top_plots_info('global_latlon_map')
+        zonal = self.get_top_plots_info('zonal_mean')
+        polar = self.get_top_plots_info('polar_map')
+        l_l_vec = self.get_top_plots_info('global_latlon_vect_map')
+        taylor = self.get_top_plots_info('cam_taylor_diagram')"""
+
+        for top in ptype_order_dict.keys():
+            print(top)
+            top_plots.append(self.get_top_plots_info(top))
+        print(top_plots)
+
+
+
+
+
 
         #Grab the plot type functions form user
         plot_func_names = self.__plotting_scripts
