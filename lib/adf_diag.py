@@ -1167,8 +1167,8 @@ class AdfDiag(AdfObs):
 
             if plot_type != None:
                 top_plots[top] = plot_type
-            else:
-                print("no items here buster")
+            #else:
+                #print("no items here buster")
         
         print(top_plots)
 
