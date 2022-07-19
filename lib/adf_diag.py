@@ -1155,14 +1155,14 @@ class AdfDiag(AdfObs):
 
         for top in ptype_order_dict.keys():  
             plot_type = self.get_top_plots_info(top)
-            
+
             if plot_type != None:
                 top_plots[top] = plot_type
         
         print(top_plots)
 
 
-
+        'html_img/plot_page_T_Zonal.html'
 
 
 
@@ -1343,6 +1343,11 @@ class AdfDiag(AdfObs):
                                 mean_html_info[category][var][ptype][season] = OrderedDict()
 
                             mean_html_info[category][var][ptype][season] = outputfile.name
+                            print(outputfile.name)
+
+                            if ptype in top_plots.keys():
+                                if var in top_plots[ptype]:
+                                    print(f"html_img/plot_page_T_Zonal.html")
                             
                 #Loop over variables:
                 for var in var_list_alpha:
