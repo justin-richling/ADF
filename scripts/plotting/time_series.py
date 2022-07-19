@@ -204,13 +204,11 @@ def ts_plot(ax, var, case_names, data_name, vals_case, vals_base, unit, yrs_case
 
     if var == "RESTOM":
         tick_spacing = 1
-        print(tick_spacing)
         ax.yaxis.set_major_locator(MultipleLocator(1))
         ax.yaxis.set_minor_locator(MultipleLocator(0.1))
 
     else:
         tick_spacing = 0.5
-        print(tick_spacing)
         ax.yaxis.set_major_locator(MultipleLocator(0.5))
         ax.yaxis.set_minor_locator(MultipleLocator(0.1))
 
