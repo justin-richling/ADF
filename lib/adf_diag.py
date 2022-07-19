@@ -1164,12 +1164,12 @@ class AdfDiag(AdfObs):
             
             plot_type = self.get_top_plots_info(top)
             print(plot_type,type(plot_type))
+
             if plot_type != None:
-                
-                #yup = []
-                #for i in plot_type:
-                    #yup.append(i)
                 top_plots[top] = plot_type
+            else:
+                print("no items here buster")
+        
         print(top_plots)
 
 
