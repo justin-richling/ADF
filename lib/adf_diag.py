@@ -1163,7 +1163,7 @@ class AdfDiag(AdfObs):
         #    d[year].append(month)
 
         for top in ptype_order_dict.keys():
-            print(top)
+            print(top,type(top))
             plot_type = self.get_top_plots_info(top)
             if top != "NoneType":
                 #top_plots.append(plot_type)
