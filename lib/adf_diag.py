@@ -1159,7 +1159,9 @@ class AdfDiag(AdfObs):
             if plot_type != None:
                 top_plots[top] = plot_type
         
-        print(top_plots,top_plots.keys())
+        print(top_plots)
+        
+        print(top_plots.keys())
 
 
         'html_img/plot_page_T_Zonal.html'
