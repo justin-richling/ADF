@@ -42,25 +42,15 @@
         <h1>Top Plots</h1>
        </div>
 
-       <div>
-       <div class="grid-container2" ><!--style="padding-left: 150px; width: 750px;" padding: 85px;-->
-        {% for category, var_ptype_seas in mydata.items() %}
+    <div>
+      <div class="grid-container2" ><!--style="padding-left: 150px; width: 750px;" padding: 85px;-->
+        {% for var_ptype_seas in mydata %}
         <div class="grid-item">
             <div class="dropdown">
-              <button class="block">{{category}}</button>
-              <div class="dropdown-content">
-                <div class="grid-container" style="column-gap: 5px; row-gap: 5px; padding:2px"><!--class="wrapper"-->
-                {% for var_name, ptype_seas in var_ptype_seas.items() %}
-                <div class="grid-item2">
-                <a href="../html_img/plot_page_{{var_name}}_LatLon.html"> {{var_name}} </a><br>
-              </div><!--inner grid-item-->
+              <button class="block">{{var_ptype_seas}}</button>
             {% endfor %}
-            </div><!--inner grid-container-->
-            </div>
-            </div>
-          </div><!--grid-item-->
-          {% endfor %}
-        </div><!--grid-container2-->
+        </div><!--grid-item-->
+      </div><!--grid-container2-->
     </div> <!-- end main div -->
 
   </body>
