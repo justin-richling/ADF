@@ -5,6 +5,10 @@ import pandas as pd
 import plotting_functions as pf
 import matplotlib.pyplot as plt
 
+import matplotlib.ticker as ticker
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
+
 import warnings  # use to warn user about missing files.
 
 def my_formatwarning(msg, *args, **kwargs):
@@ -118,7 +122,7 @@ def time_series(adfobj):
                 fig, ax = plt.subplots(figsize=(15,6))
                 plt.subplots_adjust(wspace=0.52,hspace=0.2)
                         
-                ax = ts_plot(ax,case_names,data_name,vals_case,vals_base,unit,yrs_case,yrs_base)    
+                ax = ts_plot(ax,var,case_names,data_name,vals_case,vals_base,unit,yrs_case,yrs_base)    
 
                 #Set legend for case plots
                 fig.legend(bbox_to_anchor=(-0.1, .88, 1., .102), loc="right",
@@ -168,7 +172,7 @@ def get_restom_data(case_ts_loc,data_ts_loc):
 
     return restom_case,restom_base,unit,yrs_case,yrs_base
 
-def ts_plot(ax, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs_base):
+def ts_plot(ax, var, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs_base):
     yrs_lists = []
     for _,val in enumerate(case_names):
         ax.plot(yrs_case, vals_case, c="b", label=val)
@@ -176,6 +180,18 @@ def ts_plot(ax, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs
     ax.plot(yrs_base, vals_base, "--", c="orange",label=data_name)
     ax.set_ylabel(unit,fontsize=15,labelpad=20)
     ax.set_xlabel("Years",fontsize=15,labelpad=20)
+
+    ax.xaxis.set_major_locator(MultipleLocator(5))
+    ax.tick_params(which='major', length=7)
+    ax.tick_params(which='minor', length=5)
+
+    if var == "TS":
+        tick_spacing = 0.25
+    if var == "FLNT" or "FSNT" or "RESTOM":
+        tick_spacing = 0.5
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
+
+    ax.set_xlim(0.0,max(yrs_base))
 
     yrs_lists.append(yrs_base)
     #list1 = [1,2,4,5,7,6,5]
@@ -191,7 +207,7 @@ def ts_plot(ax, case_names, data_name, vals_case, vals_base, unit, yrs_case, yrs
     ax.set_xticks(yrs_base, yrs_base, rotation=45, ha='right', rotation_mode='anchor')
     
     
-    ax.grid(color = 'grey', linestyle = '--', linewidth = 0.5)
+    #ax.grid(color = 'grey', linestyle = '--', linewidth = 0.5)
     
     return ax
 
