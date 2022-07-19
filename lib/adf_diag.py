@@ -181,6 +181,12 @@ class AdfDiag(AdfObs):
             self.expand_references(self.__cvdp_info)
         #End if
 
+        #Add top plots info to object:
+        self.__top_plots_info = self.read_config_var('top_plots')
+
+        #Expand top plots info variable strings:
+        self.expand_references(self.__top_plots_info)
+
         #Check if inputs are of the correct type.
         #Ideally this sort of checking should be done
         #in its own class that AdfDiag inherits from:
@@ -332,6 +338,20 @@ class AdfDiag(AdfObs):
         return self.read_config_var(var_str,
                                     conf_dict=self.__cam_bl_climo_info,
                                     required=required)
+
+    def get_top_plots_info(self, var_str, required=False):
+        """
+        Return the config variable from 'diag_cvdp_info' as requested by
+        the user. If 'diag_cvdp_info' is not found then try grabbing the
+        variable from the top level of the YAML config file dictionary
+        instead.
+        """
+
+        return self.read_config_var(var_str,
+                                    conf_dict=self.__top_plots_info,
+                                    required=required)
+
+    #########
 
     #########
     #Script-running functions
@@ -1043,6 +1063,11 @@ class AdfDiag(AdfObs):
         case_names = self.read_config_var('cam_case_name',
                                          conf_dict=self.__cam_climo_info,
                                          required=True)
+
+        top_plots = self.read_config_var('time_series',
+                                    conf_dict=self.__top_plots_info,
+                                    required=True)
+        print(top_plots)
         
         #Start years (not currently required):
         syears = self.get_cam_info('start_year')
