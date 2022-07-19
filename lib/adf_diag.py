@@ -1165,7 +1165,7 @@ class AdfDiag(AdfObs):
         for top in ptype_order_dict.keys():
             print(top)
             plot_type = self.get_top_plots_info(top)
-            if top != None:
+            if top != "NoneType":
                 #top_plots.append(plot_type)
                 for i in plot_type:
                     top_plots[top].append(i)
