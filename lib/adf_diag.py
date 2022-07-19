@@ -182,7 +182,7 @@ class AdfDiag(AdfObs):
         #End if
 
         #Add top plots info to object:
-        #self.__top_plots_info = self.read_config_var('top_plots')
+        self.__top_plots_info = self.read_config_var('top_plots')
 
         #Expand top plots info variable strings:
         #self.expand_references(self.__top_plots_info)
