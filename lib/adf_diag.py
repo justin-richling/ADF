@@ -1149,26 +1149,16 @@ class AdfDiag(AdfObs):
 
 
 
-        from collections import defaultdict
-        #top_plots = {}
-        top_plots = defaultdict(list)
-        """t_s = self.get_top_plots_info('time_series')
-        l_l = self.get_top_plots_info('global_latlon_map')
-        zonal = self.get_top_plots_info('zonal_mean')
-        polar = self.get_top_plots_info('polar_map')
-        l_l_vec = self.get_top_plots_info('global_latlon_vect_map')
-        taylor = self.get_top_plots_info('cam_taylor_diagram')"""
+        #from collections import defaultdict
+        top_plots = {}
+        #top_plots = defaultdict(list)
 
-
-        for top in ptype_order_dict.keys():
-            
+        for top in ptype_order_dict.keys():  
             plot_type = self.get_top_plots_info(top)
             print(plot_type,type(plot_type))
 
             if plot_type != None:
                 top_plots[top] = plot_type
-            #else:
-                #print("no items here buster")
         
         print(top_plots)
 
