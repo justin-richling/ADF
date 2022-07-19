@@ -180,7 +180,7 @@ table.dataframe td {
     /*grid-template-columns: 1fr 1fr 1fr;*/
     /*grid-template-columns: 200px 200px 200px;*/
     /*grid-auto-flow: column;*/
-    grid-template-columns: repeat(auto, auto);
+    grid-template-columns: repeat(4, auto);
     /*grid-template-columns: 200px 200px 200px;*/
     /*grid-template-columns: auto auto auto;*/
     /*grid-template-columns: fit-content(20%);*/
@@ -208,7 +208,7 @@ table.dataframe td {
   background-repeat: no-repeat;
   background-size: cover;*/
   /*padding: 100px 65px;*/
-  /*padding: 65px 100px;*/
+  padding: 30px;
 }
 
 .grid-item {
