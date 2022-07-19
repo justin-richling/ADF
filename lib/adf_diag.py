@@ -1159,8 +1159,8 @@ class AdfDiag(AdfObs):
         l_l_vec = self.get_top_plots_info('global_latlon_vect_map')
         taylor = self.get_top_plots_info('cam_taylor_diagram')"""
 
-        for year, month in data:
-            d[year].append(month)
+        #for year, month in data:
+        #    d[year].append(month)
 
         for top in ptype_order_dict.keys():
             print(top)
