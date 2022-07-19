@@ -181,6 +181,7 @@ def ts_plot(ax, var, case_names, data_name, vals_case, vals_base, unit, yrs_case
     ax.set_xlabel("Years",fontsize=15,labelpad=20)
 
     ax.xaxis.set_major_locator(MultipleLocator(5))
+    ax.xaxis.set_minor_locator(MultipleLocator(1))
     ax.tick_params(which='major', length=7)
     ax.tick_params(which='minor', length=5)
 
