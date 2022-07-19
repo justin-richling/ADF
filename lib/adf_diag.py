@@ -1071,7 +1071,7 @@ class AdfDiag(AdfObs):
             if syear_baseline and eyear_baseline:
                 data_yrs = f"(yrs {syear_baseline} - {eyear_baseline})"
             else:
-                data_yrs = ""
+                data_yrs = "  ( Years: 0020 - 0040 )"
             #End if
         #End if
 
@@ -1225,8 +1225,7 @@ class AdfDiag(AdfObs):
                 case_yrs = f"(yrs {syears[case_idx]} - {eyears[case_idx]})"
             #End if
             else:
-                case_yrs = ""
-                base_yrs= ""
+                case_yrs = "  ( Years: 0020 - 0040 )"
 
             #Create new path object from user-specified plot directory path:
             plot_path = Path(plot_location[case_idx])
