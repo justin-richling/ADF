@@ -1150,7 +1150,7 @@ class AdfDiag(AdfObs):
 
 
 
-        top_plots = []
+        top_plots = {}
         """t_s = self.get_top_plots_info('time_series')
         l_l = self.get_top_plots_info('global_latlon_map')
         zonal = self.get_top_plots_info('zonal_mean')
@@ -1160,8 +1160,11 @@ class AdfDiag(AdfObs):
 
         for top in ptype_order_dict.keys():
             print(top)
-            if top is not "None":
-                top_plots.append(self.get_top_plots_info(top))
+            plot_type = self.get_top_plots_info(top)
+            if top != "None":
+                #top_plots.append(plot_type)
+                for i in self.get_top_plots_info(top):
+                    top_plots[plot_type] = i
         print(top_plots)
 
 
