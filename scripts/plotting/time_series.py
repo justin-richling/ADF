@@ -186,9 +186,33 @@ def ts_plot(ax, var, case_names, data_name, vals_case, vals_base, unit, yrs_case
     ax.tick_params(which='minor', length=5)
 
     if var == "TS":
-        tick_spacing = 0.25
-    if var == "FLNT" or "FSNT" or "RESTOM":
         tick_spacing = 0.5
+        print(tick_spacing)
+        ax.yaxis.set_major_locator(MultipleLocator(0.5))
+        ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+        ax.tick_params(which='major', length=7)
+        ax.tick_params(which='minor', length=5)
+    if var == "FLNT":
+        tick_spacing = 0.5
+        print(tick_spacing)
+        ax.yaxis.set_major_locator(MultipleLocator(0.5))
+        ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+        ax.tick_params(which='major', length=7)
+        ax.tick_params(which='minor', length=5)
+    if var == "FSNT":
+        tick_spacing = 0.5
+        print(tick_spacing)
+        ax.yaxis.set_major_locator(MultipleLocator(0.5))
+        ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+        ax.tick_params(which='major', length=7)
+        ax.tick_params(which='minor', length=5)
+    if var == "RESTOM":
+        tick_spacing = 1
+        print(tick_spacing)
+        ax.yaxis.set_major_locator(MultipleLocator(1))
+        ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+        ax.tick_params(which='major', length=7)
+        ax.tick_params(which='minor', length=5)
     ax.yaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
 
     ax.set_xlim(0.0,max(yrs_base[:-1]))
