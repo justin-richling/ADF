@@ -1064,9 +1064,7 @@ class AdfDiag(AdfObs):
                                          conf_dict=self.__cam_climo_info,
                                          required=True)
 
-        top_plots = self.read_config_var('time_series',
-                                    conf_dict=self.__top_plots_info,
-                                    required=True)
+        top_plots = self.get_top_plots_info('time_series')
         print(top_plots)
         
         #Start years (not currently required):
