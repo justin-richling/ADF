@@ -180,12 +180,7 @@ def ts_plot(ax, var, case_names, data_name, vals_case, vals_base, unit, yrs_case
     ax.set_ylabel(unit,fontsize=15,labelpad=20)
     ax.set_xlabel("Years",fontsize=15,labelpad=20)
 
-    ax.xaxis.set_major_locator(MultipleLocator(5))
-    ax.xaxis.set_minor_locator(MultipleLocator(1))
-    ax.tick_params(which='major', length=7)
-    ax.tick_params(which='minor', length=5)
-
-    if var == "TS":
+    """if var == "TS":
         tick_spacing = 0.5
         print(tick_spacing)
         ax.yaxis.set_major_locator(MultipleLocator(0.5))
@@ -205,15 +200,27 @@ def ts_plot(ax, var, case_names, data_name, vals_case, vals_base, unit, yrs_case
         ax.yaxis.set_major_locator(MultipleLocator(0.5))
         ax.yaxis.set_minor_locator(MultipleLocator(0.1))
         ax.tick_params(which='major', length=7)
-        ax.tick_params(which='minor', length=5)
+        ax.tick_params(which='minor', length=5)"""
+
     if var == "RESTOM":
         tick_spacing = 1
         print(tick_spacing)
         ax.yaxis.set_major_locator(MultipleLocator(1))
         ax.yaxis.set_minor_locator(MultipleLocator(0.1))
-        ax.tick_params(which='major', length=7)
-        ax.tick_params(which='minor', length=5)
+
+    else:
+        tick_spacing = 0.5
+        print(tick_spacing)
+        ax.yaxis.set_major_locator(MultipleLocator(0.5))
+        ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+
+    ax.tick_params(which='major', length=7)
+    ax.tick_params(which='minor', length=5)
+    
     ax.yaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
+
+    ax.xaxis.set_major_locator(MultipleLocator(5))
+    ax.xaxis.set_minor_locator(MultipleLocator(1))
 
     ax.set_xlim(0.0,max(yrs_base[:-1]))
 
