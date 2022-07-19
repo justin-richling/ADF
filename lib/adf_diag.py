@@ -1343,11 +1343,12 @@ class AdfDiag(AdfObs):
                                 mean_html_info[category][var][ptype][season] = OrderedDict()
 
                             mean_html_info[category][var][ptype][season] = outputfile.name
-                            print(outputfile.name)
+                            #print(outputfile.name)
 
                             if ptype in top_plots.keys():
+                                print("ok")
                                 if var in top_plots[ptype]:
-                                    print(f"html_img/plot_page_T_Zonal.html")
+                                    print(img_pages_dir / f"plot_page_{var}_{ptype}.html")
                             
                 #Loop over variables:
                 for var in var_list_alpha:
