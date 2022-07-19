@@ -1568,7 +1568,7 @@ class AdfDiag(AdfObs):
             for var in top_plots[ptype]:
                 print(img_pages_dir / f"plot_page_{var}_{ptype}.html")
 
-        outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
+        #outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
         #Create titles
         tmpl = jinenv.get_template('template_Top10_index.html')  #Set template
         rndr = tmpl.render(title=main_title,
@@ -1583,8 +1583,9 @@ class AdfDiag(AdfObs):
                             mydata=mean_html_info,
                             plot_types=plot_type_html) #The template rendered
 
+        outputfile = img_pages_dir / f"Top10_index.html"
         #Open HTML file:
-        with open(outputfile2, 'w', encoding='utf-8') as ofil:
+        with open(outputfile, 'w', encoding='utf-8') as ofil:
             ofil.write(rndr)
         
         
