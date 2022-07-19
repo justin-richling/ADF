@@ -1150,7 +1150,7 @@ class AdfDiag(AdfObs):
 
 
         from collections import defaultdict
-        top_plots = {}
+        #top_plots = {}
         top_plots = defaultdict(list)
         """t_s = self.get_top_plots_info('time_series')
         l_l = self.get_top_plots_info('global_latlon_map')
@@ -1159,17 +1159,15 @@ class AdfDiag(AdfObs):
         l_l_vec = self.get_top_plots_info('global_latlon_vect_map')
         taylor = self.get_top_plots_info('cam_taylor_diagram')"""
 
-        #for year, month in data:
-        #    d[year].append(month)
 
         for top in ptype_order_dict.keys():
             print(top,type(top))
-            
-            if top != "NoneType":
-                plot_type = self.get_top_plots_info(top)
+            plot_type = self.get_top_plots_info(top)
+            if plot_type != "NoneType":
+                
                 #top_plots.append(plot_type)
-                for i in plot_type:
-                    top_plots[top].append(i)
+                for i in top:
+                    top_plots[plot_type].append(i)
         print(top_plots)
 
 
