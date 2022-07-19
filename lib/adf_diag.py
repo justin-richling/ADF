@@ -1165,9 +1165,10 @@ class AdfDiag(AdfObs):
             plot_type = self.get_top_plots_info(top)
             if plot_type != "NoneType":
                 
-                #top_plots.append(plot_type)
-                for i in top:
-                    top_plots[plot_type].append(i)
+                #yup = []
+                #for i in plot_type:
+                    #yup.append(i)
+                top_plots[top] = plot_type
         print(top_plots)
 
 
