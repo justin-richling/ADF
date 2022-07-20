@@ -1149,15 +1149,17 @@ class AdfDiag(AdfObs):
 
 
 
-        #from collections import defaultdict
+        #Top plots:
+        #
+        #--------------------------------------------
         top_plots = {}
-        #top_plots = defaultdict(list)
 
         for top in ptype_order_dict.keys():  
             plot_type = self.get_top_plots_info(top)
 
             if plot_type != None:
                 top_plots[top] = plot_type
+        #--------------------------------------------
     
         #Grab the plot type functions form user
         plot_func_names = self.__plotting_scripts
@@ -1349,7 +1351,7 @@ class AdfDiag(AdfObs):
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
                             # Hacky - how to get the relative path in a better way?:
                             img_data = [os.pardir+os.sep+assets_dir.name+os.sep+img.name, alt_text]
-
+                            print(os.pardir+os.sep+assets_dir.name+os.sep+img.name)
 
                             #Create titles
                             var_title = f"Variable: {var}"
@@ -1550,38 +1552,6 @@ class AdfDiag(AdfObs):
         
         
 
-
-
-
-
-
-
-
-        # mean_html_info[category][var][ptype][season] = outputfile.name
-        woo = []
-        for ptype in top_plots.keys():
-            for var in top_plots[ptype]:
-                woo.append(img_pages_dir / f"plot_page_{var}_ANN_{ptype}.html")
-
-        #outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
-        #Create titles
-        tmpl = jinenv.get_template('template_Top10_index.html')  #Set template
-        rndr = tmpl.render(title=main_title,
-                            var_title=var,
-                            season_title=season,
-                            plottype_title=ptype,
-                            imgs=img_data,
-                            case1=case_name,
-                            case1_yrs=case_yrs,
-                            case2=data_name,
-                            case2_yrs=data_yrs,
-                            mydata=woo,
-                            plot_types=plot_type_html) #The template rendered
-
-        outputfile = img_pages_dir / f"Top10_index.html"
-        #Open HTML file:
-        with open(outputfile, 'w', encoding='utf-8') as ofil:
-            ofil.write(rndr)
         
         
         
