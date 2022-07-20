@@ -1427,9 +1427,9 @@ class AdfDiag(AdfObs):
 
                             # Top plots
                             #--------------------------------------------------------------------
-                            if f'plot_page_top10_{var}_{season}_{ptype}.html' in woo2.keys():
+                            if f'plot_page_top10_{var}_{season}_{ptype_order_dict[ptype]}.html' in woo2.keys():
                                 print(img_pages_dir)
-                                outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype}.html'
+                                outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype_order_dict[ptype]}.html'
 
                                 tmpl = jinenv.get_template('template_Top10.html')  #Set template
                                 rndr = tmpl.render(title=main_title,
@@ -1441,7 +1441,7 @@ class AdfDiag(AdfObs):
                                                 case1_yrs=case_yrs,
                                                 case2=data_name,
                                                 case2_yrs=data_yrs,
-                                                mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
+                                                mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype_order_dict[ptype]}.html'],
                                                 plot_types=plot_type_html) #The template rendered
 
                                 #Open HTML file:
