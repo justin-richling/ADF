@@ -1165,7 +1165,7 @@ class AdfDiag(AdfObs):
         for ptype in top_plots.keys():
             for var in top_plots[ptype]:
                 #woo.append(img_pages_dir / f"plot_page_{var}_ANN_{ptype}.html")
-                woo2[f'plot_page_top10_{var}_{seas}_{ptype}.html'] = [var,ptype,seas]
+                woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype]}.html'] = [var,ptype,seas]
         #print(woo2)
         #--------------------------------------------
     
