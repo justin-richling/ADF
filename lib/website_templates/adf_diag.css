@@ -232,8 +232,8 @@ table.dataframe td {
 
 .grid-container5 {
   display: grid;
-  column-gap: 50px;
-  row-gap: 50px;
+  /*column-gap: 50px;*/
+  /*row-gap: 50px;*/
   /*grid-template-columns: 1fr 1fr 1fr;*/
   /*grid-template-columns: 200px 200px 200px;*/
   /*grid-template-columns: 150px 200px;*/
@@ -244,7 +244,7 @@ table.dataframe td {
   /*background-image: url("https://news.ucar.edu/sites/default/files/styles/small_landscape/public/tadl-item/2019-02/NCAR-Waves.jpg?itok=l1Dzyvzt");
   background-repeat: no-repeat;
   background-size: cover;*/
-  padding: 50px;
+  /*padding: 50px;*/
 
 }
 
@@ -449,3 +449,18 @@ table.dataframe td {
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
 }
+
+
+
+.flex-container {
+  display: flex;
+}
+
+.flex-child {
+  flex: 1;
+  border: 2px solid yellow;
+}  
+
+.flex-child:first-child {
+  margin-right: 20px;
+} 
