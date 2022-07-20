@@ -464,3 +464,18 @@ table.dataframe td {
 .flex-child:first-child {
   margin-right: 80px;
 } 
+
+
+
+
+.box {
+  display: flex;
+}
+
+.box :first-child {
+  width: 650px;
+}
+
+.box > * {
+  flex: auto;
+}
