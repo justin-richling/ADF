@@ -42,19 +42,34 @@
         <h1>Top Plots</h1>
        </div>
 
-    <div>
-      <div class="grid-container2" ><!--style="padding-left: 150px; width: 750px;" padding: 85px;-->
-        {% for page,var_ptype_seas in mydata.keys(),mydata.values() %}
-        <div class="grid-item">
-          <!-- need to have plot name and attributes in a-tag
-               ie plot var, type and season? eventually level too
-          -->
-          
-          <a href=../html_img/{{page}}>{% for item in var_ptype_seas %}{{item}}{% endfor %}</a>
-        </div><!--grid-item-->
-        {% endfor %}
-      </div><!--grid-container2-->
-    </div> <!-- end main div -->
+       <div style="width: 100%;"> <!-- main div-->
+        <div class="grid-container4" style="border: 3px solid black">
+          <div class="grid-item">
+            <a href="../html_img/plot_page_{{var_title}}_ANN_{{plottype_title}}.html"> ANN </a>
+          </div><!--grid-item-->
+          <div class="grid-item">
+            <a href="../html_img/plot_page_{{var_title}}_DJF_{{plottype_title}}.html"> DJF </a>
+          </div><!--grid-item-->
+          <div class="grid-item">
+            <a href="../html_img/plot_page_{{var_title}}_MAM_{{plottype_title}}.html"> MAM </a>
+          </div><!--grid-item-->
+          <div class="grid-item">
+            <a href="../html_img/plot_page_{{var_title}}_JJA_{{plottype_title}}.html"> JJA </a>
+          </div><!--grid-item-->
+          <div class="grid-item">
+            <a href="../html_img/plot_page_{{var_title}}_SON_{{plottype_title}}.html"> SON </a>
+          </div><!--grid-item-->
+        </div><!--grid-container-->
+        
+        <div id="footer">
+        <!--<div class="fixedDiv" style="width: 50%; height: 100px; float: right; padding-right: 50px; padding-bottom: 50px;">-->
+        <div class="center"><!--bottom div -->
+          <a href="{{imgs[0]}}" target="_blank">
+            <img src="{{imgs[0]}}" alt="{{imgs[1]}}"></img>
+          </a>
+        </div> <!-- end bottom div -->
+        </div><!--footer-->
+       </div> <!-- end main div -->
 
   </body>
 </html>
