@@ -1171,8 +1171,14 @@ class AdfDiag(AdfObs):
         seas = "ANN"
         for ptype in top_plots.keys():
             for var in top_plots[ptype]:
+                if len(ptype_order_dict[ptype]) > 1:
                 #woo.append(img_pages_dir / f"plot_page_{var}_ANN_{ptype}.html")
-                woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype,seas]
+                    for i in ptype_order_dict[ptype]:
+                        woo2[f'plot_page_top10_{var}_{i}.html'] = [var,ptype_order_dict[ptype][0]]
+                else:
+                    woo2[f'plot_page_top10_{var}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
+
+                    #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
         #print(woo2)
         #--------------------------------------------
 
