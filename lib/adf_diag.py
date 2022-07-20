@@ -1468,8 +1468,9 @@ class AdfDiag(AdfObs):
                                                 case2=data_name,
                                                 pages=woo2,
                                                 case2_yrs=data_yrs,
-                                                mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
-                                                plot_types=plot_type_html) #The template rendered
+                                                #mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
+                                                #plot_types=plot_type_html
+                                                ) #The template rendered
 
                                 #Open HTML file:
                                 with open(outputfile_top, 'w', encoding='utf-8') as ofil:
@@ -1493,7 +1494,8 @@ class AdfDiag(AdfObs):
                                                 case2=data_name,
                                                 case2_yrs=data_yrs,
                                                 #mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
-                                                plot_types=plot_type_html) #The template rendered
+                                                #plot_types=plot_type_html
+                                                ) #The template rendered
 
                                 #Open HTML file:
                                 with open(outputfile_top_img, 'w', encoding='utf-8') as ofil:
