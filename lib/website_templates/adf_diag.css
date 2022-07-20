@@ -231,8 +231,8 @@ table.dataframe td {
 
 .grid-container-top10 {
   display: grid;
-  column-gap: 50px;
-  row-gap: 50px;
+  /*column-gap: 50px;*/
+  /*row-gap: 50px;*/
   max-width:100%;
   height: auto;
   /*grid-template-columns: 1fr 1fr 1fr;*/
@@ -306,7 +306,7 @@ table.dataframe td {
 
 .center22 {
   text-align: center;
-  margin: 0 auto;
+  /*margin: 0 auto;*/
 }
 
 
