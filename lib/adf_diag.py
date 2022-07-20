@@ -1166,7 +1166,7 @@ class AdfDiag(AdfObs):
             for var in top_plots[ptype]:
                 #woo.append(img_pages_dir / f"plot_page_{var}_ANN_{ptype}.html")
                 woo2[f'plot_page_top10_{var}_{seas}_{ptype}.html'] = [var,ptype,seas]
-        print(woo2)
+        #print(woo2)
         #--------------------------------------------
     
         #Grab the plot type functions form user
@@ -1364,7 +1364,7 @@ class AdfDiag(AdfObs):
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
                             # Hacky - how to get the relative path in a better way?:
                             img_data = [os.pardir+os.sep+assets_dir.name+os.sep+img.name, alt_text]
-                            print(os.pardir+os.sep+assets_dir.name+os.sep+img.name)
+                            #print(os.pardir+os.sep+assets_dir.name+os.sep+img.name)
 
                             #Create titles
                             var_title = f"Variable: {var}"
