@@ -233,6 +233,8 @@ table.dataframe td {
   display: grid;
   column-gap: 50px;
   row-gap: 50px;
+  max-width:100%;
+  height: auto;
   /*grid-template-columns: 1fr 1fr 1fr;*/
   /*grid-template-columns: 200px 200px 200px;*/
   /*grid-auto-flow: column;*/
