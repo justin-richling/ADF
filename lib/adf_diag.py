@@ -1565,7 +1565,7 @@ class AdfDiag(AdfObs):
         woo = []
         for ptype in top_plots.keys():
             for var in top_plots[ptype]:
-                woo.append(img_pages_dir / f"plot_page_{var}_{ptype}.html")
+                woo.append(img_pages_dir / f"plot_page_{var}_ANN_{ptype}.html")
 
         #outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
         #Create titles
