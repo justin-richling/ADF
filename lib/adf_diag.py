@@ -1158,11 +1158,7 @@ class AdfDiag(AdfObs):
 
             if plot_type != None:
                 top_plots[top] = plot_type
-        
-        print(top_plots)
-        
-        print(top_plots.keys())
-
+    
         #Grab the plot type functions form user
         plot_func_names = self.__plotting_scripts
 
