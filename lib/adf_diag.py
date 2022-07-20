@@ -1159,6 +1159,14 @@ class AdfDiag(AdfObs):
 
             if plot_type != None:
                 top_plots[top] = plot_type
+
+        woo2 = {}
+        seas = "ANN"
+        for ptype in top_plots.keys():
+            for var in top_plots[ptype]:
+                #woo.append(img_pages_dir / f"plot_page_{var}_ANN_{ptype}.html")
+                woo2[f'plot_page_top10_{var}_{seas}_{ptype}.html'] = [var,ptype,seas]
+        print(woo2)
         #--------------------------------------------
     
         #Grab the plot type functions form user
@@ -1310,6 +1318,11 @@ class AdfDiag(AdfObs):
                         for img in assets_dir.glob(f"{var}_{season}_{ptype}_Mean*.png"):
                             alt_text  = img.stem #Extract image file name text
                             #Create output file (don't worry about analysis type for now):
+
+                            
+                            outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype}.html'
+
+
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
                             img_file = os.pardir+os.sep+assets_dir.name+os.sep+img.name
                             img_data = [img_file, alt_text]
@@ -1410,6 +1423,39 @@ class AdfDiag(AdfObs):
                             with open(outputfile,'w', encoding='utf-8') as ofil:
                                 ofil.write(mean_rndr)
                             #End with
+
+
+                            # Top plots
+                            #--------------------------------------------------------------------
+                            if f'plot_page_top10_{var}_{season}_{ptype}.html' in woo2.keys():
+                                print(img_pages_dir)
+                                outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype}.html'
+
+                                tmpl = jinenv.get_template('template_Top10.html')  #Set template
+                                rndr = tmpl.render(title=main_title,
+                                                var_title=var,
+                                                season_title=season,
+                                                plottype_title=ptype,
+                                                imgs=img_data,
+                                                case1=case_name,
+                                                case1_yrs=case_yrs,
+                                                case2=data_name,
+                                                case2_yrs=data_yrs,
+                                                mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
+                                                plot_types=plot_type_html) #The template rendered
+
+                                #Open HTML file:
+                                with open(outputfile_top, 'w', encoding='utf-8') as ofil:
+                                    ofil.write(rndr)
+                                #End with
+                            #End if woo2.keys()
+                            #--------------------------------------------------------------------
+
+
+
+
+
+
                         #End for (assests loop)
                     #End for (seasons loop)
 
