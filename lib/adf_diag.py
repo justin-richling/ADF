@@ -1167,7 +1167,8 @@ class AdfDiag(AdfObs):
             if plot_type != None:
                 top_plots[top] = plot_type
 
-        woo = woo2 = {}
+        woo = {}
+        woo2 = {}
         seas = "ANN"
         for ptype in top_plots.keys():
             for var in top_plots[ptype]:
@@ -1181,7 +1182,7 @@ class AdfDiag(AdfObs):
                     woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0],seas]
 
                     #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
-        print(woo2)
+        print(woo,"\n","\n","\n",woo2)
         #--------------------------------------------
 
 
