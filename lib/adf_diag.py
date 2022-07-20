@@ -1172,14 +1172,15 @@ class AdfDiag(AdfObs):
         for ptype in top_plots.keys():
             for var in top_plots[ptype]:
                 if len(ptype_order_dict[ptype]) > 1:
-                #woo.append(img_pages_dir / f"plot_page_{var}_ANN_{ptype}.html")
-                    for i in ptype_order_dict[ptype]:
-                        woo2[f'plot_page_top10_{var}_{i}.html'] = [var,ptype_order_dict[ptype][0]]
+                    pass
+                    # still workin on Polar cases... 
+                    #for i in ptype_order_dict[ptype]:
+                    #    woo2[f'plot_page_top10_{var}_{i}.html'] = [var,i]
                 else:
                     woo2[f'plot_page_top10_{var}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
 
                     #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
-        #print(woo2)
+        print(woo2)
         #--------------------------------------------
 
 
@@ -1450,6 +1451,7 @@ class AdfDiag(AdfObs):
 
                             # Top plots
                             #--------------------------------------------------------------------
+                            print("This is the file boyoiii: ",f'plot_page_top10_{var}_{season}_{ptype}.html')
                             if f'plot_page_top10_{var}_{season}_{ptype}.html' in woo2.keys():
                                 print("This file made it through boyoiii: ",f'plot_page_top10_{var}_{season}_{ptype}.html')
                                 outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{ptype}.html'
