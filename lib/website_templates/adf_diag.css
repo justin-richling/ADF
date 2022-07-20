@@ -472,10 +472,10 @@ table.dataframe td {
   display: flex;
 }
 
-.box :first-child {
+/*.box :first-child {
   width: 1650px;
 }
 
 .box > * {
   flex: auto;
-}
+}*/
