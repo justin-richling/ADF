@@ -1449,29 +1449,6 @@ class AdfDiag(AdfObs):
                                     ofil.write(rndr)
                                 #End with
                             #End if woo2.keys()
-
-
-
-
-                                #outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
-                                #Create titles
-                                tmpl = jinenv.get_template('template_Top10_index.html')  #Set template
-                                rndr = tmpl.render(title=main_title,
-                                                    var_title=var,
-                                                    season_title=season,
-                                                    plottype_title=ptype,
-                                                    imgs=img_data,
-                                                    case1=case_name,
-                                                    case1_yrs=case_yrs,
-                                                    case2=data_name,
-                                                    case2_yrs=data_yrs,
-                                                    pages=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
-                                                    plot_types=plot_type_html) #The template rendered
-
-                                outputfile = img_pages_dir / f"Top10_index.html"
-                                #Open HTML file:
-                                with open(outputfile, 'w', encoding='utf-8') as ofil:
-                                    ofil.write(rndr)
                             #--------------------------------------------------------------------
 
 
@@ -1603,6 +1580,33 @@ class AdfDiag(AdfObs):
             with open(outputfile, 'w', encoding='utf-8') as ofil:
                 ofil.write(index_rndr)
             #End with
+
+
+
+
+            #outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
+            #Create titles
+            tmpl = jinenv.get_template('template_Top10_index.html')  #Set template
+            rndr = tmpl.render(title=main_title,
+                                    case1=case_name,
+                                    case1_yrs=case_yrs,
+                                    case2=data_name,
+                                    case2_yrs=data_yrs,
+                                    pages=woo2,
+                                    plot_types=plot_type_html) #The template rendered
+
+            outputfile = img_pages_dir / f"Top10_index.html"
+            #Open HTML file:
+            with open(outputfile, 'w', encoding='utf-8') as ofil:
+                ofil.write(rndr)
+
+
+
+
+
+
+
+
 
             #If this is a multi-case instance, then copy website to "main" directory:
             if main_site_path:
