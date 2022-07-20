@@ -1178,7 +1178,7 @@ class AdfDiag(AdfObs):
                     #for i in ptype_order_dict[ptype]:
                     #    woo2[f'plot_page_top10_{var}_{i}.html'] = [var,i]
                 else:
-                    woo[f'plot_page_top10_{var}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
+                    woo[f'plot_page_top10_{var}_ANN_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
                     woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0],seas]
 
                     #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
