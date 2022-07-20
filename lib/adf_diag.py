@@ -1167,7 +1167,7 @@ class AdfDiag(AdfObs):
             if plot_type != None:
                 top_plots[top] = plot_type
 
-        woo2 = {}
+        woo = woo2 = {}
         seas = "ANN"
         for ptype in top_plots.keys():
             for var in top_plots[ptype]:
@@ -1177,7 +1177,8 @@ class AdfDiag(AdfObs):
                     #for i in ptype_order_dict[ptype]:
                     #    woo2[f'plot_page_top10_{var}_{i}.html'] = [var,i]
                 else:
-                    woo2[f'plot_page_top10_{var}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
+                    woo[f'plot_page_top10_{var}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
+                    woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0],seas]
 
                     #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
         print(woo2)
@@ -1382,7 +1383,7 @@ class AdfDiag(AdfObs):
                         for img in assets_dir.glob(f"{var}_{season}_{ptype}_Mean*.png"):
                             alt_text  = img.stem #Extract image file name text
 
-                            outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype}.html'
+                            #outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype}.html'
 
                             #Create output file (don't worry about analysis type for now):
                             outputfile = img_pages_dir / f'plot_page_{var}_{season}_{ptype}.html'
@@ -1451,9 +1452,9 @@ class AdfDiag(AdfObs):
 
                             # Top plots
                             #--------------------------------------------------------------------
-                            print("This is the file boyoiii: ",f'plot_page_top10_{var}_{season}_{ptype}.html')
-                            if f'plot_page_top10_{var}_{season}_{ptype}.html' in woo2.keys():
-                                print("This file made it through boyoiii: ",f'plot_page_top10_{var}_{season}_{ptype}.html')
+                            print("This is the file boyoiii: ",f'plot_page_top10_{var}_{ptype}.html')
+                            if f'plot_page_top10_{var}_{ptype}.html' in woo2.keys():
+                                print("This file made it through boyoiii: ",f'plot_page_top10_{var}_{ptype}.html')
                                 outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{ptype}.html'
 
                                 tmpl = jinenv.get_template('template_Top10_var.html')  #Set template
@@ -1654,7 +1655,7 @@ class AdfDiag(AdfObs):
                                     case1_yrs=case_yrs,
                                     case2=data_name,
                                     case2_yrs=data_yrs,
-                                    pages=woo2,
+                                    pages=woo,
                                     plot_types=plot_type_html) #The template rendered
 
             outputfile = img_pages_dir / f"Top10_index.html"
