@@ -1452,7 +1452,7 @@ class AdfDiag(AdfObs):
 
                             # Top plots
                             #--------------------------------------------------------------------
-                            print("This is the file boyoiii: ",f'plot_page_top10_{var}_{ptype}.html')
+                            #print("This is the file boyoiii: ",f'plot_page_top10_{var}_{ptype}.html')
                             if f'plot_page_top10_{var}_{ptype}.html' in woo2.keys():
                                 print("This file made it through boyoiii: ",f'plot_page_top10_{var}_{ptype}.html')
                                 outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{ptype}.html'
