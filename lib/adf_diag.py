@@ -1149,6 +1149,13 @@ class AdfDiag(AdfObs):
 
 
 
+
+
+
+
+
+
+
         #Top plots:
         #
         #--------------------------------------------
@@ -1168,6 +1175,14 @@ class AdfDiag(AdfObs):
                 woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype,seas]
         #print(woo2)
         #--------------------------------------------
+
+
+
+
+
+
+
+
     
         #Grab the plot type functions form user
         plot_func_names = self.__plotting_scripts
@@ -1427,7 +1442,7 @@ class AdfDiag(AdfObs):
 
                             # Top plots
                             #--------------------------------------------------------------------
-                            if f'plot_page_top10_{var}_{season}_{ptype}.html' in woo2.keys():
+                            if f'plot_page_top10_{var}_{ptype}.html' in woo2.keys():
                                 #print(img_pages_dir)
                                 outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype}.html'
 
