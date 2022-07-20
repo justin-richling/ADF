@@ -1428,7 +1428,7 @@ class AdfDiag(AdfObs):
                             # Top plots
                             #--------------------------------------------------------------------
                             if f'plot_page_top10_{var}_{season}_{ptype}.html' in woo2.keys():
-                                print(img_pages_dir)
+                                #print(img_pages_dir)
                                 outputfile_top = img_pages_dir / f'plot_page_top10_{var}_{season}_{ptype}.html'
 
                                 tmpl = jinenv.get_template('template_Top10.html')  #Set template
