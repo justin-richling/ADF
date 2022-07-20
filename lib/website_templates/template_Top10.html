@@ -75,6 +75,31 @@
 
         </div> <!-- end bottom div -->
         </div><!--footer-->
+
+
+
+
+        <div class="center">
+          <h1>Top Plots</h1>
+         </div>
+  
+         <div>
+          <div class="grid-container2" ><!--style="padding-left: 150px; width: 750px;" padding: 85px;-->
+            {% for page,var_ptype_seas in pages.items() %}
+            <div class="grid-item">
+              <!-- need to have plot name and attributes in a-tag
+                   ie plot var, type and season? eventually level too
+              -->
+              
+              <a href=../html_img/{{page}}>{% for item in var_ptype_seas %}{{item}}{% endfor %}</a>
+            </div><!--grid-item-->
+            {% endfor %}
+          </div><!--grid-container2-->
+        </div> <!-- end main div -->
+
+
+
+
        </div> <!-- end main div -->
 
   </body>
