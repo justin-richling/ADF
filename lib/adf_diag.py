@@ -1492,7 +1492,7 @@ class AdfDiag(AdfObs):
                                                 case1_yrs=case_yrs,
                                                 case2=data_name,
                                                 case2_yrs=data_yrs,
-                                                mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
+                                                #mydata=woo2[f'plot_page_top10_{var}_{season}_{ptype}.html'],
                                                 plot_types=plot_type_html) #The template rendered
 
                                 #Open HTML file:
