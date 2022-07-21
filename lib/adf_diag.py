@@ -1632,6 +1632,8 @@ class AdfDiag(AdfObs):
                 gen_table_html = False
             #End if
 
+            plot_type_html_home = plot_type_html
+            del plot_type_html_home['top_10']
             #Construct index.html
             #index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
@@ -1641,7 +1643,7 @@ class AdfDiag(AdfObs):
                              case2=data_name,
                              case2_yrs=data_yrs,
                              gen_table_html=gen_table_html,
-                             plot_types=plot_type_html,
+                             plot_types=plot_type_html_home,
                              )
 
             #Write Mean diagnostics HTML file:
