@@ -1221,7 +1221,6 @@ class AdfDiag(AdfObs):
 
         #Make dictionary for plot type names and html paths
         plot_type_html = dict(zip(ptype_order_list, ptype_html_list))
-        print(type(plot_type_html),plot_type_html.keys())
 
         main_title = "CAM Diagnostics"
 
@@ -1634,7 +1633,7 @@ class AdfDiag(AdfObs):
             #End if
 
             plot_type_html_home = plot_type_html
-            del plot_type_html_home['top_10']
+            del plot_type_html_home['Top10']
             #Construct index.html
             #index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
