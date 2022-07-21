@@ -1073,7 +1073,6 @@ class AdfDiag(AdfObs):
 
         #Extract variable list:
         var_list = self.diag_var_list
-        var_list.append("RESTOM")
 
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
