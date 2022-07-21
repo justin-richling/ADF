@@ -1159,6 +1159,8 @@ class AdfDiag(AdfObs):
         #Top plots:
         #
         #--------------------------------------------
+        from collections import defaultdict
+        woo = defaultdict(list)
         top_plots = {}
 
         for top in ptype_order_dict.keys():  
@@ -1167,7 +1169,7 @@ class AdfDiag(AdfObs):
             if plot_type != None:
                 top_plots[top] = plot_type
 
-        woo = {}
+        #woo = {}
         woo2 = {}
         seas = "ANN"
         for ptype in top_plots.keys():
@@ -1178,7 +1180,8 @@ class AdfDiag(AdfObs):
                     #for i in ptype_order_dict[ptype]:
                     #    woo2[f'plot_page_top10_{var}_{i}.html'] = [var,i]
                 else:
-                    woo[f'plot_page_top10_{var}_ANN_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
+                    #woo[f'plot_page_top10_{var}_ANN_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
+                    woo[ptype].append({"var":var, "season":seas, "page":f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'})
                     woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0],seas]
 
                     #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
@@ -1649,14 +1652,14 @@ class AdfDiag(AdfObs):
 
 
 
-            #outputfile2 = img_pages_dir / f'plot_page_{var}_{ptype}.html'
-            #Create titles
+            #[i for i in woo.keys()]
             tmpl = jinenv.get_template('template_Top10_index.html')  #Set template
             rndr = tmpl.render(title=main_title,
                                     case1=case_name,
                                     case1_yrs=case_yrs,
                                     case2=data_name,
                                     case2_yrs=data_yrs,
+                                    #pages=[],
                                     pages=woo,
                                     plot_types=plot_type_html) #The template rendered
 
