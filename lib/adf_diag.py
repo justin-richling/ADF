@@ -1221,6 +1221,7 @@ class AdfDiag(AdfObs):
 
         #Make dictionary for plot type names and html paths
         plot_type_html = dict(zip(ptype_order_list, ptype_html_list))
+        print(type(plot_type_html),plot_type_html.keys())
 
         main_title = "CAM Diagnostics"
 
