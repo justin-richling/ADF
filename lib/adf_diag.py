@@ -1607,6 +1607,7 @@ class AdfDiag(AdfObs):
 
                 #Construct mean_table.html
                 mean_tmpl = jinenv.get_template('template_mean_table.html')
+                print(plot_type_html.keys())
                 mean_rndr = mean_tmpl.render(title=main_title,
                                 value=amwg_table_data,
                                 case1=case_name,
