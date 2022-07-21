@@ -1278,6 +1278,7 @@ class AdfDiag(AdfObs):
 
         # add fake "cam" variable to variable list in order to find Taylor diagram plots:
         var_list.append('cam')
+        var_list.append('RESTOM')
 
         #Set path to Jinja2 template files:
         jinja_template_dir = Path(_LOCAL_PATH, 'website_templates')
