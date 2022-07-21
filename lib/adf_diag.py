@@ -1535,7 +1535,9 @@ class AdfDiag(AdfObs):
             #End if
 
             #Determine if any AMWG tables were generated:
+            print("here we go tables, check it out!")
             if table_html_files:
+                print("is this running?????")
 
                 #Set Table HTML generation logical to "TRUE":
                 gen_table_html = True
