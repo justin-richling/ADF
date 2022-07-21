@@ -1206,6 +1206,9 @@ class AdfDiag(AdfObs):
         ptype_html = sorted([ptype_html_dict[x] for x in plot_func_names if x in ptype_html_dict])
         ptype_order = sorted([ptype_order_dict[x] for x in plot_func_names if x in ptype_order_dict])
 
+        ptype_html.append(ptype_html_dict["top_10"])
+        ptype_order.append(ptype_order_dict["top_10"])
+
         #Flatten the list of lists into a regular list
         ptype_html_list = list(itertools.chain.from_iterable(ptype_html))
         ptype_order_list = list(itertools.chain.from_iterable(ptype_order))
