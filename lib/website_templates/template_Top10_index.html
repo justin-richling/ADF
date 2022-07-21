@@ -49,13 +49,15 @@
           {% for val in pages.keys() %}
           
           {% for j in pages[val] %}
+          <a>{{val}}</a>
           <div class="grid-item">
             <!-- need to have plot name and attributes in a-tag
                  ie plot var, type and season? eventually level too
             -->
-            <a>{{val}}</a>
+            
             <a href=../html_img/{{j["page"]}}>{{j["var"]}} {{j["season"]}} </a>
           </div><!--grid-item-->
+          <br>
           {% endfor %}
           {% endfor %}
         </div><!--grid-container2-->

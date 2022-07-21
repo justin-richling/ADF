@@ -1181,11 +1181,11 @@ class AdfDiag(AdfObs):
                     #    woo2[f'plot_page_top10_{var}_{i}.html'] = [var,i]
                 else:
                     #woo[f'plot_page_top10_{var}_ANN_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0]]
-                    woo[ptype].append({"var":var, "season":seas, "page":f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'})
+                    woo[ptype_order_dict[ptype][0]].append({"var":var, "season":seas, "page":f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'})
                     woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0],seas]
 
                     #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
-        print(woo,"\n","\n","\n",woo2)
+        #print(woo,"\n","\n","\n",woo2)
         #--------------------------------------------
 
 
