@@ -1138,14 +1138,16 @@ class AdfDiag(AdfObs):
                            'polar_map': ['html_img/mean_diag_NHPolar.html',
                                          'html_img/mean_diag_SHPolar.html'],
                             'cam_taylor_diagram': ["html_img/mean_diag_TaylorDiag.html"],
-                            'time_series':['html_img/mean_diag_TimeSeries.html']}
+                            'time_series':['html_img/mean_diag_TimeSeries.html'],
+                            'top_10':['html_img/Top10_index.html']}
 
         ptype_order_dict = {'global_latlon_map': ["LatLon"],
                             'zonal_mean': ["Zonal"],
                             'global_latlon_vect_map': ["LatLon_Vector"],
                             'polar_map': ["NHPolar","SHPolar"],
                             'cam_taylor_diagram': ["TaylorDiag"],
-                            'time_series':['TimeSeries']}
+                            'time_series':['TimeSeries'],
+                            'top_10':['Top10']}
 
 
 
