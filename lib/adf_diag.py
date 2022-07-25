@@ -1148,15 +1148,6 @@ class AdfDiag(AdfObs):
                             'time_series':['TimeSeries'],
                             'top_10':['Top10']}
 
-
-
-
-
-
-
-
-
-
         #Top plots:
         #
         #--------------------------------------------
@@ -1170,7 +1161,7 @@ class AdfDiag(AdfObs):
             if plot_type != None:
                 top_plots[top] = plot_type
 
-        #woo = {}
+ 
         woo2 = {}
         seas = "ANN"
         for ptype in top_plots.keys():
@@ -1178,26 +1169,13 @@ class AdfDiag(AdfObs):
                 if len(ptype_order_dict[ptype]) > 1:
                     pass
                     # still workin on Polar cases... 
-                    #for i in ptype_order_dict[ptype]:
-                    #    woo2[f'plot_page_top10_{var}_{i}.html'] = [var,i]
                 else:
-                    woo[ptype_order_dict[ptype][0]].append({"var":var, "season":seas, "page":f'plot_page_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'})
-                    woo2[f'plot_page_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0],seas]
+                    plot_page = f'plot_page_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
+                    woo[ptype_order_dict[ptype][0]].append({"var":var, "season":seas, "page":plot_page})
+                    woo2[plot_page] = [var,ptype_order_dict[ptype][0],seas]
 
-                    #woo[ptype_order_dict[ptype][0]].append({"var":var, "season":seas, "page":f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'})
-                    #woo2[f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'] = [var,ptype_order_dict[ptype][0],seas]
-
-                    #f'plot_page_top10_{var}_{seas}_{ptype_order_dict[ptype][0]}.html'
         #print(woo,"\n","\n","\n",woo2)
         #--------------------------------------------
-
-
-
-
-
-
-
-
     
         #Grab the plot type functions form user
         plot_func_names = self.__plotting_scripts
