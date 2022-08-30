@@ -169,6 +169,9 @@ class AdfDiag(AdfWeb):
             self.expand_references(self.__cvdp_info)
         #End if
 
+        #Add top plots info to object:
+        self.__top_plots_info = self.read_config_var('top_plots')
+
         #Add averaging script names:
         self.__time_averaging_scripts = self.read_config_var('time_averaging_scripts')
 
@@ -196,6 +199,18 @@ class AdfDiag(AdfWeb):
         return self.read_config_var(var_str,
                                     conf_dict=self.__cvdp_info,
                                     required=required)
+
+    def get_top_plots_info(self, var_str, required=False):
+        """
+        Return the config variable from 'top_plots' as requested by
+        the user.
+        """
+
+        return self.read_config_var(var_str,
+                                    conf_dict=self.__top_plots_info,
+                                    required=required)
+
+    #########
 
     #########
     #Script-running functions
