@@ -362,7 +362,7 @@ class AdfWeb(AdfObs):
                             pass
                             # still working on Polar cases... 
                         else:
-                            plot_page = f'plot_page_top_plots_{var}_{season}_{ptype_order_dict[ptype][0]}.html'
+                            plot_page = f'plot_page_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
                             plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
      
         #print("\n",woo2["LatLon"],"\n","\n")
