@@ -1411,7 +1411,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         line = Line2D([0], [0], label=r"\textbf{Test}:"+f" {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
     
-        line2 = Line2D([0], [0], label=f"Baseline: {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+        line2 = Line2D([0], [0], label=r"\textbf{Baseline}:"+f" {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         azm = zonal_mean_xr(adata)
