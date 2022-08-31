@@ -1408,7 +1408,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         rc('text', usetex=True)
         #line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
         #                color="#1f77b4")
-        line = Line2D([0], [0], label=r"\textbf{Test}:"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label=r"\textbf{Test}:"+f" {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
     
         line2 = Line2D([0], [0], label=f"Baseline: {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
@@ -1432,7 +1432,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         leg.get_frame().set_linewidth(0.0)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
-        ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
+        #ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
+        ax[1].text(0.45, 0.95, "Test", ha="center", va="bottom", size="medium",color="#1f77b4")
+        ax[1].text(0.5, 0.95, " - ", ha="center", va="bottom", size="medium")
+        ax[1].text(0.55,0.95,"Baseline", ha="center", va="bottom", size="medium",color="#ff7f0e")
 
         for a in ax:
             try:
