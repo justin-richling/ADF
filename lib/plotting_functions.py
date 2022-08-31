@@ -46,9 +46,7 @@ def use_this_norm():
 
 def get_difference_colors(values):
     """Provide a color norm and colormap assuming this is a difference field.
-
        Values can be either the data field or a set of specified contour levels.
-
        Uses 'OrRd' colormap for positive definite, 'BuPu_r' for negative definite,
        and 'RdBu_r' centered on zero if there are values of both signs.
     """
@@ -78,7 +76,6 @@ def get_central_longitude(*args):
          --> Else: if any of the arguments are scalars in [-180, 360], assumes the FIRST ONE is the central longitude.
        There are no other possible conditions, so if none of those are met,
        RETURN the default value of 180.
-
        This allows a script to, for example, allow a config file to specify, but also have a preference:
        get_central_longitude(AdfObj, 30.0)
     """
@@ -146,12 +143,9 @@ def global_average(fld, wgt, verbose=False):
 
 def wgt_rmse(fld1, fld2, wgt):
     """Calculated the area-weighted RMSE.
-
     Inputs are 2-d spatial fields, fld1 and fld2 with the same shape.
     They can be xarray DataArray or numpy arrays.
-
     Input wgt is the weight vector, expected to be 1-d, matching length of one dimension of the data.
-
     Returns a single float value.
     """
     assert len(fld1.shape) == 2,     "Input fields must have exactly two dimensions."
@@ -332,13 +326,13 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     st.set_y(0.95)
 
     ax1.text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=ax1.transAxes)
-    ax1.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", fontsize=8)
+    ax1.set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", fontsize=6)
     #ax1.set_title(f"{d1.name} [{d1.units}]")
     ax2.text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=ax2.transAxes)
-    ax2.set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", fontsize=8)
+    ax2.set_title("$\mathbf{Baseline}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", fontsize=6)
     #ax2.set_title(f"{d2.name} [{d2.units}]")
     ax3.text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=ax3.transAxes)
-    ax3.set_title("Test - Baseline", loc='left', fontsize=8)
+    ax3.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=6)
 
     #if hasattr(mdlfld, "units"):
     #    ax.set_ylabel("[{units}]".format(units=getattr(mdlfld,"units")))
@@ -504,8 +498,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     st.set_y(0.85)
 
     #Set case nickname and climo years:
-    ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    ax[0].set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+    ax[1].set_title("$\mathbf{Baseline}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
 
     #Set stats: area_avg
     # mdlfld, obsfld, diffld
@@ -518,7 +512,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
     # set rmse title:
     ax[-1].set_title(f"RMSE: ", fontsize=8)
-    ax[-1].set_title("Test - Baseline", loc='left', fontsize=8)
+    ax[-1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
     #if hasattr(mdlfld, "units"):
     #    ax.set_ylabel("[{units}]".format(units=getattr(mdlfld,"units")))
@@ -761,8 +755,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     st.set_y(0.85)
     
     #Set case nickname and climo years:
-    ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    ax[0].set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+    ax[1].set_title("$\mathbf{Baseline}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
     
     #Set stats: area_avg
     # mdlfld, obsfld, diffld
@@ -775,8 +769,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     # set rmse title:
     ax[-1].set_title("RMSE: {0:.3f}".format(d_rmse), fontsize=8)
-    ax[-1].set_title("Test - Baseline", loc='left', fontsize=8)
-
+    ax[-1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
+    
     #if hasattr(mdlfld, "units"):
     #    ax.set_ylabel("[{units}]".format(units=getattr(mdlfld,"units")))
     if "units" in kwargs:
@@ -831,9 +825,7 @@ def pres_from_hybrid(psfc, hya, hyb, p0=100000.):
     """
     Converts a hybrid level to a pressure
     level using the forumla:
-
     p = a(k)*p0 + b(k)*ps
-
     """
     return hya*p0 + hyb*psfc
 
@@ -844,7 +836,6 @@ def vert_remap(x_mdl, p_mdl, plev):
     Apply simple 1-d interpolation to a field, x
     given the pressure p and the new pressures plev.
     x_mdl, p_mdl are numpy arrays of shape (nlevel, spacetime).
-
     Andrew G.: changed to do interpolation in log pressure
     """
 
@@ -868,19 +859,14 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
                 convert_to_mb=False):
     """
     Interpolate model hybrid levels to specified pressure levels.
-
     new_levels-> 1-D numpy array (ndarray) containing list of pressure levels
                  in Pascals (Pa).
-
     If "new_levels" is not specified, then the levels will be set
     to the GeoCAT defaults, which are (in hPa):
-
     1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
     30, 20, 10, 7, 5, 3, 2, 1
-
     If "convert_to_mb" is True, then vertical (lev) dimension will have
     values of mb/hPa, otherwise the units are Pa.
-
     The function "interp_hybrid_to_pressure" used here is dask-enabled,
     and so can potentially be sped-up via the use of a DASK cluster.
     """
@@ -924,7 +910,6 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
 def pmid_to_plev(data, pmid, new_levels=None, convert_to_mb=False):
     """
     Interpolate data from hybrid-sigma levels to isobaric levels.
-
     data : DataArray with a 'lev' coordinate
     pmid : like data array but the pressure  of each point (Pa)
     new_levels : the output pressure levels (Pa)
@@ -975,14 +960,11 @@ def zonal_mean_xr(fld):
 
 def validate_dims(fld, list_of_dims):
     """Generalized function to check if specified dimensions are in a DataArray.
-
     input
         fld -> DataArray with named dimensions (fld.dims)
         list_of_dims -> a list of strings that specifiy the dimensions to check for
-
     return
         dict with keys that are "has_{x}" where x is the name from `list_of_dims` and values that are boolean
-
     """
     if not isinstance(list_of_dims, list):
         list_of_dims = list(list_of_dims)
@@ -1127,7 +1109,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     - set option for linear or log pressure when applicable
     - similar settings for difference, defaults to symmetric about zero
     - separates Matplotlib kwargs into their own dicts
-
     return
         a dict with the following:
             'subplots_opt': mpl kwargs for subplots
@@ -1392,7 +1373,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #Set case nickname and climo years:
         ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
         ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
-        ax[2].set_title("Test - Baseline", loc='left', fontsize=8)
+        ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
         # style the plot:
         #Set Main title for subplots:
@@ -1402,9 +1383,16 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
     else:
         from matplotlib.lines import Line2D
-        line = Line2D([0], [0], label=f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        #from matplotlib import rc
+
+        # activate latex text rendering
+        #rc('text', usetex=True)
+        #line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        #                color="#1f77b4")
+        line = Line2D([0], [0], label="$\mathbf{Test}:$"+f" {case_nickname}  years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
-        line2 = Line2D([0], [0], label=f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+    
+        line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f" {base_nickname}  years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         azm = zonal_mean_xr(adata)
@@ -1420,11 +1408,17 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(adata['lat'], azm, ax=ax[0],color="#1f77b4")
         zonal_plot(bdata['lat'], bzm, ax=ax[0],color="#ff7f0e")       
 
-        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+        leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
                    borderaxespad=0.0,fontsize=6)
+        leg.get_frame().set_linewidth(0.0)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
-        ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
+        ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
+        #ax[1].set_title(f"{case_nickname} - {base_nickname}", loc='left', fontsize=10)
+        
+        #ax[1].text(-80, 0.25, "Test", fontsize=10,color="#1f77b4")
+        #ax[1].text(-70, 0.25, " - ", fontsize=10)
+        #ax[1].text(-60,0.25,"Baseline", fontsize=10, color="#ff7f0e")
 
         for a in ax:
             try:
@@ -1451,21 +1445,16 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
                The vertical coordinate (lev) must be pressure levels.
         bdata: baseline or observations to plot adata against.
                It must have the same dimensions and vertical levels as adata.
-
         - For 2-d variables (reduced to (lon,)):
           + 2 panels: (top) meridional mean, (bottom) difference
         - For 3-D variables (reduced to (lev,lon)):
           + 3 panels: (top) meridonal mean adata, (middle) meridional mean bdata, (bottom) difference
           + pcolormesh/contour plot
-
         has_lev: boolean whether 'lev' is a dimension
-
         latbounds: the latitude bounds to average, defaults to 5S to 5N;
                    - if it is a number, assume symmetric about equator
                    - otherwise, can be a slice object. E.g., slice(-10, 20)
                    - if not a number and not a slice, print warning and skip plotting.
-
-
         kwargs -> optional dictionary of plotting options
                 ** Expecting this to be variable-specific section,
                    possibly provided by ADF Variable Defaults YAML file.**
@@ -1553,9 +1542,9 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         #End if
 
         #Set case nickname and climo years:
-        ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
-        ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
-        ax[2].set_title("Test - Baseline", loc='left', fontsize=8)
+        ax[0].set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
+        ax[1].set_title("$\mathbf{Test}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+        ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
         # style the plot:
         #Set Main title for subplots:
@@ -1568,9 +1557,10 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
 
     else:
         from matplotlib.lines import Line2D
-        line = Line2D([0], [0], label=f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label="$\mathbf{Test}:$"+f" {case_nickname}  years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
-        line2 = Line2D([0], [0], label=f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+    
+        line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f" {base_nickname}  years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         #fig, ax = plt.subplots(figsize=(10,8),nrows=2, constrained_layout=True)
@@ -1582,14 +1572,15 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         pltfunc(bdata[xdim], bdata, ax=ax[0],color="#ff7f0e")
         pltfunc(adata[xdim], diff, ax=ax[1], color="k")
 
-        ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
+        ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
 
         #Set Main title for subplots:
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(1.02)
 
-        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+        leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
                    borderaxespad=0.0,fontsize=6)
+        leg.get_frame().set_linewidth(0.0)
 
         for a in ax:
             try:
@@ -1613,37 +1604,29 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
 def square_contour_difference(fld1, fld2, **kwargs):
     """Produce a figure with square axes that show fld1, fld2,
        and their difference as filled contours.
-
        Intended use is latitude-by-month to show the annual cycle.
        Example use case: use climo files to get data, take zonal averages,
        rename "time" to "month" if desired,
        and then provide resulting DataArrays to this function.
-
        Input:
            fld1 and fld2 are 2-dimensional DataArrays with same shape
            kwargs are optional keyword arguments
                this function checks kwargs for `case1name`, `case2name`
-
        Returns:
            figure object
-
        Assumptions:
            fld1.shape == fld2.shape
            len(fld1.shape) == 2
-
        Annnotation:
            Will try to label the cases by looking for
            case1name and case2name in kwargs,
            and then fld1['case'] & fld2['case'] (i.e., attributes)
            If no case name, will proceed with empty strings.
            ** IF THERE IS A BETTER CONVENTION WE SHOULD USE IT.
-
            Each panel also puts the Min/Max values into the title string.
-
            Axis labels are upper-cased names of the coordinates of fld1.
            Ticks are automatic with the exception that if the
            first coordinate is "month" and is length 12, use np.arange(1,13).
-
     """
     assert len(fld1.shape) == 2,     "Input fields must have exactly two dimensions."  # 2-Dimension => plot contourf
     assert fld1.shape == fld2.shape, "Input fields must have the same array shape."    # Same shape => allows difference
