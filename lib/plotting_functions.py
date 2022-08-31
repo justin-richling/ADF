@@ -1433,9 +1433,9 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
         #ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
-        ax[1].text(0.45, 0.95, "Test", ha="center", va="bottom", size="medium",color="#1f77b4")
-        ax[1].text(0.5, 0.95, " - ", ha="center", va="bottom", size="medium")
-        ax[1].text(0.55,0.95,"Baseline", ha="center", va="bottom", size="medium",color="#ff7f0e")
+        ax[1].text(0.45, 0.95, "Test", ha="center", va="bottom", fontsize=10,color="#1f77b4")
+        #ax[1].text(0.5, 0.95, " - ", ha="center", va="bottom", size="medium")
+        #ax[1].text(0.55,0.95,"Baseline", ha="center", va="bottom", size="medium",color="#ff7f0e")
 
         for a in ax:
             try:
