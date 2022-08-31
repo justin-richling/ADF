@@ -1408,7 +1408,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         rc('text', usetex=True)
         #line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
         #                color="#1f77b4")
-        line = Line2D([0], [0], label=r"\textbf{Test}: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label=r"\textcolor{#1f77b4}{Test}:"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
     
         line2 = Line2D([0], [0], label=f"Baseline: {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
