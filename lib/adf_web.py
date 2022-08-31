@@ -370,6 +370,8 @@ class AdfWeb(AdfObs):
 
             if (syear_baseline and eyear_baseline) == "None":
                 print("*** No baseline climo years given, so assinging None")
+                syear_baseline = ""
+                eyear_baseline = ""
             #End if
         #End if
 
