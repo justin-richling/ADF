@@ -332,13 +332,13 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     st.set_y(0.95)
 
     ax1.text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=ax1.transAxes)
-    ax1.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", fontsize=8)
+    ax1.set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", fontsize=6)
     #ax1.set_title(f"{d1.name} [{d1.units}]")
     ax2.text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=ax2.transAxes)
-    ax2.set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", fontsize=8)
+    ax2.set_title("$\mathbf{Test}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", fontsize=6)
     #ax2.set_title(f"{d2.name} [{d2.units}]")
     ax3.text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=ax3.transAxes)
-    ax3.set_title("Test - Baseline", loc='left', fontsize=8)
+    ax3.set_title("Test - Baseline", loc='left', fontsize=6)
 
     #if hasattr(mdlfld, "units"):
     #    ax.set_ylabel("[{units}]".format(units=getattr(mdlfld,"units")))
@@ -504,8 +504,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     st.set_y(0.85)
 
     #Set case nickname and climo years:
-    ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    ax[0].set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+    ax[1].set_title("$\mathbf{Test}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
 
     #Set stats: area_avg
     # mdlfld, obsfld, diffld
@@ -776,7 +776,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     # set rmse title:
     ax[-1].set_title("RMSE: {0:.3f}".format(d_rmse), fontsize=8)
     ax[-1].set_title("Test - Baseline", loc='left', fontsize=8)
-    ax[0].get_yaxis().set_visible(False)
+    
     #if hasattr(mdlfld, "units"):
     #    ax.set_ylabel("[{units}]".format(units=getattr(mdlfld,"units")))
     if "units" in kwargs:
