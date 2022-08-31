@@ -1575,7 +1575,7 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
 
         #fig, ax = plt.subplots(figsize=(10,8),nrows=2, constrained_layout=True)
 
-        fig, ax = plt.subplots(nrows=2)
+        fig, ax = plt.subplots(figsize=(8,10),nrows=2)
         ax = [ax[0],ax[1]]
 
         pltfunc(adata[xdim], adata, ax=ax[0],color="#1f77b4")
