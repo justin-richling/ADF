@@ -1402,9 +1402,9 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
     else:
         from matplotlib.lines import Line2D
-        line = Line2D([0], [0], label=f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
-        line2 = Line2D([0], [0], label=f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+        line2 = Line2D([0], [0], label=f"Baseline: {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         azm = zonal_mean_xr(adata)
@@ -1568,9 +1568,9 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
 
     else:
         from matplotlib.lines import Line2D
-        line = Line2D([0], [0], label=f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
-        line2 = Line2D([0], [0], label=f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+        line2 = Line2D([0], [0], label=f"Baseline: {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         #fig, ax = plt.subplots(figsize=(10,8),nrows=2, constrained_layout=True)
