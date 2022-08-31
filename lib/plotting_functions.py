@@ -1423,8 +1423,9 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(adata['lat'], azm, ax=ax[0],color="#1f77b4")
         zonal_plot(bdata['lat'], bzm, ax=ax[0],color="#ff7f0e")       
 
-        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.86, 1.05, .102),loc="right",
-                   borderaxespad=0.0,fontsize=6,frameon=False)
+        leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.86, 1.05, .102),loc="right",
+                   borderaxespad=0.0,fontsize=6)
+        leg.get_frame().set_linewidth(0.0)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
         ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
