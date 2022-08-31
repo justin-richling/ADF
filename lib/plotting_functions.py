@@ -1566,8 +1566,8 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         #End if
 
         #Set case nickname and climo years:
-        ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
-        ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+        ax[0].set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
+        ax[1].set_title("$\mathbf{Test}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
         ax[2].set_title("Test - Baseline", loc='left', fontsize=8)
 
         # style the plot:
