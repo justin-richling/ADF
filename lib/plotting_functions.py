@@ -761,8 +761,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     st.set_y(0.85)
     
     #Set case nickname and climo years:
-    ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    ax[0].set_title("$\mathbf{Test}:$"+f"\n{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+    ax[1].set_title("$\mathbf{Baseline}:$"+f"\n{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
     
     #Set stats: area_avg
     # mdlfld, obsfld, diffld
@@ -776,7 +776,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     # set rmse title:
     ax[-1].set_title("RMSE: {0:.3f}".format(d_rmse), fontsize=8)
     ax[-1].set_title("Test - Baseline", loc='left', fontsize=8)
-
+    ax[0].get_yaxis().set_visible(False)
     #if hasattr(mdlfld, "units"):
     #    ax.set_ylabel("[{units}]".format(units=getattr(mdlfld,"units")))
     if "units" in kwargs:
@@ -1432,8 +1432,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         leg.get_frame().set_linewidth(0.0)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
-        #ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
-        ax[1].set_title(f"{case_nickname} - {base_nickname}", loc='left', fontsize=10)
+        ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
+        #ax[1].set_title(f"{case_nickname} - {base_nickname}", loc='left', fontsize=10)
         
         #ax[1].text(-80, 0.25, "Test", fontsize=10,color="#1f77b4")
         #ax[1].text(-70, 0.25, " - ", fontsize=10)
@@ -1581,9 +1581,10 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
 
     else:
         from matplotlib.lines import Line2D
-        line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label="$\mathbf{Test}:$"+f" {case_nickname}  years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
-        line2 = Line2D([0], [0], label=f"Baseline: {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+    
+        line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f" {base_nickname}  years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         #fig, ax = plt.subplots(figsize=(10,8),nrows=2, constrained_layout=True)
@@ -1601,8 +1602,9 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(1.02)
 
-        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.86, 1.05, .102),loc="right",
-                   borderaxespad=0.0,fontsize=6,frameon=False)
+        leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+                   borderaxespad=0.0,fontsize=6)
+        leg.get_frame().set_linewidth(0.0)
 
         for a in ax:
             try:
