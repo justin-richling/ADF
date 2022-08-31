@@ -1408,10 +1408,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #rc('text', usetex=True)
         #line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
         #                color="#1f77b4")
-        line = Line2D([0], [0], label="$\textbf{Test}:$"+f" {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label="$\mathbf{Test}:$"+f" {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
     
-        line2 = Line2D([0], [0], label="$\textbf{Baseline}:$"+f" {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+        line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f" {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         azm = zonal_mean_xr(adata)
@@ -1427,7 +1427,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(adata['lat'], azm, ax=ax[0],color="#1f77b4")
         zonal_plot(bdata['lat'], bzm, ax=ax[0],color="#ff7f0e")       
 
-        leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.86, 1.05, .102),loc="right",
+        leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
                    borderaxespad=0.0,fontsize=6)
         leg.get_frame().set_linewidth(0.0)
 
