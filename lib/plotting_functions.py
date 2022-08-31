@@ -1402,16 +1402,16 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
     else:
         from matplotlib.lines import Line2D
-        from matplotlib import rc
+        #from matplotlib import rc
 
         # activate latex text rendering
-        rc('text', usetex=True)
+        #rc('text', usetex=True)
         #line = Line2D([0], [0], label=f"Test: {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
         #                color="#1f77b4")
-        line = Line2D([0], [0], label=r"\textbf{Test}:"+f" {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label="$\textbf{Test}:$"+f" {case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4")
     
-        line2 = Line2D([0], [0], label=r"\textbf{Baseline}:"+f" {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+        line2 = Line2D([0], [0], label="$\textbf{Baseline}:$"+f" {base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e")
 
         azm = zonal_mean_xr(adata)
@@ -1432,10 +1432,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         leg.get_frame().set_linewidth(0.0)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
-        #ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
-        ax[1].text(-80, 0.25, "Test", fontsize=10,color="#1f77b4")
-        ax[1].text(-70, 0.25, " - ", fontsize=10)
-        ax[1].text(-60,0.25,"Baseline", fontsize=10, color="#ff7f0e")
+        ax[1].set_title("Test - Baseline", loc='left', fontsize=10)
+        #ax[1].text(-80, 0.25, "Test", fontsize=10,color="#1f77b4")
+        #ax[1].text(-70, 0.25, " - ", fontsize=10)
+        #ax[1].text(-60,0.25,"Baseline", fontsize=10, color="#ff7f0e")
 
         for a in ax:
             try:
