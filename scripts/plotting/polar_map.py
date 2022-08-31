@@ -63,6 +63,9 @@ def polar_map(adfobj):
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
 
+        syear_baseline = ""
+        eyear_baseline = ""
+
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
         if not var_obs_dict:
