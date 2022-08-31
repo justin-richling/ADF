@@ -361,6 +361,8 @@ class AdfWeb(AdfObs):
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
             data_name = "obs"
+            syear_baseline = ""
+            eyear_baseline = ""
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
 
@@ -370,8 +372,6 @@ class AdfWeb(AdfObs):
 
             if (syear_baseline and eyear_baseline) == "None":
                 print("*** No baseline climo years given, so assinging None")
-                syear_baseline = ""
-                eyear_baseline = ""
             #End if
         #End if
 
