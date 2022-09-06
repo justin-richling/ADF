@@ -517,7 +517,7 @@ def global_latlon_map(adfobj):
     drestom = restom_dict["dfsnt"] - restom_dict["dflnt"]
 
     plot_name = plot_loc / f"RESTOM_ANN_LatLon_Mean.{plot_type}"
-    pf.plot_restom_map_and_save(plot_name, case_nickname, base_nickname,
+    pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                      [syear_case,eyear_case],
                                                      [syear_baseline,eyear_baseline],
                                                      mrestom, orestom, drestom,
