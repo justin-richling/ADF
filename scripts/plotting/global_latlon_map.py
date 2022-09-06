@@ -325,6 +325,7 @@ def global_latlon_map(adfobj):
                                     dseasons[s] = mseasons[s] - oseasons[s]
 
                                     if var == "FSNT":
+                                        print(f"is FSNT coming thru????")
                                         restom_dict["mfsnt"] = mseasons[s]
                                         restom_dict["ofsnt"] = oseasons[s]
                                         restom_dict["dfsnt"] = dseasons[s]
