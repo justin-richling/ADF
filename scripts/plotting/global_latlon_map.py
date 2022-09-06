@@ -440,6 +440,16 @@ def global_latlon_map(adfobj):
                                         oseasons[s] = (odata * weights_ann).sum(dim='time').sel(lev=pres)
                                         # difference: each entry should be (lat, lon)
                                         dseasons[s] = mseasons[s] - oseasons[s]
+
+                                        if var == "FSNT":
+                                            restom_dict["mfsnt"] = mseasons[s]
+                                            restom_dict["ofsnt"] = oseasons[s]
+                                            restom_dict["dfsnt"] = dseasons[s]
+                                        
+                                        if var == "FLNT":
+                                            restom_dict["mflnt"] = mseasons[s]
+                                            restom_dict["oflnt"] = oseasons[s]
+                                            restom_dict["dflnt"] = dseasons[s]
                                     else:
                                         #this is inefficient because we do same calc over and over
                                         mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s,lev=pres)
@@ -500,6 +510,8 @@ def global_latlon_map(adfobj):
             #End for (case loop)
         #End for (obs/baseline loop)
     #End for (variable loop)
+    print("\t - lat/lon maps for RESTOM")
+    print(restom_dict.keys())
     mrestom = restom_dict["mfsnt"] - restom_dict["mflnt"]
     orestom = restom_dict["ofsnt"] - restom_dict["oflnt"]
     drestom = restom_dict["dfsnt"] - restom_dict["dflnt"]
