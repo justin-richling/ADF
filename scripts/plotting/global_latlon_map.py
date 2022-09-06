@@ -159,6 +159,7 @@ def global_latlon_map(adfobj):
                "SON": [9, 10, 11]
                }
 
+    restom_dict = {}
     # probably want to do this one variable at a time:
     for var in var_list:
 
@@ -203,7 +204,7 @@ def global_latlon_map(adfobj):
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
-        restom_dict = {}
+        
         #loop over different data sets to plot model against:
         for data_src in data_list:
 
