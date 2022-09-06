@@ -718,9 +718,9 @@ FLNTC:
 
 RESTOM:
   colormap: "jet"
-  contour_levels_range: [-5,5,0.5]
+  contour_levels_range: [120, 320, 10]
   diff_colormap: "BrBG"
-  diff_contour_range: [-20, 20, 2]
+  diff_contour_range: [-5, 5, 0.5]
   scale_factor: 1
   add_offset: 0
   new_unit: "Wm$^{-2}$"
