@@ -512,7 +512,21 @@ def global_latlon_map(adfobj):
         #End for (obs/baseline loop)
     #End for (variable loop)
     print("\t - lat/lon maps for RESTOM")
-    print(restom_dict.keys())
+    
+    # Check res for RESTOM specific options:
+    vres = res["RESTOM"]
+    #If found then notify user, assuming debug log is enabled:
+    adfobj.debug_log(f"global_latlon_map: Found variable defaults for {var}")
+
+    #Extract category (if available):
+    web_category = vres.get("category", None)
+
+   
+
+    # For global maps, also set the central longitude:
+    # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
+    # otherwise defaults to 180
+    vres['central_longitude'] = pf.get_central_longitude(adfobj)
     mrestom = restom_dict["mfsnt"] - restom_dict["mflnt"]
     orestom = restom_dict["ofsnt"] - restom_dict["oflnt"]
     drestom = restom_dict["dfsnt"] - restom_dict["dflnt"]
