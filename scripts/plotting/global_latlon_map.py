@@ -203,7 +203,7 @@ def global_latlon_map(adfobj):
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
-
+        restom_dict = {}
         #loop over different data sets to plot model against:
         for data_src in data_list:
 
@@ -323,6 +323,17 @@ def global_latlon_map(adfobj):
                                     oseasons[s] = (odata * weights_ann).sum(dim='time')
                                     # difference: each entry should be (lat, lon)
                                     dseasons[s] = mseasons[s] - oseasons[s]
+
+                                    if var == "FSNT":
+                                        restom_dict["mfsnt"] = mseasons[s]
+                                        restom_dict["ofsnt"] = oseasons[s]
+                                        restom_dict["dfsnt"] = dseasons[s]
+                                    
+                                    if var == "FLNT":
+                                        restom_dict["mflnt"] = mseasons[s]
+                                        restom_dict["oflnt"] = oseasons[s]
+                                        restom_dict["dflnt"] = dseasons[s]
+                                        
                                 else:
                                     #this is inefficient because we do same calc over and over
                                     mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
@@ -484,11 +495,25 @@ def global_latlon_map(adfobj):
                         print(f"\t - variable '{var}' has no vertical dimension but is not just time/lat/lon, so skipping.")
                     #End if (has_lev)
                 else:
-                    print(f"\t - skipping polar map for {var} as it has more than lat/lon dims, but no pressure levels were provided")
+                    print(f"\t - skipping lat/lon map for {var} as it has more than lat/lon dims, but no pressure levels were provided")
                 #End if (dimensions check and plotting pressure levels)
             #End for (case loop)
         #End for (obs/baseline loop)
     #End for (variable loop)
+    mrestom = restom_dict["mfsnt"] - restom_dict["mflnt"]
+    orestom = restom_dict["ofsnt"] - restom_dict["oflnt"]
+    drestom = restom_dict["dfsnt"] - restom_dict["dflnt"]
+
+    plot_name = plot_loc / f"RESTOM_ANN_LatLon_Mean.{plot_type}"
+    pf.plot_restom_map_and_save(plot_name, case_nickname, base_nickname,
+                                                     [syear_case,eyear_case],
+                                                     [syear_baseline,eyear_baseline],
+                                                     mrestom, orestom, drestom,
+                                                     **vres)
+
+    #Add plot to website (if enabled):
+    adfobj.add_website_data(plot_name, "RESTOM", case_name, category=web_category,
+                            season="ANN", plot_type="LatLon")
 
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
