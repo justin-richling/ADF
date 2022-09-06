@@ -717,7 +717,7 @@ FLNTC:
   category: "TOA energy flux"
 
 RESTOM:
-  colormap: "RdBu"
+  colormap: "twilight_shifted_r"
   #contour_levels_range: [120, 320, 10]
   diff_colormap: "BrBG"
   #diff_contour_range: [-5, 5, 0.5]
