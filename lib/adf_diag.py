@@ -471,6 +471,15 @@ class AdfDiag(AdfWeb):
             # NOTE: We need to have the half-empty cases covered, too. (*, end) & (start, *)
             if start_year == end_year == "*":
                 files_list = sorted(starting_location.glob(hist_str+'.*.nc'))
+                
+                #This will make a sub directory named based off climo years gathered
+                #from the hist files. 
+                # ** Should this be included in the ADF main?? **
+                case_climo_yrs = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
+                start_year = int(min(case_climo_yrs))
+                end_year = int(max(case_climo_yrs))
+                ts_dir[case_idx] = ts_dir[case_idx]+f"{start_year}-{end_year}/"
+
             else:
                 #Create empty list:
                 files_list = []
@@ -554,6 +563,7 @@ class AdfDiag(AdfWeb):
 
             #Check if time series directory exists, and if not, then create it:
             #Use pathlib to create parent directories, if necessary.
+            #print(ts_dir)
             Path(ts_dir[case_idx]).mkdir(parents=True, exist_ok=True)
 
             #INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
