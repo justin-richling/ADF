@@ -1804,7 +1804,7 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
     else:
         images_per_row = 3
     padding = 2
-    for var in ["TS"]:
+    for var in ["TS","SST"]:
         for season in ["ANN"]:
         
             print(var,season,"\n")
