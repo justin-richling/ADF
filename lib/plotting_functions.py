@@ -1802,7 +1802,7 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
             for case_idx, case_name in enumerate(case_names):
                 #Set output plot location:
                 plot_loc = Path(plot_locations[case_idx])
-                #print(plot_loc)
+                print(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png")[0])
                 images.append(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png")[0])
             #print("\n",images,"\n")    
             images2 = list(itertools.chain(*images))
