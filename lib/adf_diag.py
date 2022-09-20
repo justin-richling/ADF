@@ -167,7 +167,7 @@ class AdfDiag(AdfWeb):
             self.expand_references(self.__cvdp_info)
         #End if
 
-        #Add top plots info to object:
+        #Add multi plots info to object:
         self.__multi_case_plots = self.read_config_var('multi_case_plots')
 
         #Add averaging script names:
