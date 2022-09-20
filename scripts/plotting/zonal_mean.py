@@ -120,6 +120,7 @@ def zonal_mean(adfobj):
 
     #Multi-case plots
     multi = adfobj.read_config_var('multi_case_plot')
+    print("Is our multi-case nested list going thru?!?!?!?!:",multi)
     #Check if multi-case plot is desired
     if multi != None:
         multi_plot = True
