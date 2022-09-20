@@ -711,12 +711,13 @@ class AdfWeb(AdfObs):
 
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
+            print("main_site_path",main_site_path)
             #Add "multi-case" to start of case_names:
             case_names.insert(0, "multi-case")
 
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
-            print(main_templates_path)
+            print("main_templates_path",main_templates_path)
 
             #loop over cases:
             for case_name in case_names:
