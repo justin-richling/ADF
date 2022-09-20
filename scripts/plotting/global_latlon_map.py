@@ -130,8 +130,10 @@ def global_latlon_map(adfobj):
     multi = adfobj.get_multi_case_info("global_latlon_map")
     #print("Is our multi-case nested list going thru?!?!?!?!:",multi)
     #Check if multi-case plot is desired
+    multi_save = ""
     if multi != None:
         print(f"The all case var/season multi-case plots are located at: {'boogers'}")
+        multi_save = True
 
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
@@ -470,7 +472,7 @@ def global_latlon_map(adfobj):
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
-                                                        season=s, plot_type="LatLon")
+                                                        season=s, multi_save=multi_save,plot_type="LatLon")
 
                             #End for (seasons)
                         #End for (pressure levels)
