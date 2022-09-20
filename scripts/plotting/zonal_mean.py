@@ -325,7 +325,7 @@ def zonal_mean(adfobj):
         #Notify user that script has started:
         print("\n  Generating multi-case zonal mean subplots...")
         #make_multi_plots(adfobj,case_name,im_path,var_list,seasons,ptype)
-        pf.make_multi_plots(adfobj, case_names, plot_locations, multi_var_list,
+        pf.make_multi_plots(adfobj, case_names, plot_locations, multi,
                             seasons, plot_type="Zonal")
         #Notify user that script has ended:
         print("  ...Multi-case zonal mean plots have been generated successfully.")

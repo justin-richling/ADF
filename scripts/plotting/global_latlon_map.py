@@ -126,6 +126,13 @@ def global_latlon_map(adfobj):
     plot_type = basic_info_dict.get('plot_type', 'png')
     print(f"\t NOTE: Plot type is set to {plot_type}")
 
+    #Multi-case plots
+    multi = adfobj.get_multi_case_info("global_latlon_map")
+    #print("Is our multi-case nested list going thru?!?!?!?!:",multi)
+    #Check if multi-case plot is desired
+    if multi != None:
+        print(f"The all case var/season multi-case plots are located at: {'boogers'}")
+
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
@@ -480,6 +487,15 @@ def global_latlon_map(adfobj):
 
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
+
+    if multi != None:
+        #Notify user that script has started:
+        print("\n  Generating multi-case zonal mean subplots...")
+        #make_multi_plots(adfobj,case_name,im_path,var_list,seasons,ptype)
+        pf.make_multi_plots(adfobj, case_names, plot_locations, multi_var_list,
+                            seasons, plot_type="Zonal")
+        #Notify user that script has ended:
+        print("  ...Multi-case zonal mean plots have been generated successfully.")
 
 #########
 # Helpers
