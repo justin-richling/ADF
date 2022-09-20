@@ -321,8 +321,9 @@ class AdfWeb(AdfObs):
 
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
-            main_site_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
-            main_site_path = main_site_path / "main_website"
+            multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
+            print("multi_path:",multi_path)
+            main_site_path = multi_path / "main_website"
             main_site_path.mkdir(exist_ok=True)
             case_sites = OrderedDict()
         else:
@@ -728,7 +729,7 @@ class AdfWeb(AdfObs):
                     website_dir = self.__case_web_paths[case_name]['website_dir']
                     if not website_dir.is_dir():
                         #Copy website directory to "main site" directory:
-                        shutil.copytree(website_dir, main_site_path / case_name)
+                        shutil.copytree(website_dir, multi_path / case_name)
 
                     #Also add path to case_sites dictionary:
                     case_sites[case_name] = os.path.join(os.curdir, case_name, "index.html")
