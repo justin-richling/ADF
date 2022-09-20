@@ -1758,7 +1758,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 #END HELPER FUNCTIONS
 
 
-def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,ptype):
+def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
     """
     Generate new multi-plot image from seperate images.
 
@@ -1805,7 +1805,7 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,ptype):
                 #print(i, y_cord)
                 i=(i+scaled_img_width)+padding
                 j+=1
-            plot_name = im_path /f"{var}_{ptype}_{season}_all_case.png"
+            plot_name = im_path /f"{var}_{plot_type}_{season}_all_case.png"
             new_im.save(plot_name, "PNG", quality=80, optimize=True, progressive=True)
             #Add comparison table dataframe to website (if enabled):
             adfobj.add_website_data(plot_name, "Case Comparison", case_name, plot_type="Tables")
