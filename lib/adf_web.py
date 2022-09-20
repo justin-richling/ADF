@@ -732,6 +732,7 @@ class AdfWeb(AdfObs):
 
                     #Also add path to case_sites dictionary:
                     case_sites[case_name] = os.path.join(os.curdir, case_name, "index.html")
+                    print(case_sites[case_name])
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
