@@ -1793,7 +1793,7 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
     images_per_row = 6
     padding = 2
 
-    for season in seasons:
+    for season in ["ANN"]:
         for var in var_list:
             print(im_path)
             print(str(im_path)+"/")
