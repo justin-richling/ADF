@@ -801,7 +801,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         #ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
         extent = ax[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
         wks_multi_save = str(wks).replace(".png","_multi_save.png")
-        fig.savefig(wks_multi_save, bbox_inches=extent.expanded(1., 1.))
+        fig.savefig(wks_multi_save, bbox_inches=extent.expanded(0.9, 0.85))
 
     # __COLORBARS__
     cb_mean_ax = inset_axes(ax2,
