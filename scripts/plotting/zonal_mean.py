@@ -118,6 +118,14 @@ def zonal_mean(adfobj):
     plot_type = basic_info_dict.get('plot_type', 'png')
     print(f"\t NOTE: Plot type is set to {plot_type}")
 
+    #Multi-case plots
+    multi = adfobj.read_config_var('multi_case_plot')
+    #Check if multi-case plot is desired
+    if multi != None:
+        multi_plot = True
+        print(type(multi),multi)
+        print(f"The all case var/season multi-case plots are located at: {'boogers'}")
+
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
@@ -303,6 +311,14 @@ def zonal_mean(adfobj):
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
 
+    if multi_plot==True:
+        #Notify user that script has started:
+        print("\n  Generating multi-case zonal mean subplots...")
+        #make_multi_plots(adfobj,case_name,im_path,var_list,seasons,ptype)
+        pf.make_multi_plots(adfobj, case_names[0], plot_loc, var_list,
+                            seasons, plot_type="Zonal")
+        #Notify user that script has ended:
+        print("  ...Multi-case zonal mean plots have been generated successfully.")
 
 #########
 # Helpers
