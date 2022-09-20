@@ -1792,8 +1792,8 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
     PATH = "./"
 
     frame_width = 1920
-    if len(images) < 6:
-        images_per_row = len(images)
+    if len(case_names) < 6:
+        images_per_row = len(case_names)
     else:
         images_per_row = 6
     padding = 2
