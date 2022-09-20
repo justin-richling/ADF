@@ -1393,7 +1393,6 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             fig_2, ax_2 = plt.subplots(nrows=1)
             zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
             wks_multi_save = str(wks).replace(".png","_multi_save.png")
-            print("    *** wks_multi_save:",wks_multi_save)
             fig_2.savefig(wks_multi_save)
 
         #Set case nickname and climo years:
@@ -1445,7 +1444,6 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             fig_2, ax_2 = plt.subplots(nrows=1)
             zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
             wks_multi_save = str(wks).replace(".png","_multi_save.png")
-            print("    *** wks_multi_save:",wks_multi_save)
             fig_2.savefig(wks_multi_save)
     #End if
 
