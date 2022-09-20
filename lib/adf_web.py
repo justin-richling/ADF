@@ -735,7 +735,7 @@ class AdfWeb(AdfObs):
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
-                css_files_dir = self.__case_web_paths[case_names[0]]['css_files_dir']
+                css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
                 print("css_files_dir:",css_files_dir)
                 shutil.copytree(css_files_dir, main_templates_path)
             #End if
