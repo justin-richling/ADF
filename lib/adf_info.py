@@ -111,7 +111,7 @@ class AdfInfo(AdfConfig):
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
         #Initialize ADF multi_case_plots list:
-        self.__multi_case_plots = self.read_config_var('multi_case_plots', required=True)
+        #self.__multi_case_plots = self.read_config_var('multi_case_plots', required=True)
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
@@ -335,12 +335,12 @@ class AdfInfo(AdfConfig):
         return copy.copy(self.__plot_location)
 
     # Create property needed to return "multi_case_plots" list to user:
-    @property
-    def multi_case_plots(self):
-        """Return a copy of the "multi_case_plots" list to the user if requested."""
-        #Note that a copy is needed in order to avoid having a script mistakenly
-        #modify this variable, as it is mutable and thus passed by reference:
-        return copy.copy(self.__multi_case_plots)
+    #@property
+    #def multi_case_plots(self):
+    #    """Return a copy of the "multi_case_plots" list to the user if requested."""
+    #    #Note that a copy is needed in order to avoid having a script mistakenly
+    #    #modify this variable, as it is mutable and thus passed by reference:
+    #    return copy.copy(self.__multi_case_plots)
 
     #########
 
