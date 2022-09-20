@@ -1390,6 +1390,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #End if
 
         if multi_save == True:
+            print("Well, is it!!!!!!!!!!")
             extent = ax[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
             wks_multi_save = wks.replace(".png","_multi_save.png")
             print("    *** wks_multi_save:",wks_multi_save)
