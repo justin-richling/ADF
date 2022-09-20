@@ -363,7 +363,7 @@ def global_latlon_map(adfobj):
                                                  [syear_case,eyear_case],
                                                  [syear_baseline,eyear_baseline],
                                                  mseasons[s], oseasons[s], dseasons[s],
-                                                 **vres)
+                                                 multi_save=multi_save, **vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -468,11 +468,11 @@ def global_latlon_map(adfobj):
                                                      [syear_case,eyear_case],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s],
-                                                     **vres)
+                                                     multi_save=multi_save, **vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
-                                                        season=s, multi_save=multi_save,plot_type="LatLon")
+                                                        season=s,plot_type="LatLon")
 
                             #End for (seasons)
                         #End for (pressure levels)
