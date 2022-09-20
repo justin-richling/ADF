@@ -1787,13 +1787,14 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
     from PIL import Image
     from math import ceil, floor
     from pathlib import Path
+    import itertools
 
     PATH = "./"
 
     frame_width = 1920
     images_per_row = 6
     padding = 2
-
+    
     for season in ["ANN"]:
         for var in var_list:
             #print(str(im_path)+"/","\n")
@@ -1803,6 +1804,7 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
                 plot_loc = Path(plot_locations[case_idx])
                 #print(plot_loc)
                 images.append(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png"))
+            images = list(itertools.chain(*images))
             print("\n",images,"\n")
 
             img_width, img_height = Image.open(images[0]).size
