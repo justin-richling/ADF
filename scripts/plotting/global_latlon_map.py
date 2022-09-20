@@ -490,12 +490,12 @@ def global_latlon_map(adfobj):
 
     if multi != None:
         #Notify user that script has started:
-        print("\n  Generating multi-case zonal mean subplots...")
+        print("\n  Generating multi-case global lat/lon mean subplots...")
         #make_multi_plots(adfobj,case_name,im_path,var_list,seasons,ptype)
-        pf.make_multi_plots(adfobj, case_names, plot_locations, multi_var_list,
+        pf.make_multi_plots(adfobj, case_names, plot_locations, multi,
                             seasons, plot_type="Zonal")
         #Notify user that script has ended:
-        print("  ...Multi-case zonal mean plots have been generated successfully.")
+        print("  ...Multi-case global lat/lon plots have been generated successfully.")
 
 #########
 # Helpers
