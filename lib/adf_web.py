@@ -711,13 +711,13 @@ class AdfWeb(AdfObs):
 
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
-            print("main_site_path",main_site_path)
+            print("main_site_path:",main_site_path)
             #Add "multi-case" to start of case_names:
             case_names.insert(0, "multi-case")
 
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
-            print("main_templates_path",main_templates_path)
+            print("main_templates_path:",main_templates_path)
 
             #loop over cases:
             for case_name in case_names:
@@ -733,11 +733,12 @@ class AdfWeb(AdfObs):
                     #Also add path to case_sites dictionary:
                     case_sites[case_name] = os.path.join(os.curdir, case_name, "index.html")
 
-                    #Also make sure CSS template files have been copied over:
-                    if not main_templates_path.is_dir():
-                        css_files_dir = self.__case_web_paths[case_name]['css_files_dir']
-                        shutil.copytree(css_files_dir, main_site_path / "templates")
-                    #End if
+            #Also make sure CSS template files have been copied over:
+            if not main_templates_path.is_dir():
+                css_files_dir = self.__case_web_paths[case_names[0]]['css_files_dir']
+                print("css_files_dir:",css_files_dir)
+                shutil.copytree(css_files_dir, main_templates_path)
+            #End if
                 #End if
             #End for (model case loop)
 
