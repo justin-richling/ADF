@@ -292,9 +292,6 @@ def zonal_mean(adfobj):
                             print(f"*** Grabbing test case subplot for multi-case plots, boi! {case_name} {var} {s} ***")
                             
                             multi_save = True
-                        else:
-                            #print("multi_save:",multi_save)
-                            print(f"Not grabbing these subplots :( {case_name} {var} {s} ***")
                     
                     # Check redo_plot. If set to True: remove old plot, if it already exists:
                     if (not redo_plot) and plot_name.is_file():
