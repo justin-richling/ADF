@@ -1287,7 +1287,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         tiFontSize = kwargs.pop('tiFontSize')
     else:
         tiFontSize = 11
-
+    print("OK, this is silly, is it here???????????",multi_save)
     if has_lev:
 
         # calculate zonal average:
