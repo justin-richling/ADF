@@ -1804,9 +1804,9 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
                 plot_loc = Path(plot_locations[case_idx])
                 #print(plot_loc)
                 images.append(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png"))
-            print("\n",images,"\n")    
+            #print("\n",images,"\n")    
             images2 = list(itertools.chain(*images))
-            print("\n",images2,"\n")
+            #print("\n",images2,"\n")
 
             img_width, img_height = Image.open(images2[0]).size
             sf = (frame_width-(images_per_row-1)*padding)/(images_per_row*img_width)       #scaling factor
