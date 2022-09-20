@@ -1391,7 +1391,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
         if multi_save == True:
             fig_2, ax_2 = plt.subplots(nrows=1)
+            ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
             zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
+            ax_2.set_xlabel("LATITUDE")
+            fig_2.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
             wks_multi_save = str(wks).replace(".png","_multi_save.png")
             fig_2.savefig(wks_multi_save)
 
@@ -1446,8 +1449,6 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
             ax_2.set_xlabel("LATITUDE")
             fig_2.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
-
-
             wks_multi_save = str(wks).replace(".png","_multi_save.png")
             fig_2.savefig(wks_multi_save)
     #End if
@@ -1795,7 +1796,7 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
     for season in seasons:
         for var in var_list:
             #print(season,var,im_path)
-            images = glob(str(im_path / f"*{var}*{season}*_all_case.png"))
+            images = glob(str(im_path / f"*{var}*{season}*_multi_save.png"))
             print("images????",images)
 
             img_width, img_height = Image.open(images[0]).size
