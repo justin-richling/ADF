@@ -1778,8 +1778,8 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
     for season in seasons:
         for var in var_list:
             print(season,var)
-            images = glob(f"*{var}*{season}*.png")
-            print(var,season,images)
+            images = glob(im_path / f"*{var}*{season}*.png")
+            print("images????",images)
 
             img_width, img_height = Image.open(images[0]).size
             sf = (frame_width-(images_per_row-1)*padding)/(images_per_row*img_width)       #scaling factor
