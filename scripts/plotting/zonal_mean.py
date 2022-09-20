@@ -284,6 +284,7 @@ def zonal_mean(adfobj):
                     
                     #Check to see if we should save the test case subplot for multi-case full plot
                     if var in multi_var_list:
+                        print("\n",var,"\n")
                         print("*** Grabbing test case subplot for multi-case plots, boi! ***")
                         multi_save = True
                     
