@@ -123,7 +123,6 @@ def zonal_mean(adfobj):
     print("Is our multi-case nested list going thru?!?!?!?!:",multi)
     #Check if multi-case plot is desired
     if multi != None:
-        multi_plot = True
         print(type(multi),multi)
         print(f"The all case var/season multi-case plots are located at: {'boogers'}")
 
@@ -312,7 +311,7 @@ def zonal_mean(adfobj):
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
 
-    if multi_plot==True:
+    if multi != None:
         #Notify user that script has started:
         print("\n  Generating multi-case zonal mean subplots...")
         #make_multi_plots(adfobj,case_name,im_path,var_list,seasons,ptype)
