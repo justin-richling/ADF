@@ -1828,7 +1828,7 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
                 #print(i, y_cord)
                 i=(i+scaled_img_width)+padding
                 j+=1
-            plot_name = im_path /f"{var}_{plot_type}_{season}_all_case.png"
+            plot_name = plot_loc /f"{var}_{plot_type}_{season}_all_case.png"
             new_im.save(plot_name, "PNG", quality=80, optimize=True, progressive=True)
             #Add comparison table dataframe to website (if enabled):
             adfobj.add_website_data(plot_name, "Case Comparison", case_name, plot_type="Tables")
