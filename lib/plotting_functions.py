@@ -1390,10 +1390,11 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #End if
 
         if multi_save == True:
-            extent = ax[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-            wks_multi_save = wks.replace(".png","_multi_save.png")
+            fig_2, ax_2 = plt.subplots(nrows=1)
+            zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
+            wks_multi_save = str(wks).replace(".png","_multi_save.png")
             print("    *** wks_multi_save:",wks_multi_save)
-            fig.savefig(wks_multi_save, bbox_inches=extent.expanded(1.1, 1.2))
+            fig_2.savefig(wks_multi_save)
 
         #Set case nickname and climo years:
         ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
@@ -1443,10 +1444,9 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         if multi_save == True:
             fig_2, ax_2 = plt.subplots(nrows=1)
             zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
-            extent = ax_2.get_window_extent().transformed(fig_2.dpi_scale_trans.inverted())
             wks_multi_save = str(wks).replace(".png","_multi_save.png")
             print("    *** wks_multi_save:",wks_multi_save)
-            fig_2.savefig(wks_multi_save, bbox_inches=extent.expanded(1., 1.))
+            fig_2.savefig(wks_multi_save)
     #End if
 
     #Write the figure to provided workspace/file:
