@@ -290,7 +290,8 @@ def zonal_mean(adfobj):
                         #if s in multi_s_list:
                         if s == "ANN":
                             print("\n",case_name,var,s,"\n")
-                            print("*** Grabbing test case subplot for multi-case plots, boi! ***")
+                            print(f"*** Grabbing test case subplot for multi-case plots, boi! ***")
+                            print(case_name,var,s,"***\n")
                             multi_save = True
                     print("multi_save:",multi_save)
                     
