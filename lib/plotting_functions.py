@@ -1777,7 +1777,7 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
 
     for season in seasons:
         for var in var_list:
-            print(season,var)
+            print(season,var,im_path)
             images = glob(im_path / f"*{var}*{season}*.png")
             print("images????",images)
 
