@@ -1442,9 +1442,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
         if multi_save == True:
             fig_2, ax_2 = plt.subplots(nrows=1)
-            ax_2 = [ax_2[0]]
-            zonal_plot(adata['lat'], azm, ax=ax_2[0],color="#1f77b4")
-            extent = ax_2[0].get_window_extent().transformed(fig_2.dpi_scale_trans.inverted())
+            zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
+            extent = ax_2.get_window_extent().transformed(fig_2.dpi_scale_trans.inverted())
             wks_multi_save = str(wks).replace(".png","_multi_save.png")
             print("    *** wks_multi_save:",wks_multi_save)
             fig_2.savefig(wks_multi_save, bbox_inches=extent.expanded(1.1, 1.2))
