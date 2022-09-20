@@ -1803,23 +1803,23 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
                 #Set output plot location:
                 plot_loc = Path(plot_locations[case_idx])
                 #print(plot_loc)
-                images.append(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png"))
+                images.append(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png")[0])
             #print("\n",images,"\n")    
             images2 = list(itertools.chain(*images))
             #print("\n",images2,"\n")
 
-            img_width, img_height = Image.open(images2[0]).size
+            img_width, img_height = Image.open(images[0]).size
             sf = (frame_width-(images_per_row-1)*padding)/(images_per_row*img_width)       #scaling factor
             scaled_img_width = ceil(img_width*sf)                
             scaled_img_height = ceil(img_height*sf)
 
-            number_of_rows = ceil(len(images2)/images_per_row)
+            number_of_rows = ceil(len(images)/images_per_row)
             frame_height = ceil(sf*img_height*number_of_rows) 
 
             new_im = Image.new('RGB', (frame_width, frame_height),color="white")
 
             i,j=0,0
-            for num, im in enumerate(images2):
+            for num, im in enumerate(images):
                 if num%images_per_row==0:
                     i=0
                 im = Image.open(im)
