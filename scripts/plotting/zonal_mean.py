@@ -125,7 +125,7 @@ def zonal_mean(adfobj):
     if multi != None:
         print(type(multi),multi)
         print(f"The all case var/season multi-case plots are located at: {'boogers'}")
-
+    
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
@@ -144,7 +144,10 @@ def zonal_mean(adfobj):
                "JJA": [6, 7, 8],
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
+
     multi_var_list = ["TS","SST"]# replace by config file stuff in a minute
+    multi_s_list = list(seasons.keys())
+
     #Loop over variables:
     for var in var_list:
 
@@ -283,10 +286,12 @@ def zonal_mean(adfobj):
                     plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
                     
                     #Check to see if we should save the test case subplot for multi-case full plot
-                    if var in multi_var_list:
-                        print("\n",var,s,"\n")
-                        print("*** Grabbing test case subplot for multi-case plots, boi! ***")
-                        multi_save = True
+                    if var in multi:
+                        #if s in multi_s_list:
+                        if s == "ANN":
+                            print("\n",case_name,var,s,"\n")
+                            print("*** Grabbing test case subplot for multi-case plots, boi! ***")
+                            multi_save = True
                     
                     # Check redo_plot. If set to True: remove old plot, if it already exists:
                     if (not redo_plot) and plot_name.is_file():
