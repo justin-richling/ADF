@@ -1418,7 +1418,11 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         diff = azm - bzm
         fig, ax = plt.subplots(nrows=2)
         ax = [ax[0],ax[1]]
-
+        if multi_save == True:
+            extent = ax[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+            wks_multi_save = wks.replace(".png","_multi_save.png")
+            print("    *** wks_multi_save:",wks_multi_save)
+            fig.savefig(wks_multi_save, bbox_inches=extent.expanded(1.1, 1.2))
         #Set Main title for subplots:
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(1.02)
