@@ -1776,7 +1776,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 #END HELPER FUNCTIONS
 
 
-def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
+def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type):
     """
     Generate new multi-plot image from seperate images.
 
@@ -1786,6 +1786,7 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
     from glob import glob
     from PIL import Image
     from math import ceil, floor
+    from pathlib import Path
 
     PATH = "./"
 
@@ -1796,8 +1797,12 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
     for season in ["ANN"]:
         for var in var_list:
             #print(str(im_path)+"/","\n")
+            for case_idx, case_name in enumerate(case_names):
+                #Set output plot location:
+                plot_loc = Path(plot_locations[case_idx])
+                images = glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png")
 
-            images = glob(str(im_path)+f"/*{var}*{season}*_multi_save.png")
+            
             print("images????",images)
 
             img_width, img_height = Image.open(images[0]).size
@@ -1818,7 +1823,6 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
                 #resize to less than 100,100
                 im.thumbnail((scaled_img_width,scaled_img_height))
                 
-                3
                 y_cord = (j//images_per_row)*scaled_img_height
                 new_im.paste(im, (i,y_cord))
                 #print(i, y_cord)
