@@ -1242,7 +1242,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
-                             adata, bdata, has_lev, **kwargs):
+                             adata, bdata, has_lev, multi_save, **kwargs):
     """This is the default zonal mean plot:
         adata: data to plot ([lev], lat, [lon]).
                The vertical coordinate (lev) must be pressure levels.
@@ -1388,6 +1388,11 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             fig.colorbar(img1, ax=ax[1], location='right',**colorbar_opt)
             fig.colorbar(img2, ax=ax[2], location='right',**colorbar_opt)
         #End if
+
+        if multi_save == True:
+            extent = ax[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+            wks_multi_save = wks.replace(".png","_multi_save.png")
+            fig.savefig(wks_multi_save, bbox_inches=extent.expanded(1.1, 1.2))
 
         #Set case nickname and climo years:
         ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 

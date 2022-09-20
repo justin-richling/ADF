@@ -144,7 +144,7 @@ def zonal_mean(adfobj):
                "JJA": [6, 7, 8],
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
-
+    multi_var_list = ["TS","SST"]# replace by config file stuff in a minute
     #Loop over variables:
     for var in var_list:
 
@@ -281,7 +281,11 @@ def zonal_mean(adfobj):
                     #       Merging would make overall timing better because looping twice will double I/O steps.
                     #
                     plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
-
+                    
+                    #Check to see if we should save the test case subplot for multi-case full plot
+                    if var in multi_var_list:
+                        multi_save = True
+                    
                     # Check redo_plot. If set to True: remove old plot, if it already exists:
                     if (not redo_plot) and plot_name.is_file():
                         #Add already-existing plot to website (if enabled):
@@ -298,7 +302,8 @@ def zonal_mean(adfobj):
                     pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname, 
                                                 [syear_case,eyear_case],
                                                 [syear_baseline,eyear_baseline],
-                                                mseasons[s], oseasons[s], has_lev, **vres)
+                                                mseasons[s], oseasons[s], 
+                                                has_lev, multi_save=multi_save, **vres)
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
