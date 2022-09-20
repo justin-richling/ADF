@@ -1797,38 +1797,38 @@ def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type
     for season in ["ANN"]:
         for var in var_list:
             #print(str(im_path)+"/","\n")
+            images = []
             for case_idx, case_name in enumerate(case_names):
                 #Set output plot location:
                 plot_loc = Path(plot_locations[case_idx])
-                images = glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png")
+                print(plot_loc)
+                images.append(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png"))
+                print(images[0])
 
-            
-                print("images????",images)
+            img_width, img_height = Image.open(images[0]).size
+            sf = (frame_width-(images_per_row-1)*padding)/(images_per_row*img_width)       #scaling factor
+            scaled_img_width = ceil(img_width*sf)                
+            scaled_img_height = ceil(img_height*sf)
 
-                img_width, img_height = Image.open(images[0]).size
-                sf = (frame_width-(images_per_row-1)*padding)/(images_per_row*img_width)       #scaling factor
-                scaled_img_width = ceil(img_width*sf)                
-                scaled_img_height = ceil(img_height*sf)
+            number_of_rows = ceil(len(images)/images_per_row)
+            frame_height = ceil(sf*img_height*number_of_rows) 
 
-                number_of_rows = ceil(len(images)/images_per_row)
-                frame_height = ceil(sf*img_height*number_of_rows) 
+            new_im = Image.new('RGB', (frame_width, frame_height),color="white")
 
-                new_im = Image.new('RGB', (frame_width, frame_height),color="white")
-
-                i,j=0,0
-                for num, im in enumerate(images):
-                    if num%images_per_row==0:
-                        i=0
-                    im = Image.open(im)
-                    #resize to less than 100,100
-                    im.thumbnail((scaled_img_width,scaled_img_height))
+            i,j=0,0
+            for num, im in enumerate(images):
+                if num%images_per_row==0:
+                    i=0
+                im = Image.open(im)
+                #resize to less than 100,100
+                im.thumbnail((scaled_img_width,scaled_img_height))
                     
-                    y_cord = (j//images_per_row)*scaled_img_height
-                    new_im.paste(im, (i,y_cord))
-                    #print(i, y_cord)
-                    i=(i+scaled_img_width)+padding
-                    j+=1
-                plot_name = plot_loc /f"{var}_{plot_type}_{season}_all_case.png"
-                new_im.save(plot_name, "PNG", quality=80, optimize=True, progressive=True)
-                #Add comparison table dataframe to website (if enabled):
-                adfobj.add_website_data(plot_name, "Case Comparison", case_name, plot_type="Tables")
+                y_cord = (j//images_per_row)*scaled_img_height
+                new_im.paste(im, (i,y_cord))
+                #print(i, y_cord)
+                i=(i+scaled_img_width)+padding
+                j+=1
+            plot_name = plot_loc /f"{var}_{plot_type}_{season}_all_case.png"
+            new_im.save(plot_name, "PNG", quality=80, optimize=True, progressive=True)
+            #Add comparison table dataframe to website (if enabled):
+            adfobj.add_website_data(plot_name, "Case Comparison", case_name, plot_type="Tables")
