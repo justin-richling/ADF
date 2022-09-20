@@ -110,6 +110,9 @@ class AdfInfo(AdfConfig):
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
+        #Initialize ADF multi_case_plots list:
+        self.__multi_case_plots = self.read_config_var('multi_case_plots', required=True)
+
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
 
