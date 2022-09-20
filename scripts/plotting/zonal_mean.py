@@ -120,10 +120,9 @@ def zonal_mean(adfobj):
 
     #Multi-case plots
     multi = adfobj.get_multi_case_info("zonal_mean")
-    print("Is our multi-case nested list going thru?!?!?!?!:",multi)
+    #print("Is our multi-case nested list going thru?!?!?!?!:",multi)
     #Check if multi-case plot is desired
     if multi != None:
-        print(type(multi),multi)
         print(f"The all case var/season multi-case plots are located at: {'boogers'}")
     
     # check if existing plots need to be redone

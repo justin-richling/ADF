@@ -1783,7 +1783,7 @@ def make_multi_plots(adfobj,case_name,im_path,var_list,seasons,plot_type):
     for season in seasons:
         for var in var_list:
             #print(season,var,im_path)
-            images = glob(str(im_path / f"*{var}*{season}*.png"))
+            images = glob(str(im_path / f"*{var}*{season}*_all_case.png"))
             #print("images????",images)
 
             img_width, img_height = Image.open(images[0]).size
