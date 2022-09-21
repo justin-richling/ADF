@@ -799,7 +799,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     if multi_save == True:
         #fig_2, ax_2 = plt.subplots(nrows=1)
         #ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
-        extent = ax[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        #ax[0]
+        extent = gs[0:2, :3].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
         wks_multi_save = str(wks).replace(".png","_multi_save.png")
         fig.savefig(wks_multi_save, bbox_inches=extent.expanded(-0.2, -0.5))
 
