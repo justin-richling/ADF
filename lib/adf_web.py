@@ -548,7 +548,7 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 
                 #End if
-                print("table_pages_dir: ",table_pages_dir)
+                #############print("table_pages_dir: ",table_pages_dir)
                 #Check if plot image already handles multiple cases,
                 #and if so change the case name:
                 if web_data.multi_case:
