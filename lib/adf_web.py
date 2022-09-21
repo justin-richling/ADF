@@ -754,11 +754,15 @@ class AdfWeb(AdfObs):
             #End for (model case loop)
 
             #Create multi-case site:
-            multi_plots = {"Tablezz":"http:google.com"}
+            multi_plots = {"Tablezz":"../",
+                           "LatLon":"../"}
+            print(case_sites)
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
                             case_sites=case_sites,
+                            syear_cases=syear_cases,
+                            eyear_cases=eyear_cases,
                             multi_plots=multi_plots,
                             )
 
