@@ -796,25 +796,6 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         a.xaxis.set_major_formatter(lon_formatter)
         a.yaxis.set_major_formatter(lat_formatter)
 
-    if multi_save == True:
-        """# create figure object
-        fig = plt.figure(figsize=(14,10))
-
-        # LAYOUT WITH GRIDSPEC
-        gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
-        #gs.tight_layout(fig)
-        proj = ccrs.PlateCarree(central_longitude=central_longitude)
-        ax1 = plt.subplot(gs[0:2, :3], projection=proj, **subplots_opt)"""
-
-
-
-        #fig_2, ax_2 = plt.subplots(nrows=1)
-        #ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
-        #ax[0]
-        extent = gs[0:2, :3].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-        wks_multi_save = str(wks).replace(".png","_multi_save.png")
-        fig.savefig(wks_multi_save, bbox_inches=extent.expanded(-0.2, -0.5))
-
     # __COLORBARS__
     cb_mean_ax = inset_axes(ax2,
                     width="5%",  # width = 5% of parent_bbox width
@@ -1461,15 +1442,6 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                 pass
             #End except
         #End for
-
-        if multi_save == True:
-            fig_2, ax_2 = plt.subplots(nrows=1)
-            ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
-            zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
-            ax_2.set_xlabel("LATITUDE")
-            fig_2.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
-            wks_multi_save = str(wks).replace(".png","_multi_save.png")
-            fig_2.savefig(wks_multi_save)
     #End if
 
     #Write the figure to provided workspace/file:
@@ -1793,67 +1765,3 @@ def square_contour_difference(fld1, fld2, **kwargs):
 
 #####################
 #END HELPER FUNCTIONS
-
-
-def make_multi_plots(adfobj,case_names,plot_locations,var_list,seasons,plot_type):
-    """
-    Generate new multi-plot image from seperate images.
-
-    Automatically set size and layout based on number of cases
-        * Can set number of images per row
-    """
-    from glob import glob
-    from PIL import Image
-    from math import ceil, floor
-    from pathlib import Path
-    import itertools
-
-    PATH = "./"
-
-    frame_width = 1920
-    if len(case_names) < 3:
-        images_per_row = len(case_names)
-    else:
-        images_per_row = 3
-    padding = 2
-    for var in ["TS","SST"]:
-        for season in ["ANN"]:
-        
-            print(var,season,"\n")
-            images = []
-            for case_idx, case_name in enumerate(case_names):
-                #Set output plot location:
-                plot_loc = Path(plot_locations[case_idx])
-                #print(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png")[0])
-                images.append(glob(str(plot_loc)+f"/*{var}*{season}*_multi_save.png")[0])
-            #print("\n",images,"\n")    
-            #images2 = list(itertools.chain(*images))
-            #print("\n",images2,"\n")
-            print(images)
-            img_width, img_height = Image.open(images[0]).size
-            sf = (frame_width-(images_per_row-1)*padding)/(images_per_row*img_width)       #scaling factor
-            scaled_img_width = ceil(img_width*sf)                
-            scaled_img_height = ceil(img_height*sf)
-
-            number_of_rows = ceil(len(images)/images_per_row)
-            frame_height = ceil(sf*img_height*number_of_rows) 
-
-            new_im = Image.new('RGB', (frame_width, frame_height),color="white")
-
-            i,j=0,0
-            for num, im in enumerate(images):
-                if num%images_per_row==0:
-                    i=0
-                im = Image.open(im)
-                #resize to less than 100,100
-                im.thumbnail((scaled_img_width,scaled_img_height))
-                    
-                y_cord = (j//images_per_row)*scaled_img_height
-                new_im.paste(im, (i,y_cord))
-                #print(i, y_cord)
-                i=(i+scaled_img_width)+padding
-                j+=1
-            plot_name = plot_loc /f"{var}_{plot_type}_{season}_all_case.png"
-            new_im.save(plot_name, "PNG", quality=80, optimize=True, progressive=True)
-            #Add comparison table dataframe to website (if enabled):
-            adfobj.add_website_data(plot_name, "Case Comparison", case_name, plot_type="Tables")
