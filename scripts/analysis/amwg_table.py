@@ -397,7 +397,7 @@ def _df_comp_table(adf, output_location, case_names):
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
-    adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+    adf.add_website_data(df_comp, "case_comparison", case_names[0], plot_type="Tables")
 
 
 
@@ -427,7 +427,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
-    adf.add_website_data(df_comp, "All Case Comparison", case_names[0], plot_type="Tables")
+    adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
 
 
 
