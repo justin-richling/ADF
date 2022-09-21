@@ -322,7 +322,6 @@ class AdfWeb(AdfObs):
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
-            print("multi_path:",multi_path)
             main_site_path = multi_path / "main_website"
             main_site_path.mkdir(exist_ok=True)
             case_sites = OrderedDict()
@@ -548,7 +547,7 @@ class AdfWeb(AdfObs):
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
                     plot_types = plot_type_html
                 #End if
-
+                print("table_pages_dir: ",table_pages_dir)
                 #Check if plot image already handles multiple cases,
                 #and if so change the case name:
                 if web_data.multi_case:
@@ -754,9 +753,9 @@ class AdfWeb(AdfObs):
             #End for (model case loop)
 
             #Create multi-case site:
-            multi_plots = {"Tablezz":"../",
-                           "LatLon":"../"}
-            print(case_sites)
+            multi_plots = {"Tablezz": main_site_path / "amwg_table_all_case_comparison.html",
+                           "LatLon": "../"}
+            print("case sites: ",case_sites)
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
