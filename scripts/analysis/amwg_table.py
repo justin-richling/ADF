@@ -300,7 +300,12 @@ def amwg_table(adf):
     #End of model case loop
     #----------------------
 
+    #Check if observations are being comapred to, if so skip table comparison...
+    test_case_names = adf.get_cam_info("cam_case_name", required=True)
 
+
+
+    print(output_location)
     #Notify user that script has ended:
     print("  ...AMWG variable table has been generated successfully.")
 
@@ -309,10 +314,16 @@ def amwg_table(adf):
         if "CMIP" in baseline_name:
             print("CMIP case detected, skipping comparison table...")
         else:
-            #Create comparison table for both cases
-            print("\n  Making comparison table...")
-            _df_comp_table(adf, output_location, case_names)
-            print("  ... Comparison table has been generated successfully")
+
+            if len(test_case_names) == 1:
+                #Create comparison table for both cases
+                print("\n  Making comparison table...")
+                _df_comp_table(adf, output_location, case_names)
+                print("  ... Comparison table has been generated successfully")
+            if len(test_case_names) > 1:
+                print("\n  Making comparison table for multiple cases...")
+                _df_multi_comp_table(adf,write_html,csv_locs,case_names)
+                print("  ... Multi-case omparison table has been generated successfully")
         #End if
     else:
         print(" Comparison table currently doesn't work with obs, so skipping...")
@@ -384,6 +395,53 @@ def _df_comp_table(adf, output_location, case_names):
 
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+
+
+
+
+
+
+def _df_multi_comp_table(adf,write_html,csv_locs,case_names):
+    import pandas as pd
+    from pathlib import Path
+    main_site_path = Path(adf.get_basic_info('cam_diag_plot_loc', required=True))
+    output_csv_file_comp = main_site_path / "amwg_table_comp_all.csv"
+    df_comp = pd.DataFrame(dtype=object)
+    cols_comp = ['variable', 'unit']
+
+    for i,val in enumerate(csv_locs[:-1]): 
+        case = val/f"amwg_table_{case_names[i]}.csv"
+        df_case = pd.read_csv(case)
+        df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
+        cols_comp.append(f"case {i+1}")
+    
+    baseline = csv_locs[-1]/f"amwg_table_{case_names[-1]}.csv"
+    df_base = pd.read_csv(baseline)
+    
+    df_comp['control'] = df_base[['mean']]
+    cols_comp.append("control")
+    df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
+
+    #Create HTML output file name as well, if needed:
+    if write_html:
+        output_html_file_comp = main_site_path / "amwg_table_comp_all.html"
+    html = df_comp.to_html(index=False, border=1, justify='center', float_format='{:,.3g}'.format)  # should return string
+
+    baseline = csv_locs[-1]/f"amwg_table_{case_names[-1]}.csv"
+    
+    preamble1 = f"""<html><head></head><body><h1>AMWG Case Comparison<h1><h2>"""
+    case_pre = """"""
+    for i,name in enumerate(case_names[:-1]):
+        case_pre += f"""Test Case {i+1}: {name}<br/>"""
+    preamble2 = f"""Control Case: {case_names[-1]}</h2>"""
+    preamble = preamble1+case_pre+preamble2
+    ending = """</body></html>"""
+    with open(output_html_file_comp, 'w') as hfil:
+        hfil.write(preamble)
+        hfil.write(html)
+        hfil.write(ending)
+
+
 
 ##############
 #END OF SCRIPT
