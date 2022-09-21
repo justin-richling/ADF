@@ -12,6 +12,9 @@
             <nav role="navigation" class="primary-navigation">
             <ul>
               <li><a href="../">Case Home</a></li>
+              {% if multi==True %}
+              <li><a href="../../">Multi-Case Home</a></li>
+              {% endif %}
               <li><a href="#">Plots &dtrif;</a>
                 <ul class="dropdown-nav">
                   {% for type, html_file in plot_types.items() %}
