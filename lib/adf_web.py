@@ -754,7 +754,7 @@ class AdfWeb(AdfObs):
             #End for (model case loop)
 
             #Create multi-case site:
-            multi_plots = {"Tablezz": main_site_path / "amwg_table_all_case_comparison.html",
+            multi_plots = {"Tablezz": main_site_path / "html_table/amwg_table_all_case_comparison.html",
                            "LatLon": "../"}
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
