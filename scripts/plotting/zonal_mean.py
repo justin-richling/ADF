@@ -277,13 +277,6 @@ def zonal_mean(adfobj):
                     #
                     plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
                     
-                    #Check to see if we should save the test case subplot for multi-case full plot
-                    multi_save = ""
-                    if var in multi:
-                        #if s in multi_s_list:
-                        if s == "ANN":                            
-                            multi_save = True
-                    
                     # Check redo_plot. If set to True: remove old plot, if it already exists:
                     if (not redo_plot) and plot_name.is_file():
                         #Add already-existing plot to website (if enabled):
@@ -301,7 +294,7 @@ def zonal_mean(adfobj):
                                                 [syear_case,eyear_case],
                                                 [syear_baseline,eyear_baseline],
                                                 mseasons[s], oseasons[s], 
-                                                has_lev, multi_save=multi_save, **vres)
+                                                has_lev, **vres)
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
