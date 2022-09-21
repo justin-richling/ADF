@@ -180,6 +180,7 @@ class AdfWeb(AdfObs):
                          plot_type = "Special",
                          multi_case=False):
 
+        print(multi_case)
         """
         Method that provides scripts a way to add an image file or
         Pandas dataframe to the website generator.
