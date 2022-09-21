@@ -180,7 +180,6 @@ class AdfWeb(AdfObs):
                          plot_type = "Special",
                          multi_case=False):
 
-        print(" *** Multi-case option says:",multi_case," ***\n")
         """
         Method that provides scripts a way to add an image file or
         Pandas dataframe to the website generator.
@@ -327,6 +326,8 @@ class AdfWeb(AdfObs):
             main_site_path = multi_path / "main_website"
             main_site_path.mkdir(exist_ok=True)
             case_sites = OrderedDict()
+
+            multi_layout = True
         else:
             main_site_path = "" #Set main_site_path to blank value
         #End if
@@ -571,7 +572,8 @@ class AdfWeb(AdfObs):
                                   amwg_tables=table_html_info,
                                   plot_types=plot_types,
                                   table_name=web_data.name,
-                                  table_html=table_html
+                                  table_html=table_html,
+                                  multi=multi_layout,
                                   )
 
                 #Write mean diagnostic tables HTML file:
@@ -592,6 +594,7 @@ class AdfWeb(AdfObs):
                                                              baseline_yrs=baseline_yrs,
                                                              amwg_tables=table_html_info,
                                                              plot_types=plot_types,
+                                                             multi=multi_layout,
                                                             )
 
                     #Write mean diagnostic tables HTML file:
@@ -627,7 +630,8 @@ class AdfWeb(AdfObs):
                                    case_yrs=case_yrs,
                                    baseline_yrs=baseline_yrs,
                                    mydata=mean_html_info[web_data.plot_type],
-                                   plot_types=plot_types) #The template rendered
+                                   plot_types=plot_types,
+                                   multi=multi_layout,) #The template rendered
 
                 #Write HTML file:
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
@@ -648,7 +652,8 @@ class AdfWeb(AdfObs):
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info[web_data.plot_type],
                                                  curr_type=web_data.plot_type,
-                                                 plot_types=plot_types)
+                                                 plot_types=plot_types,
+                                                 multi=multi_layout,)
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
@@ -673,7 +678,8 @@ class AdfWeb(AdfObs):
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info[web_data.plot_type],
                                                  curr_type=web_data.plot_type,
-                                                 plot_types=plot_types)
+                                                 plot_types=plot_types,
+                                                 multi=multi_layout,)
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
@@ -702,7 +708,8 @@ class AdfWeb(AdfObs):
                                                case2=data_name,
                                                case_yrs=case_yrs,
                                                baseline_yrs=baseline_yrs,
-                                               plot_types=plot_types)
+                                               plot_types=plot_types,
+                                               multi=multi_layout,)
 
                 #Write Mean diagnostics index HTML file:
                 print("index_html_file:",index_html_file)
