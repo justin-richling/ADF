@@ -413,7 +413,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     lons, lats = np.meshgrid(umdlfld['lon'], umdlfld['lat'])
 
     # create figure:
-    fig = plt.figure(figsize=(14,10))
+    #fig = plt.figure(figsize=(14,10))
+    fig,ax=plt.subplots(2,2,figsize=(15,10))
 
     # LAYOUT WITH GRIDSPEC
     gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5, hspace=0.0)
@@ -797,23 +798,12 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         a.yaxis.set_major_formatter(lat_formatter)
 
     if multi_save == True:
-        """# create figure object
-        fig = plt.figure(figsize=(14,10))
-
-        # LAYOUT WITH GRIDSPEC
-        gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
-        #gs.tight_layout(fig)
-        proj = ccrs.PlateCarree(central_longitude=central_longitude)
-        ax1 = plt.subplot(gs[0:2, :3], projection=proj, **subplots_opt)"""
-
-
-
-        #fig_2, ax_2 = plt.subplots(nrows=1)
-        #ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
-        #ax[0]
-        extent = gs[0:2, :3].get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        # create figure object
+        fig = plt.figure(figsize=(7,5))
+        ax1 = plt.subplot(projection=proj, **subplots_opt)
+        
         wks_multi_save = str(wks).replace(".png","_multi_save.png")
-        fig.savefig(wks_multi_save, bbox_inches=extent.expanded(-0.2, -0.5))
+        fig.savefig(wks_multi_save, bbox_inches="tight")
 
     # __COLORBARS__
     cb_mean_ax = inset_axes(ax2,
