@@ -565,7 +565,7 @@ class AdfWeb(AdfObs):
                                                    float_format='{:,.3g}'.format)
 
                 #Construct amwg_table.html
-                print("plot_types: ",plot_types)
+                ######print("plot_types: ",plot_types)
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
                                   case1=case1,
@@ -580,7 +580,7 @@ class AdfWeb(AdfObs):
                                   )
 
                 #Write mean diagnostic tables HTML file:
-                print("web_data.html_file: ",web_data.html_file)
+                #######print("web_data.html_file: ",web_data.html_file)
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 #End with
