@@ -131,6 +131,7 @@ def amwg_table(adf):
     #Create (empty) dictionary to use for the
     #residual top of model (RESTOM) radiation calculation:
     restom_dict = {}
+    csv_locs = []
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
@@ -140,6 +141,8 @@ def amwg_table(adf):
 
         #Generate input file path:
         input_location = Path(input_ts_locs[case_idx])
+        print(output_locs[case_idx])
+        csv_locs.append(output_locs[case_idx])
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
@@ -322,7 +325,7 @@ def amwg_table(adf):
                 print("  ... Comparison table has been generated successfully")
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
-                _df_multi_comp_table(adf,write_html,csv_locs,case_names)
+                _df_multi_comp_table(adf,csv_locs,case_names)
                 print("  ... Multi-case omparison table has been generated successfully")
         #End if
     else:
@@ -401,7 +404,7 @@ def _df_comp_table(adf, output_location, case_names):
 
 
 
-def _df_multi_comp_table(adf,write_html,csv_locs,case_names):
+def _df_multi_comp_table(adf,csv_locs,case_names):
     import pandas as pd
     from pathlib import Path
     main_site_path = Path(adf.get_basic_info('cam_diag_plot_loc', required=True))
@@ -422,24 +425,8 @@ def _df_multi_comp_table(adf,write_html,csv_locs,case_names):
     cols_comp.append("control")
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
-    #Create HTML output file name as well, if needed:
-    if write_html:
-        output_html_file_comp = main_site_path / "amwg_table_comp_all.html"
-    html = df_comp.to_html(index=False, border=1, justify='center', float_format='{:,.3g}'.format)  # should return string
-
-    baseline = csv_locs[-1]/f"amwg_table_{case_names[-1]}.csv"
-    
-    preamble1 = f"""<html><head></head><body><h1>AMWG Case Comparison<h1><h2>"""
-    case_pre = """"""
-    for i,name in enumerate(case_names[:-1]):
-        case_pre += f"""Test Case {i+1}: {name}<br/>"""
-    preamble2 = f"""Control Case: {case_names[-1]}</h2>"""
-    preamble = preamble1+case_pre+preamble2
-    ending = """</body></html>"""
-    with open(output_html_file_comp, 'w') as hfil:
-        hfil.write(preamble)
-        hfil.write(html)
-        hfil.write(ending)
+    #Add comparison table dataframe to website (if enabled):
+    adf.add_website_data(df_comp, "All Case Comparison", case_names[0], plot_type="Tables")
 
 
 
