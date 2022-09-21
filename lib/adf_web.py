@@ -462,12 +462,12 @@ class AdfWeb(AdfObs):
             if web_data.data_frame:
 
                 #Create a directory that will hold table html files, if a table is present:
-                """if self.num_cases > 1:
+                if self.num_cases > 1:
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
-                else:
-                    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)"""
-
+                #else:
                 self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+
+                #self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 #End if
 
                 #Add table HTML file to dictionary:
@@ -540,14 +540,13 @@ class AdfWeb(AdfObs):
             if web_data.data_frame:
 
                 #Create output HTML file path:
-                """if self.num_cases > 1:
+                if self.num_cases > 1:
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
                     plot_types = multi_plot_type_html
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    plot_types = plot_type_html"""
-                table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
-                plot_types = plot_type_html
+                    plot_types = plot_type_html
+                
                 #End if
                 print("table_pages_dir: ",table_pages_dir)
                 #Check if plot image already handles multiple cases,
