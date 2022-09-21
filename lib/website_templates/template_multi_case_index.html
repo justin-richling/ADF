@@ -26,15 +26,13 @@
         </div><!--center-->
         <br>
         {% for case_name, case_path in case_sites.items() %}
-        {% if case_name != "multi-case" %}
         <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;"><a href="{{ case_path }}">{{ case_name }}</a></h2><h2 style="display:inline; color:black;"> - years: {{ case_yrs }}</h2><br>
-        {% endif %}
         {% endfor %}
       </div><!--screenFiller-->
     </div><!--header-->
 
     <div class="center">
-      <h1>Plot Types</h1>
+      <h1>All Case Comparison Plot Types</h1>
     </div>
 
     <div class="grid-container">      
