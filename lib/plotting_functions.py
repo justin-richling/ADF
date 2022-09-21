@@ -797,6 +797,17 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         a.yaxis.set_major_formatter(lat_formatter)
 
     if multi_save == True:
+        """# create figure object
+        fig = plt.figure(figsize=(14,10))
+
+        # LAYOUT WITH GRIDSPEC
+        gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
+        #gs.tight_layout(fig)
+        proj = ccrs.PlateCarree(central_longitude=central_longitude)
+        ax1 = plt.subplot(gs[0:2, :3], projection=proj, **subplots_opt)"""
+
+
+
         #fig_2, ax_2 = plt.subplots(nrows=1)
         #ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
         #ax[0]
