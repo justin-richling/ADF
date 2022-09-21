@@ -413,6 +413,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     cols_comp = ['variable', 'unit']
 
     for i,val in enumerate(csv_locs[:-1]): 
+        print(val,"\n",case_names[i])
         case = val/f"amwg_table_{case_names[i]}.csv"
         df_case = pd.read_csv(case)
         df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
