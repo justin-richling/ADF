@@ -715,7 +715,6 @@ class AdfWeb(AdfObs):
                                                multi=multi_layout,)
 
                 #Write Mean diagnostics index HTML file:
-                print("index_html_file:",index_html_file)
                 with open(index_html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(index_rndr)
                 #End with
