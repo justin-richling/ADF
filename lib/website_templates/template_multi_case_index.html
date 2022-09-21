@@ -25,8 +25,10 @@
           </nav>
         </div><!--center-->
         <br>
-        {% for case_name, case_path in case_sites.items() %}
-        <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;"><a href="{{ case_path }}">{{ case_name }}</a></h2><h2 style="display:inline; color:black;"> - years: {{ case_yrs }}</h2><br>
+        {% for case_name, case_deets in case_sites.items() %}
+        <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;">
+          <a href="{{ case_deets[0] }}">{{ case_name }}</a></h2>
+          <h2 style="display:inline; color:black;"> - years: {{ case_deets[1] }} - {{ case_deets[2] }}</h2><br>
         {% endfor %}
       </div><!--screenFiller-->
     </div><!--header-->
