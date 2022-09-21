@@ -723,17 +723,17 @@ class AdfWeb(AdfObs):
         if main_site_path:
             print("main_site_path:",main_site_path)
             #Add "multi-case" to start of case_names:
-            case_names.insert(0, "multi-case")
+            #case_names.insert(0, "multi-case")
 
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
             print("main_templates_path:",main_templates_path)
 
             #Also add path to case_sites dictionary:
-            case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
-            print(case_sites[case_names[0]])
+            #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
+            #print(case_sites[case_names[0]])
             #loop over cases:
-            for idx, case_name in enumerate(case_names[1:]):
+            for idx, case_name in enumerate(case_names):
 
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
