@@ -1389,15 +1389,6 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             fig.colorbar(img2, ax=ax[2], location='right',**colorbar_opt)
         #End if
 
-        if multi_save == True:
-            fig_2, ax_2 = plt.subplots(nrows=1)
-            ax_2.set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
-            zonal_plot(adata['lat'], azm, ax=ax_2,color="#1f77b4")
-            ax_2.set_xlabel("LATITUDE")
-            fig_2.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
-            wks_multi_save = str(wks).replace(".png","_multi_save.png")
-            fig_2.savefig(wks_multi_save)
-
         #Set case nickname and climo years:
         ax[0].set_title(f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) 
         ax[1].set_title(f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
