@@ -464,8 +464,8 @@ class AdfWeb(AdfObs):
                 #Create a directory that will hold table html files, if a table is present:
                 if self.num_cases > 1:
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
-                #else:
-                self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+                else:
+                    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
 
                 #self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 #End if
@@ -579,6 +579,7 @@ class AdfWeb(AdfObs):
                                   )
 
                 #Write mean diagnostic tables HTML file:
+                print("web_data.html_file: ",web_data.html_file)
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 #End with
@@ -756,7 +757,6 @@ class AdfWeb(AdfObs):
             #Create multi-case site:
             multi_plots = {"Tablezz": main_site_path / "amwg_table_all_case_comparison.html",
                            "LatLon": "../"}
-            print("case sites: ",case_sites)
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
