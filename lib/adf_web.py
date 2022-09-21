@@ -730,7 +730,7 @@ class AdfWeb(AdfObs):
             print("main_templates_path:",main_templates_path)
 
             #Also add path to case_sites dictionary:
-            case_sites[case_names[0]] = os.path.join(os.curdir, case_names[0], "index.html")
+            case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
             print(case_sites[case_names[0]])
             #loop over cases:
             for idx, case_name in enumerate(case_names[1:]):
