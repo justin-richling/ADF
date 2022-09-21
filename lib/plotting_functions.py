@@ -579,7 +579,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs, 
-                      mdlfld, obsfld, diffld, multi_save, **kwargs):
+                      mdlfld, obsfld, diffld, **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
     kwargs -> optional dictionary of plotting options
              ** Expecting this to be variable-specific section, possibly provided by ADF Variable Defaults YAML file.**
@@ -1242,7 +1242,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
-                             adata, bdata, has_lev, multi_save, **kwargs):
+                             adata, bdata, has_lev, **kwargs):
     """This is the default zonal mean plot:
         adata: data to plot ([lev], lat, [lon]).
                The vertical coordinate (lev) must be pressure levels.
