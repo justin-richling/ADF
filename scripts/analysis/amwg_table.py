@@ -419,7 +419,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
         df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
         cols_comp.append(f"case {i+1}")
     
-    baseline = csv_locs[-1]/f"amwg_table_{case_names[-1]}.csv"
+    baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
     df_base = pd.read_csv(baseline)
     
     df_comp['control'] = df_base[['mean']]
