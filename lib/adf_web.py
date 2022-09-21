@@ -730,7 +730,7 @@ class AdfWeb(AdfObs):
             print("main_templates_path:",main_templates_path)
 
             #loop over cases:
-            for case_name in case_names:
+            for idx, case_name in enumerate(case_names):
 
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
@@ -741,7 +741,7 @@ class AdfWeb(AdfObs):
                         shutil.copytree(website_dir, main_site_path / case_name)
 
                     #Also add path to case_sites dictionary:
-                    case_sites[case_name] = os.path.join(os.curdir, case_name, "index.html")
+                    case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
                     print(case_sites[case_name])
 
             #Also make sure CSS template files have been copied over:
@@ -761,8 +761,6 @@ class AdfWeb(AdfObs):
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
                             case_sites=case_sites,
-                            syear_cases=syear_cases,
-                            eyear_cases=eyear_cases,
                             multi_plots=multi_plots,
                             )
 
