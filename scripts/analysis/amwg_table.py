@@ -400,10 +400,6 @@ def _df_comp_table(adf, output_location, case_names):
     adf.add_website_data(df_comp, "case_comparison", case_names[0], plot_type="Tables")
 
 
-
-
-
-
 def _df_multi_comp_table(adf,csv_locs,case_names):
     import pandas as pd
     from pathlib import Path
