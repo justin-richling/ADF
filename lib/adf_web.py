@@ -566,7 +566,7 @@ class AdfWeb(AdfObs):
                                                    float_format='{:,.3g}'.format)
 
                 #Construct amwg_table.html
-                ######print("plot_types: ",plot_types)
+                print("plot_types: ",plot_types)
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
                                   case1=case1,
