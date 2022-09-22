@@ -539,6 +539,7 @@ class AdfWeb(AdfObs):
         for web_data in self.__website_data:
 
             if web_data.data_frame:
+                print(self.__case_web_paths)
 
                 #Create output HTML file path:
                 if self.num_cases > 1:
@@ -549,7 +550,7 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 
                 #End if
-                #############print("table_pages_dir: ",table_pages_dir)
+
                 #Check if plot image already handles multiple cases,
                 #and if so change the case name:
                 if web_data.multi_case:
