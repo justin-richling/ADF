@@ -468,8 +468,7 @@ class AdfWeb(AdfObs):
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 else:
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
-
-                #self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+                print(self.__case_web_paths[web_data.case]['table_pages_dir'])
                 #End if
 
                 #Add table HTML file to dictionary:
