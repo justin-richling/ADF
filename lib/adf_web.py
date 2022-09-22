@@ -329,6 +329,7 @@ class AdfWeb(AdfObs):
             multi_layout = True
         else:
             main_site_path = "" #Set main_site_path to blank value
+            multi_layout = False
         #End if
 
         #Extract needed variables from yaml file:
@@ -755,8 +756,8 @@ class AdfWeb(AdfObs):
             #End for (model case loop)
 
             #Create multi-case site:
-            multi_plots = {"Tablezz": "html_table/mean_tables.html",
-                           "LatLon": "../"}
+            multi_plots = {"Tables": "html_table/mean_tables.html",
+                           "LatLon": "https://ncar.ucar.edu/"}
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
