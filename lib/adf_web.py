@@ -578,6 +578,7 @@ class AdfWeb(AdfObs):
                                   table_name=web_data.name,
                                   table_html=table_html,
                                   multi=multi_layout,
+                                  case_sites=case_sites,
                                   )
 
                 #Write mean diagnostic tables HTML file:
@@ -600,6 +601,7 @@ class AdfWeb(AdfObs):
                                                              amwg_tables=table_html_info,
                                                              plot_types=plot_types,
                                                              multi=multi_layout,
+                                                             case_sites=case_sites,
                                                             )
 
                     #Write mean diagnostic tables HTML file:
