@@ -566,7 +566,6 @@ class AdfWeb(AdfObs):
                                                    float_format='{:,.3g}'.format)
 
                 #Construct amwg_table.html
-                print("plot_types: ",plot_types)
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
                                   case1=case1,
@@ -651,6 +650,7 @@ class AdfWeb(AdfObs):
 
                     #Construct individual plot type mean_diag html files, if they don't
                     #already exist:
+                    print("plot_types: ",plot_types)
                     mean_tmpl = jinenv.get_template('template_mean_diag.html')
                     mean_rndr = mean_tmpl.render(title=main_title,
                                                  case1=case1,
