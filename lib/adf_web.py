@@ -465,6 +465,7 @@ class AdfWeb(AdfObs):
                 #Create a directory that will hold table html files, if a table is present:
                 if self.num_cases > 1:
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
+                    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 else:
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
 
@@ -539,7 +540,7 @@ class AdfWeb(AdfObs):
         for web_data in self.__website_data:
 
             if web_data.data_frame:
-                print(self.__case_web_paths)
+                print(self.__case_web_paths,"\n")
 
                 #Create output HTML file path:
                 if self.num_cases > 1:
