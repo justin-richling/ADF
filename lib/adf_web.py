@@ -558,7 +558,6 @@ class AdfWeb(AdfObs):
         for web_data in self.__website_data:
 
             if web_data.data_frame:
-                print(self.__case_web_paths,"\n")
 
                 #Create output HTML file path:
                 if self.num_cases > 1:
