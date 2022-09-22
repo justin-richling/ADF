@@ -37,8 +37,17 @@
           </nav>
         </div><!--center-->
         <br>
+        {% if multi==True %}
+        <h2 style="display:inline; color:black;"> Click on case name for that ADF vs baseline</h2><br>
+        {% for case_name, case_dtls in case_sites.items() %}
+        <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;">
+          <a href="{{ case_dtls[0] }}">{{ case_name }}</a></h2>
+          <h2 style="display:inline; color:black;"> - years: {{ case_dtls[1] }} - {{ case_dtls[2] }}</h2><br>
+        {% endfor %}
+        {% else %}
         <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;">{{ case1 }}</h2><h2 style="display:inline; color:black;"> - years: {{ case_yrs }}</h2><br>
         <h2 style="display:inline; color:black;"> Baseline Case: </h2><h2 style="display:inline;">{{ case2 }}</h2><h2 style="display:inline; color:black;"> - years: {{ baseline_yrs }}</h2>
+        {% endif %}
       </div><!--screenFiller-->
     </div><!--header-->
 
