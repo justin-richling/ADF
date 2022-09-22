@@ -468,7 +468,7 @@ class AdfWeb(AdfObs):
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 else:
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
-                print(self.__case_web_paths[web_data.case]['table_pages_dir'])
+                print(self.__case_web_paths[web_data.case]['table_pages_dir'],"\n")
                 #End if
 
                 #Add table HTML file to dictionary:
@@ -561,7 +561,7 @@ class AdfWeb(AdfObs):
                 #Create output HTML file path:
                 if self.num_cases > 1:
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
-                    table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
+                    #table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
                     plot_types = multi_plot_type_html
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
@@ -600,7 +600,7 @@ class AdfWeb(AdfObs):
                                   )
 
                 #Write mean diagnostic tables HTML file:
-                #######print("web_data.html_file: ",web_data.html_file)
+                print("web_data.html_file: ",web_data.html_file,"\n")
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 #End with
