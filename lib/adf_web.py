@@ -545,7 +545,6 @@ class AdfWeb(AdfObs):
 
             #Also add path to case_sites dictionary:
             #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
-            #print(case_sites[case_names[0]])
             #loop over cases:
             for idx, case_name in enumerate(case_names):
                 #Check if case name is present in plot
