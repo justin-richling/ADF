@@ -37,7 +37,7 @@
         </div><!--center-->
         <br>
         {% if multi==True %}
-        {% for idx, (case_name, case_dtls) in case_sites.items() %}
+        {% for idx, (case_name, case_dtls) in case_sites %}
           <h2 style="display:inline; color:black;"> Test Case {{idx}}: </h2><h2 style="display:inline;">{{ case_name }}</h2>
           <h2 style="display:inline; color:black;"> - years: {{ case_dtls[1] }} - {{ case_dtls[2] }}</h2><br>
         {% endfor %}
@@ -55,7 +55,7 @@
     <div style="width: 100%;">
         <table class="big-table">
           {% if multi == True %}
-          {% for idx, (case_name, html_file) in amwg_tables.items() %}
+          {% for idx, (case_name, html_file) in amwg_tables %}
             <tr>
               <td><a id="amwg_table" href="{{ html_file }}">{{idx}}. {{ case_name }}</a></td>
             </tr>

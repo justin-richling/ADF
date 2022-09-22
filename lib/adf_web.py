@@ -578,7 +578,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 if multi_layout == True:
-                    table_html_info = enumerate(table_html_info)
+                    table_html_info = enumerate(table_html_info.items())
 
                 #Write table dataframe HTML as a string:
                 #Note:  One could generate an image file here instead of raw HTML code,
@@ -599,7 +599,7 @@ class AdfWeb(AdfObs):
                                   table_name=web_data.name,
                                   table_html=table_html,
                                   multi=multi_layout,
-                                  case_sites=enumerate(case_sites),
+                                  case_sites=enumerate(case_sites.items()),
                                   )
 
                 #Write mean diagnostic tables HTML file:
@@ -622,7 +622,7 @@ class AdfWeb(AdfObs):
                                                              amwg_tables=table_html_info,
                                                              plot_types=plot_types,
                                                              multi=multi_layout,
-                                                             case_sites=case_sites,
+                                                             case_sites=enumerate(case_sites.items()),
                                                             )
 
                     #Write mean diagnostic tables HTML file:
@@ -785,7 +785,7 @@ class AdfWeb(AdfObs):
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
-                            case_sites=enumerate(case_sites),
+                            case_sites=enumerate(case_sites.items()),
                             multi_plots=multi_plots,
                             )
 
