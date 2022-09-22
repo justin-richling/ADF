@@ -600,7 +600,7 @@ class AdfWeb(AdfObs):
                                   )
 
                 #Write mean diagnostic tables HTML file:
-                print("web_data.html_file: ",web_data.html_file,"\n")
+                # -> print("web_data.html_file: ",web_data.html_file,"\n")
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 #End with
@@ -665,11 +665,11 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
+                print("For case index, plot_types: ",plot_types,"\n")
                 if not mean_ptype_file.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
                     #already exist:
-                    print("For case index, plot_types: ",plot_types,"\n")
                     mean_tmpl = jinenv.get_template('template_mean_diag.html')
                     mean_rndr = mean_tmpl.render(title=main_title,
                                                  case1=case1,
