@@ -553,6 +553,7 @@ class AdfWeb(AdfObs):
                     #Add path to case_sites dictionary:
                     case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
         else:
+            #make empty list for non multi-case web generation
             case_sites = []
 
         #Loop over all web data objects again:
