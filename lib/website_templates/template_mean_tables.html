@@ -54,11 +54,19 @@
 
     <div style="width: 100%;">
       <table class="big-table">
-        {% for idx, (case_name, html_file) in enumerate(amwg_tables.items()) %}
+        {% if multi == True %}
+        {% for idx, (case_name, html_file) in amwg_tables.items() %}
           <tr>
             <td><a id="amwg_table" href="{{ html_file }}">{{idx}}. {{ case_name }}</a></td>
           </tr>
         {% endfor %}
+        {% else %}
+        {% for case_name, html_file in amwg_tables.items() %}
+          <tr>
+            <td><a id="amwg_table" href="{{ html_file }}">{{ case_name }}</a></td>
+          </tr>
+        {% endfor %}
+        {% endif %}
       </table>
     </div>
 
