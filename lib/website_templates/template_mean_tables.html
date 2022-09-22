@@ -41,6 +41,9 @@
           <h2 style="display:inline; color:black;"> Test Case {{loop.index}}: </h2><h2 style="display:inline;">{{ case_name }}</h2>
           <h2 style="display:inline; color:black;"> - years: {{ case_dtls[1] }} - {{ case_dtls[2] }}</h2><br>
         {% endfor %}
+        <h2 style="display:inline; color:black;"> Baseline Case: </h2><h2 style="display:inline;">
+          {{ base_name }}</h2>
+          <h2 style="display:inline; color:black;"> - years: {{ baseline_yrs }}</h2>
         {% else %}
         <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;">{{ case1 }}</h2><h2 style="display:inline; color:black;"> - years: {{ case_yrs }}</h2><br>
         <h2 style="display:inline; color:black;"> Baseline Case: </h2><h2 style="display:inline;">{{ case2 }}</h2><h2 style="display:inline; color:black;"> - years: {{ baseline_yrs }}</h2>
@@ -54,19 +57,11 @@
 
     <div style="width: 100%;">
       <table class="big-table">
-        {% if multi == True %}
-        {% for case_name, html_file in amwg_tables.items() %}
-          <tr>
-            <td><a id="amwg_table" href="{{ html_file }}">{{loop.index}}. {{ case_name }}</a></td>
-          </tr>
-        {% endfor %}
-        {% else %}
         {% for case_name, html_file in amwg_tables.items() %}
           <tr>
             <td><a id="amwg_table" href="{{ html_file }}">{{ case_name }}</a></td>
           </tr>
         {% endfor %}
-        {% endif %}
       </table>
     </div>
 
