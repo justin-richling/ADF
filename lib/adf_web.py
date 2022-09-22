@@ -468,7 +468,7 @@ class AdfWeb(AdfObs):
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 else:
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
-                print(self.__case_web_paths[web_data.case]['table_pages_dir'],"\n")
+                # -> print(self.__case_web_paths[web_data.case]['table_pages_dir'],"\n")
                 #End if
 
                 #Add table HTML file to dictionary:
@@ -669,6 +669,7 @@ class AdfWeb(AdfObs):
 
                     #Construct individual plot type mean_diag html files, if they don't
                     #already exist:
+                    print("For case index, plot_types: ",plot_types,"\n")
                     mean_tmpl = jinenv.get_template('template_mean_diag.html')
                     mean_rndr = mean_tmpl.render(title=main_title,
                                                  case1=case1,
