@@ -38,8 +38,7 @@
         <br>
         {% if multi==True %}
         {% for case_name, case_dtls in case_sites.items() %}
-        <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;">
-          <a href="{{ case_dtls[0] }}">{{ case_name }}</a></h2>
+          <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;">{{ case_name }}</h2>
           <h2 style="display:inline; color:black;"> - years: {{ case_dtls[1] }} - {{ case_dtls[2] }}</h2><br>
         {% endfor %}
         {% else %}
