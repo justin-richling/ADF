@@ -11,9 +11,10 @@
           <div class="center">
             <nav role="navigation" class="primary-navigation">
             <ul>
-              <li><a href="../">Case Home</a></li>
               {% if multi==True %}
-              <li><a href="../../">Multi-Case Home</a></li>
+              <li><a href="../">Multi-Case Home</a></li>
+              {% else %}
+              <li><a href="../">Case Home</a></li>
               {% endif %}
               <li><a href="#">Plots &dtrif;</a>
                 <ul class="dropdown-nav">
@@ -41,7 +42,7 @@
     </div><!--header-->
 
     <div class="center">
-      <h1>AMWG Tables - Being used????</h1>
+      <h1>AMWG Tables</h1>
     </div>
 
     <div style="width: 100%;">
