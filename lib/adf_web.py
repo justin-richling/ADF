@@ -536,6 +536,24 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
+        #If this is a multi-case instance, then copy website to "main" directory:
+        if main_site_path:
+            #Add "multi-case" to start of case_names:
+            #case_names.insert(0, "multi-case")
+
+            #Create CSS templates file path:
+            main_templates_path = main_site_path / "templates"
+
+            #Also add path to case_sites dictionary:
+            #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
+            #print(case_sites[case_names[0]])
+            #loop over cases:
+            for idx, case_name in enumerate(case_names):
+                #Check if case name is present in plot
+                if case_name in self.__case_web_paths:
+                    #Add path to case_sites dictionary:
+                    case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
+
         #Loop over all web data objects again:
         for web_data in self.__website_data:
 
@@ -652,7 +670,6 @@ class AdfWeb(AdfObs):
 
                     #Construct individual plot type mean_diag html files, if they don't
                     #already exist:
-                    print("plot_types: ",plot_types)
                     mean_tmpl = jinenv.get_template('template_mean_diag.html')
                     mean_rndr = mean_tmpl.render(title=main_title,
                                                  case1=case1,
@@ -749,7 +766,7 @@ class AdfWeb(AdfObs):
                         shutil.copytree(website_dir, main_site_path / case_name)
 
                     #Also add path to case_sites dictionary:
-                    case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
+                    #case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
