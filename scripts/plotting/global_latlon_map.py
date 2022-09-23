@@ -509,7 +509,7 @@ def global_latlon_map(adfobj):
 
    
 
-    # For global maps, also set the central longitude:
+    """# For global maps, also set the central longitude:
     # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
     # otherwise defaults to 180
     vres['central_longitude'] = pf.get_central_longitude(adfobj)
@@ -526,7 +526,7 @@ def global_latlon_map(adfobj):
 
     #Add plot to website (if enabled):
     adfobj.add_website_data(plot_name, "RESTOM", case_name, category=web_category,
-                            season="ANN", plot_type="LatLon")
+                            season="ANN", plot_type="LatLon")"""
 
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
