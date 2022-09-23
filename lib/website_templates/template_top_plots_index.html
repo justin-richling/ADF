@@ -45,11 +45,11 @@
         {% for var_name, season in html_file.items() %}
             <p> {{var_name}}</p>
 
-            <a href="../html_img/{{var_title}}_ANN_{{type}}.html"> ANN </a>
-            <a href="../html_img/{{var_title}}_DJF_{{type}}.html"> DJF </a>
-            <a href="../html_img/{{var_title}}_MAM_{{type}}.html"> MAM </a>
-            <a href="../html_img/{{var_title}}_JJA_{{type}}.html"> JJA </a>
-            <a href="../html_img/{{var_title}}_SON_{{type}}.html"> SON </a>
+            <a href="../html_img/{{var_name}}_ANN_{{type}}.html"> ANN </a>
+            <a href="../html_img/{{var_name}}_DJF_{{type}}.html"> DJF </a>
+            <a href="../html_img/{{var_name}}_MAM_{{type}}.html"> MAM </a>
+            <a href="../html_img/{{var_name}}_JJA_{{type}}.html"> JJA </a>
+            <a href="../html_img/{{var_name}}_SON_{{type}}.html"> SON </a>
 
             <!--{% for season_name, seas in season.items() %}
             <a href="{{ seas }}"> &nbsp; {{ season_name | join(' ') }}</a>
