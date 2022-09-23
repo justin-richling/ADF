@@ -719,8 +719,8 @@ class AdfWeb(AdfObs):
 
                 #Write HTML file:
                 print(type(web_data.html_file))
-                print("what is this file, eh: ",web_data.html_file.parent)
-                #print("what is this file, eh: ",web_data.html_file.stem)
+                print("Parent: ",web_data.html_file.parent,"\n")
+                print("Stem: ",web_data.html_file.stem,"\n")
                 #print("\n",img_data)
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
