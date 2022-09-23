@@ -351,10 +351,10 @@ class AdfWeb(AdfObs):
                             pass
                             # still working on Polar cases... 
                         else:
-                            plot_page = f'plot_page_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
+                            plot_page = f'plot_page_top_plots_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
                             plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
 
-        #print(plot_urls)
+        print("\n",plot_urls,"\n")
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
@@ -703,6 +703,7 @@ class AdfWeb(AdfObs):
                     ofil.write(rndr)
                 #End with
 
+                for 
                 tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
                 rndr = tmpl_top_plots.render(title=main_title,
                                    var_title=web_data.name,
