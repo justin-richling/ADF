@@ -355,8 +355,8 @@ class AdfWeb(AdfObs):
                             plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
                             top_plot_urls.append(plot_page)
 
-        #for i in plot_urls:
-        #    print(i,"\n")
+        for i in top_plot_urls:
+            print(i,"\n")
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
