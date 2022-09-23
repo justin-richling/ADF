@@ -398,7 +398,7 @@ def _df_comp_table(adf, output_location, case_names):
     df_comp['diff'] = df_comp['case'].values-df_comp['baseline'].values
 
     #Write the comparison dataframe to a new CSV file:
-    cols_comp = ['variable', 'unit', 'test', 'control', 'diff']
+    cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
@@ -422,8 +422,8 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
     df_base = pd.read_csv(baseline)
     
-    df_comp['control'] = df_base[['mean']]
-    cols_comp.append("control")
+    df_comp['baseline'] = df_base[['mean']]
+    cols_comp.append("baseline")
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
