@@ -319,6 +319,41 @@ class AdfWeb(AdfObs):
         #Notify user that script has started:
         print("\n  Generating Diagnostics webpages...")
 
+        ptype_order_dict = {'global_latlon_map': ["LatLon"],
+                            'zonal_mean': ["Zonal"],
+                            'global_latlon_vect_map': ["LatLon_Vector"],
+                            'polar_map': ["NHPolar","SHPolar"],
+                            'cam_taylor_diagram': ["TaylorDiag"],
+                            'time_series':['TimeSeries'],
+                            'top_10':['Top10']}
+        seasons = ["ANN","DJF","MAM","JJA","SON"]
+
+        #Top plots:
+        #--------------------------------------------
+        #from collections import defaultdict
+        plot_urls = OrderedDict()
+        
+        for ptype in ptype_order_dict.keys():  
+            
+            # List of vars for each plot type
+            ptype_vars = self.get_top_plots_info(ptype)
+
+            if ptype_vars != None:
+                if ptype not in plot_urls:
+                    plot_urls[ptype_order_dict[ptype][0]] = OrderedDict()
+
+                for var in ptype_vars:
+                    if var not in plot_urls[ptype_order_dict[ptype][0]]:
+                        plot_urls[ptype_order_dict[ptype][0]][var] = OrderedDict()
+                        
+                    for season in seasons:
+                        if len(ptype_order_dict[ptype]) > 1:
+                            pass
+                            # still working on Polar cases... 
+                        else:
+                            plot_page = f'plot_page_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
+                            plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
+
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
@@ -714,7 +749,29 @@ class AdfWeb(AdfObs):
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
                         ofil.write(plot_page_rndr)
-                    #End with  
+                    #End with
+
+
+
+                index_top_html_file = img_pages_dir / "top_plots_index.html"
+                #Construct index.html
+                top_index_tmpl = jinenv.get_template('template_TopPlots_index.html')
+                top_index_rndr = top_index_tmpl.render(title=main_title,
+                                            var_title=web_data.name,
+                                            season_title=web_data.plot_type,
+                                            plottype_title=web_data.plot_type,
+                                            imgs=img_data,
+                                            case1=case1,
+                                            case2=data_name,
+                                            case_yrs=case_yrs,
+                                            baseline_yrs=baseline_yrs,
+                                            mydata=plot_urls,
+                                            plot_types=plot_types)
+
+                #Write Mean diagnostics index HTML file:
+                with open(index_top_html_file, 'w', encoding='utf-8') as ofil:
+                    ofil.write(top_index_rndr)
+
             #End if (data frame)
 
             #Also check if index page exists for this case:

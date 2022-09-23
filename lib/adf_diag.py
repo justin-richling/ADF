@@ -167,6 +167,9 @@ class AdfDiag(AdfWeb):
             self.expand_references(self.__cvdp_info)
         #End if
 
+        #Add top plots info to object:
+        self.__top_plots_info = self.read_config_var('top_plots')
+
         #Add multi plots info to object:
         self.__multi_case_plots = self.read_config_var('multi_case_plots')
 
@@ -206,6 +209,16 @@ class AdfDiag(AdfWeb):
 
         return self.read_config_var(var_str,
                                     conf_dict=self.__multi_case_plots,
+                                    required=required)
+
+    def get_top_plots_info(self, var_str, required=False):
+        """
+        Return the config variable from 'top_plots' as requested by
+        the user.
+        """
+
+        return self.read_config_var(var_str,
+                                    conf_dict=self.__top_plots_info,
                                     required=required)
 
     #########
