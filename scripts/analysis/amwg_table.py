@@ -162,9 +162,11 @@ def amwg_table(adf):
         if Path(output_csv_file).is_file():
             Path.unlink(output_csv_file)
 
+        """
         #Save case name as a new key in the RESTOM dictonary:
         restom_dict[case_name] = {}
-
+        """
+        
         #Loop over CAM output variables:
         for var in var_list:
 
@@ -210,6 +212,7 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = _spatial_average(data)  # changes data "in place"
 
+            """
             #Add necessary data for RESTOM calcs below
             if var == "FLNT":
                 restom_dict[case_name][var] = data
@@ -217,6 +220,7 @@ def amwg_table(adf):
                 restom_units = unit_str
             if var == "FSNT":
                 restom_dict[case_name][var] = data
+            """
 
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
@@ -252,7 +256,7 @@ def amwg_table(adf):
 
         #End of var_list loop
         #--------------------
-
+        """
         if "FSNT" and "FLNT" in var_list:
             #RESTOM Calcs
             var = "RESTOM" #RESTOM = FSNT-FLNT
@@ -295,6 +299,7 @@ def amwg_table(adf):
             #Print message to debug log:
             adf.debug_log("RESTOM not calculated because FSNT and/or FLNT variables not in dataset")
         #End if
+        """
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
