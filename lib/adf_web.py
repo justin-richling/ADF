@@ -718,8 +718,9 @@ class AdfWeb(AdfObs):
                                    multi=multi_layout,) #The template rendered
 
                 #Write HTML file:
-                print("what is this file, eh: ",web_data.html_file.stem)
-                print("\n",img_data)
+                print(type(web_data.html_file))
+                #print("what is this file, eh: ",web_data.html_file.stem)
+                #print("\n",img_data)
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
                 #End with
