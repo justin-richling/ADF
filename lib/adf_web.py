@@ -332,7 +332,7 @@ class AdfWeb(AdfObs):
         #--------------------------------------------
         #from collections import defaultdict
         plot_urls = OrderedDict()
-        
+        top_plot_urls = []
         for ptype in ptype_order_dict.keys():  
             
             # List of vars for each plot type
@@ -353,9 +353,10 @@ class AdfWeb(AdfObs):
                         else:
                             plot_page = f'plot_page_top_plots_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
                             plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
+                            top_plot_urls.append(plot_page)
 
-        for i in plot_urls:
-            print(i,"\n")
+        #for i in plot_urls:
+        #    print(i,"\n")
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
@@ -704,7 +705,8 @@ class AdfWeb(AdfObs):
                     ofil.write(rndr)
                 #End with
 
-                #for 
+                for i in top_plot_urls:
+                     top_plot_name = f"{web_data.html_file.parent}/{i}"
                 tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
                 rndr = tmpl_top_plots.render(title=main_title,
                                    var_title=web_data.name,
@@ -724,7 +726,7 @@ class AdfWeb(AdfObs):
                 print("Parent: ",web_data.html_file.parent,"\n")
                 print("Stem: ",web_data.html_file.stem,"\n")
                 #print("\n",img_data)
-                with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
+                with open(top_plot_name, 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
                 #End with
 
