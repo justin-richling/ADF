@@ -722,10 +722,10 @@ class AdfWeb(AdfObs):
                                    multi=multi_layout,) #The template rendered
 
                 #Write HTML file:
-                print(type(web_data.html_file))
-                print("Parent: ",web_data.html_file.parent,"\n")
-                print("Stem: ",web_data.html_file.stem,"\n")
-                #print("\n",img_data)
+                #print(type(web_data.html_file))
+                #print("Parent: ",web_data.html_file.parent,"\n")
+                #print("Stem: ",web_data.html_file.stem,"\n")
+                print("\n",top_plot_name)
                 with open(top_plot_name, 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
                 #End with
