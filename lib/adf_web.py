@@ -703,7 +703,7 @@ class AdfWeb(AdfObs):
                     ofil.write(rndr)
                 #End with
 
-                for 
+                #for 
                 tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
                 rndr = tmpl_top_plots.render(title=main_title,
                                    var_title=web_data.name,
