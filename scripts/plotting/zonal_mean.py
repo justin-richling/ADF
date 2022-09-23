@@ -56,6 +56,9 @@ def zonal_mean(adfobj):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
+    #Time series files for unspecified climo years
+    cam_ts_locs = adfobj.get_cam_info('cam_ts_loc', required=True)
+
     #Attempt to grab case start_years (not currently required):
     syear_cases = adfobj.get_cam_info('start_year')
     eyear_cases = adfobj.get_cam_info('end_year')
@@ -77,6 +80,9 @@ def zonal_mean(adfobj):
 
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
+        syear_baseline = ""
+        eyear_baseline = ""
+        base_nickname = "Obs"
 
         syear_baseline = ""
         eyear_baseline = ""
@@ -98,8 +104,9 @@ def zonal_mean(adfobj):
         syear_baseline = adfobj.get_baseline_info('start_year')
         eyear_baseline = adfobj.get_baseline_info('end_year')
 
-        if (syear_baseline and eyear_baseline) == "None":
-            print("*** No baseline climo years given, so assinging None")
+        if (syear_baseline and eyear_baseline) == None:
+            baseline_ts_locs = adfobj.get_baseline_info('cam_ts_loc', required=True)
+            syear_baseline, eyear_baseline =  _get_climo_yrs(baseline_ts_locs)
 
         #Grab baseline case nickname
         base_nickname = adfobj.get_baseline_info('case_nickname')
@@ -115,7 +122,7 @@ def zonal_mean(adfobj):
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
     plot_type = basic_info_dict.get('plot_type', 'png')
     print(f"\t NOTE: Plot type is set to {plot_type}")
-
+    
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
@@ -134,6 +141,9 @@ def zonal_mean(adfobj):
                "JJA": [6, 7, 8],
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
+
+    multi_var_list = ["TS","SST"]# replace by config file stuff in a minute
+    multi_s_list = list(seasons.keys())
 
     #Loop over variables:
     for var in var_list:
@@ -188,7 +198,7 @@ def zonal_mean(adfobj):
             for case_idx, case_name in enumerate(case_names):
 
                 if (syear_cases[case_idx] and eyear_cases[case_idx]) == None:
-                     print("*** No case climo years given, so assinging None")
+                    syear_case, eyear_case =  _get_climo_yrs(cam_ts_locs[case_idx])
 
                 else:
                     syear_case = syear_cases[case_idx]
@@ -271,7 +281,7 @@ def zonal_mean(adfobj):
                     #       Merging would make overall timing better because looping twice will double I/O steps.
                     #
                     plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
-
+                    
                     # Check redo_plot. If set to True: remove old plot, if it already exists:
                     if (not redo_plot) and plot_name.is_file():
                         #Add already-existing plot to website (if enabled):
@@ -288,7 +298,8 @@ def zonal_mean(adfobj):
                     pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname, 
                                                 [syear_case,eyear_case],
                                                 [syear_baseline,eyear_baseline],
-                                                mseasons[s], oseasons[s], has_lev, **vres)
+                                                mseasons[s], oseasons[s], 
+                                                has_lev, **vres)
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
@@ -301,10 +312,9 @@ def zonal_mean(adfobj):
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
 
-
-#
 # Helpers
-#
+#########
+
 def _load_dataset(fils):
     if len(fils) == 0:
         warnings.warn(f"Input file list is empty.")
@@ -314,3 +324,18 @@ def _load_dataset(fils):
     else:
         sfil = str(fils[0])
         return xr.open_dataset(sfil)
+    #End if
+#End def
+
+def _get_climo_yrs(cam_ts_loc):
+    starting_location = Path(cam_ts_loc)
+    files_list = sorted(starting_location.glob('*nc'))
+    try:
+        syear = int(files_list[0].stem[-13:-9])
+        eyear = int(files_list[0].stem[-6:-2])
+    except:
+        print("Smoethign is borken...")
+    return syear, eyear
+
+##############
+#END OF SCRIPT

@@ -1400,7 +1400,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         diff = azm - bzm
         fig, ax = plt.subplots(nrows=2)
         ax = [ax[0],ax[1]]
-
+        
         #Set Main title for subplots:
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(1.02)
@@ -1409,7 +1409,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(bdata['lat'], bzm, ax=ax[0],color="#ff7f0e")       
 
         leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
-                   borderaxespad=0.0,fontsize=6)
+                   borderaxespad=0.0,fontsize=6,frameon=False)
         leg.get_frame().set_linewidth(0.0)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
@@ -1579,7 +1579,7 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         st.set_y(1.02)
 
         leg = fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
-                   borderaxespad=0.0,fontsize=6)
+                   borderaxespad=0.0,fontsize=6, frameon=False)
         leg.get_frame().set_linewidth(0.0)
 
         for a in ax:

@@ -2,15 +2,10 @@
 Website (web) generation class for the
 Atmospheric Diagnostics Framework (ADF).
 This class inherits from the AdfObs class.
-
 Currently this class does three things:
-
 1.  Initializes an instance of AdfObs.
-
 2.  Determines if a website will be generated.
-
 3.  Sets website-related internal ADF variables.
-
 This class also provides a method for generating
 a website, as well as a method to add an image
 file or pandas dataframe to the website.
@@ -188,25 +183,19 @@ class AdfWeb(AdfObs):
         """
         Method that provides scripts a way to add an image file or
         Pandas dataframe to the website generator.
-
         Required Inputs:
-
         web_data  ->  Either a path to an image file, or a pandas dataframe.
         web_name  ->  The name of the plot or table (usually the plotted variable or case name).
         case_name ->  The name of the model case or dataset associated with the plot or table.
-
         Optional Inputs:
-
         category   -> Category for associated variable.  If not provided then generator will
                       attempt to grab it from the variable defaults file.  If no default is present
                       then it will default to "No category yet".
         season     -> What the season is for the plot.  If not provided it will assume the
                       plot does not need any seasonal seperation.
         plot_type  -> Type of plot.  If not provided then plot type will be "Special".
-
         multi_case -> Logical which indicates whether the image or dataframe can contain
                       multiple cases (e.g. a line plot with one line for each case).
-
         """
 
         #Do nothing if user is not requesting a website to be generated:
@@ -332,16 +321,22 @@ class AdfWeb(AdfObs):
 
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
-            main_site_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
-            main_site_path = main_site_path / "main_website"
+            multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
+            main_site_path = multi_path / "main_website"
             main_site_path.mkdir(exist_ok=True)
             case_sites = OrderedDict()
+
+            multi_layout = True
         else:
             main_site_path = "" #Set main_site_path to blank value
+            multi_layout = False
         #End if
 
         #Extract needed variables from yaml file:
         case_names = self.get_cam_info('cam_case_name', required=True)
+
+        #Time series files for unspecified climo years
+        cam_ts_locs = self.get_cam_info('cam_ts_loc', required=True)
 
         #Attempt to grab case start_years (not currently required):
         ###########################################################
@@ -351,16 +346,24 @@ class AdfWeb(AdfObs):
         eyear_cases = self.get_cam_info('end_year')
 
         if (syear_cases and eyear_cases) == None:
-            print("*** No case climo years given, so assinging None")
+            syear_cases = [None]*len(case_names)
+            eyear_cases = [None]*len(case_names)
 
-        else:
-            syear_cases = syear_cases[0]
-            eyear_cases = eyear_cases[0]
-
-
+        #Loop over model cases to catch all cases that have no climo years specified:
+        for case_idx, case_name in enumerate(case_names):
+                
+            if (syear_cases[case_idx] and eyear_cases[case_idx]) == None:
+                print(f"No given climo years for {case_name}...")
+                starting_location = Path(cam_ts_locs[case_idx])
+                files_list = sorted(starting_location.glob('*nc'))
+                #This assumes CAM file names stay with this convention
+                #Better way to do this?
+                syear_cases[case_idx] = int(files_list[0].stem[-13:-9])
+                eyear_cases[case_idx] = int(files_list[0].stem[-6:-2])
+      
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
-            data_name = "obs"
+            data_name = "Obs"
             syear_baseline = ""
             eyear_baseline = ""
         else:
@@ -370,13 +373,19 @@ class AdfWeb(AdfObs):
             syear_baseline = self.get_baseline_info('start_year')
             eyear_baseline = self.get_baseline_info('end_year')
 
-            if (syear_baseline and eyear_baseline) == "None":
-                print("*** No baseline climo years given, so assinging None")
+            if (syear_baseline and eyear_baseline) == None:
+                print(f"No given climo years for {data_name}...")
+                #Time series files (to be used for climo years):
+                baseline_ts_locs = self.get_baseline_info('cam_ts_loc', required=True)
+                starting_location = Path(baseline_ts_locs)
+                files_list = sorted(starting_location.glob('*.nc'))
+                syear_baseline = int(files_list[0].stem[-13:-9])
+                eyear_baseline = int(files_list[0].stem[-6:-2])
             #End if
         #End if
 
         #Set climo years format for html file headers
-        case_yrs=f"{syear_cases} - {eyear_cases}"
+        case_yrs=f"{syear_cases[0]} - {eyear_cases[0]}"
         baseline_yrs=f"{syear_baseline} - {eyear_baseline}"
 
         #Extract variable defaults dictionary (for categories):
@@ -456,8 +465,10 @@ class AdfWeb(AdfObs):
                 #Create a directory that will hold table html files, if a table is present:
                 if self.num_cases > 1:
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
+                    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 else:
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+                # -> print(self.__case_web_paths[web_data.case]['table_pages_dir'],"\n")
                 #End if
 
                 #Add table HTML file to dictionary:
@@ -524,6 +535,26 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
+        #If this is a multi-case instance, then copy website to "main" directory:
+        if main_site_path:
+            #Add "multi-case" to start of case_names:
+            #case_names.insert(0, "multi-case")
+
+            #Create CSS templates file path:
+            main_templates_path = main_site_path / "templates"
+
+            #Also add path to case_sites dictionary:
+            #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
+            #loop over cases:
+            for idx, case_name in enumerate(case_names):
+                #Check if case name is present in plot
+                if case_name in self.__case_web_paths:
+                    #Add path to case_sites dictionary:
+                    case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
+        else:
+            #make empty list for non multi-case web generation
+            case_sites = []
+
         #Loop over all web data objects again:
         for web_data in self.__website_data:
 
@@ -532,10 +563,12 @@ class AdfWeb(AdfObs):
                 #Create output HTML file path:
                 if self.num_cases > 1:
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
+                    #table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
                     plot_types = multi_plot_type_html
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
                     plot_types = plot_type_html
+                
                 #End if
 
                 #Check if plot image already handles multiple cases,
@@ -559,14 +592,18 @@ class AdfWeb(AdfObs):
                                   case1=case1,
                                   case2=data_name,
                                   case_yrs=case_yrs,
+                                  base_name=data_name,
                                   baseline_yrs=baseline_yrs,
                                   amwg_tables=table_html_info,
                                   plot_types=plot_types,
                                   table_name=web_data.name,
-                                  table_html=table_html
+                                  table_html=table_html,
+                                  multi=multi_layout,
+                                  case_sites=case_sites,
                                   )
 
                 #Write mean diagnostic tables HTML file:
+                # -> print("web_data.html_file: ",web_data.html_file,"\n")
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 #End with
@@ -581,9 +618,12 @@ class AdfWeb(AdfObs):
                                                              case1=case1,
                                                              case2=data_name,
                                                              case_yrs=case_yrs,
+                                                             base_name=data_name,
                                                              baseline_yrs=baseline_yrs,
                                                              amwg_tables=table_html_info,
                                                              plot_types=plot_types,
+                                                             multi=multi_layout,
+                                                             case_sites=case_sites,
                                                             )
 
                     #Write mean diagnostic tables HTML file:
@@ -619,7 +659,8 @@ class AdfWeb(AdfObs):
                                    case_yrs=case_yrs,
                                    baseline_yrs=baseline_yrs,
                                    mydata=mean_html_info[web_data.plot_type],
-                                   plot_types=plot_types) #The template rendered
+                                   plot_types=plot_types,
+                                   multi=multi_layout,) #The template rendered
 
                 #Write HTML file:
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
@@ -628,6 +669,7 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
+                print("For case index, plot_types: ",plot_types,"\n")
                 if not mean_ptype_file.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
@@ -640,7 +682,8 @@ class AdfWeb(AdfObs):
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info[web_data.plot_type],
                                                  curr_type=web_data.plot_type,
-                                                 plot_types=plot_types)
+                                                 plot_types=plot_types,
+                                                 multi=multi_layout,)
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
@@ -665,7 +708,8 @@ class AdfWeb(AdfObs):
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info[web_data.plot_type],
                                                  curr_type=web_data.plot_type,
-                                                 plot_types=plot_types)
+                                                 plot_types=plot_types,
+                                                 multi=multi_layout,)
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
@@ -694,7 +738,8 @@ class AdfWeb(AdfObs):
                                                case2=data_name,
                                                case_yrs=case_yrs,
                                                baseline_yrs=baseline_yrs,
-                                               plot_types=plot_types)
+                                               plot_types=plot_types,
+                                               multi=multi_layout,)
 
                 #Write Mean diagnostics index HTML file:
                 with open(index_html_file, 'w', encoding='utf-8') as ofil:
@@ -706,38 +751,45 @@ class AdfWeb(AdfObs):
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
             #Add "multi-case" to start of case_names:
-            case_names.insert(0, "multi-case")
+            #case_names.insert(0, "multi-case")
 
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
 
+            #Also add path to case_sites dictionary:
+            #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
+            #print(case_sites[case_names[0]])
             #loop over cases:
-            for case_name in case_names:
-
+            for idx, case_name in enumerate(case_names):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
                     #Extract website directory:
                     website_dir = self.__case_web_paths[case_name]['website_dir']
-
-                    #Copy website directory to "main site" directory:
-                    shutil.copytree(website_dir, main_site_path / case_name)
+                    if not website_dir.is_dir():
+                        #Copy website directory to "main site" directory:
+                        shutil.copytree(website_dir, main_site_path / case_name)
 
                     #Also add path to case_sites dictionary:
-                    case_sites[case_name] = os.path.join(os.curdir, case_name, "index.html")
+                    #case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
 
-                    #Also make sure CSS template files have been copied over:
-                    if not main_templates_path.is_dir():
-                        css_files_dir = self.__case_web_paths[case_name]['css_files_dir']
-                        shutil.copytree(css_files_dir, main_site_path / "templates")
-                    #End if
+            #Also make sure CSS template files have been copied over:
+            if not main_templates_path.is_dir():
+                css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
+                shutil.copytree(css_files_dir, main_templates_path)
+            #End if
                 #End if
             #End for (model case loop)
 
             #Create multi-case site:
+            multi_plots = {"Tables": "html_table/mean_tables.html",
+                           "LatLon": "https://ncar.ucar.edu/"}
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
                             case_sites=case_sites,
+                            base_name=data_name,
+                            baseline_yrs=baseline_yrs,
+                            multi_plots=multi_plots,
                             )
 
             #Write multi-case main HTML file:
@@ -749,7 +801,6 @@ class AdfWeb(AdfObs):
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
-
 #++++++++++++++++++++
 #End Class definition
 #++++++++++++++++++++
