@@ -64,11 +64,6 @@ def meridional_mean(adfobj):
         eyear_baseline = ""
         base_nickname = "Obs"
 
-        syear_baseline = ""
-        eyear_baseline = ""
-
-        base_nickname = "Obs"
-
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
         if not var_obs_dict:
