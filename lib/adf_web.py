@@ -703,6 +703,26 @@ class AdfWeb(AdfObs):
                     ofil.write(rndr)
                 #End with
 
+                tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
+                rndr = tmpl_top_plots.render(title=main_title,
+                                   var_title=web_data.name,
+                                   season_title=web_data.season,
+                                   plottype_title=web_data.plot_type,
+                                   imgs=img_data,
+                                   case1=case1,
+                                   case2=data_name,
+                                   case_yrs=case_yrs,
+                                   baseline_yrs=baseline_yrs,
+                                   mydata=mean_html_info[web_data.plot_type],
+                                   plot_types=plot_types,
+                                   multi=multi_layout,) #The template rendered
+
+                #Write HTML file:
+                print("what is this file, eh: ",web_data.html_file)
+                with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
+                    ofil.write(rndr)
+                #End with
+
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
                 if not mean_ptype_file.exists():
