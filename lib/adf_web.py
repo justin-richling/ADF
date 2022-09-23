@@ -755,7 +755,7 @@ class AdfWeb(AdfObs):
 
                 index_top_html_file = img_pages_dir / "top_plots_index.html"
                 #Construct index.html
-                top_index_tmpl = jinenv.get_template('template_TopPlots_index.html')
+                top_index_tmpl = jinenv.get_template('template_top_plots_index.html')
                 top_index_rndr = top_index_tmpl.render(title=main_title,
                                             var_title=web_data.name,
                                             season_title=web_data.plot_type,
