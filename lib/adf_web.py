@@ -321,6 +321,7 @@ class AdfWeb(AdfObs):
 
         ptype_order_dict = {'global_latlon_map': ["LatLon"],
                             'zonal_mean': ["Zonal"],
+                            'meridional_mean': ["Meridional"],
                             'global_latlon_vect_map': ["LatLon_Vector"],
                             'polar_map': ["NHPolar","SHPolar"],
                             'cam_taylor_diagram': ["TaylorDiag"],
