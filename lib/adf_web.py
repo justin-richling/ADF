@@ -769,7 +769,6 @@ class AdfWeb(AdfObs):
                                             var_title=web_data.name,
                                             season_title=web_data.plot_type,
                                             plottype_title=web_data.plot_type,
-                                            imgs=img_data,
                                             case1=case1,
                                             case2=data_name,
                                             case_yrs=case_yrs,
@@ -826,7 +825,7 @@ class AdfWeb(AdfObs):
                                     case2=data_name,
                                     case_yrs=case_yrs,
                                     baseline_yrs=baseline_yrs,
-                                    mydata=mean_html_info[web_data.plot_type],
+                                    mydata=plot_urls,
                                     plot_types=plot_types,
                                     multi=multi_layout,) #The template rendered
 
