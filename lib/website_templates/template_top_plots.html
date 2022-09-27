@@ -43,39 +43,40 @@
     <!--<div class="center">
       <h1>**  Your Favorite Plots!!  **</h1>
     </div>-->
-    <div>
-    <div style="float: left;" class="grid-container-top-plots">      
-      {% for type, html_file in mydata.items() %}
-      <div class="grid-item">
-        <p style="font-size:12"> &nbsp; {{ type }} </p>
-        <!--href="https://www.cgd.ucar.edu/amp/" style="font-size: 30px;"-->
-        {% for var_name, season in html_file.items() %}
-            <p> {{var_name}}</p>
+    <div class="float-container">
+      <div style="float: left;" class="grid-container-top-plots; float-child">      
+        {% for type, html_file in mydata.items() %}
+        <div class="grid-item">
+          <p style="font-size:12"> &nbsp; {{ type }} </p>
+          <!--href="https://www.cgd.ucar.edu/amp/" style="font-size: 30px;"-->
+          {% for var_name, season in html_file.items() %}
+              <p> {{var_name}}</p>
 
-            <a href="../html_img/plot_page_top_plots_{{var_name}}_ANN_{{type}}_Mean.html">&nbsp;ANN </a>
-            <a href="../html_img/plot_page_top_plots_{{var_name}}_DJF_{{type}}_Mean.html">&nbsp;DJF </a>
-            <a href="../html_img/plot_page_top_plots_{{var_name}}_MAM_{{type}}_Mean.html">&nbsp;MAM </a>
-            <a href="../html_img/plot_page_top_plots_{{var_name}}_JJA_{{type}}_Mean.html">&nbsp;JJA </a>
-            <a href="../html_img/plot_page_top_plots_{{var_name}}_SON_{{type}}_Mean.html">&nbsp;SON </a>
+              <a href="../html_img/plot_page_top_plots_{{var_name}}_ANN_{{type}}_Mean.html">&nbsp;ANN </a>
+              <a href="../html_img/plot_page_top_plots_{{var_name}}_DJF_{{type}}_Mean.html">&nbsp;DJF </a>
+              <a href="../html_img/plot_page_top_plots_{{var_name}}_MAM_{{type}}_Mean.html">&nbsp;MAM </a>
+              <a href="../html_img/plot_page_top_plots_{{var_name}}_JJA_{{type}}_Mean.html">&nbsp;JJA </a>
+              <a href="../html_img/plot_page_top_plots_{{var_name}}_SON_{{type}}_Mean.html">&nbsp;SON </a>
 
-            <!--{% for season_name, seas in season.items() %}
-            <a href="{{ seas }}"> &nbsp; {{ season_name | join(' ') }}</a>
-            {% endfor %}-->
+              <!--{% for season_name, seas in season.items() %}
+              <a href="{{ seas }}"> &nbsp; {{ season_name | join(' ') }}</a>
+              {% endfor %}-->
+          {% endfor %}
+
+
+        </div><!--grid-item-->
         {% endfor %}
+      </div><!--grid-container (end left div)-->
 
 
-      </div><!--grid-item-->
-      {% endfor %}
-    </div><!--grid-container-->
-
-    <div id="footer">
-      <div style="float: right; padding-left: 50px;"> <!--class="fixedDiv"--><!--float: right; width: 50%; height: 100px; padding-bottom: 50px;-->
-      <div class="center"><!--bottom div -->
+      <div class="center; float-child"><!--right div -->
         <a href="{{imgs[0]}}" target="_blank">
           <img src="{{imgs[0]}}" alt="{{imgs[1]}}"></img>
         </a>
-      </div> <!-- end bottom div -->
-      </div><!--footer-->
-    </div> <!--main-->
+      </div> <!-- end right div -->
+  
+
+    </div> <!--float-container-->
+
   </body>
 </html>
