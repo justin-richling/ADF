@@ -44,7 +44,8 @@
       <h1>**  Your Favorite Plots!!  **</h1>
     </div>-->
     <div class="float-container">
-      <div style="float: left;" class="grid-container-top-plots; float-child">      
+      <div class="float-child"> 
+      <div class="grid-container-top-plots"> <!--style="float: left;" -->     
         {% for type, html_file in mydata.items() %}
         <div class="grid-item">
           <p style="font-size:12"> &nbsp; {{ type }} </p>
@@ -66,10 +67,11 @@
 
         </div><!--grid-item-->
         {% endfor %}
-      </div><!--grid-container (end left div)-->
+      </div><!-- grid-container -->
+    </div><!-- end left div -->
 
 
-      <div class="center; float-child"><!--right div -->
+      <div class ="float-child"><!--right div -->
         <a href="{{imgs[0]}}" target="_blank">
           <img src="{{imgs[0]}}" alt="{{imgs[1]}}"></img>
         </a>
