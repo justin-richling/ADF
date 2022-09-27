@@ -810,6 +810,7 @@ class AdfWeb(AdfObs):
         #End for (web data loop)
 
         for i,val in enumerate(top_plot_urls):
+            print(i,val,"\n")
             top_plot_name = f"{web_data.html_file.parent}/{val}"
             tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
             rndr = tmpl_top_plots.render(title=main_title,
