@@ -44,7 +44,7 @@
       <h1>**  Your Favorite Plots!!  **</h1>
     </div>-->
     <div>
-    <div class="grid-container-top-plots">      
+    <div style="float: left;" class="grid-container-top-plots">      
       {% for type, html_file in mydata.items() %}
       <div class="grid-item">
         <p style="font-size:12"> &nbsp; {{ type }} </p>
@@ -69,7 +69,7 @@
     </div><!--grid-container-->
 
     <div id="footer">
-      <div style="padding-left: 50px;"> <!--class="fixedDiv"--><!--float: right; width: 50%; height: 100px; padding-bottom: 50px;-->
+      <div style="float: right; padding-left: 50px;"> <!--class="fixedDiv"--><!--float: right; width: 50%; height: 100px; padding-bottom: 50px;-->
       <div class="center"><!--bottom div -->
         <a href="{{imgs[0]}}" target="_blank">
           <img src="{{imgs[0]}}" alt="{{imgs[1]}}"></img>
