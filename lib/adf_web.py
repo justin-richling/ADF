@@ -681,7 +681,7 @@ class AdfWeb(AdfObs):
                             web_data.asset_path.stem]
                 print("img_data: ",img_data,"\n")
 
-                if img_data[1] in top_plot_name:
+                if img_data[1] in top_plots_names:
                     img_data_names.append(img_data)
 
                 #Check if plot image already handles multiple cases:
