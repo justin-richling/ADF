@@ -42,7 +42,7 @@
 
     <div class="float-container">
 
-      <div class="float-child" style="float: left;"> 
+      <div class="float-child" style="float: left; width: 25%"> 
         <div class="grid-container-top-plots"> <!--style="float: left;" -->     
           {% for type, html_file in mydata.items() %}
           <div class="grid-item">
@@ -66,7 +66,7 @@
         </div><!-- grid-container -->
       </div><!-- end left div -->
 
-      <div class ="float-child" style="float: right;"><!--right div -->
+      <div class ="float-child" style="float: right; width: 75%"><!--right div -->
         <a href="{{imgs[0]}}" target="_blank">
           <img src="{{imgs[0]}}" alt="{{imgs[1]}}"></img>
         </a>
