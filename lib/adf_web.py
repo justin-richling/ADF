@@ -705,31 +705,6 @@ class AdfWeb(AdfObs):
                     ofil.write(rndr)
                 #End with
 
-                for i in top_plot_urls:
-                    top_plot_name = f"{web_data.html_file.parent}/{i}"
-                    tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
-                    rndr = tmpl_top_plots.render(title=main_title,
-                                    var_title=web_data.name,
-                                    season_title=web_data.season,
-                                    plottype_title=web_data.plot_type,
-                                    imgs=img_data,
-                                    case1=case1,
-                                    case2=data_name,
-                                    case_yrs=case_yrs,
-                                    baseline_yrs=baseline_yrs,
-                                    mydata=mean_html_info[web_data.plot_type],
-                                    plot_types=plot_types,
-                                    multi=multi_layout,) #The template rendered
-
-                    #Write HTML file:
-                    #print(type(web_data.html_file))
-                    #print("Parent: ",web_data.html_file.parent,"\n")
-                    #print("Stem: ",web_data.html_file.stem,"\n")
-                    print("\n",top_plot_name)
-                    with open(top_plot_name, 'w', encoding='utf-8') as ofil:
-                        ofil.write(rndr)
-                    #End with
-
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
                 if not mean_ptype_file.exists():
@@ -831,6 +806,32 @@ class AdfWeb(AdfObs):
                 #End with
             #End if (mean_index exists)
         #End for (web data loop)
+
+        for i in top_plot_urls:
+            top_plot_name = f"{web_data.html_file.parent}/{i}"
+            tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
+            
+            rndr = tmpl_top_plots.render(title=main_title,
+                                    var_title=web_data.name,
+                                    season_title=web_data.season,
+                                    plottype_title=web_data.plot_type,
+                                    imgs=img_data,
+                                    case1=case1,
+                                    case2=data_name,
+                                    case_yrs=case_yrs,
+                                    baseline_yrs=baseline_yrs,
+                                    mydata=mean_html_info[web_data.plot_type],
+                                    plot_types=plot_types,
+                                    multi=multi_layout,) #The template rendered
+
+            #Write HTML file:
+            #print(type(web_data.html_file))
+            #print("Parent: ",web_data.html_file.parent,"\n")
+            #print("Stem: ",web_data.html_file.stem,"\n")
+            print("\n",top_plot_name)
+            with open(top_plot_name, 'w', encoding='utf-8') as ofil:
+                ofil.write(rndr)
+            #End with
 
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
