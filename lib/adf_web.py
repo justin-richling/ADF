@@ -358,8 +358,6 @@ class AdfWeb(AdfObs):
                             top_plot_urls.append(plot_page)
                             top_plots_names.append(f"{var}_{season}_{ptype_order_dict[ptype][0]}_Mean")
 
-        for i in top_plot_urls:
-            print(i,"\n")
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
@@ -509,7 +507,6 @@ class AdfWeb(AdfObs):
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 else:
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
-                # -> print(self.__case_web_paths[web_data.case]['table_pages_dir'],"\n")
                 #End if
 
                 #Add table HTML file to dictionary:
@@ -644,7 +641,6 @@ class AdfWeb(AdfObs):
                                   )
 
                 #Write mean diagnostic tables HTML file:
-                # -> print("web_data.html_file: ",web_data.html_file,"\n")
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 #End with
@@ -679,7 +675,6 @@ class AdfWeb(AdfObs):
                 img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
-                print("img_data: ",img_data,"\n")
 
                 if img_data[1] in top_plots_names:
                     img_data_names.append(img_data)
@@ -830,10 +825,6 @@ class AdfWeb(AdfObs):
                                     multi=multi_layout,) #The template rendered
 
             #Write HTML file:
-            #print(type(web_data.html_file))
-            #print("Parent: ",web_data.html_file.parent,"\n")
-            #print("Stem: ",web_data.html_file.stem,"\n")
-            print("\n",top_plot_name)
             with open(top_plot_name, 'w', encoding='utf-8') as ofil:
                 ofil.write(rndr)
             #End with
