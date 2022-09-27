@@ -242,7 +242,8 @@ border: 3px solid #fff;
 }
 
 .float-child {
-width: 50%;
+/*width: 50%;*/
+border: none;
 /*float: left;*/
 /*padding: 20px;*/
 /*border: 2px solid red;*/
