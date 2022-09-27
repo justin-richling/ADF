@@ -179,7 +179,7 @@ padding: 65px 100px;
   column-gap: 50px;
   row-gap: 50px;
   width: 220px;
-  grid-template-columns: repeat(1, auto);
+  grid-template-columns: repeat(2, auto);
   background-color: #e4eef0;
   padding: 15px 25px;
   }
