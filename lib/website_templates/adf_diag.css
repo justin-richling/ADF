@@ -178,7 +178,7 @@ padding: 65px 100px;
   display: grid;
   column-gap: 50px;
   row-gap: 50px;
-  width: 220px;
+  width: 440px;
   grid-template-columns: repeat(2, auto);
   background-color: #e4eef0;
   padding: 15px 25px;
