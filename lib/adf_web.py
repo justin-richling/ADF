@@ -333,6 +333,8 @@ class AdfWeb(AdfObs):
         #from collections import defaultdict
         plot_urls = OrderedDict()
         top_plot_urls = []
+        top_plots_names = []
+        img_data_names = []
         for ptype in ptype_order_dict.keys():  
             
             # List of vars for each plot type
@@ -354,6 +356,7 @@ class AdfWeb(AdfObs):
                             plot_page = f'plot_page_top_plots_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
                             plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
                             top_plot_urls.append(plot_page)
+                            top_plots_names.append(f"{var}_{season}_{ptype_order_dict[ptype][0]}_Mean")
 
         for i in top_plot_urls:
             print(i,"\n")
@@ -677,6 +680,10 @@ class AdfWeb(AdfObs):
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
                 print("img_data: ",img_data,"\n")
+
+                if img_data[1] in top_plot_name:
+                    img_data_names.append(img_data)
+
                 #Check if plot image already handles multiple cases:
                 if web_data.multi_case:
                     case1 = "Listed in plots."
@@ -810,12 +817,11 @@ class AdfWeb(AdfObs):
         for i in top_plot_urls:
             top_plot_name = f"{web_data.html_file.parent}/{i}"
             tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
-            
             rndr = tmpl_top_plots.render(title=main_title,
                                     var_title=web_data.name,
                                     season_title=web_data.season,
                                     plottype_title=web_data.plot_type,
-                                    imgs=img_data,
+                                    imgs=img_data_names[i],
                                     case1=case1,
                                     case2=data_name,
                                     case_yrs=case_yrs,
