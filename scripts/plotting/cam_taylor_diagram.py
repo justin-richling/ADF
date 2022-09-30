@@ -52,6 +52,7 @@ def cam_taylor_diagram(adfobj):
     
     #Grab test case nickname(s)
     test_nicknames = adfobj.get_cam_info('case_nickname')
+    print(type(test_nicknames),test_nicknames)
     if test_nicknames == None:
         test_nicknames = case_names
 
