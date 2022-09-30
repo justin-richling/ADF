@@ -174,7 +174,7 @@ def cam_taylor_diagram(adfobj):
         # -- PLOTTING (one per season) --
         #
         fig, ax = taylor_plot_setup(title=f"Taylor Diagram - {s}",
-                                    baseline=f"Baseline: {data_name}  yrs: {syear_baseline}-{eyear_baseline}")
+                                    baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
 
         for i, case in enumerate(case_names):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
