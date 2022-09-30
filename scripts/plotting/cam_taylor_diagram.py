@@ -95,6 +95,7 @@ def cam_taylor_diagram(adfobj):
 
         #Grab baseline case nickname
         base_nickname = adfobj.get_baseline_info('case_nickname')
+        print(type(base_nickname),base_nickname)
         if base_nickname == None:
             base_nickname = data_name
 
