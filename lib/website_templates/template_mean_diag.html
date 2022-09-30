@@ -44,7 +44,7 @@
     <div class="grid-container" >
       {% for category, var_seas in mydata.items() %}
       <div class="grid-item">
-        <div class="dropdown">
+        <div style="position: relative; display: inline-block;">
           <h3 class="block">{{ category }}</h3>
             <div class="grid-container" style="column-gap: 5px; row-gap: 5px; padding:2px">
               {% for var_name, ptype_seas in var_seas.items() %}
