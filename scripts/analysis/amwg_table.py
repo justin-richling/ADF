@@ -258,6 +258,7 @@ def amwg_table(adf):
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
+            print(type(data))
             # Now that data is (time,), we can do our simple stats:
             data_mean = data.mean()
             data_sample = len(data)
