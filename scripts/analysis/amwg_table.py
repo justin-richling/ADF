@@ -239,6 +239,7 @@ def amwg_table(adf):
 
             # Add entries to Pandas structure:
             df = pd.DataFrame(dfentries)
+            df.style.format(thousands=",", precision=2, subset=["mean"])
 
             # Check if the output CSV file exists,
             # if so, then append to it:
