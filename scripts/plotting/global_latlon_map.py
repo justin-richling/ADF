@@ -492,7 +492,7 @@ def global_latlon_map(adfobj):
     #End for (variable loop)
 
     print("\t - lat/lon maps for RESTOM")
-    print(restom_dict)
+    #print(restom_dict)
     
     # Check res for RESTOM specific options:
     vres = res["RESTOM"]
@@ -509,9 +509,9 @@ def global_latlon_map(adfobj):
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
-        mrestom = restom_dict[case_name]["mfsnt"] - restom_dict["mflnt"]
-        orestom = restom_dict[case_name]["ofsnt"] - restom_dict["oflnt"]
-        drestom = restom_dict[case_name]["dfsnt"] - restom_dict["dflnt"]
+        mrestom = restom_dict[case_name]["mfsnt"] - restom_dict[case_name]["mflnt"]
+        orestom = restom_dict[case_name]["ofsnt"] - restom_dict[case_name]["oflnt"]
+        drestom = restom_dict[case_name]["dfsnt"] - restom_dict[case_name]["dflnt"]
 
         plot_name = plot_loc / f"RESTOM_ANN_LatLon_Mean.{plot_type}"
         pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
