@@ -281,6 +281,10 @@ def amwg_table(adf):
             # Add entries to Pandas structure:
             df = pd.DataFrame(dfentries)
 
+            df.style.set_properties(pd.IndexSlice[["RESTOM"], :], 
+                                    **{"text-decoration: line-through"}
+)
+
             # Check if the output CSV file exists,
             # if so, then append to it:
             if output_csv_file.is_file():
