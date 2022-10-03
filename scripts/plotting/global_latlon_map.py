@@ -262,6 +262,7 @@ def global_latlon_map(adfobj):
                         mseasons = {}
                         oseasons = {}
                         dseasons = {} # hold the differences
+                        restom_dict = {}
 
                         #Loop over season dictionary:
                         for s in seasons:
@@ -289,6 +290,17 @@ def global_latlon_map(adfobj):
                                     oseasons[s] = (odata * weights_ann).sum(dim='time')
                                     # difference: each entry should be (lat, lon)
                                     dseasons[s] = mseasons[s] - oseasons[s]
+
+                                    if var == "FSNT":
+                                        restom_dict["mfsnt"] = mseasons[s]
+                                        restom_dict["ofsnt"] = oseasons[s]
+                                        restom_dict["dfsnt"] = dseasons[s]
+                                    
+                                    if var == "FLNT":
+                                        restom_dict["mflnt"] = mseasons[s]
+                                        restom_dict["oflnt"] = oseasons[s]
+                                        restom_dict["dflnt"] = dseasons[s]
+
                                 else:
                                     #this is inefficient because we do same calc over and over
                                     mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
@@ -381,6 +393,7 @@ def global_latlon_map(adfobj):
                             mseasons = {}
                             oseasons = {}
                             dseasons = {}
+                            restom_dict = {}
 
                             #Loop over seasons:
                             for s in seasons:
@@ -395,6 +408,17 @@ def global_latlon_map(adfobj):
                                         oseasons[s] = (odata * weights_ann).sum(dim='time').sel(lev=pres)
                                         # difference: each entry should be (lat, lon)
                                         dseasons[s] = mseasons[s] - oseasons[s]
+
+                                        if var == "FSNT":
+                                            restom_dict["mfsnt"] = mseasons[s]
+                                            restom_dict["ofsnt"] = oseasons[s]
+                                            restom_dict["dfsnt"] = dseasons[s]
+                                        
+                                        if var == "FLNT":
+                                            restom_dict["mflnt"] = mseasons[s]
+                                            restom_dict["oflnt"] = oseasons[s]
+                                            restom_dict["dflnt"] = dseasons[s]
+
                                     else:
                                         #this is inefficient because we do same calc over and over
                                         mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s,lev=pres)
@@ -455,6 +479,37 @@ def global_latlon_map(adfobj):
             #End for (case loop)
         #End for (obs/baseline loop)
     #End for (variable loop)
+
+    print("\t - lat/lon maps for RESTOM")
+    
+    # Check res for RESTOM specific options:
+    vres = res["RESTOM"]
+    #If found then notify user, assuming debug log is enabled:
+    adfobj.debug_log(f"global_latlon_map: Found variable defaults for {var}")
+
+    #Extract category (if available):
+    web_category = vres.get("category", None)
+
+   
+
+    # For global maps, also set the central longitude:
+    # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
+    # otherwise defaults to 180
+    vres['central_longitude'] = pf.get_central_longitude(adfobj)
+    mrestom = restom_dict["mfsnt"] - restom_dict["mflnt"]
+    orestom = restom_dict["ofsnt"] - restom_dict["oflnt"]
+    drestom = restom_dict["dfsnt"] - restom_dict["dflnt"]
+
+    plot_name = plot_loc / f"RESTOM_ANN_LatLon_Mean.{plot_type}"
+    pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
+                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                     [syear_baseline,eyear_baseline],
+                                                     mrestom, orestom, drestom,
+                                                     **vres)
+
+    #Add plot to website (if enabled):
+    adfobj.add_website_data(plot_name, "RESTOM", case_name, category=web_category,
+                            season="ANN", plot_type="LatLon")
 
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
