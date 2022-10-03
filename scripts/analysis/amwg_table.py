@@ -247,7 +247,7 @@ def amwg_table(adf):
             else:
                 df.to_csv(output_csv_file, header=cols, index=False)
 
-
+        print(var)
         #End of var_list loop
         #--------------------
         """
