@@ -249,7 +249,7 @@ def amwg_table(adf):
 
         #End of var_list loop
         #--------------------
-
+        """
         if "FSNT" and "FLNT" in var_list:
             #RESTOM Calcs
             var = "RESTOM" #RESTOM = FSNT-FLNT
@@ -281,8 +281,8 @@ def amwg_table(adf):
             # Add entries to Pandas structure:
             df = pd.DataFrame(dfentries)
 
-            df.style.set_properties(subset = pd.IndexSlice[["RESTOM"], :], 
-                                    **{"text-decoration": "line-through"})
+            #df.style.set_properties(subset = pd.IndexSlice[["RESTOM"], :], 
+            #                        **{"text-decoration": "line-through"})
 
             # Check if the output CSV file exists,
             # if so, then append to it:
@@ -300,6 +300,7 @@ def amwg_table(adf):
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+        """
 
     #End of model case loop
     #----------------------
