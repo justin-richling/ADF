@@ -492,6 +492,7 @@ def global_latlon_map(adfobj):
     #End for (variable loop)
 
     print("\t - lat/lon maps for RESTOM")
+    print(restom_dict)
     
     # Check res for RESTOM specific options:
     vres = res["RESTOM"]
