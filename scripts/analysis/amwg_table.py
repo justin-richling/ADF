@@ -282,7 +282,7 @@ def amwg_table(adf):
             df = pd.DataFrame(dfentries)
 
             df.style.set_properties(subset = pd.IndexSlice[["RESTOM"], :], 
-                                    **{"text-decoration: line-through"})
+                                    **{"text-decoration": "line-through"})
 
             # Check if the output CSV file exists,
             # if so, then append to it:
