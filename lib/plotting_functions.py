@@ -505,19 +505,19 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     st.set_y(0.85)
 
     #Set case nickname and climo years:
-    ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=6) #fontsize=tiFontSize
+    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=6)
 
     #Set stats: area_avg
     ax[0].set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.values.max():5.2f}\nMin: {mdl_mag.values.min():5.2f}", loc='right',
-                       fontsize=8)
+                       fontsize=6)
     ax[1].set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.values.max():5.2f}\nMin: {mdl_mag.values.min():5.2f}", loc='right',
-                       fontsize=8)
+                       fontsize=6)
     ax[-1].set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.values.max():5.2f}\nMin: {mdl_mag.values.min():5.2f}", loc='right',
-                       fontsize=8)
+                       fontsize=6)
 
     # set rmse title:
-    ax[-1].set_title(f"RMSE: ", fontsize=8)
+    ax[-1].set_title(f"RMSE: ", fontsize=6)
     ax[-1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
     if "units" in kwargs:
@@ -701,19 +701,19 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     st.set_y(0.85)
     
     #Set case nickname and climo years:
-    ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=6) #fontsize=tiFontSize
+    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=6)
     
     #Set stats: area_avg
     ax[0].set_title(f"Mean: {mdlfld.weighted(wgt).mean().item():5.2f}\nMax: {mdlfld.values.max():5.2f}\nMin: {mdlfld.values.min():5.2f}", loc='right',
-                       fontsize=8)
+                       fontsize=6)
     ax[1].set_title(f"Mean: {obsfld.weighted(wgt).mean().item():5.2f}\nMax: {obsfld.values.max():5.2f}\nMin: {obsfld.values.min():5.2f}", loc='right',
-                       fontsize=8)
+                       fontsize=6)
     ax[-1].set_title(f"Mean: {diffld.weighted(wgt).mean().item():5.2f}\nMax: {diffld.values.max():5.2f}\nMin: {diffld.values.min():5.2f}", loc='right',
-                       fontsize=8)
+                       fontsize=6)
 
     # set rmse title:
-    ax[-1].set_title(f"RMSE: {d_rmse:.3f}", fontsize=8)
+    ax[-1].set_title(f"RMSE: {d_rmse:.3f}", fontsize=6)
     ax[-1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
     if "units" in kwargs:
