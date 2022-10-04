@@ -1,6 +1,8 @@
 '''
 Module: cam_taylor_diagram
+
 Provides a Taylor diagram following the AMWG package. Uses spatial information only.
+
 This module, for better or worse, provides both the computation and plotting functionality.
 It depends on an ADF instance to obtain the `climo` files.
 It is designed to have one "reference" case (could be observations) and arbitrary test cases.
@@ -44,19 +46,13 @@ def cam_taylor_diagram(adfobj):
     # NOTE: "baseline" == "reference" == "observations" will be called `base`
     #       test case(s) == case(s) to be diagnosed  will be called `case` (assumes a list)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)  # Loop over these
-    #Attempt to grab case start_years (not currently required):
-    syear_cases = adfobj.get_cam_info('start_year')
-    eyear_cases = adfobj.get_cam_info('end_year')
 
-    #Time series files for unspecified climo years
-    cam_ts_locs = adfobj.get_cam_info('cam_ts_loc', required=True)
-
-    if (syear_cases and eyear_cases) == None:
-        syear_cases = [None]*len(case_names)
-        eyear_cases = [None]*len(case_names)
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
     
     #Grab test case nickname(s)
     test_nicknames = adfobj.get_cam_info('case_nickname')
+    print(type(test_nicknames),test_nicknames)
     if test_nicknames == None:
         test_nicknames = case_names
 
@@ -93,16 +89,13 @@ def cam_taylor_diagram(adfobj):
         data_name = adfobj.get_baseline_info('cam_case_name', required=True)
         data_list = data_name # should not be needed (?)
         data_loc = adfobj.get_baseline_info("cam_climo_loc", required=True)
-        #Attempt to grab baseline start_years (not currently required):
-        syear_baseline = adfobj.get_baseline_info('start_year')
-        eyear_baseline = adfobj.get_baseline_info('end_year')
-
-        if (syear_baseline and eyear_baseline) == None:
-            baseline_ts_locs = adfobj.get_baseline_info('cam_ts_loc', required=True)
-            syear_baseline, eyear_baseline =  _get_climo_yrs(baseline_ts_locs)
+    
+        syear_baseline = adfobj.climo_yrs["syear_baseline"]
+        eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
         #Grab baseline case nickname
         base_nickname = adfobj.get_baseline_info('case_nickname')
+        print(type(base_nickname),base_nickname)
         if base_nickname == None:
             base_nickname = data_name
 
@@ -181,12 +174,12 @@ def cam_taylor_diagram(adfobj):
         # -- PLOTTING (one per season) --
         #
         fig, ax = taylor_plot_setup(title=f"Taylor Diagram - {s}",
-                                    baseline=f"Baseline: {data_name}  yrs: {syear_baseline}-{eyear_baseline}")
+                                    baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
 
         for i, case in enumerate(case_names):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
         
-        ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, cam_ts_locs, needs_bias_labels=True)
+        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         # add text with variable names:
         txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
         fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
@@ -566,7 +559,7 @@ def plot_taylor_data(wks, df, **kwargs):
     return wks
 
 
-def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, cam_ts_locs, needs_bias_labels=True):
+def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cases, needs_bias_labels=True):
     """Apply final formatting to a Taylor diagram.
         wks -> Axes object that has passed through taylor_plot_setup and plot_taylor_data
         casenames -> list of case names for the legend
@@ -575,16 +568,14 @@ def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, c
     """
     # CASE LEGEND -- Color-coded
     bottom_of_text = 0.05
-    number_of_lines = len(casenames)
+    number_of_lines = len(test_nicknames)
     height_of_lines = 0.03
     text = wks.text(0.052, 0.08, "Cases:",
             color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)
     n = 0
-    for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
-            if (syear_cases[case_idx] and eyear_cases[case_idx]) == None:
-                syear_case, eyear_case =  _get_climo_yrs(cam_ts_locs[case_idx])
+    for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
 
-            text = wks.text(0.052, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_case}-{eyear_case}",
+            text = wks.text(0.052, bottom_of_text + n*height_of_lines, f"{test_nicknames[case_idx]}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
             color=c, ha='left', va='bottom', transform=wks.transAxes, fontsize=10)
             n += 1
     # BIAS LEGEND
@@ -602,13 +593,3 @@ def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, c
         wks.legend(handles=bias_legend_elements, labels=bias_legend_labels, loc='upper left', handler_map={tuple: HandlerTuple(ndivide=None, pad=2.)}, labelspacing=2, handletextpad=2, frameon=False, title=" - / + Bias",
                     title_fontsize=18)
     return wks
-
-def _get_climo_yrs(cam_ts_loc):
-    starting_location = Path(cam_ts_loc)
-    files_list = sorted(starting_location.glob('*nc'))
-    try:
-        syear = int(files_list[0].stem[-13:-9])
-        eyear = int(files_list[0].stem[-6:-2])
-    except:
-        print("Smoethign is borken...")
-    return syear, eyear

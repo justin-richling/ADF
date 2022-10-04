@@ -1,18 +1,24 @@
 """
 Information/Parameter (Info) class for
 the Atmospheric Diagnostics Framework (ADF).
+
 This class inherits from the AdfConfig class.
 Currently this class does four things:
+
 1.  Initializes an instance of AdfConfig.
+
 2.  Checks for the three, required upper-level
     dictionaries specified in the config file,
     and makes copies where the variables have
     been expanded.
+
 3.  Extract values for "compare_obs", "diag_var_list",
     and "plot_location", and provide properties to
     access these values to the rest of ADF.
+
 4.  Set "num_procs" variable, and provde num_procs
     property to the rest of ADF.
+
 This class also provide methods for extracting
 variables from the standard, expanded config
 dictionaries.
@@ -141,20 +147,20 @@ class AdfInfo(AdfConfig):
             syear_baseline = self.get_baseline_info('start_year')
             eyear_baseline = self.get_baseline_info('end_year')
 
-            if (syear_baseline and eyear_baseline) == None:
-                print("No given climo years for baseline...")
+            if (syear_baseline and eyear_baseline) is None:
+                print(f"No given climo years for {data_name}...")
                 baseline_hist_locs = self.get_baseline_info('cam_hist_loc',
                                                     required=True)
                 starting_location = Path(baseline_hist_locs)
                 files_list = sorted(starting_location.glob(hist_str+'.*.nc'))
                 base_climo_yrs = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
-                syear_baseline = int(min(base_climo_yrs))
-                eyear_baseline = int(max(base_climo_yrs))
-                data_name += f"_{syear_baseline}_{eyear_baseline}"
+                syear_baseline = int(base_climo_yrs[0])
+                eyear_baseline = int(base_climo_yrs[-1])
+            #End if
 
-            else:
-                data_name += f"_{syear_baseline}_{eyear_baseline}"
-        #End if
+            data_name += f"_{syear_baseline}_{eyear_baseline}"
+        self.__syear_baseline = syear_baseline
+        self.__eyear_baseline = eyear_baseline
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
         #-------------------------------------------------------------------------
@@ -173,7 +179,7 @@ class AdfInfo(AdfConfig):
         eyears = self.get_cam_info('end_year')
 
         #Make lists of None to be iterated over for case_names
-        if (syears and eyears) == None:
+        if (syears and eyears) is None:
             syears = [None]*len(case_names)
             eyears = [None]*len(case_names)
 
@@ -183,18 +189,16 @@ class AdfInfo(AdfConfig):
 
         for case_idx, case_name in enumerate(case_names):
 
-            if (syears[case_idx] and eyears[case_idx]) == None:
-                print("No given climo years for case...")
+            if (syears[case_idx] and eyears[case_idx]) is None:
+                print(f"No given climo years for {case_name}...")
                 starting_location = Path(cam_hist_locs[case_idx])
                 files_list = sorted(starting_location.glob(hist_str+'.*.nc'))
                 case_climo_yrs = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
-                syear = int(min(case_climo_yrs))
-                eyear = int(max(case_climo_yrs))
-                case_name += f"_{syear}_{eyear}"
-
-            else:
-                case_name += f"_{syears[case_idx]}_{eyears[case_idx]}"
+                syears[case_idx] = int(case_climo_yrs[0])
+                eyears[case_idx] = int(case_climo_yrs[-1])
             #End if
+
+            case_name += f"_{syears[case_idx]}_{eyears[case_idx]}"
 
             #Set the final directory name and save it to plot_location:
             direc_name = f"{case_name}_vs_{data_name}"
@@ -206,6 +210,9 @@ class AdfInfo(AdfConfig):
             #End if
 
         #End for
+
+        self.__syears = syears
+        self.__eyears = eyears
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
@@ -334,13 +341,12 @@ class AdfInfo(AdfConfig):
         #modify this variable:
         return copy.copy(self.__plot_location)
 
-    # Create property needed to return "multi_case_plots" list to user:
-    #@property
-    #def multi_case_plots(self):
-    #    """Return a copy of the "multi_case_plots" list to the user if requested."""
-    #    #Note that a copy is needed in order to avoid having a script mistakenly
-    #    #modify this variable, as it is mutable and thus passed by reference:
-    #    return copy.copy(self.__multi_case_plots)
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        """Return the "syear" and "eyear" integer values to the user if requested."""
+        return {"syears":self.__syears,"eyears":self.__eyears,
+                "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
 
     #########
 

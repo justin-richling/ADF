@@ -1,5 +1,6 @@
 #Import standard modules:
 from pathlib import Path
+from collections import OrderedDict
 import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
@@ -64,16 +65,8 @@ def global_latlon_map(adfobj):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
-    #Time series files for unspecified climo years
-    cam_ts_locs = adfobj.get_cam_info('cam_ts_loc', required=True)
-
-    #Attempt to grab case start_years (not currently required):
-    syear_cases = adfobj.get_cam_info('start_year')
-    eyear_cases = adfobj.get_cam_info('end_year')
-
-    if (syear_cases and eyear_cases) == None:
-        syear_cases = [None]*len(case_names)
-        eyear_cases = [None]*len(case_names)
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
 
     #Grab test case nickname(s)
     test_nicknames = adfobj.get_cam_info('case_nickname')
@@ -88,8 +81,6 @@ def global_latlon_map(adfobj):
 
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
-        syear_baseline = ""
-        eyear_baseline = ""
         base_nickname = "Obs"
 
         #If dictionary is empty, then  there are no observations to regrid to,
@@ -103,13 +94,8 @@ def global_latlon_map(adfobj):
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
 
-        #Attempt to grab baseline start_years (not currently required):
-        syear_baseline = adfobj.get_baseline_info('start_year')
-        eyear_baseline = adfobj.get_baseline_info('end_year')
-
-        if (syear_baseline and eyear_baseline) == None:
-            baseline_ts_locs = adfobj.get_baseline_info('cam_ts_loc', required=True)
-            syear_baseline, eyear_baseline =  _get_climo_yrs(baseline_ts_locs)
+        syear_baseline = adfobj.climo_yrs["syear_baseline"]
+        eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
         #Grab baseline case nickname
         base_nickname = adfobj.get_baseline_info('case_nickname')
@@ -153,6 +139,8 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
+    
+    restom_dict = {}
 
     restom_dict = {}
     # probably want to do this one variable at a time:
@@ -220,13 +208,6 @@ def global_latlon_map(adfobj):
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
 
-                if (syear_cases[case_idx] and eyear_cases[case_idx]) == None:
-                    syear_case, eyear_case =  _get_climo_yrs(cam_ts_locs[case_idx])
-                    
-                else:
-                    syear_case = syear_cases[case_idx]
-                    eyear_case = eyear_cases[case_idx]
-
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
 
@@ -286,6 +267,10 @@ def global_latlon_map(adfobj):
                         oseasons = {}
                         dseasons = {} # hold the differences
 
+                        #Initialize Ordered Dictionary for variable:
+                        if case_name not in restom_dict:
+                            restom_dict[case_name] = OrderedDict()
+
                         #Loop over season dictionary:
                         for s in seasons:
 
@@ -314,15 +299,15 @@ def global_latlon_map(adfobj):
                                     dseasons[s] = mseasons[s] - oseasons[s]
 
                                     if var == "FSNT":
-                                        restom_dict["mfsnt"] = mseasons[s]
-                                        restom_dict["ofsnt"] = oseasons[s]
-                                        restom_dict["dfsnt"] = dseasons[s]
+                                        restom_dict[case_name]["mfsnt"] = mseasons[s]
+                                        restom_dict[case_name]["ofsnt"] = oseasons[s]
+                                        restom_dict[case_name]["dfsnt"] = dseasons[s]
                                     
                                     if var == "FLNT":
-                                        restom_dict["mflnt"] = mseasons[s]
-                                        restom_dict["oflnt"] = oseasons[s]
-                                        restom_dict["dflnt"] = dseasons[s]
-                                        
+                                        restom_dict[case_name]["mflnt"] = mseasons[s]
+                                        restom_dict[case_name]["oflnt"] = oseasons[s]
+                                        restom_dict[case_name]["dflnt"] = dseasons[s]
+
                                 else:
                                     #this is inefficient because we do same calc over and over
                                     mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
@@ -363,7 +348,7 @@ def global_latlon_map(adfobj):
                             # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
 
                             pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
-                                                 [syear_case,eyear_case],
+                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
                                                  mseasons[s], oseasons[s], dseasons[s], **vres)
 
@@ -399,6 +384,8 @@ def global_latlon_map(adfobj):
 
                         #Loop over pressure levels:
                         for pres in pres_levs:
+                            if var == "FSNT":
+                                print("FSNT has levs I guess...")
 
                             #Check that the user-requested pressure level
                             #exists in the model data, which should already
@@ -414,6 +401,10 @@ def global_latlon_map(adfobj):
                             mseasons = {}
                             oseasons = {}
                             dseasons = {}
+                            
+                            #Initialize Ordered Dictionary for variable:
+                            if case_name not in restom_dict:
+                                restom_dict[case_name] = OrderedDict()
 
                             #Loop over seasons:
                             for s in seasons:
@@ -430,14 +421,15 @@ def global_latlon_map(adfobj):
                                         dseasons[s] = mseasons[s] - oseasons[s]
 
                                         if var == "FSNT":
-                                            restom_dict["mfsnt"] = mseasons[s]
-                                            restom_dict["ofsnt"] = oseasons[s]
-                                            restom_dict["dfsnt"] = dseasons[s]
-                                        
+                                            restom_dict[case_name]["mfsnt"] = mseasons[s]
+                                            restom_dict[case_name]["ofsnt"] = oseasons[s]
+                                            restom_dict[case_name]["dfsnt"] = dseasons[s]
+
                                         if var == "FLNT":
-                                            restom_dict["mflnt"] = mseasons[s]
-                                            restom_dict["oflnt"] = oseasons[s]
-                                            restom_dict["dflnt"] = dseasons[s]
+                                            restom_dict[case_name]["mflnt"] = mseasons[s]
+                                            restom_dict[case_name]["oflnt"] = oseasons[s]
+                                            restom_dict[case_name]["dflnt"] = dseasons[s]
+
                                     else:
                                         #this is inefficient because we do same calc over and over
                                         mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s,lev=pres)
@@ -477,7 +469,7 @@ def global_latlon_map(adfobj):
                                 #   *Any other entries will be ignored.
                                 # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
                                 pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
-                                                     [syear_case,eyear_case],
+                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], **vres)
 
@@ -528,6 +520,41 @@ def global_latlon_map(adfobj):
     adfobj.add_website_data(plot_name, "RESTOM", case_name, category=web_category,
                             season="ANN", plot_type="LatLon")
 
+    print("\t - lat/lon maps for RESTOM")
+    #print(restom_dict)
+    
+    # Check res for RESTOM specific options:
+    vres = res["RESTOM"]
+
+    # For global maps, also set the central longitude:
+    # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
+    # otherwise defaults to 180
+    vres['central_longitude'] = pf.get_central_longitude(adfobj)
+
+    #If found then notify user, assuming debug log is enabled:
+    adfobj.debug_log(f"global_latlon_map: Found variable defaults for {var}")
+
+    #Extract category (if available):
+    web_category = vres.get("category", None)
+   
+    #Loop over model cases:
+    for case_idx, case_name in enumerate(case_names):
+        
+        mrestom = restom_dict[case_name]["mfsnt"] - restom_dict[case_name]["mflnt"]
+        orestom = restom_dict[case_name]["ofsnt"] - restom_dict[case_name]["oflnt"]
+        drestom = restom_dict[case_name]["dfsnt"] - restom_dict[case_name]["dflnt"]
+
+        plot_name = plot_loc / f"RESTOM_ANN_LatLon_Mean.{plot_type}"
+        pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
+                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [syear_baseline,eyear_baseline],
+                                                        mrestom, orestom, drestom,
+                                                        **vres)
+
+        #Add plot to website (if enabled):
+        adfobj.add_website_data(plot_name, "RESTOM", case_name, category=web_category,
+                                season="ANN", plot_type="LatLon")
+
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
 
@@ -546,16 +573,6 @@ def _load_dataset(fils):
         return xr.open_dataset(sfil)
     #End if
 #End def
-
-def _get_climo_yrs(cam_ts_loc):
-    starting_location = Path(cam_ts_loc)
-    files_list = sorted(starting_location.glob('*nc'))
-    try:
-        syear = int(files_list[0].stem[-13:-9])
-        eyear = int(files_list[0].stem[-6:-2])
-    except:
-        print("Smoethign is borken...")
-    return syear, eyear
 
 ##############
 #END OF SCRIPT

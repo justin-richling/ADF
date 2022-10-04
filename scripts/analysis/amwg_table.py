@@ -246,6 +246,7 @@ def amwg_table(adf):
 
             # Add entries to Pandas structure:
             df = pd.DataFrame(dfentries)
+            df.style.format(thousands=",", precision=2, subset=["mean"])
 
             # Check if the output CSV file exists,
             # if so, then append to it:
@@ -265,6 +266,7 @@ def amwg_table(adf):
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
+            print(type(data))
             # Now that data is (time,), we can do our simple stats:
             data_mean = data.mean()
             data_sample = len(data)
@@ -287,6 +289,9 @@ def amwg_table(adf):
             # Add entries to Pandas structure:
             df = pd.DataFrame(dfentries)
 
+            #df.style.set_properties(subset = pd.IndexSlice[["RESTOM"], :], 
+            #                        **{"text-decoration": "line-through"})
+
             # Check if the output CSV file exists,
             # if so, then append to it:
             if output_csv_file.is_file():
@@ -304,6 +309,7 @@ def amwg_table(adf):
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+        
 
     #End of model case loop
     #----------------------
