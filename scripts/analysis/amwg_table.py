@@ -229,7 +229,7 @@ def amwg_table(adf):
             # create a dataframe:
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
-            row_values = [var, unit_str, data_mean.data.item(), data_sample,
+            row_values = [var, unit_str, f'{data_mean.data.item():0.2f}', data_sample,
                           data_std.data.item(), data_sem.data.item(), data_ci.data.item(),
                           f'{data_trend.intercept : 0.3f} + {data_trend.slope : 0.3f} t',
                           data_trend.pvalue]
@@ -239,7 +239,7 @@ def amwg_table(adf):
 
             # Add entries to Pandas structure:
             df = pd.DataFrame(dfentries)
-            df.style.format(thousands=",", precision=2, subset=["mean"])
+            #df.style.format(thousands=",", precision=2, subset=["mean"])
 
             # Check if the output CSV file exists,
             # if so, then append to it:
