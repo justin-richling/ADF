@@ -9,12 +9,16 @@ def regrid_and_vert_interp(adf):
     vertically interpolates the test case (and baseline case
     if need be) to match a default set of pressure levels, which
     are (in hPa):
+
     1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
     30, 20, 10, 7, 5, 3, 2, 1
+
     Currently any 3-D observations file needs to have equivalent pressure
     levels in order to work properly, although in the future it is hoped
     to enable the vertical interpolation of observations as well.
+    
     Description of needed inputs from ADF:
+
     case_name        -> Name of CAM case provided by "cam_case_name"
     input_climo_loc  -> Location of CAM climo files provided by "cam_climo_loc"
     output_loc       -> Location to write re-gridded CAM files, specified by "cam_regrid_loc"
