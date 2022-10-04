@@ -496,19 +496,21 @@ def global_latlon_map(adfobj):
     
     # Check res for RESTOM specific options:
     vres = res["RESTOM"]
+
+    # For global maps, also set the central longitude:
+    # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
+    # otherwise defaults to 180
+    vres['central_longitude'] = pf.get_central_longitude(adfobj)
+
     #If found then notify user, assuming debug log is enabled:
     adfobj.debug_log(f"global_latlon_map: Found variable defaults for {var}")
 
     #Extract category (if available):
     web_category = vres.get("category", None)
-
    
     #Loop over model cases:
     for case_idx, case_name in enumerate(case_names):
-        # For global maps, also set the central longitude:
-        # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
-        # otherwise defaults to 180
-        vres['central_longitude'] = pf.get_central_longitude(adfobj)
+        
         mrestom = restom_dict[case_name]["mfsnt"] - restom_dict[case_name]["mflnt"]
         orestom = restom_dict[case_name]["ofsnt"] - restom_dict[case_name]["oflnt"]
         drestom = restom_dict[case_name]["dfsnt"] - restom_dict[case_name]["dflnt"]
