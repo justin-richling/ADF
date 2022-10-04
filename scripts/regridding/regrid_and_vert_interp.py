@@ -9,16 +9,12 @@ def regrid_and_vert_interp(adf):
     vertically interpolates the test case (and baseline case
     if need be) to match a default set of pressure levels, which
     are (in hPa):
-
     1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
     30, 20, 10, 7, 5, 3, 2, 1
-
     Currently any 3-D observations file needs to have equivalent pressure
     levels in order to work properly, although in the future it is hoped
     to enable the vertical interpolation of observations as well.
-
     Description of needed inputs from ADF:
-
     case_name        -> Name of CAM case provided by "cam_case_name"
     input_climo_loc  -> Location of CAM climo files provided by "cam_climo_loc"
     output_loc       -> Location to write re-gridded CAM files, specified by "cam_regrid_loc"
@@ -31,7 +27,6 @@ def regrid_and_vert_interp(adf):
 
     #Import necessary modules:
     import numpy as np
-    import plotting_functions as pf
 
     from pathlib import Path
 
@@ -66,13 +61,6 @@ def regrid_and_vert_interp(adf):
         var_list.pop(pmid_idx)
         var_list.insert(0,"PMID")
     #End if
-
-    if 'SST' in var_list:
-        regrid_ofrac = True
-        mask_var = 'SST'
-    elif 'TS' in var_list:
-        regrid_ofrac = True
-        mask_var = 'TS'
 
     #Check if surface pressure exists in variable list:
     if "PS" in var_list:
@@ -187,7 +175,7 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_*.nc"))
                     #End if
 
                     #Write to debug log if enabled:
@@ -203,9 +191,6 @@ def regrid_and_vert_interp(adf):
                         #Open single file as new xarray dataset:
                         tclim_ds = xr.open_dataset(tclim_fils[0])
                     #End if
-
-                    if regrid_ofrac and 'OCNFRAC' in tclim_ds:
-                        regrid_ofrac = False
 
                     #Generate CAM climatology (climo) file list:
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
@@ -232,33 +217,7 @@ def regrid_and_vert_interp(adf):
                     #Perform regridding and interpolation of variable:
                     rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
                                                                  regrid_dataset=tclim_ds,
-                                                                 regrid_ofrac=regrid_ofrac, **regrid_kwargs)
-
-                    if var == mask_var:
-                        if 'OCNFRAC' in rgdata_interp:
-                            ofrac = rgdata_interp['OCNFRAC']
-                            # set the bounds of regridded ocnfrac to 0 to 1
-                            ofrac = xr.where(ofrac>1,1,ofrac)
-                            ofrac = xr.where(ofrac<0,0,ofrac)
-                            # mask the land in TS for global means
-                            rgdata_interp['OCNFRAC'] = ofrac
-                            ts_tmp = rgdata_interp[mask_var]
-                            ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
-                            rgdata_interp[mask_var] = ts_tmp
-                        else:
-                            if 'OCNFRAC' in tclim_ds:
-                                ofrac = tclim_ds['OCNFRAC']
-                                ts1_tmp = tclim_ds[mask_var]
-                                ts2_tmp = rgdata_interp[mask_var]
-                                ts1_tmp = pf.mask_land_or_ocean(ts1_tmp,ofrac)
-                                ts2_tmp = pf.mask_land_or_ocean(ts2_tmp,ofrac)
-                                rgdata_interp[mask_var] = ts2_tmp
-                                tclim_ds[mask_var] = ts1_tmp
-                                # replace old target file with new one that contains masked TS
-                                tclim_fils[0].unlink()
-                                save_to_nc(tclim_ds,tclim_fils[0])
-                            #end if
-                        #end if
+                                                                 **regrid_kwargs)
 
                     #Finally, write re-gridded data to output file:
                     save_to_nc(rgdata_interp, regridded_file_loc)
@@ -315,7 +274,7 @@ def regrid_and_vert_interp(adf):
 #Helper functions
 #################
 
-def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
+def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -325,18 +284,14 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     ----------
     model_dataset -> The xarray dataset which contains the model variable data
     var_name      -> The name of the variable to be regridded/interpolated.
-
     Optional inputs:
-
     ps_file        -> A NetCDF file containing already re-gridded surface pressure
     regrid_dataset -> The xarray dataset that contains the lat/lon grid that
                       "var_name" will be regridded to.  If not present then
                       only the vertical interpolation will be done.
-
     kwargs         -> Keyword arguments that contain paths to surface pressure
                       and mid-level pressure files, which are necessary for
                       certain types of vertical interpolation.
-
     This function returns a new xarray dataset that contains the regridded
     and/or vertically-interpolated model variable.
     """
@@ -358,11 +313,6 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
     #Extract variable info from model data (and remove any degenerate dimensions):
     mdata = model_dataset[var_name].squeeze()
-
-    mdat_ofrac = None
-    if regrid_ofrac:
-        if 'OCNFRAC' in model_dataset:
-            mdat_ofrac = model_dataset['OCNFRAC'].squeeze()
 
     #Check if variable has a vertical component:
     if 'lev' in mdata.dims:
@@ -492,9 +442,6 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
         #Regrid model data to match target grid:
         rgdata = regrid_data(mdata, tgrid, method=1)
 
-        if mdat_ofrac:
-            rgofrac = regrid_data(mdat_ofrac, tgrid, method=1)
-
         #Regrid surface pressure if need be:
         if has_lev:
             if not regridded_ps:
@@ -550,9 +497,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     #End if
 
     #Convert to xarray dataset:
-    rgdata_interp = rgdata_interp.to_dataset()
-    if mdat_ofrac:
-        rgdata_interp['OCNFRAC'] = rgofrac
+    rgdata_interp.to_dataset()
 
     #Add surface pressure to variable if a hybrid (just in case):
     if has_lev:
