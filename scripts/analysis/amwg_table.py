@@ -327,10 +327,6 @@ def _get_row_vals(data):
     data_trend = stats.linregress(data.year, data.values)
     
     if (np.abs(data_mean) < 1) and (_num_zeros(np.array(np.abs(data_mean))) >= 1):
-        #if _num_zeros(np.array(np.abs(data_mean))) >= 1:
-        #    formatter = ".3g"
-        #else:
-        #    formatter = ".3f"
         formatter = ".3g"
     else:
         formatter = ".3f"

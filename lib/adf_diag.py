@@ -371,6 +371,9 @@ class AdfDiag(AdfWeb):
             hist_num = 'h0'
         #End if
 
+        #List of vars that might have bad missing/fill values
+        bad_fillvals = ["AODDUST", "AODVIS", "BURDENBC", "BURDENDUST", "BURDENPOM", "BURDENSEASALT", "BURDENSO4", "BURDENSOA"]
+
         #Loop over cases:
         for case_idx, case_name in enumerate(case_names):
 
@@ -502,6 +505,7 @@ class AdfDiag(AdfWeb):
 
             #Loop over CAM history variables:
             list_of_commands = []
+            list_of_commands_bad = []
             for var in self.diag_var_list:
                 if var not in hist_file_var_list:
                     msg = f"WARNING: {var} is not in the file {hist_files[0]}."
@@ -560,12 +564,36 @@ class AdfDiag(AdfWeb):
                 #Add to command list for use in multi-processing pool:
                 list_of_commands.append(cmd)
 
+                # Bad missing/fill value going into Time Series files
+                # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                #Some fill/missing values from history files are not being caught by the ADF
+                #and are being converted to string in scientific notation instead of float/double.
+                
+                #This then messes up the values in plottiong and comparison AMWG tables
+
+                #So this is a temp fix for a specific set of known problematic variables
+                #These are the only variables I've seen with this issue and fill value (so far). 
+                # - JR
+                if var in bad_fillvals:
+                    print(f"*! WARNING !* Fill/missing values in {var} can cause erroneous calculations, masking to NaN...")
+                    cmd2 = ["ncap2", "-v", "-O", "-s", f'where({var}>1.e+26) {var}=nan;', 
+                            ts_outfil_str, ts_outfil_str]
+
+                    list_of_commands_bad.append(cmd2)
+                # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
             #End variable loop
 
             #Now run the "ncrcat" subprocesses in parallel:
             with mp.Pool(processes=self.num_procs) as p:
                 result = p.map(call_ncrcat, list_of_commands)
             #End with
+
+            if list_of_commands_bad:
+                #Now run the "ncrcat" subprocesses in parallel:
+                with mp.Pool(processes=self.num_procs) as p:
+                    result = p.map(call_ncrcat, list_of_commands_bad)
+                #End with
 
         #End cases loop
 
