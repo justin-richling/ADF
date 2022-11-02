@@ -305,7 +305,6 @@ def amwg_table(adf):
 ##################
 
 def _load_data(dataloc, varname):
-    
     ds = xr.open_dataset(dataloc)
     return ds[varname]
 
