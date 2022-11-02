@@ -326,11 +326,12 @@ def _get_row_vals(data):
     data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
     data_trend = stats.linregress(data.year, data.values)
     
-    if np.abs(data_mean) < 1:
-        if _num_zeros(np.array(np.abs(data_mean))) >= 1:
-            formatter = ".3g"
-        else:
-            formatter = ".3f"
+    if (np.abs(data_mean) < 1) and (_num_zeros(np.array(np.abs(data_mean))) >= 1):
+        #if _num_zeros(np.array(np.abs(data_mean))) >= 1:
+        #    formatter = ".3g"
+        #else:
+        #    formatter = ".3f"
+        formatter = ".3g"
     else:
         formatter = ".3f"
 
