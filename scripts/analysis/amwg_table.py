@@ -253,7 +253,7 @@ def amwg_table(adf):
             # Now that data is (time,), we can do our simple stats:
             stats_list = _get_row_vals(data) 
             row_values = [var, restom_units] + stats_list
-            # col (column values declared above)
+            # col (column) values declared above
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
