@@ -334,6 +334,14 @@ def _get_row_vals(data):
             ci = f'{data_ci.data.item() : .3g}'
             slope_int = f'{data_trend.intercept : .3g} + {data_trend.slope : .3g} t'
             pval = f'{data_trend.pvalue : .3g}'
+
+        else:
+            data_mean_str = f'{data_mean.data.item():.3f}'
+            stdev = f'{data_std.data.item() : .3f}'
+            sem = f'{data_sem.data.item() : .3f}'
+            ci = f'{data_ci.data.item() : .3f}'
+            slope_int = f'{data_trend.intercept : .3f} + {data_trend.slope : .3f} t'
+            pval = f'{data_trend.pvalue : .3f}'
     else:
         data_mean_str = f'{data_mean.data.item():.3f}'
         stdev = f'{data_std.data.item() : .3f}'
@@ -347,7 +355,7 @@ def _get_row_vals(data):
 #####
 
 def _spatial_average(indata):
-    
+
     assert 'lev' not in indata.coords
     assert 'ilev' not in indata.coords
     if 'lat' in indata.coords:
