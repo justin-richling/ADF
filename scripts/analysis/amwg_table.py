@@ -328,7 +328,7 @@ def _get_row_vals(data):
     
     if np.abs(data_mean) < 1:
         if _num_zeros(np.array(np.abs(data_mean))) >= 1:
-            data_mean_str = f"{data_mean.data.item():.5g}"
+            data_mean_str = f"{data_mean.data.item():.4g}"
             stdev = f'{data_std.data.item() : .3g}'
             sem = f'{data_sem.data.item() : .3g}'
             ci = f'{data_ci.data.item() : .3g}'
