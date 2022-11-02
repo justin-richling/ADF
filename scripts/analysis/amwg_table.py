@@ -328,29 +328,19 @@ def _get_row_vals(data):
     
     if np.abs(data_mean) < 1:
         if _num_zeros(np.array(np.abs(data_mean))) >= 1:
-            data_mean_str = f"{data_mean.data.item():.4g}"
-            stdev = f'{data_std.data.item() : .3g}'
-            sem = f'{data_sem.data.item() : .3g}'
-            ci = f'{data_ci.data.item() : .3g}'
-            slope_int = f'{data_trend.intercept : .3g} + {data_trend.slope : .3g} t'
-            pval = f'{data_trend.pvalue : .3g}'
-
+            formatter = ".3g"
         else:
-            data_mean_str = f'{data_mean.data.item():.3f}'
-            stdev = f'{data_std.data.item() : .3f}'
-            sem = f'{data_sem.data.item() : .3f}'
-            ci = f'{data_ci.data.item() : .3f}'
-            slope_int = f'{data_trend.intercept : .3f} + {data_trend.slope : .3f} t'
-            pval = f'{data_trend.pvalue : .3f}'
+            formatter = ".3f"
     else:
-        data_mean_str = f'{data_mean.data.item():.3f}'
-        stdev = f'{data_std.data.item() : .3f}'
-        sem = f'{data_sem.data.item() : .3f}'
-        ci = f'{data_ci.data.item() : .3f}'
-        slope_int = f'{data_trend.intercept : .3f} + {data_trend.slope : .3f} t'
-        pval = f'{data_trend.pvalue : .3f}'
-    return [data_mean_str, data_sample, stdev, sem, ci, slope_int, pval]
+        formatter = ".3f"
 
+    data_mean_str = f'{data_mean.data.item():{formatter}}'
+    stdev = f'{data_std.data.item() : {formatter}}'
+    sem = f'{data_sem.data.item() : {formatter}}'
+    ci = f'{data_ci.data.item() : {formatter}}'
+    slope_int = f'{data_trend.intercept : {formatter}} + {data_trend.slope : {formatter}} t'
+    pval = f'{data_trend.pvalue : {formatter}}'
+    return [data_mean_str, data_sample, stdev, sem, ci, slope_int, pval]
 
 #####
 
