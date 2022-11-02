@@ -311,11 +311,13 @@ def _load_data(dataloc, varname):
 
 #####
 
+def _num_zeros(decimal_vec):
+    return np.floor(np.abs(np.log10(decimal_vec)))
+
+#####
+
 def _get_row_vals(data):
     
-    def num_zeros(decimal_vec):
-        return np.floor(np.abs(np.log10(decimal_vec)))
-
     # Now that data is (time,), we can do our simple stats:
     data_mean = data.mean()
     data_sample = len(data)
@@ -325,7 +327,7 @@ def _get_row_vals(data):
     data_trend = stats.linregress(data.year, data.values)
     
     if np.abs(data_mean) < 1:
-        if num_zeros(np.array(np.abs(data_mean))) >= 1:
+        if _num_zeros(np.array(np.abs(data_mean))) >= 1:
             data_mean_str = f"{data_mean.data.item():.5g}"
             stdev = f'{data_std.data.item() : .3g}'
             sem = f'{data_sem.data.item() : .3g}'
