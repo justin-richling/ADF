@@ -1,3 +1,22 @@
+import numpy as np
+import xarray as xr
+import warnings  # use to warn user about missing files.
+from pathlib import Path
+
+#Import "special" modules:
+try:
+    import pandas as pd
+except ImportError:
+    print("Pandas module does not exist in python path, but is needed for amwg_table.")
+    print("Please install module, e.g. 'pip install pandas'.")
+    sys.exit(1)
+try:
+    import scipy.stats as stats # for easy linear regression and testing
+except ImportError:
+    print("Scipy module does not exist in python path, but is needed for amwg_table.")
+    print("Please install module, e.g. 'pip install scipy'.")
+
+
 def amwg_table(adf):
 
     """
@@ -31,26 +50,7 @@ def amwg_table(adf):
     """
 
     #Import necessary modules:
-    import numpy as np
-    import xarray as xr
-    from pathlib import Path
     from adf_base import AdfError
-    import warnings  # use to warn user about missing files.
-
-    #Import "special" modules:
-    try:
-        import pandas as pd
-    except ImportError:
-        print("Pandas module does not exist in python path, but is needed for amwg_table.")
-        print("Please install module, e.g. 'pip install pandas'.")
-        sys.exit(1)
-
-    try:
-        import scipy.stats as stats # for easy linear regression and testing
-    except ImportError:
-        print("Scipy module does not exist in python path, but is needed for amwg_table.")
-        print("Please install module, e.g. 'pip install scipy'.")
-
 
     #Additional information:
     #----------------------
@@ -219,20 +219,13 @@ def amwg_table(adf):
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                               # NOTE: data will now have a 'year' dimension instead of 'time'
             # Now that data is (time,), we can do our simple stats:
-            data_mean = data.mean()
-            data_sample = len(data)
-            data_std = data.std()
-            data_sem = data_std / data_sample
-            data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
-            data_trend = stats.linregress(data.year, data.values)
+            stats_list = _get_row_vals(data)
             # These get written to our output file:
             # create a dataframe:
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
-            row_values = [var, unit_str, data_mean.data.item(), data_sample,
-                          data_std.data.item(), data_sem.data.item(), data_ci.data.item(),
-                          f'{data_trend.intercept : 0.3f} + {data_trend.slope : 0.3f} t',
-                          data_trend.pvalue]
+            
+            row_values = [var, unit_str] + stats_list
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -259,20 +252,9 @@ def amwg_table(adf):
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
             # Now that data is (time,), we can do our simple stats:
-            data_mean = data.mean()
-            data_sample = len(data)
-            data_std = data.std()
-            data_sem = data_std / data_sample
-            data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
-            data_trend = stats.linregress(data.year, data.values)
-            # These get written to our output file:
-            # create a dataframe:
-            cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
-                        'standard error', '95% CI', 'trend', 'trend p-value']
-            row_values = [var, restom_units, data_mean.data.item(), data_sample,
-                            data_std.data.item(), data_sem.data.item(), data_ci.data.item(),
-                            f'{data_trend.intercept : 0.3f} + {data_trend.slope : 0.3f} t',
-                            data_trend.pvalue]
+            stats_list = _get_row_vals(data) 
+            row_values = [var, restom_units] + stats_list
+            # col (column) values declared above
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -324,16 +306,48 @@ def amwg_table(adf):
 ##################
 
 def _load_data(dataloc, varname):
-    import xarray as xr
     ds = xr.open_dataset(dataloc)
     return ds[varname]
 
 #####
 
+def _num_zeros(decimal_vec):
+    return np.floor(np.abs(np.log10(decimal_vec)))
+
+#####
+
+def _get_row_vals(data):
+    
+    # Now that data is (time,), we can do our simple stats:
+    data_mean = data.mean()
+    data_sample = len(data)
+    data_std = data.std()
+    data_sem = data_std / data_sample
+    data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
+    data_trend = stats.linregress(data.year, data.values)
+    
+    if np.abs(data_mean) < 1:
+        if _num_zeros(np.array(np.abs(data_mean))) >= 1:
+            data_mean_str = f"{data_mean.data.item():.4g}"
+            stdev = f'{data_std.data.item() : .3g}'
+            sem = f'{data_sem.data.item() : .3g}'
+            ci = f'{data_ci.data.item() : .3g}'
+            slope_int = f'{data_trend.intercept : .3g} + {data_trend.slope : .3g} t'
+            pval = f'{data_trend.pvalue : .3g}'
+    else:
+        data_mean_str = f'{data_mean.data.item():.3f}'
+        stdev = f'{data_std.data.item() : .3f}'
+        sem = f'{data_sem.data.item() : .3f}'
+        ci = f'{data_ci.data.item() : .3f}'
+        slope_int = f'{data_trend.intercept : .3f} + {data_trend.slope : .3f} t'
+        pval = f'{data_trend.pvalue : .3f}'
+    return [data_mean_str, data_sample, stdev, sem, ci, slope_int, pval]
+
+
+#####
+
 def _spatial_average(indata):
-    import xarray as xr
-    import numpy as np
-    import warnings
+    
     assert 'lev' not in indata.coords
     assert 'ilev' not in indata.coords
     if 'lat' in indata.coords:
@@ -354,7 +368,6 @@ def _spatial_average(indata):
 #####
 
 def _df_comp_table(adf, output_location, case_names):
-    import pandas as pd
 
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
 
