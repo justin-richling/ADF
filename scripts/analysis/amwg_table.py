@@ -361,15 +361,21 @@ def _get_row_vals(data,formatter):
     slope_int = f'{data_trend.intercept : {formatter}} + {data_trend.slope : {formatter}} t'
     pval = f'{data_trend.pvalue : {formatter}}'
     
-    rows = [data_sample, stdev, sem, ci, slope_int, pval]
+    rows = [data_sample, data_std.data.item(), data_sem.data.item(), data_ci.data.item(), data_trend.intercept, data_trend.slope, data_trend.pvalue]
     for i in rows:
         if i is 'nan':
             print("YEAH!!\n")
             rows_2.append(" - ")
         else:
             rows_2.append(i)
+
+    stdev = f'{rows_2[1] : {formatter}}'
+    sem = f'{rows_2[2] : {formatter}}'
+    ci = f'{rows_2[3] : {formatter}}'
+    slope_int = f'{rows_2[4] : {formatter}} + {rows_2[5] : {formatter}} t'
+    pval = f'{rows_2[6] : {formatter}}'
     print(rows_2)
-    return rows_2
+    return [data_sample, stdev, sem, ci, slope_int, pval]
 
 #####
 
