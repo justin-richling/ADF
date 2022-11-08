@@ -291,15 +291,15 @@ def regrid_and_vert_interp(adf):
                     print("\t Regridded file already exists, so skipping...")
                     #Grab exisiting file to add mean to csv file for AMWG tables
                     #input_rgd_locs
-                    print("rgclimo_loc:",rgclimo_loc,"\n")
+                    #print("rgclimo_loc:",rgclimo_loc,"\n")
 
                     mclim_fils = sorted(rgclimo_loc.glob(f"*{case_name}_{var}_*.nc"))
 
-                    print("mclim_fils: ",mclim_fils,"\n")
+                    #print("mclim_fils: ",mclim_fils,"\n")
 
                     ds = _load_dataset(mclim_fils)
 
-                    print(f"Whats the score sucker (Regrid files)? {var} {case_name}: {ds[var].values.max()}")
+                    #print(f"Whats the score sucker (Regrid files)? {var} {case_name}: {ds[var].values.max()}")
                     #print("ds: ",ds[var],"\n") #ds[var].values.max()
 
                     rgdata_interp = ds[var]
