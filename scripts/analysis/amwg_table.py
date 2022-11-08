@@ -370,11 +370,17 @@ def _get_row_vals(data,formatter):
         else:
             rows_2.append(i)
 
-    stdev = f'{rows_2[1] : {formatter}}'
+    """stdev = f'{rows_2[1] : {formatter}}'
     sem = f'{rows_2[2] : {formatter}}'
     ci = f'{rows_2[3] : {formatter}}'
     slope_int = f'{rows_2[4] : {formatter}} + {rows_2[5] : {formatter}} t'
-    pval = f'{rows_2[6] : {formatter}}'
+    pval = f'{rows_2[6] : {formatter}}'"""
+
+    stdev = f'{rows_2[1]}'
+    sem = f'{rows_2[2]}'
+    ci = f'{rows_2[3]}'
+    slope_int = f'{rows_2[4]} + {rows_2[5]} t'
+    pval = f'{rows_2[6]}'
     print(rows_2)
     return [data_sample, stdev, sem, ci, slope_int, pval]
 
