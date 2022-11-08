@@ -237,7 +237,7 @@ def amwg_table(adf):
                                                               # NOTE: data will now have a 'year' dimension instead of 'time'
             # Now that data is (time,), we can do our simple stats:
             if np.abs(data_mean) < 1:
-                formatter = ".3g"
+                formatter = ".5g"
             else:
                 formatter = ".3f"
             #formatter = "5.3g"
@@ -276,7 +276,7 @@ def amwg_table(adf):
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
             # Now that data is (time,), we can do our simple stats:
             if np.abs(data_mean) < 1:
-                formatter = ".3g"
+                formatter = ".5g"
             else:
                 formatter = ".3f"
             #formatter = "5.3g"
