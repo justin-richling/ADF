@@ -137,6 +137,7 @@ def amwg_table(adf):
     #Create (empty) dictionary to use for the
     #residual top of model (RESTOM) radiation calculation:
     restom_dict = {}
+    restom_dict2 = {}
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
@@ -171,6 +172,7 @@ def amwg_table(adf):
 
         #Save case name as a new key in the RESTOM dictonary:
         restom_dict[case_name] = {}
+        restom_dict2[case_name] = {}
 
         #Loop over CAM output variables:
         for var in var_list:
@@ -223,10 +225,12 @@ def amwg_table(adf):
             #Add necessary data for RESTOM calcs below
             if var == "FLNT":
                 restom_dict[case_name][var] = data
+                restom_dict2[case_name][var] = data_mean
                 #Copy units for RESTOM as well:
                 restom_units = unit_str
             if var == "FSNT":
                 restom_dict[case_name][var] = data
+                restom_dict2[case_name][var] = data_mean
 
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
