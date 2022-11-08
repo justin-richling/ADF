@@ -338,7 +338,6 @@ def _load_data(dataloc, varname):
 def _get_row_vals(data,formatter):
     import numpy as np
     
-    rows = []
     rows_2 = []
     # Now that data is (time,), we can do our simple stats:
     #data_mean = data.mean()
@@ -362,7 +361,7 @@ def _get_row_vals(data,formatter):
     slope_int = f'{data_trend.intercept : {formatter}} + {data_trend.slope : {formatter}} t'
     pval = f'{data_trend.pvalue : {formatter}}'
     
-    rows.append(data_sample, stdev, sem, ci, slope_int, pval)
+    rows = [data_sample, stdev, sem, ci, slope_int, pval]
     for i in rows:
         if i == np.nan:
             rows_2.append(" - ")
