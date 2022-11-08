@@ -360,7 +360,7 @@ def _get_row_vals(data,formatter):
     ci = f'{data_ci.data.item() : {formatter}}'
     slope_int = f'{data_trend.intercept : {formatter}} + {data_trend.slope : {formatter}} t'
     pval = f'{data_trend.pvalue : {formatter}}'"""
-    print(type(data_std.data.item()))
+    print(type(data_std.data.item()),data_std.data.item())
     
     rows = [data_sample, data_std.data.item(), data_sem.data.item(), data_ci.data.item(), data_trend.intercept, data_trend.slope, data_trend.pvalue]
     for i in rows:
