@@ -1,6 +1,14 @@
 #Import standard modules:
 import xarray as xr
 
+import warnings  # use to warn user about missing files.
+
+#Format warning messages:
+def my_formatwarning(msg, *args, **kwargs):
+    # ignore everything except the message
+    return str(msg) + '\n'
+warnings.formatwarning = my_formatwarning
+
 def regrid_and_vert_interp(adf):
 
     """
@@ -46,14 +54,26 @@ def regrid_and_vert_interp(adf):
     #Notify user that script has started:
     print("\n  Regridding CAM climatologies...")
 
-    #Extract needed quantities from ADF object:
+    ##Extract needed quantities from ADF object:
     #-----------------------------------------
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
     output_loc = adf.get_basic_info("cam_regrid_loc", required=True)
+
+    #Location for mean csv files to be saved 
+    output_locs = adf.plot_location
+    if not adf.get_basic_info("compare_obs"):
+        #Save the baseline to the first case's plots directory:
+        output_locs.append(output_locs[0])
+
+    data_loc = adf.get_basic_info("cam_regrid_loc", required=True)
+    dclimo_loc  = Path(data_loc)
+
     var_list = adf.diag_var_list
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
+    baseline_name = adf.get_baseline_info("cam_case_name", required=True)
+
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
     #Check if mid-level pressure exists in the variable list:
@@ -114,6 +134,9 @@ def regrid_and_vert_interp(adf):
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
+
+        #Output location for case specific csv files
+        output_location = Path(output_locs[case_idx])
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
@@ -219,8 +242,8 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Perform regridding and interpolation of variable:
-                    rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
-                                                                 regrid_dataset=tclim_ds,
+                    rgdata_interp = _regrid_and_interpolate_levs(case_name, mclim_ds, var,
+                                                                 output_location, regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
 
                     #Finally, write re-gridded data to output file:
@@ -252,8 +275,8 @@ def regrid_and_vert_interp(adf):
                         #End if
 
                         #Generate vertically-interpolated baseline dataset:
-                        tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
-                                                                     **regrid_kwargs)
+                        tgdata_interp = _regrid_and_interpolate_levs(baseline_name, tclim_ds, var, output_location,
+                                                                    **regrid_kwargs)
 
                         if tgdata_interp is None:
                             #Something went wrong during interpolation, so just cycle through
@@ -266,6 +289,35 @@ def regrid_and_vert_interp(adf):
                     #End if
                 else:
                     print("\t Regridded file already exists, so skipping...")
+                    #Grab exisiting file to add mean to csv file for AMWG tables
+                    #input_rgd_locs
+                    print("rgclimo_loc:",rgclimo_loc,"\n")
+
+                    mclim_fils = sorted(rgclimo_loc.glob(f"*{case_name}_{var}_*.nc"))
+
+                    print("mclim_fils: ",mclim_fils,"\n")
+
+                    ds = _load_dataset(mclim_fils)
+
+                    print(f"Whats the score sucker (Regrid files)? {var} {case_name}: {ds[var].values.max()}")
+                    #print("ds: ",ds[var],"\n") #ds[var].values.max()
+
+                    rgdata_interp = ds[var]
+                    #print()
+                    #print("Makin' Means is hard work!\n")
+                    _make_mean_csv(rgdata_interp, var, case_name, output_location)
+
+                    # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                    if adf.compare_obs:
+                        #For now, only grab one file (but convert to list for use below)
+                        oclim_fils = [dclimo_loc]
+                    else:
+                        oclim_fils = sorted(dclimo_loc.glob(f"{baseline_name}_{var}_baseline.nc"))
+
+                    ds = _load_dataset(oclim_fils)
+                    rgdata_interp = ds[var]
+                    #print("Makin' Baseline Means is harder work!\n")
+                    _make_mean_csv(rgdata_interp, var, baseline_name, output_location)
                 #End if (file check)
             #End do (target list)
         #End do (variable list)
@@ -278,7 +330,7 @@ def regrid_and_vert_interp(adf):
 #Helper functions
 #################
 
-def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, **kwargs):
+def _regrid_and_interpolate_levs(case_name, model_dataset, var_name, output_location, regrid_dataset=None, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -515,6 +567,9 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, *
         rgdata_interp['lev'].attrs.update({"vert_coord": "pressure"})
     #End if
 
+    #Create csv file for means
+    _make_mean_csv(rgdata_interp, var_name, case_name, output_location)
+
     #Return dataset:
     return rgdata_interp
 
@@ -574,3 +629,68 @@ def regrid_data(fromthis, tothis, method=1):
     #End if
 
 #####
+
+def _make_mean_csv(rgdata_interp, var_name, case_name, output_location):
+    import pandas as pd
+    import numpy as np
+    if not output_location.is_dir():
+        print(f"\t    {output_location} not found, making new directory")
+        output_location.mkdir(parents=True)
+
+    data = rgdata_interp.copy()
+
+    timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
+    lat = data['lat']
+    wgt = np.cos(np.radians(lat))
+    
+    data['time']=timefix
+
+    #Extract variable of interest
+    #odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
+    if (data.max() > 10000000) or (data.min() < -10000000):
+        data = data.where(data < 10000000)
+        data = data.where(data > -10000000)
+
+    #Calculate monthly weights based on number of days:
+    month_length = data.time.dt.days_in_month
+    weights_ann = month_length / month_length.sum()
+    data = (data * weights_ann).sum(dim='time')
+    
+    data_mean = data.weighted(wgt).mean().item()
+
+    cols = ['case', "var", 'mean']
+    row_values = [case_name,var_name,data_mean]
+
+    # Format entries:
+    dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
+
+    # Add entries to Pandas structure:
+    df = pd.DataFrame(dfentries)
+
+    #Create output file name:
+    output_csv_file = output_location / f"stats_mean_{case_name}.csv"
+
+    # Check if the output CSV file exists,
+    # if so, then append to it:
+    if output_csv_file.is_file():
+        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+    else:
+        df.to_csv(output_csv_file, header=cols, index=False)
+    #End if
+
+#####
+
+def _load_dataset(fils):
+    if len(fils) == 0:
+        warnings.warn(f"Input file list is empty.")
+        return None
+    elif len(fils) > 1:
+        return xr.open_mfdataset(fils, combine='by_coords')
+    else:
+        sfil = str(fils[0])
+        return xr.open_dataset(sfil)
+    #End if
+#End def
+
+#####
+

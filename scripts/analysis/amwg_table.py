@@ -1,3 +1,9 @@
+try:
+    import scipy.stats as stats # for easy linear regression and testing
+except ImportError:
+    print("Scipy module does not exist in python path, but is needed for amwg_table.")
+    print("Please install module, e.g. 'pip install scipy'.")
+
 def amwg_table(adf):
 
     """
@@ -155,6 +161,10 @@ def amwg_table(adf):
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"
 
+        #These are created in regridding/regrid_and_vert_interp.py script
+        mean_case = output_location/f"stats_mean_{case_names[case_idx]}.csv"
+        mean_df_case = pd.read_csv(mean_case)
+
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
         if Path(output_csv_file).is_file():
             Path.unlink(output_csv_file)
@@ -207,6 +217,9 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = _spatial_average(data)  # changes data "in place"
 
+            #Grab mean value from csv file
+            data_mean = mean_df_case[mean_df_case["var"]==var]["mean"].values[0]
+
             #Add necessary data for RESTOM calcs below
             if var == "FLNT":
                 restom_dict[case_name][var] = data
@@ -219,20 +232,18 @@ def amwg_table(adf):
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                               # NOTE: data will now have a 'year' dimension instead of 'time'
             # Now that data is (time,), we can do our simple stats:
-            data_mean = data.mean()
-            data_sample = len(data)
-            data_std = data.std()
-            data_sem = data_std / data_sample
-            data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
-            data_trend = stats.linregress(data.year, data.values)
+            if np.abs(data_mean) < 1:
+                formatter = ".3g"
+            else:
+                formatter = ".3f"
+
+            stats_list = _get_row_vals(data,formatter)
             # These get written to our output file:
             # create a dataframe:
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
-            row_values = [var, unit_str, data_mean.data.item(), data_sample,
-                          data_std.data.item(), data_sem.data.item(), data_ci.data.item(),
-                          f'{data_trend.intercept : 0.3f} + {data_trend.slope : 0.3f} t',
-                          data_trend.pvalue]
+            
+            row_values = [var, unit_str, data_mean] + stats_list
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -259,20 +270,14 @@ def amwg_table(adf):
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
             # Now that data is (time,), we can do our simple stats:
-            data_mean = data.mean()
-            data_sample = len(data)
-            data_std = data.std()
-            data_sem = data_std / data_sample
-            data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
-            data_trend = stats.linregress(data.year, data.values)
-            # These get written to our output file:
-            # create a dataframe:
-            cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
-                        'standard error', '95% CI', 'trend', 'trend p-value']
-            row_values = [var, restom_units, data_mean.data.item(), data_sample,
-                            data_std.data.item(), data_sem.data.item(), data_ci.data.item(),
-                            f'{data_trend.intercept : 0.3f} + {data_trend.slope : 0.3f} t',
-                            data_trend.pvalue]
+            if np.abs(data_mean) < 1:
+                formatter = ".3g"
+            else:
+                formatter = ".3f"
+
+            stats_list = _get_row_vals(data,formatter) 
+            row_values = [var, restom_units, data] + stats_list
+            # col (column) values declared above
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -327,6 +332,44 @@ def _load_data(dataloc, varname):
     import xarray as xr
     ds = xr.open_dataset(dataloc)
     return ds[varname]
+
+#####
+
+def _get_row_vals(data,formatter):
+    import numpy as np
+    
+    rows = []
+    rows_2 = []
+    # Now that data is (time,), we can do our simple stats:
+    #data_mean = data.mean()
+    data_stats = data.copy()
+ 
+    if data_stats.max() > 10000000:
+        data_stats = data_stats.where(data_stats < 10000000)
+    if data_stats.min() < -10000000:    
+        data_stats = data_stats.where(data_stats > -10000000)
+  
+    data_sample = len(data_stats)
+    data_std = data_stats.std()
+    data_sem = data_std / data_sample
+    data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
+    data_trend = stats.linregress(data_stats.year, data_stats.values)
+
+    #data_mean_str = f'{data_mean.data.item():{formatter}}'
+    stdev = f'{data_std.data.item() : {formatter}}'
+    sem = f'{data_sem.data.item() : {formatter}}'
+    ci = f'{data_ci.data.item() : {formatter}}'
+    slope_int = f'{data_trend.intercept : {formatter}} + {data_trend.slope : {formatter}} t'
+    pval = f'{data_trend.pvalue : {formatter}}'
+    
+    rows.append(data_sample, stdev, sem, ci, slope_int, pval)
+    for i in rows:
+        if i == np.nan:
+            rows_2.append(" - ")
+        else:
+            rows_2.append(i)
+    print(rows_2)
+    return rows_2
 
 #####
 
