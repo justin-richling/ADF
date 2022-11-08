@@ -433,7 +433,7 @@ def _df_comp_table(adf, output_location, case_names):
     df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
     df_comp['baseline'] = df_merge[['mean_y']]
 
-    
+    print("\n",df_comp['case'].values,"\n",df_comp['baseline'].values,"\n")
     df_comp['diff'] = df_comp['case'].values-df_comp['baseline'].values
 
     #Write the comparison dataframe to a new CSV file:
