@@ -240,7 +240,7 @@ def amwg_table(adf):
                 formatter = ".3g"
             else:
                 formatter = ".3f"
-
+            formatter = "5.3g"
             stats_list = _get_row_vals(data,formatter)
             # These get written to our output file:
             # create a dataframe:
@@ -279,7 +279,7 @@ def amwg_table(adf):
                 formatter = ".3g"
             else:
                 formatter = ".3f"
-
+            formatter = "5.3g"
             stats_list = _get_row_vals(data,formatter) 
             row_values = [var, restom_units, data_mean] + stats_list
             # col (column) values declared above
