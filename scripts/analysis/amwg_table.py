@@ -270,6 +270,7 @@ def amwg_table(adf):
             var = "RESTOM" #RESTOM = FSNT-FLNT
             print(f"\t - Variable '{var}' being added to table")
             data = restom_dict[case_name]["FSNT"] - restom_dict[case_name]["FLNT"]
+            data_mean = restom_dict2[case_name]["FSNT"] - restom_dict2[case_name]["FLNT"]
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
@@ -280,7 +281,7 @@ def amwg_table(adf):
                 formatter = ".3f"
 
             stats_list = _get_row_vals(data,formatter) 
-            row_values = [var, restom_units, data] + stats_list
+            row_values = [var, restom_units, data_mean] + stats_list
             # col (column) values declared above
 
             # Format entries:
