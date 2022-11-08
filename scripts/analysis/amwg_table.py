@@ -364,7 +364,7 @@ def _get_row_vals(data,formatter):
     
     rows = [data_sample, data_std.data.item(), data_sem.data.item(), data_ci.data.item(), data_trend.intercept, data_trend.slope, data_trend.pvalue]
     for i in rows:
-        if i == np.nan:
+        if np.isnan(i):
             print("YEAH!!\n")
             rows_2.append(" - ")
         else:
