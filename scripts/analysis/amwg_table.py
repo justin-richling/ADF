@@ -363,7 +363,7 @@ def _get_row_vals(data,formatter):
     
     rows = [data_sample, stdev, sem, ci, slope_int, pval]
     for i in rows:
-        if i == np.nan:
+        if i is 'nan':
             print("YEAH!!\n")
             rows_2.append(" - ")
         else:
