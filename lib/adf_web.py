@@ -568,7 +568,7 @@ class AdfWeb(AdfObs):
                 #which might be beneficial for colored tables and other more advance
                 #formatting features.
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                   float_format='{:5.3f}'.format
+                                                   float_format='{:5.3fg'.format
                                                    )
 
                 #Construct amwg_table.html
