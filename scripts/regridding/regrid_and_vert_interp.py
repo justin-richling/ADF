@@ -647,8 +647,9 @@ def _make_mean_csv(rgdata_interp, var_name, case_name, output_location):
 
     #Extract variable of interest
     #odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
-    if (data.max() > 10000000) or (data.min() < -10000000):
+    if data.max() > 10000000:
         data = data.where(data < 10000000)
+    if data.min() < -10000000:
         data = data.where(data > -10000000)
 
     #Calculate monthly weights based on number of days:

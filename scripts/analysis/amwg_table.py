@@ -364,6 +364,7 @@ def _get_row_vals(data,formatter):
     rows = [data_sample, stdev, sem, ci, slope_int, pval]
     for i in rows:
         if i == np.nan:
+            print("YEAH!!\n")
             rows_2.append(" - ")
         else:
             rows_2.append(i)
@@ -418,6 +419,8 @@ def _df_comp_table(adf, output_location, case_names):
     df_comp = pd.DataFrame(dtype=object)
     df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
     df_comp['baseline'] = df_merge[['mean_y']]
+
+    
     df_comp['diff'] = df_comp['case'].values-df_comp['baseline'].values
 
     #Write the comparison dataframe to a new CSV file:
