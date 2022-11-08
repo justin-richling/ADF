@@ -247,7 +247,7 @@ def amwg_table(adf):
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
             
-            row_values = [var, unit_str, data_mean] + stats_list
+            row_values = [var, unit_str, f'{data_mean:formatter}'] + stats_list
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -281,7 +281,7 @@ def amwg_table(adf):
                 formatter = ".3f"
             formatter = "5.3g"
             stats_list = _get_row_vals(data,formatter) 
-            row_values = [var, restom_units, data_mean] + stats_list
+            row_values = [var, restom_units, f'{data_mean:formatter}'] + stats_list
             # col (column) values declared above
 
             # Format entries:
