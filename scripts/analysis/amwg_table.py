@@ -354,12 +354,13 @@ def _get_row_vals(data,formatter):
     data_ci = data_sem * 1.96  # https://en.wikipedia.org/wiki/Standard_error
     data_trend = stats.linregress(data_stats.year, data_stats.values)
 
-    #data_mean_str = f'{data_mean.data.item():{formatter}}'
+    """#data_mean_str = f'{data_mean.data.item():{formatter}}'
     stdev = f'{data_std.data.item() : {formatter}}'
     sem = f'{data_sem.data.item() : {formatter}}'
     ci = f'{data_ci.data.item() : {formatter}}'
     slope_int = f'{data_trend.intercept : {formatter}} + {data_trend.slope : {formatter}} t'
-    pval = f'{data_trend.pvalue : {formatter}}'
+    pval = f'{data_trend.pvalue : {formatter}}'"""
+    print(type(data_std.data.item()))
     
     rows = [data_sample, data_std.data.item(), data_sem.data.item(), data_ci.data.item(), data_trend.intercept, data_trend.slope, data_trend.pvalue]
     for i in rows:
