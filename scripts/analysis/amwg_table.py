@@ -396,17 +396,17 @@ def _get_row_vals(data,formatter):
 
 
     #data_mean_str = f'{data_mean.data.item():{formatter}}'
-    """stdev = f'{data_std.data.item() : {formatter}}'
+    stdev = f'{data_std.data.item() : {formatter}}'
     sem = f'{data_sem.data.item() : {formatter}}'
     ci = f'{data_ci.data.item() : {formatter}}'
     slope_int = f'{data_trend.intercept : {formatter}} + {data_trend.slope : {formatter}} t'
-    pval = f'{data_trend.pvalue : {formatter}}'"""
+    pval = f'{data_trend.pvalue : {formatter}}'
 
-    stdev = f'{data_std.data.item()}'
+    """stdev = f'{data_std.data.item()}'
     sem = f'{data_sem.data.item()}'
     ci = f'{data_ci.data.item()}'
     slope_int = f'{data_trend.intercept} + {data_trend.slope} t'
-    pval = f'{data_trend.pvalue}'
+    pval = f'{data_trend.pvalue}'"""
 
     return [data_sample, stdev, sem, ci, slope_int, pval]
 
