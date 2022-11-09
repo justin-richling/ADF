@@ -252,6 +252,7 @@ def meridional_mean(adfobj):
                                                 mseasons[s], oseasons[s], has_lev, latbounds=slice(-5,5), **vres)
 
                     #Add plot to website (if enabled):
+                    print("IS THIS WORKING?!?!?!?!")
                     adfobj.add_website_data(plot_name, var, case_name, season=s,
                                             plot_type="Meridional")
 
