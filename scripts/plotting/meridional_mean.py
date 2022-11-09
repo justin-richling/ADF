@@ -241,6 +241,11 @@ def meridional_mean(adfobj):
 
                     # Check redo_plot. If set to True: remove old plot, if it already exists:
                     if (not redo_plot) and plot_name.is_file():
+                        #Add already-existing plot to website (if enabled):
+                        adfobj.add_website_data(plot_name, var, case_name, season=s,
+                                                plot_type="Meridional")
+
+                        #Continue to next iteration:
                         continue
                     elif (redo_plot) and plot_name.is_file():
                         plot_name.unlink()
