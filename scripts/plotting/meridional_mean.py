@@ -36,9 +36,6 @@ def meridional_mean(adfobj):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
-    #Time series files for unspecified climo years
-    cam_ts_locs = adfobj.get_cam_info('cam_ts_loc', required=True)
-
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
@@ -220,7 +217,6 @@ def meridional_mean(adfobj):
                 #Create new dictionaries:
                 mseasons = {}
                 oseasons = {}
-                dseasons = {} # hold the differences
 
                 #Loop over season dictionary:
                 for s in seasons:
