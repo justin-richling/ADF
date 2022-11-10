@@ -767,7 +767,7 @@ class AdfWeb(AdfObs):
             #print(case_sites[case_names[0]])
             #loop over cases:
 
-            case_sites2 = []
+            case_sites2 = OrderedDict()
             for idx, case_name in enumerate(case_names[:-1]):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
