@@ -796,7 +796,7 @@ class AdfWeb(AdfObs):
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
-                            case_sites=case_sites2,
+                            case_sites=case_sites,
                             base_name=data_name,
                             baseline_yrs=baseline_yrs,
                             multi_plots=multi_plots,
