@@ -339,7 +339,7 @@ def amwg_table(adf):
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
                 _df_multi_comp_table(adf,csv_locs,case_names)
-                print("  ... Multi-case omparison table has been generated successfully")
+                print("  ... Multi-case comparison table has been generated successfully")
         #End if
     else:
         print(" Comparison table currently doesn't work with obs, so skipping...")
