@@ -590,7 +590,7 @@ class AdfWeb(AdfObs):
                 #which might be beneficial for colored tables and other more advance
                 #formatting features.
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                   float_format='{:,.3g}'.format)
+                                                   float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
                 table_tmpl = jinenv.get_template('template_table.html')
@@ -788,7 +788,7 @@ class AdfWeb(AdfObs):
 
             #Create multi-case site:
             multi_plots = {"Tables": "html_table/mean_tables.html",
-                           "LatLon": "https://ncar.ucar.edu/"}
+                           "LatLon": "html_table/mean_tables.html"}
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,

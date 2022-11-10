@@ -55,21 +55,17 @@
 
     <div style="width: 100%;"> <!-- main div-->
       <div class="grid-container-template" style="border: 3px solid black">
+        {% for category, var_seas in mydata.items() %}
+        {% for var_name, seas_files in var_seas.items() %}
+        {% if var_name == var_title %}
+        {% for season_name, file_name in seas_files.items() %}
         <div class="grid-item">
-          <a href="../html_img/plot_page_{{ var_title }}_ANN_{{ plottype_title }}_Mean.html"> ANN </a>
+          <a href="../html_img/{{ file_name }}">{{ season_name }}</a>
         </div><!--grid-item-->
-        <div class="grid-item">
-          <a href="../html_img/plot_page_{{ var_title }}_DJF_{{ plottype_title }}_Mean.html"> DJF </a>
-        </div><!--grid-item-->
-        <div class="grid-item">
-          <a href="../html_img/plot_page_{{ var_title }}_MAM_{{ plottype_title }}_Mean.html"> MAM </a>
-        </div><!--grid-item-->
-        <div class="grid-item">
-          <a href="../html_img/plot_page_{{ var_title }}_JJA_{{ plottype_title }}_Mean.html"> JJA </a>
-        </div><!--grid-item-->
-        <div class="grid-item">
-          <a href="../html_img/plot_page_{{ var_title }}_SON_{{ plottype_title }}_Mean.html"> SON </a>
-        </div><!--grid-item-->
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
       </div><!--grid-container-->
     
       <div id="footer">

@@ -1,3 +1,22 @@
+import numpy as np
+import xarray as xr
+from pathlib import Path
+import warnings  # use to warn user about missing files.
+
+#Import "special" modules:
+try:
+    import pandas as pd
+except ImportError:
+    print("Pandas module does not exist in python path, but is needed for amwg_table.")
+    print("Please install module, e.g. 'pip install pandas'.")
+    sys.exit(1)
+
+try:
+    import scipy.stats as stats # for easy linear regression and testing
+except ImportError:
+    print("Scipy module does not exist in python path, but is needed for amwg_table.")
+    print("Please install module, e.g. 'pip install scipy'.")
+
 def amwg_table(adf):
 
     """
@@ -31,25 +50,8 @@ def amwg_table(adf):
     """
 
     #Import necessary modules:
-    import numpy as np
-    import xarray as xr
-    from pathlib import Path
     from adf_base import AdfError
-    import warnings  # use to warn user about missing files.
 
-    #Import "special" modules:
-    try:
-        import pandas as pd
-    except ImportError:
-        print("Pandas module does not exist in python path, but is needed for amwg_table.")
-        print("Please install module, e.g. 'pip install pandas'.")
-        sys.exit(1)
-
-    try:
-        import scipy.stats as stats # for easy linear regression and testing
-    except ImportError:
-        print("Scipy module does not exist in python path, but is needed for amwg_table.")
-        print("Please install module, e.g. 'pip install scipy'.")
 
 
     #Additional information:
@@ -379,7 +381,6 @@ def _spatial_average(indata):
 #####
 
 def _df_comp_table(adf, output_location, case_names):
-    import pandas as pd
 
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
 
@@ -401,7 +402,9 @@ def _df_comp_table(adf, output_location, case_names):
     df_comp = pd.DataFrame(dtype=object)
     df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
     df_comp['baseline'] = df_merge[['mean_y']]
-    df_comp['diff'] = df_comp['case'].values-df_comp['baseline'].values
+    
+    diffs = df_comp['case'].values-df_comp['baseline'].values
+    df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
 
     #Write the comparison dataframe to a new CSV file:
     cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
@@ -412,8 +415,7 @@ def _df_comp_table(adf, output_location, case_names):
 
 
 def _df_multi_comp_table(adf,csv_locs,case_names):
-    import pandas as pd
-    from pathlib import Path
+
     main_site_path = Path(adf.get_basic_info('cam_diag_plot_loc', required=True))
     output_csv_file_comp = main_site_path / "amwg_table_comp_all.csv"
     df_comp = pd.DataFrame(dtype=object)
