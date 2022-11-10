@@ -268,8 +268,8 @@ def global_latlon_map(adfobj):
                         dseasons = {} # hold the differences
 
                         #Initialize Ordered Dictionary for variable:
-                        if case_name not in restom_dict:
-                            restom_dict[case_name] = OrderedDict()
+                        #if case_name not in restom_dict:
+                        #restom_dict[case_name] = OrderedDict()
 
                         #Loop over season dictionary:
                         for s in seasons:
@@ -298,7 +298,7 @@ def global_latlon_map(adfobj):
                                     # difference: each entry should be (lat, lon)
                                     dseasons[s] = mseasons[s] - oseasons[s]
 
-                                    if var == "FSNT":
+                                    """if var == "FSNT":
                                         restom_dict[case_name]["mfsnt"] = mseasons[s]
                                         restom_dict[case_name]["ofsnt"] = oseasons[s]
                                         restom_dict[case_name]["dfsnt"] = dseasons[s]
@@ -306,7 +306,7 @@ def global_latlon_map(adfobj):
                                     if var == "FLNT":
                                         restom_dict[case_name]["mflnt"] = mseasons[s]
                                         restom_dict[case_name]["oflnt"] = oseasons[s]
-                                        restom_dict[case_name]["dflnt"] = dseasons[s]
+                                        restom_dict[case_name]["dflnt"] = dseasons[s]"""
 
                                 else:
                                     #this is inefficient because we do same calc over and over
@@ -384,9 +384,7 @@ def global_latlon_map(adfobj):
 
                         #Loop over pressure levels:
                         for pres in pres_levs:
-                            if var == "FSNT":
-                                print("FSNT has levs I guess...")
-
+                            
                             #Check that the user-requested pressure level
                             #exists in the model data, which should already
                             #have been interpolated to the standard reference
@@ -402,10 +400,6 @@ def global_latlon_map(adfobj):
                             oseasons = {}
                             dseasons = {}
                             
-                            #Initialize Ordered Dictionary for variable:
-                            if case_name not in restom_dict:
-                                restom_dict[case_name] = OrderedDict()
-
                             #Loop over seasons:
                             for s in seasons:
 
@@ -419,16 +413,6 @@ def global_latlon_map(adfobj):
                                         oseasons[s] = (odata * weights_ann).sum(dim='time').sel(lev=pres)
                                         # difference: each entry should be (lat, lon)
                                         dseasons[s] = mseasons[s] - oseasons[s]
-
-                                        if var == "FSNT":
-                                            restom_dict[case_name]["mfsnt"] = mseasons[s]
-                                            restom_dict[case_name]["ofsnt"] = oseasons[s]
-                                            restom_dict[case_name]["dfsnt"] = dseasons[s]
-
-                                        if var == "FLNT":
-                                            restom_dict[case_name]["mflnt"] = mseasons[s]
-                                            restom_dict[case_name]["oflnt"] = oseasons[s]
-                                            restom_dict[case_name]["dflnt"] = dseasons[s]
 
                                     else:
                                         #this is inefficient because we do same calc over and over
@@ -489,40 +473,6 @@ def global_latlon_map(adfobj):
             #End for (case loop)
         #End for (obs/baseline loop)
     #End for (variable loop)
-    print("\t - lat/lon maps for RESTOM")
-    
-    # Check res for RESTOM specific options:
-    vres = res["RESTOM"]
-
-    # For global maps, also set the central longitude:
-    # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
-    # otherwise defaults to 180
-    vres['central_longitude'] = pf.get_central_longitude(adfobj)
-
-    #If found then notify user, assuming debug log is enabled:
-    adfobj.debug_log(f"global_latlon_map: Found variable defaults for {var}")
-
-    #Extract category (if available):
-    web_category = vres.get("category", None)
-   
-    #Loop over model cases:
-    for case_idx, case_name in enumerate(case_names):
-        
-        mrestom = restom_dict[case_name]["mfsnt"] - restom_dict[case_name]["mflnt"]
-        orestom = restom_dict[case_name]["ofsnt"] - restom_dict[case_name]["oflnt"]
-        drestom = restom_dict[case_name]["dfsnt"] - restom_dict[case_name]["dflnt"]
-
-        plot_name = plot_loc / f"RESTOM_ANN_LatLon_Mean.{plot_type}"
-        pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
-                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                        [syear_baseline,eyear_baseline],
-                                                        mrestom, orestom, drestom,
-                                                        **vres)
-
-        #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_name, "RESTOM", case_name, category=web_category,
-                                season="ANN", plot_type="LatLon")
-
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
 
