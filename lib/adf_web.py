@@ -766,6 +766,8 @@ class AdfWeb(AdfObs):
             #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
             #print(case_sites[case_names[0]])
             #loop over cases:
+
+            case_sites2 = []
             for idx, case_name in enumerate(case_names):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
@@ -777,6 +779,7 @@ class AdfWeb(AdfObs):
 
                     #Also add path to case_sites dictionary:
                     case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
+                    print("YAHHOOO",case_sites[case_name],"\n")
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
@@ -792,7 +795,7 @@ class AdfWeb(AdfObs):
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
-                            case_sites=case_sites,
+                            case_sites=case_sites2,
                             base_name=data_name,
                             baseline_yrs=baseline_yrs,
                             multi_plots=multi_plots,
