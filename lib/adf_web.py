@@ -768,7 +768,7 @@ class AdfWeb(AdfObs):
             #loop over cases:
 
             case_sites2 = []
-            for idx, case_name in enumerate(case_names):
+            for idx, case_name in enumerate(case_names[:-1]):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
                     #Extract website directory:
