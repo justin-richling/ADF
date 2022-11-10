@@ -778,7 +778,7 @@ class AdfWeb(AdfObs):
                         shutil.copytree(website_dir, main_site_path / case_name)
 
                     #Also add path to case_sites dictionary:
-                    case_sites[case_name] = os.path.join(os.curdir, f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{case_names[-1]}_{syear_baseline}_{eyear_baseline}", "index.html")
+                    case_sites2[case_name] = os.path.join(os.curdir, f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{case_names[-1]}_{syear_baseline}_{eyear_baseline}", "index.html")
                     print("YAHHOOO",case_sites[case_name],"\n")
 
             #Also make sure CSS template files have been copied over:
