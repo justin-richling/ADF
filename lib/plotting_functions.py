@@ -1633,7 +1633,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 ####'''
 
 
-def multi_plots(wks, nicknames):
+def multi_plots(wks, case_names, nicknames, multi_dict):
 
 
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
@@ -1673,7 +1673,14 @@ def multi_plots(wks, nicknames):
                         titles.append(axs[l,c].set_title(nicknames[-1],loc='left',fontsize=8))
                     else:
                         titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))"""
+                    
+                    mdlfld = multi_dict["TS"][case_names][count]
+                    lat = mdlfld['lat']
+                    mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
+                    # mesh for plots:
+                    lons, lats = np.meshgrid(lon, lat)
 
+                    axs[l,c].contourf(lons, lats, mwrap, transform=ccrs.PlateCarree())
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
                         
                     if axs[l,c].get_subplotspec().is_first_col():
