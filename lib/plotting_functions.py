@@ -1694,16 +1694,18 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].coastlines()
                     axs[l,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
                     axs[l,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
-                    axs[l,c].tick_params('both', length=5, width=1.5, which='major')
-                    axs[l,c].tick_params('both', length=5, width=1.5, which='minor')
+                    axs[l,c].tick_params('x', length=5, width=1.5, which='major')
+                    axs[l,c].tick_params('x', length=5, width=1.5, which='minor')
                     axs[l,c].xaxis.set_major_formatter(lon_formatter)
                     axs[l,c].yaxis.set_major_formatter(lat_formatter)
 
                         
-                    """if axs[l,c].get_subplotspec().is_first_col():
-                        gl.left_labels = True
-                    else:
-                        gl.left_labels = False"""
+                    if axs[l,c].get_subplotspec().is_first_col():
+                        #gl.left_labels = True
+                        axs[l,c].tick_params('y', length=5, width=1.5, which='major')
+                        axs[l,c].tick_params('y', length=5, width=1.5, which='minor')
+                    #else:
+                        #gl.left_labels = False
                 else:
                     axs[l,c].set_visible(False)
                 count = count + 1
