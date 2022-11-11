@@ -480,6 +480,7 @@ def global_latlon_map(adfobj):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
                                                         season=s,plot_type="LatLon")
                                 
+                                print(plot_name)
 
                                 #var_season.append(mseasons[s])
                                 #if multi_plots:
@@ -499,7 +500,7 @@ def global_latlon_map(adfobj):
     #End for (variable loop)
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
-    print(plot_name)
+    #print(plot_name.parts)
 
     #print(multi_dict)
     print(multi_dict.keys())
@@ -507,7 +508,7 @@ def global_latlon_map(adfobj):
     for i in multi_dict.keys():
         print(multi_dict[i].keys())
 
-    #pf.multi_plots()
+    pf.multi_plots()
 
 
 #########
