@@ -343,6 +343,7 @@ def global_latlon_map(adfobj):
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
                             # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                             plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+                            print(plot_name)
 
                             # Check redo_plot. If set to True: remove old plot, if it already exists:
                             if (not redo_plot) and plot_name.is_file():
@@ -451,7 +452,6 @@ def global_latlon_map(adfobj):
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                                 plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
-                                print(plot_name)
 
                                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                                 redo_plot = adfobj.get_basic_info('redo_plot')
@@ -509,7 +509,7 @@ def global_latlon_map(adfobj):
     for i in multi_dict.keys():
         print(multi_dict[i].keys())
 
-    pf.multi_plots()
+    #pf.multi_plots()
 
 
 #########
