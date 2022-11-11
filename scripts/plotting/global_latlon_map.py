@@ -49,6 +49,11 @@ def global_latlon_map(adfobj):
     # - Take difference, calculate statistics
     # - make plot
 
+
+
+    multi_plots = True
+
+
     #Notify user that script has started:
     print("\n  Generating lat/lon maps...")
 
@@ -143,8 +148,13 @@ def global_latlon_map(adfobj):
     restom_dict = {}
 
     restom_dict = {}
+    multi_dict = OrderedDict()
     # probably want to do this one variable at a time:
     for var in var_list:
+        if multi_plots:
+            if var in ["TS", "SST"]:
+                multi_dict[var] = OrderedDict()
+
 
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
@@ -207,6 +217,9 @@ def global_latlon_map(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+
+                if multi_plots:
+                    multi_dict[var][case_name] = OrderedDict()
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
@@ -324,6 +337,9 @@ def global_latlon_map(adfobj):
                                 dseasons[s] = mseasons[s] - oseasons[s]
                             #End if
 
+                            if multi_plots:
+                                multi_dict[var][case_name][s] = mseasons[s]
+
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
                             # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                             plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
@@ -429,6 +445,9 @@ def global_latlon_map(adfobj):
                                     dseasons[s] = mseasons[s] - oseasons[s]
                                 #End if
 
+                                if multi_plots:
+                                    multi_dict[var][case_name][s] = mseasons[s]
+
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                                 plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
@@ -460,7 +479,12 @@ def global_latlon_map(adfobj):
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
                                                         season=s,plot_type="LatLon")
+                                
 
+                                #var_season.append(mseasons[s])
+                                #if multi_plots:
+                                #    if var in ["TS","SST"]:
+                                #        multi_dict[var][s] = [case_nickname, base_nickname,[syear_cases[case_idx],eyear_cases[case_idx]],[syear_baseline,eyear_baseline], mseasons[s], oseasons[s], dseasons[s]]
                             #End for (seasons)
                         #End for (pressure levels)
 
@@ -475,6 +499,10 @@ def global_latlon_map(adfobj):
     #End for (variable loop)
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
+
+    print(multi_dict)
+
+
 
 #########
 # Helpers
