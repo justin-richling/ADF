@@ -1665,9 +1665,9 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                 
                 if count < nplots:            
                     #axs[l,c].coastlines()
-                    gl = axs[l,c].gridlines(draw_labels=True, linewidth=1)
-                    gl.top_labels = False
-                    gl.right_labels = False
+                    #gl = axs[l,c].gridlines(draw_labels=True, linewidth=1)
+                    #gl.top_labels = False
+                    #gl.right_labels = False
 
                     """if (axs[l,c].get_subplotspec().is_first_col()) and (axs[l,c].get_subplotspec().is_first_row()):
                         titles.append(axs[l,c].set_title(nicknames[-1],loc='left',fontsize=8))
@@ -1700,10 +1700,10 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].yaxis.set_major_formatter(lat_formatter)
 
                         
-                    if axs[l,c].get_subplotspec().is_first_col():
+                    """if axs[l,c].get_subplotspec().is_first_col():
                         gl.left_labels = True
                     else:
-                        gl.left_labels = False
+                        gl.left_labels = False"""
                 else:
                     axs[l,c].set_visible(False)
                 count = count + 1
