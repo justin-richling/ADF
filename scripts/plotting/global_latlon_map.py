@@ -451,6 +451,7 @@ def global_latlon_map(adfobj):
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                                 plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
+                                print(plot_name)
 
                                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                                 redo_plot = adfobj.get_basic_info('redo_plot')
@@ -480,7 +481,7 @@ def global_latlon_map(adfobj):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
                                                         season=s,plot_type="LatLon")
                                 
-                                print(plot_name)
+                                
 
                                 #var_season.append(mseasons[s])
                                 #if multi_plots:
