@@ -1697,7 +1697,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].tick_params('x', length=5, width=1.5, which='major')
                     axs[l,c].tick_params('x', length=5, width=1.5, which='minor')
                     axs[l,c].xaxis.set_major_formatter(lon_formatter)
-                    axs[l,c].yaxis.set_major_formatter(lat_formatter)
+                    #axs[l,c].yaxis.set_major_formatter(lat_formatter)
 
                         
                     """if axs[l,c].get_subplotspec().is_first_col():
