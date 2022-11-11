@@ -1654,10 +1654,14 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     if nrows < 2:
         nrows = 2
 
+    # specify the central longitude for the plot
+    central_longitude = 180
+    proj = ccrs.PlateCarree(central_longitude=central_longitude)
+
     fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(15,15), facecolor='w', edgecolor='k',
                             sharex=True,
                             sharey=True,
-                            subplot_kw={"projection": ccrs.PlateCarree()})
+                            subplot_kw={"projection": proj})
 
     count = 0
     for l in range(0,nrows):
