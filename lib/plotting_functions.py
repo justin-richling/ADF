@@ -1674,7 +1674,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     else:
                         titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))"""
                     
-                    mdlfld = multi_dict["TS"][case_names][count]
+                    mdlfld = multi_dict["TS"][case_names[count]]
                     lat = mdlfld['lat']
                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
                     # mesh for plots:
