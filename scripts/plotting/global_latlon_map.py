@@ -107,7 +107,7 @@ def global_latlon_map(adfobj):
         if base_nickname == None:
             base_nickname = data_name
 
-    nicknames = test_nicknames.append(base_nickname)
+    #nicknames = test_nicknames.append(base_nickname)
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
