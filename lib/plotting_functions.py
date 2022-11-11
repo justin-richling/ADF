@@ -1682,8 +1682,8 @@ def multi_plots(wks, nicknames):
                 count = count + 1
                 
     plt.subplots_adjust(wspace=0.1, hspace=hspace_dict[nplots])
-    plt.savefig(f"multi_case_plots_{nplots}_cases.png",bbox_inches="tight")
-    fig.savefig(wks, bbox_inches='tight', dpi=300)
+    #plt.savefig(f"multi_case_plots_{nplots}_cases.png",bbox_inches="tight")
+    fig.savefig(wks, bbox_inches='tight')#, dpi=300
 
 
 
