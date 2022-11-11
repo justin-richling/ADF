@@ -500,7 +500,8 @@ def global_latlon_map(adfobj):
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
 
-    print(multi_dict)
+    #print(multi_dict)
+    print(multi_dict.keys())
 
 
 
