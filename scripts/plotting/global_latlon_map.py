@@ -499,6 +499,7 @@ def global_latlon_map(adfobj):
     #End for (variable loop)
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
+    print(plot_name)
 
     #print(multi_dict)
     print(multi_dict.keys())
@@ -506,6 +507,7 @@ def global_latlon_map(adfobj):
     for i in multi_dict.keys():
         print(multi_dict[i].keys())
 
+    #pf.multi_plots()
 
 
 #########

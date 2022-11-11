@@ -1600,3 +1600,92 @@ def square_contour_difference(fld1, fld2, **kwargs):
 
 #####################
 #END HELPER FUNCTIONS
+
+
+
+'''def _get_plot_location(adfobj):
+    """
+    Determine plot location based on ADF object.
+    Create location if it is not a directory.
+    Return a Path object to the directory.
+    """
+    plot_location = adfobj.plot_location  # ADF output path for plots and tables
+    if not plot_location:
+        plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
+    if isinstance(plot_location, list):
+        for pl in plot_location:
+            plpth = Path(pl)
+            # Check if plot output directory exists, and if not, then create it:
+            if not plpth.is_dir():
+                print(f"\t    {pl} not found, making new directory")
+                plpth.mkdir(parents=True)
+        if len(plot_location) == 1:
+            plot_loc = Path(plot_location[0])
+        else:
+            print(
+                f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}"
+            )
+            plot_loc = Path(plot_location[0])
+    else:
+        plot_loc = Path(plot_location)
+    return plot_loc
+
+####'''
+
+
+def multi_plots(wks, nicknames):
+
+
+    #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
+    #These will need to be changed if the figsize changes!
+    hspace_dict = {
+    **dict.fromkeys([2, 3], 0), 
+    **dict.fromkeys([4,5,6], -0.72),
+    **dict.fromkeys([7,8,9], -0.6), 
+    **dict.fromkeys([10,11,12], -0.35),
+    **dict.fromkeys([13,14,15], 0.4),
+    }
+
+    titles = []
+    #ncols = int(np.sqrt(nplots)) + 1
+    ncols = 3
+    nplots = len(nicknames)
+    nrows = int(np.ceil(nplots/ncols))
+    if nrows < 2:
+        nrows = 2
+
+    fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(15,15), facecolor='w', edgecolor='k',
+                            sharex=True,
+                            sharey=True,
+                            subplot_kw={"projection": ccrs.PlateCarree()})
+
+    count = 0
+    for l in range(0,nrows):
+        for c in range(0,ncols):
+                
+                if count < nplots:            
+                    axs[l,c].coastlines()
+                    gl = axs[l,c].gridlines(draw_labels=True, linewidth=1)
+                    gl.top_labels = False
+                    gl.right_labels = False
+                    if (axs[l,c].get_subplotspec().is_first_col()) and (axs[l,c].get_subplotspec().is_first_row()):
+                        titles.append(axs[l,c].set_title(nicknames[-1],loc='left'))
+                    else:
+                        titles.append(axs[l,c].set_title(nicknames[count],loc='left'))
+                        
+                    if axs[l,c].get_subplotspec().is_first_col():
+                        gl.left_labels = True
+                    else:
+                        gl.left_labels = False
+                else:
+                    axs[l,c].set_visible(False)
+                count = count + 1
+                
+    plt.subplots_adjust(wspace=0.1, hspace=hspace_dict[nplots])
+    plt.savefig(f"multi_case_plots_{nplots}_cases.png",bbox_inches="tight")
+    fig.savefig(wks, bbox_inches='tight', dpi=300)
+
+
+
+
+
