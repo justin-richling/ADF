@@ -503,6 +503,9 @@ def global_latlon_map(adfobj):
     #print(multi_dict)
     print(multi_dict.keys())
 
+    for i in multi_dict.keys():
+        print(multi_dict[i].keys())
+
 
 
 #########
