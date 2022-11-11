@@ -1664,7 +1664,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
         for c in range(0,ncols):
                 
                 if count < nplots:            
-                    axs[l,c].coastlines()
+                    #axs[l,c].coastlines()
                     gl = axs[l,c].gridlines(draw_labels=True, linewidth=1)
                     gl.top_labels = False
                     gl.right_labels = False
@@ -1682,6 +1682,23 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
                     axs[l,c].contourf(lons, lats, mwrap, transform=ccrs.PlateCarree())
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
+
+                    # formatting for tick labels
+                    lon_formatter = LongitudeFormatter(number_format='0.0f',
+                                                        degree_symbol='',
+                                                        dateline_direction_label=False)
+                    lat_formatter = LatitudeFormatter(number_format='0.0f',
+                                        degree_symbol='')
+
+                    axs[l,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+                    axs[l,c].coastlines()
+                    axs[l,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
+                    axs[l,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
+                    axs[l,c].tick_params('both', length=5, width=1.5, which='major')
+                    axs[l,c].tick_params('both', length=5, width=1.5, which='minor')
+                    axs[l,c].xaxis.set_major_formatter(lon_formatter)
+                    axs[l,c].yaxis.set_major_formatter(lat_formatter)
+
                         
                     if axs[l,c].get_subplotspec().is_first_col():
                         gl.left_labels = True
