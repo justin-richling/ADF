@@ -1669,9 +1669,9 @@ def multi_plots(wks, nicknames):
                     gl.top_labels = False
                     gl.right_labels = False
                     if (axs[l,c].get_subplotspec().is_first_col()) and (axs[l,c].get_subplotspec().is_first_row()):
-                        titles.append(axs[l,c].set_title(nicknames[-1],loc='left'))
+                        titles.append(axs[l,c].set_title(nicknames[-1],loc='left',fontsize=8))
                     else:
-                        titles.append(axs[l,c].set_title(nicknames[count],loc='left'))
+                        titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
                         
                     if axs[l,c].get_subplotspec().is_first_col():
                         gl.left_labels = True
