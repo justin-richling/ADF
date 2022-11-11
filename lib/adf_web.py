@@ -676,7 +676,7 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                print("For case index, plot_types: ",plot_types,"\n")
+                #print("For case index, plot_types: ",plot_types,"\n")
                 if not mean_ptype_file.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
@@ -780,7 +780,7 @@ class AdfWeb(AdfObs):
 
                     #Also add path to case_sites dictionary:
                     case_sites2[case_name] = [os.path.join(os.curdir, f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", "index.html"),syear_cases[idx],eyear_cases[idx]]
-                    print("YAHHOOO",case_sites[case_name],"\n")
+                    #print("YAHHOOO",case_sites[case_name],"\n")
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
