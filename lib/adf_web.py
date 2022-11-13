@@ -789,8 +789,8 @@ class AdfWeb(AdfObs):
             #End if
                 #End if
             #End for (model case loop)
-            wks = "b.cesm3_cam058_mom_e.B1850MOM.ne30_L32_t061.camdev_cice5.009_vs_016_022c_024_026a_026b/diag-plot/b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40/mulit_plot.png"
-            print(f"{case_sites2[case_names[0]]}/{wks}")
+            wks = "mulit_plot.png"
+            print(f"{case_sites2[case_names[0]][0]}/{wks}")
             #Create multi-case site:
             multi_plots = {"Tables": "html_table/mean_tables.html",
                            "LatLon": f"{case_sites2[case_names[0]][0]}/{wks}"}
