@@ -1666,18 +1666,19 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
     count = 0
     img = []
+    var = "TS"
     for l in range(0,nrows):
         for c in range(0,ncols):
                 
                 if count < nplots:
-                    mdlfld = multi_dict["TS"][case_names[count]]["ANN"][0]
+                    mdlfld = multi_dict[var][case_names[count]]["ANN"][0]
                     lat = mdlfld['lat']
                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
 
                     # mesh for plots:
                     lons, lats = np.meshgrid(lon, lat)
 
-                    levelsdiff = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
+                    levelsdiff = multi_dict[var][case_names[count]]["ANN"][1]["diff_contour_range"]
                     levelsdiff = np.arange(levelsdiff[0],levelsdiff[1],levelsdiff[-1])
                     
                     normfunc, mplv = use_this_norm()
@@ -1691,7 +1692,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     else:
                         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                    cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
+                    cmap = multi_dict[var][case_names[count]]["ANN"][1]['diff_colormap']
 
                     img.append(axs[l,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                       cmap=cmap, norm=normdiff, 
@@ -1728,7 +1729,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     
                     )"""
     #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
-    fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')        
+    fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
+    fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)        
 
     """cb = fig.colorbar(
         ax=axs,
