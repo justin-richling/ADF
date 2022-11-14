@@ -1667,7 +1667,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     count = 0
     img = []
     var = "TS"
-    fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
+    #fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
     for l in range(0,nrows):
         for c in range(0,ncols):
                 
@@ -1698,6 +1698,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     img.append(axs[l,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                       cmap=cmap, norm=normdiff, 
                                       transform=ccrs.PlateCarree()))
+                    if l == 0 and c == 1:
+                        axs[l,c].set_title(f'All Case Comparison - Test - Baseline: {var}\n', fontsize=16)
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
 
                     # formatting for tick labels
@@ -1732,7 +1734,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
     fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
     #plt.title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
-    axs[0,1].set_title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)
+    #axs[0,1].set_title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)
 
 
     """cb = fig.colorbar(
