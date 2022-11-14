@@ -1684,7 +1684,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     # mesh for plots:
                     lons, lats = np.meshgrid(lon, lat)
 
-                    axs[l,c].contourf(lons, lats, mwrap, transform=ccrs.PlateCarree())
+                    axs[l,c].contourf(lons, lats, mwrap, #levels=levels, cmap=cmap, norm=norm, 
+                                      transform=ccrs.PlateCarree())
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
 
                     # formatting for tick labels
@@ -1716,7 +1717,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].set_visible(False)
                 count = count + 1
                 
-    plt.subplots_adjust(wspace=0.1, hspace=hspace_dict[nplots])
+    plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
     #plt.savefig(f"multi_case_plots_{nplots}_cases.png",bbox_inches="tight")
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
 

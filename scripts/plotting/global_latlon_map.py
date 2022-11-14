@@ -467,6 +467,8 @@ def global_latlon_map(adfobj):
                                 elif (redo_plot) and plot_name.is_file():
                                     plot_name.unlink()
 
+                                print(vres)
+
                                 #Create new plot:
                                 # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
                                 # This relies on `plot_map_and_save` knowing how to deal with the options
@@ -503,9 +505,7 @@ def global_latlon_map(adfobj):
     #End for (variable loop)
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
-    #print(plot_name.parts)
 
-    #print(multi_dict)
     print(multi_dict.keys())
 
     for i in multi_dict.keys():
