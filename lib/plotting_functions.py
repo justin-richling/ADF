@@ -1734,7 +1734,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].set_visible(False)
                 count = count + 1
     # __COLORBARS__
-    cb_mean_ax = inset_axes(axs[-1,-1],
+    cb_mean_ax = inset_axes(axs[0,-1],
                     width="5%",  # width = 5% of parent_bbox width
                     height="100%",  # height : 100%
                     loc='lower left',
