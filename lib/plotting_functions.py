@@ -1685,6 +1685,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     lons, lats = np.meshgrid(lon, lat)
 
                     levels = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
+                    print(levels)
                     cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
                     #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
 
