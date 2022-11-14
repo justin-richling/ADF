@@ -1681,6 +1681,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     mdlfld = multi_dict["TS"][case_names[count]]["ANN"][0]
                     lat = mdlfld['lat']
                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
+                    print(mwrap.max(),mwrap.min())
                     # mesh for plots:
                     lons, lats = np.meshgrid(lon, lat)
 
