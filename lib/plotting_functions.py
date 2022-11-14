@@ -1667,6 +1667,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     count = 0
     img = []
     var = "TS"
+    fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
     for l in range(0,nrows):
         for c in range(0,ncols):
                 
@@ -1730,7 +1731,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     )"""
     #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
     fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
-    plt.title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)        
+    #plt.title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
+
 
     """cb = fig.colorbar(
         ax=axs,
@@ -1741,7 +1743,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
     #fig.colorbar(img[0], ax=axs, bbox_to_anchor=(.5, 0), orientation='horizontal')
     
-    plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
+    plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots],top=0.2)
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
 
 
