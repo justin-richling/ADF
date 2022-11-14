@@ -1741,7 +1741,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
     #fig.colorbar(img[0], ax=axs, bbox_to_anchor=(.5, 0), orientation='horizontal')
     
-    plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots],top=0.99,)
+    plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
 
 
