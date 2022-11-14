@@ -1718,16 +1718,24 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].set_visible(False)
                 count = count + 1
     # __COLORBARS__
-    cb_mean_ax = inset_axes(axs[0,-1],
+    """cb_mean_ax = inset_axes(axs[0,-1],
                     width="5%",  # width = 5% of parent_bbox width
                     height="100%",  # height : 100%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0, 1, 1),
                     bbox_transform=axs[0,-1].transAxes,
                     borderpad=0,
-                    )
+                    )"""
     #fig.colorbar(img[2], cax=cb_mean_ax)  
-    fig.colorbar(img[2],  ax=axs.ravel().tolist(), orientation='horizontal')          
+    #fig.colorbar(img[2],  ax=axs.ravel().tolist(), orientation='horizontal')        
+
+    cb = fig.colorbar(
+
+        ax=axs,
+        orientation="horizontal",
+        aspect=60,
+
+    )  
     
     plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
