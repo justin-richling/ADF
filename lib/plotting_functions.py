@@ -1689,7 +1689,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
                     #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
 
-                    axs[l,c].contourf(lons, lats, mwrap, levels=levels, cmap=cmap, #norm=norm, 
+                    axs[l,c].contourf(lons, lats, mwrap, #levels=levels, 
+                                      cmap=cmap, #norm=norm, 
                                       transform=ccrs.PlateCarree())
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
 
