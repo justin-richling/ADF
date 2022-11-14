@@ -1669,22 +1669,11 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     for l in range(0,nrows):
         for c in range(0,ncols):
                 
-                if count < nplots:            
-                    #axs[l,c].coastlines()
-                    #gl = axs[l,c].gridlines(draw_labels=True, linewidth=1)
-                    #gl.top_labels = False
-                    #gl.right_labels = False
-
-                    """if (axs[l,c].get_subplotspec().is_first_col()) and (axs[l,c].get_subplotspec().is_first_row()):
-                        titles.append(axs[l,c].set_title(nicknames[-1],loc='left',fontsize=8))
-                    else:
-                        titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))"""
-                    
+                if count < nplots:
                     mdlfld = multi_dict["TS"][case_names[count]]["ANN"][0]
                     lat = mdlfld['lat']
                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
-                    print(mwrap.max(),mwrap.min())
-                    print(mwrap.shape)
+
                     # mesh for plots:
                     lons, lats = np.meshgrid(lon, lat)
 
@@ -1737,7 +1726,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     bbox_transform=axs[0,-1].transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img[2], cax=cb_mean_ax)            
+    #fig.colorbar(img[2], cax=cb_mean_ax)  
+    fig.colorbar(img[2],  ax=axs.ravel().tolist(), orientation='horizontal')          
     
     plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
