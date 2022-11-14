@@ -1722,7 +1722,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     width="60%",  # width = 5% of parent_bbox width
                     height="5%",  # height : 100%
                     loc='bottom',
-                    bbox_to_anchor=(.5, 0), #, 1, 1
+                    bbox_to_anchor=(.5, 0, 1, 1), #, 1, 1
                     bbox_transform=axs[0,-1].transAxes,
                     borderpad=0,
                     
