@@ -1678,13 +1678,17 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     else:
                         titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))"""
                     
-                    mdlfld = multi_dict["TS"][case_names[count]]["ANN"]
+                    mdlfld = multi_dict["TS"][case_names[count]]["ANN"][0]
                     lat = mdlfld['lat']
                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
                     # mesh for plots:
                     lons, lats = np.meshgrid(lon, lat)
 
-                    axs[l,c].contourf(lons, lats, mwrap, #levels=levels, cmap=cmap, norm=norm, 
+                    levels = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
+                    cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
+                    #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
+
+                    axs[l,c].contourf(lons, lats, mwrap, levels=levels, cmap=cmap, #norm=norm, 
                                       transform=ccrs.PlateCarree())
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
 
