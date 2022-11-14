@@ -1730,7 +1730,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     )"""
     #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
     fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
-    fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)        
+    plt.title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)        
 
     """cb = fig.colorbar(
         ax=axs,
