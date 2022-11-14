@@ -1145,6 +1145,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     else:
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
     #End if
+    print("normdiff:",normdiff,"\n")
 
     subplots_opt = {}
     contourf_opt = {}
