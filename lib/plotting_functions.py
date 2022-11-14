@@ -1690,16 +1690,19 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
                     levelsdiff = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
                     levelsdiff = np.arange(levelsdiff[0],levelsdiff[1],levelsdiff[-1])
-                    normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                    
                     normfunc, mplv = use_this_norm()
-                    #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
-                    print(levelsdiff)
-                    cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
-                    #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
 
-                    #axs[l,c].contourf(lons, lats, mwrap, #levels=levelsdiff, 
-                    #                 cmap=cmap, norm=normdiff, 
-                    #                 transform=ccrs.PlateCarree())
+                    #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                    #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
+
+                    # color normalization for difference
+                    if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+                        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
+                    else:
+                        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+
+                    cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
 
                     img.append(axs[l,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                       cmap=cmap, norm=normdiff, 
@@ -1722,15 +1725,6 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].xaxis.set_major_formatter(lon_formatter)
                     axs[l,c].yaxis.set_major_formatter(lat_formatter)
 
-                        
-                    """if axs[l,c].get_subplotspec().is_first_col():
-                        #gl.left_labels = True
-                        axs[l,c].tick_params('y', length=5, width=1.5, which='major')
-                        axs[l,c].tick_params('y', length=5, width=1.5, which='minor')
-                        axs[l,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
-                        axs[l,c].yaxis.set_major_formatter(lat_formatter)
-                    #else:
-                        #gl.left_labels = False"""
                 else:
                     axs[l,c].set_visible(False)
                 count = count + 1
@@ -1744,8 +1738,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     borderpad=0,
                     )
     fig.colorbar(img[2], cax=cb_mean_ax)            
+    
     plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
-    #plt.savefig(f"multi_case_plots_{nplots}_cases.png",bbox_inches="tight")
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
 
 
