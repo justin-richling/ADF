@@ -1725,9 +1725,9 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     bbox_to_anchor=(.5, 0), #, 1, 1
                     bbox_transform=axs[0,-1].transAxes,
                     borderpad=0,
-                    orientation='horizontal'
+                    
                     )
-    fig.colorbar(img[2], cax=cb_mean_ax)  
+    fig.colorbar(img[2], cax=cb_mean_ax,orientation='horizontal')  
     #fig.colorbar(img[2],  ax=axs.ravel().tolist(), orientation='horizontal')        
 
     """cb = fig.colorbar(
