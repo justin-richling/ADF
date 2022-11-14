@@ -1729,13 +1729,14 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     #fig.colorbar(img[2], cax=cb_mean_ax)  
     #fig.colorbar(img[2],  ax=axs.ravel().tolist(), orientation='horizontal')        
 
-    cb = fig.colorbar(
-
+    """cb = fig.colorbar(
         ax=axs,
         orientation="horizontal",
         aspect=60,
 
-    )  
+    ) """ 
+
+    fig.colorbar(img, ax=axs, location='bottom')
     
     plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
