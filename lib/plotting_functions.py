@@ -1690,9 +1690,9 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
                     levelsdiff = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
                     levelsdiff = np.arange(levelsdiff[0],levelsdiff[1],levelsdiff[-1])
-                    #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                    normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
                     normfunc, mplv = use_this_norm()
-                    normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
+                    #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
                     print(levelsdiff)
                     cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
                     #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
@@ -1701,7 +1701,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     #                 cmap=cmap, norm=normdiff, 
                     #                 transform=ccrs.PlateCarree())
 
-                    img.append(axs[l,c].contourf(lons, lats, mwrap, #levels=levelsdiff, 
+                    img.append(axs[l,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                       cmap=cmap, norm=normdiff, 
                                       transform=ccrs.PlateCarree()))
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
