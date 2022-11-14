@@ -1718,12 +1718,12 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].set_visible(False)
                 count = count + 1
      # __COLORBARS__
-    cb_mean_ax = inset_axes(axs[0,-1],
+    cb_mean_ax = inset_axes(axs[-1,-1],
                     width="60%",  # width = 5% of parent_bbox width
                     height="5%",  # height : 100%
                     loc='lower center',
                     bbox_to_anchor=(.5, 0, 1, 1), #, 1, 1
-                    bbox_transform=axs[0,-1].transAxes,
+                    bbox_transform=axs[-1,-1].transAxes,
                     borderpad=0,
                     
                     )
