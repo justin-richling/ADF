@@ -199,6 +199,8 @@ def global_latlon_map(adfobj):
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
+
+        print(vres)
         
         #loop over different data sets to plot model against:
         for data_src in data_list:
@@ -466,8 +468,6 @@ def global_latlon_map(adfobj):
                                     continue
                                 elif (redo_plot) and plot_name.is_file():
                                     plot_name.unlink()
-
-                                print(vres)
 
                                 #Create new plot:
                                 # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
