@@ -1665,6 +1665,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                             subplot_kw={"projection": proj})
 
     count = 0
+    img = []
     for l in range(0,nrows):
         for c in range(0,ncols):
                 
@@ -1698,6 +1699,8 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].contourf(lons, lats, mwrap, #levels=levelsdiff, 
                                       cmap=cmap, norm=normdiff, 
                                       transform=ccrs.PlateCarree())
+
+                    img.append(axs[l,c].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree()))
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
 
                     # formatting for tick labels
@@ -1728,7 +1731,16 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                 else:
                     axs[l,c].set_visible(False)
                 count = count + 1
-                
+    # __COLORBARS__
+    cb_mean_ax = inset_axes(axs[-1,-1],
+                    width="5%",  # width = 5% of parent_bbox width
+                    height="100%",  # height : 100%
+                    loc='lower left',
+                    bbox_to_anchor=(1.05, 0, 1, 1),
+                    bbox_transform=axs[-1,-1].transAxes,
+                    borderpad=0,
+                    )
+    fig.colorbar(img[-1], cax=cb_mean_ax)            
     plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
     #plt.savefig(f"multi_case_plots_{nplots}_cases.png",bbox_inches="tight")
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
