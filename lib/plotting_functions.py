@@ -1696,11 +1696,13 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
                     #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
 
-                    axs[l,c].contourf(lons, lats, mwrap, #levels=levelsdiff, 
-                                      cmap=cmap, norm=normdiff, 
-                                      transform=ccrs.PlateCarree())
+                    #axs[l,c].contourf(lons, lats, mwrap, #levels=levelsdiff, 
+                    #                 cmap=cmap, norm=normdiff, 
+                    #                 transform=ccrs.PlateCarree())
 
-                    img.append(axs[l,c].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree()))
+                    img.append(axs[l,c].contourf(lons, lats, mwrap, #levels=levelsdiff, 
+                                      cmap=cmap, norm=normdiff, 
+                                      transform=ccrs.PlateCarree()))
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
 
                     # formatting for tick labels
