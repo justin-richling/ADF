@@ -1718,7 +1718,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     axs[l,c].set_visible(False)
                 count = count + 1
      # __COLORBARS__
-    cb_mean_ax = inset_axes(axs[-1,-1],
+    """cb_mean_ax = inset_axes(axs[-1,-1],
                     width="60%",  # width = 5% of parent_bbox width
                     height="5%",  # height : 100%
                     loc='lower center',
@@ -1726,7 +1726,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     bbox_transform=axs[-1,-1].transAxes,
                     borderpad=0,
                     
-                    )
+                    )"""
     #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
     fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=60,location="bottom",anchor=(0.5,-0.5))        
 
