@@ -1685,12 +1685,13 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     # mesh for plots:
                     lons, lats = np.meshgrid(lon, lat)
 
-                    levels = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
-                    print(levels)
+                    levelsdiff = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
+                    normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                    print(levelsdiff)
                     cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
                     #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
 
-                    axs[l,c].contourf(lons, lats, mwrap, #levels=levels, 
+                    axs[l,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                       cmap=cmap, #norm=norm, 
                                       transform=ccrs.PlateCarree())
                     titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
