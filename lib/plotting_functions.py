@@ -1739,10 +1739,10 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     height="100%",  # height : 100%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0, 1, 1),
-                    bbox_transform=axs[-1,-1].transAxes,
+                    bbox_transform=axs[0,-1].transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img[-1], cax=cb_mean_ax)            
+    fig.colorbar(img[2], cax=cb_mean_ax)            
     plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
     #plt.savefig(f"multi_case_plots_{nplots}_cases.png",bbox_inches="tight")
     fig.savefig(wks, bbox_inches='tight')#, dpi=300
