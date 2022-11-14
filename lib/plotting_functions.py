@@ -1145,7 +1145,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     else:
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
     #End if
-    print("normdiff:",normdiff,"\n")
+    #print("normdiff:",normdiff,"\n")
 
     subplots_opt = {}
     contourf_opt = {}
@@ -1687,7 +1687,9 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     lons, lats = np.meshgrid(lon, lat)
 
                     levelsdiff = multi_dict["TS"][case_names[count]]["ANN"][1]["diff_contour_range"]
-                    normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                    #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                    normfunc, mplv = use_this_norm()
+                    normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
                     print(levelsdiff)
                     cmap = multi_dict["TS"][case_names[count]]["ANN"][1]['diff_colormap']
                     #norm = multi_dict["TS"][case_names[count]]["ANN"][1]
