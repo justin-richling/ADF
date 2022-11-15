@@ -1681,7 +1681,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
 
                 count = 0
                 img = []
-                axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
+                axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var} {season}\n', fontsize=16) 
                 for r in range(0,nrows):
                     for c in range(0,ncols):
                             
