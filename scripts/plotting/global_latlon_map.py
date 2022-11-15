@@ -200,7 +200,7 @@ def global_latlon_map(adfobj):
         # otherwise defaults to 180
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
 
-        print(vres)
+        print("\n",web_category,"\n")
         
         #loop over different data sets to plot model against:
         for data_src in data_list:
@@ -510,6 +510,8 @@ def global_latlon_map(adfobj):
         wks = "/glade/scratch/richling/adf-output/multi-case/test/b.cesm3_cam058_mom_e.B1850MOM.ne30_L32_t061.camdev_cice5.009_vs_016_022c_024_026a_026b/diag-plot/b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40/"
 
         pf.multi_plots(wks,"LatLon", case_names, test_nicknames, multi_dict)
+        #adfobj.add_website_data(plot_name, var, case_name, category=web_category,
+        #                                                    season=s, plot_type="multi_LatLon")
         print("  ...lat/lon multi plots have been generated successfully.")
 
 
