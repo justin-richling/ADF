@@ -1643,20 +1643,10 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
     **dict.fromkeys([2, 3], -1.0), 
     **dict.fromkeys([4,5,6], -0.85),
     **dict.fromkeys([7,8,9], -0.85), 
-    **dict.fromkeys([10,11,12], -0.65),
+    **dict.fromkeys([10,11,12], -0.85),
     **dict.fromkeys([13,14,15], 0.35),
     }
 
-    """hspace_dict = {
-    **dict.fromkeys([2, 3], 0), 
-    **dict.fromkeys([4,5,6], -0.72),
-    **dict.fromkeys([7,8,9], -0.3), 
-    **dict.fromkeys([10,11,12], -0.35),
-    **dict.fromkeys([13,14,15], 0.4),
-    }
-    """
-
-    #ncols = int(np.sqrt(nplots)) + 1
     ncols = 3
     nplots = len(nicknames)
     print("\n",hspace_dict[nplots],"\n")
