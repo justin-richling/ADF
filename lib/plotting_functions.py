@@ -1695,14 +1695,14 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                     for c in range(0,ncols):
                             
                             if count < nplots:
-                                mdlfld = multi_dict[var][case_names[count]][season][0]
+                                mdlfld = multi_dict[var][case_names[count]][season]["diff_data"]
                                 lat = mdlfld['lat']
                                 mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
 
                                 # mesh for plots:
                                 lons, lats = np.meshgrid(lon, lat)
 
-                                levelsdiff = multi_dict[var][case_names[count]][season][1]["diff_contour_range"]
+                                levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
                                 levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
                                 
                                 normfunc, mplv = use_this_norm()
@@ -1713,7 +1713,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                 else:
                                     normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                                cmap = multi_dict[var][case_names[count]][season][1]['diff_colormap']
+                                cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
 
                                 img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                                 cmap=cmap, norm=normdiff, 

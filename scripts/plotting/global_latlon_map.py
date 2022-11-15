@@ -342,7 +342,7 @@ def global_latlon_map(adfobj):
                             #End if
 
                             if multi_plots:
-                                multi_dict[var][case_name][s] = [dseasons[s],vres]
+                                multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
                             # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
@@ -451,7 +451,7 @@ def global_latlon_map(adfobj):
                                 #End if
 
                                 if multi_plots:
-                                    multi_dict[var][case_name][s] = [dseasons[s],vres]
+                                    multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
