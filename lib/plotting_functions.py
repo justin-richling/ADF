@@ -1655,7 +1655,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
     **dict.fromkeys([13,14,15], 0.4),
     }
     """
-    titles = []
+
     #ncols = int(np.sqrt(nplots)) + 1
     ncols = 3
     nplots = len(nicknames)
@@ -1666,6 +1666,12 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
     # specify the central longitude for the plot
     central_longitude = 180
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
+    # formatting for tick labels
+    lon_formatter = LongitudeFormatter(number_format='0.0f',
+                                        degree_symbol='',
+                                        dateline_direction_label=False)
+    lat_formatter = LatitudeFormatter(number_format='0.0f',
+                                        degree_symbol='')
 
     for var in multi_dict.keys():
         print(multi_dict[var].keys())
@@ -1679,9 +1685,12 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                         sharey=True,
                                         subplot_kw={"projection": proj})
 
+                #Set figure title
+                axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var} {season}\n', fontsize=16) 
+                
                 count = 0
                 img = []
-                axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var} {season}\n', fontsize=16) 
+                titles = []
                 for r in range(0,nrows):
                     for c in range(0,ncols):
                             
@@ -1698,9 +1707,6 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                 
                                 normfunc, mplv = use_this_norm()
 
-                                #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-                                #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
-
                                 # color normalization for difference
                                 if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
                                     normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
@@ -1712,16 +1718,9 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                 img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                                 cmap=cmap, norm=normdiff, 
                                                 transform=ccrs.PlateCarree()))
-                                #if l == 0 and c == 1:
-                                #    axs[r,c].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16)
-                                titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
 
-                                # formatting for tick labels
-                                lon_formatter = LongitudeFormatter(number_format='0.0f',
-                                                                    degree_symbol='',
-                                                                    dateline_direction_label=False)
-                                lat_formatter = LatitudeFormatter(number_format='0.0f',
-                                                    degree_symbol='')
+                                #Set individual plot titles (case name/nickname)
+                                titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
 
                                 axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
                                 axs[r,c].coastlines()
@@ -1733,6 +1732,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                 axs[r,c].yaxis.set_major_formatter(lat_formatter)
 
                             else:
+                                #Clear left over subplots if they don't fill the row x column matrix
                                 axs[r,c].set_visible(False)
                             count = count + 1
                 # __COLORBARS__
