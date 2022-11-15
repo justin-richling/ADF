@@ -1634,7 +1634,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 ####'''
 
 
-def multi_plots(wks, case_names, nicknames, multi_dict):
+def multi_plots(wks, var, case_names, nicknames, multi_dict):
 
 
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
@@ -1666,9 +1666,12 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
     count = 0
     img = []
-    var = "TS"
-    #fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
-    for l in range(0,nrows):
+    #var = "TS"
+    #fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)
+    for i in multi_dict[var].keys():
+        print(i)
+    axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
+    for r in range(0,nrows):
         for c in range(0,ncols):
                 
                 if count < nplots:
@@ -1695,12 +1698,12 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
 
                     cmap = multi_dict[var][case_names[count]]["ANN"][1]['diff_colormap']
 
-                    img.append(axs[l,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
+                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                       cmap=cmap, norm=normdiff, 
                                       transform=ccrs.PlateCarree()))
-                    if l == 0 and c == 1:
-                        axs[l,c].set_title(f'All Case Comparison - Test - Baseline: {var}\n', fontsize=16)
-                    titles.append(axs[l,c].set_title(nicknames[count],loc='left',fontsize=8))
+                    #if l == 0 and c == 1:
+                    #    axs[r,c].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16)
+                    titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
 
                     # formatting for tick labels
                     lon_formatter = LongitudeFormatter(number_format='0.0f',
@@ -1709,17 +1712,17 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
                     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
 
-                    axs[l,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-                    axs[l,c].coastlines()
-                    axs[l,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
-                    axs[l,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
-                    axs[l,c].tick_params('both', length=5, width=1.5, which='major')
-                    axs[l,c].tick_params('both', length=5, width=1.5, which='minor')
-                    axs[l,c].xaxis.set_major_formatter(lon_formatter)
-                    axs[l,c].yaxis.set_major_formatter(lat_formatter)
+                    axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+                    axs[r,c].coastlines()
+                    axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
+                    axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
+                    axs[r,c].tick_params('both', length=5, width=1.5, which='major')
+                    axs[r,c].tick_params('both', length=5, width=1.5, which='minor')
+                    axs[r,c].xaxis.set_major_formatter(lon_formatter)
+                    axs[r,c].yaxis.set_major_formatter(lat_formatter)
 
                 else:
-                    axs[l,c].set_visible(False)
+                    axs[r,c].set_visible(False)
                 count = count + 1
      # __COLORBARS__
     """cb_mean_ax = inset_axes(axs[-1,-1],
@@ -1734,7 +1737,7 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
     fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
     #plt.title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
-    #axs[0,1].set_title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)
+    
 
 
     """cb = fig.colorbar(
