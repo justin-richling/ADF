@@ -1659,10 +1659,6 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     central_longitude = 180
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
 
-    fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(15,15), facecolor='w', edgecolor='k',
-                            sharex=True,
-                            sharey=True,
-                            subplot_kw={"projection": proj})
 
     count = 0
     img = []
@@ -1670,6 +1666,10 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     #fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)
     for var in multi_dict.keys():
         print(var)
+        fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(15,15), facecolor='w', edgecolor='k',
+                            sharex=True,
+                            sharey=True,
+                            subplot_kw={"projection": proj})
         axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
         for r in range(0,nrows):
             for c in range(0,ncols):
