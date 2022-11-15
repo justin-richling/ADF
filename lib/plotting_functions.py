@@ -1641,10 +1641,10 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
     #These will need to be changed if the figsize changes!
     hspace_dict = {
     **dict.fromkeys([2, 3], 0), 
-    **dict.fromkeys([4,5,6], -0.72),
-    **dict.fromkeys([7,8,9], -0.6), 
-    **dict.fromkeys([10,11,12], -0.35),
-    **dict.fromkeys([13,14,15], 0.4),
+    **dict.fromkeys([4,5,6], -1.1),
+    **dict.fromkeys([7,8,9], -0.9), 
+    **dict.fromkeys([10,11,12], -0.65),
+    **dict.fromkeys([13,14,15], 0.25),
     }
 
     """hspace_dict = {
