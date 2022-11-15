@@ -1659,7 +1659,9 @@ def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
     central_longitude = 180
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
 
-    fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(15,25), facecolor='w', edgecolor='k',
+    fig_width = 15
+    fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
+    fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
                             sharex=True,
                             sharey=True,
                             subplot_kw={"projection": proj})
