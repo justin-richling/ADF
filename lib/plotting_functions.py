@@ -1736,7 +1736,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                 axs[r,c].set_visible(False)
                             count = count + 1
                 # __COLORBARS__
-                fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
+                fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.3),extend='both')
                     
                 plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
                 fig.savefig(wks+f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight')#, dpi=300
