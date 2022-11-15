@@ -507,12 +507,11 @@ def global_latlon_map(adfobj):
     print("  ...lat/lon maps have been generated successfully.")
 
     print(multi_dict.keys())
+    wks = "/glade/scratch/richling/adf-output/multi-case/test/b.cesm3_cam058_mom_e.B1850MOM.ne30_L32_t061.camdev_cice5.009_vs_016_022c_024_026a_026b/diag-plot/b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40/"
 
     for i in multi_dict.keys():
         print(multi_dict[i].keys())
-
-    wks = "/glade/scratch/richling/adf-output/multi-case/test/b.cesm3_cam058_mom_e.B1850MOM.ne30_L32_t061.camdev_cice5.009_vs_016_022c_024_026a_026b/diag-plot/b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40/"
-    pf.multi_plots(wks, case_names, test_nicknames, multi_dict)
+        pf.multi_plots(wks, i, "LatLon", case_names, test_nicknames, multi_dict)
 
 
 #########
