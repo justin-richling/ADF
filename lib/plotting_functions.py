@@ -1634,7 +1634,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 ####'''
 
 
-def multi_plots(wks, var, season, ptype, case_names, nicknames, multi_dict):
+def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
 
     
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
@@ -1667,93 +1667,76 @@ def multi_plots(wks, var, season, ptype, case_names, nicknames, multi_dict):
     central_longitude = 180
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
 
-    fig_width = 15
-    fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
-    fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
-                            sharex=True,
-                            sharey=True,
-                            subplot_kw={"projection": proj})
+    for var in multi_dict.keys():
+        print(multi_dict[var].keys())
+        for j in multi_dict[var].keys():
+            for season in multi_dict[var][j].keys():
 
-    count = 0
-    img = []
-    axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
-    for r in range(0,nrows):
-        for c in range(0,ncols):
-                
-                if count < nplots:
-                    mdlfld = multi_dict[var][case_names[count]][season][0]
-                    lat = mdlfld['lat']
-                    mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
+                fig_width = 15
+                fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
+                fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
+                                        sharex=True,
+                                        sharey=True,
+                                        subplot_kw={"projection": proj})
 
-                    # mesh for plots:
-                    lons, lats = np.meshgrid(lon, lat)
+                count = 0
+                img = []
+                axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
+                for r in range(0,nrows):
+                    for c in range(0,ncols):
+                            
+                            if count < nplots:
+                                mdlfld = multi_dict[var][case_names[count]][season][0]
+                                lat = mdlfld['lat']
+                                mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
 
-                    levelsdiff = multi_dict[var][case_names[count]][season][1]["diff_contour_range"]
-                    levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+                                # mesh for plots:
+                                lons, lats = np.meshgrid(lon, lat)
+
+                                levelsdiff = multi_dict[var][case_names[count]][season][1]["diff_contour_range"]
+                                levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+                                
+                                normfunc, mplv = use_this_norm()
+
+                                #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                                #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
+
+                                # color normalization for difference
+                                if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+                                    normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
+                                else:
+                                    normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+
+                                cmap = multi_dict[var][case_names[count]][season][1]['diff_colormap']
+
+                                img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
+                                                cmap=cmap, norm=normdiff, 
+                                                transform=ccrs.PlateCarree()))
+                                #if l == 0 and c == 1:
+                                #    axs[r,c].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16)
+                                titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
+
+                                # formatting for tick labels
+                                lon_formatter = LongitudeFormatter(number_format='0.0f',
+                                                                    degree_symbol='',
+                                                                    dateline_direction_label=False)
+                                lat_formatter = LatitudeFormatter(number_format='0.0f',
+                                                    degree_symbol='')
+
+                                axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+                                axs[r,c].coastlines()
+                                axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
+                                axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
+                                axs[r,c].tick_params('both', length=5, width=1.5, which='major')
+                                axs[r,c].tick_params('both', length=5, width=1.5, which='minor')
+                                axs[r,c].xaxis.set_major_formatter(lon_formatter)
+                                axs[r,c].yaxis.set_major_formatter(lat_formatter)
+
+                            else:
+                                axs[r,c].set_visible(False)
+                            count = count + 1
+                # __COLORBARS__
+                fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
                     
-                    normfunc, mplv = use_this_norm()
-
-                    #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-                    #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
-
-                    # color normalization for difference
-                    if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
-                        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
-                    else:
-                        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
-                    cmap = multi_dict[var][case_names[count]][season][1]['diff_colormap']
-
-                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
-                                      cmap=cmap, norm=normdiff, 
-                                      transform=ccrs.PlateCarree()))
-                    #if l == 0 and c == 1:
-                    #    axs[r,c].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16)
-                    titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
-
-                    # formatting for tick labels
-                    lon_formatter = LongitudeFormatter(number_format='0.0f',
-                                                        degree_symbol='',
-                                                        dateline_direction_label=False)
-                    lat_formatter = LatitudeFormatter(number_format='0.0f',
-                                        degree_symbol='')
-
-                    axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-                    axs[r,c].coastlines()
-                    axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
-                    axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
-                    axs[r,c].tick_params('both', length=5, width=1.5, which='major')
-                    axs[r,c].tick_params('both', length=5, width=1.5, which='minor')
-                    axs[r,c].xaxis.set_major_formatter(lon_formatter)
-                    axs[r,c].yaxis.set_major_formatter(lat_formatter)
-
-                else:
-                    axs[r,c].set_visible(False)
-                count = count + 1
-     # __COLORBARS__
-    """cb_mean_ax = inset_axes(axs[-1,-1],
-                    width="60%",  # width = 5% of parent_bbox width
-                    height="5%",  # height : 100%
-                    loc='lower center',
-                    bbox_to_anchor=(.5, 0, 1, 1), #, 1, 1
-                    bbox_transform=axs[-1,-1].transAxes,
-                    borderpad=0,
-                    
-                    )"""
-    #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
-    fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
-    #plt.title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
-    
-
-
-    """cb = fig.colorbar(
-        ax=axs,
-        orientation="horizontal",
-        aspect=60,
-
-    ) """ 
-
-    #fig.colorbar(img[0], ax=axs, bbox_to_anchor=(.5, 0), orientation='horizontal')
-    
-    plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
-    fig.savefig(wks+f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight')#, dpi=300
+                plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
+                fig.savefig(wks+f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight')#, dpi=300
