@@ -1634,7 +1634,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 ####'''
 
 
-def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
+def multi_plots(wks, var, season, ptype, case_names, nicknames, multi_dict):
 
     
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
@@ -1647,14 +1647,14 @@ def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
     **dict.fromkeys([13,14,15], 0.4),
     }
 
-    hspace_dict = {
+    """hspace_dict = {
     **dict.fromkeys([2, 3], 0), 
     **dict.fromkeys([4,5,6], -0.72),
     **dict.fromkeys([7,8,9], -0.3), 
     **dict.fromkeys([10,11,12], -0.35),
     **dict.fromkeys([13,14,15], 0.4),
     }
-
+    """
     titles = []
     #ncols = int(np.sqrt(nplots)) + 1
     ncols = 3
@@ -1681,14 +1681,14 @@ def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
         for c in range(0,ncols):
                 
                 if count < nplots:
-                    mdlfld = multi_dict[var][case_names[count]]["ANN"][0]
+                    mdlfld = multi_dict[var][case_names[count]][season][0]
                     lat = mdlfld['lat']
                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
 
                     # mesh for plots:
                     lons, lats = np.meshgrid(lon, lat)
 
-                    levelsdiff = multi_dict[var][case_names[count]]["ANN"][1]["diff_contour_range"]
+                    levelsdiff = multi_dict[var][case_names[count]][season][1]["diff_contour_range"]
                     levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
                     
                     normfunc, mplv = use_this_norm()
@@ -1702,7 +1702,7 @@ def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
                     else:
                         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                    cmap = multi_dict[var][case_names[count]]["ANN"][1]['diff_colormap']
+                    cmap = multi_dict[var][case_names[count]][season][1]['diff_colormap']
 
                     img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                       cmap=cmap, norm=normdiff, 
@@ -1755,5 +1755,5 @@ def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
 
     #fig.colorbar(img[0], ax=axs, bbox_to_anchor=(.5, 0), orientation='horizontal')
     
-    plt.subplots_adjust(wspace=0.3)#, hspace=hspace_dict[nplots])
-    fig.savefig(wks+f"{var}_{ptype}_multi_plot.png", bbox_inches='tight', dpi=300)#, dpi=300
+    plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
+    fig.savefig(wks+f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight')#, dpi=300
