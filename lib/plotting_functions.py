@@ -1640,7 +1640,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
     #These will need to be changed if the figsize changes!
     hspace_dict = {
-    **dict.fromkeys([2, 3], -1.15), 
+    **dict.fromkeys([2, 3], -1.0), 
     **dict.fromkeys([4,5,6], -0.85),
     **dict.fromkeys([7,8,9], -0.85), 
     **dict.fromkeys([10,11,12], -0.65),
