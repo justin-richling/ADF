@@ -1634,7 +1634,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 ####'''
 
 
-def multi_plots(wks, var, case_names, nicknames, multi_dict):
+def multi_plots(wks, case_names, nicknames, multi_dict):
 
 
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
