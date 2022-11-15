@@ -1647,6 +1647,14 @@ def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
     **dict.fromkeys([13,14,15], 0.4),
     }
 
+    hspace_dict = {
+    **dict.fromkeys([2, 3], 0), 
+    **dict.fromkeys([4,5,6], -0.72),
+    **dict.fromkeys([7,8,9], -0.3), 
+    **dict.fromkeys([10,11,12], -0.35),
+    **dict.fromkeys([13,14,15], 0.4),
+    }
+
     titles = []
     #ncols = int(np.sqrt(nplots)) + 1
     ncols = 3
@@ -1668,9 +1676,6 @@ def multi_plots(wks, var, ptype, case_names, nicknames, multi_dict):
 
     count = 0
     img = []
-    #var = "TS"
-    #fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)
-    
     axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
     for r in range(0,nrows):
         for c in range(0,ncols):
