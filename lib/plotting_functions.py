@@ -1738,5 +1738,5 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                 # __COLORBARS__
                 fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
                     
-                plt.subplots_adjust(wspace=0.3, hspace=0.1)
+                plt.subplots_adjust(wspace=0.3, hspace=-0.8)
                 fig.savefig(wks+f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight')#, dpi=300
