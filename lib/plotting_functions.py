@@ -1639,17 +1639,22 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
     
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
     #These will need to be changed if the figsize changes!
-    hspace_dict = {
+    """hspace_dict = {
     **dict.fromkeys([2, 3], -1.0), 
     **dict.fromkeys([4,5,6], -0.85),
     **dict.fromkeys([7,8,9], -0.85), 
     **dict.fromkeys([10,11,12], -0.85),
     **dict.fromkeys([13,14,15], 0.35),
-    }
+    }"""
 
     ncols = 3
     nplots = len(nicknames)
-    print("\n",hspace_dict[nplots],"\n")
+
+    if nplots < 4:
+        hspace = -1.0
+    else:
+        hspace = -0.85
+
     nrows = int(np.ceil(nplots/ncols))
     if nrows < 2:
         nrows = 2
@@ -1729,5 +1734,5 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                 # __COLORBARS__
                 fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.3),extend='both')
                     
-                plt.subplots_adjust(wspace=0.3, hspace=hspace_dict[nplots])
+                plt.subplots_adjust(wspace=0.3, hspace=hspace) #hspace_dict[nplots]
                 fig.savefig(wks+f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight', dpi=300)#, dpi=300
