@@ -1668,72 +1668,72 @@ def multi_plots(wks, case_names, nicknames, multi_dict):
     img = []
     #var = "TS"
     #fig.suptitle(f'All Case Comparison - Test - Baseline: {var}', fontsize=16)
-    for i in multi_dict[var].keys():
-        print(i)
-    axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
-    for r in range(0,nrows):
-        for c in range(0,ncols):
-                
-                if count < nplots:
-                    mdlfld = multi_dict[var][case_names[count]]["ANN"][0]
-                    lat = mdlfld['lat']
-                    mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
-
-                    # mesh for plots:
-                    lons, lats = np.meshgrid(lon, lat)
-
-                    levelsdiff = multi_dict[var][case_names[count]]["ANN"][1]["diff_contour_range"]
-                    levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+    for var in multi_dict.keys():
+        print(var)
+        axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16) 
+        for r in range(0,nrows):
+            for c in range(0,ncols):
                     
-                    normfunc, mplv = use_this_norm()
+                    if count < nplots:
+                        mdlfld = multi_dict[var][case_names[count]]["ANN"][0]
+                        lat = mdlfld['lat']
+                        mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
 
-                    #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-                    #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
+                        # mesh for plots:
+                        lons, lats = np.meshgrid(lon, lat)
 
-                    # color normalization for difference
-                    if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
-                        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
+                        levelsdiff = multi_dict[var][case_names[count]]["ANN"][1]["diff_contour_range"]
+                        levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+                        
+                        normfunc, mplv = use_this_norm()
+
+                        #normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+                        #normdiff = normfunc(vmin=np.min(mwrap), vmax=np.max(mwrap), vcenter=0.0)
+
+                        # color normalization for difference
+                        if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+                            normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
+                        else:
+                            normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+
+                        cmap = multi_dict[var][case_names[count]]["ANN"][1]['diff_colormap']
+
+                        img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
+                                        cmap=cmap, norm=normdiff, 
+                                        transform=ccrs.PlateCarree()))
+                        #if l == 0 and c == 1:
+                        #    axs[r,c].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16)
+                        titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
+
+                        # formatting for tick labels
+                        lon_formatter = LongitudeFormatter(number_format='0.0f',
+                                                            degree_symbol='',
+                                                            dateline_direction_label=False)
+                        lat_formatter = LatitudeFormatter(number_format='0.0f',
+                                            degree_symbol='')
+
+                        axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+                        axs[r,c].coastlines()
+                        axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
+                        axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
+                        axs[r,c].tick_params('both', length=5, width=1.5, which='major')
+                        axs[r,c].tick_params('both', length=5, width=1.5, which='minor')
+                        axs[r,c].xaxis.set_major_formatter(lon_formatter)
+                        axs[r,c].yaxis.set_major_formatter(lat_formatter)
+
                     else:
-                        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
-                    cmap = multi_dict[var][case_names[count]]["ANN"][1]['diff_colormap']
-
-                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
-                                      cmap=cmap, norm=normdiff, 
-                                      transform=ccrs.PlateCarree()))
-                    #if l == 0 and c == 1:
-                    #    axs[r,c].set_title(f'All Case Comparison: (Test - Baseline)  {var}\n', fontsize=16)
-                    titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
-
-                    # formatting for tick labels
-                    lon_formatter = LongitudeFormatter(number_format='0.0f',
-                                                        degree_symbol='',
-                                                        dateline_direction_label=False)
-                    lat_formatter = LatitudeFormatter(number_format='0.0f',
-                                        degree_symbol='')
-
-                    axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-                    axs[r,c].coastlines()
-                    axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
-                    axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
-                    axs[r,c].tick_params('both', length=5, width=1.5, which='major')
-                    axs[r,c].tick_params('both', length=5, width=1.5, which='minor')
-                    axs[r,c].xaxis.set_major_formatter(lon_formatter)
-                    axs[r,c].yaxis.set_major_formatter(lat_formatter)
-
-                else:
-                    axs[r,c].set_visible(False)
-                count = count + 1
-     # __COLORBARS__
-    """cb_mean_ax = inset_axes(axs[-1,-1],
-                    width="60%",  # width = 5% of parent_bbox width
-                    height="5%",  # height : 100%
-                    loc='lower center',
-                    bbox_to_anchor=(.5, 0, 1, 1), #, 1, 1
-                    bbox_transform=axs[-1,-1].transAxes,
-                    borderpad=0,
-                    
-                    )"""
+                        axs[r,c].set_visible(False)
+                    count = count + 1
+        # __COLORBARS__
+        """cb_mean_ax = inset_axes(axs[-1,-1],
+                        width="60%",  # width = 5% of parent_bbox width
+                        height="5%",  # height : 100%
+                        loc='lower center',
+                        bbox_to_anchor=(.5, 0, 1, 1), #, 1, 1
+                        bbox_transform=axs[-1,-1].transAxes,
+                        borderpad=0,
+                        
+                        )"""
     #fig.colorbar(img[-1], cax=cb_mean_ax,orientation='horizontal')  
     fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.5),extend='both')
     #plt.title(f'All Case Comparison - Test - Baseline: {var}', fontsize=16) 
