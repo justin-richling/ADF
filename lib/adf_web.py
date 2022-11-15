@@ -789,7 +789,7 @@ class AdfWeb(AdfObs):
             #End if
                 #End if
             #End for (model case loop)
-            wks = "multi_plot.png"
+            wks = "TS_LatLon_plot.png"
             print(f"{main_site_path}")
             #Create multi-case site:
             multi_plots = {"Tables": "html_table/mean_tables.html",
