@@ -1735,3 +1735,6 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                     
                 plt.subplots_adjust(wspace=0.3, hspace=hspace) #hspace_dict[nplots]
                 fig.savefig(wks+f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight', dpi=300)#, dpi=300
+
+                #Close plots:
+                plt.close()
