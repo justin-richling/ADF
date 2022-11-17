@@ -265,7 +265,8 @@ def global_latlon_map(adfobj):
             for case_idx, case_name in enumerate(case_names):
 
                 if multi_plots:
-                    multi_dict[var][case_name] = OrderedDict()
+                    if var in adfobj.get_multi_case_info("global_latlon_map"):
+                        multi_dict[var][case_name] = OrderedDict()
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
