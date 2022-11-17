@@ -88,7 +88,12 @@ def global_latlon_map(adfobj):
 
 
     #print("Try to find out form yaml:",plot_urls,"\n")
-    multi_plots = False
+    if adfobj.read_config_var('multi_case_plots'):
+        multi_plots = True
+    else:
+        multi_plots = False
+
+    print("OMG:",adfobj.get_multi_case_info("global_latlon_map"),"\n")
 
 
     #Notify user that script has started:
