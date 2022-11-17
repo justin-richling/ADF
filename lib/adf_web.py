@@ -522,6 +522,7 @@ class AdfWeb(AdfObs):
 
                 #Extract web data name (usually the variable name):
                 name = web_data.name
+                print("Regular ol'web_data.name",web_data.name,"\n")
 
                 #Initialize Ordered Dictionary for variable:
                 if name not in mean_html_info[ptype][category]:
