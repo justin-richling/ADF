@@ -49,9 +49,44 @@ def global_latlon_map(adfobj):
     # - Take difference, calculate statistics
     # - make plot
 
+    ptype_order_dict = {'global_latlon_map': ["LatLon"],
+                            'zonal_mean': ["Zonal"],
+                            'global_latlon_vect_map': ["LatLon_Vector"],
+                            'polar_map': ["NHPolar","SHPolar"],
+                            'cam_taylor_diagram': ["TaylorDiag"],
+                            'time_series':['TimeSeries'],
+                            'top_10':['Top10']}
+    seasons = ["ANN","DJF","MAM","JJA","SON"]
+
+    #Top plots:
+    #--------------------------------------------
+    #from collections import defaultdict
+    plot_urls = OrderedDict()
+        
+    for ptype in ptype_order_dict.keys():  
+            
+        # List of vars for each plot type
+        ptype_vars = adfobj.get_multi_case_info(ptype)
+
+        if ptype_vars != None:
+            if ptype not in plot_urls:
+                plot_urls[ptype_order_dict[ptype][0]] = OrderedDict()
+
+            for var in ptype_vars:
+                if var not in plot_urls[ptype_order_dict[ptype][0]]:
+                    plot_urls[ptype_order_dict[ptype][0]][var] = OrderedDict()
+                        
+                for season in seasons:
+                    if len(ptype_order_dict[ptype]) > 1:
+                        pass
+                        # still working on Polar cases... 
+                    else:
+                        plot_page = f'plot_page_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
+                        plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
 
 
-    multi_plots = True
+
+    multi_plots = False
 
 
     #Notify user that script has started:
