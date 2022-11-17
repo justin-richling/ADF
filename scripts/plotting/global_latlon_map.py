@@ -49,6 +49,8 @@ def global_latlon_map(adfobj):
     # - Take difference, calculate statistics
     # - make plot
 
+    print("Zippity doo dah: ",adfobj.read_config_var('multi_case_plots'),"\n")
+    
     ptype_order_dict = {'global_latlon_map': ["LatLon"],
                             'zonal_mean': ["Zonal"],
                             'global_latlon_vect_map': ["LatLon_Vector"],
@@ -85,7 +87,7 @@ def global_latlon_map(adfobj):
                         plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
 
 
-    print("Try to find out form yaml:",plot_urls,"\n")
+    #print("Try to find out form yaml:",plot_urls,"\n")
     multi_plots = False
 
 
