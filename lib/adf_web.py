@@ -466,6 +466,7 @@ class AdfWeb(AdfObs):
                 shutil.copyfile(css_file, css_files_dir / css_file.name)
             #End for
 
+            #Check first for AMWG tables data frame
             if web_data.data_frame:
 
                 #Create a directory that will hold table html files, if a table is present:
@@ -481,6 +482,7 @@ class AdfWeb(AdfObs):
                 #Note:  Need to use data name instead of case name for tables.
                 table_html_info[web_data.name] = web_data.html_file.name
 
+            #Now check all plot types
             if not web_data.data_frame:
 
                 #Create a directory that will hold just the html files for individual images:
@@ -522,7 +524,7 @@ class AdfWeb(AdfObs):
 
                 #Extract web data name (usually the variable name):
                 name = web_data.name
-                print("Regular ol'web_data",'\n',web_data.name,"\n",web_data.plot_type,"\n",web_data.season,"\n",web_data.html_file.name,"\n\n")
+                #print("Regular ol'web_data",'\n',web_data.name,"\n",web_data.plot_type,"\n",web_data.season,"\n",web_data.html_file.name,"\n\n")
 
                 #Initialize Ordered Dictionary for variable:
                 if name not in mean_html_info[ptype][category]:
