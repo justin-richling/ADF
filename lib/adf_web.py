@@ -782,6 +782,42 @@ class AdfWeb(AdfObs):
                     case_sites2[case_name] = [os.path.join(os.curdir, f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", "index.html"),syear_cases[idx],eyear_cases[idx]]
                     #print("YAHHOOO",case_sites[case_name],"\n")
 
+            
+            
+            
+            #Check if the mean plot type page exists for this case:
+            print("Here in the world of multi-case - web_data.plot_type:",web_data.plot_type,"\n")
+            print("also- web_data.name",web_data.name,"\n")
+
+
+            """mean_ptype_file = main_site_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
+            #print("For case index, plot_types: ",plot_types,"\n")
+            if not mean_ptype_file.exists():
+
+                #Construct individual plot type mean_diag html files, if they don't
+                #already exist:
+                mean_tmpl = jinenv.get_template('template_multi_case_mean_diag.html')
+                mean_rndr = mean_tmpl.render(title=main_title,
+                                                 case1=case1,
+                                                 case2=data_name,
+                                                 case_yrs=case_yrs,
+                                                 baseline_yrs=baseline_yrs,
+                                                 mydata=mean_html_info[web_data.plot_type],
+                                                 curr_type=web_data.plot_type,
+                                                 plot_types=plot_types,
+                                                 multi=multi_layout,)
+
+                #Write mean diagnostic plots HTML file:
+                with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
+                    ofil.write(mean_rndr)
+                #End with
+            #End if (mean_ptype exists)"""
+            
+            
+            
+            
+            
+            
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
                 css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
