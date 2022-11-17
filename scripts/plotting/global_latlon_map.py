@@ -85,7 +85,7 @@ def global_latlon_map(adfobj):
                         plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
 
 
-
+    print("Try to find out form yaml:",plot_urls,"\n")
     multi_plots = False
 
 
