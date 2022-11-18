@@ -432,7 +432,9 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     for i,val in enumerate(csv_locs[:-1]): 
         case = str(val)+f"/amwg_table_{case_names[i]}.csv"
         df_case = pd.read_csv(case)
+        
         df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
+        df_case["mean"] = df_case["mean"]+f"\n{df_case['mean']-df_base['mean']}"
         cols_comp.append(f"case {i+1}")
 
         #diffs = df_case['mean']-df_base['mean']
