@@ -436,7 +436,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
         df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
         
         #print("AAARRRGGGG:", df_case["mean"],"\n")
-        cols_comp.append(f"case {i+1}")
+        cols_comp.append(f"case {i+1} ( difference )")
 
         #diffs = df_case['mean']-df_base['mean']
 
