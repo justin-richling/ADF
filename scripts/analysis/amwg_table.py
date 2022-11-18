@@ -452,6 +452,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     for i in df_comp.columns:
         
         if case in df_comp[i]:
+            print(i)
             df_comp[i] = f'{df_comp[i]} - ({df_comp[i]-df_base["mean"]})'
 
     #df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
