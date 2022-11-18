@@ -559,6 +559,18 @@ def global_latlon_map(adfobj):
     if multi_plots:
         wks = "/glade/scratch/richling/adf-output/multi-case/test/b.cesm3_cam058_mom_e.B1850MOM.ne30_L32_t061.camdev_cice5.009_vs_016_022c_024_026a_026b/diag-plot/b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40/"
 
+        """# Check redo_plot. If set to True: remove old plot, if it already exists:
+        redo_plot = adfobj.get_basic_info('redo_plot')
+        if (not redo_plot) and plot_name.is_file():
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
+                                                            season=s, plot_type="LatLon")
+
+            #Continue to next iteration:
+            #continue
+        elif (redo_plot) and plot_name.is_file():
+            plot_name.unlink()
+        """
         pf.multi_plots(wks,"LatLon", case_names, test_nicknames, multi_dict)
         #adfobj.add_website_data(plot_name, var, case_name, category=web_category,
         #                                                    season=s, plot_type="multi_LatLon")
