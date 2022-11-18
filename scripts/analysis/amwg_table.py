@@ -433,6 +433,12 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     
     baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
     df_base = pd.read_csv(baseline)
+
+    for i,val in enumerate(csv_locs[:-1]): 
+        case = str(val)+f"/amwg_table_{case_names[i]}.csv"
+        df_case = pd.read_csv(case)
+        df_comp["diff"] = df_case['mean']-df_base['mean']
+        #cols_comp.append(f"case {i+1}")
     
     df_comp['baseline'] = df_base[['mean']]
     cols_comp.append("baseline")
