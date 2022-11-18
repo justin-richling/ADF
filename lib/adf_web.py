@@ -480,6 +480,7 @@ class AdfWeb(AdfObs):
 
                 #Add table HTML file to dictionary:
                 #Note:  Need to use data name instead of case name for tables.
+                print("web_data.html_file.name:", web_data.html_file.name,"\n")
                 table_html_info[web_data.name] = web_data.html_file.name
 
             #Now check all plot types
