@@ -575,14 +575,14 @@ class AdfWeb(AdfObs):
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
                     print("Multi: table_pages_dir",table_pages_dir,"\n")
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    plot_types = multi_plot_type_html
-                    print("Multi: plot_types",plot_types,"\n")
+                    #plot_types = multi_plot_type_html
+                    #print("Multi: plot_types",plot_types,"\n")
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
                     print("Single: table_pages_dir",table_pages_dir,"\n")
                     plot_types = plot_type_html
                     print("Single: plot_types",plot_types,"\n")
-                
+                plot_types = plot_type_html
                 #End if
 
                 #Check if plot image already handles multiple cases,
