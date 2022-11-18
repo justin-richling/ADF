@@ -449,7 +449,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     df_comp['baseline'] = df_base[['mean']]
     cols_comp.append("baseline")
 
-    for i in df_comp.columns():
+    for i in df_comp.columns:
         if df_comp[df_comp[i].str.contains("case")==True]:
             df_comp[df_comp[i]] = f'{df_case["mean"]} - ({df_case["mean"]-df_base["mean"]})'
 
