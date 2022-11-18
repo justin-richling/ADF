@@ -435,7 +435,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
         df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
         cols_comp.append(f"case {i+1}")
 
-        diffs = df_case['mean']-df_base['mean']
+        #diffs = df_case['mean']-df_base['mean']
 
     """for i,val in enumerate(csv_locs[:-1]): 
         case = str(val)+f"/amwg_table_{case_names[i]}.csv"
@@ -446,8 +446,8 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     df_comp['baseline'] = df_base[['mean']]
     cols_comp.append("baseline")
 
-    df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
-    cols_comp.append("diff")
+    #df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
+    #cols_comp.append("diff")
     
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
