@@ -456,9 +456,11 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
             for idx,row in enumerate(df_comp[i]):
                 if np.abs(df_comp[i][idx]) < 1:
                     formatter = ".10g"
+                    formatter2 = ".3g"
                 else:
                     formatter = ".10f"
-                df_comp[i][idx] = f'{df_comp[i][idx]:{formatter}}   ({df_comp[i][idx]-df_base["mean"][idx]:{formatter}})'
+                    formatter2 = ".3f"
+                df_comp[i][idx] = f'{df_comp[i][idx]:{formatter}}   ({df_comp[i][idx]-df_base["mean"][idx]:{formatter2}})'
 
     #df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
     #cols_comp.append("diff")
