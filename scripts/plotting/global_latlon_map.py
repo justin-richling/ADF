@@ -51,7 +51,7 @@ def global_latlon_map(adfobj):
 
     print("Zippity doo dah: ",adfobj.read_config_var('multi_case_plots'),"\n")
     
-    ptype_order_dict = {'global_latlon_map': ["LatLon"],
+    """ptype_order_dict = {'global_latlon_map': ["LatLon"],
                             'zonal_mean': ["Zonal"],
                             'global_latlon_vect_map': ["LatLon_Vector"],
                             'polar_map': ["NHPolar","SHPolar"],
@@ -84,10 +84,10 @@ def global_latlon_map(adfobj):
                         # still working on Polar cases... 
                     else:
                         plot_page = f'plot_page_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
-                        plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
+                        plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page"""
 
 
-    #print("Try to find out form yaml:",plot_urls,"\n")
+    #Check if multi-plots are desired from yaml file
     if adfobj.read_config_var('multi_case_plots'):
         multi_plots = True
     else:
@@ -189,9 +189,8 @@ def global_latlon_map(adfobj):
                "SON": [9, 10, 11]
                }
     
-    restom_dict = {}
+    #restom_dict = {}
 
-    restom_dict = {}
     multi_dict = OrderedDict()
     # probably want to do this one variable at a time:
     for var in var_list:
@@ -264,6 +263,7 @@ def global_latlon_map(adfobj):
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
 
+                #Grab data for desired multi-plots (from yaml file)
                 if multi_plots:
                     if var in adfobj.get_multi_case_info("global_latlon_map"):
                         multi_dict[var][case_name] = OrderedDict()
@@ -384,6 +384,7 @@ def global_latlon_map(adfobj):
                                 dseasons[s] = mseasons[s] - oseasons[s]
                             #End if
 
+                            #Grab data for desired multi-plots (from yaml file)
                             if multi_plots:
                                 if var in adfobj.get_multi_case_info("global_latlon_map"):
                                     print("Multi plot var in lat lon plots (no levs):",var,"\n")

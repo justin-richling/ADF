@@ -419,6 +419,10 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     main_site_path = Path(adf.get_basic_info('cam_diag_plot_loc', required=True))
     output_csv_file_comp = main_site_path / "amwg_table_comp_all.csv"
     df_comp = pd.DataFrame(dtype=object)
+
+    #diffs = df_comp['case'].values-df_comp['baseline'].values
+    #df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
+
     cols_comp = ['variable', 'unit']
 
     for i,val in enumerate(csv_locs[:-1]): 
@@ -432,6 +436,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     
     df_comp['baseline'] = df_base[['mean']]
     cols_comp.append("baseline")
+    cols_comp.append("diff")
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
