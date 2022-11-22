@@ -484,7 +484,7 @@ class AdfWeb(AdfObs):
 
                 #Add table HTML file to dictionary:
                 #Note:  Need to use data name instead of case name for tables.
-                print("web_data.html_file.name:", web_data.html_file.name,"\n")
+                #print("web_data.html_file.name:", web_data.html_file.name,"\n")
                 
                 for i in web_data.html_file:
                     print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i.name)
