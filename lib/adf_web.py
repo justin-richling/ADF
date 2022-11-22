@@ -486,8 +486,8 @@ class AdfWeb(AdfObs):
                 #Note:  Need to use data name instead of case name for tables.
                 print("web_data.html_file.name:", web_data.html_file.name,"\n")
                 
-                for i in web_data:
-                    print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i.html_file.name)
+                for i in web_data.html_file:
+                    print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i.name)
                 table_html_info[web_data.name] = web_data.html_file.name
 
             #Now check all plot types
