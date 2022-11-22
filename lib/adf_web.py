@@ -630,7 +630,7 @@ class AdfWeb(AdfObs):
 
                 #Write mean diagnostic tables HTML file:
                 print("web_data.html_file: ",web_data.html_file,"\n")
-                with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                with open(web_data.html_file[1], 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 #End with
 
