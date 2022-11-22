@@ -217,6 +217,7 @@ class AdfWeb(AdfObs):
         #Initialize Pandas data frame logical:
         data_frame = False
 
+        html_file = []
         #Check that the web_data is either a path
         #or a pandas dataframe:
         try:
@@ -271,9 +272,12 @@ class AdfWeb(AdfObs):
 
             #If multi-case, then save under the "multi-case" directory:
             if self.num_cases > 1:
-                html_file = self.__case_web_paths['multi-case']["table_pages_dir"] / html_name
+                #html_file = self.__case_web_paths['multi-case']["table_pages_dir"] / html_name
+                html_file.append(self.__case_web_paths['multi-case']["table_pages_dir"] / html_name)
+                html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
             else:
-                html_file = self.__case_web_paths[case_name]["table_pages_dir"] / html_name
+               html_file = self.__case_web_paths[case_name]["table_pages_dir"] / html_name
+            
             #End if
             asset_path = None
         else:
@@ -481,6 +485,9 @@ class AdfWeb(AdfObs):
                 #Add table HTML file to dictionary:
                 #Note:  Need to use data name instead of case name for tables.
                 print("web_data.html_file.name:", web_data.html_file.name,"\n")
+                
+                for i in web_data:
+                    print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i.html_file.name)
                 table_html_info[web_data.name] = web_data.html_file.name
 
             #Now check all plot types
