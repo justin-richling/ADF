@@ -473,6 +473,8 @@ class AdfWeb(AdfObs):
             #Check first for AMWG tables data frame
             if web_data.data_frame:
 
+                print("web_data.case: ",web_data.case,"\n")
+
                 #Create a directory that will hold table html files, if a table is present:
                 if self.num_cases > 1:
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
