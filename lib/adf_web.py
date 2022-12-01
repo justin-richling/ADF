@@ -491,7 +491,7 @@ class AdfWeb(AdfObs):
                 for i in web_data.html_file:
                     print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i)
                 print("UGGGGG:",web_data.name,"\n")
-                table_html_info[web_data.name] = web_data.html_file[0].name
+                table_html_info[web_data.name] = web_data.html_file.name
 
             #Now check all plot types
             if not web_data.data_frame:
@@ -570,8 +570,8 @@ class AdfWeb(AdfObs):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
                     #Add path to case_sites dictionary:
-                    case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
-                    #case_sites[case_name] = [os.path.join(os.curdir, f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", "index.html"),syear_cases[idx],eyear_cases[idx]]
+                    #case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
+                    case_sites[case_name] = [os.path.join(os.curdir, f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", "index.html"),syear_cases[idx],eyear_cases[idx]]
         else:
             #make empty list for non multi-case web generation
             case_sites = []
@@ -593,8 +593,8 @@ class AdfWeb(AdfObs):
                     print("Single: table_pages_dir",table_pages_dir,"\n")
                     plot_types = plot_type_html
                     print("Single: plot_types",plot_types,"\n")
-                table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
-                plot_types = plot_type_html
+                #table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
+                #plot_types = plot_type_html
                 #End if
 
                 #Check if plot image already handles multiple cases,
