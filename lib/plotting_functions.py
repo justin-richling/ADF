@@ -1683,7 +1683,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                         subplot_kw={"projection": proj})
 
                 #Set figure title
-                plt.suptitle(f'All Case Comparison: (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.6)
+                plt.suptitle(f'All Case Comparison: (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.3)
                 axs[0,1].set_title(f'Baseline:  {nicknames[1]}\n', fontsize=12) 
                 
                 count = 0
