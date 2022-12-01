@@ -274,9 +274,9 @@ class AdfWeb(AdfObs):
             if self.num_cases > 1:
                 #html_file = self.__case_web_paths['multi-case']["table_pages_dir"] / html_name
                 html_file.append(self.__case_web_paths['multi-case']["table_pages_dir"] / html_name)
-                html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
+                #html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
             else:
-               html_file = self.__case_web_paths[case_name]["table_pages_dir"] / html_name
+                html_file = self.__case_web_paths[case_name]["table_pages_dir"] / html_name
             
             #End if
             asset_path = None
