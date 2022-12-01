@@ -587,7 +587,7 @@ class AdfWeb(AdfObs):
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
                     print("Multi: table_pages_dir",table_pages_dir,"\n")
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    #plot_types = multi_plot_type_html
+                    plot_types = multi_plot_type_html
                     #print("Multi: plot_types",plot_types,"\n")
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
