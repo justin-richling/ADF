@@ -848,7 +848,7 @@ class AdfWeb(AdfObs):
             wks = "TS_ANN_LatLon_multi_plot.png"
             print(f"{main_site_path}")
             #Create multi-case site:
-            multi_plots = {"Tables": main_site_path / "html_table/mean_tables.html",
+            multi_plots = {"Tables": "html_table/mean_tables.html",
                            "LatLon": f"./{wks}"}
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
