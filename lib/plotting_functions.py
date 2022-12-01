@@ -1648,7 +1648,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
     }"""
 
     ncols = 3
-    nplots = len(nicknames)
+    nplots = len(nicknames[0])
 
     if nplots < 4:
         hspace = -1.0
@@ -1683,7 +1683,8 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                         subplot_kw={"projection": proj})
 
                 #Set figure title
-                axs[0,1].set_title(f'All Case Comparison: (Test - Baseline)  {var} {season}\n', fontsize=16) 
+                plt.suptitle(f'All Case Comparison: (Test - Baseline)  {var}: {season}\n', fontsize=16)
+                axs[0,1].set_title(f'Baseline:  {nicknames[1]}\n', fontsize=12) 
                 
                 count = 0
                 img = []
@@ -1716,7 +1717,7 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                             transform=ccrs.PlateCarree()))
 
                             #Set individual plot titles (case name/nickname)
-                            titles.append(axs[r,c].set_title(nicknames[count],loc='left',fontsize=8))
+                            titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
 
                             axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
                             axs[r,c].coastlines()
