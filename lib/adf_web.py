@@ -332,7 +332,7 @@ class AdfWeb(AdfObs):
         #Top plots:
         #--------------------------------------------
         #from collections import defaultdict
-        plot_urls = OrderedDict()
+        top_plot_urls = OrderedDict()
         top_plot_urls = []
         top_plots_names = []
         img_data_names = []
@@ -342,12 +342,12 @@ class AdfWeb(AdfObs):
             ptype_vars = self.get_top_plots_info(ptype)
 
             if ptype_vars != None:
-                if ptype not in plot_urls:
-                    plot_urls[ptype_order_dict[ptype][0]] = OrderedDict()
+                if ptype not in top_plot_urls:
+                    top_plot_urls[ptype_order_dict[ptype][0]] = OrderedDict()
 
                 for var in ptype_vars:
-                    if var not in plot_urls[ptype_order_dict[ptype][0]]:
-                        plot_urls[ptype_order_dict[ptype][0]][var] = OrderedDict()
+                    if var not in top_plot_urls[ptype_order_dict[ptype][0]]:
+                        top_plot_urls[ptype_order_dict[ptype][0]][var] = OrderedDict()
                         
                     for season in seasons:
                         if len(ptype_order_dict[ptype]) > 1:
@@ -355,8 +355,8 @@ class AdfWeb(AdfObs):
                             # still working on Polar cases... 
                         else:
                             plot_page = f'plot_page_top_plots_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
-                            plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
-                            top_plot_urls.append(plot_page)
+                            top_plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
+                            #top_plot_urls.append(plot_page)
                             top_plots_names.append(f"{var}_{season}_{ptype_order_dict[ptype][0]}_Mean")
 
         #If there is more than one non-baseline case, then create new website directory:
