@@ -808,7 +808,8 @@ class AdfWeb(AdfObs):
                 #End with
             #End if (mean_index exists)
         #End for (web data loop)
-        print(len(top_plot_urls),len(img_data_names))
+        print(len(top_plot_urls),len(img_data_names),"\n")
+        print("img_data_names: ",img_data_names,"\n")
         for i,val in enumerate(top_plot_urls):
             print(i,val,"\n")
             top_plot_name = f"{web_data.html_file.parent}/{val}"
