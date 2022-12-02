@@ -770,7 +770,7 @@ class AdfWeb(AdfObs):
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
                                             #mydata=plot_urls,
-                                            mydata=top_plot_urls
+                                            mydata=top_plot_urls,
                                             plot_types=plot_types)
 
                 #Write Mean diagnostics index HTML file:
