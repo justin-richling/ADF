@@ -355,6 +355,7 @@ class AdfWeb(AdfObs):
                             # still working on Polar cases... 
                         else:
                             plot_page = f'plot_page_top_plots_{var}_{season}_{ptype_order_dict[ptype][0]}_Mean.html'
+                            print("AHHHHH:",plot_page,"\n")
                             top_plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page
                             #top_plot_urls.append(plot_page)
                             top_plots_names.append(f"{var}_{season}_{ptype_order_dict[ptype][0]}_Mean")
