@@ -333,11 +333,10 @@ class AdfWeb(AdfObs):
         #--------------------------------------------
         #from collections import defaultdict
         top_plot_urls = OrderedDict()
-        top_plot_urls = []
+        plot_urls = []
         top_plots_names = []
         img_data_names = []
         for ptype in ptype_order_dict.keys():  
-            print("pytpe: ",ptype,"\n")
             
             # List of vars for each plot type
             ptype_vars = self.get_top_plots_info(ptype)
