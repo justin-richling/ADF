@@ -808,10 +808,11 @@ class AdfWeb(AdfObs):
                 #End with
             #End if (mean_index exists)
         #End for (web data loop)
-        print(len(top_plot_urls),len(img_data_names),"\n")
+        """print(len(top_plot_urls),len(img_data_names),"\n")
         print("img_data_names: ",img_data_names,"\n")
         print("top_plot_urls: ",top_plot_urls,"\n")
-        for i,val in enumerate(top_plot_urls):
+        #for i,val in enumerate(top_plot_urls):
+        for i,val in enumerate(img_data_names):
             print(i,val,"\n")
             top_plot_name = f"{web_data.html_file.parent}/{val}"
             tmpl_top_plots = jinenv.get_template('template_top_plots.html')  #Set template
@@ -831,7 +832,7 @@ class AdfWeb(AdfObs):
             #Write HTML file:
             with open(top_plot_name, 'w', encoding='utf-8') as ofil:
                 ofil.write(rndr)
-            #End with
+            #End with"""
 
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
