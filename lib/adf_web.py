@@ -810,6 +810,7 @@ class AdfWeb(AdfObs):
         #End for (web data loop)
         print(len(top_plot_urls),len(img_data_names),"\n")
         print("img_data_names: ",img_data_names,"\n")
+        print("top_plot_urls: ",top_plot_urls,"\n")
         for i,val in enumerate(top_plot_urls):
             print(i,val,"\n")
             top_plot_name = f"{web_data.html_file.parent}/{val}"
