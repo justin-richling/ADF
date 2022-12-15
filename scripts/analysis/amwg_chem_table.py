@@ -112,7 +112,6 @@ def amwg_chem_table(adf):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    var_list   = adf.diag_var_list
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
@@ -152,7 +151,9 @@ def amwg_chem_table(adf):
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
 
+    #End gathering case, path, and data info
     #-----------------------------------------
+
 
     # Chemistry/Aerosol Tables
     # -------------------------
@@ -175,7 +176,7 @@ def amwg_chem_table(adf):
         'AIR':28.97}
 
     # Avogadro's Number
-    AVO=6.022e23
+    avo=6.022e23
      # gravity - replace by numpy or scipy for best guess of gravity
     gr=9.80616
         
@@ -270,22 +271,22 @@ def amwg_chem_table(adf):
     NOTE - can probably make this more efficient/correct
     '''
     #Get dict for critical values and dict for case/variables mean ANN values
-    #Dic_crit,Dic_scn_var_comp = make_Dic_scn_var_comp(CHEMS)
+    #Dic_crit,var_dict = make_var_dict(CHEMS)
     dic_SE = fill_dic_SE(CHEMS,ListVars,ext1_SE)
     
     #dic_SE = fill_dic_SE(CHEMS)
         
     # extract all the data
-    Dic_scn_var_comp={}
+    var_dict={}
 
     # this is for finding tropospheric values
     Dic_crit={}
 
-    for i,current_scn in enumerate(scenarios):
+    for i,scn in enumerate(scenarios):
         
-        area=areas[current_scn]
-        current_lat=Lats[current_scn]
-        current_lon=Lons[current_scn]
+        area=areas[scn]
+        current_lat=Lats[scn]
+        current_lon=Lons[scn]
 
         if regional:
             inside=Inside_SE(current_lat,current_lon,limit)
@@ -294,53 +295,51 @@ def amwg_chem_table(adf):
                 inside=np.full((len(current_lon)),True)
             else:
                 inside=np.full((len(current_lat),len(current_lon)),True)
-                
-                
-                
-
-
 
         current_dir=data_dirs[i]
-        current_files=Files[current_scn] 
+        current_files=Files[scn] 
             
         # Only for testing purposes
         # -------------------------
         if i !=0:
-            current_scn = current_scn.replace(".cam.h0","FAKE_NAME.cam.h0")
+            scn = scn.replace(".cam.h0","FAKE_NAME.cam.h0")
         # Remove when in ADF testing
         # -------------------------
 
-        Dic_scn_var_comp[current_scn]={}
+        var_dict[scn]={}
         Dic_var_comp={}
             
-        for _,current_var in enumerate(CHEMS):
+        for _,var in enumerate(CHEMS):
+
             # Components are: burden, chemical loss, chemical prod, dry deposition, 
             #                 surface emissions, elevated emissions, chemical tendency
             # I always add Lightning NOx production for gaseous species.
-            components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
-                        current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
-                        current_var+'_TEND',current_var+'_LNO']         
+            components=[var+'_BURDEN',var+'_CHML',var+'_CHMP',
+                        var+'_DDF',var+'_WDF', var+'_SF', var+'_CLXF',
+                        var+'_TEND',var+'_LNO']         
 
             Dic_comp={}
             for comp in components:
                 current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
                     
                 Dic_comp[comp]=current_data
-            Dic_var_comp[current_var]=Dic_comp
-        Dic_scn_var_comp[current_scn]= Dic_var_comp    
+            Dic_var_comp[var]=Dic_comp
+        var_dict[scn]= Dic_var_comp    
 
         #Critical threshholds????
         current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)  
-        Dic_crit[current_scn]=current_crit
+        Dic_crit[scn]=current_crit
 
-        print(f'Current Scenario: {current_scn}')
-        print(len(f'Current Scenario: {current_scn}')*'-','\n')
+        print(f'Current Scenario: {scn}')
+        print(len(f'Current Scenario: {scn}')*'-','\n')
         
         if Tropospheric:
             trop=np.where(current_crit>150,np.nan,current_crit)
             strat=np.where(current_crit>150,current_crit,np.nan)
         else:
             trop=current_crit
+
+
 
     thing_ext_list_main = {'_BURDEN':'_BURDEN',
                        '_CHML':'_CHEM_LOSS',
@@ -379,7 +378,11 @@ def amwg_chem_table(adf):
     #Name the file after the test case
     #output_csv_file = f'amwg_chem_table_{case_names[0]}.csv'
 
-    cols = ['variable',"Test","Baseline"]
+
+    #Create the table
+    #----------------
+    #cols = ['variable',"Test","Baseline"]
+    cols = ['variable']+[f"Test {i}" for i,val in enumerate(case_names[0:-1])]+[]
     
     for current_var in CHEMS:
 
@@ -390,10 +393,10 @@ def amwg_chem_table(adf):
             for key,new_ext in thing_ext_list_O3_full.items():
     
                 thing1_list = calc_chem_data(scenarios[0],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[0],inside)
+                                            var_dict,trop,area,durations[0],inside)
 
                 thing2_list = calc_chem_data(scenarios[1],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[1],inside)
+                                            var_dict,trop,area,durations[1],inside)
 
                 val1 =  thing1_list[key]
                 val2 =  thing2_list[key]
@@ -425,10 +428,10 @@ def amwg_chem_table(adf):
             for key,new_ext in thing_ext_list_main.items():
                 
                 thing1_list = calc_chem_data(scenarios[0],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[0],inside)
+                                            var_dict,trop,area,durations[0],inside)
 
                 thing2_list = calc_chem_data(scenarios[1],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[1],inside)
+                                            var_dict,trop,area,durations[1],inside)
 
                 val1 =  thing1_list[key]
                 val2 =  thing2_list[key]
@@ -464,10 +467,10 @@ def amwg_chem_table(adf):
             new_ext = "_EMIS"
 
             thing1_list = calc_chem_data(scenarios[0],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[0],inside)
+                                            var_dict,trop,area,durations[0],inside)
 
             thing2_list = calc_chem_data(scenarios[1],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[1],inside)
+                                            var_dict,trop,area,durations[1],inside)
 
             val1 =  thing1_list['_SF']
             val2 =  thing2_list['_SF']
@@ -488,12 +491,12 @@ def amwg_chem_table(adf):
     # - mostly to try and match the old AMWG chem tables
     table_df = pd.read_csv(output_csv_file,names=cols)
 
-    # Change some compounds to match old AMWG chem tables
+    # Change some compounds to match old AMWG chem table names
     #table_df = table_df.replace('C10H16','Monoterpene', regex=True)
     #table_df = table_df.replace('CH3OH','Methanol', regex=True)
     #table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
 
-    # There's a much better way to do this, trust me
+    # There's probably a much better way to do this 
     drop_vals = ["CH3CCL3_LNO","CO_LNO","O3_LNO"]
 
     for val in drop_vals:
@@ -528,20 +531,20 @@ def amwg_chem_table(adf):
     output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
     print("output_csv_file: ",output_csv_file,"\n")
 
-    #Dic_crit,Dic_scn_var_comp = make_Dic_scn_var_comp(AEROSOLS)
+    #Dic_crit,var_dict = make_var_dict(AEROSOLS)
     dic_SE = fill_dic_SE(AEROSOLS,ListVars,ext1_SE)
 
     # extract all the data
-    Dic_scn_var_comp={}
+    var_dict={}
 
     # this is for finding tropospheric values
     Dic_crit={}
 
-    for i,current_scn in enumerate(scenarios):
+    for i,scn in enumerate(scenarios):
         
-        area=areas[current_scn]
-        current_lat=Lats[current_scn]
-        current_lon=Lons[current_scn]
+        area=areas[scn]
+        current_lat=Lats[scn]
+        current_lon=Lons[scn]
 
         if regional:
             inside=Inside_SE(current_lat,current_lon,limit)
@@ -552,16 +555,16 @@ def amwg_chem_table(adf):
                 inside=np.full((len(current_lat),len(current_lon)),True)
 
         current_dir=data_dirs[i]
-        current_files=Files[current_scn] 
+        current_files=Files[scn] 
 
         # Only for testing purposes
         # -------------------------
         if i !=0:
-            current_scn = current_scn.replace(".cam.h0","FAKE_NAME.cam.h0")
+            scn = scn.replace(".cam.h0","FAKE_NAME.cam.h0")
         # Remove when in ADF testing
         # -------------------------
 
-        Dic_scn_var_comp[current_scn]={}
+        var_dict[scn]={}
         Dic_var_comp={}
 
         for _,current_var in enumerate(AEROSOLS):
@@ -585,14 +588,14 @@ def amwg_chem_table(adf):
                     
                 Dic_comp[comp]=current_data
             Dic_var_comp[current_var]=Dic_comp
-        Dic_scn_var_comp[current_scn]= Dic_var_comp
+        var_dict[scn]= Dic_var_comp
 
         #Critical threshholds????
         current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
-        Dic_crit[current_scn]=current_crit
+        Dic_crit[scn]=current_crit
 
-        print(f'Current Scenario: {current_scn}')
-        print(len(f'Current Scenario: {current_scn}')*'-','\n')
+        print(f'Current Scenario: {scn}')
+        print(len(f'Current Scenario: {scn}')*'-','\n')
 
         if Tropospheric:
             trop=np.where(current_crit>150,np.nan,current_crit)
@@ -606,10 +609,10 @@ def amwg_chem_table(adf):
             #cols = ['variable',case_names[0],case_names[1]]
 
             thing1_list = calc_aerosol_data(scenarios[0],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[0],inside)
+                                            var_dict,trop,area,durations[0],inside)
             
             thing2_list = calc_aerosol_data(scenarios[1],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[1],inside)
+                                            var_dict,trop,area,durations[1],inside)
             
             val1 =  thing1_list[key]
             val2 =  thing2_list[key]
@@ -652,10 +655,10 @@ def amwg_chem_table(adf):
             #cols = ['variable',case_names[0],case_names[1]]
             
             thing1_list = calc_aerosol_data(scenarios[0],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[0],inside)
+                                            var_dict,trop,area,durations[0],inside)
                 
             thing2_list = calc_aerosol_data(scenarios[1],current_var,
-                                            Dic_scn_var_comp,trop,area,durations[1],inside)
+                                            var_dict,trop,area,durations[1],inside)
                 
             val1 =  thing1_list['_AQS']
             val2 =  thing2_list['_AQS']
@@ -806,7 +809,7 @@ def list_files(directory,scenario,start_date,end_date):
 
 #####
 
-def Get_files(data_dirs,scenarios,start_periods,end_periods,**kwargs):
+def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         
     """
         This function retrieves the files, latitude, and longitude information
@@ -846,10 +849,10 @@ def Get_files(data_dirs,scenarios,start_periods,end_periods,**kwargs):
     for i in range(len(scenarios)):
 
         current_dir=data_dirs[i]
-        current_scn=scenarios[i]
+        scn=scenarios[i]
 
         # find the needed the files
-        current_files=list_files(current_dir,current_scn,start_periods[i],end_periods[i])
+        current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
 
         # get the Lat and Lons for each scenario
         #print("current_files[0]: ",current_files[i],"\n")
@@ -862,7 +865,7 @@ def Get_files(data_dirs,scenarios,start_periods,end_periods,**kwargs):
             try:
                 tmp_area=tmp_file['area'+ext1_SE].data
                 Earth_area= 4 * np.pi * Earth_rad**(2)
-                areas[current_scn]=tmp_area*Earth_area/np.nansum(tmp_area)
+                areas[scn]=tmp_area*Earth_area/np.nansum(tmp_area)
 
             except KeyError:
                 print("I think a key error happened\n")
@@ -876,15 +879,15 @@ def Get_files(data_dirs,scenarios,start_periods,end_periods,**kwargs):
                 dx=Earth_rad*np.cos(lat2d*np.pi/180)*dlon*np.pi/180
 
                 area=dx*dy
-                areas[current_scn]=area
+                areas[scn]=area
 
-        files[current_scn]=current_files
-        Lats[current_scn]=lat
-        Lons[current_scn]=lon
-        areas[current_scn]=area
+        files[scn]=current_files
+        Lats[scn]=lat
+        Lons[scn]=lon
+        areas[scn]=area
 
     print("Got the files, lats, lons, and areas (hopefully)...")
-    return files,Lats,Lons,areas
+    return files, Lats, Lons, areas
 
 #####
 
@@ -947,29 +950,29 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
 
 #####
 
-def fill_dic_SE(variables,ListVars,ext1_SE):
+def fill_dic_SE(variables, ListVars, ext1_SE):
     #Dictionary for Molecular weights. Keys must be consistent with variable name
     MW={'O3':48,
-            'CH4':16,
-            'CO':28,
-            'ISOP':68,
-            'C10H16':136,
-            'SOA':144.132,
-            'SALT':12.011,
-            'SULF':115.11,
-            'POM':12.011,
-            'BC':12.011 ,
-            'DUST':12.011,
-            'CH3CCL3':133.4042,
-            'C10H16':136.2340,
-            'CH3OH':32.0419,
-            'CH3COCH3':58.0791,
-            'AIR':28.97}
+        'CH4':16,
+        'CO':28,
+        'ISOP':68,
+        'C10H16':136,
+        'SOA':144.132,
+        'SALT':12.011,
+        'SULF':115.11,
+        'POM':12.011,
+        'BC':12.011 ,
+        'DUST':12.011,
+        'CH3CCL3':133.4042,
+        'C10H16':136.2340,
+        'CH3OH':32.0419,
+        'CH3COCH3':58.0791,
+        'AIR':28.97}
 
     # Avogadro's Number
-    AVO=6.022e23
+    avo = 6.022e23
     # gravity - replace by numpy or scipy for best guess of gravity
-    gr=9.80616
+    gr = 9.80616
     
     #dic_SE = set_dic_SE(ext1_SE)
 
@@ -1058,17 +1061,17 @@ def fill_dic_SE(variables,ListVars,ext1_SE):
             if key=='O3'+ext1_SE: 
                 # for O3, we should not include fast cycling reactions
                 # As a result, we use below diagnostics in the model
-                dic_SE[var+'_CHML'][key+'_Loss'+ext1_SE]=MW[var]*1e3/AVO/gr
-                dic_SE[var+'_CHMP'][key+'_Prod'+ext1_SE]=MW[var]*1e3/AVO/gr 
+                dic_SE[var+'_CHML'][key+'_Loss'+ext1_SE]=MW[var]*1e3/avo/gr
+                dic_SE[var+'_CHMP'][key+'_Prod'+ext1_SE]=MW[var]*1e3/avo/gr 
 
             else:
                 if key+'_CHML' in ListVars:
-                    dic_SE[var+'_CHML'][key+'_CHML'+ext1_SE]=MW[var]*1e3/AVO/gr
+                    dic_SE[var+'_CHML'][key+'_CHML'+ext1_SE]=MW[var]*1e3/avo/gr
                 else:
                     dic_SE[var+'_CHML']['O3'+ext1_SE]=0.
 
                 if key+'_CHMP' in ListVars:            
-                    dic_SE[var+'_CHMP'][key+'_CHMP'+ext1_SE]=MW[var]*1e3/AVO/gr        
+                    dic_SE[var+'_CHMP'][key+'_CHMP'+ext1_SE]=MW[var]*1e3/avo/gr        
                 else:
                     dic_SE[var+'_CHMP']['O3'+ext1_SE]=0.        
 
@@ -1083,7 +1086,7 @@ def fill_dic_SE(variables,ListVars,ext1_SE):
             # original unit: [molec/cm2/s]
             # conversion: Mw*10/Avo
             if key+'_CLXF' in ListVars:            
-                dic_SE[var+'_CLXF'][key+'_CLXF'+ext1_SE]=MW[var]*10/AVO  # convert [molec/cm2/s] to [kg/m2/s]        
+                dic_SE[var+'_CLXF'][key+'_CLXF'+ext1_SE]=MW[var]*10/avo  # convert [molec/cm2/s] to [kg/m2/s]        
             else:
                 dic_SE[var+'_CLXF']['O3'+ext1_SE]=0. 
 
@@ -1201,7 +1204,7 @@ def fill_dic_SE(variables,ListVars,ext1_SE):
 
 #####
 
-def calc_chem_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,inside):
+def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     """
     Calcs for chem diagnostics (no aerosols)
     
@@ -1217,7 +1220,7 @@ def calc_chem_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,i
     thing_list = {}
     
     # Burden      
-    spc_burd=Dic_scn_var_comp[current_scn][current_var][current_var+'_BURDEN']       
+    spc_burd=var_dict[scn][var][var+'_BURDEN']       
     spc_burd=np.where(np.isnan(trop),np.nan,spc_burd)
     tmp_burden=np.nansum(spc_burd*area,axis=0)
     burden=np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
@@ -1225,7 +1228,7 @@ def calc_chem_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,i
     thing_list['_BURDEN'] = np.round(BURDEN,5)
 
     # Chemical Loss
-    spc_chml=Dic_scn_var_comp[current_scn][current_var][current_var+'_CHML'] 
+    spc_chml=var_dict[scn][var][var+'_CHML'] 
     spc_chml=np.where(np.isnan(trop),np.nan,spc_chml)       
     tmp_chml=np.nansum(spc_chml*area,axis=0)
     chml=np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
@@ -1233,7 +1236,7 @@ def calc_chem_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,i
     thing_list['_CHML'] = np.round(CHML,5)
 
     # Chemical Production
-    spc_chmp=Dic_scn_var_comp[current_scn][current_var][current_var+'_CHMP'] 
+    spc_chmp=var_dict[scn][var][var+'_CHMP'] 
     spc_chmp=np.where(np.isnan(trop),np.nan,spc_chmp)
     tmp_chmp=np.nansum(spc_chmp*area,axis=0)
     chmp=np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
@@ -1241,39 +1244,39 @@ def calc_chem_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,i
     thing_list['_CHMP'] = np.round(CHMP,5)
         
     # Surface Emissions
-    spc_sf=Dic_scn_var_comp[current_scn][current_var][current_var+'_SF'] 
+    spc_sf=var_dict[scn][var][var+'_SF'] 
     tmp_sf=spc_sf
     sf=np.ma.masked_where(inside==False,tmp_sf*area)  #convert Kg/m2/s to Tg/yr
     SF = np.ma.sum(sf*duration*1e-9)
     thing_list['_SF'] = np.round(SF,5)
 
     # Elevated Emissions
-    if current_var == "CO":
-        print(f"Smoethign is borken with {current_var}")
+    if var == "CO":
+        print(f"Smoethign is borken with {var}")
         CLXF = np.nan
     else:
-        spc_clxf=Dic_scn_var_comp[current_scn][current_var][current_var+'_CLXF'] 
+        spc_clxf=var_dict[scn][var][var+'_CLXF'] 
         tmp_clxf=np.nansum(spc_clxf*area,axis=0)
         clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
         CLXF = np.ma.sum(clxf*duration*1e-9)
     thing_list['_CLXF'] = np.round(CLXF,5)
 
     # Dry Deposition Flux 
-    spc_ddf=Dic_scn_var_comp[current_scn][current_var][current_var+'_DDF'] 
+    spc_ddf=var_dict[scn][var][var+'_DDF'] 
     tmp_ddf=spc_ddf
     ddf=np.ma.masked_where(inside==False,tmp_ddf*area)  #convert Kg/m2/s to Tg/yr
     DDF = np.ma.sum(ddf*duration*1e-9)
     thing_list['_DDF'] = np.round(DDF,5)
             
     # Wet Deposition Flux   
-    spc_wdf=Dic_scn_var_comp[current_scn][current_var][current_var+'_WDF'] 
+    spc_wdf=var_dict[scn][var][var+'_WDF'] 
     tmp_wdf=spc_wdf
     wdf=np.ma.masked_where(inside==False,tmp_wdf*area)  #convert Kg/m2/s to Tg/yr
     WDF = np.ma.sum(wdf*duration*1e-9)
     thing_list['_WDF'] = np.round(WDF,5)
              
     # Chemical Tendency
-    spc_tnd=Dic_scn_var_comp[current_scn][current_var][current_var+'_TEND'] 
+    spc_tnd=var_dict[scn][var][var+'_TEND'] 
     spc_tnd=np.where(np.isnan(trop),np.nan,spc_tnd)
     tmp_tnd=np.nansum(spc_tnd,axis=0)
     tnd=np.ma.masked_where(inside==False,tmp_tnd)  #convert Kg/s to Tg/yr
@@ -1289,7 +1292,7 @@ def calc_chem_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,i
     thing_list['_LIFETIME'] = np.round(LT,5)
 
     # Lightning NOX production
-    spc_lno=Dic_scn_var_comp[current_scn][current_var][current_var+'_LNO']
+    spc_lno=var_dict[scn][var][var+'_LNO']
     tmp_lno=np.ma.masked_where(inside==False,spc_lno)  
     LNO = np.ma.sum(tmp_lno)
     thing_list['_LNO'] = np.round(LNO,5)
@@ -1302,12 +1305,12 @@ def calc_chem_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,i
 
 #####
 
-def calc_aerosol_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duration,inside):
+def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
     
     thing_list = {}
     
     # Burden      
-    spc_burd=Dic_scn_var_comp[current_scn][current_var][current_var+'_BURDEN']       
+    spc_burd=var_dict[scn][var][var+'_BURDEN']       
     spc_burd=np.where(np.isnan(trop),np.nan,spc_burd)
     tmp_burden=np.nansum(spc_burd*area,axis=0)
     burden=np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
@@ -1315,7 +1318,7 @@ def calc_aerosol_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duratio
     thing_list['_BURDEN'] = np.round(BURDEN,5)
 
     # Chemical Loss
-    spc_chml=Dic_scn_var_comp[current_scn][current_var][current_var+'_CHML'] 
+    spc_chml=var_dict[scn][var][var+'_CHML'] 
     spc_chml=np.where(np.isnan(trop),np.nan,spc_chml)       
     tmp_chml=np.nansum(spc_chml*area,axis=0)
     chml=np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
@@ -1323,7 +1326,7 @@ def calc_aerosol_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duratio
     thing_list['_CHML'] = np.round(CHML,5)
     
     # Chemical Production
-    spc_chmp=Dic_scn_var_comp[current_scn][current_var][current_var+'_CHMP'] 
+    spc_chmp=var_dict[scn][var][var+'_CHMP'] 
     spc_chmp=np.where(np.isnan(trop),np.nan,spc_chmp)
     tmp_chmp=np.nansum(spc_chmp*area,axis=0)
     chmp=np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
@@ -1331,27 +1334,22 @@ def calc_aerosol_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duratio
     thing_list['_CHMP'] = np.round(CHMP,5)
         
     # Surface Emissions
-    spc_sf=Dic_scn_var_comp[current_scn][current_var][current_var+'_SF'] 
+    spc_sf=var_dict[scn][var][var+'_SF'] 
     tmp_sf=spc_sf
     sf=np.ma.masked_where(inside==False,tmp_sf*area)  #convert Kg/m2/s to Tg/yr
     SF = np.ma.sum(sf*duration*1e-9)
     thing_list['_SF'] = np.round(SF,5)
-
-        
+ 
     # Elevated Emissions
-    if current_var == "CO":
-        print(f"Smoethign is borken with {current_var}")
-        CLXF = np.nan
-    else:
-        spc_clxf=Dic_scn_var_comp[current_scn][current_var][current_var+'_CLXF'] 
-        tmp_clxf=np.nansum(spc_clxf*area,axis=0)
-        clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
-        CLXF = np.ma.sum(clxf*duration*1e-9)
+    spc_clxf=var_dict[scn][var][var+'_CLXF'] 
+    tmp_clxf=np.nansum(spc_clxf*area,axis=0)
+    clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
+    CLXF = np.ma.sum(clxf*duration*1e-9)
     thing_list['_CLXF'] = np.round(CLXF,5)
     
     # Dry Deposition Flux      
-    spc_ddfa=Dic_scn_var_comp[current_scn][current_var][current_var+'_DDF'] 
-    spc_ddfc=Dic_scn_var_comp[current_scn][current_var][current_var+'_DDFC']
+    spc_ddfa=var_dict[scn][var][var+'_DDF'] 
+    spc_ddfc=var_dict[scn][var][var+'_DDFC']
     spc_ddf=spc_ddfa +spc_ddfc
     tmp_ddf=spc_ddf
     ddf=np.ma.masked_where(inside==False,tmp_ddf*area)  #convert Kg/m2/s to Tg/yr
@@ -1359,8 +1357,8 @@ def calc_aerosol_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duratio
     thing_list['_DDF'] = np.round(DDF,5)
             
     # Wet deposition
-    spc_wdfa=Dic_scn_var_comp[current_scn][current_var][current_var+'_WDF'] 
-    spc_wdfc=Dic_scn_var_comp[current_scn][current_var][current_var+'_WDFC']
+    spc_wdfa=var_dict[scn][var][var+'_WDF'] 
+    spc_wdfc=var_dict[scn][var][var+'_WDFC']
     spc_wdf=spc_wdfa +spc_wdfc            
     tmp_wdf=spc_wdf
     wdf=np.ma.masked_where(inside==False,tmp_wdf*area)  #convert Kg/m2/s to Tg/yr
@@ -1368,7 +1366,7 @@ def calc_aerosol_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duratio
     thing_list['_WDF'] = np.round(WDF,5)
             
     # gas-aerosol Exchange
-    spc_gaex=Dic_scn_var_comp[current_scn][current_var][current_var+'_GAEX'] 
+    spc_gaex=var_dict[scn][var][var+'_GAEX'] 
     tmp_gaex=spc_gaex
     gaex=np.ma.masked_where(inside==False,tmp_gaex*area)  #convert Kg/m2/s to Tg/yr
     GAEX = np.ma.sum(gaex*duration*1e-9)
@@ -1378,16 +1376,16 @@ def calc_aerosol_data(current_scn,current_var,Dic_scn_var_comp,trop,area,duratio
     LT=BURDEN/(CHML+DDF-WDF)* duration/86400 # days   
     thing_list['_LIFETIME'] = np.round(LT,5)
             
-    if current_var=='SULF':     
+    if var=='SULF':     
         # Aqueous Chemistry
-        spc_aqs=Dic_scn_var_comp[current_scn][current_var][current_var+'_AQS'] 
+        spc_aqs=var_dict[scn][var][var+'_AQS'] 
         tmp_aqs=spc_aqs
         aqs=np.ma.masked_where(inside==False,tmp_aqs*area)  #convert Kg/m2/s to Tg/yr
         AQS = np.ma.sum(aqs*duration*1e-9)
         thing_list['_AQS'] = np.round(AQS,5)    
         
         # Nucleation
-        spc_nucl=Dic_scn_var_comp[current_scn][current_var][current_var+'_NUCL'] 
+        spc_nucl=var_dict[scn][var][var+'_NUCL'] 
         tmp_nucl=spc_nucl
         nucl=np.ma.masked_where(inside==False,tmp_nucl*area)  #convert Kg/m2/s to Tg/yr
         NUCL = np.ma.sum(nucl*duration*1e-9)
