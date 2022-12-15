@@ -889,6 +889,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         
     all_data=[]
     for file in files:
+        print("AARRGGG",data_dir+file)
         ds=xr.open_dataset(data_dir+file)
         data=[]
     
