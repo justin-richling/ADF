@@ -147,7 +147,8 @@ def amwg_chem_table(adf):
             #Append to case list:
             case_names.append(baseline_name)
             #input_ts_locs.append(input_ts_baseline)
-            input_ts_locs2.append(input_ts_baseline2)
+            #input_ts_locs2.append(input_ts_baseline2)
+            input_ts_locs2.append(input_ts_baseline)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
