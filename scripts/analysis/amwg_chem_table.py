@@ -385,22 +385,20 @@ def amwg_chem_table(adf):
     #Create the table
     #----------------
     #cols = ['variable',"Test","Baseline"]
-    cols = ['variable']+[f"Test {i}" for i,val in enumerate(case_names[0:-1])]+[]
+    cols = ['variable']+[f"Test {i+1}" for i,val in enumerate(case_names[0:-1])]+["Baseline"]
     
     for current_var in CHEMS:
 
         #Run O3 calcs
         #------------
         if current_var == "O3":
-            print("Running O3 calcs. This message is being displayed for testing purposes\n")
-            for key,new_ext in thing_ext_list_O3_full.items():
-    
-                thing1_list = calc_chem_data(scenarios[0],current_var,
+            thing1_list = calc_chem_data(scenarios[0],current_var,
                                             var_dict,trop,area,durations[0],inside)
 
-                thing2_list = calc_chem_data(scenarios[1],current_var,
+            thing2_list = calc_chem_data(scenarios[1],current_var,
                                             var_dict,trop,area,durations[1],inside)
-
+            print("Running O3 calcs. This message is being displayed for testing purposes\n")
+            for key,new_ext in thing_ext_list_O3_full.items():
                 val1 =  thing1_list[key]
                 val2 =  thing2_list[key]
 
@@ -428,14 +426,12 @@ def amwg_chem_table(adf):
         #Run most other variables
         #--------------------------------------------
         elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', "O3"]:
-            for key,new_ext in thing_ext_list_main.items():
-                
-                thing1_list = calc_chem_data(scenarios[0],current_var,
+            thing1_list = calc_chem_data(scenarios[0],current_var,
                                             var_dict,trop,area,durations[0],inside)
 
-                thing2_list = calc_chem_data(scenarios[1],current_var,
+            thing2_list = calc_chem_data(scenarios[1],current_var,
                                             var_dict,trop,area,durations[1],inside)
-
+            for key,new_ext in thing_ext_list_main.items():
                 val1 =  thing1_list[key]
                 val2 =  thing2_list[key]
                 
@@ -467,18 +463,15 @@ def amwg_chem_table(adf):
         #Run ISOP, Monoterpene, Methanol, and Acetone emmission calcs
         #--------------------------------------------
         elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
-            new_ext = "_EMIS"
-
             thing1_list = calc_chem_data(scenarios[0],current_var,
                                             var_dict,trop,area,durations[0],inside)
 
             thing2_list = calc_chem_data(scenarios[1],current_var,
                                             var_dict,trop,area,durations[1],inside)
-
+            new_ext = "_EMIS (Tg/yr)"
             val1 =  thing1_list['_SF']
             val2 =  thing2_list['_SF']
-            
-            new_ext = new_ext+" (Tg/yr)"
+            #new_ext = new_ext+" (Tg/yr)"
 
             row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
 
@@ -490,7 +483,7 @@ def amwg_chem_table(adf):
             else:
                 df.to_csv(output_csv_file, header=False, index=False)
 
-    #Do some extracurricular wrok to clean up the tables
+    #Do some extracurricular work to clean up the tables
     # - mostly to try and match the old AMWG chem tables
     table_df = pd.read_csv(output_csv_file,names=cols)
 
@@ -700,44 +693,6 @@ def _load_data(dataloc, varname):
 
 #####
 
-def _df_comp_table(adf, output_location, case_names):
-    #import pandas as pd
-    #import numpy as np
-
-    output_csv_file_comp = output_location / "amwg_table_comp.csv"
-
-    # * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    #This will be for single-case for now (case_names[0]),
-    #will need to change to loop as multi-case is introduced
-    case = output_location/f"amwg_table_{case_names[0]}.csv"
-    baseline = output_location/f"amwg_table_{case_names[-1]}.csv"
-
-    #Read in test case and baseline dataframes:
-    df_case = pd.read_csv(case)
-    df_base = pd.read_csv(baseline)
-
-    #Create a merged dataframe that contains only the variables
-    #contained within both the test case and the baseline:
-    df_merge = pd.merge(df_case, df_base, how='inner', on=['variable'])
-
-    #Create the "comparison" dataframe:
-    df_comp = pd.DataFrame(dtype=object)
-    df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
-    df_comp['baseline'] = df_merge[['mean_y']]
-
-    diffs = df_comp['case'].values-df_comp['baseline'].values
-
-    df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
-
-    #Write the comparison dataframe to a new CSV file:
-    cols_comp = ['variable', 'unit', 'test', 'control', 'diff']
-    df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
-
-    #Add comparison table dataframe to website (if enabled):
-    adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
-
-#####
-
 def list_files(directory,scenario,start_date,end_date):
 
     """
@@ -802,9 +757,7 @@ def list_files(directory,scenario,start_date,end_date):
                     all_fileNames.append(all_filenames[i])
                 
             else:
-                
-                if  (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
-     
+                if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
                     all_fileNames.append(all_filenames[i])
                     
     print("Got the list of files (hopefully)...")
@@ -836,10 +789,6 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
     """
     ext1_SE=kwargs.pop('ext1_SE','')
     Area=kwargs.pop('area',False)
-    
-    # convert date strings to datetime format
-    #start_period = datetime.strptime(start_date, "%Y-%m-%d")
-    #end_period = datetime.strptime(end_date, "%Y-%m-%d")
 
     files={}
     Lats={}
