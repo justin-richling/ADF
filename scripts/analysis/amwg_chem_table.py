@@ -124,10 +124,10 @@ def amwg_chem_table(adf):
     start_year = adf.climo_yrs["syears"]
     end_year = adf.climo_yrs["eyears"]
 
-    input_ts_locs2 = []
-    for i,val in enumerate(input_ts_locs):
+    #input_ts_locs2 = []
+    #for i,val in enumerate(input_ts_locs):
         #input_ts_locs2.append(f"{val}/{start_year[i]}-{end_year[i]}/")
-        input_ts_locs2.append(val)
+        #input_ts_locs2.append(val)
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -146,9 +146,9 @@ def amwg_chem_table(adf):
         else:
             #Append to case list:
             case_names.append(baseline_name)
-            #input_ts_locs.append(input_ts_baseline)
+            input_ts_locs.append(input_ts_baseline)
             #input_ts_locs2.append(input_ts_baseline2)
-            input_ts_locs2.append(input_ts_baseline)
+            #input_ts_locs2.append(input_ts_baseline)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
@@ -360,7 +360,8 @@ def amwg_chem_table(adf):
     output_location = Path(output_locs[0])
 
     #Generate input file path:
-    input_location = Path(input_ts_locs2[0])
+    #input_location = Path(input_ts_locs2[0])
+    input_location = Path(input_ts_locs[0])
 
     #Check that time series input directory actually exists:
     if not input_location.is_dir():
