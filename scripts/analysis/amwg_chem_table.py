@@ -732,7 +732,7 @@ def list_files(directory,scenario,start_date,end_date):
     import os,sys,glob
     all_filenames =list (file for file in os.listdir(directory) 
          if os.path.isfile(os.path.join(directory, file)))
-    print(all_filenames[0])
+    print(sorted(all_filenames[0]))
 
     from pathlib import Path
     Path(directory)
@@ -740,11 +740,11 @@ def list_files(directory,scenario,start_date,end_date):
 
     #all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    all_start_filenames = [i.stem for i in start_filenames]
+    all_start_filenames = [i.stem+".nc" for i in start_filenames]
 
     #all_end_filenames = glob.glob(f"{directory}/*.{end_date[0:4]}*")
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    all_end_filenames = [i.stem for i in end_filenames]
+    all_end_filenames = [i.stem+".nc" for i in end_filenames]
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
     #print("all_filenames:",all_filenames)
