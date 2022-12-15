@@ -468,8 +468,8 @@ def amwg_chem_table(adf):
             thing1_list = calc_chem_data(scenarios[0],current_var,
                                             var_dict,trop,area,durations[0],inside)
 
-            thing2_list = calc_chem_data(scenarios[1],current_var,
-                                            var_dict,trop,area,durations[1],inside)
+            #thing2_list = calc_chem_data(scenarios[1],current_var,
+            #                                var_dict,trop,area,durations[1],inside)
             new_ext = "_EMIS (Tg/yr)"
             val1 =  thing1_list['_SF']
             #val2 =  thing2_list['_SF']
