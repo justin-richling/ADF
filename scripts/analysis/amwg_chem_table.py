@@ -388,7 +388,8 @@ def amwg_chem_table(adf):
     #Create the table
     #----------------
     #cols = ['variable',"Test","Baseline"]
-    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
+    #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
+    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
     
     for current_var in CHEMS:
 
@@ -400,15 +401,15 @@ def amwg_chem_table(adf):
                 thing1_list = calc_chem_data(scenarios[0],current_var,
                                                 var_dict,trop,area,durations[0],inside)
 
-                thing2_list = calc_chem_data(scenarios[1],current_var,
-                                            var_dict,trop,area,durations[1],inside)
+                #thing2_list = calc_chem_data(scenarios[1],current_var,
+                #                            var_dict,trop,area,durations[1],inside)
             except:
                     print(f"Looks like something is missing: {key} for {current_var}")
 
             print("Running O3 calcs. This message is being displayed for testing purposes\n")
             for key,new_ext in thing_ext_list_O3_full.items():
                 val1 =  thing1_list[key]
-                val2 =  thing2_list[key]
+                #val2 =  thing2_list[key]
 
                 if new_ext == "_BURDEN":
                     new_ext = new_ext+" (Tg)"
@@ -417,11 +418,12 @@ def amwg_chem_table(adf):
                 elif new_ext == "_LIFETIME":
                     new_ext = new_ext+" (days)"
                     val1 = val1*365
-                    val2 = val2*365
+                    #val2 = val2*365
                 else:
                     new_ext = new_ext+" (Tg/yr)"
 
-                row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+                #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+                row_values = [current_var+new_ext,np.round(val1,3)]
 
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
@@ -437,11 +439,11 @@ def amwg_chem_table(adf):
             thing1_list = calc_chem_data(scenarios[0],current_var,
                                             var_dict,trop,area,durations[0],inside)
 
-            thing2_list = calc_chem_data(scenarios[1],current_var,
-                                            var_dict,trop,area,durations[1],inside)
+            #thing2_list = calc_chem_data(scenarios[1],current_var,
+            #                                var_dict,trop,area,durations[1],inside)
             for key,new_ext in thing_ext_list_main.items():
                 val1 =  thing1_list[key]
-                val2 =  thing2_list[key]
+                #val2 =  thing2_list[key]
                 
                 if new_ext == "_BURDEN":
                     new_ext = new_ext+" (Tg)"
@@ -451,14 +453,15 @@ def amwg_chem_table(adf):
                     if val1 < 1:
                         val1 = val1*365
                         new_ext = new_ext+" (days)"
-                    if val2 < 1:
-                        val2 = val2*365
+                    #if val2 < 1:
+                    #    val2 = val2*365
                     else:
                         new_ext = new_ext+" (yr)"
                 else:
                     new_ext = new_ext+" (Tg/yr)"
 
-                row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+                #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+                row_values = [current_var+new_ext,np.round(val1,3)]
 
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
@@ -478,10 +481,11 @@ def amwg_chem_table(adf):
                                             var_dict,trop,area,durations[1],inside)
             new_ext = "_EMIS (Tg/yr)"
             val1 =  thing1_list['_SF']
-            val2 =  thing2_list['_SF']
+            #val2 =  thing2_list['_SF']
             #new_ext = new_ext+" (Tg/yr)"
 
-            row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+            #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+            row_values = [current_var+new_ext,np.round(val1,3)]
 
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -615,11 +619,11 @@ def amwg_chem_table(adf):
             thing1_list = calc_aerosol_data(scenarios[0],current_var,
                                             var_dict,trop,area,durations[0],inside)
             
-            thing2_list = calc_aerosol_data(scenarios[1],current_var,
-                                            var_dict,trop,area,durations[1],inside)
+            #thing2_list = calc_aerosol_data(scenarios[1],current_var,
+            #                                var_dict,trop,area,durations[1],inside)
             
             val1 =  thing1_list[key]
-            val2 =  thing2_list[key]
+            #val2 =  thing2_list[key]
             
             if new_ext == "_BURDEN":
                 if current_var == "SULF":
@@ -631,8 +635,8 @@ def amwg_chem_table(adf):
                 if val1 < 1:
                     val1 = val1*365
                     new_ext = new_ext+" (days)"
-                if val2 < 1:
-                    val2 = val2*365
+                #if val2 < 1:
+                #    val2 = val2*365
                 else:
                     new_ext = new_ext+" (yr)"
         
@@ -642,7 +646,8 @@ def amwg_chem_table(adf):
                 else:
                     new_ext = new_ext+" (TgC/yr)"
 
-            row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+            #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+            row_values = [current_var+new_ext,np.round(val1,3)]
         
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -661,13 +666,14 @@ def amwg_chem_table(adf):
             thing1_list = calc_aerosol_data(scenarios[0],current_var,
                                             var_dict,trop,area,durations[0],inside)
                 
-            thing2_list = calc_aerosol_data(scenarios[1],current_var,
-                                            var_dict,trop,area,durations[1],inside)
+            #thing2_list = calc_aerosol_data(scenarios[1],current_var,
+            #                                var_dict,trop,area,durations[1],inside)
                 
             val1 =  thing1_list['_AQS']
-            val2 =  thing2_list['_AQS']
+            #val2 =  thing2_list['_AQS']
 
-            row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3),np.round(val2*1.052,3)]
+            #row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3),np.round(val2*1.052,3)]
+            row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3)]
 
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -723,11 +729,16 @@ def list_files(directory,scenario,start_date,end_date):
     # from files. 
     #           *** Flag for possible upgrade/update ***
     #
-    import os,sys
-    all_filenames =list (file for file in os.listdir(directory) 
-         if os.path.isfile(os.path.join(directory, file)))
+    import os,sys,glob
+    #all_filenames =list (file for file in os.listdir(directory) 
+    #     if os.path.isfile(os.path.join(directory, file)))
+
+    all_start_filenames = glob.glob(f"{directory}/{start_date[0:4]}*")
+    all_end_filenames = glob.glob(f"{directory}/{end_date[0:4]}*")
+    all_filenames = sorted(all_start_filenames+all_end_filenames)
+
     if len(all_filenames)==0 : sys.exit(" Directory has no outputs ")
-    all_filenames.sort()
+    #all_filenames.sort()
     
     # this is used to discern what files to extract
     scenario_len=len(scenario)
