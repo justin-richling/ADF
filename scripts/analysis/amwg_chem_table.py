@@ -827,6 +827,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         print(i)
         # get the Lat and Lons for each scenario
         #print("current_files[0]: ",current_files[i],"\n")
+        print("WAAAAHHAHAHAHAHA:",current_dir+current_files[i],"\n")
         tmp_file=xr.open_dataset(current_dir+current_files[i])
         lon=tmp_file['lon'+ext1_SE].data
         lon[lon > 180.] -= 360 # shift longitude from 0-360˚ to -180-180˚
