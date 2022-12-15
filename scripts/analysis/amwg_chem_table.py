@@ -127,6 +127,7 @@ def amwg_chem_table(adf):
     input_ts_locs2 = []
     for i,val in enumerate(input_ts_locs):
         input_ts_locs2.append(f"{val}/{start_year[i]}-{end_year[i]}/")
+        input_ts_locs2.append(val)
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
