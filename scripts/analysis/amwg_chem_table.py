@@ -559,7 +559,7 @@ def amwg_chem_table(adf):
         # Only for testing purposes
         # -------------------------
         if i !=0:
-            scn = scn.replace(".cam.h0","FAKE_NAME.cam.h0")
+            scn = scn.replace(".cam.h0","_FAKE_NAME.cam.h0")
         # Remove when in ADF testing
         # -------------------------
 
@@ -893,6 +893,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         data=[]
     
         for i in dic_SE[var].keys():
+            #Check to see if the product is in the actual dataset, if not, move on and set to 0
             if i in ds:
                 data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
             else:
