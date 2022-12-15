@@ -183,11 +183,11 @@ def amwg_chem_table(adf):
     gr=9.80616
         
     data_root_path = '/glade/scratch/richling/archive/chem_diags/'
-    data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
-    f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
+    data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',]
+    #f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
         
     scenarios = [f'{ix}.cam.h0' for ix in case_names]
-    case_names[1] = case_names[1].replace(".001","._false_case.001")
+    #case_names[1] = case_names[1].replace(".001","._false_case.001")
 
     #case_names = ["f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001",
      #      'FWmaMAM4HIST.f19_f19_mg17.carma_trop_strat09.1980_2014_FALSE_NAME']
