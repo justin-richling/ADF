@@ -1,3 +1,10 @@
+#Import "special" modules:
+try:
+    import pandas as pd
+except ImportError:
+    print("Pandas module does not exist in python path, but is needed for amwg_table.")
+    print("Please install module, e.g. 'pip install pandas'.")
+    sys.exit(1)
 try:
     import scipy.stats as stats # for easy linear regression and testing
 except ImportError:
@@ -6,8 +13,11 @@ except ImportError:
 
 from datetime import datetime, timedelta
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import xarray as xr
+from pathlib import Path
+import sys
+import warnings  # use to warn user about missing files.
 
 # list of the variables to be caculated. 
 CHEMS =["CH4",
@@ -54,26 +64,7 @@ def amwg_chem_table(adf):
     """
 
     #Import necessary modules:
-    import numpy as np
-    import xarray as xr
-    from pathlib import Path
     from adf_base import AdfError
-    import warnings  # use to warn user about missing files.
-
-    #Import "special" modules:
-    try:
-        import pandas as pd
-    except ImportError:
-        print("Pandas module does not exist in python path, but is needed for amwg_table.")
-        print("Please install module, e.g. 'pip install pandas'.")
-        sys.exit(1)
-
-    try:
-        import scipy.stats as stats # for easy linear regression and testing
-    except ImportError:
-        print("Scipy module does not exist in python path, but is needed for amwg_table.")
-        print("Please install module, e.g. 'pip install scipy'.")
-
 
     #Additional information:
     #----------------------
@@ -729,14 +720,10 @@ def list_files(directory,scenario,start_date,end_date):
     # from files. 
     #           *** Flag for possible upgrade/update ***
     #
-    import os,sys,glob
-    all_filenames =list (file for file in os.listdir(directory) 
-         if os.path.isfile(os.path.join(directory, file)))
-    print(sorted(all_filenames[0]))
-
-    from pathlib import Path
-    Path(directory)
-    sorted(Path('.').glob('*.py'))
+    #import os,sys,glob
+    #all_filenames =list (file for file in os.listdir(directory) 
+    #     if os.path.isfile(os.path.join(directory, file)))
+    #print(sorted(all_filenames[0]))
 
     #all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
@@ -838,10 +825,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
 
         # find the needed the files
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
-        print("current_files:",current_files)
         # get the Lat and Lons for each scenario
-        #print("current_files[0]: ",current_files[i],"\n")
-        print("WAAAAHHAHAHAHAHA:",current_dir+current_files[i],"\n")
         tmp_file=xr.open_dataset(current_dir+current_files[i])
         lon=tmp_file['lon'+ext1_SE].data
         lon[lon > 180.] -= 360 # shift longitude from 0-360˚ to -180-180˚
