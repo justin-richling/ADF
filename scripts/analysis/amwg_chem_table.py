@@ -388,7 +388,7 @@ def amwg_chem_table(adf):
         #------------
         if current_var == "O3":
             #row_values = [current_var+new_ext]
-            for i,scn in scenarios:
+            for i,scn in enumerate(scenarios):
             
                 thing_list = calc_chem_data(scn, current_var, var_dict, trop, area, durations[i], inside)
 
@@ -427,7 +427,7 @@ def amwg_chem_table(adf):
         #--------------------------------------------
         elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', "O3"]:
             #row_values = [current_var+new_ext]
-            for i,scn in scenarios:
+            for i,scn in enumerate(scenarios):
             
                 thing_list = calc_chem_data(scn, current_var, var_dict, trop, area, durations[i], inside)
             #thing1_list = calc_chem_data(scenarios[0],current_var,
@@ -471,7 +471,7 @@ def amwg_chem_table(adf):
         #--------------------------------------------
         elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
             #row_values = [current_var+new_ext]
-            for i,scn in scenarios:
+            for i,scn in enumerate(scenarios):
                 row_values = [current_var+new_ext]
             
                 thing_list = calc_chem_data(scn, current_var, var_dict, trop, area, durations[i], inside)
@@ -615,7 +615,7 @@ def amwg_chem_table(adf):
 
     for current_var in AEROSOLS:
         
-        for i,scn in scenarios:
+        for i,scn in enumerate(scenarios):
             
                 thing_list = calc_chem_data(scn, current_var, var_dict, trop, area, durations[i], inside)
         for key,new_ext in aerosols_ext_dict.items():
@@ -663,18 +663,22 @@ def amwg_chem_table(adf):
         
         # Add aqueous calc for SO4 only
         if current_var == "SULF":
+            row_values = [current_var+new_ext]
+            for i,scn in enumerate(scenarios):
+                thing_list = calc_chem_data(scn, current_var, var_dict, trop, area, durations[i], inside)
             
-            thing1_list = calc_aerosol_data(scenarios[0],current_var,
-                                            var_dict,trop,area,durations[0],inside)
+            #thing1_list = calc_aerosol_data(scenarios[0],current_var,
+            #                                var_dict,trop,area,durations[0],inside)
                 
             #thing2_list = calc_aerosol_data(scenarios[1],current_var,
             #                                var_dict,trop,area,durations[1],inside)
                 
-            val1 =  thing1_list['_AQS']
+            value =  thing_list['_AQS']
             #val2 =  thing2_list['_AQS']
 
             #row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3),np.round(val2*1.052,3)]
-            row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3)]
+            #row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3)]
+            row_values.append(np.round(value,3))
 
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -756,9 +760,7 @@ def list_files(directory,scenario,start_date,end_date):
     #print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
-            print("did we make it here??")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
-            print("did we make to here too?")
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
             time_bounds=tmp_file['time_bnds'].data
