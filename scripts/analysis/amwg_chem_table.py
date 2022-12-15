@@ -733,8 +733,8 @@ def list_files(directory,scenario,start_date,end_date):
     #all_filenames =list (file for file in os.listdir(directory) 
     #     if os.path.isfile(os.path.join(directory, file)))
 
-    all_start_filenames = glob.glob(f"{directory}/{start_date[0:4]}*")
-    all_end_filenames = glob.glob(f"{directory}/{end_date[0:4]}*")
+    all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
+    all_end_filenames = glob.glob(f"{directory}/*.{end_date[0:4]}*")
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
     if len(all_filenames)==0 : sys.exit(" Directory has no outputs ")
