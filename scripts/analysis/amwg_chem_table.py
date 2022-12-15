@@ -779,7 +779,7 @@ def list_files(directory,scenario,start_date,end_date):
                 if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
                     all_fileNames.append(all_filenames[i])
                     
-    print("Got the list of files (hopefully)...")
+    print("Got the list of files (hopefully)...",len(all_fileNames))
     return all_fileNames
 
 #####
