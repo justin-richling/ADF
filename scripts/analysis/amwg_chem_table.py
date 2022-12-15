@@ -23,7 +23,7 @@ import warnings  # use to warn user about missing files.
 CHEMS =["CH4",
         "CH3CCL3",
          "CO",
-        #"O3", #Currently missing some components 
+        "O3", #Currently missing some components 
         "ISOP",
         "C10H16",
         "CH3OH",
