@@ -735,9 +735,7 @@ def list_files(directory,scenario,start_date,end_date):
     #print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
-            print("did we make it here??")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
-            print("did we make to here too?")
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
             time_bounds=tmp_file['time_bnds'].data
