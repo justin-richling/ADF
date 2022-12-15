@@ -456,8 +456,8 @@ def amwg_chem_table(adf):
                 else:
                     new_ext = new_ext+" (Tg/yr)"
 
-                #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
-                row_values = [current_var+new_ext,np.round(val1,3)]
+                row_values = [current_var+new_ext,np.round(val1,3),np.round(val1*1.052,3)]
+                #row_values = [current_var+new_ext,np.round(val1,3)]
 
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
@@ -480,8 +480,8 @@ def amwg_chem_table(adf):
             #val2 =  thing2_list['_SF']
             #new_ext = new_ext+" (Tg/yr)"
 
-            #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
-            row_values = [current_var+new_ext,np.round(val1,3)]
+            row_values = [current_var+new_ext,np.round(val1,3),np.round(val1*1.052,3)]
+            #row_values = [current_var+new_ext,np.round(val1,3)]
 
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -637,8 +637,8 @@ def amwg_chem_table(adf):
                 else:
                     new_ext = new_ext+" (TgC/yr)"
 
-            #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
-            row_values = [current_var+new_ext,np.round(val1,3)]
+            row_values = [current_var+new_ext,np.round(val1,3),np.round(val1*1.052,3)]
+            #row_values = [current_var+new_ext,np.round(val1,3)]
         
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -661,8 +661,8 @@ def amwg_chem_table(adf):
             val1 =  thing1_list['_AQS']
             #val2 =  thing2_list['_AQS']
 
-            #row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3),np.round(val2*1.052,3)]
-            row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3)]
+            row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3),np.round(val1*1.052,3)]
+            #row_values = [current_var+'_AQ_PROD (TgS/yr)',np.round(val1,3)]
 
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
