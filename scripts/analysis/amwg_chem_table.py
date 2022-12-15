@@ -412,7 +412,7 @@ def amwg_chem_table(adf):
                 #val2 =  thing2_list[key]
                 my_vals = {}
                 for i,scn in enumerate(scenarios):
-                    my_vals = my_dict[scn][key]
+                    my_vals[scn] = my_dict[scn][key]
 
                     if new_ext == "_BURDEN":
                         new_ext = new_ext+" (Tg)"
@@ -420,14 +420,14 @@ def amwg_chem_table(adf):
                         new_ext = new_ext+" (TgN/yr)"
                     elif new_ext == "_LIFETIME":
                         new_ext = new_ext+" (days)"
-                        my_vals = my_vals*365
+                        my_vals[scn] = my_vals[scn]*365
                         #val2 = val2*365
                     else:
                         new_ext = new_ext+" (Tg/yr)"
 
                     #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
                     #row_values = [current_var+new_ext,np.round(val1,3)]
-                    row_values.append(np.round(my_vals,3))
+                    row_values.append(np.round(my_vals[scn],3))
 
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
