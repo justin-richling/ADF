@@ -385,18 +385,23 @@ def amwg_chem_table(adf):
     #Create the table
     #----------------
     #cols = ['variable',"Test","Baseline"]
-    cols = ['variable']+[f"Test {i+1}" for i,val in enumerate(case_names[0:-1])]+["Baseline"]
+    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
     
     for current_var in CHEMS:
 
         #Run O3 calcs
         #------------
         if current_var == "O3":
-            thing1_list = calc_chem_data(scenarios[0],current_var,
-                                            var_dict,trop,area,durations[0],inside)
+            
+            try:
+                thing1_list = calc_chem_data(scenarios[0],current_var,
+                                                var_dict,trop,area,durations[0],inside)
 
-            thing2_list = calc_chem_data(scenarios[1],current_var,
+                thing2_list = calc_chem_data(scenarios[1],current_var,
                                             var_dict,trop,area,durations[1],inside)
+            except:
+                    print(f"Looks like something is missing: {key} for {current_var}")
+
             print("Running O3 calcs. This message is being displayed for testing purposes\n")
             for key,new_ext in thing_ext_list_O3_full.items():
                 val1 =  thing1_list[key]
