@@ -734,8 +734,18 @@ def list_files(directory,scenario,start_date,end_date):
          if os.path.isfile(os.path.join(directory, file)))
     print(all_filenames[0])
 
-    all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
-    all_end_filenames = glob.glob(f"{directory}/*.{end_date[0:4]}*")
+    from pathlib import Path
+    Path(directory)
+    sorted(Path('.').glob('*.py'))
+
+    #all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
+    start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
+    all_start_filenames = [i.stem for i in start_filenames]
+
+    #all_end_filenames = glob.glob(f"{directory}/*.{end_date[0:4]}*")
+    end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
+    all_end_filenames = [i.stem for i in end_filenames]
+    
     all_filenames = sorted(all_start_filenames+all_end_filenames)
     #print("all_filenames:",all_filenames)
 
@@ -748,7 +758,7 @@ def list_files(directory,scenario,start_date,end_date):
     all_fileNames=[]
     print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
-        if all_filenames[i][-scenario_len+11:-11]==scenario: # check if the file is relevant
+        if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
             print("did we make it here??")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
             
