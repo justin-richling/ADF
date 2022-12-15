@@ -743,7 +743,7 @@ def list_files(directory,scenario,start_date,end_date):
     
     # this is used to discern what files to extract
     scenario_len=len(scenario)
-
+    print(all_filenames[0])
     all_fileNames=[]
     print("all_filenames[0][0:scenario_len]",all_filenames[0][0:scenario_len])
     for i in range(len(all_filenames)):
