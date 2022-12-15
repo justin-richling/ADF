@@ -730,8 +730,9 @@ def list_files(directory,scenario,start_date,end_date):
     #           *** Flag for possible upgrade/update ***
     #
     import os,sys,glob
-    #all_filenames =list (file for file in os.listdir(directory) 
-    #     if os.path.isfile(os.path.join(directory, file)))
+    all_filenames =list (file for file in os.listdir(directory) 
+         if os.path.isfile(os.path.join(directory, file)))
+    print(all_filenames[0])
 
     all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
     all_end_filenames = glob.glob(f"{directory}/*.{end_date[0:4]}*")
