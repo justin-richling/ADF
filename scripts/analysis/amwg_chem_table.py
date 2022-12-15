@@ -176,18 +176,10 @@ def amwg_chem_table(adf):
     gr=9.80616
         
     data_root_path = '/glade/scratch/richling/archive/chem_diags/'
-    data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
-    #f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
+    data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
         
     scenarios = [f'{ix}.cam.h0' for ix in case_names[0:1]]
-    #case_names[1] = case_names[1].replace(".001","._false_case.001")
-
-    #case_names = ["f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001",
-     #      'FWmaMAM4HIST.f19_f19_mg17.carma_trop_strat09.1980_2014_FALSE_NAME']
-
-    #scenarios=[f'{}.cam.h0', f'{}.cam.h0',]
-    #scenarios = [f'{ix}.cam.h0' for ix in case_names]
-    #scenarios = 
+    case_names[1] = case_names[1].replace(".001","._false_case.001")
 
     print(scenarios)
 
@@ -224,11 +216,11 @@ def amwg_chem_table(adf):
     # Periods of Interest
     # -------------------
     # choose the period of interest. Plots will be averaged within this period
-    #start_dates = ["1995-1-1", "1997-1-1"]
-    #end_dates = ["1996-1-1", "1998-1-1"]
+    start_dates = ["1995-1-1", "1997-1-1"]
+    end_dates = ["1996-1-1", "1998-1-1"]
 
-    start_dates = ["1995-1-1"]
-    end_dates = ["1996-1-1"]
+    #start_dates = ["1995-1-1"]
+    #end_dates = ["1996-1-1"]
 
     start_periods = []
     end_periods = []
@@ -384,8 +376,8 @@ def amwg_chem_table(adf):
     #cols = ['variable',"Test","Baseline"]
     
     #Use this for multi-case --> down the road a bit, yeah?
-    #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
-    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
+    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
+    #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
     
     for current_var in CHEMS:
 
