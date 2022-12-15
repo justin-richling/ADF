@@ -12,6 +12,8 @@ except ImportError:
     print("Please install module, e.g. 'pip install scipy'.")
 
 from datetime import datetime, timedelta
+import secrets
+from tty import setcbreak
 import numpy as np
 #import pandas as pd
 import xarray as xr
@@ -379,6 +381,8 @@ def amwg_chem_table(adf):
     #Create the table
     #----------------
     #cols = ['variable',"Test","Baseline"]
+    
+    #Use this for multi-case --> down the road a bit, yeah?
     #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
     cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
     
@@ -387,30 +391,42 @@ def amwg_chem_table(adf):
         #Run O3 calcs
         #------------
         if current_var == "O3":
+            my_dict = {}
             
-            thing1_list = calc_chem_data(scenarios[0],current_var,
-                                                var_dict,trop,area,durations[0],inside)
+            for i_scn in enumerate(scenarios):
+                my_dict[scn] = calc_chem_data(scn,current_var,
+                                                var_dict,trop,area,durations[i],inside)
+
+
+            #thing1_list = calc_chem_data(scenarios[0],current_var,
+            #                                    var_dict,trop,area,durations[0],inside)
 
             #thing2_list = calc_chem_data(scenarios[1],current_var,
             #                            var_dict,trop,area,durations[1],inside)
-
+            row_values = [current_var+new_ext]
             for key,new_ext in thing_ext_list_O3_full.items():
-                val1 =  thing1_list[key]
+                #val1 =  thing1_list[key]
+
+                #val1 = my_dict[scn][key]
                 #val2 =  thing2_list[key]
+                my_vals = {}
+                for i,scn in enumerate(scenarios):
+                    my_vals = my_dict[scn][key]
 
-                if new_ext == "_BURDEN":
-                    new_ext = new_ext+" (Tg)"
-                elif new_ext == "_LNO":
-                    new_ext = new_ext+" (TgN/yr)"
-                elif new_ext == "_LIFETIME":
-                    new_ext = new_ext+" (days)"
-                    val1 = val1*365
-                    #val2 = val2*365
-                else:
-                    new_ext = new_ext+" (Tg/yr)"
+                    if new_ext == "_BURDEN":
+                        new_ext = new_ext+" (Tg)"
+                    elif new_ext == "_LNO":
+                        new_ext = new_ext+" (TgN/yr)"
+                    elif new_ext == "_LIFETIME":
+                        new_ext = new_ext+" (days)"
+                        my_vals = my_vals*365
+                        #val2 = val2*365
+                    else:
+                        new_ext = new_ext+" (Tg/yr)"
 
-                #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
-                row_values = [current_var+new_ext,np.round(val1,3)]
+                    #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
+                    #row_values = [current_var+new_ext,np.round(val1,3)]
+                    row_values.append(np.round(my_vals,3))
 
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
