@@ -380,6 +380,7 @@ def amwg_chem_table(adf):
 
     #Create the table
     #----------------
+    print("For real, though, here comes the table.......................\n")
     #cols = ['variable',"Test","Baseline"]
     
     #Use this for multi-case --> down the road a bit, yeah?
