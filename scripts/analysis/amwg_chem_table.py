@@ -896,7 +896,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
             if i in ds:
                 data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
             else:
-                print(f"Looks like {var} is missing {i}, so skipping...\n")
+                print(f"Looks like {var} is missing {i} for {file}, so skipping...\n")
         data=np.sum(data,axis=0)
             
         if ('CHML' in var) or ('CHMP' in var) : 
