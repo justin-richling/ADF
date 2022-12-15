@@ -396,8 +396,9 @@ def amwg_chem_table(adf):
 
             #thing2_list = calc_chem_data(scenarios[1],current_var,
             #                            var_dict,trop,area,durations[1],inside)
-            row_values = [current_var+new_ext]
+            
             for key,new_ext in thing_ext_list_O3_full.items():
+                row_values = [current_var+new_ext]
                 #val1 =  thing1_list[key]
 
                 #val1 = my_dict[scn][key]
