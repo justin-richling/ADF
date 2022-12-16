@@ -160,7 +160,7 @@ def amwg_chem_table(adf):
     data_root_path = '/glade/scratch/richling/archive/chem_diags/'
     data_root_path2 = '/glade/scratch/tilmes/archive/'
     data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
-                f'{data_root_path2}f.cesm3_cam058_mom_e.FWscHIST_chemistry.ne30_L58.024/']
+                f'{data_root_path2}f.cesm3_cam058_mom_e.FWscHIST_chemistry.ne30_L58.024/atm/hist/']
     #--------------------------------------------------------------------------------------------
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
