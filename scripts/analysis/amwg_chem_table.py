@@ -403,7 +403,7 @@ def amwg_chem_table(adf):
 
                 #val1 = my_dict[scn][key]
                 #val2 =  thing2_list[key]
-                my_vals = {}
+                #my_vals = {}
                 for i,scn in enumerate(scenarios):
                     my_val = calc_chem_data(scn,current_var,
                                                 var_dict,trop,area,durations[i],inside)[key]
