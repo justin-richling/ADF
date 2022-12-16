@@ -504,6 +504,11 @@ def amwg_chem_table(adf):
     print("For real, though, here comes the fun cooker.......................\n")
     # Aerosol tables
     #-----------------
+
+
+    # SEbudget seems like the function to run multi processors on?? 
+
+
     #Notify user that script has started:
     print("\n  Calculating AMWG aerosol variable table...")
 
@@ -629,7 +634,7 @@ def amwg_chem_table(adf):
         # Add aqueous calc for SO4 only
         if current_var == "SULF":
 
-            for key,ext in {'_AQS':'_AQ_PROD',}:
+            for key,ext in {'_AQS':'_AQ_PROD',}.items():
                 row_values = []
 
                 for i,scn in enumerate(scenarios):
