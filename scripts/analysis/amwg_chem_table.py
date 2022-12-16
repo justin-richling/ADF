@@ -408,7 +408,7 @@ def amwg_chem_table(adf):
                     my_val = calc_chem_data(scn,current_var,
                                                 var_dict,trop,area,durations[i],inside)[key]
                     #my_vals[scn] = my_dict[scn][key]
-                    print(scn)
+                    #print(scn)
 
                     if new_ext == "_BURDEN":
                         new_ext = new_ext+" (Tg)"
@@ -417,6 +417,7 @@ def amwg_chem_table(adf):
                     elif new_ext == "_LIFETIME":
                         new_ext = new_ext+" (days)"
                         my_val = my_val*365
+                        print("What is happening here: ",i,val,"\n")
                         #val2 = val2*365
                     else:
                         new_ext = new_ext+" (Tg/yr)"
