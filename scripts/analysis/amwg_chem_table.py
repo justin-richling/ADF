@@ -521,6 +521,8 @@ def amwg_chem_table(adf):
     table_df = table_df.append(table_df.iloc[idx], ignore_index=True)
     table_df = table_df.drop([idx]).reset_index(drop=True)
 
+    table_df = table_df.drop_duplicates()
+
     table_df.to_csv(output_csv_file, index=False)#  <------  header=False,
     adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")
 
