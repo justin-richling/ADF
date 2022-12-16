@@ -372,7 +372,7 @@ def amwg_chem_table(adf):
 
     #Create the table
     #----------------
-    print("For real, though, here comes the table.......................\n")
+    print("For real, though, here comes the fun cooker.......................\n")
     #cols = ['variable',"Test","Baseline"]
     
     #Use this for multi-case --> down the road a bit, yeah?
@@ -384,11 +384,11 @@ def amwg_chem_table(adf):
         #Run O3 calcs
         #------------
         if current_var == "O3":
-            my_dict = {}
+            #my_dict = {}
             
-            for i_scn in enumerate(scenarios):
-                my_dict[scn] = calc_chem_data(scn,current_var,
-                                                var_dict,trop,area,durations[i],inside)
+            #for i_scn in enumerate(scenarios):
+            #    my_dict[scn] = calc_chem_data(scn,current_var,
+            #                                    var_dict,trop,area,durations[i],inside)
 
 
             #thing1_list = calc_chem_data(scenarios[0],current_var,
@@ -405,7 +405,9 @@ def amwg_chem_table(adf):
                 #val2 =  thing2_list[key]
                 my_vals = {}
                 for i,scn in enumerate(scenarios):
-                    my_vals[scn] = my_dict[scn][key]
+                    my_vals[scn] = calc_chem_data(scn,current_var,
+                                                var_dict,trop,area,durations[i],inside)[key]
+                    #my_vals[scn] = my_dict[scn][key]
                     print(scn)
 
                     if new_ext == "_BURDEN":
