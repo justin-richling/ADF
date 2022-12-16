@@ -406,6 +406,7 @@ def amwg_chem_table(adf):
                 my_vals = {}
                 for i,scn in enumerate(scenarios):
                     my_vals[scn] = my_dict[scn][key]
+                    print(scn)
 
                     if new_ext == "_BURDEN":
                         new_ext = new_ext+" (Tg)"
@@ -421,8 +422,9 @@ def amwg_chem_table(adf):
                     #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
                     #row_values = [current_var+new_ext,np.round(val1,3)]
                     row_values.append(np.round(my_vals[scn],3))
+                    print(row_values)
 
-                print(row_values,cols)
+                #print(row_values,cols)
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
                 df = pd.DataFrame(dfentries,columns=cols)
