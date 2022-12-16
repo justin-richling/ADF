@@ -620,6 +620,7 @@ def amwg_chem_table(adf):
 
                 row_values.append(np.round(my_val,3))
             row_values = [current_var+new_ext]+row_values
+            print(row_values)
             
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -660,6 +661,7 @@ def amwg_chem_table(adf):
     # probably not needed in the actual ADF...
     #table_df = table_df.round({case_names[0]: 3, case_names[1]: 3})
     table_df.to_csv(output_csv_file, index=False)
+    print("Shoould've saved a csv file, please. Oh please, I neeeeeeed this to have worked, or else. That's it. I'm a goner...")
     adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
 
     #Notify user that script has ended:
