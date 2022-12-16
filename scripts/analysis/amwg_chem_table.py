@@ -422,6 +422,7 @@ def amwg_chem_table(adf):
                     #row_values = [current_var+new_ext,np.round(val1,3)]
                     row_values.append(np.round(my_vals[scn],3))
 
+                print(row_values,cols)
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
                 df = pd.DataFrame(dfentries,columns=cols)
