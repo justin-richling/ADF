@@ -397,8 +397,8 @@ def amwg_chem_table(adf):
             #thing2_list = calc_chem_data(scenarios[1],current_var,
             #                            var_dict,trop,area,durations[1],inside)
             
-            for key,new_ext in thing_ext_list_O3_full.items():
-                row_values = [current_var+new_ext]
+            for key,ext in thing_ext_list_O3_full.items():
+                row_values = [current_var]
                 #val1 =  thing1_list[key]
 
                 #val1 = my_dict[scn][key]
@@ -410,24 +410,25 @@ def amwg_chem_table(adf):
                     #my_vals[scn] = my_dict[scn][key]
                     #print(scn)
 
-                    if new_ext == "_BURDEN":
-                        new_ext = new_ext+" (Tg)"
-                    elif new_ext == "_LNO":
-                        new_ext = new_ext+" (TgN/yr)"
-                    elif new_ext == "_LIFETIME":
-                        new_ext = new_ext+" (days)"
+                    if ext == "_BURDEN":
+                        new_ext = ext+" (Tg)"
+                    elif ext == "_LNO":
+                        new_ext = ext+" (TgN/yr)"
+                    elif ext == "_LIFETIME":
+                        new_ext = ext+" (days)"
                         my_val = my_val*365
-                        print("What is happening here: ",i,val,"\n")
+                        print("What is happening here: ",i,my_val,"\n")
                         #val2 = val2*365
                     else:
-                        new_ext = new_ext+" (Tg/yr)"
+                        new_ext = ext+" (Tg/yr)"
 
                     #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
                     #row_values = [current_var+new_ext,np.round(val1,3)]
                     row_values.append(np.round(my_val,3))
-                    print(row_values)
+                    #print(row_values)
 
                 #print(row_values,cols)
+                row_values[0] = current_var+new_ext
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
                 df = pd.DataFrame(dfentries,columns=cols)
