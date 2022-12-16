@@ -158,8 +158,9 @@ def amwg_chem_table(adf):
     # THIS NEEDS TO BE CHANGED
     #--------------------------------------------------------------------------------------------
     data_root_path = '/glade/scratch/richling/archive/chem_diags/'
+    data_root_path2 = '/glade/scratch/tilmes/archive/'
     data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
-                f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
+                f'{data_root_path2}f.cesm3_cam058_mom_e.FWscHIST_chemistry.ne30_L58.024/']
     #--------------------------------------------------------------------------------------------
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
@@ -775,10 +776,10 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
     Earth_rad=6.371e6 # Earth Radius in m 
 
     
-    for i in range(len(scenarios)):
+    for i,scn in enumerate(scenarios):
 
         current_dir=data_dirs[i]
-        scn=scenarios[i]
+        #scn=scenarios[i]
 
         # find the needed the files
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
