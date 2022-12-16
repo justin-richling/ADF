@@ -187,7 +187,7 @@ def amwg_chem_table(adf):
     # TESTING PURPOSES - will remove when comparing two actual cases
     # Change name of second case since it's a repeat of the first case
     #--------------------------------------------------------------------------------------------
-    case_names[1] = case_names[1].replace(".001","._false_case.001")
+    #case_names[1] = case_names[1].replace(".001","._false_case.001")
     #--------------------------------------------------------------------------------------------
 
     print(scenarios)
