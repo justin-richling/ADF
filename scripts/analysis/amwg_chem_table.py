@@ -875,14 +875,28 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         data=np.sum(data,axis=0)
             
         if ('CHML' in var) or ('CHMP' in var) : 
-            Temp=np.array(ds['T'].isel(time=0))
-            Pres=np.array(ds['PMID'].isel(time=0))
+
+            if 'T' in ds:
+                Temp=np.array(ds['T'].isel(time=0))
+            else:
+                Temp=0
+            if 'PMID' in ds:
+                Pres=np.array(ds['PMID'].isel(time=0))
+            else:
+                Pres=0
             rho= Pres/(Rgas*Temp)
             
-            delP=np.array(ds['PDELDRY'].isel(time=0))
+            if 'PDELDRY' in ds:
+                delP=np.array(ds['PDELDRY'].isel(time=0))
+            else:
+                delP=0
             data=data*delP/rho
         elif ('BURDEN' in var):
-            delP=np.array(ds['PDELDRY'].isel(time=0)) 
+
+            if 'PDELDRY' in ds:
+                delP=np.array(ds['PDELDRY'].isel(time=0))
+            else:
+                delP=0 
             data=data*delP
         else:
             data=data
