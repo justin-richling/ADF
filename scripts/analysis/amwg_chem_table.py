@@ -153,30 +153,8 @@ def amwg_chem_table(adf):
 
 
     # Chemistry/Aerosol Tables
-    # -------------------------
-    #Dictionary for Molecular weights. Keys must be consistent with variable name
-    MW={'O3':48,
-        'CH4':16,
-        'CO':28,
-        'ISOP':68,
-        'C10H16':136,
-        'SOA':144.132,
-        'SALT':12.011,
-        'SULF':115.11,
-        'POM':12.011,
-        'BC':12.011 ,
-        'DUST':12.011,
-        'CH3CCL3':133.4042,
-        'C10H16':136.2340,
-        'CH3OH':32.0419,
-        'CH3COCH3':58.0791,
-        'AIR':28.97}
-
-    # Avogadro's Number
-    avo=6.022e23
-     # gravity - replace by numpy or scipy for best guess of gravity
-    gr=9.80616
-
+    #-------------------------
+   
     # THIS NEEDS TO BE CHANGED
     #--------------------------------------------------------------------------------------------
     data_root_path = '/glade/scratch/richling/archive/chem_diags/'
@@ -186,7 +164,7 @@ def amwg_chem_table(adf):
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
 
-    # TESTING PURPOSES
+    # TESTING PURPOSES - will remove when comparing two actual cases
     # Change name of second case since it's a repeat of the first case
     #--------------------------------------------------------------------------------------------
     case_names[1] = case_names[1].replace(".001","._false_case.001")
@@ -273,9 +251,9 @@ def amwg_chem_table(adf):
     '''
     #Get dict for critical values and dict for case/variables mean ANN values
     #Dic_crit,var_dict = make_var_dict(CHEMS)
-    dic_SE = fill_dic_SE(CHEMS,ListVars,ext1_SE)
+    dic_SE = create_dic_SE(CHEMS, ListVars, ext1_SE)
     
-    #dic_SE = fill_dic_SE(CHEMS)
+    #dic_SE = create_dic_SE(CHEMS)
         
     # extract all the data
     var_dict={}
@@ -388,7 +366,7 @@ def amwg_chem_table(adf):
     cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
     #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
     
-    for current_var in CHEMS:
+    """for current_var in CHEMS:
 
         #Run O3 calcs
         #------------
@@ -485,9 +463,8 @@ def amwg_chem_table(adf):
     #table_df = table_df.replace('CH3OH','Methanol', regex=True)
     #table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
 
-    # There's probably a much better way to do this 
+    # There's probably a better way to do this 
     drop_vals = ["CH3CCL3_LNO","CO_LNO","O3_LNO"]
-
     for val in drop_vals:
         table_df = table_df[table_df["variable"].str.contains(val) == False]
         table_df.reset_index(drop=True, inplace = True)
@@ -508,7 +485,7 @@ def amwg_chem_table(adf):
     #Notify user that script has ended:
     print("  ...AMWG chemistry variable table has been generated successfully.")
     #End chemistry tables
-    #--------------------
+    #--------------------"""
 
 
 
@@ -525,7 +502,7 @@ def amwg_chem_table(adf):
     print("output_csv_file: ",output_csv_file,"\n")
 
     #Dic_crit,var_dict = make_var_dict(AEROSOLS)
-    dic_SE = fill_dic_SE(AEROSOLS,ListVars,ext1_SE)
+    dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
 
     # extract all the data
     var_dict={}
@@ -601,7 +578,7 @@ def amwg_chem_table(adf):
             row_values = []
 
             for i,scn in enumerate(scenarios):
-                my_val = calc_chem_data(scn,current_var,var_dict,trop,
+                my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
             
                 if ext == "_BURDEN":
@@ -643,7 +620,7 @@ def amwg_chem_table(adf):
                 row_values = []
 
                 for i,scn in enumerate(scenarios):
-                    my_val = calc_chem_data(scn,current_var,var_dict,trop,
+                    my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
                     row_values.append(np.round(my_val,3))
                 row_values = [current_var+new_ext]+row_values
@@ -864,6 +841,14 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         var: string showing the variable to be extracted.
  
     """
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+    # This currently is gathering and storing data with numpy arrays
+    # Probably makes sense to transistion this to xarray data arrays for seasonal weighting, right?
+    
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
     # gas constanct
     Rgas=287.04 #[J/K/Kg]=8.314/0.028965
         
@@ -904,7 +889,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
 
 #####
 
-def fill_dic_SE(variables, ListVars, ext1_SE):
+def create_dic_SE(variables, ListVars, ext1_SE):
     #Dictionary for Molecular weights. Keys must be consistent with variable name
     MW={'O3':48,
         'CH4':16,
