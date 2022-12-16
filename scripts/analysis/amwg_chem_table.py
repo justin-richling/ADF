@@ -147,7 +147,26 @@ def amwg_chem_table(adf):
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
+    
     h_case = "h0"
+
+    #Convert output location string to a Path object:
+    output_location = Path(output_locs[0])
+
+    #Generate input file path:
+    #input_location = Path(input_ts_locs2[0])
+    input_location = Path(input_ts_locs[0])
+
+    #Check that time series input directory actually exists:
+    if not input_location.is_dir():
+        errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
+        raise AdfError(errmsg)
+    #Write to debug log if enabled:
+    adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
+    #Check if analysis directory exists, and if not, then create it:
+    if not output_location.is_dir():
+        print(f"\t    {output_locs[0]} not found, making new directory")
+        output_location.mkdir(parents=True)
     #End gathering case, path, and data info
     #-----------------------------------------
 
@@ -245,6 +264,15 @@ def amwg_chem_table(adf):
     #print(ListVars)
 
 
+    
+    #cols = ['variable',"Test","Baseline"]
+    
+    #Use this for multi-case --> down the road a bit, yeah?
+    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
+    #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
+
+
+    """
     # Chemistry tables
     #-----------------
     #Notify user that script has started:
@@ -334,25 +362,6 @@ def amwg_chem_table(adf):
     not_O3_ext = {k: v for k, v in thing_ext_full.items() if k in ['_BURDEN', '_CHML', '_SF','_LIFETIME','_LNO']}
     O3_ext = thing_ext_full.copy()
 
-    
-    #Convert output location string to a Path object:
-    output_location = Path(output_locs[0])
-
-    #Generate input file path:
-    #input_location = Path(input_ts_locs2[0])
-    input_location = Path(input_ts_locs[0])
-
-    #Check that time series input directory actually exists:
-    if not input_location.is_dir():
-        errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
-        raise AdfError(errmsg)
-    #Write to debug log if enabled:
-    adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
-    #Check if analysis directory exists, and if not, then create it:
-    if not output_location.is_dir():
-        print(f"\t    {output_locs[0]} not found, making new directory")
-        output_location.mkdir(parents=True)
-
     #Create output file name:
     output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
     print("output_csv_file: ",output_csv_file,"\n")
@@ -370,7 +379,7 @@ def amwg_chem_table(adf):
     cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
     #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
     
-    """for current_var in CHEMS:
+    for current_var in CHEMS:
 
         #Run O3 calcs
         #------------
@@ -492,7 +501,7 @@ def amwg_chem_table(adf):
     #--------------------"""
 
 
-
+    print("For real, though, here comes the fun cooker.......................\n")
     # Aerosol tables
     #-----------------
     #Notify user that script has started:
