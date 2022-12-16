@@ -405,7 +405,7 @@ def amwg_chem_table(adf):
                 #val2 =  thing2_list[key]
                 my_vals = {}
                 for i,scn in enumerate(scenarios):
-                    my_vals[scn] = calc_chem_data(scn,current_var,
+                    my_val = calc_chem_data(scn,current_var,
                                                 var_dict,trop,area,durations[i],inside)[key]
                     #my_vals[scn] = my_dict[scn][key]
                     print(scn)
@@ -416,14 +416,14 @@ def amwg_chem_table(adf):
                         new_ext = new_ext+" (TgN/yr)"
                     elif new_ext == "_LIFETIME":
                         new_ext = new_ext+" (days)"
-                        my_vals[scn] = my_vals[scn]*365
+                        my_val = my_val*365
                         #val2 = val2*365
                     else:
                         new_ext = new_ext+" (Tg/yr)"
 
                     #row_values = [current_var+new_ext,np.round(val1,3),np.round(val2*1.052,3)]
                     #row_values = [current_var+new_ext,np.round(val1,3)]
-                    row_values.append(np.round(my_vals[scn],3))
+                    row_values.append(np.round(my_val,3))
                     print(row_values)
 
                 #print(row_values,cols)
