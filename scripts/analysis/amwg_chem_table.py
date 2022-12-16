@@ -542,8 +542,8 @@ def amwg_chem_table(adf):
 
         # Only for testing purposes
         # -------------------------
-        if i !=0:
-            scn = scn.replace(".cam.h0","_FAKE_NAME.cam.h0")
+        #if i !=0:
+        #    scn = scn.replace(".cam.h0","_FAKE_NAME.cam.h0")
         # Remove when in ADF testing
         # -------------------------
 
