@@ -605,26 +605,34 @@ def amwg_chem_table(adf):
                     else:
                         new_ext = ext+" (TgC)"
                 elif ext == "_LIFETIME":
-                    print(current_var, "_LIFETIME", my_val,"\n")
-                    if 0 < my_val < 1:
-                        print("THIS SHOULD BE CHANGING THE VALUE!!!!!!!!: ",current_var, "_LIFETIME", my_val,"\n")
-                        my_val = my_val*365
-                        new_ext = ext+" (days)"
-                        print("DID IT CHANGE????",my_val)
-                        
-                    elif my_val > 1:
-                        print("SHOULD BE A YEARLY VALUE SINCE IT IS GREATER THAN 1, VERN: ",current_var,my_val)
-                        new_ext = ext+" (yr)"
-                    elif my_val == 0:
-                        print("SHOULD BE A YEARLY VALUE SINCE IT IS ZERO, VERN: ",current_var,my_val)
-                        new_ext = ext+" (yr)"
-                    print("AFTER: ",current_var, "_LIFETIME", my_val,"\n")
+                    if i == 0:
+                        print(current_var, "_LIFETIME", my_val,"\n")
+                        if 0 < my_val < 1:
+                            print("THIS SHOULD BE CHANGING THE VALUE!!!!!!!!: ",current_var, "_LIFETIME", my_val,"\n")
+                            my_val = my_val*365
+                            new_ext = ext+" (days)"
+                            print("DID IT CHANGE????",my_val)
+                            
+                        elif my_val > 1:
+                            print("SHOULD BE A YEARLY VALUE SINCE IT IS GREATER THAN 1, VERN: ",current_var,my_val)
+                            new_ext = ext+" (yr)"
+                        elif my_val == 0:
+                            print("SHOULD BE A YEARLY VALUE SINCE IT IS ZERO, VERN: ",current_var,my_val)
+                            new_ext = ext+" (yr)"
+                        print("AFTER: ",current_var, "_LIFETIME", my_val,"\n")
+                    if i > 0:
+                        #print(current_var, "_LIFETIME", my_val,"\n")
+                        if 0 < my_val < 1:
+                            print("THIS SHOULD BE CHANGING THE VALUE!!!!!!!!: ",current_var, "_LIFETIME", my_val,"\n")
+                            my_val = my_val*365
+                            #new_ext = ext+" (days)"
+                            #print("DID IT CHANGE????",my_val)
                 else:
                     if current_var == "SULF":
                         new_ext = ext+" (TgS/yr)"
                     else:
                         new_ext = ext+" (TgC/yr)"
-                print(f"Let's compare units now Ver for {scn}:",new_ext,"\n")
+                print(f"Let's compare units now Vern for {scn}:",new_ext,"\n")
                 row_values.append(np.round(my_val,3))
             row_values = [current_var+new_ext]+row_values
             print(row_values)
