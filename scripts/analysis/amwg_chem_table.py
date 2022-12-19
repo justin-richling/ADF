@@ -606,7 +606,7 @@ def amwg_chem_table(adf):
                         new_ext = ext+" (TgC)"
                 elif ext == "_LIFETIME":
                     print(current_var, "_LIFETIME", my_val,"\n")
-                    if my_val < 1:
+                    if 0 < my_val < 1:
                         print("THIS SHOULD BE CHANGING THE VALUE!!!!!!!!: ",current_var, "_LIFETIME", my_val,"\n")
                         my_val = my_val*365
                         new_ext = ext+" (days)"
