@@ -605,11 +605,10 @@ def amwg_chem_table(adf):
                     else:
                         new_ext = ext+" (TgC)"
                 elif ext == "_LIFETIME":
+                    print(current_var, "_LIFETIME", my_val,"\n")
                     if my_val < 1:
                         my_val = my_val*365
                         new_ext = ext+" (days)"
-                    #if val2 < 1:
-                    #    val2 = val2*365
                     else:
                         new_ext = ext+" (yr)"
                 else:
