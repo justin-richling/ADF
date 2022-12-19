@@ -605,11 +605,15 @@ def amwg_chem_table(adf):
                     else:
                         new_ext = ext+" (TgC)"
                 elif ext == "_LIFETIME":
-                    print("BEFORE: ",current_var, "_LIFETIME", my_val,"\n")
+                    print(current_var, "_LIFETIME", my_val,"\n")
                     if my_val < 1:
+                        print("THIS SHOULD BE CHANGING THE VALUE!!!!!!!!: ",current_var, "_LIFETIME", my_val,"\n")
                         my_val = my_val*365
                         new_ext = ext+" (days)"
+                        print("DID IT CHANGE????",my_val)
+                        
                     else:
+                        print("SHOULD BE A YEARLY VALUE, VERN: ",current_var,my_val)
                         new_ext = ext+" (yr)"
                     print("AFTER: ",current_var, "_LIFETIME", my_val,"\n")
                 else:
