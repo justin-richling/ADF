@@ -657,7 +657,8 @@ def amwg_chem_table(adf):
                     my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
                     row_values.append(np.round(my_val,3))
-                row_values = [current_var+ext]+row_values
+                new_ext = ext+" (TgS/yr)"
+                row_values = [current_var+new_ext]+row_values
             
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
