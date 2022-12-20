@@ -618,7 +618,7 @@ def amwg_chem_table(adf):
                             new_ext = ext+" (yr)"
                         if my_val == 0:
                             print("SHOULD BE A YEARLY VALUE SINCE IT IS ZERO, VERN: ",current_var,my_val)
-                            new_ext = ext+" (yr)"
+                            new_ext = ext+" (days)"
                         print("AFTER: ",current_var, "_LIFETIME", my_val,"\n")
                     if i > 0:
                         #print(current_var, "_LIFETIME", my_val,"\n")
