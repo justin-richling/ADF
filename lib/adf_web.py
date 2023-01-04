@@ -489,7 +489,7 @@ class AdfWeb(AdfObs):
                 #print("web_data.html_file.name:", web_data.html_file.name,"\n")
                 
                 for i in web_data.html_file:
-                    print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i)
+                    print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i,"\n")
                 print("UGGGGG:",web_data.name,"\n")
                 print("oookkkk", web_data.html_file,"\n")
                 table_html_info[web_data.name] = web_data.html_file[0].name
