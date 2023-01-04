@@ -498,7 +498,7 @@ class AdfWeb(AdfObs):
                 print("oookkkk", web_data.html_file,"\n")
                 table_html_info[web_data.name] = web_data.html_file[0].name
                 print("web_data.html_file[0].name: ",type(web_data.html_file[0].name),"\n")
-                table_html_info2[web_data.name] = Path(str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website"))#web_data.html_file[0].name
+                table_html_info2[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")#web_data.html_file[0].name
 
             #Now check all plot types
             if not web_data.data_frame:
@@ -671,7 +671,7 @@ class AdfWeb(AdfObs):
                                         case_yrs=case_yrs,
                                         base_name=data_name,
                                         baseline_yrs=baseline_yrs,
-                                        amwg_tables=[table_html_info2[web_data.case]],
+                                        amwg_tables=table_html_info2,
                                         plot_types=plot_type_html,
                                         table_name=web_data.name,
                                         table_html=table_html,
@@ -735,7 +735,7 @@ class AdfWeb(AdfObs):
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
                                                                 baseline_yrs=baseline_yrs,
-                                                                amwg_tables=[table_html_info2[web_data.case]],
+                                                                amwg_tables=table_html_info2,
                                                                 plot_types=plot_type_html,
                                                                 multi=False,
                                                                 case_sites=case_sites,
