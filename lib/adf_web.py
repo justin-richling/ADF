@@ -871,6 +871,7 @@ class AdfWeb(AdfObs):
             #End if (mean_ptype exists)
 
             if web_data.data_frame:
+                print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
                 table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                     float_format='{:6g}'.format)
