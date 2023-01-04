@@ -642,8 +642,8 @@ class AdfWeb(AdfObs):
                     with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
                 else:
-                    print(table_pages_dir2 / web_data.html_file)
-                    with open(table_pages_dir2 / web_data.html_file, 'w', encoding='utf-8') as ofil:
+                    print(table_pages_dir2 / web_data.name+".html")
+                    with open(table_pages_dir2 / web_data.name+".html", 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
 
                 #Check if the mean plot type page exists for this case (or for multi-case):
