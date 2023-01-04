@@ -616,6 +616,8 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                 #End if
 
+                print("web_data.case: ",web_data.case,"\n")
+
                 #Write table dataframe HTML as a string:
                 #Note:  One could generate an image file here instead of raw HTML code,
                 #which might be beneficial for colored tables and other more advance
