@@ -740,7 +740,7 @@ class AdfWeb(AdfObs):
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
                                                                 baseline_yrs=baseline_yrs,
-                                                                amwg_tables=table_html_info2[0][web_data.case],
+                                                                amwg_tables=dict_you_want,
                                                                 plot_types=plot_type_html,
                                                                 multi=False,
                                                                 case_sites=case_sites,
