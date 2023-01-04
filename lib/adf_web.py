@@ -920,7 +920,7 @@ class AdfWeb(AdfObs):
                                                     float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
-                print("once and for all:",table_html_info2,"\n")
+                print("once and for all:",table_html_info2[web_data.case],"\n")
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
                                     case1=web_data.case,
@@ -928,7 +928,7 @@ class AdfWeb(AdfObs):
                                     case_yrs=case_yrs,
                                     base_name=data_name,
                                     baseline_yrs=baseline_yrs,
-                                    amwg_tables=table_html_info2[web_data.case],
+                                    amwg_tables=table_html_info2,
                                     plot_types=plot_types,
                                     table_name=web_data.name,
                                     table_html=table_html,
