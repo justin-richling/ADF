@@ -580,7 +580,8 @@ class AdfWeb(AdfObs):
             case_sites = []
 
         #Loop over all web data objects again:
-        for web_data in self.__website_data:
+        for idx,web_data in enumerate(self.__website_data):
+            print("idx",idx,"\n")
 
             if web_data.data_frame:
 
@@ -589,9 +590,9 @@ class AdfWeb(AdfObs):
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
                     #print("Multi: table_pages_dir",table_pages_dir,"\n")
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    print("Multi: table_pages_dir",table_pages_dir2,"\n")
+                    print("Multi: table_pages_dir2",table_pages_dir2,"\n")
                     plot_types = multi_plot_type_html
-                    #print("Multi: plot_types",plot_types,"\n")
+                    print("Multi: plot_types",plot_types,"\n")
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
                     print("Single: table_pages_dir",table_pages_dir,"\n")
@@ -634,9 +635,16 @@ class AdfWeb(AdfObs):
 
                 #Write mean diagnostic tables HTML file:
                 print("web_data.html_file: ",web_data.html_file,"\n")
-                with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                    ofil.write(table_rndr)
-                #End with
+                #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                #   ofil.write(table_rndr)
+                ##End with
+                if "all_case_comparison.html" in str(web_data.html_file[0]):
+                    with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                        ofil.write(table_rndr)
+                else:
+                    print(table_pages_dir2 / web_data.name)
+                    with open(table_pages_dir2 / web_data.name, 'w', encoding='utf-8') as ofil:
+                        ofil.write(table_rndr)
 
                 #Check if the mean plot type page exists for this case (or for multi-case):
                 mean_table_file = table_pages_dir / "mean_tables.html"
