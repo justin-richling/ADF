@@ -675,7 +675,7 @@ class AdfWeb(AdfObs):
                                         table_name=web_data.name,
                                         table_html=table_html,
                                         multi=False,
-                                        case_sites=case_sites,
+                                        case_sites=case_sites[web_data.case],
                                         )
 
                     #Write mean diagnostic tables HTML file:
