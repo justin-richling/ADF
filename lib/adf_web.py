@@ -498,7 +498,7 @@ class AdfWeb(AdfObs):
                 print("oookkkk", web_data.html_file,"\n")
                 table_html_info[web_data.name] = web_data.html_file[0].name
                 print("web_data.html_file[0].name: ",type(web_data.html_file[0].name),"\n")
-                table_html_info2[web_data.name] = []#web_data.html_file[0].name
+                table_html_info2[web_data.name] = [str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")]#web_data.html_file[0].name
 
             #Now check all plot types
             if not web_data.data_frame:
