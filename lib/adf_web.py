@@ -721,6 +721,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 if multi_layout==True:
+                    print("Current case:",web_data.case,"\n")
                     #Check if the mean plot type page exists for this case (or for multi-case):
                     mean_table_file = table_pages_dir2 / "mean_tables.html"
                     print(f"Line 679 - mean_table_file: {mean_table_file}\n")
