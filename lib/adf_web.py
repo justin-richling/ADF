@@ -478,7 +478,7 @@ class AdfWeb(AdfObs):
                 #Create a directory that will hold table html files, if a table is present:
                 if self.num_cases > 1:
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
-                    #self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+                    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 else:
                     self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 # -> print(self.__case_web_paths[web_data.case]['table_pages_dir'],"\n")
@@ -572,7 +572,9 @@ class AdfWeb(AdfObs):
                 if case_name in self.__case_web_paths:
                     #Add path to case_sites dictionary:
                     #case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
-                    case_sites[case_name] = [os.path.join(os.curdir, f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", "index.html"),syear_cases[idx],eyear_cases[idx]]
+                    case_sites[case_name] = [os.path.join(os.curdir, 
+                                             f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", 
+                                             "index.html"),syear_cases[idx],eyear_cases[idx]]
         else:
             #make empty list for non multi-case web generation
             case_sites = []
@@ -810,7 +812,7 @@ class AdfWeb(AdfObs):
             print("also- web_data.name",web_data.name,"\n")
 
 
-            """mean_ptype_file = main_site_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
+            mean_ptype_file = main_site_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
             #print("For case index, plot_types: ",plot_types,"\n")
             if not mean_ptype_file.exists():
 
@@ -831,7 +833,7 @@ class AdfWeb(AdfObs):
                 with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
                     ofil.write(mean_rndr)
                 #End with
-            #End if (mean_ptype exists)"""
+            #End if (mean_ptype exists)
             
             
             
