@@ -346,7 +346,7 @@ class AdfWeb(AdfObs):
             main_site_path = "" #Set main_site_path to blank value
             multi_layout = False
         #End if
-
+        print(f"ABOVE: {multi_layout} \n")
         #Extract needed variables from yaml file:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
@@ -767,7 +767,7 @@ class AdfWeb(AdfObs):
                 else:
                     plot_types = plot_type_html
                 #End if
-
+                print(f"BELOW - line 770 dummy: {multi_layout} \n")
                 #Construct index.html
                 index_title = "AMP Diagnostics Prototype"
                 index_tmpl = jinenv.get_template('template_index.html')
