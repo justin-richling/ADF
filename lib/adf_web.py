@@ -663,6 +663,7 @@ class AdfWeb(AdfObs):
                                                         float_format='{:6g}'.format)
 
                     #Construct amwg_table.html
+                    print("WOOO:",[table_html_info2[web_data.case]],"\n")
                     table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
                                         case1=[web_data.case],
