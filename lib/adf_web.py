@@ -721,7 +721,7 @@ class AdfWeb(AdfObs):
 
                 if multi_layout==True:
                     #Check if the mean plot type page exists for this case (or for multi-case):
-                    mean_table_file = table_pages_dir2 / "mean_tables.html"
+                    mean_table_file = table_pages_dir2[web_data.case] / "mean_tables.html"
                     print(f"Line 679 - mean_table_file: {mean_table_file}\n")
                     if not mean_table_file.exists():
 
