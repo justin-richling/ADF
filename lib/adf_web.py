@@ -274,7 +274,7 @@ class AdfWeb(AdfObs):
             if self.num_cases > 1:
                 #html_file = self.__case_web_paths['multi-case']["table_pages_dir"] / html_name
                 html_file.append(self.__case_web_paths['multi-case']["table_pages_dir"] / html_name)
-                #html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
+                html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
             else:
                 html_file = self.__case_web_paths[case_name]["table_pages_dir"] / html_name
             
@@ -457,6 +457,7 @@ class AdfWeb(AdfObs):
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
+        table_html_info2 = OrderedDict()
 
         #Loop over all web data objects:
         for web_data in self.__website_data:
@@ -496,6 +497,8 @@ class AdfWeb(AdfObs):
                 print("UGGGGG:",web_data.name,"\n")
                 print("oookkkk", web_data.html_file,"\n")
                 table_html_info[web_data.name] = web_data.html_file[0].name
+                print("web_data.html_file[0].name: ",type(web_data.html_file[0].name),"\n")
+                table_html_info2[web_data.name] = []#web_data.html_file[0].name
 
             #Now check all plot types
             if not web_data.data_frame:
