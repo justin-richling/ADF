@@ -665,7 +665,7 @@ class AdfWeb(AdfObs):
                     #Construct amwg_table.html
                     table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
-                                        case1=case1,
+                                        case1=[web_data.case],
                                         case2=data_name,
                                         case_yrs=case_yrs,
                                         base_name=data_name,
@@ -728,7 +728,7 @@ class AdfWeb(AdfObs):
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
-                                                                case1=case1,
+                                                                case1=[web_data.case],
                                                                 case2=data_name,
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
