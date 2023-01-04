@@ -792,19 +792,20 @@ class AdfWeb(AdfObs):
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
-            if not index_html_file.exists():
+            #if not index_html_file.exists():
 
-                #Re-et plot types list:
-                if web_data.case == 'multi-case':
-                    plot_types = multi_plot_type_html
-                else:
-                    plot_types = plot_type_html
-                #End if
-                print(f"BELOW - line 770 dummy: {multi_layout} \n")
-                #Construct index.html
-                index_title = "AMP Diagnostics Prototype"
-                index_tmpl = jinenv.get_template('template_index.html')
-                index_rndr = index_tmpl.render(title=index_title,
+            #Re-et plot types list:
+            if web_data.case == 'multi-case':
+                plot_types = multi_plot_type_html
+            else:
+                plot_types = plot_type_html
+            plot_types = plot_type_html
+            #End if
+            print(f"BELOW - line 770 dummy: {multi_layout} \n")
+            #Construct index.html
+            index_title = "AMP Diagnostics Prototype"
+            index_tmpl = jinenv.get_template('template_index.html')
+            index_rndr = index_tmpl.render(title=index_title,
                                                case1=web_data.case,
                                                case2=data_name,
                                                case_yrs=case_yrs,
@@ -812,11 +813,11 @@ class AdfWeb(AdfObs):
                                                plot_types=plot_types,
                                                multi=multi_layout,)
 
-                #Write Mean diagnostics index HTML file:
-                with open(index_html_file, 'w', encoding='utf-8') as ofil:
-                    ofil.write(index_rndr)
-                #End with
-            #End if (mean_index exists)
+            #Write Mean diagnostics index HTML file:
+            with open(index_html_file, 'w', encoding='utf-8') as ofil:
+                ofil.write(index_rndr)
+            #End with
+            ##End if (mean_index exists)
         #End for (web data loop)
 
         #If this is a multi-case instance, then copy website to "main" directory:
