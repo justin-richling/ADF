@@ -689,7 +689,7 @@ class AdfWeb(AdfObs):
                                                                 baseline_yrs=baseline_yrs,
                                                                 amwg_tables=table_html_info,
                                                                 plot_types=plot_types,
-                                                                multi=multi_layout,
+                                                                multi=False,
                                                                 case_sites=case_sites,
                                                                 )
 
