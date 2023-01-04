@@ -673,6 +673,31 @@ class AdfWeb(AdfObs):
                     #End with
                 #End if
 
+                if multi_layout==True:
+                    #Check if the mean plot type page exists for this case (or for multi-case):
+                    mean_table_file = table_pages_dir2 / "mean_tables.html"
+                    if not mean_table_file.exists():
+
+                        #Construct mean_table.html
+                        mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
+                        mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                                                                case1=case1,
+                                                                case2=data_name,
+                                                                case_yrs=case_yrs,
+                                                                base_name=data_name,
+                                                                baseline_yrs=baseline_yrs,
+                                                                amwg_tables=table_html_info,
+                                                                plot_types=plot_types,
+                                                                multi=multi_layout,
+                                                                case_sites=case_sites,
+                                                                )
+
+                        #Write mean diagnostic tables HTML file:
+                        with open(mean_table_file, 'w', encoding='utf-8') as ofil:
+                            ofil.write(mean_table_rndr)
+                        #End with
+                    #End if
+
             else: #Plot image
 
                 #Create output HTML file path:
