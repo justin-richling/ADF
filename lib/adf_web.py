@@ -922,12 +922,12 @@ class AdfWeb(AdfObs):
                 #Construct amwg_table.html
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
-                                    case1=case1,
+                                    case1=web_data.case,
                                     case2=data_name,
                                     case_yrs=case_yrs,
                                     base_name=data_name,
                                     baseline_yrs=baseline_yrs,
-                                    amwg_tables=table_html_info,
+                                    amwg_tables=table_html_info2,
                                     plot_types=plot_types,
                                     table_name=web_data.name,
                                     table_html=table_html,
