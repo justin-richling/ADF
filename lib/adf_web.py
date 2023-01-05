@@ -658,18 +658,18 @@ class AdfWeb(AdfObs):
 
                 if multi_layout == True:
                     print("GETTING TIRED:",web_data.case,data_name,"\n")
-                    if web_data.case != data_name:
-                        print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
-                        table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                    
+                    #print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
+                    table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
+                    table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
-                        #Construct amwg_table.html
-                        print("WOOO:",[table_html_info2[data_name]],"\n")
-                        your_keys = [web_data.case,data_name]
-                        dict_you_want = {key: table_html_info2[key] for key in your_keys}
-                        table_tmpl = jinenv.get_template('template_table.html')
-                        table_rndr = table_tmpl.render(title=main_title,
+                    #Construct amwg_table.html
+                    print("WOOO:",[table_html_info2[data_name]],"\n")
+                    your_keys = [web_data.case,data_name]
+                    dict_you_want = {key: table_html_info2[key] for key in your_keys}
+                    table_tmpl = jinenv.get_template('template_table.html')
+                    table_rndr = table_tmpl.render(title=main_title,
                                             case1=[web_data.case],
                                             case2=data_name,
                                             case_yrs=case_yrs,
@@ -683,18 +683,19 @@ class AdfWeb(AdfObs):
                                             case_sites=case_sites,
                                             )
 
-                        #Write mean diagnostic tables HTML file:
-                        print("web_data.html_file: ",web_data.html_file,"\n")
-                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                        #   ofil.write(table_rndr)
-                        ##End with
-                        #if "all_case_comparison.html" in str(web_data.html_file[0]):
-                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                        #    ofil.write(table_rndr)
-                        #if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                        #    print(table_pages_dir2 / f"{web_data.name}.html")
-                        with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
-                            ofil.write(table_rndr)
+                    #Write mean diagnostic tables HTML file:
+                    print("web_data.html_file: ",web_data.html_file,"\n")
+                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                    #   ofil.write(table_rndr)
+                    ##End with
+                    #if "all_case_comparison.html" in str(web_data.html_file[0]):
+                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                    #    ofil.write(table_rndr)
+                    #if "all_case_comparison.html" not in str(web_data.html_file[0]):
+                    #    print(table_pages_dir2 / f"{web_data.name}.html")
+                    #if web_data.case != data_name:
+                    with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                        ofil.write(table_rndr)
 
 
 
