@@ -477,7 +477,7 @@ class AdfWeb(AdfObs):
             #Check first for AMWG tables data frame
             if web_data.data_frame:
 
-                print("web_data.case: ",web_data.case,"\n")
+                #print("web_data.case: ",web_data.case,"\n")
 
                 #Create a directory that will hold table html files, if a table is present:
                 if self.num_cases > 1:
@@ -492,12 +492,12 @@ class AdfWeb(AdfObs):
                 #Note:  Need to use data name instead of case name for tables.
                 #print("web_data.html_file.name:", web_data.html_file.name,"\n")
                 
-                for i in web_data.html_file:
-                    print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i,"\n")
-                print("UGGGGG:",web_data.name,"\n")
-                print("oookkkk", web_data.html_file,"\n")
+                #for i in web_data.html_file:
+                #    print("YYYYYAAAAAAAAHHHHHHHOOOOOOOO - should be a list????",i,"\n")
+                #print("UGGGGG:",web_data.name,"\n")
+                #print("oookkkk", web_data.html_file,"\n")
                 table_html_info[web_data.name] = web_data.html_file[0].name
-                print("web_data.html_file[0].name: ",type(web_data.html_file[0].name),"\n")
+                #print("web_data.html_file[0].name: ",type(web_data.html_file[0].name),"\n")
                 table_html_info2[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")#web_data.html_file[0].name
 
             #Now check all plot types
@@ -595,14 +595,14 @@ class AdfWeb(AdfObs):
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
                     #print("Multi: table_pages_dir",table_pages_dir,"\n")
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    print("Multi: table_pages_dir2",table_pages_dir2,"\n")
+                    #print("Multi: table_pages_dir2",table_pages_dir2,"\n")
                     plot_types = multi_plot_type_html
-                    print("Multi: plot_types",plot_types,"\n")
+                    #print("Multi: plot_types",plot_types,"\n")
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    print("Single: table_pages_dir",table_pages_dir,"\n")
+                    #print("Single: table_pages_dir",table_pages_dir,"\n")
                     plot_types = plot_type_html
-                    print("Single: plot_types",plot_types,"\n")
+                    #print("Single: plot_types",plot_types,"\n")
                 #table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
                 plot_types = plot_type_html
                 #End if
@@ -615,7 +615,7 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                 #End if
 
-                print("web_data.case: ",web_data.case,"\n")
+                #print("web_data.case: ",web_data.case,"\n")
 
                 #Write table dataframe HTML as a string:
                 #Note:  One could generate an image file here instead of raw HTML code,
@@ -641,7 +641,7 @@ class AdfWeb(AdfObs):
                                   )
 
                 #Write mean diagnostic tables HTML file:
-                print("web_data.html_file: ",web_data.html_file,"\n")
+                #print("web_data.html_file: ",web_data.html_file,"\n")
                 #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
                 #   ofil.write(table_rndr)
                 ##End with
@@ -649,14 +649,14 @@ class AdfWeb(AdfObs):
                 with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
                 if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                    print(table_pages_dir2 / f"{web_data.name}.html")
+                    #print(table_pages_dir2 / f"{web_data.name}.html")
                     with open(table_pages_dir2 / f"{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
 
 
 
                 if multi_layout == True:
-                    print("GETTING TIRED:",web_data.case,data_name,"\n")
+                    #print("GETTING TIRED:",web_data.case,data_name,"\n")
                     
                     #print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
@@ -664,7 +664,7 @@ class AdfWeb(AdfObs):
                                                             float_format='{:6g}'.format)
 
                     #Construct amwg_table.html
-                    print("WOOO:",[table_html_info2[data_name]],"\n")
+                    #print("WOOO:",[table_html_info2[data_name]],"\n")
                     your_keys = [web_data.case,data_name]
                     dict_you_want = {key: table_html_info2[key] for key in your_keys}
                     table_tmpl = jinenv.get_template('template_table.html')
@@ -683,7 +683,7 @@ class AdfWeb(AdfObs):
                                             )
 
                     #Write mean diagnostic tables HTML file:
-                    print("web_data.html_file: ",web_data.html_file,"\n")
+                    #print("web_data.html_file: ",web_data.html_file,"\n")
                     #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
                     #   ofil.write(table_rndr)
                     ##End with
@@ -725,11 +725,11 @@ class AdfWeb(AdfObs):
                 #End if
 
                 if multi_layout==True:
-                    print("Current case:",web_data.case,"\n")
+                    #print("Current case:",web_data.case,"\n")
                     #Check if the mean plot type page exists for this case (or for multi-case):
                     mean_table_file = table_pages_dir2 / "mean_tables.html"
-                    print(f"Line 679 - mean_table_file: {mean_table_file}\n")
-                    print("OK:",table_html_info2,"\n")
+                    #print(f"Line 679 - mean_table_file: {mean_table_file}\n")
+                    #print("OK:",table_html_info2,"\n")
                     if not mean_table_file.exists():
 
                         #Construct mean_table.html
@@ -850,7 +850,7 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 plot_types = plot_type_html
                 #End if
-                print(f"BELOW - line 770 dummy: {multi_layout} \n")
+                #print(f"BELOW - line 770 dummy: {multi_layout} \n")
                 #Construct index.html
                 index_title = "AMP Diagnostics Prototype"
                 index_tmpl = jinenv.get_template('template_index.html')
@@ -949,14 +949,14 @@ class AdfWeb(AdfObs):
             #End if (mean_ptype exists)"""
 
             if web_data.data_frame:
-                print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
+                #print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
                 table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                print(f"Line 917 - table_pages_dir2: {table_pages_dir2}\n")
+                #print(f"Line 917 - table_pages_dir2: {table_pages_dir2}\n")
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                     float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
-                print("once and for all:",table_html_info2[web_data.case],"\n")
+                #print("once and for all:",table_html_info2[web_data.case],"\n")
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
                                     case1=web_data.case,
@@ -973,7 +973,7 @@ class AdfWeb(AdfObs):
                                     )
 
                 #Write mean diagnostic tables HTML file:
-                print("web_data.html_file: ",web_data.html_file,"\n")
+                #print("web_data.html_file: ",web_data.html_file,"\n")
                 #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
                 #   ofil.write(table_rndr)
                 ##End with
@@ -981,7 +981,7 @@ class AdfWeb(AdfObs):
                 #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
                 #    ofil.write(table_rndr)
                 #if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                print(table_pages_dir2 / table_html_info2[web_data.case])
+                #print(table_pages_dir2 / table_html_info2[web_data.case])
                 with open(table_pages_dir2 / table_html_info2[web_data.case], 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
             
@@ -998,7 +998,7 @@ class AdfWeb(AdfObs):
                 #End if
             #End for (model case loop)
             wks = "SST_ANN_LatLon_multi_plot.png"
-            print(f"{main_site_path}")
+            #print(f"{main_site_path}")
             #Create multi-case site:
             multi_plots = {"Tables": "html_table/mean_tables.html",
                            "LatLon": f"./{wks}"}
