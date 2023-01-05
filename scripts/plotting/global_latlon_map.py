@@ -573,6 +573,7 @@ def global_latlon_map(adfobj):
         elif (redo_plot) and plot_name.is_file():
             plot_name.unlink()"""
         print("web_category for multi plot?:",web_category,"\n")
+        print("plot_name for multi plot?:",plot_name,"\n")
         adfobj.add_website_data(plot_name, var, case_name, category=web_category,
                                                             season=s, plot_type="multi_LatLon")
         print("  ...lat/lon multi plots have been generated successfully.")
