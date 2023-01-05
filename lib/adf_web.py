@@ -928,7 +928,7 @@ class AdfWeb(AdfObs):
 
 
 
-            print("for multi case maen diag html:",web_data.plot_type,"\n")
+            print("for multi case mean diag html:",web_data.plot_type,"\n")
             mean_ptype_file = main_site_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
             #print("For case index, plot_types: ",plot_types,"\n")
             if not mean_ptype_file.exists():
@@ -1013,8 +1013,8 @@ class AdfWeb(AdfObs):
             #print(f"{main_site_path}")
             #Create multi-case site:
             multi_plots = {"Tables": "html_table/mean_tables.html",
-                           "LatLon": f"./{wks}",
-                           "LatLon": f"html_img/mean_diag_{plot_type}.html"}
+                           #"LatLon": f"./{wks}",
+                           "LatLon": f"html_img/multi_case_mean_diag_{plot_type}.html"}
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
