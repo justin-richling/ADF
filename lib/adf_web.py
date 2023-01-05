@@ -587,7 +587,6 @@ class AdfWeb(AdfObs):
 
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
-            print("idx",idx,"\n")
 
             if web_data.data_frame:
 
