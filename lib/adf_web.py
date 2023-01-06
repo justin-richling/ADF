@@ -561,7 +561,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 
-                mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_TS_DJF_LatLon_Mean.html"
+                mean_html_info2["Surface variables"]["LatLon"]["SST"] = "plot_page_TS_DJF_LatLon_Mean.html"
 
                 #Determine season value:
                 if web_data.season:
