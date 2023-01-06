@@ -515,6 +515,7 @@ class AdfWeb(AdfObs):
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
+                print("ptype",ptype,"\n")
 
                 #Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
