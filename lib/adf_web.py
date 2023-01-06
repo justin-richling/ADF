@@ -559,7 +559,8 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype][category][name] = OrderedDict()
                 #End if
 
-
+                
+                mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_TS_DJF_LatLon_Mean.html"
 
                 #Determine season value:
                 if web_data.season:
@@ -972,7 +973,7 @@ class AdfWeb(AdfObs):
                 #Check if the mean plot type and var page exists for this case:
                 print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
                 print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
-                mean_ptype_plot_page = img_pages_dir / f"plot_page_{web_data.name}_{web_data.plot_type}.html"
+                mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
                 if not mean_ptype_plot_page.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
@@ -986,7 +987,7 @@ class AdfWeb(AdfObs):
                                                  case2=data_name,
                                                  case_yrs=case_yrs,
                                                  baseline_yrs=baseline_yrs,
-                                                 mydata=mean_html_info[web_data.plot_type],
+                                                 mydata=mean_html_info2[web_data.plot_type],
                                                  curr_type=web_data.plot_type,
                                                  plot_types=plot_types,
                                                  multi=multi_layout,)
