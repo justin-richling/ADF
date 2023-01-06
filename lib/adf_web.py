@@ -525,7 +525,7 @@ class AdfWeb(AdfObs):
                 print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
                 #for key,val in self.read_config_var('multi_case_plots'):
                 if "LatLon" not in mean_html_info2:
-                    mean_html_info2["LatLon"] = OrderedDict()
+                    mean_html_info2["Surface variables"] = OrderedDict()
                 #End if
 
                 mean_html_info2["Surface variables"]["LatLon"] = OrderedDict()
