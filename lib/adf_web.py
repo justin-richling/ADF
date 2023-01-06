@@ -948,7 +948,7 @@ class AdfWeb(AdfObs):
             if not web_data.data_frame:
 
                 #Create output HTML file path:
-                img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
+                #img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                 print(f"Getting close I think... web_data.asset_path: {web_data.asset_path} img_pages_dir: {img_pages_dir} web_data.asset_path.stem: {web_data.asset_path.stem}")
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
