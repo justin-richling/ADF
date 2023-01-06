@@ -454,6 +454,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
+        mean_html_info2 = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -518,6 +519,12 @@ class AdfWeb(AdfObs):
                 #Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
                     mean_html_info[ptype] = OrderedDict()
+
+                #Initialize Ordered Dictionary for multi case plot type:
+                print("Zippity doo dah: ",self.read_config_var('multi_case_plots'),"\n")
+                #for 
+                if ptype not in mean_html_info2:
+                    mean_html_info2[ptype] = OrderedDict()
                 #End if
 
                 #Check if category has been provided for this web data:
@@ -957,7 +964,7 @@ class AdfWeb(AdfObs):
 
 
                 #Check if the mean plot type and var page exists for this case:
-                print("for plot_page multi case try: web_data.name",web_data.name,"\neb_data.plot_type: ",web_data.plot_type,"\n")
+                print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
                 print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
                 mean_ptype_plot_page = img_pages_dir / f"plot_page_{web_data.name}_{web_data.plot_type}.html"
                 if not mean_ptype_plot_page.exists():
