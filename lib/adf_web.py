@@ -989,7 +989,7 @@ class AdfWeb(AdfObs):
                                                  case2=data_name,
                                                  case_yrs=case_yrs,
                                                  baseline_yrs=baseline_yrs,
-                                                 mydata=mean_html_info2[web_data.plot_type],
+                                                 mydata=mean_html_info2,
                                                  curr_type=web_data.plot_type,
                                                  plot_types=plot_types,
                                                  multi=multi_layout,)
