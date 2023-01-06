@@ -521,11 +521,11 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype] = OrderedDict()
 
                 #Initialize Ordered Dictionary for multi case plot type:
-                print("Zippity doo dah: ",self.read_config_var('multi_case_plots'),"\n")
-                for key,val in self.read_config_var('multi_case_plots'):
-                    if "LatLon" not in mean_html_info2:
-                        mean_html_info2["LatLon"] = OrderedDict()
-                    #End if
+                print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
+                #for key,val in self.read_config_var('multi_case_plots'):
+                if "LatLon" not in mean_html_info2:
+                    mean_html_info2["LatLon"] = OrderedDict()
+                #End if
 
                 mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
                 mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
