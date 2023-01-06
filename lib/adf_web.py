@@ -522,11 +522,13 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for multi case plot type:
                 print("Zippity doo dah: ",self.read_config_var('multi_case_plots'),"\n")
-                #for 
-                if ptype not in mean_html_info2:
-                    mean_html_info2[ptype] = OrderedDict()
-                #End if
+                for key,val in self.read_config_var('multi_case_plots'):
+                    if "LatLon" not in mean_html_info2:
+                        mean_html_info2["LatLon"] = OrderedDict()
+                    #End if
 
+                mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
+                mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 #Check if category has been provided for this web data:
                 if web_data.category:
                     #If so, then just use directly:
@@ -546,6 +548,7 @@ class AdfWeb(AdfObs):
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
                 #End if
+                
 
                 #Extract web data name (usually the variable name):
                 name = web_data.name
@@ -556,6 +559,8 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype][category][name] = OrderedDict()
                 #End if
 
+
+
                 #Determine season value:
                 if web_data.season:
                     season = web_data.season
@@ -564,6 +569,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 #Initialize Ordered Dictionary for season:
+                print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
 
             #End if (data-frame check)
