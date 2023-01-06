@@ -528,8 +528,8 @@ class AdfWeb(AdfObs):
                     mean_html_info2["LatLon"] = OrderedDict()
                 #End if
 
-                mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
-                mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
+                mean_html_info2["Surface variables"]["LatLon"] = OrderedDict()
+                mean_html_info2["Surface variables"]["LatLon"]["SST"] = OrderedDict()
                 #Check if category has been provided for this web data:
                 if web_data.category:
                     #If so, then just use directly:
