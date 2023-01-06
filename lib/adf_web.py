@@ -956,7 +956,30 @@ class AdfWeb(AdfObs):
 
 
 
+                #Check if the mean plot type and var page exists for this case:
+                mean_ptype_plot_page = img_pages_dir / f"plot_page_{web_data.name}_{web_data.plot_type}.html"
+                if not mean_ptype_plot_page.exists():
 
+                    #Construct individual plot type mean_diag html files, if they don't
+                    #already exist:
+                    plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
+                    plot_page_rndr = plot_page_tmpl.render(title=main_title,
+                                                 var_title=web_data.name,
+                                                 season_title=web_data.season,
+                                                 plottype_title=web_data.plot_type,
+                                                 case1=case1,
+                                                 case2=data_name,
+                                                 case_yrs=case_yrs,
+                                                 baseline_yrs=baseline_yrs,
+                                                 mydata=mean_html_info[web_data.plot_type],
+                                                 curr_type=web_data.plot_type,
+                                                 plot_types=plot_types,
+                                                 multi=multi_layout,)
+
+                    #Write mean diagnostic plots HTML file:
+                    with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
+                        ofil.write(plot_page_rndr)
+                    #End with
 
 
 
