@@ -525,11 +525,11 @@ class AdfWeb(AdfObs):
                 print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
                 #for key,val in self.read_config_var('multi_case_plots'):
                 if "LatLon" not in mean_html_info2:
-                    mean_html_info2["Surface variables"] = OrderedDict()
+                    mean_html_info2["LatLon"] = OrderedDict()
                 #End if
 
-                mean_html_info2["Surface variables"]["LatLon"] = OrderedDict()
-                mean_html_info2["Surface variables"]["LatLon"]["SST"] = OrderedDict()
+                mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
+                mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 #Check if category has been provided for this web data:
                 if web_data.category:
                     #If so, then just use directly:
@@ -561,7 +561,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 
-                mean_html_info2["Surface variables"]["LatLon"]["SST"] = "plot_page_TS_DJF_LatLon_Mean.html"
+                mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_TS_DJF_LatLon_Mean.html"
 
                 #Determine season value:
                 if web_data.season:
@@ -957,7 +957,7 @@ class AdfWeb(AdfObs):
                                                     case2=data_name,
                                                     case_yrs=case_yrs,
                                                     baseline_yrs=baseline_yrs,
-                                                    mydata=mean_html_info2,
+                                                    mydata=mean_html_info2["LatLon"],
                                                     #mydata=mean_html_info[web_data.plot_type],
                                                     curr_type=web_data.plot_type,
                                                     plot_types=plot_types,
@@ -975,6 +975,7 @@ class AdfWeb(AdfObs):
                 #Check if the mean plot type and var page exists for this case:
                 print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
                 print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
+                print("Trying to go into mydata: ",mean_html_info2,"\n")
                 mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
                 if not mean_ptype_plot_page.exists():
 
@@ -989,7 +990,7 @@ class AdfWeb(AdfObs):
                                                  case2=data_name,
                                                  case_yrs=case_yrs,
                                                  baseline_yrs=baseline_yrs,
-                                                 mydata=mean_html_info2,
+                                                 mydata=mean_html_info2["LatLon"],
                                                  curr_type=web_data.plot_type,
                                                  plot_types=plot_types,
                                                  multi=multi_layout,)
