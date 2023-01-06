@@ -957,6 +957,8 @@ class AdfWeb(AdfObs):
 
 
                 #Check if the mean plot type and var page exists for this case:
+                print("for plot_page multi case try: web_data.name",web_data.name,"\neb_data.plot_type: ",web_data.plot_type,"\n")
+                print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
                 mean_ptype_plot_page = img_pages_dir / f"plot_page_{web_data.name}_{web_data.plot_type}.html"
                 if not mean_ptype_plot_page.exists():
 
