@@ -573,7 +573,7 @@ class AdfWeb(AdfObs):
                 #Initialize Ordered Dictionary for season:
                 print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
-                mean_html_info2[ptype][category][name][season] = f"SST_{season}_LatLon_multi_plot.png"
+                mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"SST_{season}_LatLon_multi_plot.png"
             #End if (data-frame check)
         #End for (web_data list loop)
 
