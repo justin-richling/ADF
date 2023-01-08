@@ -1035,7 +1035,7 @@ class AdfWeb(AdfObs):
                     #already exist:
                     plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
                     plot_page_rndr = plot_page_tmpl.render(title=main_title,
-                                                 var_title=web_data.name,
+                                                 var_title="SST",
                                                  season_title=web_data.season,
                                                  plottype_title=web_data.plot_type,
                                                  case1=case1,
@@ -1043,7 +1043,7 @@ class AdfWeb(AdfObs):
                                                  case_yrs=case_yrs,
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info2["LatLon"],
-                                                 curr_type="SST",
+                                                 curr_type=web_data.plot_type,
                                                  plot_types=plot_types,
                                                  multi=multi_layout,)
 
