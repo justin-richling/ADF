@@ -974,7 +974,8 @@ class AdfWeb(AdfObs):
                                    baseline_yrs=baseline_yrs,
                                    mydata=mean_html_info2["LatLon"],
                                    plot_types=plot_types,
-                                   multi=multi_layout,) #The template rendered
+                                   multi=multi_layout,
+                                   case_sites=case_sites,) #The template rendered
 
                 #Write HTML file:
                 with open(img_pages_dir / "plot_page_multi_case_SST_SON_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
@@ -1002,7 +1003,8 @@ class AdfWeb(AdfObs):
                                                     #mydata=mean_html_info[web_data.plot_type],
                                                     curr_type=web_data.plot_type,
                                                     plot_types=plot_types,
-                                                    multi=multi_layout,)
+                                                    multi=multi_layout,
+                                                    case_sites=case_sites,)
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
@@ -1049,7 +1051,9 @@ class AdfWeb(AdfObs):
                                                  mydata=mean_html_info2["LatLon"],
                                                  curr_type=web_data.plot_type,
                                                  plot_types=plot_types,
-                                                 multi=multi_layout,)
+                                                 multi=multi_layout,
+                                                 case_sites=case_sites,
+                                                 )
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
