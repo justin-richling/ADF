@@ -1023,6 +1023,8 @@ class AdfWeb(AdfObs):
                 #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
                 #print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
                 print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
+                
+                self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
                 img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                 print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
                 #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
