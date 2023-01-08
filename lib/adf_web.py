@@ -962,6 +962,7 @@ class AdfWeb(AdfObs):
                 
                 img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
                             self.__case_web_paths['multi-case']['assets_dir'].stem]
+                print("img_data",img_data,"\n")
 
                 tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                 rndr = tmpl.render(title=main_title,
@@ -978,7 +979,7 @@ class AdfWeb(AdfObs):
                                    multi=multi_layout,) #The template rendered
 
                 #Write HTML file:
-                with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
+                with open(img_pages_dir / "plot_page_multi_case_SST_SON_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
 
                 
