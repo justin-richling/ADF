@@ -575,7 +575,7 @@ class AdfWeb(AdfObs):
                 print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
-                #print("SO DONE:", type(season),season,f"plot_page_SST_{season}_LatLon_Mean.html")
+                print("SO DONE:", type(season),season,f"plot_page_SST_{season}_LatLon_Mean.html")
                 mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
             #End if (data-frame check)
         #End for (web_data list loop)
@@ -1024,6 +1024,11 @@ class AdfWeb(AdfObs):
                 print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
                 #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
                 mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{'SST'}_{web_data.plot_type}.html"
+
+
+                print("web_data.season:",web_data.season,"\n")
+
+
                 if not mean_ptype_plot_page.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
