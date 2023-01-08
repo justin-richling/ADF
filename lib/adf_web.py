@@ -974,7 +974,7 @@ class AdfWeb(AdfObs):
                                    season_title=web_data.season,
                                    plottype_title=web_data.plot_type,
                                    imgs=img_data,
-                                   case1=case1,
+                                   case1=web_data.case,
                                    case2=data_name,
                                    case_yrs=case_yrs,
                                    baseline_yrs=baseline_yrs,
@@ -1000,7 +1000,7 @@ class AdfWeb(AdfObs):
                     #already exist:
                     mean_tmpl = jinenv.get_template('template_multi_case_mean_diag.html')
                     mean_rndr = mean_tmpl.render(title=main_title,
-                                                    case1=case1,
+                                                    case1=web_data.case,
                                                     case2=data_name,
                                                     case_yrs=case_yrs,
                                                     baseline_yrs=baseline_yrs,
@@ -1048,7 +1048,7 @@ class AdfWeb(AdfObs):
                                                  var_title="SST",
                                                  season_title=web_data.season,
                                                  plottype_title=web_data.plot_type,
-                                                 case1=case1,
+                                                 case1=web_data.case,
                                                  case2=data_name,
                                                  case_yrs=case_yrs,
                                                  baseline_yrs=baseline_yrs,
