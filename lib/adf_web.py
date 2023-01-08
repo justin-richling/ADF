@@ -1043,7 +1043,7 @@ class AdfWeb(AdfObs):
                                                  case_yrs=case_yrs,
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info2["LatLon"],
-                                                 curr_type=web_data.plot_type,
+                                                 curr_type="SST",
                                                  plot_types=plot_types,
                                                  multi=multi_layout,)
 
