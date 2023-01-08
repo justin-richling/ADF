@@ -949,12 +949,15 @@ class AdfWeb(AdfObs):
 
                 #Create output HTML file path:
                 #img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                print(f"Getting close I think...\nweb_data.asset_path: {web_data.asset_path}\nimg_pages_dir: {img_pages_dir}\nweb_data.asset_path.stem: {web_data.asset_path.stem}\n")
+                #print(f"Getting close I think...\nweb_data.asset_path: {web_data.asset_path}\nimg_pages_dir: {img_pages_dir}\nweb_data.asset_path.stem: {web_data.asset_path.stem}\n")
                 #img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                 #            web_data.asset_path.stem]
 
                 #self.__case_web_paths['multi-case']['assets']
                 self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
+
+                print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
+                print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
                 
                 img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
                             self.__case_web_paths['multi-case']['assets_dir'].stem]
@@ -1023,6 +1026,7 @@ class AdfWeb(AdfObs):
                 img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                 print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
                 #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
+
                 mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{'SST'}_{web_data.plot_type}.html"
 
 
