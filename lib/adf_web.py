@@ -950,8 +950,13 @@ class AdfWeb(AdfObs):
                 #Create output HTML file path:
                 #img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                 print(f"Getting close I think...\nweb_data.asset_path: {web_data.asset_path}\nimg_pages_dir: {img_pages_dir}\nweb_data.asset_path.stem: {web_data.asset_path.stem}\n")
-                img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
-                            web_data.asset_path.stem]
+                #img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
+                #            web_data.asset_path.stem]
+
+                #self.__case_web_paths['multi-case']['assets']
+
+                img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
+                            self.__case_web_paths['multi-case']['assets'].stem]
 
                 """#Check if plot image already handles multiple cases:
                 if web_data.multi_case:
@@ -984,8 +989,8 @@ class AdfWeb(AdfObs):
 
 
 
-                print("for multi case mean diag html:",web_data.plot_type,"\n")
-                print("UMMMMM:",mean_html_info[web_data.plot_type],"\n")
+                #print("for multi case mean diag html:",web_data.plot_type,"\n")
+                #print("UMMMMM:",mean_html_info[web_data.plot_type],"\n")
                 mean_ptype_file = main_site_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
                 #print("For case index, plot_types: ",plot_types,"\n")
                 if not mean_ptype_file.exists():
@@ -1015,12 +1020,13 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type and var page exists for this case:
                 print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
-                print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
-                print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
+                #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
+                #print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
                 print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
                 img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                 print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
-                mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
+                #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
+                mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{'SST'}_{web_data.plot_type}.html"
                 if not mean_ptype_plot_page.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
