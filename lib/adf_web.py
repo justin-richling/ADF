@@ -965,7 +965,7 @@ class AdfWeb(AdfObs):
 
                 tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                 rndr = tmpl.render(title=main_title,
-                                   var_title=web_data.name,
+                                   var_title="SST",#web_data.name,
                                    season_title=web_data.season,
                                    plottype_title=web_data.plot_type,
                                    imgs=img_data,
