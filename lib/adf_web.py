@@ -944,12 +944,6 @@ class AdfWeb(AdfObs):
                         shutil.copytree(website_dir, main_site_path / case_name)
 
             #Check if the mean plot type page exists for this case:
-            print("Here in the world of multi-case - web_data.plot_type:",web_data.plot_type,"\n")
-            print("also- web_data.name",web_data.name,"\n")
-
-
-
-
             if not web_data.data_frame:
 
                 #Create output HTML file path:
