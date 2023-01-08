@@ -1012,6 +1012,9 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type and var page exists for this case:
                 print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
+
+                print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
+
                 #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
                 #print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
                 print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
