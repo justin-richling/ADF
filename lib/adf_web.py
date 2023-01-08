@@ -777,6 +777,9 @@ class AdfWeb(AdfObs):
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
 
+                print("web_data.asset_path",web_data.asset_path,"\n")
+                print("web_data.asset_path.stem",web_data.asset_path.stem,"\n")
+
                 #Check if plot image already handles multiple cases:
                 if web_data.multi_case:
                     case1 = "Listed in plots."
