@@ -943,6 +943,7 @@ class AdfWeb(AdfObs):
                         #Copy website directory to "main site" directory:
                         shutil.copytree(website_dir, main_site_path / case_name)
 
+            print("case_sites",case_sites,"\n")
             #Check if the mean plot type page exists for this case:
             if not web_data.data_frame:
 
