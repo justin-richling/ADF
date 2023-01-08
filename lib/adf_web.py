@@ -959,15 +959,6 @@ class AdfWeb(AdfObs):
                 img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
                             self.__case_web_paths['multi-case']['assets_dir'].stem]
 
-                """#Check if plot image already handles multiple cases:
-                if web_data.multi_case:
-                    case1 = "Listed in plots."
-                    plot_types = multi_plot_type_html
-                else:
-                    case1 = web_data.case
-                    plot_types = plot_type_html
-                #End if"""
-
                 tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                 rndr = tmpl.render(title=main_title,
                                    var_title=web_data.name,
