@@ -955,8 +955,8 @@ class AdfWeb(AdfObs):
 
                 #self.__case_web_paths['multi-case']['assets']
 
-                img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
-                            self.__case_web_paths['multi-case']['assets'].stem]
+                img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
+                            self.__case_web_paths['multi-case']['assets_dir'].stem]
 
                 """#Check if plot image already handles multiple cases:
                 if web_data.multi_case:
