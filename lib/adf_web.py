@@ -882,7 +882,7 @@ class AdfWeb(AdfObs):
                                                 case2=data_name,
                                                 case_yrs=case_yrs,
                                                 baseline_yrs=baseline_yrs,
-                                                plot_types=plot_types,
+                                                plot_types=multi_plot_type_html,
                                                 multi=multi_layout,)
 
                 #Write Mean diagnostics index HTML file:
@@ -908,7 +908,7 @@ class AdfWeb(AdfObs):
                                                     case2=data_name,
                                                     case_yrs=case_yrs,
                                                     baseline_yrs=baseline_yrs,
-                                                    plot_types=plot_type_html,
+                                                    plot_types=multi_plot_type_html,
                                                     multi=multi_layout,)
 
                     #Write Mean diagnostics index HTML file:
@@ -974,7 +974,7 @@ class AdfWeb(AdfObs):
                                    case_yrs=case_yrs,
                                    baseline_yrs=baseline_yrs,
                                    mydata=mean_html_info2["LatLon"],
-                                   plot_types=plot_types,
+                                   plot_types=multi_plot_type_html,
                                    multi=multi_layout,
                                    case_sites=case_sites,) #The template rendered
 
@@ -1003,7 +1003,7 @@ class AdfWeb(AdfObs):
                                                     mydata=mean_html_info2["LatLon"],
                                                     #mydata=mean_html_info[web_data.plot_type],
                                                     curr_type=web_data.plot_type,
-                                                    plot_types=plot_types,
+                                                    plot_types=multi_plot_type_html,
                                                     multi=multi_layout,
                                                     case_sites=case_sites,)
 
@@ -1051,7 +1051,7 @@ class AdfWeb(AdfObs):
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info2["LatLon"],
                                                  curr_type=web_data.plot_type,
-                                                 plot_types=plot_types,
+                                                 plot_types=multi_plot_type_html,
                                                  multi=multi_layout,
                                                  case_sites=case_sites,
                                                  )
