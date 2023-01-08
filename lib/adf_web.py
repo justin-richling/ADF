@@ -964,8 +964,8 @@ class AdfWeb(AdfObs):
                 print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
                 print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
                 
-                img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
-                            self.__case_web_paths['multi-case']['assets_dir'].stem]
+                img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'] / "SST_SON_LatLon_multi_plot.png", start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
+                            "SST_SON_LatLon_multi_plot.png"]
                 print("img_data",img_data,"\n")
 
                 tmpl = jinenv.get_template('template_multi_case.html')  #Set template
