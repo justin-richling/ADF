@@ -515,7 +515,7 @@ class AdfWeb(AdfObs):
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
-                print("ptype",ptype,"\n")
+                #print("ptype",ptype,"\n")
 
                 #Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
@@ -572,7 +572,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 #Initialize Ordered Dictionary for season:
-                print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
+                #print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
                 print("SO DONE:", type(season),season,f"plot_page_SST_{season}_LatLon_Mean.html")
