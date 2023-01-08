@@ -954,7 +954,8 @@ class AdfWeb(AdfObs):
                 #            web_data.asset_path.stem]
 
                 #self.__case_web_paths['multi-case']['assets']
-
+                self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
+                
                 img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'], start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
                             self.__case_web_paths['multi-case']['assets_dir'].stem]
 
