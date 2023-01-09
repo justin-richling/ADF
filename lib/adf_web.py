@@ -344,6 +344,8 @@ class AdfWeb(AdfObs):
             main_site_path.mkdir(exist_ok=True)
             main_site_img_path = main_site_path / "html_img"
             main_site_img_path.mkdir(exist_ok=True)
+            main_site_assets_path = main_site_path / "assets"
+            main_site_assets_path.mkdir(exist_ok=True)
             case_sites = OrderedDict()
 
             multi_layout = True
@@ -976,9 +978,11 @@ class AdfWeb(AdfObs):
                         #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
                         #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
                         
-                        img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'] / f"{var[0]}_{season}_LatLon_multi_plot.png", start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
+                        img_data = [os.path.relpath(main_site_assets_path / f"{var[0]}_{season}_LatLon_multi_plot.png", start=main_site_img_path),
                                     f"{var[0]}_{season}_LatLon_multi_plot.png"]
                         #print("img_data",img_data,"\n")
+
+                        print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
 
                         tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                         rndr = tmpl.render(title=main_title,
@@ -1001,7 +1005,7 @@ class AdfWeb(AdfObs):
 
                         #print("for multi case mean diag html:",web_data.plot_type,"\n")
                         #print("UMMMMM:",mean_html_info[web_data.plot_type],"\n")
-                        mean_ptype_file = main_site_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
+                        mean_ptype_file = main_site_img_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
                         #print("For case index, plot_types: ",plot_types,"\n")
                         if not mean_ptype_file.exists():
 
