@@ -579,7 +579,8 @@ class AdfWeb(AdfObs):
                 
                 
             #End if (data-frame check)
-        mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
+        for season in ["ANN","DJF","MAM","JJA","SON"]:
+            mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
         #End for (web_data list loop)
 
         #If this is a multi-case instance, then copy website to "main" directory:
