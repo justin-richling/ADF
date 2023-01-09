@@ -522,7 +522,7 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype] = OrderedDict()
                 
                 #Initialize Ordered Dictionary for multi case plot type:
-                #print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
+                print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
                 #for key,val in self.read_config_var('multi_case_plots'):
                 if "LatLon" not in mean_html_info2:
                     mean_html_info2["LatLon"] = OrderedDict()
@@ -580,8 +580,8 @@ class AdfWeb(AdfObs):
                 
                 
             #End if (data-frame check)
-        #for season in ["ANN","DJF","MAM","JJA","SON"]:
-        #    mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
+        for season in ["ANN","DJF","MAM","JJA","SON"]:
+            mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
         #End for (web_data list loop)
 
         #If this is a multi-case instance, then copy website to "main" directory:
