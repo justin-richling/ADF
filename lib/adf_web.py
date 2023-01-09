@@ -349,7 +349,7 @@ class AdfWeb(AdfObs):
             main_site_path = "" #Set main_site_path to blank value
             multi_layout = False
         #End if
-        print(f"ABOVE: {multi_layout} \n")
+        #print(f"ABOVE: {multi_layout} \n")
         #Extract needed variables from yaml file:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
@@ -522,7 +522,7 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype] = OrderedDict()
                 
                 #Initialize Ordered Dictionary for multi case plot type:
-                print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
+                #print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
                 #for key,val in self.read_config_var('multi_case_plots'):
                 if "LatLon" not in mean_html_info2:
                     mean_html_info2["LatLon"] = OrderedDict()
@@ -575,7 +575,7 @@ class AdfWeb(AdfObs):
                 #print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
-                print("SO DONE:", type(season),season,f"plot_page_SST_{season}_LatLon_Mean.html")
+                #print("SO DONE:", type(season),season,f"plot_page_SST_{season}_LatLon_Mean.html")
                 mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
                 
                 
@@ -809,7 +809,7 @@ class AdfWeb(AdfObs):
                                    multi=multi_layout,) #The template rendered
 
                 #Write HTML file:
-                print("HELP:",web_data.html_file,"\n")
+                #print("HELP:",web_data.html_file,"\n")
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
                 #End with
@@ -952,7 +952,7 @@ class AdfWeb(AdfObs):
                         #Copy website directory to "main site" directory:
                         shutil.copytree(website_dir, main_site_path / case_name)
 
-            print("case_sites",case_sites,"\n")
+            #print("case_sites",case_sites,"\n")
             #Check if the mean plot type page exists for this case:
             if not web_data.data_frame:
 
@@ -969,12 +969,12 @@ class AdfWeb(AdfObs):
                     #self.__case_web_paths['multi-case']['assets']
                     self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
 
-                    print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
-                    print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
+                    #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
+                    #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
                     
                     img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'] / f"{var}_SON_LatLon_multi_plot.png", start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
                                 f"{var}_SON_LatLon_multi_plot.png"]
-                    print("img_data",img_data,"\n")
+                    #print("img_data",img_data,"\n")
 
                     tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                     rndr = tmpl.render(title=main_title,
@@ -1028,21 +1028,21 @@ class AdfWeb(AdfObs):
                     #Check if the mean plot type and var page exists for this case:
                     #print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
 
-                    print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
+                    #print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
 
                     #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
                     #print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
-                    print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
+                    #print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
                     
                     self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
                     img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                    print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
+                    #print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
                     #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
 
                     mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{var}_{web_data.plot_type}.html"
 
 
-                    print("web_data.season:",web_data.season,"\n")
+                    #print("web_data.season:",web_data.season,"\n")
 
 
                     if not mean_ptype_plot_page.exists():
