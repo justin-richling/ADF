@@ -959,6 +959,7 @@ class AdfWeb(AdfObs):
                 for key,var in self.read_config_var('multi_case_plots').items():
                 #for var in ["SST"]:
                     for season in ["ANN","DJF","MAM","JJA","SON"]:
+                        print(season,'\n')
                     
 
                         #Create output HTML file path:
