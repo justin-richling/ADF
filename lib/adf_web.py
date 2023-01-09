@@ -783,7 +783,7 @@ class AdfWeb(AdfObs):
 
                 #print("web_data.asset_path",web_data.asset_path,"\n")
                 #print("web_data.asset_path.stem",web_data.asset_path.stem,"\n")
-                print("img_data",img_data,"\n")
+                #print("img_data",img_data,"\n")
 
                 #Check if plot image already handles multiple cases:
                 if web_data.multi_case:
