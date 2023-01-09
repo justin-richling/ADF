@@ -956,7 +956,8 @@ class AdfWeb(AdfObs):
             #Check if the mean plot type page exists for this case:
             if not web_data.data_frame:
 
-                for vars in self.read_config_var('multi_case_plots'):
+                #for vars in self.read_config_var('multi_case_plots'):
+                for vars in ["SST"]:
 
                     #Create output HTML file path:
                     #img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
