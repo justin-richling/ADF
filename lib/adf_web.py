@@ -956,8 +956,9 @@ class AdfWeb(AdfObs):
             #Check if the mean plot type page exists for this case:
             if not web_data.data_frame:
 
-                #for vars in self.read_config_var('multi_case_plots'):
-                for vars in ["SST"]:
+                for key,var in self.read_config_var('multi_case_plots').items():
+                #for var in ["SST"]:
+                    
 
                     #Create output HTML file path:
                     #img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
@@ -971,13 +972,13 @@ class AdfWeb(AdfObs):
                     print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
                     print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
                     
-                    img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'] / f"{vars}_SON_LatLon_multi_plot.png", start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
-                                f"{vars}_SON_LatLon_multi_plot.png"]
+                    img_data = [os.path.relpath(self.__case_web_paths['multi-case']['assets_dir'] / f"{var}_SON_LatLon_multi_plot.png", start=self.__case_web_paths["multi-case"]["img_pages_dir"]),
+                                f"{var}_SON_LatLon_multi_plot.png"]
                     print("img_data",img_data,"\n")
 
                     tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                     rndr = tmpl.render(title=main_title,
-                                    var_title=vars,#web_data.name,
+                                    var_title=var,#web_data.name,
                                     season_title=web_data.season,
                                     plottype_title=web_data.plot_type,
                                     imgs=img_data,
@@ -991,7 +992,7 @@ class AdfWeb(AdfObs):
                                     case_sites=case_sites,) #The template rendered
 
                     #Write HTML file:
-                    with open(img_pages_dir / f"plot_page_multi_case_{vars}_SON_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
+                    with open(img_pages_dir / f"plot_page_multi_case_{var}_SON_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
                         ofil.write(rndr)
 
                     #print("for multi case mean diag html:",web_data.plot_type,"\n")
@@ -1038,7 +1039,7 @@ class AdfWeb(AdfObs):
                     print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
                     #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
 
-                    mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{vars}_{web_data.plot_type}.html"
+                    mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{var}_{web_data.plot_type}.html"
 
 
                     print("web_data.season:",web_data.season,"\n")
@@ -1050,7 +1051,7 @@ class AdfWeb(AdfObs):
                         #already exist:
                         plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
                         plot_page_rndr = plot_page_tmpl.render(title=main_title,
-                                                    var_title=vars,
+                                                    var_title=var,
                                                     season_title=web_data.season,
                                                     plottype_title=web_data.plot_type,
                                                     case1=web_data.case,
