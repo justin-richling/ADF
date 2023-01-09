@@ -1670,10 +1670,10 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                         degree_symbol='')
 
     for var in multi_dict.keys():
-        print(var)
-        print(multi_dict[var].keys())
+        #print(var)
+        #print(multi_dict[var].keys())
         for j in multi_dict[var].keys():
-            print("WHAT IS HAPPENING HERE?!?!?!?",j,"\n")
+
             for season in multi_dict[var][j].keys():
 
                 fig_width = 15
