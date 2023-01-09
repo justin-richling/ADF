@@ -93,7 +93,7 @@ def global_latlon_map(adfobj):
     else:
         multi_plots = False
 
-    print("OMG:",adfobj.get_multi_case_info("global_latlon_map"),"\n")
+    #print("OMG:",adfobj.get_multi_case_info("global_latlon_map"),"\n")
 
 
     #Notify user that script has started:
@@ -241,7 +241,7 @@ def global_latlon_map(adfobj):
         # otherwise defaults to 180
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
 
-        print("\n",web_category,"\n")
+        #print("\n",web_category,"\n")
         
         #loop over different data sets to plot model against:
         for data_src in data_list:
@@ -387,7 +387,7 @@ def global_latlon_map(adfobj):
                             #Grab data for desired multi-plots (from yaml file)
                             if multi_plots:
                                 if var in adfobj.get_multi_case_info("global_latlon_map"):
-                                    print("Multi plot var in lat lon plots (no levs):",var,"\n")
+                                    #print("Multi plot var in lat lon plots (no levs):",var,"\n")
                                     multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
