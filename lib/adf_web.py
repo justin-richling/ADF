@@ -705,51 +705,72 @@ class AdfWeb(AdfObs):
 
 
                 if multi_layout == True:
-                    #if web_data.case != data_name:
+                    if web_data.case != data_name:
 
-                    table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                                float_format='{:6g}'.format)
+                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                                    float_format='{:6g}'.format)
 
-                    #Construct amwg_table.html
-                    #print("WOOO:",table_html_info2,"\n")
-                    print("Whats happening here: case_names[0]",case_names[0],"\n")
-                    your_keys = [web_data.case,data_name]
-                    print(your_keys,"\n")
-                    dict_you_want = {key: table_html_info2[key] for key in your_keys}
-                    table_tmpl = jinenv.get_template('template_table.html')
-                    table_rndr = table_tmpl.render(title=main_title,
-                                                case1=web_data.case,
-                                                case2=data_name,
-                                                case_yrs=case_yrs,
-                                                base_name=data_name,
-                                                baseline_yrs=baseline_yrs,
-                                                amwg_tables=dict_you_want,
-                                                plot_types=plot_type_html,
-                                                table_name=web_data.name,
-                                                table_html=table_html,
-                                                multi_head=True,
-                                                multi=False,
-                                                case_sites=case_sites,
-                                                )
+                        #Construct amwg_table.html
+                        #print("WOOO:",table_html_info2,"\n")
+                        print("Whats happening here: case_names[0]",case_names[0],"\n")
+                        your_keys = [web_data.case,data_name]
+                        print(your_keys,"\n")
+                        dict_you_want = {key: table_html_info2[key] for key in your_keys}
+                        table_tmpl = jinenv.get_template('template_table.html')
+                        table_rndr = table_tmpl.render(title=main_title,
+                                                    case1=web_data.case,
+                                                    case2=data_name,
+                                                    case_yrs=case_yrs,
+                                                    base_name=data_name,
+                                                    baseline_yrs=baseline_yrs,
+                                                    amwg_tables=dict_you_want,
+                                                    plot_types=plot_type_html,
+                                                    table_name=web_data.name,
+                                                    table_html=table_html,
+                                                    multi_head=True,
+                                                    multi=False,
+                                                    case_sites=case_sites,
+                                                    )
 
-                    #Write mean diagnostic tables HTML file:
-                    #print("web_data.html_file: ",web_data.html_file,"\n")
-                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                    #   ofil.write(table_rndr)
-                    ##End with
-                    #if "all_case_comparison.html" in str(web_data.html_file[0]):
-                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                    #    ofil.write(table_rndr)
-                    #if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                    #    print(table_pages_dir2 / f"{web_data.name}.html")
-                     #if web_data.case != data_name:
-                    print("YAABBAADDOODDOODDOODDOODDOODDOO\n")
-                    with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
-                        ofil.write(table_rndr)
-                    """else:
+                        #Write mean diagnostic tables HTML file:
+                        #print("web_data.html_file: ",web_data.html_file,"\n")
+                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                        #   ofil.write(table_rndr)
+                        ##End with
+                        #if "all_case_comparison.html" in str(web_data.html_file[0]):
+                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                        #    ofil.write(table_rndr)
+                        #if "all_case_comparison.html" not in str(web_data.html_file[0]):
+                        #    print(table_pages_dir2 / f"{web_data.name}.html")
+                        #if web_data.case != data_name:
+                        
                         with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                             ofil.write(table_rndr)
-                        print("must be the data case, yabadabadooodooopooopooopity\n")"""
+                    else:
+                        for case_name in case_names[0:-1]:
+                            your_keys = [web_data.case,data_name]
+                            print(your_keys,"\n")
+                            dict_you_want = {key: table_html_info2[key] for key in your_keys}
+                            table_tmpl = jinenv.get_template('template_table.html')
+                            table_rndr = table_tmpl.render(title=main_title,
+                                                        case1=web_data.case,
+                                                        case2=data_name,
+                                                        case_yrs=case_yrs,
+                                                        base_name=data_name,
+                                                        baseline_yrs=baseline_yrs,
+                                                        amwg_tables=dict_you_want,
+                                                        plot_types=plot_type_html,
+                                                        table_name=web_data.name,
+                                                        table_html=table_html,
+                                                        multi_head=True,
+                                                        multi=False,
+                                                        case_sites=case_sites,
+                                                        )
+                            print(case_name,web_data.case,web_data.name,"\n")
+                            table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
+                            with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                                ofil.write(table_rndr)
+                        print("must be the data case, yabadabadooodooopooopooopity\n")
 
 
 
@@ -1251,7 +1272,7 @@ class AdfWeb(AdfObs):
         for plot in OK:
             print("PLOT",plot,"\n")
             print(Path(plot).stem,"\n")
-            shutil.move(plot, main_site_assets_path / Path(plot).stem+".png")
+            shutil.move(plot, main_site_assets_path / f"{Path(plot).stem}.png")
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
