@@ -713,6 +713,7 @@ class AdfWeb(AdfObs):
 
                         #Construct amwg_table.html
                         #print("WOOO:",table_html_info2,"\n")
+                        print("Whats happening here: case_names[0]",case_names[0],"\n")
                         your_keys = [web_data.case,data_name]
                         print(your_keys,"\n")
                         dict_you_want = {key: table_html_info2[key] for key in your_keys}
