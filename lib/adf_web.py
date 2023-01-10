@@ -1251,7 +1251,7 @@ class AdfWeb(AdfObs):
         for plot in OK:
             print("PLOT",plot,"\n")
             print(Path(plot).stem,"\n")
-            #shutil.move(plot, main_site_assets_path / Path(plot))
+            shutil.move(plot, main_site_assets_path / Path(plot).stem+".png")
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
