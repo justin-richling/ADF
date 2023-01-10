@@ -1168,7 +1168,10 @@ class AdfWeb(AdfObs):
                 #End with
         #End if
 
-        
+        for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
+            print("PLOT",plot,"\n")
+            shutil.move(plot, main_site_assets_path)
+            
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
 #++++++++++++++++++++
