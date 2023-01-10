@@ -945,6 +945,9 @@ class AdfWeb(AdfObs):
                 #End if (mean_index exists)
         #End for (web data loop)
 
+
+
+
         # --- Starting multi-case layout if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -975,9 +978,10 @@ class AdfWeb(AdfObs):
                 #Check if the web data obj is table or not (plots)
                 if not web_data.data_frame:
                     #Check if the current var is in the 
+                    print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
                     if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
                         var = web_data.name
-                        print("GOLLY GEE WHIZZ",web_data.name,"\n")
+                        print("GOLLY GEE WHIZZ",var,"\n")
 
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
