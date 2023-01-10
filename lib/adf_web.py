@@ -748,7 +748,7 @@ class AdfWeb(AdfObs):
                             ofil.write(table_rndr)
                     else:
                         for case_name in case_names[0:-1]:
-                            your_keys = [web_data.case,data_name]
+                            your_keys = [case_name,data_name]
                             print(your_keys,"\n")
                             dict_you_want = {key: table_html_info2[key] for key in your_keys}
                             table_tmpl = jinenv.get_template('template_table.html')
@@ -768,7 +768,7 @@ class AdfWeb(AdfObs):
                                                         )
                             print(case_name,web_data.case,web_data.name,"\n")
                             table_pages_dir3 = self.__case_web_paths[case_name]['table_pages_dir']
-                            with open(table_pages_dir3 / f"amwg_table_{case_name}.html", 'w', encoding='utf-8') as ofil:
+                            with open(table_pages_dir3 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                                 ofil.write(table_rndr)
                         print("must be the data case, yabadabadooodooopooopooopity\n")
 
