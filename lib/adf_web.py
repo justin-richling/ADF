@@ -479,6 +479,9 @@ class AdfWeb(AdfObs):
             print("PLOT",plot,"\n")
             shutil.move(plot, main_site_assets_path)
 
+        #Move file to assets directory:
+        #shutil.copy(web_data.data, web_data.asset_path)
+
         #print('"HHHEEEEERRRREEEE: "',glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"),"\n")
 
         #If this is a multi-case instance, then copy website to "main" directory:
@@ -493,6 +496,7 @@ class AdfWeb(AdfObs):
             #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
             #loop over cases:
             for idx, case_name in enumerate(case_names):
+                print(glob.glob("ARE YOU HERE?!?!?!?",f"{case_name}/*multi_plot.png"),"\n")
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
                     #Add path to case_sites dictionary:
@@ -528,9 +532,10 @@ class AdfWeb(AdfObs):
                 #Create a directory that will hold table html files, if a table is present:
                 if self.num_cases > 1:
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
-                    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
-                else:
-                    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+                #    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+                #else:
+                #    self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
+                self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
                 # -> print(self.__case_web_paths[web_data.case]['table_pages_dir'],"\n")
                 #End if
 
@@ -691,16 +696,16 @@ class AdfWeb(AdfObs):
                 #if "all_case_comparison.html" in str(web_data.html_file[0]):
                 with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
-                if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                    #print(table_pages_dir2 / f"{web_data.name}.html")
-                    with open(table_pages_dir2 / f"{web_data.name}.html", 'w', encoding='utf-8') as ofil:
-                        ofil.write(table_rndr)
+                #if "all_case_comparison.html" not in str(web_data.html_file[0]):
+                #    #print(table_pages_dir2 / f"{web_data.name}.html")
+                #    with open(table_pages_dir2 / f"{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                #        ofil.write(table_rndr)
 
 
 
                 if multi_layout == True:
                     #print("GETTING TIRED:",web_data.case,data_name,"\n")
-                    table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
+                    #table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
                     table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
@@ -975,11 +980,12 @@ class AdfWeb(AdfObs):
 
                 #print("case_sites",case_sites,"\n")self.read_config_var('multi_case_plots')
                 #Check if the web data obj is table or not (plots)
-                if not web_data.data_frame:
+                if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
+                    var = web_data.name
+                    if not web_data.data_frame:
                     #Check if the current var is in the 
                     #print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
-                    if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
-                        var = web_data.name
+                    
                         #print("GOLLY GEE CHEESEWHIZZ",var,"\n")
 
                         #Create output HTML file path:
@@ -1097,7 +1103,6 @@ class AdfWeb(AdfObs):
 
 
                 if web_data.data_frame:
-                    #print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
                     #print(f"Line 917 - table_pages_dir2: {table_pages_dir2}\n")
                     table_html = web_data.data.to_html(index=False, border=1, justify='center',
