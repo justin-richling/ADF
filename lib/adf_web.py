@@ -742,6 +742,7 @@ class AdfWeb(AdfObs):
                     #if "all_case_comparison.html" not in str(web_data.html_file[0]):
                     #    print(table_pages_dir2 / f"{web_data.name}.html")
                     #if web_data.case != data_name:
+                    print("YAABBAADDOODDOODDOODDOODDOODDOO\n")
                     with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
 
