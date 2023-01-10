@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        #mean_html_info2 = OrderedDict()
+        mean_html_info2 = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -988,6 +988,72 @@ class AdfWeb(AdfObs):
                 if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
                     var = web_data.name
                     if not web_data.data_frame:
+
+
+                        """#Create a directory that will hold just the html files for individual images:
+                        self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
+
+                        #Create a directory that will hold copies of the actual images:
+                        self.__case_web_paths[web_data.case]['assets_dir'].mkdir(exist_ok=True)
+
+                        #Move file to assets directory:
+                        shutil.copy(web_data.data, web_data.asset_path)
+
+                        #Extract plot_type:
+                        ptype = web_data.plot_type"""
+                        
+                        #Initialize Ordered Dictionary for multi case plot type:
+                        #print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
+                        #for key,val in self.read_config_var('multi_case_plots'):
+                        if "LatLon" not in mean_html_info2:
+                            mean_html_info2["LatLon"] = OrderedDict()
+                        #End if
+
+                        mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
+                        mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
+                        #Check if category has been provided for this web data:
+                        if web_data.category:
+                            #If so, then just use directly:
+                            category = web_data.category
+                        else:
+
+                            #Check if variable in defaults dictionary:
+                            if web_data.name in var_defaults_dict:
+                                #If so, then extract category from dictionary:
+                                category = var_defaults_dict[web_data.name].get("category",
+                                                                                "No category yet")
+                            else:
+                                category = 'No category yet'
+                            #End if
+                        #End if
+
+                        #if category not in mean_html_info[ptype]:
+                        #    mean_html_info[ptype][category] = OrderedDict()
+                        #End if
+                        
+
+                        #Extract web data name (usually the variable name):
+                        name = web_data.name
+
+                        #Initialize Ordered Dictionary for variable:
+                        #if name not in mean_html_info[ptype][category]:
+                        #    mean_html_info[ptype][category][name] = OrderedDict()
+                        #End if
+                        
+                        mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
+
+                        #Determine season value:
+                        if web_data.season:
+                            season = web_data.season
+                        else:
+                            season = "plot" #Just have the link be labeled "plot".
+                        #End if
+
+                        #Initialize Ordered Dictionary for season:
+                        mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
+
+
+
                     #Check if the current var is in the 
                     #print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
                     
