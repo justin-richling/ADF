@@ -981,7 +981,7 @@ class AdfWeb(AdfObs):
                     print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
                     if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
                         var = web_data.name
-                        print("GOLLY GEE WHIZZ",var,"\n")
+                        print("GOLLY GEE CHEESEWHIZZ",var,"\n")
 
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
