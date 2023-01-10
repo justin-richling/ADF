@@ -747,6 +747,8 @@ class AdfWeb(AdfObs):
                         with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                             ofil.write(table_rndr)
                     else:
+                        with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                            ofil.write(table_rndr)
                         print("must be the data case, yabadabadooodooopooopooopity\n")
 
 
@@ -1238,7 +1240,9 @@ class AdfWeb(AdfObs):
                     ofil.write(main_rndr)
                 #End with
         #End if
-        print(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png","\n")
+        print(f"{self.get_cam_info('cam_case_name')[0]}","\n")
+        OK = glob.glob(f"{self.get_cam_info('cam_case_name')[0]}")
+        print(OK)
         for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
             print("PLOT",plot,"\n")
             shutil.move(plot, main_site_assets_path / plot)
