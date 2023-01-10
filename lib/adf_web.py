@@ -480,14 +480,14 @@ class AdfWeb(AdfObs):
 
             #Also add path to case_sites dictionary:
             #loop over cases:
-            for idx, case_name in enumerate(case_names[0:-1]):
+            for idx, case_name in enumerate(case_names):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
                     #Extract website directory:
-                    website_dir = self.__case_web_paths[case_name]['website_dir']
-                    if not website_dir.is_dir():
-                        #Copy website directory to "main site" directory:
-                        shutil.copytree(website_dir, main_site_path / case_name)
+                    #website_dir = self.__case_web_paths[case_name]['website_dir']
+                    #if not website_dir.is_dir():
+                    #    #Copy website directory to "main site" directory:
+                    #    shutil.copytree(website_dir, main_site_path / case_name)
                     
                     #Add path to case_sites dictionary:
                     #case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
@@ -966,7 +966,7 @@ class AdfWeb(AdfObs):
                 #Create CSS templates file path:
                 main_templates_path = main_site_path / "templates"
 
-                """#loop over cases:
+                #loop over cases:
                 for idx, case_name in enumerate(case_names):
                     #Check if case name is present in plot
                     if case_name in self.__case_web_paths:
@@ -974,7 +974,7 @@ class AdfWeb(AdfObs):
                         website_dir = self.__case_web_paths[case_name]['website_dir']
                         if not website_dir.is_dir():
                             #Copy website directory to "main site" directory:
-                            shutil.copytree(website_dir, main_site_path / case_name)"""
+                            shutil.copytree(website_dir, main_site_path / case_name)
 
                 #Check if the web data obj is table or not (plots)
                 if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
