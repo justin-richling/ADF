@@ -595,12 +595,14 @@ class AdfWeb(AdfObs):
                 mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_SST_LatLon.html"
 
-                #Determine season value:
+                
+                season = web_data.season
+                """#Determine season value:
                 if web_data.season:
                     season = web_data.season
                 else:
                     season = "plot" #Just have the link be labeled "plot".
-                #End if
+                #End if"""
 
                 #Initialize Ordered Dictionary for season:
                 #print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
