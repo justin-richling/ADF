@@ -705,8 +705,9 @@ class AdfWeb(AdfObs):
                                                             float_format='{:6g}'.format)
 
                     #Construct amwg_table.html
-                    print("WOOO:",table_html_info2,"\n")
+                    #print("WOOO:",table_html_info2,"\n")
                     your_keys = [web_data.case,data_name]
+                    print(your_keys,"\n")
                     dict_you_want = {key: table_html_info2[key] for key in your_keys}
                     table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
@@ -955,8 +956,8 @@ class AdfWeb(AdfObs):
             #case_names.insert(0, "multi-case")
             #Loop over all web data objects again:
             for idx_2,web_data in enumerate(self.__website_data):
-                print("BIG DADDY web_data: ",web_data,"\n------------------\n")
-                print("OH BOY",idx_2,web_data.season,"\n")
+                #print("BIG DADDY web_data: ",web_data,"\n------------------\n")
+                #print("OH BOY",idx_2,web_data.season,"\n")
                 season = web_data.season
 
                 #Create CSS templates file path:
@@ -976,10 +977,10 @@ class AdfWeb(AdfObs):
                 #Check if the web data obj is table or not (plots)
                 if not web_data.data_frame:
                     #Check if the current var is in the 
-                    print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
+                    #print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
                     if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
                         var = web_data.name
-                        print("GOLLY GEE CHEESEWHIZZ",var,"\n")
+                        #print("GOLLY GEE CHEESEWHIZZ",var,"\n")
 
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
@@ -997,7 +998,7 @@ class AdfWeb(AdfObs):
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
                         #print("img_data",img_data,"\n")
 
-                        print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
+                        #print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
 
                         tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                         rndr = tmpl.render(title=main_title,
