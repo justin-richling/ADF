@@ -1080,7 +1080,7 @@ class AdfWeb(AdfObs):
 
                         print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
 
-                        if not img_pages_dir / f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html".exists():
+                        if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                             rndr = tmpl.render(title=main_title,
                                                         var_title=var,#web_data.name,
