@@ -1242,7 +1242,8 @@ class AdfWeb(AdfObs):
         #End if
         print(f"{multi_path / self.get_cam_info('cam_case_name')[0]}","\n")
         print("b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40\n")
-        OK = glob.glob(f"{multi_path / self.get_cam_info('cam_case_name')[0]}")
+        print(f"{self.get_cam_info('cam_case_name')[0]}" == "b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40")
+        OK = glob.glob(f"{multi_path / self.get_cam_info('cam_case_name')[0]}/")
         print(OK)
         for plot in OK:
             print("PLOT",plot,"\n")
