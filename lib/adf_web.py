@@ -946,67 +946,65 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case layout if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - - 
-        #if multi_layout == True:
 
-        
-            #If this is a multi-case instance, then copy website to "main" directory:
-            if main_site_path:
-                #Add "multi-case" to start of case_names:
-                #case_names.insert(0, "multi-case")
-                #Loop over all web data objects again:
-                for idx,web_data in enumerate(self.__website_data):
-                    print("BIG DADDY web_data: ",web_data,"\n------------------\n")
-                    print("OH BOY",idx,web_data.season,"\n")
-                    season = web_data.season
+        #If this is a multi-case instance, then copy website to "main" directory:
+        if main_site_path:
+            #Add "multi-case" to start of case_names:
+            #case_names.insert(0, "multi-case")
+            #Loop over all web data objects again:
+            for idx,web_data in enumerate(self.__website_data):
+                print("BIG DADDY web_data: ",web_data,"\n------------------\n")
+                print("OH BOY",idx,web_data.season,"\n")
+                season = web_data.season
 
-                    #Create CSS templates file path:
-                    main_templates_path = main_site_path / "templates"
+                #Create CSS templates file path:
+                main_templates_path = main_site_path / "templates"
 
-                    #loop over cases:
-                    for idx, case_name in enumerate(case_names):
-                        #Check if case name is present in plot
-                        if case_name in self.__case_web_paths:
-                            #Extract website directory:
-                            website_dir = self.__case_web_paths[case_name]['website_dir']
-                            if not website_dir.is_dir():
-                                #Copy website directory to "main site" directory:
-                                shutil.copytree(website_dir, main_site_path / case_name)
+                #loop over cases:
+                for idx, case_name in enumerate(case_names):
+                    #Check if case name is present in plot
+                    if case_name in self.__case_web_paths:
+                        #Extract website directory:
+                        website_dir = self.__case_web_paths[case_name]['website_dir']
+                        if not website_dir.is_dir():
+                            #Copy website directory to "main site" directory:
+                            shutil.copytree(website_dir, main_site_path / case_name)
 
-                    #print("case_sites",case_sites,"\n")self.read_config_var('multi_case_plots')
-                    #Check if the web data obj is table or not (plots)
-                    if not web_data.data_frame:
-                        #Check if the current var is in the 
-                        if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
-                            var = web_data.name
-                            print("GOLLY GEE WHIZZ",web_data.name,"\n")
+                #print("case_sites",case_sites,"\n")self.read_config_var('multi_case_plots')
+                #Check if the web data obj is table or not (plots)
+                if not web_data.data_frame:
+                    #Check if the current var is in the 
+                    if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
+                        var = web_data.name
+                        print("GOLLY GEE WHIZZ",web_data.name,"\n")
                             
-                            #
+                        #
 
-                            #for key,var in self.read_config_var('multi_case_plots').items():
-                                # key is plot type; ie global_latlon_map ...
-                                # var could be multiple values (list) of variables; ie SST, PS ...
-                            #for var in ["SST"]:
+                        #for key,var in self.read_config_var('multi_case_plots').items():
+                            # key is plot type; ie global_latlon_map ...
+                            # var could be multiple values (list) of variables; ie SST, PS ...
+                        #for var in ["SST"]:
 
-                            #Create output HTML file path:
-                            img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                            #print(f"Getting close I think...\nweb_data.asset_path: {web_data.asset_path}\nimg_pages_dir: {img_pages_dir}\nweb_data.asset_path.stem: {web_data.asset_path.stem}\n")
-                            #img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
-                            #            web_data.asset_path.stem]
+                        #Create output HTML file path:
+                        img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
+                        #print(f"Getting close I think...\nweb_data.asset_path: {web_data.asset_path}\nimg_pages_dir: {img_pages_dir}\nweb_data.asset_path.stem: {web_data.asset_path.stem}\n")
+                        #img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
+                        #            web_data.asset_path.stem]
 
-                            #self.__case_web_paths['multi-case']['assets']
-                            self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
+                        #self.__case_web_paths['multi-case']['assets']
+                        self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
 
-                            #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
-                            #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
+                        #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
+                        #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
                                     
-                            img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_LatLon_multi_plot.png", start=main_site_img_path),
+                        img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_LatLon_multi_plot.png", start=main_site_img_path),
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
-                            #print("img_data",img_data,"\n")
+                        #print("img_data",img_data,"\n")
 
-                            print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
+                        print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
 
-                            tmpl = jinenv.get_template('template_multi_case.html')  #Set template
-                            rndr = tmpl.render(title=main_title,
+                        tmpl = jinenv.get_template('template_multi_case.html')  #Set template
+                        rndr = tmpl.render(title=main_title,
                                                     var_title=var,#web_data.name,
                                                     season_title=season,
                                                     plottype_title=web_data.plot_type,
@@ -1020,20 +1018,20 @@ class AdfWeb(AdfObs):
                                                     multi=multi_layout,
                                                     case_sites=case_sites,) #The template rendered
 
-                            #Write HTML file:
-                            with open(img_pages_dir / f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
+                        #Write HTML file:
+                        with open(img_pages_dir / f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
                                     ofil.write(rndr)
 
-                            #print("for multi case mean diag html:",web_data.plot_type,"\n")
-                            #print("UMMMMM:",mean_html_info[web_data.plot_type],"\n")
-                            mean_ptype_file = main_site_img_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
-                            #print("For case index, plot_types: ",plot_types,"\n")
-                            if not mean_ptype_file.exists():
+                        #print("for multi case mean diag html:",web_data.plot_type,"\n")
+                        #print("UMMMMM:",mean_html_info[web_data.plot_type],"\n")
+                        mean_ptype_file = main_site_img_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
+                        #print("For case index, plot_types: ",plot_types,"\n")
+                        if not mean_ptype_file.exists():
 
-                                #Construct individual plot type mean_diag html files, if they don't
-                                #already exist:
-                                mean_tmpl = jinenv.get_template('template_multi_case_mean_diag.html')
-                                mean_rndr = mean_tmpl.render(title=main_title,
+                            #Construct individual plot type mean_diag html files, if they don't
+                            #already exist:
+                            mean_tmpl = jinenv.get_template('template_multi_case_mean_diag.html')
+                            mean_rndr = mean_tmpl.render(title=main_title,
                                                                         case1=web_data.case,
                                                                         case2=data_name,
                                                                         case_yrs=case_yrs,
@@ -1045,41 +1043,41 @@ class AdfWeb(AdfObs):
                                                                         multi=multi_layout,
                                                                         case_sites=case_sites,)
 
-                                #Write mean diagnostic plots HTML file:
-                                with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
-                                    ofil.write(mean_rndr)
-                                #End with
-                            #End if (mean_ptype exists)
+                            #Write mean diagnostic plots HTML file:
+                            with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
+                                ofil.write(mean_rndr)
+                            #End with
+                        #End if (mean_ptype exists)
 
 
 
 
-                            #Check if the mean plot type and var page exists for this case:
-                            #print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
+                        #Check if the mean plot type and var page exists for this case:
+                        #print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
 
-                            #print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
+                        #print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
 
-                            #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
-                            #print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
-                            #print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
+                        #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
+                        #print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
+                        #print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
                                     
-                            self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
-                            img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                            #print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
-                            #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
+                        self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
+                        img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
+                        #print("AFTER: img_pages_dir: ",img_pages_dir,"\n")
+                        #mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{web_data.name}_{web_data.plot_type}.html"
 
-                            mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{var}_{web_data.plot_type}.html"
-
-
-                            #print("web_data.season:",web_data.season,"\n")
+                        mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{var}_{web_data.plot_type}.html"
 
 
-                            if not mean_ptype_plot_page.exists():
+                        #print("web_data.season:",web_data.season,"\n")
 
-                                #Construct individual plot type mean_diag html files, if they don't
-                                #already exist:
-                                plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
-                                plot_page_rndr = plot_page_tmpl.render(title=main_title,
+
+                        if not mean_ptype_plot_page.exists():
+
+                            #Construct individual plot type mean_diag html files, if they don't
+                            #already exist:
+                            plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
+                            plot_page_rndr = plot_page_tmpl.render(title=main_title,
                                                                     var_title=var,
                                                                     season_title=season,
                                                                     plottype_title=web_data.plot_type,
@@ -1094,24 +1092,24 @@ class AdfWeb(AdfObs):
                                                                     case_sites=case_sites,
                                                                     )
 
-                                #Write mean diagnostic plots HTML file:
-                                with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                                    ofil.write(plot_page_rndr)
-                                #End with
+                            #Write mean diagnostic plots HTML file:
+                            with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
+                                ofil.write(plot_page_rndr)
+                            #End with
 
 
 
-                    if web_data.data_frame:
-                        #print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
-                        table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                        #print(f"Line 917 - table_pages_dir2: {table_pages_dir2}\n")
-                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                if web_data.data_frame:
+                    #print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
+                    table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
+                    #print(f"Line 917 - table_pages_dir2: {table_pages_dir2}\n")
+                    table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                                 float_format='{:6g}'.format)
 
-                        #Construct amwg_table.html
-                        #print("once and for all:",table_html_info2[web_data.case],"\n")
-                        table_tmpl = jinenv.get_template('template_table.html')
-                        table_rndr = table_tmpl.render(title=main_title,
+                    #Construct amwg_table.html
+                    #print("once and for all:",table_html_info2[web_data.case],"\n")
+                    table_tmpl = jinenv.get_template('template_table.html')
+                    table_rndr = table_tmpl.render(title=main_title,
                                                 case1=web_data.case,
                                                 case2=data_name,
                                                 case_yrs=case_yrs,
@@ -1125,48 +1123,48 @@ class AdfWeb(AdfObs):
                                                 case_sites=case_sites,
                                                 )
 
-                        #Write mean diagnostic tables HTML file:
-                        #print("web_data.html_file: ",web_data.html_file,"\n")
-                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                        #   ofil.write(table_rndr)
-                        ##End with
-                        #if "all_case_comparison.html" in str(web_data.html_file[0]):
-                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                        #    ofil.write(table_rndr)
-                        #if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                        #print(table_pages_dir2 / table_html_info2[web_data.case])
-                        with open(table_pages_dir2 / table_html_info2[web_data.case], 'w', encoding='utf-8') as ofil:
-                            ofil.write(table_rndr)
+                    #Write mean diagnostic tables HTML file:
+                    #print("web_data.html_file: ",web_data.html_file,"\n")
+                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                    #   ofil.write(table_rndr)
+                    ##End with
+                    #if "all_case_comparison.html" in str(web_data.html_file[0]):
+                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                    #    ofil.write(table_rndr)
+                    #if "all_case_comparison.html" not in str(web_data.html_file[0]):
+                    #print(table_pages_dir2 / table_html_info2[web_data.case])
+                    with open(table_pages_dir2 / table_html_info2[web_data.case], 'w', encoding='utf-8') as ofil:
+                        ofil.write(table_rndr)
                         
-                    #Also make sure CSS template files have been copied over:
-                    if not main_templates_path.is_dir():
-                        css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
-                        shutil.copytree(css_files_dir, main_templates_path)
+                #Also make sure CSS template files have been copied over:
+                if not main_templates_path.is_dir():
+                    css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
+                    shutil.copytree(css_files_dir, main_templates_path)
+                #End if
                     #End if
-                        #End if
-                    #End for (model case loop)
+                #End for (model case loop)
 
-                    wks = "SST_ANN_LatLon_multi_plot.png"
-                    #print(f"{main_site_path}")
-                    #Create multi-case site:
-                    multi_plots = {"Tables": "html_table/mean_tables.html",
+                wks = "SST_ANN_LatLon_multi_plot.png"
+                #print(f"{main_site_path}")
+                #Create multi-case site:
+                multi_plots = {"Tables": "html_table/mean_tables.html",
                                     #"LatLon": f"./{wks}",
                                     "LatLon": f"html_img/multi_case_mean_diag_LatLon.html"}
-                    main_title = "ADF Diagnostics"
-                    main_tmpl = jinenv.get_template('template_multi_case_index.html')
-                    main_rndr = main_tmpl.render(title=main_title,
+                main_title = "ADF Diagnostics"
+                main_tmpl = jinenv.get_template('template_multi_case_index.html')
+                main_rndr = main_tmpl.render(title=main_title,
                                         case_sites=case_sites,
                                         base_name=data_name,
                                         baseline_yrs=baseline_yrs,
                                         multi_plots=multi_plots,
                                         )
 
-                    #Write multi-case main HTML file:
-                    outputfile = main_site_path / "index.html"
-                    with open(outputfile, 'w', encoding='utf-8') as ofil:
-                        ofil.write(main_rndr)
-                    #End with
-            #End if
+                #Write multi-case main HTML file:
+                outputfile = main_site_path / "index.html"
+                with open(outputfile, 'w', encoding='utf-8') as ofil:
+                    ofil.write(main_rndr)
+                #End with
+        #End if
 
         
         #Notify user that script has finishedd:
