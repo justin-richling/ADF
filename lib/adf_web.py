@@ -1004,7 +1004,7 @@ class AdfWeb(AdfObs):
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
                         #print("img_data",img_data,"\n")
 
-                        #print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
+                        print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
 
                         tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                         rndr = tmpl.render(title=main_title,
