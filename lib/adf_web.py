@@ -707,7 +707,7 @@ class AdfWeb(AdfObs):
                                                             float_format='{:6g}'.format)
 
                     #Construct amwg_table.html
-                    #print("WOOO:",[table_html_info2[data_name]],"\n")
+                    print("WOOO:",table_html_info2,"\n")
                     your_keys = [web_data.case,data_name]
                     dict_you_want = {key: table_html_info2[key] for key in your_keys}
                     table_tmpl = jinenv.get_template('template_table.html')
