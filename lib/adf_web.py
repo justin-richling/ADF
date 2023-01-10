@@ -975,13 +975,6 @@ class AdfWeb(AdfObs):
                     if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
                         var = web_data.name
                         print("GOLLY GEE WHIZZ",web_data.name,"\n")
-                            
-                        #
-
-                        #for key,var in self.read_config_var('multi_case_plots').items():
-                            # key is plot type; ie global_latlon_map ...
-                            # var could be multiple values (list) of variables; ie SST, PS ...
-                        #for var in ["SST"]:
 
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
