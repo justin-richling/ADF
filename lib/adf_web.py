@@ -688,7 +688,7 @@ class AdfWeb(AdfObs):
                                   multi=multi_layout,
                                   case_sites=case_sites,
                                   )
-
+                print("web_data.html_file[0]",web_data.html_file[0],"\n")
                 #Write mean diagnostic tables HTML file:
                 #print("web_data.html_file: ",web_data.html_file,"\n")
                 #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
