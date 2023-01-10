@@ -1240,10 +1240,12 @@ class AdfWeb(AdfObs):
                     ofil.write(main_rndr)
                 #End with
         #End if
-        print(f"{multi_path / self.get_cam_info('cam_case_name')[0]}","\n")
+
+        ug = f"{multi_path / self.get_cam_info('cam_case_name')[0]}_{syear_cases[0]}_{eyear_cases[0]}vs_{data_name}_{syear_baseline}_{eyear_baseline}"
+        print(ug,"\n")
         print("b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40\n")
         print(f"{self.get_cam_info('cam_case_name')[0]}" == "b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40")
-        OK = glob.glob(f"{multi_path / self.get_cam_info('cam_case_name')[0]}/")
+        OK = glob.glob(f"{ug}/*multi_plot*")
         print(OK)
         for plot in OK:
             print("PLOT",plot,"\n")
