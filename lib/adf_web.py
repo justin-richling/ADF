@@ -469,15 +469,15 @@ class AdfWeb(AdfObs):
         table_html_info2 = OrderedDict()
 
         import glob
-        print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_basic_info('cam_diag_plot_loc')}"),"\n")
-        print("HHHEEEEERRRREEEE: ",glob.glob(f"{case_names[0]}/*"),"\n")
+        #print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_basic_info('cam_diag_plot_loc')}"),"\n")
+        #print("HHHEEEEERRRREEEE: ",glob.glob(f"{case_names[0]}/*"),"\n")
         
-        print("FOR THE LOVE OF... self.get_basic_info('cam_diag_plot_loc')",self.get_basic_info('cam_diag_plot_loc'),"\n")
-        print("main_site_assets_path",main_site_assets_path,"\n")
+        #print("FOR THE LOVE OF... self.get_basic_info('cam_diag_plot_loc')",self.get_basic_info('cam_diag_plot_loc'),"\n")
+        #print("main_site_assets_path",main_site_assets_path,"\n")
         #f"{self.get_basic_info('cam_diag_plot_loc')}/{}"
-        for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
-            print("PLOT",plot,"\n")
-            shutil.move(plot, main_site_assets_path)
+        #for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
+        #    print("PLOT",plot,"\n")
+        #    shutil.move(plot, main_site_assets_path)
 
         #Move file to assets directory:
         #shutil.copy(web_data.data, web_data.asset_path)
