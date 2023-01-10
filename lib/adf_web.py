@@ -958,16 +958,10 @@ class AdfWeb(AdfObs):
                     print(web_data.season)
                     season = web_data.season
 
-                
-
                     #Create CSS templates file path:
                     main_templates_path = main_site_path / "templates"
 
-                    #Also add path to case_sites dictionary:
-                    #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
-                    #print(case_sites[case_names[0]])
                     #loop over cases:
-
                     for idx, case_name in enumerate(case_names):
                         #Check if case name is present in plot
                         if case_name in self.__case_web_paths:
@@ -978,8 +972,9 @@ class AdfWeb(AdfObs):
                                 shutil.copytree(website_dir, main_site_path / case_name)
 
                     #print("case_sites",case_sites,"\n")self.read_config_var('multi_case_plots')
-                    #Check if the mean plot type page exists for this case:
+                    #Check if the web data obj is table or not (plots)
                     if not web_data.data_frame:
+                        #Check if the current var is in the 
                         if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
                             var = web_data.name
                             print("GOLLY GEE WHIZZ",web_data.name,"\n")
