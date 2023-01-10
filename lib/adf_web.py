@@ -950,9 +950,9 @@ class AdfWeb(AdfObs):
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
             #Loop over all web data objects again:
-            for idx,web_data in enumerate(self.__website_data):
+            for idx_2,web_data in enumerate(self.__website_data):
                 print("BIG DADDY web_data: ",web_data,"\n------------------\n")
-                print("OH BOY",idx,web_data.season,"\n")
+                print("OH BOY",idx_2,web_data.season,"\n")
                 season = web_data.season
 
                 #Create CSS templates file path:
