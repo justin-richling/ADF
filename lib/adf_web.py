@@ -25,7 +25,7 @@ import os.path
 
 from pathlib import Path
 from collections import OrderedDict
-mean_html_info2 = OrderedDict()
+#mean_html_info2 = OrderedDict()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
