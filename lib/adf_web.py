@@ -468,13 +468,38 @@ class AdfWeb(AdfObs):
         table_html_info2 = OrderedDict()
 
         import glob
+        print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_basic_info('cam_diag_plot_loc')}"),"\n")
         print("FOR THE LOVE OF... self.get_basic_info('cam_diag_plot_loc')",self.get_basic_info('cam_diag_plot_loc'),"\n")
         print("main_site_assets_path",main_site_assets_path,"\n")
+        #f"{self.get_basic_info('cam_diag_plot_loc')}/{}"
         for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
             print("PLOT",plot,"\n")
             shutil.move(plot, main_site_assets_path)
 
         print('"HHHEEEEERRRREEEE: "',glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"),"\n")
+
+        #If this is a multi-case instance, then copy website to "main" directory:
+        if main_site_path:
+            #Add "multi-case" to start of case_names:
+            #case_names.insert(0, "multi-case")
+
+            #Create CSS templates file path:
+            main_templates_path = main_site_path / "templates"
+
+            #Also add path to case_sites dictionary:
+            #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
+            #loop over cases:
+            for idx, case_name in enumerate(case_names):
+                #Check if case name is present in plot
+                if case_name in self.__case_web_paths:
+                    #Add path to case_sites dictionary:
+                    #case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
+                    case_sites[case_name] = [os.path.join(os.curdir, 
+                                             f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", 
+                                             "index.html"),syear_cases[idx],eyear_cases[idx]]
+        else:
+            #make empty list for non multi-case web generation
+            case_sites = []
 
         #Loop over all web data objects:
         for web_data in self.__website_data:
@@ -594,35 +619,11 @@ class AdfWeb(AdfObs):
                 
                 print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
                 mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
-                
-                
+
             #End if (data-frame check)
-        #for season in ["ANN","DJF","MAM","JJA","SON"]:
-        #    mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
         #End for (web_data list loop)
 
-        #If this is a multi-case instance, then copy website to "main" directory:
-        if main_site_path:
-            #Add "multi-case" to start of case_names:
-            #case_names.insert(0, "multi-case")
-
-            #Create CSS templates file path:
-            main_templates_path = main_site_path / "templates"
-
-            #Also add path to case_sites dictionary:
-            #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
-            #loop over cases:
-            for idx, case_name in enumerate(case_names):
-                #Check if case name is present in plot
-                if case_name in self.__case_web_paths:
-                    #Add path to case_sites dictionary:
-                    #case_sites[case_name] = [os.path.join(os.curdir, case_name, "index.html"), syear_cases[idx], eyear_cases[idx]]
-                    case_sites[case_name] = [os.path.join(os.curdir, 
-                                             f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}", 
-                                             "index.html"),syear_cases[idx],eyear_cases[idx]]
-        else:
-            #make empty list for non multi-case web generation
-            case_sites = []
+        
 
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
@@ -939,9 +940,6 @@ class AdfWeb(AdfObs):
                         ofil.write(index_rndr)
                     #End with
                 #End if (mean_index exists)
-
-
-
         #End for (web data loop)
 
         # --- Starting multi-case layout if activated ---
