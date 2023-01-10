@@ -977,9 +977,9 @@ class AdfWeb(AdfObs):
                 #print("case_sites",case_sites,"\n")self.read_config_var('multi_case_plots')
                 #Check if the mean plot type page exists for this case:
                 if not web_data.data_frame:
-                    print("GOLLY GEE WHIZZ",name,"\n")
-                    if name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
-                        var = name
+                    print("GOLLY GEE WHIZZ",web_data.name,"\n")
+                    if web_data.name in [item for sublist in [multi_dict_ok[x] for x in multi_dict_ok] for item in sublist]:
+                        var = web_data.name
                     #for key,var in self.read_config_var('multi_case_plots').items():
                         # key is plot type; ie global_latlon_map ...
                         # var could be multiple values (list) of variables; ie SST, PS ...
