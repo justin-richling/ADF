@@ -558,7 +558,8 @@ def global_latlon_map(adfobj):
     adfobj.get_multi_case_info("global_latlon_map")
     if multi_plots:
         #wks = "/glade/scratch/richling/adf-output/multi-case/4-case/b.cesm3_cam058_mom_e.B1850MOM.ne30_L32_t061.camdev_cice5.009_vs_016_022c_024_026a_026b/diag-plot/b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40/"
-        wks = adfobj.__case_web_paths['multi-case']['assets_dir']
+        #wks = adfobj.__case_web_paths['multi-case']['assets_dir']
+        wks = plot_locations[0]
         pf.multi_plots(wks,"LatLon", case_names, [test_nicknames,base_nickname], multi_dict)
 
         """# Check redo_plot. If set to True: remove old plot, if it already exists:
