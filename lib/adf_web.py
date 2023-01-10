@@ -465,7 +465,7 @@ class AdfWeb(AdfObs):
         table_html_info2 = OrderedDict()
 
         import glob
-        for plot in glob.glob(multi_path / "*multi_plot.png"):
+        for plot in glob.glob(f"{multi_path}/*multi_plot.png"):
             dest = shutil.move(plot, main_site_assets_path)
 
         #Loop over all web data objects:
