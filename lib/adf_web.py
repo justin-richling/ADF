@@ -752,7 +752,7 @@ class AdfWeb(AdfObs):
                             dict_you_want = {key: table_html_info2[key] for key in your_keys}
                             table_tmpl = jinenv.get_template('template_table.html')
                             table_rndr = table_tmpl.render(title=main_title,
-                                                        case1=web_data.case,
+                                                        case1=case_name,
                                                         case2=data_name,
                                                         case_yrs=case_yrs,
                                                         base_name=data_name,
