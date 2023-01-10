@@ -470,6 +470,8 @@ class AdfWeb(AdfObs):
 
         import glob
         print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_basic_info('cam_diag_plot_loc')}"),"\n")
+        print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_cam_info('cam_case_name')[0]}"),"\n")
+        
         print("FOR THE LOVE OF... self.get_basic_info('cam_diag_plot_loc')",self.get_basic_info('cam_diag_plot_loc'),"\n")
         print("main_site_assets_path",main_site_assets_path,"\n")
         #f"{self.get_basic_info('cam_diag_plot_loc')}/{}"
@@ -477,7 +479,7 @@ class AdfWeb(AdfObs):
             print("PLOT",plot,"\n")
             shutil.move(plot, main_site_assets_path)
 
-        print('"HHHEEEEERRRREEEE: "',glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"),"\n")
+        #print('"HHHEEEEERRRREEEE: "',glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"),"\n")
 
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
