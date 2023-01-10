@@ -575,12 +575,12 @@ class AdfWeb(AdfObs):
                 #Initialize Ordered Dictionary for multi case plot type:
                 #print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
                 #for key,val in self.read_config_var('multi_case_plots'):
-                if "LatLon" not in mean_html_info2:
-                    mean_html_info2["LatLon"] = OrderedDict()
+                #if "LatLon" not in mean_html_info2:
+                #    mean_html_info2["LatLon"] = OrderedDict()
                 #End if
 
-                mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
-                mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
+                #mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
+                #mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 #Check if category has been provided for this web data:
                 if web_data.category:
                     #If so, then just use directly:
@@ -612,7 +612,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 
-                mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
+                #mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 #mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_SST_LatLon.html"
 
                 #Determine season value:
@@ -627,7 +627,7 @@ class AdfWeb(AdfObs):
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
                 #print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
-                mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
+                #mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
 
             #End if (data-frame check)
         #End for (web_data list loop)
