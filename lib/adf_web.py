@@ -464,6 +464,10 @@ class AdfWeb(AdfObs):
         table_html_info = OrderedDict()
         table_html_info2 = OrderedDict()
 
+        import glob
+        for plot in glob.glob(multi_path / "*multi_plot.png"):
+            dest = shutil.move(plot, main_site_assets_path)
+
         #Loop over all web data objects:
         for web_data in self.__website_data:
 
@@ -478,6 +482,7 @@ class AdfWeb(AdfObs):
             for css_file in jinja_template_dir.glob('*.css'):
                 shutil.copyfile(css_file, css_files_dir / css_file.name)
             #End for
+             
 
             #Check first for AMWG tables data frame
             if web_data.data_frame:
