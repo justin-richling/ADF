@@ -700,8 +700,6 @@ class AdfWeb(AdfObs):
 
                 if multi_layout == True:
                     #print("GETTING TIRED:",web_data.case,data_name,"\n")
-                    
-                    #print("AAAHAHAHAINDKJN OIJW RNOIUFHC WNORIOINON OMIOMOMOJOKJCWFMOIJEWCPFIOJMPOCJRMPO\nboo\n")
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
                     table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
