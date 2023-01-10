@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        mean_html_info2 = OrderedDict()
+        #mean_html_info2 = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -963,6 +963,7 @@ class AdfWeb(AdfObs):
         # - - - - - - - - - - - - - - - - - - - - - - - - 
 
         #If this is a multi-case instance, then copy website to "main" directory:
+        mean_html_info2 = OrderedDict()
         if main_site_path:
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
