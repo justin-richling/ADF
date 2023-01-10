@@ -931,7 +931,7 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case layout if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - - 
-
+        print(web_data.season)
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
             #Add "multi-case" to start of case_names:
