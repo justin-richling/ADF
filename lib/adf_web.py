@@ -467,7 +467,8 @@ class AdfWeb(AdfObs):
         import glob
         print("FOR THE LOVE OF... self.get_basic_info('cam_diag_plot_loc')",self.get_basic_info('cam_diag_plot_loc'),"\n")
         print("main_site_assets_path",main_site_assets_path,"\n")
-        for plot in glob.glob(f"{self.get_basic_info('cam_diag_plot_loc')}/*multi_plot.png"):
+        for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
+            print("PLOT",plot,"\n")
             shutil.move(plot, main_site_assets_path)
 
         #Loop over all web data objects:
