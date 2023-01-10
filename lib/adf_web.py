@@ -496,7 +496,6 @@ class AdfWeb(AdfObs):
             #case_sites[case_names[0]] = [os.path.join(os.curdir, case_names[0], "index.html"), "", ""]
             #loop over cases:
             for idx, case_name in enumerate(case_names):
-                print("ARE YOU HERE?!?!?!?",glob.glob(f"{case_name}/*multi_plot.png"),"\n")
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
                     #Add path to case_sites dictionary:
@@ -1171,7 +1170,7 @@ class AdfWeb(AdfObs):
         for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
             print("PLOT",plot,"\n")
             shutil.move(plot, main_site_assets_path)
-            
+
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
 #++++++++++++++++++++
