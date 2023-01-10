@@ -580,7 +580,7 @@ class AdfWeb(AdfObs):
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
                 #print("SO DONE:", type(season),season,f"plot_page_SST_{season}_LatLon_Mean.html")
-                mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
+                #mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
                 
                 
             #End if (data-frame check)
