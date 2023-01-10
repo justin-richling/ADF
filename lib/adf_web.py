@@ -1249,7 +1249,7 @@ class AdfWeb(AdfObs):
         print(OK)
         for plot in OK:
             print("PLOT",plot,"\n")
-            print(plot.stem,"\n")
+            print(Path(plot.stem),"\n")
             shutil.move(plot, main_site_assets_path / plot.stem)
 
         #Notify user that script has finishedd:
