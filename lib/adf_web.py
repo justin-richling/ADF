@@ -470,7 +470,7 @@ class AdfWeb(AdfObs):
 
         import glob
         print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_basic_info('cam_diag_plot_loc')}"),"\n")
-        print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_cam_info('cam_case_name')[0]}"),"\n")
+        print("HHHEEEEERRRREEEE: ",glob.glob(f"{self.get_cam_info('cam_case_name')}"),"\n")
         
         print("FOR THE LOVE OF... self.get_basic_info('cam_diag_plot_loc')",self.get_basic_info('cam_diag_plot_loc'),"\n")
         print("main_site_assets_path",main_site_assets_path,"\n")
