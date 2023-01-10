@@ -1241,9 +1241,9 @@ class AdfWeb(AdfObs):
                 #End with
         #End if
         print(f"{self.get_cam_info('cam_case_name')[0]}","\n")
-        OK = glob.glob(f"{self.get_cam_info('cam_case_name')[0]}")
+        OK = glob.glob(f"{multi_path / self.get_cam_info('cam_case_name')[0]}")
         print(OK)
-        for plot in glob.glob(f"{self.get_cam_info('cam_case_name')[0]}/*multi_plot.png"):
+        for plot in OK:
             print("PLOT",plot,"\n")
             shutil.move(plot, main_site_assets_path / plot)
 
