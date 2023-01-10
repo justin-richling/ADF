@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        #mean_html_info2 = OrderedDict()
+        mean_html_info2 = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -713,7 +713,7 @@ class AdfWeb(AdfObs):
                         #Construct amwg_table.html
                         #print("WOOO:",table_html_info2,"\n")
                         your_keys = [web_data.case,data_name]
-                        print(your_keys,"\n")
+                        #print(your_keys,"\n")
                         dict_you_want = {key: table_html_info2[key] for key in your_keys}
                         table_tmpl = jinenv.get_template('template_table.html')
                         table_rndr = table_tmpl.render(title=main_title,
@@ -732,20 +732,10 @@ class AdfWeb(AdfObs):
                                                     )
 
                         #Write mean diagnostic tables HTML file:
-                        #print("web_data.html_file: ",web_data.html_file,"\n")
-                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                        #   ofil.write(table_rndr)
-                        ##End with
-                        #if "all_case_comparison.html" in str(web_data.html_file[0]):
-                        #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                        #    ofil.write(table_rndr)
-                        #if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                        #    print(table_pages_dir2 / f"{web_data.name}.html")
-                        #if web_data.case != data_name:
-                        
                         with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                             ofil.write(table_rndr)
                     else:
+                        print("must be the data case, yabadabadooodooopooopooopity\n")
                         for case_name in case_names[0:-1]:
                             your_keys = [case_name,data_name]
                             print(your_keys,"\n")
@@ -765,11 +755,11 @@ class AdfWeb(AdfObs):
                                                         multi=False,
                                                         case_sites=case_sites,
                                                         )
-                            print(case_name,web_data.case,web_data.name,"\n")
+                            #print(case_name,web_data.case,web_data.name,"\n")
                             table_pages_dir3 = self.__case_web_paths[case_name]['table_pages_dir']
                             with open(table_pages_dir3 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                                 ofil.write(table_rndr)
-                        print("must be the data case, yabadabadooodooopooopooopity\n")
+                        
 
 
 
