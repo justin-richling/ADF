@@ -625,7 +625,7 @@ class AdfWeb(AdfObs):
                 #print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
-                print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
+                #print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
                 mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
 
             #End if (data-frame check)
@@ -1102,7 +1102,7 @@ class AdfWeb(AdfObs):
 
 
 
-                if web_data.data_frame:
+                """if web_data.data_frame:
                     table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
                     #print(f"Line 917 - table_pages_dir2: {table_pages_dir2}\n")
                     table_html = web_data.data.to_html(index=False, border=1, justify='center',
@@ -1136,7 +1136,7 @@ class AdfWeb(AdfObs):
                     #if "all_case_comparison.html" not in str(web_data.html_file[0]):
                     #print(table_pages_dir2 / table_html_info2[web_data.case])
                     with open(table_pages_dir2 / table_html_info2[web_data.case], 'w', encoding='utf-8') as ofil:
-                        ofil.write(table_rndr)
+                        ofil.write(table_rndr)"""
                         
                 #Also make sure CSS template files have been copied over:
                 if not main_templates_path.is_dir():
