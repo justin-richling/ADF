@@ -412,7 +412,7 @@ class AdfWeb(AdfObs):
 
         # Dict for multi case if activated
         multi_dict = self.read_config_var('multi_case_plots')
-        #print("multi_dict",multi_dict,"\n")
+        print("multi_dict",multi_dict,"\n")
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -938,8 +938,8 @@ class AdfWeb(AdfObs):
 
 
 
-
-
+            print(multi_dict)
+            #Set dictionary for plot page html files
             for web_data in self.__website_data:
                 season = web_data.season
 
