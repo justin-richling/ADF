@@ -912,7 +912,7 @@ class AdfWeb(AdfObs):
                                                 case2=data_name,
                                                 case_yrs=case_yrs,
                                                 baseline_yrs=baseline_yrs,
-                                                plot_types=multi_plot_type_html,
+                                                plot_types=plot_type_html,
                                                 multi=multi_layout,)
 
                 #Write Mean diagnostics index HTML file:
