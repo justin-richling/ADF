@@ -960,7 +960,7 @@ class AdfWeb(AdfObs):
                         print("web_data.category",web_data.category,"\n")                
 
                         
-                        #print(multi_dict.keys(),"\n")
+                        print()
                         #Extract plot_type:
                         #if not web_data.data_frame:
                         ptype = web_data.plot_type
