@@ -1004,8 +1004,7 @@ class AdfWeb(AdfObs):
             #Loop over all web data objects again:
             for web_data in self.__website_data:
 
-                season = web_data.season
-                print("season 2.0",season,"\n")
+                
 
                 #Create CSS templates file path:
                 main_templates_path = main_site_path / "templates"
@@ -1024,6 +1023,8 @@ class AdfWeb(AdfObs):
                 #Check if the web data obj is table or not (plots)
                 if var in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
                     if not web_data.data_frame:
+                        season = web_data.season
+                        print("season 2.0",season,"\n")
                         #mean_html_info2 = OrderedDict()
                         #Create a directory that will hold just the html files for individual images:
                         self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
