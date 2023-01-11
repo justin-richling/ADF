@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        multi_mean_html_info = OrderedDict()
+        #multi_mean_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -537,7 +537,6 @@ class AdfWeb(AdfObs):
 
             #Now check all plot types
             if not web_data.data_frame:
-                #if web_data.plot_type == "LatLon"
 
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
@@ -550,18 +549,11 @@ class AdfWeb(AdfObs):
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
-                #print("ptype",ptype,"\n")
 
                 #Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
                     mean_html_info[ptype] = OrderedDict()
-                
-                #Initialize Ordered Dictionary for multi case plot type:
-                if "LatLon" not in multi_mean_html_info:
-                    multi_mean_html_info["LatLon"] = OrderedDict()
-                #End if
 
-                #mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
                 #Check if category has been provided for this web data:
                 if web_data.category:
                     #If so, then just use directly:
@@ -582,42 +574,23 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype][category] = OrderedDict()
                 #End if
 
-                if category not in multi_mean_html_info["LatLon"]:
-                    multi_mean_html_info["LatLon"]["Surface variables"] = OrderedDict()
-                #End if
-                
                 #Extract web data name (usually the variable name):
                 name = web_data.name
-                #print("Regular ol'web_data",'\n',web_data.name,"\n",web_data.plot_type,"\n",web_data.season,"\n",web_data.html_file.name,"\n\n")
 
                 #Initialize Ordered Dictionary for variable:
                 if name not in mean_html_info[ptype][category]:
                     mean_html_info[ptype][category][name] = OrderedDict()
                 #End if
 
-                #Initialize Ordered Dictionary for variable:
-                if name not in multi_mean_html_info["LatLon"]["Surface variables"]:
-                    multi_mean_html_info["LatLon"]["Surface variables"]["SST"] = OrderedDict()
-                #End if
-
-                
-                #mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
-                #mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_SST_LatLon.html"
-
-                season = web_data.season
-                """#Determine season value:
+                #Determine season value:
                 if web_data.season:
                     season = web_data.season
                 else:
                     season = "plot" #Just have the link be labeled "plot".
-                #End if"""
+                #End if
 
                 #Initialize Ordered Dictionary for season:
-                #print("Line 571: web_data.html_file.name ",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
-                
-                #print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
-                multi_mean_html_info["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
 
             #End if (data-frame check)
         #End for (web_data list loop)
@@ -961,7 +934,7 @@ class AdfWeb(AdfObs):
         # - - - - - - - - - - - - - - - - - - - - - - - -     
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
-            #mean_html_info2 = OrderedDict()
+            multi_mean_html_info = OrderedDict()
 
             #Loop over all web data objects again:
             for web_data in self.__website_data:
@@ -1014,18 +987,27 @@ class AdfWeb(AdfObs):
                             #End if
                         #End if
 
-                        #if category not in mean_html_info[ptype]:
-                        #    mean_html_info[ptype][category] = OrderedDict()
+                        #Extract plot_type:
+                        ptype = web_data.plot_type
+                        
+                        #Initialize Ordered Dictionary for multi case plot type:
+                        if "LatLon" not in multi_mean_html_info:
+                            multi_mean_html_info["LatLon"] = OrderedDict()
                         #End if
+                        if category not in multi_mean_html_info["LatLon"]:
+                            multi_mean_html_info["LatLon"]["Surface variables"] = OrderedDict()
+                        #End if
+                        #Initialize Ordered Dictionary for variable:
+                        if name not in multi_mean_html_info["LatLon"]["Surface variables"]:
+                            multi_mean_html_info["LatLon"]["Surface variables"]["SST"] = OrderedDict()
+                        #End if
+                        #print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
+                        multi_mean_html_info["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
 
                         #Extract web data name (usually the variable name):
                         name = web_data.name
 
-                        #Initialize Ordered Dictionary for variable:
-                        #if name not in mean_html_info[ptype][category]:
-                        #    mean_html_info[ptype][category][name] = OrderedDict()
-                        #End if
-                        
+                       
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                         #self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
