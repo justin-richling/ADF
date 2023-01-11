@@ -557,7 +557,7 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype] = OrderedDict()
                 
                 #Initialize Ordered Dictionary for multi case plot type:
-                if "LatLon" not in mean_html_info2:
+                if "LatLon" not in multi_mean_html_info:
                     multi_mean_html_info["LatLon"] = OrderedDict()
                 #End if
 
