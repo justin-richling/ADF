@@ -412,7 +412,7 @@ class AdfWeb(AdfObs):
 
         # Dict for multi case if activated
         multi_dict = self.read_config_var('multi_case_plots')
-        print("multi_dict",multi_dict,"\n")
+        #print("multi_dict",multi_dict,"\n")
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -596,7 +596,6 @@ class AdfWeb(AdfObs):
                 #mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 #mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_SST_LatLon.html"
 
-                print(web_data.season)
                 season = web_data.season
                 """#Determine season value:
                 if web_data.season:
@@ -671,7 +670,7 @@ class AdfWeb(AdfObs):
                                   multi=multi_layout,
                                   case_sites=case_sites,
                                   )
-                print("web_data.html_file[0]",web_data.html_file[0],"\n")
+                #print("web_data.html_file[0]",web_data.html_file[0],"\n")
                 #Write mean diagnostic tables HTML file:
                 #print("web_data.html_file: ",web_data.html_file,"\n")
                 #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
@@ -718,7 +717,7 @@ class AdfWeb(AdfObs):
                         with open(table_pages_dir2 / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                             ofil.write(table_rndr)
                     else:
-                        print("must be the data case, yabadabadooodooopooopooopity\n")
+                        #print("must be the data case, yabadabadooodooopooopooopity\n")
                         for case_name in case_names:
                             your_keys = [case_name,data_name]
                             print(your_keys,"\n")
