@@ -933,10 +933,10 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case layout if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - -  
-        multi_mean_html_info = OrderedDict()   
+        #c  
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
-            #multi_mean_html_info = OrderedDict()
+            multi_mean_html_info = OrderedDict()
 
 
             print(multi_dict,"\n")
@@ -948,10 +948,12 @@ class AdfWeb(AdfObs):
                 #print(dir(web_data),"\n\n\n\n\n\n")
 
                 season = web_data.season
+                category = web_data.category
                 print(season,"\n")
                 print("web_data.case",web_data.case,"\n")
                 print("web_data.name",web_data.name,"\n") 
-                print("web_data.html_file",web_data.html_file,"\n")                
+                print("web_data.html_file",web_data.html_file,"\n") 
+                print("web_data.category",web_data.category,"\n")                
 
                 
                 print(multi_dict.keys(),"\n")
@@ -960,28 +962,29 @@ class AdfWeb(AdfObs):
 
                 for i in multi_dict.keys():
                     if i == ok[ptype]:
+                        for var in multi_dict[i]:
 
-                        print(f"OK, lets try this so called plot type: {ptype}\n")
-                        #Initialize Ordered Dictionary for multi case plot type:
-                        if ptype not in multi_mean_html_info:
-                            multi_mean_html_info[ptype] = OrderedDict()
-                        #End if
-
-
-                        if category not in multi_mean_html_info["LatLon"]:
-                            multi_mean_html_info[ptype]["Surface variables"] = OrderedDict()
-                        #End if
-
-                        #Check if the web data obj is table or not (plots)
-                        if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
-                            var = web_data.name
-                            #Initialize Ordered Dictionary for variable:
-                            if name not in multi_mean_html_info["LatLon"]["Surface variables"]:
-                                multi_mean_html_info["LatLon"]["Surface variables"][var] = OrderedDict()
+                            print(f"OK, lets try this so called plot type: {ptype}\n")
+                            #Initialize Ordered Dictionary for multi case plot type:
+                            if ptype not in multi_mean_html_info:
+                                multi_mean_html_info[ptype] = OrderedDict()
                             #End if
-                    
-                            print("SO DONE:",f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")
-                            multi_mean_html_info["LatLon"]["Surface variables"][var][season] = f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html"
+
+
+                            if category not in multi_mean_html_info[ptype]:
+                                multi_mean_html_info[ptype][category] = OrderedDict()
+                            #End if
+
+                            #Check if the web data obj is table or not (plots)
+                            if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                                var = web_data.name
+                                #Initialize Ordered Dictionary for variable:
+                                if name not in multi_mean_html_info[ptype][category]:
+                                    multi_mean_html_info[ptype][category][var] = OrderedDict()
+                                #End if
+                        
+                                print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
+                                multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                     #else:
                     #    multi_mean_html_info = {}
 
