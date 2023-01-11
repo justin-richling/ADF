@@ -953,7 +953,9 @@ class AdfWeb(AdfObs):
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
+                print(multi_dict.keys(),"\n")
                 if ptype in multi_dict.keys():
+                    print(f"OK, lets try this so called plot type: {ptype}\n")
                     #Initialize Ordered Dictionary for multi case plot type:
                     if ptype not in multi_mean_html_info:
                         multi_mean_html_info[ptype] = OrderedDict()
@@ -974,8 +976,8 @@ class AdfWeb(AdfObs):
                 
                             print("SO DONE:",f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")
                             multi_mean_html_info["LatLon"]["Surface variables"][var][season] = f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html"
-                        else:
-                            multi_mean_html_info = {}
+                #else:
+                #    multi_mean_html_info = {}
 
 
             #Loop over all web data objects again:
