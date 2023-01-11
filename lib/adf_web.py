@@ -1039,7 +1039,7 @@ class AdfWeb(AdfObs):
                         ptype = web_data.plot_type
                         
                         #Extract web data name (usually the variable name):
-                        name = web_data.name
+                        #name = web_data.name
                        
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
