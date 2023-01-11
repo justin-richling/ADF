@@ -990,8 +990,13 @@ class AdfWeb(AdfObs):
                         #    multi_mean_html_info = {}
 
             print(multi_mean_html_info,"\n\n")
+
+
+
             #Loop over all web data objects again:
             for web_data in self.__website_data:
+
+                season = web_data.season
 
                 #Create CSS templates file path:
                 main_templates_path = main_site_path / "templates"
@@ -1098,7 +1103,7 @@ class AdfWeb(AdfObs):
 
 
                         #Check if the mean plot type and var page exists for this case:
-                        print("Trying to go into mydata: ",multi_mean_html_info["LatLon"],"\n")
+                        print("Trying to go into mydata: ",multi_mean_html_info[web_data.plot_type],"\n")
                                     
                         self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
