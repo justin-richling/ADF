@@ -942,6 +942,7 @@ class AdfWeb(AdfObs):
             #Set dictionary for plot page html files
             for web_data in self.__website_data:
                 season = web_data.season
+                print(season,"\n")
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
@@ -961,7 +962,7 @@ class AdfWeb(AdfObs):
                         multi_mean_html_info["LatLon"]["Surface variables"][var] = OrderedDict()
                     #End if
                 
-                print("SO DONE:", web_data.html_file.name,f"plot_page_{var}_{season}_LatLon_Mean.html")
+                print("SO DONE:", web_data.html_file.name,f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")
                 multi_mean_html_info["LatLon"]["Surface variables"][var][season] = f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html"
 
             #Loop over all web data objects again:
