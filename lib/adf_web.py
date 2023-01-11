@@ -1038,7 +1038,7 @@ class AdfWeb(AdfObs):
                                     
                         img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_LatLon_multi_plot.png", start=main_site_img_path),
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
-
+                        print(multi_mean_html_info,"\n")
                         if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                             rndr = tmpl.render(title=main_title,
