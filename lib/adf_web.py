@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        #mean_html_info2 = OrderedDict()
+        multi_mean_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -557,8 +557,8 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype] = OrderedDict()
                 
                 #Initialize Ordered Dictionary for multi case plot type:
-                #if "LatLon" not in mean_html_info2:
-                #    mean_html_info2["LatLon"] = OrderedDict()
+                if "LatLon" not in mean_html_info2:
+                    multi_mean_html_info["LatLon"] = OrderedDict()
                 #End if
 
                 #mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
@@ -581,8 +581,11 @@ class AdfWeb(AdfObs):
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
                 #End if
-                
 
+                if category not in multi_mean_html_info["LatLon"]:
+                    multi_mean_html_info["LatLon"]["Surface variables"] = OrderedDict()
+                #End if
+                
                 #Extract web data name (usually the variable name):
                 name = web_data.name
                 #print("Regular ol'web_data",'\n',web_data.name,"\n",web_data.plot_type,"\n",web_data.season,"\n",web_data.html_file.name,"\n\n")
@@ -590,6 +593,11 @@ class AdfWeb(AdfObs):
                 #Initialize Ordered Dictionary for variable:
                 if name not in mean_html_info[ptype][category]:
                     mean_html_info[ptype][category][name] = OrderedDict()
+                #End if
+
+                #Initialize Ordered Dictionary for variable:
+                if name not in multi_mean_html_info["LatLon"]["Surface variables"]:
+                    multi_mean_html_info["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 #End if
 
                 
@@ -609,7 +617,7 @@ class AdfWeb(AdfObs):
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
                 #print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
-                #mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
+                multi_mean_html_info["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
 
             #End if (data-frame check)
         #End for (web_data list loop)
@@ -956,7 +964,7 @@ class AdfWeb(AdfObs):
         
         if main_site_path:
             print("yeah, were here for multi\n")
-            mean_html_info2 = OrderedDict()
+            #mean_html_info2 = OrderedDict()
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
             #Loop over all web data objects again:
@@ -999,15 +1007,6 @@ class AdfWeb(AdfObs):
                         #Extract plot_type:
                         ptype = web_data.plot_type
                         
-                        #Initialize Ordered Dictionary for multi case plot type:
-                        #print("Zippity doo dah: ",type(self.read_config_var('multi_case_plots')), self.read_config_var('multi_case_plots'),"\n")
-                        #for key,val in self.read_config_var('multi_case_plots'):
-                        if "LatLon" not in mean_html_info2:
-                            mean_html_info2["LatLon"] = OrderedDict()
-                        #End if
-
-                        mean_html_info2["LatLon"]["Surface variables"] = OrderedDict()
-                        mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                         #Check if category has been provided for this web data:
                         if web_data.category:
                             #If so, then just use directly:
@@ -1037,13 +1036,6 @@ class AdfWeb(AdfObs):
                         #    mean_html_info[ptype][category][name] = OrderedDict()
                         #End if
                         
-                        mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
-
-                        print(season,f"plot_page_multi_case_SST_{season}_LatLon_Mean.html","\n")
-                        #Initialize Ordered Dictionary for season:
-                        mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
-                        
-
 
                         #Check if the current var is in the 
                         #print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
@@ -1066,8 +1058,6 @@ class AdfWeb(AdfObs):
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
                         #print("img_data",img_data,"\n")
 
-                        print('SOOO CLOSE - mean_html_info2["LatLon"]:',mean_html_info2["LatLon"],"\n")
-
                         if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                             rndr = tmpl.render(title=main_title,
@@ -1079,7 +1069,7 @@ class AdfWeb(AdfObs):
                                                         base_name=data_name,
                                                         case_yrs=case_yrs,
                                                         baseline_yrs=baseline_yrs,
-                                                        mydata=mean_html_info2["LatLon"],
+                                                        mydata=multi_mean_html_info["LatLon"],
                                                         plot_types=multi_plot_type_html,
                                                         multi=multi_layout,
                                                         case_sites=case_sites,) #The template rendered
@@ -1102,7 +1092,7 @@ class AdfWeb(AdfObs):
                                                                         base_name=data_name,
                                                                         case_yrs=case_yrs,
                                                                         baseline_yrs=baseline_yrs,
-                                                                        mydata=mean_html_info2["LatLon"],
+                                                                        mydata=multi_mean_html_info["LatLon"],
                                                                         #mydata=mean_html_info[web_data.plot_type],
                                                                         curr_type=web_data.plot_type,
                                                                         plot_types=multi_plot_type_html,
@@ -1124,7 +1114,7 @@ class AdfWeb(AdfObs):
                         #print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
 
                         #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
-                        print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
+                        print("Trying to go into mydata: ",multi_mean_html_info["LatLon"],"\n")
                         #print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
                                     
                         self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
@@ -1144,7 +1134,7 @@ class AdfWeb(AdfObs):
                                                                         base_name=data_name,
                                                                         case_yrs=case_yrs,
                                                                         baseline_yrs=baseline_yrs,
-                                                                        mydata=mean_html_info2["LatLon"],
+                                                                        mydata=multi_mean_html_info["LatLon"],
                                                                         curr_type=web_data.plot_type,
                                                                         plot_types=multi_plot_type_html,
                                                                         multi=multi_layout,
