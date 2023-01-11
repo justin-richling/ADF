@@ -937,7 +937,7 @@ class AdfWeb(AdfObs):
         #multi_mean_html_info = OrderedDict()
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
-            #multi_mean_html_info = OrderedDict()
+            multi_mean_html_info = OrderedDict()
 
 
             print("multi_dict",multi_dict,"\n")
@@ -948,7 +948,7 @@ class AdfWeb(AdfObs):
             for web_data in self.__website_data:
                 #print(dir(web_data),"\n\n\n\n\n\n")
                 if not web_data.data_frame:
-                    multi_mean_html_info = OrderedDict()
+                    #multi_mean_html_info = OrderedDict()
                     season = web_data.season
                     category = web_data.category
                     print("season",season)
@@ -999,6 +999,7 @@ class AdfWeb(AdfObs):
             for web_data in self.__website_data:
 
                 season = web_data.season
+                print("season 2.0",season,"\n")
 
                 #Create CSS templates file path:
                 main_templates_path = main_site_path / "templates"
