@@ -956,8 +956,9 @@ class AdfWeb(AdfObs):
         # - - - - - - - - - - - - - - - - - - - - - - - - 
 
         #If this is a multi-case instance, then copy website to "main" directory:
-        mean_html_info2 = OrderedDict()
+        
         if main_site_path:
+
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
             #Loop over all web data objects again:
@@ -985,6 +986,7 @@ class AdfWeb(AdfObs):
                     print("web_data.plot_type: ",web_data.plot_type,"\n")
                     if not web_data.data_frame:
                         print()
+                        mean_html_info2 = OrderedDict()
 
 
                         #Create a directory that will hold just the html files for individual images:
