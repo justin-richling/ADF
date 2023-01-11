@@ -952,18 +952,17 @@ class AdfWeb(AdfObs):
                 if category not in multi_mean_html_info["LatLon"]:
                     multi_mean_html_info["LatLon"]["Surface variables"] = OrderedDict()
                 #End if
-                #Initialize Ordered Dictionary for variable:
-                if name not in multi_mean_html_info["LatLon"]["Surface variables"]:
-                    multi_mean_html_info["LatLon"]["Surface variables"]["SST"] = OrderedDict()
-                #End if
-                #print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
+
+                var = web_data.name
+                #Check if the web data obj is table or not (plots)
+                if var in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                    #Initialize Ordered Dictionary for variable:
+                    if name not in multi_mean_html_info["LatLon"]["Surface variables"]:
+                        multi_mean_html_info["LatLon"]["Surface variables"][var] = OrderedDict()
+                    #End if
+                
+                print("SO DONE:", web_data.html_file.name,f"plot_page_SST_{season}_LatLon_Mean.html")
                 multi_mean_html_info["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
-
-
-
-
-
-
 
             #Loop over all web data objects again:
             for web_data in self.__website_data:
