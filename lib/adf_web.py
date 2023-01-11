@@ -25,7 +25,7 @@ import os.path
 
 from pathlib import Path
 from collections import OrderedDict
-multi_mean_html_info = OrderedDict()
+#multi_mean_html_info = OrderedDict()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        #multi_mean_html_info = OrderedDict()
+        multi_mean_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
