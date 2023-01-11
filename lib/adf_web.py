@@ -25,7 +25,7 @@ import os.path
 
 from pathlib import Path
 from collections import OrderedDict
-#mean_html_info2 = OrderedDict()
+multi_mean_html_info = OrderedDict()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
@@ -933,7 +933,7 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case layout if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - -  
-        multi_mean_html_info = OrderedDict()
+        #multi_mean_html_info = OrderedDict()
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
             #multi_mean_html_info = OrderedDict()
