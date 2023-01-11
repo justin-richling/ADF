@@ -938,16 +938,18 @@ class AdfWeb(AdfObs):
             #multi_mean_html_info = OrderedDict()
 
 
-            print(multi_dict)
+            print(multi_dict,"\n")
             # multi_dict = self.read_config_var('multi_case_plots')
             #{'global_latlon_map': ['SST']}
 
             #Set dictionary for plot page html files
             for web_data in self.__website_data:
-                print(dir(web_data),"\n\n\n\n\n\n")
+                #print(dir(web_data),"\n\n\n\n\n\n")
 
                 season = web_data.season
                 print(season,"\n")
+                print("web_data.case",web_data.case,"\n")
+                print("web_data.name",web_data.name,"\n")                
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
