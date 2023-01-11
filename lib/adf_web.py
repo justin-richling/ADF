@@ -994,7 +994,6 @@ class AdfWeb(AdfObs):
                         #else:
                         #    multi_mean_html_info = {}
                                     print("Ok, now I'm generally lost 1",multi_mean_html_info,"\n\n")
-                print("Ok, now I'm generally lost 2",multi_mean_html_info,"\n\n")
             print("Ok, now I'm generally lost 3",multi_mean_html_info,"\n\n")
 
 
