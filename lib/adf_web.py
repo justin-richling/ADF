@@ -939,7 +939,7 @@ class AdfWeb(AdfObs):
             #multi_mean_html_info = OrderedDict()
 
 
-            print(multi_dict,"\n")
+            print("multi_dict",multi_dict,"\n")
             # multi_dict = self.read_config_var('multi_case_plots')
             #{'global_latlon_map': ['SST']}
 
@@ -949,10 +949,10 @@ class AdfWeb(AdfObs):
                 
                 season = web_data.season
                 category = web_data.category
-                print(season,"\n")
-                print("web_data.case",web_data.case,"\n")
-                print("web_data.name",web_data.name,"\n") 
-                print("web_data.html_file",web_data.html_file,"\n") 
+                print("season",season)
+                print("web_data.case",web_data.case)
+                print("web_data.name",web_data.name) 
+                print("web_data.html_file",web_data.html_file) 
                 print("web_data.category",web_data.category,"\n")                
 
                 
