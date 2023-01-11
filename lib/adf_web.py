@@ -903,7 +903,6 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 plot_types = plot_type_html
                 #End if
-                print(f"BELOW - line 906 dummy: {multi_plot_type_html} \n")
                 #Construct index.html
                 index_title = "AMP Diagnostics Prototype"
                 index_tmpl = jinenv.get_template('template_index.html')
@@ -957,6 +956,7 @@ class AdfWeb(AdfObs):
         #If this is a multi-case instance, then copy website to "main" directory:
         
         if main_site_path:
+            print("yeah, were here for multi\n")
             #mean_html_info2 = OrderedDict()
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
@@ -1040,12 +1040,6 @@ class AdfWeb(AdfObs):
                         
                         mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
 
-                        #Determine season value:
-                        if web_data.season:
-                            season = web_data.season
-                        else:
-                            season = "plot" #Just have the link be labeled "plot".
-                        #End if
                         print(season,f"plot_page_multi_case_SST_{season}_LatLon_Mean.html","\n")
                         #Initialize Ordered Dictionary for season:
                         mean_html_info2["LatLon"]["Surface variables"]["SST"][season] = f"plot_page_multi_case_SST_{season}_LatLon_Mean.html"
@@ -1138,12 +1132,12 @@ class AdfWeb(AdfObs):
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                         mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{var}_{web_data.plot_type}.html"
 
-                        if not mean_ptype_plot_page.exists():
+                        #if not mean_ptype_plot_page.exists():
 
-                            #Construct individual plot type mean_diag html files, if they don't
-                            #already exist:
-                            plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
-                            plot_page_rndr = plot_page_tmpl.render(title=main_title,
+                        #Construct individual plot type mean_diag html files, if they don't
+                        #already exist:
+                        plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
+                        plot_page_rndr = plot_page_tmpl.render(title=main_title,
                                                                     var_title=var,
                                                                     season_title=season,
                                                                     plottype_title=web_data.plot_type,
@@ -1158,10 +1152,10 @@ class AdfWeb(AdfObs):
                                                                     case_sites=case_sites,
                                                                     )
 
-                            #Write mean diagnostic plots HTML file:
-                            with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                                ofil.write(plot_page_rndr)
-                            #End with
+                        #Write mean diagnostic plots HTML file:
+                        with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
+                            ofil.write(plot_page_rndr)
+                        #End with
                         
                 #Also make sure CSS template files have been copied over:
                 if not main_templates_path.is_dir():
