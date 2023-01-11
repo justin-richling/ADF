@@ -896,7 +896,6 @@ class AdfWeb(AdfObs):
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
             if not index_html_file.exists():
-
                 #Re-et plot types list:
                 if web_data.case == 'multi-case':
                     plot_types = multi_plot_type_html
