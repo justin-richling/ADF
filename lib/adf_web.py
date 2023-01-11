@@ -958,10 +958,7 @@ class AdfWeb(AdfObs):
 
 
         # --- Starting multi-case layout if activated ---
-        # - - - - - - - - - - - - - - - - - - - - - - - - 
-
-        #If this is a multi-case instance, then copy website to "main" directory:
-        
+        # - - - - - - - - - - - - - - - - - - - - - - - -     
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
             #mean_html_info2 = OrderedDict()
