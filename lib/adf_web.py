@@ -1131,30 +1131,30 @@ class AdfWeb(AdfObs):
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                         mean_ptype_plot_page = img_pages_dir / f"plot_page_multi_case_{var}_{web_data.plot_type}.html"
 
-                        #if not mean_ptype_plot_page.exists():
+                        if not mean_ptype_plot_page.exists():
 
-                        #Construct individual plot type mean_diag html files, if they don't
-                        #already exist:
-                        plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
-                        plot_page_rndr = plot_page_tmpl.render(title=main_title,
-                                                                    var_title=var,
-                                                                    season_title=season,
-                                                                    plottype_title=web_data.plot_type,
-                                                                    #case1=web_data.case,
-                                                                    base_name=data_name,
-                                                                    case_yrs=case_yrs,
-                                                                    baseline_yrs=baseline_yrs,
-                                                                    mydata=mean_html_info2["LatLon"],
-                                                                    curr_type=web_data.plot_type,
-                                                                    plot_types=multi_plot_type_html,
-                                                                    multi=multi_layout,
-                                                                    case_sites=case_sites,
-                                                                    )
+                            #Construct individual plot type mean_diag html files, if they don't
+                            #already exist:
+                            plot_page_tmpl = jinenv.get_template('template_multi_case_var.html')
+                            plot_page_rndr = plot_page_tmpl.render(title=main_title,
+                                                                        var_title=var,
+                                                                        season_title=season,
+                                                                        plottype_title=web_data.plot_type,
+                                                                        #case1=web_data.case,
+                                                                        base_name=data_name,
+                                                                        case_yrs=case_yrs,
+                                                                        baseline_yrs=baseline_yrs,
+                                                                        mydata=mean_html_info2["LatLon"],
+                                                                        curr_type=web_data.plot_type,
+                                                                        plot_types=multi_plot_type_html,
+                                                                        multi=multi_layout,
+                                                                        case_sites=case_sites,
+                                                                        )
 
-                        #Write mean diagnostic plots HTML file:
-                        with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                            ofil.write(plot_page_rndr)
-                        #End with
+                            #Write mean diagnostic plots HTML file:
+                            with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
+                                ofil.write(plot_page_rndr)
+                            #End with
                         
                 #Also make sure CSS template files have been copied over:
                 if not main_templates_path.is_dir():
