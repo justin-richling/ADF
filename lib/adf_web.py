@@ -944,6 +944,8 @@ class AdfWeb(AdfObs):
 
             #Set dictionary for plot page html files
             for web_data in self.__website_data:
+                print(dir(web_data),"\n\n\n\n\n\n")
+
                 season = web_data.season
                 print(season,"\n")
 
