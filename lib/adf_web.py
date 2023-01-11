@@ -958,35 +958,36 @@ class AdfWeb(AdfObs):
                 
                 print(multi_dict.keys(),"\n")
                 #Extract plot_type:
-                ptype = web_data.plot_type
+                if not web_data.data_frame:
+                    ptype = web_data.plot_type
 
-                for i in multi_dict.keys():
-                    if i == ok[ptype]:
-                        for var in multi_dict[i]:
+                    for i in multi_dict.keys():
+                        if i == ok[ptype]:
+                            for var in multi_dict[i]:
 
-                            print(f"OK, lets try this so called plot type: {ptype}\n")
-                            #Initialize Ordered Dictionary for multi case plot type:
-                            if ptype not in multi_mean_html_info:
-                                multi_mean_html_info[ptype] = OrderedDict()
-                            #End if
-
-
-                            if category not in multi_mean_html_info[ptype]:
-                                multi_mean_html_info[ptype][category] = OrderedDict()
-                            #End if
-
-                            #Check if the web data obj is table or not (plots)
-                            if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
-                                var = web_data.name
-                                #Initialize Ordered Dictionary for variable:
-                                if name not in multi_mean_html_info[ptype][category]:
-                                    multi_mean_html_info[ptype][category][var] = OrderedDict()
+                                print(f"OK, lets try this so called plot type: {ptype}\n")
+                                #Initialize Ordered Dictionary for multi case plot type:
+                                if ptype not in multi_mean_html_info:
+                                    multi_mean_html_info[ptype] = OrderedDict()
                                 #End if
-                        
-                                print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
-                                multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                    #else:
-                    #    multi_mean_html_info = {}
+
+
+                                if category not in multi_mean_html_info[ptype]:
+                                    multi_mean_html_info[ptype][category] = OrderedDict()
+                                #End if
+
+                                #Check if the web data obj is table or not (plots)
+                                if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                                    var = web_data.name
+                                    #Initialize Ordered Dictionary for variable:
+                                    if name not in multi_mean_html_info[ptype][category]:
+                                        multi_mean_html_info[ptype][category][var] = OrderedDict()
+                                    #End if
+                            
+                                    print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
+                                    multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                        #else:
+                        #    multi_mean_html_info = {}
 
 
             #Loop over all web data objects again:
