@@ -903,7 +903,7 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 plot_types = plot_type_html
                 #End if
-                #print(f"BELOW - line 770 dummy: {multi_layout} \n")
+                print(f"BELOW - line 906 dummy: {multi_plot_type_html} \n")
                 #Construct index.html
                 index_title = "AMP Diagnostics Prototype"
                 index_tmpl = jinenv.get_template('template_index.html')
