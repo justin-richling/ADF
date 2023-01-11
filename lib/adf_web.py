@@ -595,7 +595,7 @@ class AdfWeb(AdfObs):
                 mean_html_info2["LatLon"]["Surface variables"]["SST"] = OrderedDict()
                 mean_html_info2["LatLon"]["Surface variables"]["SST"] = "plot_page_SST_LatLon.html"
 
-                
+                print(web_data.season)
                 season = web_data.season
                 """#Determine season value:
                 if web_data.season:
