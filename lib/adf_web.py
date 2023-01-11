@@ -1174,18 +1174,19 @@ class AdfWeb(AdfObs):
                 with open(outputfile, 'w', encoding='utf-8') as ofil:
                     ofil.write(main_rndr)
                 #End with
+
+            #Move over all the multi plot images to the main website assets dir
+            ug = f"{multi_path / self.get_cam_info('cam_case_name')[0]}_{syear_cases[0]}_{eyear_cases[0]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}"
+            #print(ug,"\n")
+            #print("b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40\n")
+            #print(f"{self.get_cam_info('cam_case_name')[0]}" == "b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40")
+            OK = glob.glob(f"{ug}/*multi_plot*")
+            #print(OK)
+            for plot in OK:
+                #print("PLOT",plot,"\n")
+                #print(Path(plot).stem,"\n")
+                shutil.move(plot, main_site_assets_path / f"{Path(plot).stem}.png")
         #End if
-        
-        ug = f"{multi_path / self.get_cam_info('cam_case_name')[0]}_{syear_cases[0]}_{eyear_cases[0]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}"
-        #print(ug,"\n")
-        #print("b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40\n")
-        #print(f"{self.get_cam_info('cam_case_name')[0]}" == "b.cesm3_cam058_mom_e.B1850MOM.f09_L32_t061.cam6_cice5.016_30_40_vs_b.cesm3_cam058_mom_c.B1850WscMOM.ne30_L58_t061.009_30_40")
-        OK = glob.glob(f"{ug}/*multi_plot*")
-        #print(OK)
-        for plot in OK:
-            #print("PLOT",plot,"\n")
-            #print(Path(plot).stem,"\n")
-            shutil.move(plot, main_site_assets_path / f"{Path(plot).stem}.png")
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
