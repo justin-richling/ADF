@@ -686,7 +686,7 @@ class AdfWeb(AdfObs):
                 #        ofil.write(table_rndr)
 
 
-
+                print("case_names",case_names,"\n")
                 if multi_layout == True:
                     if web_data.case != data_name:
 
@@ -719,7 +719,7 @@ class AdfWeb(AdfObs):
                             ofil.write(table_rndr)
                     else:
                         print("must be the data case, yabadabadooodooopooopooopity\n")
-                        for case_name in case_names[0:-1]:
+                        for case_name in case_names:
                             your_keys = [case_name,data_name]
                             print(your_keys,"\n")
                             dict_you_want = {key: table_html_info2[key] for key in your_keys}
