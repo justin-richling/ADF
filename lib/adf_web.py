@@ -934,10 +934,10 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case layout if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - -  
-        #multi_mean_html_info = OrderedDict()
+        multi_mean_html_info = OrderedDict()
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
-            multi_mean_html_info = OrderedDict()
+            #multi_mean_html_info = OrderedDict()
 
 
             print("multi_dict",multi_dict,"\n")
@@ -948,38 +948,39 @@ class AdfWeb(AdfObs):
             for web_data in self.__website_data:
                 #print(dir(web_data),"\n\n\n\n\n\n")
                 if not web_data.data_frame:
-                    #multi_mean_html_info = OrderedDict()
-                    season = web_data.season
-                    category = web_data.category
-                    print("season",season)
-                    print("web_data.case",web_data.case)
-                    print("web_data.name",web_data.name) 
-                    print("web_data.html_file",web_data.html_file) 
-                    print("web_data.category",web_data.category,"\n")                
+                    #Check if the web data obj is table or not (plots)
+                    if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                        #multi_mean_html_info = OrderedDict()
+                        season = web_data.season
+                        category = web_data.category
+                        print("season",season)
+                        print("web_data.case",web_data.case)
+                        print("web_data.name",web_data.name) 
+                        print("web_data.html_file",web_data.html_file) 
+                        print("web_data.category",web_data.category,"\n")                
 
-                    
-                    print(multi_dict.keys(),"\n")
-                    #Extract plot_type:
-                    #if not web_data.data_frame:
-                    ptype = web_data.plot_type
-                    
-                    for i in multi_dict.keys():
-                        if i == ok[ptype]:
-                            for var in multi_dict[i]:
+                        
+                        #print(multi_dict.keys(),"\n")
+                        #Extract plot_type:
+                        #if not web_data.data_frame:
+                        ptype = web_data.plot_type
+                        
+                        for i in multi_dict.keys():
+                            if i == ok[ptype]:
+                                for var in multi_dict[i]:
 
-                                print(f"OK, lets try this so called plot type: {ptype}\n")
-                                #Initialize Ordered Dictionary for multi case plot type:
-                                if ptype not in multi_mean_html_info:
-                                    multi_mean_html_info[ptype] = OrderedDict()
-                                #End if
+                                    print(f"OK, lets try this so called plot type: {ptype}\n")
+                                    #Initialize Ordered Dictionary for multi case plot type:
+                                    if ptype not in multi_mean_html_info:
+                                        multi_mean_html_info[ptype] = OrderedDict()
+                                    #End if
 
 
-                                if category not in multi_mean_html_info[ptype]:
-                                    multi_mean_html_info[ptype][category] = OrderedDict()
-                                #End if
+                                    if category not in multi_mean_html_info[ptype]:
+                                        multi_mean_html_info[ptype][category] = OrderedDict()
+                                    #End if
 
-                                #Check if the web data obj is table or not (plots)
-                                if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                                
                                     var = web_data.name
                                     #Initialize Ordered Dictionary for variable:
                                     if name not in multi_mean_html_info[ptype][category]:
@@ -1056,7 +1057,7 @@ class AdfWeb(AdfObs):
                                     
                         img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_LatLon_multi_plot.png", start=main_site_img_path),
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
-                        print(multi_mean_html_info,"\n")
+                        #print(multi_mean_html_info,"\n")
                         if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                             rndr = tmpl.render(title=main_title,
