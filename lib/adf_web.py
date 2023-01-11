@@ -25,7 +25,7 @@ import os.path
 
 from pathlib import Path
 from collections import OrderedDict
-#mean_html_info2 = OrderedDict()
+mean_html_info2 = OrderedDict()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
@@ -957,7 +957,7 @@ class AdfWeb(AdfObs):
         #If this is a multi-case instance, then copy website to "main" directory:
         
         if main_site_path:
-            mean_html_info2 = OrderedDict()
+            #mean_html_info2 = OrderedDict()
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
             #Loop over all web data objects again:
