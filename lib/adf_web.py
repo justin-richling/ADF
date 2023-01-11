@@ -941,6 +941,8 @@ class AdfWeb(AdfObs):
 
 
             for web_data in self.__website_data:
+                season = web_data.season
+
                 #Extract plot_type:
                 ptype = web_data.plot_type
                 #Initialize Ordered Dictionary for multi case plot type:
