@@ -931,10 +931,11 @@ class AdfWeb(AdfObs):
 
 
         # --- Starting multi-case layout if activated ---
-        # - - - - - - - - - - - - - - - - - - - - - - - -     
+        # - - - - - - - - - - - - - - - - - - - - - - - -  
+        multi_mean_html_info = OrderedDict()   
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
-            multi_mean_html_info = OrderedDict()
+            #multi_mean_html_info = OrderedDict()
 
 
 
