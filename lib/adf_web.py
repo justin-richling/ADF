@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        multi_mean_html_info = OrderedDict()
+        #multi_mean_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -594,6 +594,7 @@ class AdfWeb(AdfObs):
 
             #End if (data-frame check)
         #End for (web_data list loop)
+        print("mean_html_info",mean_html_info,"\n")
 
         
 
