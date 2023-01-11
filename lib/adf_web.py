@@ -963,14 +963,12 @@ class AdfWeb(AdfObs):
         #If this is a multi-case instance, then copy website to "main" directory:
         
         if main_site_path:
-            print("yeah, were here for multi\n")
+            print("yeah, were here for multi!!!!\n")
             #mean_html_info2 = OrderedDict()
-            #Add "multi-case" to start of case_names:
-            #case_names.insert(0, "multi-case")
+
             #Loop over all web data objects again:
-            for idx_2,web_data in enumerate(self.__website_data):
-                #print("BIG DADDY web_data: ",web_data,"\n------------------\n")
-                #print("OH BOY",idx_2,web_data.season,"\n")
+            for web_data in self.__website_data:
+
                 season = web_data.season
 
                 #Create CSS templates file path:
@@ -985,15 +983,11 @@ class AdfWeb(AdfObs):
                         if not website_dir.is_dir():
                             #Copy website directory to "main site" directory:
                             shutil.copytree(website_dir, main_site_path / case_name)
-
+                
+                var = web_data.name
                 #Check if the web data obj is table or not (plots)
-                if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
-                    
-                    var = web_data.name
-                    print("web_data.plot_type: ",web_data.plot_type,"\n")
+                if var in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
                     if not web_data.data_frame:
-                        
-
                         #mean_html_info2 = OrderedDict()
                         #Create a directory that will hold just the html files for individual images:
                         self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
@@ -1026,7 +1020,6 @@ class AdfWeb(AdfObs):
                         #if category not in mean_html_info[ptype]:
                         #    mean_html_info[ptype][category] = OrderedDict()
                         #End if
-                        
 
                         #Extract web data name (usually the variable name):
                         name = web_data.name
@@ -1036,27 +1029,12 @@ class AdfWeb(AdfObs):
                         #    mean_html_info[ptype][category][name] = OrderedDict()
                         #End if
                         
-
-                        #Check if the current var is in the 
-                        #print("GOLLY GEE PREWHIZZ",web_data.name,"\n")
-                    
-                        #print("GOLLY GEE CHEESEWHIZZ",var,"\n")
-
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                        #print(f"Getting close I think...\nweb_data.asset_path: {web_data.asset_path}\nimg_pages_dir: {img_pages_dir}\nweb_data.asset_path.stem: {web_data.asset_path.stem}\n")
-                        #img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
-                        #            web_data.asset_path.stem]
-
-                        #self.__case_web_paths['multi-case']['assets']
-                        self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
-
-                        #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'],"\n")
-                        #print("self.__case_web_paths['multi-case']['assets_dir'].stem",self.__case_web_paths['multi-case']['assets_dir'].stem,"\n")
+                        #self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
                                     
                         img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_LatLon_multi_plot.png", start=main_site_img_path),
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
-                        #print("img_data",img_data,"\n")
 
                         if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')  #Set template
@@ -1078,10 +1056,8 @@ class AdfWeb(AdfObs):
                             with open(img_pages_dir / f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
                                         ofil.write(rndr)
 
-                        #print("for multi case mean diag html:",web_data.plot_type,"\n")
-                        #print("UMMMMM:",mean_html_info[web_data.plot_type],"\n")
-                        mean_ptype_file = main_site_img_path / f"multi_case_mean_diag_{web_data.plot_type}.html"
-                        #print("For case index, plot_types: ",plot_types,"\n")
+                    
+                        mean_ptype_file = main_site_img_path / f"multi_case_mean_diag_{web_data.plot_type}.html"    
                         if not mean_ptype_file.exists():
 
                             #Construct individual plot type mean_diag html files, if they don't
@@ -1109,13 +1085,7 @@ class AdfWeb(AdfObs):
 
 
                         #Check if the mean plot type and var page exists for this case:
-                        #print("for plot_page multi case try: web_data.name",web_data.name,"\nweb_data.plot_type: ",web_data.plot_type,"\n")
-
-                        #print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
-
-                        #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
                         print("Trying to go into mydata: ",multi_mean_html_info["LatLon"],"\n")
-                        #print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
                                     
                         self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
@@ -1154,12 +1124,11 @@ class AdfWeb(AdfObs):
                     #End if
                 #End for (model case loop)
 
-                wks = "SST_ANN_LatLon_multi_plot.png"
                 #print(f"{main_site_path}")
                 #Create multi-case site:
                 multi_plots = {"Tables": "html_table/mean_tables.html",
-                                    #"LatLon": f"./{wks}",
-                                    "LatLon": f"html_img/multi_case_mean_diag_LatLon.html"}
+                                "LatLon": f"html_img/multi_case_mean_diag_LatLon.html"}
+
                 main_title = "ADF Diagnostics"
                 main_tmpl = jinenv.get_template('template_multi_case_index.html')
                 main_rndr = main_tmpl.render(title=main_title,
