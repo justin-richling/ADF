@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        #multi_mean_html_info = OrderedDict()
+        multi_mean_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -934,7 +934,7 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case layout if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - -  
-        multi_mean_html_info = OrderedDict()
+        #multi_mean_html_info = OrderedDict()
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
             #multi_mean_html_info = OrderedDict()
@@ -948,18 +948,21 @@ class AdfWeb(AdfObs):
             for web_data in self.__website_data:
                 #print(dir(web_data),"\n\n\n\n\n\n")
                 if not web_data.data_frame:
-                    season = web_data.season
-                    category = web_data.category
-                    print("season",season)
-                    print("web_data.case",web_data.case)
-                    print("web_data.name",web_data.name) 
-                    print("web_data.html_file",web_data.html_file) 
-                    print("web_data.category",web_data.category,"\n")                
-                    print()
+                    
 
                     #Check if the web data obj is table or not (plots)
+                    print("********** web_data.name",web_data.name,"****************\n")
                     if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                        print(f"{web_data.name} made it through, you sure about this???\n")
                         #multi_mean_html_info = OrderedDict()
+                        season = web_data.season
+                        category = web_data.category
+                        print("season",season)
+                        print("web_data.case",web_data.case)
+                        print("web_data.name",web_data.name) 
+                        print("web_data.html_file",web_data.html_file) 
+                        print("web_data.category",web_data.category,"\n")                
+                        print()
                         
                         #Extract plot_type:
                         #if not web_data.data_frame:
