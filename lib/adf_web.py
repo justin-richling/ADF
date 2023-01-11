@@ -947,19 +947,20 @@ class AdfWeb(AdfObs):
             #Set dictionary for plot page html files
             for web_data in self.__website_data:
                 #print(dir(web_data),"\n\n\n\n\n\n")
-                multi_mean_html_info = OrderedDict()
-                season = web_data.season
-                category = web_data.category
-                print("season",season)
-                print("web_data.case",web_data.case)
-                print("web_data.name",web_data.name) 
-                print("web_data.html_file",web_data.html_file) 
-                print("web_data.category",web_data.category,"\n")                
-
-                
-                print(multi_dict.keys(),"\n")
-                #Extract plot_type:
                 if not web_data.data_frame:
+                    multi_mean_html_info = OrderedDict()
+                    season = web_data.season
+                    category = web_data.category
+                    print("season",season)
+                    print("web_data.case",web_data.case)
+                    print("web_data.name",web_data.name) 
+                    print("web_data.html_file",web_data.html_file) 
+                    print("web_data.category",web_data.category,"\n")                
+
+                    
+                    print(multi_dict.keys(),"\n")
+                    #Extract plot_type:
+                    #if not web_data.data_frame:
                     ptype = web_data.plot_type
                     
                     for i in multi_dict.keys():
