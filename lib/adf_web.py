@@ -936,7 +936,7 @@ class AdfWeb(AdfObs):
         #c  
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
-            multi_mean_html_info = OrderedDict()
+            #multi_mean_html_info = OrderedDict()
 
 
             print(multi_dict,"\n")
@@ -946,7 +946,7 @@ class AdfWeb(AdfObs):
             #Set dictionary for plot page html files
             for web_data in self.__website_data:
                 #print(dir(web_data),"\n\n\n\n\n\n")
-
+                multi_mean_html_info = OrderedDict()
                 season = web_data.season
                 category = web_data.category
                 print(season,"\n")
