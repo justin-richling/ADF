@@ -25,7 +25,7 @@ import os.path
 
 from pathlib import Path
 from collections import OrderedDict
-mean_html_info2 = OrderedDict()
+#mean_html_info2 = OrderedDict()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
@@ -956,7 +956,7 @@ class AdfWeb(AdfObs):
         
         if main_site_path:
             print("yeah, were here for multi\n")
-            #mean_html_info2 = OrderedDict()
+            mean_html_info2 = OrderedDict()
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
             #Loop over all web data objects again:
@@ -986,7 +986,7 @@ class AdfWeb(AdfObs):
                     if not web_data.data_frame:
                         
 
-                        mean_html_info2 = OrderedDict()
+                        #mean_html_info2 = OrderedDict()
                         #Create a directory that will hold just the html files for individual images:
                         self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
 
@@ -1075,8 +1075,8 @@ class AdfWeb(AdfObs):
                                                         season_title=season,
                                                         plottype_title=web_data.plot_type,
                                                         imgs=img_data,
-                                                        case1=web_data.case,
-                                                        case2=data_name,
+                                                        #case1=web_data.case,
+                                                        base_name=data_name,
                                                         case_yrs=case_yrs,
                                                         baseline_yrs=baseline_yrs,
                                                         mydata=mean_html_info2["LatLon"],
@@ -1098,8 +1098,8 @@ class AdfWeb(AdfObs):
                             #already exist:
                             mean_tmpl = jinenv.get_template('template_multi_case_mean_diag.html')
                             mean_rndr = mean_tmpl.render(title=main_title,
-                                                                        case1=web_data.case,
-                                                                        case2=data_name,
+                                                                        #case1=web_data.case,
+                                                                        base_name=data_name,
                                                                         case_yrs=case_yrs,
                                                                         baseline_yrs=baseline_yrs,
                                                                         mydata=mean_html_info2["LatLon"],
@@ -1124,7 +1124,7 @@ class AdfWeb(AdfObs):
                         #print('mean_html_info2["LatLon"]: ',mean_html_info2["LatLon"],mean_html_info2["LatLon"].items())
 
                         #print("Going into mydata: ",mean_html_info[web_data.plot_type],"\n")
-                        #print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
+                        print("Trying to go into mydata: ",mean_html_info2["LatLon"],"\n")
                         #print("BEFORE: img_pages_dir: ",img_pages_dir,"\n")
                                     
                         self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
@@ -1140,8 +1140,8 @@ class AdfWeb(AdfObs):
                                                                     var_title=var,
                                                                     season_title=season,
                                                                     plottype_title=web_data.plot_type,
-                                                                    case1=web_data.case,
-                                                                    case2=data_name,
+                                                                    #case1=web_data.case,
+                                                                    base_name=data_name,
                                                                     case_yrs=case_yrs,
                                                                     baseline_yrs=baseline_yrs,
                                                                     mydata=mean_html_info2["LatLon"],
