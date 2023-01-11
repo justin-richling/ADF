@@ -989,7 +989,7 @@ class AdfWeb(AdfObs):
                         #else:
                         #    multi_mean_html_info = {}
 
-
+            print(multi_mean_html_info,"\n\n")
             #Loop over all web data objects again:
             for web_data in self.__website_data:
 
