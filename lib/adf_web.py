@@ -958,7 +958,7 @@ class AdfWeb(AdfObs):
         #If this is a multi-case instance, then copy website to "main" directory:
         
         if main_site_path:
-
+            mean_html_info2 = OrderedDict()
             #Add "multi-case" to start of case_names:
             #case_names.insert(0, "multi-case")
             #Loop over all web data objects again:
@@ -985,8 +985,7 @@ class AdfWeb(AdfObs):
                     var = web_data.name
                     print("web_data.plot_type: ",web_data.plot_type,"\n")
                     if not web_data.data_frame:
-                        print()
-                        mean_html_info2 = OrderedDict()
+                        
 
 
                         #Create a directory that will hold just the html files for individual images:
@@ -1163,44 +1162,6 @@ class AdfWeb(AdfObs):
                             with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
                                 ofil.write(plot_page_rndr)
                             #End with
-
-
-
-                """if web_data.data_frame:
-                    table_pages_dir2 = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    #print(f"Line 917 - table_pages_dir2: {table_pages_dir2}\n")
-                    table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                                float_format='{:6g}'.format)
-
-                    #Construct amwg_table.html
-                    #print("once and for all:",table_html_info2[web_data.case],"\n")
-                    table_tmpl = jinenv.get_template('template_table.html')
-                    table_rndr = table_tmpl.render(title=main_title,
-                                                case1=web_data.case,
-                                                case2=data_name,
-                                                case_yrs=case_yrs,
-                                                base_name=data_name,
-                                                baseline_yrs=baseline_yrs,
-                                                amwg_tables=table_html_info2,
-                                                plot_types=plot_types,
-                                                table_name=web_data.name,
-                                                table_html=table_html,
-                                                multi=False,
-                                                case_sites=case_sites,
-                                                )
-
-                    #Write mean diagnostic tables HTML file:
-                    #print("web_data.html_file: ",web_data.html_file,"\n")
-                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                    #   ofil.write(table_rndr)
-                    ##End with
-                    #if "all_case_comparison.html" in str(web_data.html_file[0]):
-                    #with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
-                    #    ofil.write(table_rndr)
-                    #if "all_case_comparison.html" not in str(web_data.html_file[0]):
-                    #print(table_pages_dir2 / table_html_info2[web_data.case])
-                    with open(table_pages_dir2 / table_html_info2[web_data.case], 'w', encoding='utf-8') as ofil:
-                        ofil.write(table_rndr)"""
                         
                 #Also make sure CSS template files have been copied over:
                 if not main_templates_path.is_dir():
