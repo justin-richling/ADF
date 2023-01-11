@@ -981,6 +981,7 @@ class AdfWeb(AdfObs):
 
                 #Check if the web data obj is table or not (plots)
                 if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                    mean_html_info2 = OrderedDict()
                     var = web_data.name
                     print("web_data.plot_type: ",web_data.plot_type,"\n")
                     if not web_data.data_frame:
