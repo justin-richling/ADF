@@ -938,8 +938,10 @@ class AdfWeb(AdfObs):
             #multi_mean_html_info = OrderedDict()
 
 
-
             print(multi_dict)
+            # multi_dict = self.read_config_var('multi_case_plots')
+            #{'global_latlon_map': ['SST']}
+
             #Set dictionary for plot page html files
             for web_data in self.__website_data:
                 season = web_data.season
@@ -947,25 +949,27 @@ class AdfWeb(AdfObs):
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
-                #Initialize Ordered Dictionary for multi case plot type:
-                if "LatLon" not in multi_mean_html_info:
-                    multi_mean_html_info["LatLon"] = OrderedDict()
-                #End if
-                if category not in multi_mean_html_info["LatLon"]:
-                    multi_mean_html_info["LatLon"]["Surface variables"] = OrderedDict()
-                #End if
+                if ptype in multi_dict.keys():
+                    #Initialize Ordered Dictionary for multi case plot type:
+                    if ptype not in multi_mean_html_info:
+                        multi_mean_html_info[ptype] = OrderedDict()
+                    #End if
+                    if category not in multi_mean_html_info["LatLon"]:
+                        multi_mean_html_info[ptype]["Surface variables"] = OrderedDict()
+                    #End if
 
-                var = web_data.name
                 #Check if the web data obj is table or not (plots)
-                if var in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                    var = web_data.name
                     #Initialize Ordered Dictionary for variable:
                     if name not in multi_mean_html_info["LatLon"]["Surface variables"]:
                         multi_mean_html_info["LatLon"]["Surface variables"][var] = OrderedDict()
                     #End if
                 
-                print("SO DONE:",f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")
-                multi_mean_html_info["LatLon"]["Surface variables"][var][season] = f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html"
-
+                    print("SO DONE:",f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")
+                    multi_mean_html_info["LatLon"]["Surface variables"][var][season] = f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html"
+                else:
+                    multi_mean_html_info = {}
 
 
             #Loop over all web data objects again:
