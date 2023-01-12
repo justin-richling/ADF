@@ -519,9 +519,10 @@ class AdfWeb(AdfObs):
                 print("web_data.html_file",web_data.html_file,"\n")
                 if len(case_names) >1:
                     table_html_info[web_data.name] = web_data.html_file[0].name
+                    multi_table_html_info[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")
                 else:
                     table_html_info[web_data.name] = web_data.html_file.name
-                multi_table_html_info[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")
+                
 
             #Now check all plot types
             if not web_data.data_frame:
