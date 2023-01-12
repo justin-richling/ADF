@@ -189,7 +189,7 @@ def global_latlon_map(adfobj):
                "SON": [9, 10, 11]
                }
     
-    #restom_dict = {}
+    print("YYYYAAAAHHHHPOOOPOP",adfobj.read_config_var('multi_case_plots'),"\n")
 
     multi_dict = OrderedDict()
     # probably want to do this one variable at a time:
