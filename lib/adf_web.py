@@ -464,7 +464,7 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
-        multi_mean_html_info = OrderedDict()
+        #multi_mean_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -976,26 +976,28 @@ class AdfWeb(AdfObs):
                                     print("VAR:  ",var,"\n")
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
-                                    #if ptype not in multi_mean_html_info:
-                                    multi_mean_html_info[ptype] = OrderedDict()
+                                    print(multi_mean_html_info,"\n")
+                                    if ptype not in multi_mean_html_info:
+                                        multi_mean_html_info[ptype] = OrderedDict()
                                     #End if
 
-
-                                    #if category not in multi_mean_html_info[ptype]:
-                                    multi_mean_html_info[ptype][category] = OrderedDict()
+                                    print(multi_mean_html_info,"\n")
+                                    if category not in multi_mean_html_info[ptype]:
+                                        multi_mean_html_info[ptype][category] = OrderedDict()
                                     #End if
 
                                 
-                                    var = web_data.name
+                                    #var = web_data.name
                                     #Initialize Ordered Dictionary for variable:
-                                    #if name not in multi_mean_html_info[ptype][category]:
-                                    multi_mean_html_info[ptype][category][var] = OrderedDict()
+                                    print(multi_mean_html_info,"\n")
+                                    if name not in multi_mean_html_info[ptype][category]:
+                                        multi_mean_html_info[ptype][category][var] = OrderedDict()
                                     #End if
                             
                                     print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
                                     multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                        #else:
-                        #    multi_mean_html_info = {}
+                                    #print(multi_mean_html_info,"\n")
+       
                                     print("Ok, now I'm generally lost 1",multi_mean_html_info,"\n\n")
             print("Ok, now I'm generally lost 3",multi_mean_html_info,"\n\n")
 
