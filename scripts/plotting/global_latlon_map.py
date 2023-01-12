@@ -421,7 +421,7 @@ def global_latlon_map(adfobj):
                                                  mseasons[s], oseasons[s], dseasons[s], **vres)
 
                             #Add plot to website (if enabled):
-                            adfobj.add_website_data(plot_name, var, case_name, category=web_category,
+                            adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", category=web_category,
                                                     season=s, plot_type="LatLon")
 
                     else: #mdata dimensions check
@@ -530,7 +530,8 @@ def global_latlon_map(adfobj):
                                                      mseasons[s], oseasons[s], dseasons[s], **vres)
 
                                 #Add plot to website (if enabled):
-                                adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
+                                adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
+                                                        category=web_category,
                                                         season=s,plot_type="LatLon")
                                 
                                 
@@ -575,32 +576,7 @@ def global_latlon_map(adfobj):
             print("  ...lat/lon multi-case plots have been generated successfully.")
         #End for (variable loop)
         #Notify user that script has ended:
-        print("  ...lat/lon maps have been generated successfully.")
-
-    '''#This will be a list of variables for multi-case plotting based off LatLon plot type
-    #adfobj.get_multi_case_info("global_latlon_map")
-    if multi_plots:
-        #Notify user that script has started:
-        print("\n  Generating lat/lon multi-case plots...")
-        wks = Path(plot_locations[0])
-        pf.multi_plots(wks,"LatLon", case_names, [test_nicknames,base_nickname], multi_dict)
-
-        """# Check redo_plot. If set to True: remove old plot, if it already exists:
-        redo_plot = adfobj.get_basic_info('redo_plot')
-        if (not redo_plot) and plot_name.is_file():
-            #Add already-existing plot to website (if enabled):
-            adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
-                                                            season=s, plot_type="LatLon")
-
-            #Continue to next iteration:
-            #continue
-        elif (redo_plot) and plot_name.is_file():
-            plot_name.unlink()"""
-        #print("web_category for multi plot?:",web_category,"\n")
-        #print("plot_name for multi plot?:",plot_name,"\n")
-        #adfobj.add_website_data(plot_name, var, case_name, category=web_category,season=s, plot_type="multi_LatLon")
-        print("  ...lat/lon multi-case plots have been generated successfully.")'''
-    
+        print("  ...lat/lon maps have been generated successfully.")    
 
 #########
 # Helpers
