@@ -932,8 +932,8 @@ class AdfWeb(AdfObs):
         ok = {"LatLon":"global_latlon_map","Zonal":"zonal_mean"}
         #ok = {"global_latlon_map":"LatLon","zonal_mean":"Zonal"}
 
-        # --- Starting multi-case layout if activated ---
-        # - - - - - - - - - - - - - - - - - - - - - - - -  
+        # --- Starting multi-case plots if activated ---
+        # - - - - - - - - - - - - - - - - - - - - - - -  
         #multi_mean_html_info = OrderedDict()
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
