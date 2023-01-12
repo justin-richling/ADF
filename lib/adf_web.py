@@ -989,11 +989,10 @@ class AdfWeb(AdfObs):
                         if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                             rndr = tmpl.render(title=main_title,
-                                                        var_title=var,#web_data.name,
+                                                        var_title=var,
                                                         season_title=season,
                                                         plottype_title=web_data.plot_type,
                                                         imgs=img_data,
-                                                        #case1=web_data.case,
                                                         base_name=data_name,
                                                         case_yrs=case_yrs,
                                                         baseline_yrs=baseline_yrs,
@@ -1014,7 +1013,6 @@ class AdfWeb(AdfObs):
                             #already exist:
                             mean_tmpl = jinenv.get_template('template_multi_case_mean_diag.html')
                             mean_rndr = mean_tmpl.render(title=main_title,
-                                                                        #case1=web_data.case,
                                                                         base_name=data_name,
                                                                         case_yrs=case_yrs,
                                                                         baseline_yrs=baseline_yrs,
@@ -1044,7 +1042,6 @@ class AdfWeb(AdfObs):
                                                                         var_title=var,
                                                                         season_title=season,
                                                                         plottype_title=web_data.plot_type,
-                                                                        #case1=web_data.case,
                                                                         base_name=data_name,
                                                                         case_yrs=case_yrs,
                                                                         baseline_yrs=baseline_yrs,
