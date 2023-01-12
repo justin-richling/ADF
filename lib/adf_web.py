@@ -976,20 +976,20 @@ class AdfWeb(AdfObs):
                                     print("VAR:  ",var,"\n")
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
-                                    if ptype not in multi_mean_html_info:
-                                        multi_mean_html_info[ptype] = OrderedDict()
+                                    #if ptype not in multi_mean_html_info:
+                                    multi_mean_html_info[ptype] = OrderedDict()
                                     #End if
 
 
-                                    if category not in multi_mean_html_info[ptype]:
-                                        multi_mean_html_info[ptype][category] = OrderedDict()
+                                    #if category not in multi_mean_html_info[ptype]:
+                                    multi_mean_html_info[ptype][category] = OrderedDict()
                                     #End if
 
                                 
                                     var = web_data.name
                                     #Initialize Ordered Dictionary for variable:
-                                    if name not in multi_mean_html_info[ptype][category]:
-                                        multi_mean_html_info[ptype][category][var] = OrderedDict()
+                                    #if name not in multi_mean_html_info[ptype][category]:
+                                    multi_mean_html_info[ptype][category][var] = OrderedDict()
                                     #End if
                             
                                     print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
@@ -1024,7 +1024,7 @@ class AdfWeb(AdfObs):
                 if var in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
                     if not web_data.data_frame:
                         season = web_data.season
-                        print("season 2.0",season,"\n")
+                        #print("season 2.0",season,"\n")
                         #mean_html_info2 = OrderedDict()
                         #Create a directory that will hold just the html files for individual images:
                         self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
