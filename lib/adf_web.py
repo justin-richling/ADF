@@ -933,11 +933,11 @@ class AdfWeb(AdfObs):
         #ok = {"global_latlon_map":"LatLon","zonal_mean":"Zonal"}
 
         # --- Starting multi-case plots if activated ---
-        # - - - - - - - - - - - - - - - - - - - - - - -  
+        # - - - - - - - - - - - - - - - - - - - - - - - - 
         #multi_mean_html_info = OrderedDict()
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
-            #multi_mean_html_info = OrderedDict()
+            multi_mean_html_info = OrderedDict()
 
 
             print("multi_dict",multi_dict,"\n")
@@ -977,7 +977,7 @@ class AdfWeb(AdfObs):
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
                                     #if ptype not in multi_mean_html_info:
-                                    multi_mean_html_info[ptype] = OrderedDict()
+                                    #multi_mean_html_info[ptype] = OrderedDict()
                                     #End if
 
 
