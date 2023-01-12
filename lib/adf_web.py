@@ -952,7 +952,7 @@ class AdfWeb(AdfObs):
                     
 
                     #Check if the web data obj is table or not (plots)
-                    print("********** web_data.name",web_data.name,"****************\n")
+                    #print("********** web_data.name",web_data.name,"****************\n")
                     if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
                         print(f"{web_data.name} made it through, you sure about this???\n")
                         #multi_mean_html_info = OrderedDict()
@@ -991,12 +991,12 @@ class AdfWeb(AdfObs):
                                     #var = web_data.name
                                     #Initialize Ordered Dictionary for variable:
                                     print(multi_mean_html_info,"\n")
-                                    if name not in multi_mean_html_info[ptype][category]:
+                                    if var not in multi_mean_html_info[ptype][category]:
                                         multi_mean_html_info[ptype][category][var] = OrderedDict()
                                     #End if
                             
                                     print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
-                                    if name not in multi_mean_html_info[ptype][category][var]:
+                                    if season not in multi_mean_html_info[ptype][category][var]:
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #print(multi_mean_html_info,"\n")
        
