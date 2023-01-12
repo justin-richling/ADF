@@ -1063,10 +1063,10 @@ class AdfWeb(AdfObs):
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                         #self.__case_web_paths['multi-case']['assets_dir'].mkdir(exist_ok=True)
                                     
-                        img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_LatLon_multi_plot.png", start=main_site_img_path),
+                        img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_{ptype}_multi_plot.png", start=main_site_img_path),
                                                 f"{var}_{season}_LatLon_multi_plot.png"]
                         #print(multi_mean_html_info,"\n")
-                        if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html")).exists():
+                        if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')  #Set template
                             rndr = tmpl.render(title=main_title,
                                                         var_title=var,#web_data.name,
@@ -1083,7 +1083,7 @@ class AdfWeb(AdfObs):
                                                         case_sites=case_sites,) #The template rendered
 
                             #Write HTML file:
-                            with open(img_pages_dir / f"plot_page_multi_case_{var}_{season}_LatLon_Mean.html", 'w', encoding='utf-8') as ofil:
+                            with open(img_pages_dir / f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html", 'w', encoding='utf-8') as ofil:
                                         ofil.write(rndr)
 
                     
@@ -1098,7 +1098,7 @@ class AdfWeb(AdfObs):
                                                                         base_name=data_name,
                                                                         case_yrs=case_yrs,
                                                                         baseline_yrs=baseline_yrs,
-                                                                        mydata=multi_mean_html_info["LatLon"],
+                                                                        mydata=multi_mean_html_info[ptype],
                                                                         #mydata=mean_html_info[web_data.plot_type],
                                                                         curr_type=web_data.plot_type,
                                                                         plot_types=multi_plot_type_html,
@@ -1134,7 +1134,7 @@ class AdfWeb(AdfObs):
                                                                         base_name=data_name,
                                                                         case_yrs=case_yrs,
                                                                         baseline_yrs=baseline_yrs,
-                                                                        mydata=multi_mean_html_info["LatLon"],
+                                                                        mydata=multi_mean_html_info[ptype],
                                                                         curr_type=web_data.plot_type,
                                                                         plot_types=multi_plot_type_html,
                                                                         multi=multi_layout,
