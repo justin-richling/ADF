@@ -108,8 +108,8 @@ def global_latlon_map(adfobj):
         #Check if multi-plots are desired from yaml file
         if adfobj.read_config_var('multi_case_plots'):
             multi_plots = True
-        else:
-            multi_plots = False
+    else:
+        multi_plots = False
 
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
