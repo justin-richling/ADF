@@ -969,9 +969,9 @@ class AdfWeb(AdfObs):
                         ptype = web_data.plot_type
                         
                         for i in multi_dict.keys():
-                            #print("i",i,"\n")
+                            print("i",i,"\n")
                             if i == ok[ptype]:
-                                #print("i 2",i,ok[ptype],"\n")
+                                print("i 2",i,ok[ptype],"\n")
                                 for var in multi_dict[i]:
                                     print("VAR:  ",var,"\n")
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
