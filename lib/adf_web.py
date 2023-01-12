@@ -594,7 +594,7 @@ class AdfWeb(AdfObs):
 
             #End if (data-frame check)
         #End for (web_data list loop)
-        print("mean_html_info",mean_html_info,"\n")
+        #print("mean_html_info",mean_html_info,"\n")
 
         
 
@@ -667,7 +667,7 @@ class AdfWeb(AdfObs):
                 #        ofil.write(table_rndr)
 
 
-                print("case_names",case_names,"\n")
+                #print("case_names",case_names,"\n")
                 if multi_layout == True:
                     if web_data.case != data_name:
 
@@ -974,7 +974,7 @@ class AdfWeb(AdfObs):
                                 #print("i 2",i,ok[ptype],"\n")
                                 for var in multi_dict[i]:
                                     #print("VAR:  ",var,"\n")
-                                    print(f"OK, lets try this so called plot type: {ptype}\n")
+                                    #print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
                                     #print(multi_mean_html_info,"\n")
                                     if ptype not in multi_mean_html_info:
@@ -1115,7 +1115,7 @@ class AdfWeb(AdfObs):
 
 
                         #Check if the mean plot type and var page exists for this case:
-                        print("Trying to go into mydata: ",multi_mean_html_info[web_data.plot_type],"\n")
+                        #print("Trying to go into mydata: ",multi_mean_html_info[web_data.plot_type],"\n")
                                     
                         self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
