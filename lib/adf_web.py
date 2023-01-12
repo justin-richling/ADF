@@ -929,19 +929,19 @@ class AdfWeb(AdfObs):
         #End for (web data loop)
 
 
-        ok = {"LatLon":"global_latlon_map","Zonal":"zonal_mean"}
+        ok = {"LatLon":"global_latlon_map", "Zonal":"zonal_mean", "Meridional":"meridional_mean"}
         #ok = {"global_latlon_map":"LatLon","zonal_mean":"Zonal"}
 
         # --- Starting multi-case plots if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - - 
         #multi_mean_html_info = OrderedDict()
         if main_site_path:
-            print("yeah, were here for multi!!!!\n")
+            #print("yeah, were here for multi!!!!\n")
             multi_mean_html_info = OrderedDict()
             #print(multi_mean_html_info,"\n")
 
 
-            print("multi_dict",multi_dict,"\n")
+            #print("multi_dict",multi_dict,"\n")
             # multi_dict = self.read_config_var('multi_case_plots')
             #{'global_latlon_map': ['SST']}
 
@@ -954,16 +954,15 @@ class AdfWeb(AdfObs):
                     #Check if the web data obj is table or not (plots)
                     #print("********** web_data.name",web_data.name,"****************\n")
                     if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
-                        print(f"{web_data.name} made it through, you sure about this???\n")
-                        #multi_mean_html_info = OrderedDict()
+                        #print(f"{web_data.name} made it through, you sure about this???\n")
                         season = web_data.season
                         category = web_data.category
-                        print("season",season)
-                        print("web_data.case",web_data.case)
-                        print("web_data.name",web_data.name) 
-                        print("web_data.html_file",web_data.html_file) 
-                        print("web_data.category",web_data.category,"\n")                
-                        print()
+                        #print("season",season)
+                        #print("web_data.case",web_data.case)
+                        #print("web_data.name",web_data.name) 
+                        #print("web_data.html_file",web_data.html_file) 
+                        #print("web_data.category",web_data.category,"\n")                
+                        #print()
                         
                         #Extract plot_type:
                         #if not web_data.data_frame:
@@ -1000,7 +999,6 @@ class AdfWeb(AdfObs):
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #print(multi_mean_html_info,"\n")
        
-                                    print("Ok, now I'm generally lost 1",multi_mean_html_info,"\n\n")
             print("Ok, now I'm generally lost 3",multi_mean_html_info,"\n\n")
 
 
