@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections import OrderedDict
 import numpy as np
 import xarray as xr
 import plotting_functions as pf
@@ -40,6 +41,12 @@ def zonal_mean(adfobj):
         files are using native hybrid-sigma levels rather than being
         transformed to pressure levels.
     """
+
+    #Check if multi-plots are desired from yaml file
+    if adfobj.read_config_var('multi_case_plots'):
+        multi_plots = True
+    else:
+        multi_plots = False
 
     #Notify user that script has started:
     print("\n  Generating zonal mean plots...")
@@ -125,8 +132,15 @@ def zonal_mean(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
 
-    multi_var_list = ["TS","SST"]# replace by config file stuff in a minute
-    multi_s_list = list(seasons.keys())
+    #multi_var_list = ["TS","SST"]# replace by config file stuff in a minute
+    #multi_s_list = list(seasons.keys())
+
+    """multi_dict = OrderedDict()
+    # probably want to do this one variable at a time:
+    if multi_plots:
+        for var in var_list:
+            if var in ["TS", "SST"]:
+                multi_dict[var] = OrderedDict()"""
 
     #Loop over variables:
     for var in var_list:
@@ -179,6 +193,11 @@ def zonal_mean(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+
+                #Grab data for desired multi-plots (from yaml file)
+                if multi_plots:
+                    if var in adfobj.get_multi_case_info("global_latlon_map"):
+                        multi_dict[var][case_name] = OrderedDict()
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
@@ -243,6 +262,13 @@ def zonal_mean(adfobj):
                 for s in seasons:
                     mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
                     oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
+                    dseasons[s] = mseasons[s] - oseasons[s]
+
+                    #Grab data for desired multi-plots (from yaml file)
+                    if multi_plots:
+                        if var in adfobj.get_multi_case_info("zonal_mean"):
+                            #print("Multi plot var in lat lon plots (no levs):",var,"\n")
+                            multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                     # difference: each entry should be (lat, lon) or (plev, lat, lon)
                     # dseasons[s] = mseasons[s] - oseasons[s]
