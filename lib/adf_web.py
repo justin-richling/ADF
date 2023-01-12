@@ -995,7 +995,7 @@ class AdfWeb(AdfObs):
                                     #End if
                             
                                     print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
-                                    if name not in multi_mean_html_info[ptype][category][var][season]:
+                                    if name not in multi_mean_html_info[ptype][category][var]:
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #print(multi_mean_html_info,"\n")
        
