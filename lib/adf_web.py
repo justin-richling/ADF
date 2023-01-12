@@ -977,7 +977,7 @@ class AdfWeb(AdfObs):
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
                                     #if ptype not in multi_mean_html_info:
-                                    #multi_mean_html_info[ptype] = OrderedDict()
+                                    multi_mean_html_info[ptype] = OrderedDict()
                                     #End if
 
 
