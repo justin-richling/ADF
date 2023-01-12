@@ -500,7 +500,6 @@ def global_latlon_map(adfobj):
 
                                 if multi_plots:
                                     if var in adfobj.get_multi_case_info("global_latlon_map"):
-                                        print("Multi plot var in lat lon plots:",var,"\n")
                                         multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
