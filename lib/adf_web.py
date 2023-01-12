@@ -58,6 +58,7 @@ class _WebData:
     """
 
     def __init__(self, web_data, web_name, case_name,
+                 plot_ext = None,
                  category = None,
                  season = None,
                  plot_type = "Special",
@@ -73,6 +74,7 @@ class _WebData:
         self.category   = category
         self.season     = season
         self.plot_type  = plot_type
+        self.plot_ext   = plot_ext
         self.data_frame = data_frame
         self.html_file  = html_file
         self.asset_path = asset_path
@@ -181,7 +183,8 @@ class AdfWeb(AdfObs):
 
     #########
 
-    def add_website_data(self, web_data, web_name, case_name, plot_ext,
+    def add_website_data(self, web_data, web_name, case_name, 
+                         plot_ext = None,
                          category = None,
                          season = None,
                          plot_type = "Special",
