@@ -87,18 +87,10 @@ def global_latlon_map(adfobj):
                         plot_urls[ptype_order_dict[ptype][0]][var][season] = plot_page"""
 
 
-    #Check if multi-plots are desired from yaml file
-    if adfobj.read_config_var('multi_case_plots'):
-        multi_plots = True
-    else:
-        multi_plots = False
-
-    #print("OMG:",adfobj.get_multi_case_info("global_latlon_map"),"\n")
-
 
     #Notify user that script has started:
     print("\n  Generating lat/lon maps...")
-
+    
     #
     # Use ADF api to get all necessary information
     #
@@ -111,6 +103,13 @@ def global_latlon_map(adfobj):
 
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
+
+    if len(case_names) > 1:
+        #Check if multi-plots are desired from yaml file
+        if adfobj.read_config_var('multi_case_plots'):
+            multi_plots = True
+        else:
+            multi_plots = False
 
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
