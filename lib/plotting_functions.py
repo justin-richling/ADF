@@ -1634,7 +1634,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 ####'''
 
 
-def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
+def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict):
 
     
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
@@ -1670,8 +1670,8 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                         degree_symbol='')
 
     for var in multi_dict.keys():
-        print("multi_dict var:",var,"\n")
-        print("multi_dict[var]:",multi_dict[var].keys(),"\n")
+        #print("multi_dict var:",var,"\n")
+        #print("multi_dict[var]:",multi_dict[var].keys(),"\n")
         for j in multi_dict[var].keys():
 
             for season in multi_dict[var][j].keys():
