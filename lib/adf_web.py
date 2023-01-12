@@ -634,7 +634,11 @@ class AdfWeb(AdfObs):
                                   )
 
                 #Write mean diagnostic tables HTML file:
-                with open(web_data.html_file[0], 'w', encoding='utf-8') as ofil:
+                if len(case_names) >1:
+                    html_file = web_data.html_file[0]
+                else:
+                    html_file = web_data.html_file
+                with open(html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
 
                 if multi_layout == True:
