@@ -320,7 +320,7 @@ def zonal_mean(adfobj):
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
 
-    #This will be a list of variables for multi-case plotting based off LatLon plot type
+    '''#This will be a list of variables for multi-case plotting based off LatLon plot type
     #adfobj.get_multi_case_info("global_latlon_map")
     if multi_plots:
         #Notify user that script has started:
@@ -342,7 +342,7 @@ def zonal_mean(adfobj):
         #print("web_category for multi plot?:",web_category,"\n")
         #print("plot_name for multi plot?:",plot_name,"\n")
         #adfobj.add_website_data(plot_name, var, case_name, category=web_category,season=s, plot_type="multi_LatLon")
-        print("  ...Zonal mean multi-case plots have been generated successfully.")
+        print("  ...Zonal mean multi-case plots have been generated successfully.")'''
 
 # Helpers
 #########
