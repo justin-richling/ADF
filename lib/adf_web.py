@@ -969,19 +969,19 @@ class AdfWeb(AdfObs):
                         ptype = web_data.plot_type
                         
                         for i in multi_dict.keys():
-                            print("i",i,"\n")
+                            #print("i",i,"\n")
                             if i == ok[ptype]:
-                                print("i 2",i,ok[ptype],"\n")
+                                #print("i 2",i,ok[ptype],"\n")
                                 for var in multi_dict[i]:
                                     print("VAR:  ",var,"\n")
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
-                                    print(multi_mean_html_info,"\n")
+                                    #print(multi_mean_html_info,"\n")
                                     if ptype not in multi_mean_html_info:
                                         multi_mean_html_info[ptype] = OrderedDict()
                                     #End if
 
-                                    print(multi_mean_html_info,"\n")
+                                    #print(multi_mean_html_info,"\n")
                                     if category not in multi_mean_html_info[ptype]:
                                         multi_mean_html_info[ptype][category] = OrderedDict()
                                     #End if
@@ -989,13 +989,14 @@ class AdfWeb(AdfObs):
                                 
                                     #var = web_data.name
                                     #Initialize Ordered Dictionary for variable:
-                                    print(multi_mean_html_info,"\n")
+                                    #print(multi_mean_html_info,"\n")
                                     if name not in multi_mean_html_info[ptype][category]:
                                         multi_mean_html_info[ptype][category][var] = OrderedDict()
                                     #End if
                             
                                     print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
-                                    multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                    if name not in multi_mean_html_info[ptype][category][season]:
+                                        multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #print(multi_mean_html_info,"\n")
        
                                     print("Ok, now I'm generally lost 1",multi_mean_html_info,"\n\n")
