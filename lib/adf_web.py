@@ -938,6 +938,7 @@ class AdfWeb(AdfObs):
         if main_site_path:
             print("yeah, were here for multi!!!!\n")
             multi_mean_html_info = OrderedDict()
+            print(multi_mean_html_info,"\n")
 
 
             print("multi_dict",multi_dict,"\n")
@@ -976,7 +977,7 @@ class AdfWeb(AdfObs):
                                     print("VAR:  ",var,"\n")
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
-                                    #print(multi_mean_html_info,"\n")
+                                    print(multi_mean_html_info,"\n")
                                     if ptype not in multi_mean_html_info:
                                         multi_mean_html_info[ptype] = OrderedDict()
                                     #End if
@@ -989,7 +990,7 @@ class AdfWeb(AdfObs):
                                 
                                     #var = web_data.name
                                     #Initialize Ordered Dictionary for variable:
-                                    #print(multi_mean_html_info,"\n")
+                                    print(multi_mean_html_info,"\n")
                                     if name not in multi_mean_html_info[ptype][category]:
                                         multi_mean_html_info[ptype][category][var] = OrderedDict()
                                     #End if
