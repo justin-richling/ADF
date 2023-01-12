@@ -969,11 +969,11 @@ class AdfWeb(AdfObs):
                         ptype = web_data.plot_type
                         
                         for i in multi_dict.keys():
-                            print("i",i,"\n")
+                            #print("i",i,"\n")
                             if i == ok[ptype]:
-                                print("i 2",i,ok[ptype],"\n")
+                                #print("i 2",i,ok[ptype],"\n")
                                 for var in multi_dict[i]:
-                                    print("VAR:  ",var,"\n")
+                                    #print("VAR:  ",var,"\n")
                                     print(f"OK, lets try this so called plot type: {ptype}\n")
                                     #Initialize Ordered Dictionary for multi case plot type:
                                     #print(multi_mean_html_info,"\n")
@@ -994,7 +994,7 @@ class AdfWeb(AdfObs):
                                         multi_mean_html_info[ptype][category][var] = OrderedDict()
                                     #End if
                             
-                                    print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
+                                    #print("SO DONE:",f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")
                                     if season not in multi_mean_html_info[ptype][category][var]:
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #print(multi_mean_html_info,"\n")
