@@ -144,6 +144,12 @@ def zonal_mean(adfobj):
 
     #Loop over variables:
     for var in var_list:
+        if multi_plots:
+            multi_dict = OrderedDict()
+            #multi_dict = adfobj.read_config_var('multi_case_plots')
+            for multi_var in adfobj.read_config_var('multi_case_plots')["global_latlon_map"]:
+                print(multi_var)
+                multi_dict[multi_var] = OrderedDict()
 
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
@@ -196,7 +202,7 @@ def zonal_mean(adfobj):
 
                 #Grab data for desired multi-plots (from yaml file)
                 if multi_plots:
-                    if var in adfobj.get_multi_case_info("global_latlon_map"):
+                    if var in adfobj.get_multi_case_info("zonal_mean"):
                         multi_dict[var][case_name] = OrderedDict()
 
                 #Set case nickname:
@@ -313,6 +319,30 @@ def zonal_mean(adfobj):
 
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
+
+    #This will be a list of variables for multi-case plotting based off LatLon plot type
+    #adfobj.get_multi_case_info("global_latlon_map")
+    if multi_plots:
+        #Notify user that script has started:
+        print("\n  Generating zonal mean multi-case plots...")
+        wks = Path(plot_locations[0])
+        pf.multi_plots(wks,"Zonal", case_names, [test_nicknames,base_nickname], multi_dict)
+
+        """# Check redo_plot. If set to True: remove old plot, if it already exists:
+        redo_plot = adfobj.get_basic_info('redo_plot')
+        if (not redo_plot) and plot_name.is_file():
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
+                                                            season=s, plot_type="LatLon")
+
+            #Continue to next iteration:
+            #continue
+        elif (redo_plot) and plot_name.is_file():
+            plot_name.unlink()"""
+        #print("web_category for multi plot?:",web_category,"\n")
+        #print("plot_name for multi plot?:",plot_name,"\n")
+        #adfobj.add_website_data(plot_name, var, case_name, category=web_category,season=s, plot_type="multi_LatLon")
+        print("  ...Zonal mean multi-case plots have been generated successfully.")
 
 # Helpers
 #########
