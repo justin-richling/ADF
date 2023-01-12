@@ -1670,8 +1670,8 @@ def multi_plots(wks, ptype, case_names, nicknames, multi_dict):
                                         degree_symbol='')
 
     for var in multi_dict.keys():
-        print(var)
-        print(multi_dict[var].keys())
+        print("multi_dict var:",var,"\n")
+        print("multi_dict[var]:",multi_dict[var].keys(),"\n")
         for j in multi_dict[var].keys():
 
             for season in multi_dict[var][j].keys():
