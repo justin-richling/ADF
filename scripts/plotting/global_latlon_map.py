@@ -195,8 +195,9 @@ def global_latlon_map(adfobj):
     # probably want to do this one variable at a time:
     for var in var_list:
         if multi_plots:
-            if var in ["TS", "SST"]:
-                multi_dict[var] = OrderedDict()
+            multi_dict = adfobj.read_config_var('multi_case_plots')
+            for multi_var in multi_dict["global_latlon_map"]:
+                multi_dict[multi_var] = OrderedDict()
 
 
         if adfobj.compare_obs:
