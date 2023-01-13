@@ -525,12 +525,13 @@ class AdfWeb(AdfObs):
 
             #Now check all plot types
             if not web_data.data_frame:
+                multi_mean_html_info = OrderedDict()
 
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #check to see if the user has multi-plots enabled
                     if multi_dict:
-                        multi_mean_html_info = OrderedDict()
+                        
 
                         if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
                             season = web_data.season
