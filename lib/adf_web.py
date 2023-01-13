@@ -1062,8 +1062,9 @@ class AdfWeb(AdfObs):
                             #Construct amwg_table.html
                             your_keys = [web_data.case,data_name]
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
+                            indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
                             
-                            if not table_pages_dir_indv / f"amwg_table_{web_data.name}.html".exists():
+                            if not indv_html.exists():
                                 table_tmpl = jinenv.get_template('template_table.html')
                                 table_rndr = table_tmpl.render(title=main_title,
                                                             case1=web_data.case,
@@ -1081,15 +1082,16 @@ class AdfWeb(AdfObs):
                                                             )
 
                                 #Write mean diagnostic tables HTML file:
-                                with open(table_pages_dir_indv / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                                with open(indv_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
                         else:
                             for case_name in case_names:
                                 your_keys = [case_name,data_name]
                                 print(your_keys,"\n")
                                 dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
+                                sp_html = table_pages_dir_sp / f"amwg_table_{web_data.name}.html"
 
-                                if not table_pages_dir_sp / f"amwg_table_{web_data.name}.html".exists():
+                                if not sp_html.exists():
                                     table_tmpl = jinenv.get_template('template_table.html')
                                     table_rndr = table_tmpl.render(title=main_title,
                                                                 case1=case_name,
@@ -1108,7 +1110,7 @@ class AdfWeb(AdfObs):
 
                                     table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
                                     #self.__case_web_paths[web_data.case]['table_pages_dir']
-                                    with open(table_pages_dir_sp / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                                    with open(sp_html, 'w', encoding='utf-8') as ofil:
                                         ofil.write(table_rndr)
 
                         
