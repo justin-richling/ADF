@@ -1062,34 +1062,11 @@ class AdfWeb(AdfObs):
                             #Construct amwg_table.html
                             your_keys = [web_data.case,data_name]
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
-
-                            table_tmpl = jinenv.get_template('template_table.html')
-                            table_rndr = table_tmpl.render(title=main_title,
-                                                        case1=web_data.case,
-                                                        case2=data_name,
-                                                        case_yrs=case_yrs,
-                                                        base_name=data_name,
-                                                        baseline_yrs=baseline_yrs,
-                                                        amwg_tables=dict_you_want,
-                                                        plot_types=plot_type_html,
-                                                        table_name=web_data.name,
-                                                        table_html=table_html,
-                                                        multi_head=True,
-                                                        multi=False,
-                                                        case_sites=case_sites,
-                                                        )
-
-                            #Write mean diagnostic tables HTML file:
-                            with open(table_pages_dir_indv / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
-                                ofil.write(table_rndr)
-                        else:
-                            for case_name in case_names:
-                                your_keys = [case_name,data_name]
-                                print(your_keys,"\n")
-                                dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
+                            
+                            if not table_pages_dir_indv / f"amwg_table_{web_data.name}.html".exists():
                                 table_tmpl = jinenv.get_template('template_table.html')
                                 table_rndr = table_tmpl.render(title=main_title,
-                                                            case1=case_name,
+                                                            case1=web_data.case,
                                                             case2=data_name,
                                                             case_yrs=case_yrs,
                                                             base_name=data_name,
@@ -1103,10 +1080,36 @@ class AdfWeb(AdfObs):
                                                             case_sites=case_sites,
                                                             )
 
-                                table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
-                                #self.__case_web_paths[web_data.case]['table_pages_dir']
-                                with open(table_pages_dir_sp / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                                #Write mean diagnostic tables HTML file:
+                                with open(table_pages_dir_indv / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
+                        else:
+                            for case_name in case_names:
+                                your_keys = [case_name,data_name]
+                                print(your_keys,"\n")
+                                dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
+
+                                if not table_pages_dir_sp / f"amwg_table_{web_data.name}.html".exists():
+                                    table_tmpl = jinenv.get_template('template_table.html')
+                                    table_rndr = table_tmpl.render(title=main_title,
+                                                                case1=case_name,
+                                                                case2=data_name,
+                                                                case_yrs=case_yrs,
+                                                                base_name=data_name,
+                                                                baseline_yrs=baseline_yrs,
+                                                                amwg_tables=dict_you_want,
+                                                                plot_types=plot_type_html,
+                                                                table_name=web_data.name,
+                                                                table_html=table_html,
+                                                                multi_head=True,
+                                                                multi=False,
+                                                                case_sites=case_sites,
+                                                                )
+
+                                    table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
+                                    #self.__case_web_paths[web_data.case]['table_pages_dir']
+                                    with open(table_pages_dir_sp / f"amwg_table_{web_data.name}.html", 'w', encoding='utf-8') as ofil:
+                                        ofil.write(table_rndr)
 
                         
                         #asdas
