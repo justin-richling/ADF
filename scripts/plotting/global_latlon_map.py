@@ -398,7 +398,8 @@ def global_latlon_map(adfobj):
                             # Check redo_plot. If set to True: remove old plot, if it already exists:
                             if (not redo_plot) and plot_name.is_file():
                                 #Add already-existing plot to website (if enabled):
-                                adfobj.add_website_data(plot_name, var, case_name, category=web_category,
+                                adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map",
+                                                        category=web_category,
                                                         season=s, plot_type="LatLon")
 
                                 #Continue to next iteration:
@@ -420,7 +421,8 @@ def global_latlon_map(adfobj):
                                                  mseasons[s], oseasons[s], dseasons[s], **vres)
 
                             #Add plot to website (if enabled):
-                            adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", category=web_category,
+                            adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", 
+                                                    category=web_category,
                                                     season=s, plot_type="LatLon")
 
                     else: #mdata dimensions check
@@ -508,7 +510,8 @@ def global_latlon_map(adfobj):
                                 redo_plot = adfobj.get_basic_info('redo_plot')
                                 if (not redo_plot) and plot_name.is_file():
                                     #Add already-existing plot to website (if enabled):
-                                    adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
+                                    adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
+                                                            category=web_category,
                                                             season=s, plot_type="LatLon")
 
                                     #Continue to next iteration:
