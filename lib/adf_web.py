@@ -1086,6 +1086,7 @@ class AdfWeb(AdfObs):
                                     ofil.write(table_rndr)
                         else:
                             for case_name in case_names:
+                                table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
                                 your_keys = [case_name,data_name]
                                 print(your_keys,"\n")
                                 dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
@@ -1108,7 +1109,7 @@ class AdfWeb(AdfObs):
                                                                 case_sites=case_sites,
                                                                 )
 
-                                    table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
+                                    
                                     #self.__case_web_paths[web_data.case]['table_pages_dir']
                                     with open(sp_html, 'w', encoding='utf-8') as ofil:
                                         ofil.write(table_rndr)
