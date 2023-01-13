@@ -549,22 +549,22 @@ def global_latlon_map(adfobj):
         #End for (obs/baseline loop)
         #This will be a list of variables for multi-case plotting based off LatLon plot type
         #adfobj.get_multi_case_info("global_latlon_map")
-    print(multi_dict,"\n")
-    if multi_plots:
-        #Notify user that script has started:
-        print("\n  Generating lat/lon multi-case plots...")
-        wks = Path(plot_locations[0])
-        pf.multi_latlon_plots(wks,"LatLon", case_names, [test_nicknames,base_nickname], multi_dict)
+        #print(multi_dict,"\n")
+        if multi_plots:
+            #Notify user that script has started:
+            print("\n  Generating lat/lon multi-case plots...")
+            wks = Path(plot_locations[0])
+            pf.multi_latlon_plots(wks,"LatLon", case_names, [test_nicknames,base_nickname], multi_dict)
 
-        """# Check redo_plot. If set to True: remove old plot, if it already exists:
-        redo_plot = adfobj.get_basic_info('redo_plot')
-        if (not redo_plot) and plot_name.is_file():
-                
-            #Continue to next iteration:
-            #continue
-        elif (redo_plot) and plot_name.is_file():
-            plot_name.unlink()"""
-        print("  ...lat/lon multi-case plots have been generated successfully.")
+            """# Check redo_plot. If set to True: remove old plot, if it already exists:
+            redo_plot = adfobj.get_basic_info('redo_plot')
+            if (not redo_plot) and plot_name.is_file():
+                    
+                #Continue to next iteration:
+                #continue
+            elif (redo_plot) and plot_name.is_file():
+                plot_name.unlink()"""
+            print("  ...lat/lon multi-case plots have been generated successfully.")
     #End for (variable loop)
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")    
