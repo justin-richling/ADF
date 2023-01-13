@@ -1059,6 +1059,8 @@ class AdfWeb(AdfObs):
 
                         #Check if the mean plot type page exists for this case (or for multi-case):
                         mean_table_file = table_pages_dir_indv / "mean_tables.html"
+                        your_keys = [web_data.case,data_name]
+                        dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
 
                         if not mean_table_file.exists():
 
