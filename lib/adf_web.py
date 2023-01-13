@@ -557,6 +557,7 @@ class AdfWeb(AdfObs):
                                     if season not in multi_mean_html_info[ptype][category][var]:
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #End if
+                        print(multi_mean_html_info,"\n")
 
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
