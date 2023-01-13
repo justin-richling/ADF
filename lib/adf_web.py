@@ -1029,7 +1029,7 @@ class AdfWeb(AdfObs):
                                                         base_name=data_name,
                                                         case_yrs=case_yrs,
                                                         baseline_yrs=baseline_yrs,
-                                                        mydata=multi_mean_html_info["LatLon"],
+                                                        mydata=multi_mean_html_info[pytpe],
                                                         plot_types=multi_plot_type_html,
                                                         multi=multi_layout,
                                                         case_sites=case_sites,) #The template rendered
