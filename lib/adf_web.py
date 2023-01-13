@@ -920,48 +920,6 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case plots if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - - 
-        """if main_site_path:
-            print("multi_dict",multi_dict,"\n")
-            #Make dict for plot type and map extension - probably a better way to do this
-            ok = {"LatLon":"global_latlon_map", "Zonal":"zonal_mean", "Meridional":"meridional_mean"}
-
-            multi_mean_html_info = OrderedDict()
-
-            #Set dictionary for plot page html files
-            for web_data in self.__website_data:
-                
-                #Check if the web data obj is table or not (plots)
-                if not web_data.data_frame:
-                    
-                    if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
-                        season = web_data.season
-                        category = web_data.category
-                        
-                        #Extract plot_type:
-                        ptype = web_data.plot_type
-                        
-                        for i in multi_dict.keys():
-                            #if i == ok[ptype]:
-                            if i == web_data.plot_ext:
-                                for var in multi_dict[i]:
-
-                                    #Initialize Ordered Dictionary for multi case plot type:
-                                    if ptype not in multi_mean_html_info:
-                                        multi_mean_html_info[ptype] = OrderedDict()
-                                    #End if
-
-                                    if category not in multi_mean_html_info[ptype]:
-                                        multi_mean_html_info[ptype][category] = OrderedDict()
-                                    #End if
-
-                                    #Initialize Ordered Dictionary for variable:
-                                    if var not in multi_mean_html_info[ptype][category]:
-                                        multi_mean_html_info[ptype][category][var] = OrderedDict()
-                                    #End if
-                            
-                                    if season not in multi_mean_html_info[ptype][category][var]:
-                                        multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                                    #End if"""
         if main_site_path:
             #Loop over all web data objects AGAIN:
             for web_data in self.__website_data:
@@ -987,6 +945,7 @@ class AdfWeb(AdfObs):
                         season = web_data.season
                         #Extract plot_type:
                         ptype = web_data.plot_type
+                        print("ptype",ptype,"\n")
 
                         #Create a directory that will hold just the html files for individual images:
                         self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
@@ -1029,7 +988,7 @@ class AdfWeb(AdfObs):
                                                         base_name=data_name,
                                                         case_yrs=case_yrs,
                                                         baseline_yrs=baseline_yrs,
-                                                        mydata=multi_mean_html_info[pytpe],
+                                                        mydata=multi_mean_html_info[ptype],
                                                         plot_types=multi_plot_type_html,
                                                         multi=multi_layout,
                                                         case_sites=case_sites,) #The template rendered
