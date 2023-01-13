@@ -1685,7 +1685,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict):
 
                 #Set figure title
                 plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.325)
-                axs[0,1].set_title("$\mathbf{Baseline}:$"+f'{nicknames[1]}\n', fontsize=12) 
+                axs[0,1].set_title("$\mathbf{Baseline}:$"+f'{nicknames[1]}\n', fontsize=12)
                 
                 count = 0
                 img = []
