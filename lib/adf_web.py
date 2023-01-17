@@ -1198,13 +1198,6 @@ class AdfWeb(AdfObs):
                             #End with
                         #End if
 
-
-                        #adsfsd
-                        
-
-                
-                
-                
                 #Also make sure CSS template files have been copied over:
                 if not main_templates_path.is_dir():
                     css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
