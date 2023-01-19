@@ -537,8 +537,6 @@ class AdfWeb(AdfObs):
 
             #Now check all plot types
             if not web_data.data_frame:
-                
-
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #check to see if the user has multi-plots enabled
@@ -550,7 +548,6 @@ class AdfWeb(AdfObs):
 
                             if web_data.plot_ext in multi_dict.keys():
                                 for var in multi_dict[web_data.plot_ext]:
-
                                     #Initialize Ordered Dictionary for multi case plot type:
                                     if ptype not in multi_mean_html_info:
                                         multi_mean_html_info[ptype] = OrderedDict()
