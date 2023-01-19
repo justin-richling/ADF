@@ -1669,7 +1669,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
 
-    print(multi_dict,"\n")
     for var in multi_dict.keys():
         #print("multi_dict var:",var,"\n")
         #print("multi_dict[var]:",multi_dict[var].keys(),"\n")
