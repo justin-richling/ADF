@@ -1678,12 +1678,13 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                 from pathlib import Path
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 redo_plot = adfobj.get_basic_info('redo_plot')
+                print("redo_plot",redo_plot)
                 print(Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file())
                 if (not redo_plot) and Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file():
                     print("Looks like that file exists partner, giddy up!\n")
                     #Continue to next iteration:
                     continue
-                elif (redo_plot):
+                elif redo_plot:
                     #Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").unlink()
 
                     fig_width = 15
