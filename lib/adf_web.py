@@ -25,6 +25,7 @@ import os.path
 
 from pathlib import Path
 from collections import OrderedDict
+from sqlite3 import adapt
 #multi_mean_html_info = OrderedDict()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
@@ -278,8 +279,11 @@ class AdfWeb(AdfObs):
 
             #If multi-case, then save under the "multi-case" directory:
             if self.num_cases > 1:
-                html_file.append(self.__case_web_paths['multi-case']["table_pages_dir"] / html_name)
-                html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
+                if web_name == "case_comparison":
+                    html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
+                else:
+                    html_file.append(self.__case_web_paths['multi-case']["table_pages_dir"] / html_name)
+                    html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
             else:
                 html_file = self.__case_web_paths[case_name]["table_pages_dir"] / html_name
             
@@ -1044,6 +1048,7 @@ class AdfWeb(AdfObs):
                             your_keys = [case_name,data_name]
                             #print(your_keys,"\n")
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
+                            print("dict_you_want",dict_you_want,"\n")
                             sp_html = table_pages_dir_sp / f"amwg_table_{web_data.name}.html"
 
                             if not sp_html.exists():
