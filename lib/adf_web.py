@@ -1022,7 +1022,7 @@ class AdfWeb(AdfObs):
                             ofil.write(mean_table_rndr)
                         #End with
 
-                    if web_data.case != data_name:
+                    """if web_data.case != data_name:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
@@ -1081,13 +1081,61 @@ class AdfWeb(AdfObs):
                                                                 )
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                    ofil.write(table_rndr)
+                                    ofil.write(table_rndr)"""
+
+                    
+
+
+
+                    
+
+                    if web_data.case != data_name:
+                        indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
+
+                    else:
+                        indv_html = table_pages_dir_indv / f"amwg_table_{data_name}.html"
+
+
+                    table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                            float_format='{:6g}'.format)
+
+                    #Construct amwg_table.html
+                    your_keys = [web_data.case,data_name,"case_comparison"]
+                    dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
+                    indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
+                            
+                    if not indv_html.exists():
+                        table_tmpl = jinenv.get_template('template_table.html')
+                        table_rndr = table_tmpl.render(title=main_title,
+                                                            case1=web_data.case,
+                                                            case2=data_name,
+                                                            case_yrs=case_yrs,
+                                                            base_name=data_name,
+                                                            baseline_yrs=baseline_yrs,
+                                                            amwg_tables=dict_you_want,
+                                                            plot_types=plot_type_html,
+                                                            table_name=web_data.name,
+                                                            table_html=table_html,
+                                                            multi_head=True,
+                                                            multi=False,
+                                                            case_sites=case_sites,
+                                                            )
+
+                        #Write mean diagnostic tables HTML file:
+                        with open(indv_html, 'w', encoding='utf-8') as ofil:
+                            ofil.write(table_rndr)
+
+
+
+
+
 
                     #Check if the mean plot type page exists for this case:
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
+                        print("dict_you_want for mean tables indv. ",dict_you_want,"\n")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
