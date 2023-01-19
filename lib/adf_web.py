@@ -1065,7 +1065,7 @@ class AdfWeb(AdfObs):
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
 
-                    #Check if the mean plot type page exists for this case (or for multi-case):
+                    #Check if the mean plot type page exists for this case:
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
 
                     if not mean_table_file.exists():
