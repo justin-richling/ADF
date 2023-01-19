@@ -1062,38 +1062,10 @@ class AdfWeb(AdfObs):
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)"""
 
-                        
-                    """#asdas
-                    #Also check if index page exists for this case:
-                    index_html_file = \
-                        self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
-
-                    if not index_html_file.exists():
-
-                        #Construct index.html
-                        index_title = "AMP Diagnostics Prototype"
-                        index_tmpl = jinenv.get_template('template_index.html')
-                        index_rndr = index_tmpl.render(title=index_title,
-                                                            case1=web_data.case,
-                                                            case2=data_name,
-                                                            case_yrs=case_yrs,
-                                                            baseline_yrs=baseline_yrs,
-                                                            plot_types=multi_plot_type_html,
-                                                            multi=multi_layout,)
-
-                        #Write Mean diagnostics index HTML file:
-                        with open(index_html_file, 'w', encoding='utf-8') as ofil:
-                            ofil.write(index_rndr)
-                        #End with
-                    #End if (mean_index exists)"""
-
-
-                    #swdf
                     #Check if the mean plot type page exists for this case (or for multi-case):
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
 
                     if not mean_table_file.exists():
-
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
@@ -1156,9 +1128,6 @@ class AdfWeb(AdfObs):
             for key,_ in multi_dict.items():
                 multi_plots[new_dict[key]] = f"html_img/multi_case_mean_diag_{new_dict[key]}.html"
 
-            #multi_plots = {"Tables": "html_table/mean_tables.html",
-            #                    "LatLon": f"html_img/multi_case_mean_diag_LatLon.html"}
-
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
@@ -1173,36 +1142,6 @@ class AdfWeb(AdfObs):
             with open(outputfile, 'w', encoding='utf-8') as ofil:
                 ofil.write(main_rndr)
             #End with
-
-
-            """
-                #Also make sure CSS template files have been copied over:
-                if not main_templates_path.is_dir():
-                    css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
-                    shutil.copytree(css_files_dir, main_templates_path)
-                #End if
-                    #End if
-                #End for (model case loop)
-
-                #Create multi-case site:
-                multi_plots = {"Tables": "html_table/mean_tables.html",
-                                "LatLon": f"html_img/multi_case_mean_diag_LatLon.html"}
-
-                main_title = "ADF Diagnostics"
-                main_tmpl = jinenv.get_template('template_multi_case_index.html')
-                main_rndr = main_tmpl.render(title=main_title,
-                                        case_sites=case_sites,
-                                        base_name=data_name,
-                                        baseline_yrs=baseline_yrs,
-                                        multi_plots=multi_plots,
-                                        )
-
-                #Write multi-case main HTML file:
-                outputfile = main_site_path / "index.html"
-                with open(outputfile, 'w', encoding='utf-8') as ofil:
-                    ofil.write(main_rndr)
-                #End with
-            """
 
             #Move over all the multi plot images to the main website assets dir
             ug = f"{multi_path / self.get_cam_info('cam_case_name')[0]}_{syear_cases[0]}_{eyear_cases[0]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}"
