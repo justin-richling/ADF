@@ -1670,8 +1670,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                                         degree_symbol='')
 
     for var in multi_dict.keys():
-        print("multi_dict var:",var,"\n")
-        print("multi_dict[var]:",multi_dict[var].keys(),"\n")
+        #print("multi_dict var:",var,"\n")
+        #print("multi_dict[var]:",multi_dict[var].keys(),"\n")
         for j in multi_dict[var].keys():
 
             for season in multi_dict[var][j].keys():
@@ -1683,7 +1683,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                     print("Looks like that file exists partner, giddy up!\n")
                     #Continue to next iteration:
                     continue
-                if (redo_plot) and (not Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file()):
+                if (redo_plot) or (not Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file()):
                     #Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").unlink()
 
                     fig_width = 15
