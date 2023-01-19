@@ -707,6 +707,7 @@ class AdfWeb(AdfObs):
                     #    html_file = web_data.html_file[0]
                     #else:
                     #    html_file = web_data.html_file
+                    html_file = web_data.html_file[0]
                     with open(html_file, 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
                         
