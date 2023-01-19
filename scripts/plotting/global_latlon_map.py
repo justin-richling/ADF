@@ -554,8 +554,11 @@ def global_latlon_map(adfobj):
             #Notify user that script has started:
             print("\n  Generating lat/lon multi-case plots...")
             wks = Path(plot_locations[0])
-            print("wks",wks,"\n")
-            pf.multi_latlon_plots(wks / "main_website","LatLon", case_names, [test_nicknames,base_nickname], multi_dict, adfobj)
+            multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
+            main_site_path = multi_path / "main_website"
+            main_site_path.mkdir(exist_ok=True)
+            print("main_site_path",main_site_path,"\n")
+            pf.multi_latlon_plots(main_site_path, "LatLon", case_names, [test_nicknames,base_nickname], multi_dict, adfobj)
 
             """# Check redo_plot. If set to True: remove old plot, if it already exists:
             redo_plot = adfobj.get_basic_info('redo_plot')
