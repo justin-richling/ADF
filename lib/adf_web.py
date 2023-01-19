@@ -984,7 +984,7 @@ class AdfWeb(AdfObs):
                                                                         float_format='{:6g}'.format)
 
                         #Construct amwg_table.html
-                         your_keys = [web_data.case,data_name]
+                        your_keys = [web_data.case,data_name]
                         dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
                             
