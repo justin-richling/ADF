@@ -986,33 +986,6 @@ class AdfWeb(AdfObs):
                             ofil.write(mean_table_rndr)
                         #End with
 
-                    """for case_name in case_names:
-                        table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
-                        your_keys = [case_name,data_name]
-                        print(your_keys,"\n")
-                        dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
-                        sp_html = table_pages_dir_sp / f"amwg_table_{web_data.name}.html"
-
-                        if not sp_html.exists():
-                            table_tmpl = jinenv.get_template('template_table.html')
-                            table_rndr = table_tmpl.render(title=main_title,
-                                                                case1=case_name,
-                                                                case2=data_name,
-                                                                case_yrs=case_yrs,
-                                                                base_name=data_name,
-                                                                baseline_yrs=baseline_yrs,
-                                                                amwg_tables=dict_you_want,
-                                                                plot_types=plot_type_html,
-                                                                table_name=web_data.name,
-                                                                table_html=table_html,
-                                                                multi_head=True,
-                                                                multi=False,
-                                                                case_sites=case_sites,
-                                                                )
-
-                            with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                ofil.write(table_rndr)"""
-
                     if web_data.case != data_name:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
@@ -1043,6 +1016,8 @@ class AdfWeb(AdfObs):
                             with open(indv_html, 'w', encoding='utf-8') as ofil:
                                 ofil.write(table_rndr)
                     else:
+                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                            float_format='{:6g}'.format)
                         for case_name in case_names:
                             print("case_name",case_name,"\n")
                             table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
