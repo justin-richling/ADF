@@ -273,7 +273,7 @@ class AdfWeb(AdfObs):
         #Create HTML file path variable,
         #which will be used in "create_website":
         if data_frame:
-            print("web_name",web_name,"\n")
+            #print("web_name",web_name,"\n")
             #Use web data name instead of case name for tables:
             html_name = f"amwg_table_{web_name}.html"
 
@@ -519,13 +519,15 @@ class AdfWeb(AdfObs):
                     self.__case_web_paths['multi-case']['table_pages_dir'].mkdir(exist_ok=True)
                 #End if
 
-                self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)\
+                self.__case_web_paths[web_data.case]['table_pages_dir'].mkdir(exist_ok=True)
 
                 #Add table HTML file to dictionary:
                 #Note:  Need to use data name instead of case name for tables.
-                if len(case_names) >1:
+                if len(case_names) > 1:
                     table_html_info[web_data.name] = web_data.html_file[0].name
                     print("web_data.name",web_data.name,"\n")
+                    if web_data.name == "case_comparison":
+                        print()
                     multi_table_html_info[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")
                 else:
                     table_html_info[web_data.name] = web_data.html_file.name
@@ -1021,7 +1023,7 @@ class AdfWeb(AdfObs):
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
                         for case_name in case_names:
-                            print("case_name",case_name,"\n")
+                            #print("case_name",case_name,"\n")
                             table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
                             your_keys = [case_name,data_name]
                             #print(your_keys,"\n")
