@@ -1634,7 +1634,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 ####'''
 
 
-def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict):
+def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
 
     
     #hspace values for subplots based off number of cases (plots) with figsize=(15,15)
@@ -1737,7 +1737,17 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict):
                 fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.3),extend='both')
                     
                 plt.subplots_adjust(wspace=0.3, hspace=hspace) #hspace_dict[nplots]
-                fig.savefig(wks / f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight', dpi=300)#, dpi=300
+                from pathlib import Path
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                redo_plot = adfobj.get_basic_info('redo_plot')
+                if (not redo_plot) and Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file():
+                    print("Looks like that file exists partner, giddy up!\n")
+                    #Continue to next iteration:
+                    continue
+                elif (redo_plot) and Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file():
+                    Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").unlink()
+
+                fig.savefig(wks / f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight', dpi=300)
 
                 #Close plots:
                 plt.close()
