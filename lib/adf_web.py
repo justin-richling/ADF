@@ -280,6 +280,7 @@ class AdfWeb(AdfObs):
             #If multi-case, then save under the "multi-case" directory:
             if self.num_cases > 1:
                 if web_name == "case_comparison":
+                    print("YAHOO\n")
                     html_file.append(self.__case_web_paths[case_name]["table_pages_dir"] / html_name)
                 else:
                     html_file.append(self.__case_web_paths['multi-case']["table_pages_dir"] / html_name)
