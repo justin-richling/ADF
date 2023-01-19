@@ -684,7 +684,7 @@ class AdfWeb(AdfObs):
                         ofil.write(table_rndr)
 
                 
-                else:
+                """else:
                     print(multi_table_html_info,"\n")
                     table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
@@ -711,7 +711,7 @@ class AdfWeb(AdfObs):
                     html_file = web_data.html_file[0]
                     print(html_file)
                     with open(html_file, 'w', encoding='utf-8') as ofil:
-                        ofil.write(table_rndr)
+                        ofil.write(table_rndr)"""
                         
                 #Check if the mean plot type page exists for this case (or for multi-case):
                 mean_table_file = table_pages_dir / "mean_tables.html"
@@ -1027,7 +1027,7 @@ class AdfWeb(AdfObs):
                                                             float_format='{:6g}'.format)
 
                         #Construct amwg_table.html
-                        your_keys = [web_data.case,data_name]
+                        your_keys = [web_data.case,data_name,"case_comparison"]
                         dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
                             
@@ -1057,7 +1057,7 @@ class AdfWeb(AdfObs):
                         for case_name in case_names:
                             #print("case_name",case_name,"\n")
                             table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
-                            your_keys = [case_name,data_name]
+                            your_keys = [case_name,data_name,"case_comparison"]
                             #print(your_keys,"\n")
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
                             #print("dict_you_want",dict_you_want,"\n")
