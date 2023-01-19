@@ -1022,7 +1022,7 @@ class AdfWeb(AdfObs):
                             ofil.write(mean_table_rndr)
                         #End with
 
-                    """if web_data.case != data_name:
+                    if web_data.case != data_name:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
@@ -1081,7 +1081,7 @@ class AdfWeb(AdfObs):
                                                                 )
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                    ofil.write(table_rndr)"""
+                                    ofil.write(table_rndr)
 
                     
 
@@ -1089,7 +1089,7 @@ class AdfWeb(AdfObs):
 
                     
 
-                    if web_data.case != data_name:
+                    """if web_data.case != data_name:
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
 
                     else:
@@ -1123,7 +1123,7 @@ class AdfWeb(AdfObs):
 
                         #Write mean diagnostic tables HTML file:
                         with open(indv_html, 'w', encoding='utf-8') as ofil:
-                            ofil.write(table_rndr)
+                            ofil.write(table_rndr)"""
 
 
 
