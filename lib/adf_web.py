@@ -944,7 +944,10 @@ class AdfWeb(AdfObs):
                                 with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
                                     ofil.write(plot_page_rndr)
                                 #End with
-                        
+                            #End if (mean_ptype_plot_page exists)
+
+                        #End if (not web_data.data_frame)
+                    #End if    
                 
                 #Create all individual tables 
                 # for the individual websites
@@ -978,7 +981,7 @@ class AdfWeb(AdfObs):
                             ofil.write(mean_table_rndr)
                         #End with
 
-                    for case_name in case_names:
+                    """for case_name in case_names:
                         table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
                         your_keys = [case_name,data_name]
                         print(your_keys,"\n")
@@ -1003,9 +1006,9 @@ class AdfWeb(AdfObs):
                                                                 )
 
                             with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                ofil.write(table_rndr)
+                                ofil.write(table_rndr)"""
 
-                    """if web_data.case != data_name:
+                    if web_data.case != data_name:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
@@ -1060,7 +1063,7 @@ class AdfWeb(AdfObs):
                                                                 )
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                    ofil.write(table_rndr)"""
+                                    ofil.write(table_rndr)
 
                     #Check if the mean plot type page exists for this case (or for multi-case):
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
