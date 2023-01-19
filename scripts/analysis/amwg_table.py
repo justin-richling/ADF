@@ -341,7 +341,7 @@ def amwg_table(adf):
                 _df_multi_comp_table(adf,csv_locs,case_names)
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
-                    _df_comp_table(adf, Path(output_locs[idx]), [case,baseline_name])
+                    _df_comp_table(adf, Path(output_locs[idx]), output_locs[0], [case,baseline_name])
                 print("  ... Multi-case comparison table has been generated successfully")
         #End if
     else:
@@ -383,7 +383,7 @@ def _spatial_average(indata):
 
 #####
 
-def _df_comp_table(adf, output_location, case_names):
+def _df_comp_table(adf, output_location, base_output_location ,case_names):
     
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
 
@@ -391,7 +391,7 @@ def _df_comp_table(adf, output_location, case_names):
     #This will be for single-case for now (case_names[0]),
     #will need to change to loop as multi-case is introduced
     case = output_location/f"amwg_table_{case_names[0]}.csv"
-    baseline = output_location/f"amwg_table_{case_names[-1]}.csv"
+    baseline = base_output_location/f"amwg_table_{case_names[-1]}.csv"
 
     #Read in test case and baseline dataframes:
     df_case = pd.read_csv(case)
