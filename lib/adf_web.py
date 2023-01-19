@@ -699,7 +699,7 @@ class AdfWeb(AdfObs):
                                     case_sites=case_sites,
                                     )
 
-                    print("\nOOOOKKKKKAAAAYYY: ",web_data.html_file,web_data.html_file[0],"\n")
+                    #print("\nOOOOKKKKKAAAAYYY: ",web_data.html_file,web_data.html_file[0],"\n")
                     #Write mean diagnostic tables HTML file:
                     #if len(case_names) > 1:
                     #    html_file = web_data.html_file[0]
