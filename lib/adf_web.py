@@ -1109,12 +1109,16 @@ class AdfWeb(AdfObs):
             #Create multi-case site:
             # Dict for multi case if activated
             multi_dict = self.read_config_var('multi_case_plots')
-            new_dict = {
-
+            new_dict = {"global_latlon_map":"LatLon",
+                        "zonal_mean":"Zonal",
                         }
 
-            multi_plots = {"Tables": "html_table/mean_tables.html",
-                                "LatLon": f"html_img/multi_case_mean_diag_LatLon.html"}
+            multi_plots = {"Tables": "html_table/mean_tables.html",}
+            for key,_ in multi_dict.items():
+                multi_plots[new_dict[key]] = f"html_img/multi_case_mean_diag_{new_dict[key]}.html"
+
+            #multi_plots = {"Tables": "html_table/mean_tables.html",
+            #                    "LatLon": f"html_img/multi_case_mean_diag_LatLon.html"}
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
