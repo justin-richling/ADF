@@ -685,6 +685,7 @@ class AdfWeb(AdfObs):
 
                 
                 else:
+                    print(multi_table_html_info,"\n")
                     table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
                                     case1=case1,
