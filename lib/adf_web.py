@@ -529,6 +529,7 @@ class AdfWeb(AdfObs):
                     #print("web_data.name",web_data.name,"\n")
                     if web_data.name == "case_comparison":
                         print("case:",web_data.case,"\n")
+                        multi_table_html_info[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")
                     else:
                         multi_table_html_info[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")
                 else:
