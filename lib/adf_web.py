@@ -557,7 +557,7 @@ class AdfWeb(AdfObs):
                                     if season not in multi_mean_html_info[ptype][category][var]:
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #End if
-                        print(multi_mean_html_info,"\n")
+
 
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
@@ -1041,7 +1041,7 @@ class AdfWeb(AdfObs):
                         for case_name in case_names:
                             table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
                             your_keys = [case_name,data_name]
-                            print(your_keys,"\n")
+                            #print(your_keys,"\n")
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
                             sp_html = table_pages_dir_sp / f"amwg_table_{web_data.name}.html"
 
