@@ -1684,7 +1684,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                     #Continue to next iteration:
                     continue
                 elif (redo_plot):
-                    Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").unlink()
+                    #Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").unlink()
 
                     fig_width = 15
                     fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
