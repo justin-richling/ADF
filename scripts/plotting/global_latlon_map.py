@@ -555,7 +555,7 @@ def global_latlon_map(adfobj):
             print("\n  Generating lat/lon multi-case plots...")
             wks = Path(plot_locations[0])
             multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
-            main_site_path = multi_path / "main_website"
+            main_site_path = multi_path / "main_website/assets/"
             main_site_path.mkdir(exist_ok=True)
             print("main_site_path",main_site_path,"\n")
             pf.multi_latlon_plots(main_site_path, "LatLon", case_names, [test_nicknames,base_nickname], multi_dict, adfobj)
