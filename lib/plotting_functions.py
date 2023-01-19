@@ -1683,7 +1683,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                     print("Looks like that file exists partner, giddy up!\n")
                     #Continue to next iteration:
                     continue
-                if (redo_plot) or (not Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file()):
+                if (redo_plot) and (not Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file()):
                     #Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").unlink()
 
                     fig_width = 15
