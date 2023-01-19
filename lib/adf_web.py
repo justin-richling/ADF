@@ -691,7 +691,7 @@ class AdfWeb(AdfObs):
                                     case_yrs=case_yrs,
                                     base_name=data_name,
                                     baseline_yrs=baseline_yrs,
-                                    amwg_tables=table_html_info,
+                                    amwg_tables=multi_table_html_info,
                                     plot_types=plot_types,
                                     table_name=web_data.name,
                                     table_html=table_html,
@@ -701,10 +701,10 @@ class AdfWeb(AdfObs):
 
                     print("\nOOOOKKKKKAAAAYYY: ",web_data.html_file,web_data.html_file[0],"\n")
                     #Write mean diagnostic tables HTML file:
-                    if len(case_names) > 1:
-                        html_file = web_data.html_file[0]
-                    else:
-                        html_file = web_data.html_file
+                    #if len(case_names) > 1:
+                    #    html_file = web_data.html_file[0]
+                    #else:
+                    #    html_file = web_data.html_file
                     with open(html_file, 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
                         
