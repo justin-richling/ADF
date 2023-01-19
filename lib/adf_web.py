@@ -272,6 +272,7 @@ class AdfWeb(AdfObs):
         #Create HTML file path variable,
         #which will be used in "create_website":
         if data_frame:
+            print("web_name",web_name,"\n")
             #Use web data name instead of case name for tables:
             html_name = f"amwg_table_{web_name}.html"
 
