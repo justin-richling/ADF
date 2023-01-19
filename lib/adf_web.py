@@ -947,6 +947,7 @@ class AdfWeb(AdfObs):
                         
                 
                 #Create all individual tables 
+                # for the individual websites
                 #############################
                 if web_data.data_frame:
                     table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
@@ -983,7 +984,7 @@ class AdfWeb(AdfObs):
                     if web_data.case != data_name:
 
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                                        float_format='{:6g}'.format)
+                                                            float_format='{:6g}'.format)
 
                         #Construct amwg_table.html
                         your_keys = [web_data.case,data_name]
@@ -1041,7 +1042,7 @@ class AdfWeb(AdfObs):
                                     ofil.write(table_rndr)
 
                         
-                    #asdas
+                    """#asdas
                     #Also check if index page exists for this case:
                     index_html_file = \
                         self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
@@ -1063,7 +1064,7 @@ class AdfWeb(AdfObs):
                         with open(index_html_file, 'w', encoding='utf-8') as ofil:
                             ofil.write(index_rndr)
                         #End with
-                    #End if (mean_index exists)
+                    #End if (mean_index exists)"""
 
 
                     #swdf
@@ -1094,9 +1095,30 @@ class AdfWeb(AdfObs):
                     #End if
 
 
+                #Create all individual website index files 
+                ##########################################
+                index_html_file = \
+                    self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
+                if not index_html_file.exists():
 
-                
+                    #Construct index.html
+                    index_title = "AMP Diagnostics Prototype"
+                    index_tmpl = jinenv.get_template('template_index.html')
+                    index_rndr = index_tmpl.render(title=index_title,
+                                                            case1=web_data.case,
+                                                            case2=data_name,
+                                                            case_yrs=case_yrs,
+                                                            baseline_yrs=baseline_yrs,
+                                                            plot_types=multi_plot_type_html,
+                                                            multi=multi_layout,)
+
+                    #Write Mean diagnostics index HTML file:
+                    with open(index_html_file, 'w', encoding='utf-8') as ofil:
+                        ofil.write(index_rndr)
+                    #End with
+                #End if (mean_index exists)
+            #End all website data loop
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
