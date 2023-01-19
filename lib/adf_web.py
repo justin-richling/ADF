@@ -1146,11 +1146,11 @@ class AdfWeb(AdfObs):
                 ofil.write(main_rndr)
             #End with
 
-            #Move over all the multi plot images to the main website assets dir
+            """#Move over all the multi plot images to the main website assets dir
             ug = f"{multi_path / self.get_cam_info('cam_case_name')[0]}_{syear_cases[0]}_{eyear_cases[0]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}"
             OK = glob.glob(f"{ug}/*multi_plot*")
             for plot in OK:
-                shutil.move(plot, main_site_assets_path / f"{Path(plot).stem}.png")
+                shutil.move(plot, main_site_assets_path / f"{Path(plot).stem}.png")"""
         #End if
 
         #Notify user that script has finishedd:
