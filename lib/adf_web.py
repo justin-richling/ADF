@@ -1107,8 +1107,6 @@ class AdfWeb(AdfObs):
             #End for (model case loop)
 
             #Create multi-case site:
-            # Dict for multi case if activated
-            multi_dict = self.read_config_var('multi_case_plots')
             new_dict = {"global_latlon_map":"LatLon",
                         "zonal_mean":"Zonal",
                         }
