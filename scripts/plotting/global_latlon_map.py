@@ -554,6 +554,7 @@ def global_latlon_map(adfobj):
             #Notify user that script has started:
             print("\n  Generating lat/lon multi-case plots...")
             wks = Path(plot_locations[0])
+            print("wks",wks,"\n")
             pf.multi_latlon_plots(wks,"LatLon", case_names, [test_nicknames,base_nickname], multi_dict)
 
             """# Check redo_plot. If set to True: remove old plot, if it already exists:
