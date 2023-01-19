@@ -1044,11 +1044,12 @@ class AdfWeb(AdfObs):
                                 ofil.write(table_rndr)
                     else:
                         for case_name in case_names:
+                            print("case_name",case_name,"\n")
                             table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
                             your_keys = [case_name,data_name]
                             #print(your_keys,"\n")
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
-                            print("dict_you_want",dict_you_want,"\n")
+                            #print("dict_you_want",dict_you_want,"\n")
                             sp_html = table_pages_dir_sp / f"amwg_table_{web_data.name}.html"
 
                             if not sp_html.exists():
