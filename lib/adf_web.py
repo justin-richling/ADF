@@ -525,7 +525,8 @@ class AdfWeb(AdfObs):
                 #Note:  Need to use data name instead of case name for tables.
                 #print("web_data.html_file[0].name: ",web_data.html_file[0].name,"\n")
                 if len(case_names) > 1:
-                    table_html_info[web_data.name] = web_data.html_file[0].name
+                    if web_data.name != "case_comparison":
+                        table_html_info[web_data.name] = web_data.html_file[0].name
                     #print("web_data.name",web_data.name,"\n")
                     #if web_data.name == "case_comparison":
                     #    multi_table_html_info[web_data.name] = str(web_data.html_file[0].name).replace("main_website",f"{web_data.name}/website")
