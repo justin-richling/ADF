@@ -659,30 +659,54 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
-                if web_data.name != "case_comparison":
+                if main_site_path:
+                    if web_data.name != "case_comparison":
+                        table_tmpl = jinenv.get_template('template_table.html')
+                        table_rndr = table_tmpl.render(title=main_title,
+                                        case1=case1,
+                                        case2=data_name,
+                                        case_yrs=case_yrs,
+                                        base_name=data_name,
+                                        baseline_yrs=baseline_yrs,
+                                        amwg_tables=table_html_info,
+                                        plot_types=plot_types,
+                                        table_name=web_data.name,
+                                        table_html=table_html,
+                                        multi_head=multi_layout,
+                                        multi=multi_layout,
+                                        case_sites=case_sites,
+                                        )
+
+                        #Write mean diagnostic tables HTML file:
+                        if len(case_names) > 1:
+                            html_file = web_data.html_file[0]
+                        else:
+                            html_file = web_data.html_file
+                        with open(html_file, 'w', encoding='utf-8') as ofil:
+                            ofil.write(table_rndr)
+
+                else:
                     table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
-                                    case1=case1,
-                                    case2=data_name,
-                                    case_yrs=case_yrs,
-                                    base_name=data_name,
-                                    baseline_yrs=baseline_yrs,
-                                    amwg_tables=table_html_info,
-                                    plot_types=plot_types,
-                                    table_name=web_data.name,
-                                    table_html=table_html,
-                                    multi_head=multi_layout,
-                                    multi=multi_layout,
-                                    case_sites=case_sites,
-                                    )
+                                        case1=case1,
+                                        case2=data_name,
+                                        case_yrs=case_yrs,
+                                        base_name=data_name,
+                                        baseline_yrs=baseline_yrs,
+                                        amwg_tables=table_html_info,
+                                        plot_types=plot_types,
+                                        table_name=web_data.name,
+                                        table_html=table_html,
+                                        multi_head=multi_layout,
+                                        multi=multi_layout,
+                                        case_sites=case_sites,
+                                        )
 
                     #Write mean diagnostic tables HTML file:
-                    if len(case_names) > 1:
-                        html_file = web_data.html_file[0]
-                    else:
-                        html_file = web_data.html_file
+                    html_file = web_data.html_file
                     with open(html_file, 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
+                    
 
                 
                 """else:
