@@ -634,11 +634,11 @@ class AdfWeb(AdfObs):
                 if self.num_cases > 1:
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
                     table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    plot_types = multi_plot_type_html
+                    #plot_types = multi_plot_type_html
 
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
-                    plot_types = plot_type_html
+                    #plot_types = plot_type_html
                 
                 plot_types = plot_type_html
                 #End if
@@ -827,7 +827,7 @@ class AdfWeb(AdfObs):
                 plot_types = multi_plot_type_html
             else:
                 plot_types = plot_type_html
-            plot_types = plot_type_html
+            #plot_types = plot_type_html
             #End if
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
