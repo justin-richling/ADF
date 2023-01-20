@@ -677,7 +677,7 @@ class AdfWeb(AdfObs):
                                     )
 
                     #Write mean diagnostic tables HTML file:
-                    if len(case_names) >1:
+                    if len(case_names) > 1:
                         html_file = web_data.html_file[0]
                     else:
                         html_file = web_data.html_file
