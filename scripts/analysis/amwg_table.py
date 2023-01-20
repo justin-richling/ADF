@@ -387,6 +387,7 @@ def _spatial_average(indata):
 
 def _df_comp_table(adf, output_location, base_output_location ,case_names):
     
+    print("\n",output_location,"\n")
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
 
     # * * * * * * * * * * * * * * * * * * * * * * * * * * * *
