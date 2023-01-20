@@ -672,7 +672,7 @@ class AdfWeb(AdfObs):
                                         plot_types=plot_types,
                                         table_name=web_data.name,
                                         table_html=table_html,
-                                        multi_head=multi_layout,
+                                        multi_head=False,
                                         multi=multi_layout,
                                         case_sites=case_sites,
                                         )
@@ -697,7 +697,7 @@ class AdfWeb(AdfObs):
                                         plot_types=plot_types,
                                         table_name=web_data.name,
                                         table_html=table_html,
-                                        multi_head=multi_layout,
+                                        multi_head=False,
                                         multi=multi_layout,
                                         case_sites=case_sites,
                                         )
