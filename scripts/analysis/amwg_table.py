@@ -334,7 +334,8 @@ def amwg_table(adf):
             if len(test_case_names) == 1:
                 #Create comparison table for both cases
                 print("\n  Making comparison table...")
-                _df_comp_table(adf, output_location, case_names)
+                # _df_comp_table(adf, output_location, base_output_location ,case_names)
+                _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
                 print("  ... Comparison table has been generated successfully")
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
