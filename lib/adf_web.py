@@ -725,7 +725,10 @@ class AdfWeb(AdfObs):
                                         )
 
                 #Write mean diagnostic tables HTML file:
-                html_file = web_data.html_file
+                if len(case_names) > 1:
+                    html_file = web_data.html_file[0]
+                else:
+                    html_file = web_data.html_file
                 with open(html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(table_rndr)
 
