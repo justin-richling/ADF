@@ -1015,7 +1015,6 @@ class AdfWeb(AdfObs):
                             ofil.write(mean_table_rndr)
                         #End with
 
-                    house = 0
                     #if web_data.case in case_names:
                     if web_data.case != data_name:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
@@ -1170,7 +1169,7 @@ class AdfWeb(AdfObs):
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
-        print("\n**************",house,"**************")
+
 #++++++++++++++++++++
 #End Class definition
 #++++++++++++++++++++
