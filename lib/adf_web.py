@@ -1055,7 +1055,7 @@ class AdfWeb(AdfObs):
 
                         for case_name in case_names:
                             table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
-                            your_keys = [web_data.case,data_name,"case_comparison"]
+                            your_keys = [case_name,data_name,"case_comparison"]
                             #print(your_keys,"\n")
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
                             print("dict_you_want",dict_you_want,"\n")
