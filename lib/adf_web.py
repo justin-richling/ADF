@@ -1046,7 +1046,37 @@ class AdfWeb(AdfObs):
                             #Write mean diagnostic tables HTML file:
                             with open(indv_html, 'w', encoding='utf-8') as ofil:
                                 ofil.write(table_rndr)
-                    else:
+
+                        
+                        table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
+                        your_keys = [web_data.case,data_name,"case_comparison"]
+                        #print(your_keys,"\n")
+                        dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
+                        #print("dict_you_want",dict_you_want,"\n")
+                        sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
+
+                        if not sp_html.exists():
+                            table_tmpl = jinenv.get_template('template_table.html')
+                            table_rndr = table_tmpl.render(title=main_title,
+                                                                case1=web_data.case,
+                                                                case2=data_name,
+                                                                case_yrs=case_yrs,
+                                                                base_name=data_name,
+                                                                baseline_yrs=baseline_yrs,
+                                                                amwg_tables=dict_you_want,
+                                                                plot_types=plot_type_html,
+                                                                table_name=web_data.name,
+                                                                table_html=table_html,
+                                                                multi_head=True,
+                                                                multi=False,
+                                                                case_sites=case_sites,
+                                                                )
+
+                            with open(sp_html, 'w', encoding='utf-8') as ofil:
+                                ofil.write(table_rndr)   
+
+
+                    """else:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
                         #for case_name in case_names:
@@ -1078,7 +1108,7 @@ class AdfWeb(AdfObs):
                                                                 )
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                    ofil.write(table_rndr)
+                                    ofil.write(table_rndr)"""
 
                     #Check if the mean plot type page exists for this case:
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
