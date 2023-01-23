@@ -1054,11 +1054,10 @@ class AdfWeb(AdfObs):
                                                             float_format='{:6g}'.format)
 
                         for case_name in case_names:
-                            table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
-                            your_keys = [case_name,data_name,"case_comparison"]
-                            #print(your_keys,"\n")
-                            dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
-                            print("dict_you_want",dict_you_want,"\n")
+                            table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
+                            base_table_keys = [case_name,data_name,"case_comparison"]
+                            base_table_dict = {key: multi_table_html_info[key] for key in base_table_keys}
+
                             sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
 
                             if not sp_html.exists():
@@ -1069,7 +1068,7 @@ class AdfWeb(AdfObs):
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
                                                                 baseline_yrs=baseline_yrs,
-                                                                amwg_tables=dict_you_want,
+                                                                amwg_tables=base_table_dict,
                                                                 plot_types=plot_type_html,
                                                                 table_name=web_data.name,
                                                                 table_html=table_html,
@@ -1086,7 +1085,7 @@ class AdfWeb(AdfObs):
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
-                        print("dict_you_want for mean tables indv. ",dict_you_want,"\n")
+                        print("dict_you_want for mean tables indv. ",table_dict,"\n")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
@@ -1094,7 +1093,7 @@ class AdfWeb(AdfObs):
                                                                     case_yrs=case_yrs,
                                                                     base_name=data_name,
                                                                     baseline_yrs=baseline_yrs,
-                                                                    amwg_tables=dict_you_want,
+                                                                    amwg_tables=table_dict,
                                                                     plot_types=plot_type_html,
                                                                     multi_head=True,
                                                                     multi=False,
