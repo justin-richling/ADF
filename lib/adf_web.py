@@ -1078,13 +1078,14 @@ class AdfWeb(AdfObs):
                     #Baseline case added to all test case directories
                     # - this block should only run once when web_data is the baseline case
                     else:
-                        house += 1
+                        
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
+                        print("web_data.case",web_data.case,"house",house,"\n")
                         for case_name in case_names:
                         #print(web_data.case,case_names,"\n")
                         #if web_data.case in case_names:
-                            print("web_data.case",web_data.case,"\n")
+                            
                             table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
                             your_keys = [web_data.case,data_name,"case_comparison"]
                             #print(your_keys,"\n")
@@ -1111,7 +1112,7 @@ class AdfWeb(AdfObs):
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
-
+                    house += 1
                     #Check if the mean plot type page exists for this case:
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
 
