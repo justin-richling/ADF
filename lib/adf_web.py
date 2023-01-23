@@ -1049,6 +1049,7 @@ class AdfWeb(AdfObs):
                     #Baseline case added to all test case directories
                     # - this block should only run once when web_data is the baseline case
                     else:
+                        print("web_data.name",web_data.name,web_data.case,"\n")
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
