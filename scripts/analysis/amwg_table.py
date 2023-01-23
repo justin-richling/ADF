@@ -447,10 +447,8 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
                 else:
                     formatter = ".10f"
                     formatter2 = ".3f"
-                print(f'{df_comp[i][idx]:{formatter}}\n')
-                #df_comp.loc[df_comp[i],df_comp[idx]] = f'{df_comp[i][idx]:{formatter}}   ({(df_comp[i][idx]-df_base["mean"][idx]):{formatter2}})'
+
                 df_comp[i][idx] = f'{df_comp[i][idx]:{formatter2}}   ({(df_comp[i][idx]-df_base["mean"][idx]):{formatter2}})'
-                print("df_comp[i][idx]",df_comp[i][idx],"\n")
     
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
