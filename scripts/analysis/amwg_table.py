@@ -431,7 +431,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
         
         df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
         
-        cols_comp.append(f"case {i+1} ( diff w/ baseline )")
+        cols_comp.append(f"case {i+1} ( diff from baseline )")
     
     df_comp['baseline'] = df_base[['mean']]
     cols_comp.append("baseline")
@@ -447,7 +447,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
                 else:
                     formatter = ".10f"
                     formatter2 = ".3f"
-                
+                print(f'{df_comp[i][idx]:{formatter}}\n')
                 #df_comp.loc[df_comp[i],df_comp[idx]] = f'{df_comp[i][idx]:{formatter}}   ({(df_comp[i][idx]-df_base["mean"][idx]):{formatter2}})'
                 df_comp[i][idx] = f'{df_comp[i][idx]:{formatter}}   ({(df_comp[i][idx]-df_base["mean"][idx]):{formatter2}})'
     
