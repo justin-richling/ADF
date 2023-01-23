@@ -1047,45 +1047,13 @@ class AdfWeb(AdfObs):
                             with open(indv_html, 'w', encoding='utf-8') as ofil:
                                 ofil.write(table_rndr)
 
-                        """#
-                        table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
-                        your_keys = [web_data.case,data_name,"case_comparison"]
-                        #print(your_keys,"\n")
-                        dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
-                        #print("dict_you_want",dict_you_want,"\n")
-                        sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
-
-                        if not sp_html.exists():
-                            table_tmpl = jinenv.get_template('template_table.html')
-                            table_rndr = table_tmpl.render(title=main_title,
-                                                                case1=web_data.case,
-                                                                case2=data_name,
-                                                                case_yrs=case_yrs,
-                                                                base_name=data_name,
-                                                                baseline_yrs=baseline_yrs,
-                                                                amwg_tables=dict_you_want,
-                                                                plot_types=plot_type_html,
-                                                                table_name=web_data.name,
-                                                                table_html=table_html,
-                                                                multi_head=True,
-                                                                multi=False,
-                                                                case_sites=case_sites,
-                                                                )
-
-                            with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                ofil.write(table_rndr)"""   
-
                     #Baseline case added to all test case directories
                     # - this block should only run once when web_data is the baseline case
                     else:
-                        
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
-                        print("web_data.case",web_data.case,"house",house,"\n")
+
                         for case_name in case_names:
-                        #print(web_data.case,case_names,"\n")
-                        #if web_data.case in case_names:
-                            
                             table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
                             your_keys = [web_data.case,data_name,"case_comparison"]
                             #print(your_keys,"\n")
@@ -1112,7 +1080,7 @@ class AdfWeb(AdfObs):
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
-                    house += 1
+
                     #Check if the mean plot type page exists for this case:
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
 
@@ -1181,6 +1149,7 @@ class AdfWeb(AdfObs):
 
             multi_plots = {"Tables": "html_table/mean_tables.html",}
             for key,_ in multi_case_plots.items():
+                #Update the dictionary to add any plot types specified in the yaml file
                 multi_plots[multi_case_dict[key]] = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
 
             main_title = "ADF Diagnostics"
