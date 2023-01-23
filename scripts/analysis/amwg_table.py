@@ -337,12 +337,12 @@ def amwg_table(adf):
                 # _df_comp_table(adf, output_location, base_output_location ,case_names)
                 _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
                 print("  ... Comparison table has been generated successfully")
+                
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
                 _df_multi_comp_table(adf,csv_locs,case_names)
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
-                    #print("Path(output_locs[idx])",Path(output_locs[idx]),"\n")
                     _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
                 print("  ... Multi-case comparison table has been generated successfully")
         #End if
