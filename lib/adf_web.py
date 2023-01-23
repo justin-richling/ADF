@@ -1051,7 +1051,7 @@ class AdfWeb(AdfObs):
                                                             float_format='{:6g}'.format)
                         #for case_name in case_names:
                         if web_data.case in case_names:
-                            #print("case_name",case_name,"\n")
+                            print("web_data.case",web_data.case,"\n")
                             table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
                             your_keys = [web_data.case,data_name,"case_comparison"]
                             #print(your_keys,"\n")
