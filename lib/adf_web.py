@@ -1050,6 +1050,7 @@ class AdfWeb(AdfObs):
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
                         #for case_name in case_names:
+                        print(web_data.case,case_names,"\n")
                         if web_data.case in case_names:
                             print("web_data.case",web_data.case,"\n")
                             table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
