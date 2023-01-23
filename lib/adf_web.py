@@ -1204,7 +1204,7 @@ class AdfWeb(AdfObs):
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
-        print("**************\n",house,"**************")
+        print("\n**************",house,"**************")
 #++++++++++++++++++++
 #End Class definition
 #++++++++++++++++++++
