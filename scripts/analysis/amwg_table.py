@@ -386,9 +386,6 @@ def _df_comp_table(adf, output_location, base_output_location ,case_names):
     
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
 
-    # * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    #This will be for single-case for now (case_names[0]),
-    #will need to change to loop as multi-case is introduced
     case = output_location/f"amwg_table_{case_names[0]}.csv"
     baseline = base_output_location/f"amwg_table_{case_names[-1]}.csv"
 
@@ -422,9 +419,6 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     output_csv_file_comp = main_site_path / "amwg_table_comp_all.csv"
     df_comp = pd.DataFrame(dtype=object)
 
-    #diffs = df_comp['case'].values-df_comp['baseline'].values
-    #df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
-
     cols_comp = ['variable', 'unit']
 
     baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
@@ -437,22 +431,12 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
         
         df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
         
-        #print("AAARRRGGGG:", df_case["mean"],"\n")
         cols_comp.append(f"case {i+1} ( diff w/ baseline )")
-
-        #diffs = df_case['mean']-df_base['mean']
-
-    """for i,val in enumerate(csv_locs[:-1]): 
-        case = str(val)+f"/amwg_table_{case_names[i]}.csv"
-        df_case = pd.read_csv(case)
-        df_comp["diff"] = df_case['mean']-df_base['mean']
-        #cols_comp.append(f"case {i+1}")"""
     
     df_comp['baseline'] = df_base[['mean']]
     cols_comp.append("baseline")
 
     for i in df_comp.columns:
-        
         if "case" in i:
             print(i)
             for idx,row in enumerate(df_comp[i]):
@@ -463,9 +447,6 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
                     formatter = ".10f"
                     formatter2 = ".3f"
                 df_comp[i][idx] = f'{df_comp[i][idx]:{formatter}}   ({(df_comp[i][idx]-df_base["mean"][idx]):{formatter2}})'
-
-    #df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
-    #cols_comp.append("diff")
     
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
