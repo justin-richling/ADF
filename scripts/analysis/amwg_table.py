@@ -439,7 +439,7 @@ def _df_multi_comp_table(adf,csv_locs,case_names):
     for i in df_comp.columns:
         print(i,"\n")
         if "case" in i:
-            print(i)
+            #print(i)
             for idx,row in enumerate(df_comp[i]):
                 if np.abs(df_comp[i][idx]) < 1:
                     formatter = ".10g"
