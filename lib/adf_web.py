@@ -732,6 +732,7 @@ class AdfWeb(AdfObs):
                         ofil.write(mean_table_rndr)
                     #End with
                 #End if
+            #End if (web_data.data_frame)
             else: #Plot image
 
                 #Create output HTML file path:
