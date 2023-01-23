@@ -418,7 +418,7 @@ class AdfWeb(AdfObs):
         var_defaults_dict = self.variable_defaults
 
         # Dict for multi case if activated
-        multi_dict = self.read_config_var('multi_case_plots')
+        multi_case_plots = self.read_config_var('multi_case_plots')
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -541,14 +541,14 @@ class AdfWeb(AdfObs):
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #check to see if the user has multi-plots enabled
-                    if multi_dict:
-                        if web_data.name in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                    if multi_case_plots:
+                        if web_data.name in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]:
                             season = web_data.season
                             category = web_data.category    
                             ptype = web_data.plot_type
 
-                            if web_data.plot_ext in multi_dict.keys():
-                                for var in multi_dict[web_data.plot_ext]:
+                            if web_data.plot_ext in multi_case_plots.keys():
+                                for var in multi_case_plots[web_data.plot_ext]:
                                     #Initialize Ordered Dictionary for multi case plot type:
                                     if ptype not in multi_mean_html_info:
                                         multi_mean_html_info[ptype] = OrderedDict()
@@ -867,9 +867,9 @@ class AdfWeb(AdfObs):
 
                 #Multi Case Plots (LatLon for now)
                 ##################################
-                if multi_dict:
+                if multi_case_plots:
                     var = web_data.name
-                    if var in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                    if var in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]:
                         #Check if the web data obj is table or not (plots)
                         if not web_data.data_frame:
 
@@ -1172,13 +1172,16 @@ class AdfWeb(AdfObs):
                 #End if
 
             #Create multi-case site:
-            new_dict = {"global_latlon_map":"LatLon",
+            multi_case_dict = {"global_latlon_map":"LatLon",
                         "zonal_mean":"Zonal",
+                        "meridional":"Meridional",
+                        "global_latlon_vect_map":"LatLon_Vector",
+                        #"polar_maps":"",
                         }
 
             multi_plots = {"Tables": "html_table/mean_tables.html",}
-            for key,_ in multi_dict.items():
-                multi_plots[new_dict[key]] = f"html_img/multi_case_mean_diag_{new_dict[key]}.html"
+            for key,_ in multi_case_plots.items():
+                multi_plots[multi_case_dict[key]] = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
@@ -1194,13 +1197,7 @@ class AdfWeb(AdfObs):
             with open(outputfile, 'w', encoding='utf-8') as ofil:
                 ofil.write(main_rndr)
             #End with
-
-            """#Move over all the multi plot images to the main website assets dir
-            ug = f"{multi_path / self.get_cam_info('cam_case_name')[0]}_{syear_cases[0]}_{eyear_cases[0]}_vs_{data_name}_{syear_baseline}_{eyear_baseline}"
-            OK = glob.glob(f"{ug}/*multi_plot*")
-            for plot in OK:
-                shutil.move(plot, main_site_assets_path / f"{Path(plot).stem}.png")"""
-        #End if
+        #End if (multi case)
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
