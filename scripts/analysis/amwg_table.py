@@ -319,9 +319,6 @@ def amwg_table(adf):
     #Check if observations are being comapred to, if so skip table comparison...
     test_case_names = adf.get_cam_info("cam_case_name", required=True)
 
-
-
-    print("AHHHH",output_location,case_names,"\n")
     #Notify user that script has ended:
     print("  ...AMWG variable table has been generated successfully.")
 
@@ -337,7 +334,7 @@ def amwg_table(adf):
                 # _df_comp_table(adf, output_location, base_output_location ,case_names)
                 _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
                 print("  ... Comparison table has been generated successfully")
-                
+
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
                 _df_multi_comp_table(adf,csv_locs,case_names)
