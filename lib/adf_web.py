@@ -871,8 +871,8 @@ class AdfWeb(AdfObs):
                 ##################################
                 if multi_dict:
                     var = web_data.name
-                    #Check if the web data obj is table or not (plots)
                     if var in [item for sublist in [multi_dict[x] for x in multi_dict] for item in sublist]:
+                        #Check if the web data obj is table or not (plots)
                         if not web_data.data_frame:
 
                             season = web_data.season
@@ -908,7 +908,7 @@ class AdfWeb(AdfObs):
                             img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
 
                             img_data = [os.path.relpath(main_site_assets_path / f"{var}_{season}_{ptype}_multi_plot.png", start=main_site_img_path),
-                                                    f"{var}_{season}_LatLon_multi_plot.png"]
+                                                    f"{var}_{season}_{ptype}_multi_plot.png"]
 
                             if not (img_pages_dir / Path(f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html")).exists():
                                 tmpl = jinenv.get_template('template_multi_case.html')  #Set template
