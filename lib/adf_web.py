@@ -1076,7 +1076,7 @@ class AdfWeb(AdfObs):
                                 ofil.write(table_rndr)"""   
 
                     #Baseline case added to all test case directories
-                    # - this block should only run one when web_data is the baseline case
+                    # - this block should only run once when web_data is the baseline case
                     else:
                         house += house
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
