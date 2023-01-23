@@ -658,7 +658,7 @@ class AdfWeb(AdfObs):
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
 
-                #Construct amwg_table.html
+                """#Construct amwg_table.html
                 if main_site_path:
                     if web_data.name != "case_comparison":
                         table_tmpl = jinenv.get_template('template_table.html')
@@ -706,8 +706,29 @@ class AdfWeb(AdfObs):
                     html_file = web_data.html_file
                     with open(html_file, 'w', encoding='utf-8') as ofil:
                         ofil.write(table_rndr)
+                """
+                
+                table_tmpl = jinenv.get_template('template_table.html')
+                table_rndr = table_tmpl.render(title=main_title,
+                                        case1=case1,
+                                        case2=data_name,
+                                        case_yrs=case_yrs,
+                                        base_name=data_name,
+                                        baseline_yrs=baseline_yrs,
+                                        amwg_tables=table_html_info,
+                                        plot_types=plot_types,
+                                        table_name=web_data.name,
+                                        table_html=table_html,
+                                        multi_head=False,
+                                        multi=multi_layout,
+                                        case_sites=case_sites,
+                                        )
 
-                        
+                #Write mean diagnostic tables HTML file:
+                html_file = web_data.html_file
+                with open(html_file, 'w', encoding='utf-8') as ofil:
+                    ofil.write(table_rndr)
+
                 #Check if the mean plot type page exists for this case (or for multi-case):
                 mean_table_file = table_pages_dir / "mean_tables.html"
                 if not mean_table_file.exists():
@@ -988,6 +1009,36 @@ class AdfWeb(AdfObs):
                 # for the individual websites
                 #############################
                 if web_data.data_frame:
+                    if web_data.name != "case_comparison":
+                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                   float_format='{:6g}'.format)
+                        table_tmpl = jinenv.get_template('template_table.html')
+                        table_rndr = table_tmpl.render(title=main_title,
+                                        case1=case1,
+                                        case2=data_name,
+                                        case_yrs=case_yrs,
+                                        base_name=data_name,
+                                        baseline_yrs=baseline_yrs,
+                                        amwg_tables=table_html_info,
+                                        plot_types=plot_types,
+                                        table_name=web_data.name,
+                                        table_html=table_html,
+                                        multi_head=False,
+                                        multi=multi_layout,
+                                        case_sites=case_sites,
+                                        )
+
+                        #Write mean diagnostic tables HTML file:
+                        if len(case_names) > 1:
+                            html_file = web_data.html_file[0]
+                        else:
+                            html_file = web_data.html_file
+                        with open(html_file, 'w', encoding='utf-8') as ofil:
+                            ofil.write(table_rndr)
+
+
+
+
                     table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
 
                     #Check if the mean plot type page exists for this case (or for multi-case):
