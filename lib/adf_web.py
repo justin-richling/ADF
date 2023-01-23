@@ -1058,7 +1058,7 @@ class AdfWeb(AdfObs):
                             your_keys = [web_data.case,data_name,"case_comparison"]
                             #print(your_keys,"\n")
                             dict_you_want = {key: multi_table_html_info[key] for key in your_keys}
-                            #print("dict_you_want",dict_you_want,"\n")
+                            print("dict_you_want",dict_you_want,"\n")
                             sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
 
                             if not sp_html.exists():
