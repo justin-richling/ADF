@@ -821,7 +821,6 @@ class AdfWeb(AdfObs):
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
-            #if not index_html_file.exists():
             #Re-et plot types list:
             if web_data.case == 'multi-case':
                 plot_types = multi_plot_type_html
@@ -844,7 +843,6 @@ class AdfWeb(AdfObs):
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
                 ofil.write(index_rndr)
             #End with
-            #End if (mean_index exists)
         #End for (web data loop)
 
         # --- Starting multi-case plots if activated ---
@@ -1017,13 +1015,15 @@ class AdfWeb(AdfObs):
                             ofil.write(mean_table_rndr)
                         #End with
 
+                    house = 0
+                    #if web_data.case in case_names:
                     if web_data.case != data_name:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
                         #Construct amwg_table.html
-                        base_table_keys = [web_data.case,data_name,"case_comparison"]
-                        base_table_dict = {key: multi_table_html_info[key] for key in base_table_keys}
+                        case_table_keys = [web_data.case,data_name,"case_comparison"]
+                        case_table_dict = {key: multi_table_html_info[key] for key in case_table_keys}
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
                             
                         if not indv_html.exists():
@@ -1034,7 +1034,7 @@ class AdfWeb(AdfObs):
                                                             case_yrs=case_yrs,
                                                             base_name=data_name,
                                                             baseline_yrs=baseline_yrs,
-                                                            amwg_tables=base_table_dict,
+                                                            amwg_tables=case_table_dict,
                                                             plot_types=plot_type_html,
                                                             table_name=web_data.name,
                                                             table_html=table_html,
@@ -1047,7 +1047,7 @@ class AdfWeb(AdfObs):
                             with open(indv_html, 'w', encoding='utf-8') as ofil:
                                 ofil.write(table_rndr)
 
-                        
+                        """#
                         table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
                         your_keys = [web_data.case,data_name,"case_comparison"]
                         #print(your_keys,"\n")
@@ -1073,15 +1073,17 @@ class AdfWeb(AdfObs):
                                                                 )
 
                             with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                ofil.write(table_rndr)   
+                                ofil.write(table_rndr)"""   
 
-
-                    """else:
+                    #Baseline case added to all test case directories
+                    # - this block should only run one when web_data is the baseline case
+                    else:
+                        house += house
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
-                        #for case_name in case_names:
-                        print(web_data.case,case_names,"\n")
-                        if web_data.case in case_names:
+                        for case_name in case_names:
+                        #print(web_data.case,case_names,"\n")
+                        #if web_data.case in case_names:
                             print("web_data.case",web_data.case,"\n")
                             table_pages_dir_sp = self.__case_web_paths[web_data.case]['table_pages_dir']
                             your_keys = [web_data.case,data_name,"case_comparison"]
@@ -1108,7 +1110,7 @@ class AdfWeb(AdfObs):
                                                                 )
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                    ofil.write(table_rndr)"""
+                                    ofil.write(table_rndr)
 
                     #Check if the mean plot type page exists for this case:
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
@@ -1201,6 +1203,7 @@ class AdfWeb(AdfObs):
 
         #Notify user that script has finishedd:
         print("  ...Webpages have been generated successfully.")
+        print("**************\n",house,"**************")
 #++++++++++++++++++++
 #End Class definition
 #++++++++++++++++++++
