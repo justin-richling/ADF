@@ -55,7 +55,8 @@ def time_series(adfobj):
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
-    print("plot_locations???????????",plot_location,"\n")
+    for i in plot_location:
+        print("plot_location:",i,"\n")
     if not plot_location:
         plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
     if isinstance(plot_location, list):
