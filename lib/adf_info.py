@@ -322,6 +322,14 @@ class AdfInfo(AdfConfig):
         #modify this variable, as it is mutable and thus passed by reference:
         return copy.copy(self.__diag_var_list)
 
+    # Create property needed to return "timeseries_var_list" list to user:
+    @property
+    def timeseries_var_list(self):
+        """Return a copy of the "timeseries_var_list" list to the user if requested."""
+        #Note that a copy is needed in order to avoid having a script mistakenly
+        #modify this variable, as it is mutable and thus passed by reference:
+        return copy.copy(self.__timeseries_var_list)
+
     # Create property needed to return "basic_info" expanded dictionary to user:
     @property
     def basic_info_dict(self):
