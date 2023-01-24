@@ -185,10 +185,10 @@ def time_series(adfobj):
                 #print("case_idx, case_name: ",case_idx, case_name,"\n")
                 #if case_name != data_name:
                 #    plot_name = Path(plot_location.index(case_name)) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                if multi_path:
-                    plot_name = main_site_assets_path / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                else:
-                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                #if multi_path:
+                #    plot_name = main_site_assets_path / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                #else:
+                plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
                 if case_idx == len(case_base_names)-1:
                     if custom_leg == True:
                         label=f"{labels[case_idx]} (baseline)"
