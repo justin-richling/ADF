@@ -153,7 +153,6 @@ def time_series(adfobj):
                 vres = {}
             #End if
 
-            plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
             print(f"\t - Plotting Time Series, {season}")
                 
             print("Plotting variable:",var)
@@ -170,11 +169,14 @@ def time_series(adfobj):
             vals_cases = []
             yrs_cases = []
 
-            case_base_names = [i for i in case_names]
-            case_base_names.append(data_name)
+            #case_base_names = [i for i in case_names]
+            #case_base_names.append(data_name)
+            case_base_names = case_names + [data_name]
 
             for case_idx, case_name in enumerate(case_base_names):
                 #print("case_idx, case_name: ",case_idx, case_name,"\n")
+                if case_name != data_name:
+                    plot_name = Path(plot_location.index(case_name)) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
                 if case_idx == len(case_base_names)-1:
                     if custom_leg == True:
                         label=f"{labels[case_idx]} (baseline)"
