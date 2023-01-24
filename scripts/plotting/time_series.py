@@ -50,6 +50,13 @@ def time_series(adfobj):
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
     data_name = adfobj.get_baseline_info('cam_case_name', required=True)
 
+    if len(case_names) > 1:
+        multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
+        main_site_path = multi_path / "main_website"
+        main_site_path.mkdir(exist_ok=True)
+        main_site_assets_path = main_site_path / "assets"
+        main_site_assets_path.mkdir(exist_ok=True)
+
     case_ts_loc = adfobj.get_cam_info("cam_ts_loc", required=True)
     data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
 
@@ -137,6 +144,11 @@ def time_series(adfobj):
     #Add derived variable names into plotting list
     #ts_var_list += ["RESTOM"]
 
+    plot_names = []
+    for i in plot_location[:-1]:
+        plot_names.append(Path(i) / f"{var}_{season}_TimeSeries_Mean.{plot_type}")
+    
+    case_base_names = case_names + [data_name]
 
     for season in seasons:
         print(season,"\n")
@@ -171,12 +183,12 @@ def time_series(adfobj):
 
             #case_base_names = [i for i in case_names]
             #case_base_names.append(data_name)
-            case_base_names = case_names + [data_name]
+            #case_base_names = case_names + [data_name]
 
             for case_idx, case_name in enumerate(case_base_names):
                 #print("case_idx, case_name: ",case_idx, case_name,"\n")
-                if case_name != data_name:
-                    plot_name = Path(plot_location.index(case_name)) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                #if case_name != data_name:
+                #    plot_name = Path(plot_location.index(case_name)) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
                 if case_idx == len(case_base_names)-1:
                     if custom_leg == True:
                         label=f"{labels[case_idx]} (baseline)"
