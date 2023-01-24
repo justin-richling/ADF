@@ -871,7 +871,7 @@ class AdfWeb(AdfObs):
                         #Check if the web data obj is table or not (plots)
                         ptype = web_data.plot_type
                         if not web_data.data_frame:
-                            if ptype!="TimeSeries":
+                            if ptype!="TimeSeriesZ":
 
                                 season = web_data.season
                                 #Extract plot_type:
@@ -980,7 +980,7 @@ class AdfWeb(AdfObs):
                                     #End with
                                 #End if (mean_ptype_plot_page exists)
                             else: # Time Series multi plot?
-                                print("TIME SERIEEEEEEESSSSSSSZZZZZZZZ\n") 
+                                a = 1
                         #End if (not web_data.data_frame)
                     #End if    
                 
