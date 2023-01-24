@@ -1152,7 +1152,7 @@ class AdfWeb(AdfObs):
             for key,_ in multi_case_plots.items():
                 #Update the dictionary to add any plot types specified in the yaml file
                 multi_plots[multi_case_dict[key]] = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
-            if "time_series" in self.plotting_scripts:
+            if "TimeSeries" in multi_mean_html_info.keys():
                 multi_plots["TimeSeries"] = "html_img/multi_case_mean_diag_TimeSeries.html"
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
