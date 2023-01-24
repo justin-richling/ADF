@@ -55,6 +55,7 @@ def time_series(adfobj):
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
+    print("plot_locations???????????",plot_location,"\n")
     if not plot_location:
         plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
     if isinstance(plot_location, list):
@@ -243,12 +244,6 @@ def time_series(adfobj):
 
             case_base_names = [i for i in case_names]
             case_base_names.append(data_name)
-
-
-            '''if len(yrs[case_name]) < 5:
-                marker = "-*"
-            else:
-                marker = "--"'''
 
             for case_idx, case_name in enumerate(case_base_names):
                 if case_idx == len(case_base_names)-1:
