@@ -226,6 +226,7 @@ def time_series(adfobj):
             #End if
 
             plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+            print("plot_name",plot_name,"\n")
             print(f"\t - Plotting Time Series, {season}")
 
             print("Plotting variable:",var)
