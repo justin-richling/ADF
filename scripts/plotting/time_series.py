@@ -181,7 +181,7 @@ def time_series(adfobj):
             #case_base_names.append(data_name)
             #case_base_names = case_names + [data_name]
             if len(case_names) > 1:
-                plot_name = main_site_assets_path / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
             else:
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
 
