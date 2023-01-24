@@ -62,8 +62,7 @@ def time_series(adfobj):
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
-    for i in plot_location:
-        print("plot_location:",i,"\n")
+
     if not plot_location:
         plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
     if isinstance(plot_location, list):
@@ -147,7 +146,6 @@ def time_series(adfobj):
     case_base_names = case_names + [data_name]
 
     for season in seasons:
-        print(season,"\n")
 
         # Loop over variables:
         for var in ts_var_list:
@@ -241,8 +239,7 @@ def time_series(adfobj):
                 vres = {}
             #End if
 
-            plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-            print("plot_name",plot_name,"\n")
+            #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
             print(f"\t - Plotting Time Series, {season}")
 
             print("Plotting variable:",var)
@@ -282,8 +279,7 @@ def time_series(adfobj):
                         marker = "-*"
                     else:
                         marker = "-"
-                    print(case_name, season,"\n")
-                    print(vals[var][case_name][season])
+
                     ax.plot(yrs[case_name].astype(int), vals[var][case_name][season], marker, c=colors[case_idx],
                                         label=label)
 
@@ -502,7 +498,7 @@ def plot_var_details(ax, var, vals_cases, unit, title_var, **kwargs):
     if major_locator:
         ax.yaxis.set_major_locator(MultipleLocator(major_locator))
 
-    print(f"for {var}: major_locator: {major_locator} and minor_locator: {minor_locator}\n")
+    #print(f"for {var}: major_locator: {major_locator} and minor_locator: {minor_locator}\n")
     ax.set_ylabel(unit,fontsize=20,labelpad=12)
 
     if major_locator:
