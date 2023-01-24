@@ -539,6 +539,7 @@ class AdfWeb(AdfObs):
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     if  web_data.plot_type == "TimeSeries":#if "time_series" in self.plotting_scripts:
+                        print("Is this working??\n")
 
                         season = web_data.season
                         category = web_data.category    
