@@ -538,6 +538,30 @@ class AdfWeb(AdfObs):
             if not web_data.data_frame:
                 #Check to see if there are multiple-cases
                 if main_site_path:
+                    if "time_series" in self.plotting_scripts:
+                        season = web_data.season
+                        category = web_data.category    
+                        ptype = web_data.plot_type
+
+                        if web_data.plot_ext in multi_case_plots.keys():
+                            for var in multi_case_plots[web_data.plot_ext]:
+                                #Initialize Ordered Dictionary for multi case plot type:
+                                if ptype not in multi_mean_html_info:
+                                    multi_mean_html_info[ptype] = OrderedDict()
+                                #End if
+
+                                if category not in multi_mean_html_info[ptype]:
+                                    multi_mean_html_info[ptype][category] = OrderedDict()
+                                #End if
+
+                                #Initialize Ordered Dictionary for variable:
+                                if var not in multi_mean_html_info[ptype][category]:
+                                    multi_mean_html_info[ptype][category][var] = OrderedDict()
+                                #End if
+                                    
+                                if season not in multi_mean_html_info[ptype][category][var]:
+                                    multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                #End if
                     #check to see if the user has multi-plots enabled
                     if multi_case_plots:
                         if web_data.name in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]:
@@ -564,6 +588,7 @@ class AdfWeb(AdfObs):
                                     if season not in multi_mean_html_info[ptype][category][var]:
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #End if
+                        
 
 
                 #Create a directory that will hold just the html files for individual images:
