@@ -116,6 +116,9 @@ class AdfInfo(AdfConfig):
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
+        #Initialize timeseries variable list:
+        self.__timeseries_var_list = self.read_config_var('timeseries_var_list', required=True)
+
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
 
