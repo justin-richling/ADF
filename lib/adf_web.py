@@ -979,7 +979,8 @@ class AdfWeb(AdfObs):
                                         ofil.write(plot_page_rndr)
                                     #End with
                                 #End if (mean_ptype_plot_page exists)
-
+                            else: # Time Series multi plot?
+                                print("TIME SERIEEEEEEESSSSSSSZZZZZZZZ\n") 
                         #End if (not web_data.data_frame)
                     #End if    
                 
