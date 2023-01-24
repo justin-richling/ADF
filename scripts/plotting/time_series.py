@@ -48,23 +48,10 @@ def time_series(adfobj):
     # -----------------------------------------
     
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_names_len = len(case_names)
     data_name = adfobj.get_baseline_info('cam_case_name', required=True)
-    all_case_names = case_names+[data_name]
 
     case_ts_loc = adfobj.get_cam_info("cam_ts_loc", required=True)
     data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
-
-    start_year    = adfobj.get_cam_info("start_year")
-    end_year      = adfobj.get_cam_info("end_year")
-    cam_hist_locs = adfobj.get_cam_info('cam_hist_loc', required=True)
-
-    #Check if a baseline simulation is also being used:
-    if not adfobj.get_basic_info("compare_obs"):
-        #Extract CAM baseline variaables:
-        bl_syr            = adfobj.get_baseline_info("start_year")
-        bl_eyr            = adfobj.get_baseline_info("end_year")
-        cam_hist_locs_bl  = adfobj.get_baseline_info('cam_hist_loc', required=True)
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
