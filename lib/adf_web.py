@@ -543,24 +543,24 @@ class AdfWeb(AdfObs):
                         category = web_data.category    
                         ptype = web_data.plot_type
 
+                        for var in self.timeseries_var_list:#multi_case_plots[web_data.plot_ext]:
+                            #Initialize Ordered Dictionary for multi case plot type:
+                            if ptype not in multi_mean_html_info:
+                                multi_mean_html_info[ptype] = OrderedDict()
+                            #End if
 
-                        #Initialize Ordered Dictionary for multi case plot type:
-                        if ptype not in multi_mean_html_info:
-                            multi_mean_html_info[ptype] = OrderedDict()
-                        #End if
+                            if category not in multi_mean_html_info[ptype]:
+                                multi_mean_html_info[ptype][category] = OrderedDict()
+                            #End if
 
-                        if category not in multi_mean_html_info[ptype]:
-                            multi_mean_html_info[ptype][category] = OrderedDict()
-                        #End if
-
-                        #Initialize Ordered Dictionary for variable:
-                        if var not in multi_mean_html_info[ptype][category]:
-                            multi_mean_html_info[ptype][category][var] = OrderedDict()
-                        #End if
-                                    
-                        if season not in multi_mean_html_info[ptype][category][var]:
-                            multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                        #End if
+                            #Initialize Ordered Dictionary for variable:
+                            if var not in multi_mean_html_info[ptype][category]:
+                                multi_mean_html_info[ptype][category][var] = OrderedDict()
+                            #End if
+                                        
+                            if season not in multi_mean_html_info[ptype][category][var]:
+                                multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                            #End if
                     #check to see if the user has multi-plots enabled
                     if multi_case_plots:
                         if web_data.name in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]:
@@ -951,7 +951,7 @@ class AdfWeb(AdfObs):
                                     with open(img_pages_dir / f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html", 'w', encoding='utf-8') as ofil:
                                                 ofil.write(rndr)
 
-                            
+                                print("multi_mean_html_info",multi_mean_html_info.keys(),"\n")
                                 mean_ptype_file = main_site_img_path / f"multi_case_mean_diag_{web_data.plot_type}.html"    
                                 if not mean_ptype_file.exists():
 
