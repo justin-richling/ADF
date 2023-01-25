@@ -157,6 +157,9 @@ def time_series(adfobj):
                 #If found then notify user, assuming debug log is enabled:
                 adfobj.debug_log(f"time_series: Found variable defaults for {var}")
 
+                #Extract category (if available):
+                web_category = vres.get("category", None)
+
             else:
                 vres = {}
             #End if
@@ -177,21 +180,12 @@ def time_series(adfobj):
             vals_cases = []
             yrs_cases = []
 
-            #case_base_names = [i for i in case_names]
-            #case_base_names.append(data_name)
-            #case_base_names = case_names + [data_name]
             if len(case_names) > 1:
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
             else:
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
 
             for case_idx, case_name in enumerate(case_base_names):
-                #print("case_idx, case_name: ",case_idx, case_name,"\n")
-                #if case_name != data_name:
-                #    plot_name = Path(plot_location.index(case_name)) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                #if multi_path:
-                #    plot_name = main_site_assets_path / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                #else:
                 
                 if case_idx == len(case_base_names)-1:
                     if custom_leg == True:
@@ -225,10 +219,97 @@ def time_series(adfobj):
                                     bbox_to_anchor=(0.122, 0.82,.05,.05))
             plt.savefig(plot_name, facecolor='w')
             #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, var, None, season=season, plot_type="TimeSeries",multi_case=True)
+            adfobj.add_website_data(plot_name, var, web_category, season=season, plot_type="TimeSeries",multi_case=True)
             #Close plots:
             plt.close()
         # End for (variables loop)
+
+        if multi_path:
+            for season in seasons:
+
+                # Loop over variables:
+                for var in ts_var_list:
+                    # Check res for any variable specific options that need to be used BEFORE going to the plot:
+                    if var in res:
+                        vres = res[var]
+                        #If found then notify user, assuming debug log is enabled:
+                        adfobj.debug_log(f"time_series: Found variable defaults for {var}")
+                        
+                        #Extract category (if available):
+                        web_category = vres.get("category", None)
+
+                    else:
+                        vres = {}
+                    #End if
+
+                    print(f"\t - Plotting Time Series, {season}")
+                        
+                    print("Plotting variable:",var)
+                        
+                    title_var = "Global"
+
+                    """fig = plt.figure(figsize=(12,8))
+                    ax = fig.add_subplot(111)
+
+                    ax = ts_plot(ax, var, season, units, title_var)
+
+                    # Create lists to hold all sets of years (for each case) and
+                    # sets of var data (for each case)
+                    vals_cases = []
+                    yrs_cases = []"""
+
+                    for case_idx, case_name in enumerate(case_names):
+                        plot_name = plot_location[case_idx] / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+
+                        fig = plt.figure(figsize=(12,8))
+                        ax = fig.add_subplot(111)
+
+                        ax = ts_plot(ax, var, season, units, title_var)
+
+                        # Create lists to hold all sets of years (for each case) and
+                        # sets of var data (for each case)
+                        vals_cases = []
+                        yrs_cases = []
+                        
+                        #if case_idx == len(case_base_names)-1:
+                        if custom_leg == True:
+                            label=f"{labels[case_idx]} (baseline)"
+                        else:
+                            label=f"{case_name} (baseline)"
+                        marker = "--"
+
+                        ax.plot(yrs[case_name].astype(int), vals[var][data_name][season], marker, c='g',
+                                            label=label)
+                        #else:
+                        if custom_leg == True:
+                            label=f"{labels[case_idx]}"
+                        else:
+                            label=f"{case_name}"
+                        marker = "-"
+                        ax.plot(yrs[case_name].astype(int), vals[var][case_name][season], marker, c=colors[case_idx],
+                                            label=label)
+
+                        vals_cases.append(vals[var][case_name][season])
+                        yrs_cases.append(yrs[case_name])
+
+                        ax = plot_var_details(ax, var, vals_cases, units[var], title_var, **vres)
+
+                        ax = _format_xaxis(ax, yrs_cases)
+
+                        # Set up legend
+                        # If custom_legend = True, change the code in make_fig_legend() function for custom legend
+                        #fig = make_fig_legend(case_names_len, fig, custom_legend=False)
+                        fig.legend(loc="center left",fontsize=12,
+                                            bbox_to_anchor=(0.122, 0.82,.05,.05))
+                        plt.savefig(plot_name, facecolor='w')
+                        #Add plot to website (if enabled):
+                        adfobj.add_website_data(plot_name, var, web_category, season=season, plot_type="TimeSeries")
+                        #Close plots:
+                        plt.close()
+                    #End for (case loop)
+                #End for (variables loop)
+            #End for (season loop)
+        #End if (multi_path)
 
         #Derived quantities:
         #-------------------
