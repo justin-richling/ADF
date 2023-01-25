@@ -688,6 +688,9 @@ class AdfWeb(AdfObs):
 
                 #Construct amwg_table.html
                 if main_site_path:
+                    #Skip case comparison for individual cases, those are handled below
+                    #in the multi case section. Probably no the most intuitive, but it woks for now.
+                    #NOTE Let's revisit this for some refactoring - JR
                     if web_data.name != "case_comparison":
                         table_tmpl = jinenv.get_template('template_table.html')
                         table_rndr = table_tmpl.render(title=main_title,
