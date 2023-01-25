@@ -226,61 +226,10 @@ def time_series(adfobj):
 
             #If multiple cases, make each individaul case vs baseline time series plot
             # to go into each case website
-            if multi_path:
-                for case_idx, case_name in enumerate(case_names):
-                    plot_name = Path(plot_location[case_idx]) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-
-                    fig = plt.figure(figsize=(12,8))
-                    ax = fig.add_subplot(111)
-
-                    ax = ts_plot(ax, var, season, units, title_var)
-
-                    # Create lists to hold all sets of years (for each case) and
-                    # sets of var data (for each case)
-                    vals_cases = []
-                    yrs_cases = []
-                        
-                    #if case_idx == len(case_base_names)-1:
-                    if custom_leg == True:
-                        label=f"{labels[-1]} (baseline)"
-                    else:
-                        label=f"{data_name} (baseline)"
-                    marker = "--"
-
-                    ax.plot(yrs[case_name].astype(int), vals[var][data_name][season], marker, c='g',
-                                            label=label)
-                    #else:
-                    if custom_leg == True:
-                        label=f"{labels[case_idx]}"
-                    else:
-                        label=f"{case_name}"
-                    marker = "-"
-                    ax.plot(yrs[case_name].astype(int), vals[var][case_name][season], marker, c=colors[case_idx],
-                                            label=label)
-
-                    vals_cases.append(vals[var][case_name][season])
-                    yrs_cases.append(yrs[case_name])
-
-                    ax = plot_var_details(ax, var, vals_cases, units[var], title_var, **vres)
-
-                    ax = _format_xaxis(ax, yrs_cases)
-
-                    # Set up legend
-                    # If custom_legend = True, change the code in make_fig_legend() function for custom legend
-                    #fig = make_fig_legend(case_names_len, fig, custom_legend=False)
-                    fig.legend(loc="center left",fontsize=12,
-                                        bbox_to_anchor=(0.122, 0.82,.05,.05))
-                    plt.savefig(plot_name, facecolor='w')
-                    #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category,
-                                            season=season, plot_type="TimeSeries", multi_case=True)
-                    #Close plots:
-                    plt.close()
-                #End for (case loop - multi)
-            #End if (multi_path)
+            
         # End for (variables loop)
 
-        """if multi_path:
+        if multi_path:
             for season in seasons:
 
                 # Loop over variables:
@@ -356,16 +305,14 @@ def time_series(adfobj):
                     #End for (case loop)
                 #End for (variables loop)
             #End for (season loop)
-        #End if (multi_path)"""
+        #End if (multi_path)
 
         #Derived quantities:
         #-------------------
         
         # - RESTOM
-        #if ("FSNT" in ts_var_list) and ("FLNT" in ts_var_list):
         if all(value in ts_var_list for value in ["FSNT","FLNT"]):
             print("DID IT MAKE IT TO THIS POINT, AHHHHHHHHHHHH\n")
-            #if any((match := item) in ts_var_list for item in ["FSNT","FLNT"]):
    
             if season == "ANN":
                 var = "RESTOM"
@@ -446,68 +393,6 @@ def time_series(adfobj):
                 adfobj.add_website_data(plot_name, var, None, season=season, plot_type="TimeSeries",multi_case=True)
                 #Close plots:
                 plt.close()
-
-                if multi_path:
-                    for case_idx, case_name in enumerate(case_names):
-                        plot_name = Path(plot_location[case_idx]) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-
-                        fig = plt.figure(figsize=(12,8))
-                        ax = fig.add_subplot(111)
-
-                        ax = ts_plot(ax, var, season, units, title_var)
-
-                        # Create lists to hold all sets of years (for each case) and
-                        # sets of var data (for each case)
-                        vals_cases = []
-                        yrs_cases = []
-                            
-                        #if case_idx == len(case_base_names)-1:
-                        if custom_leg == True:
-                            label=f"{labels[-1]} (baseline)"
-                        else:
-                            label=f"{data_name} (baseline)"
-
-                        if len(yrs[case_name]) < 5:
-                            marker = "--*"
-                        else:
-                            marker = "--"
-
-                        ax.plot(yrs[case_name].astype(int), vals[var][data_name][season], marker, c='g',
-                                                label=label)
-                        #else:
-                        if custom_leg == True:
-                            label=f"{labels[case_idx]}"
-                        else:
-                            label=f"{case_name}"
-                        
-                        if len(yrs[case_name]) < 5:
-                            marker = "-*"
-                        else:
-                            marker = "-"
-
-                        ax.plot(yrs[case_name].astype(int), vals[var][case_name][season], marker, c=colors[case_idx],
-                                                label=label)
-
-                        vals_cases.append(vals[var][case_name][season])
-                        yrs_cases.append(yrs[case_name])
-
-                        ax = plot_var_details(ax, var, vals_cases, units[var], title_var, **vres)
-
-                        ax = _format_xaxis(ax, yrs_cases)
-
-                        # Set up legend
-                        # If custom_legend = True, change the code in make_fig_legend() function for custom legend
-                        #fig = make_fig_legend(case_names_len, fig, custom_legend=False)
-                        fig.legend(loc="center left",fontsize=12,
-                                            bbox_to_anchor=(0.122, 0.82,.05,.05))
-                        plt.savefig(plot_name, facecolor='w')
-                        #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category,
-                                                season=season, plot_type="TimeSeries", multi_case=True)
-                        #Close plots:
-                        plt.close()
-                    #End for (case loop - multi)
-                #End if (multi_path)
             #End if (season ANN)
         #End RESTOM timeseries
     # End for (seasons loop)
