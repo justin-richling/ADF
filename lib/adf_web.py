@@ -471,6 +471,8 @@ class AdfWeb(AdfObs):
         multi_table_html_info = OrderedDict()
 
         ts_var_list = self.timeseries_var_list
+        if all(value in ts_var_list for value in ["FSNT","FLNT"]):
+            ts_var_list += ["RESTOM"]
 
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
