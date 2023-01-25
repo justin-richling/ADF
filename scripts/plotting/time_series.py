@@ -241,9 +241,9 @@ def time_series(adfobj):
                         
                     #if case_idx == len(case_base_names)-1:
                     if custom_leg == True:
-                        label=f"{labels[case_idx]} (baseline)"
+                        label=f"{labels[-1]} (baseline)"
                     else:
-                        label=f"{case_name} (baseline)"
+                        label=f"{data_name} (baseline)"
                     marker = "--"
 
                     ax.plot(yrs[case_name].astype(int), vals[var][data_name][season], marker, c='g',
@@ -271,7 +271,8 @@ def time_series(adfobj):
                                         bbox_to_anchor=(0.122, 0.82,.05,.05))
                     plt.savefig(plot_name, facecolor='w')
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category, season=season, plot_type="TimeSeries")
+                    adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category,
+                                            season=season, plot_type="TimeSeries", multi_case=True)
                     #Close plots:
                     plt.close()
                 #End for (case loop - multi)
@@ -371,6 +372,9 @@ def time_series(adfobj):
                     #If found then notify user, assuming debug log is enabled:
                     adfobj.debug_log(f"time_series: Found variable defaults for {var}")
 
+                    #Extract category (if available):
+                    web_category = vres.get("category", None)
+
                 else:
                     vres = {}
                 #End if
@@ -436,7 +440,7 @@ def time_series(adfobj):
                                             bbox_to_anchor=(0.122, 0.82,.05,.05))
                 plt.savefig(plot_name, facecolor='w')
                 #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_name, var, None, season=season, plot_type="TimeSeries",multi_case=True)
+                adfobj.add_website_data(plot_name, var, None, category=web_category, season=season, plot_type="TimeSeries",multi_case=True)
                 #Close plots:
                 plt.close()
 
@@ -456,9 +460,9 @@ def time_series(adfobj):
                             
                         #if case_idx == len(case_base_names)-1:
                         if custom_leg == True:
-                            label=f"{labels[case_idx]} (baseline)"
+                            label=f"{labels[-1]} (baseline)"
                         else:
-                            label=f"{case_name} (baseline)"
+                            label=f"{data_name} (baseline)"
 
                         if len(yrs[case_name]) < 5:
                             marker = "--*"
@@ -495,7 +499,8 @@ def time_series(adfobj):
                                             bbox_to_anchor=(0.122, 0.82,.05,.05))
                         plt.savefig(plot_name, facecolor='w')
                         #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category, season=season, plot_type="TimeSeries")
+                        adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category,
+                                                season=season, plot_type="TimeSeries", multi_case=True)
                         #Close plots:
                         plt.close()
                     #End for (case loop - multi)
