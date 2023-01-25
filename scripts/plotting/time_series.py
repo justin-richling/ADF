@@ -219,7 +219,7 @@ def time_series(adfobj):
                                     bbox_to_anchor=(0.122, 0.82,.05,.05))
             plt.savefig(plot_name, facecolor='w')
             #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, var, case_name=None, category=web_category, season=season, plot_type="TimeSeries",multi_case=True)
+            adfobj.add_website_data(plot_name, var, season=season, plot_type="TimeSeries",multi_case=True)
             #Close plots:
             plt.close()
         # End for (variables loop)
@@ -392,7 +392,7 @@ def time_series(adfobj):
                                             bbox_to_anchor=(0.122, 0.82,.05,.05))
                 plt.savefig(plot_name, facecolor='w')
                 #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_name, var, case_name=None, category=web_category, season=season, plot_type="TimeSeries",multi_case=True)
+                adfobj.add_website_data(plot_name, var, season=season, plot_type="TimeSeries",multi_case=True)
                 #Close plots:
                 plt.close()
     # End for (seasons loop)
