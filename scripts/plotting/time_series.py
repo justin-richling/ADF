@@ -247,7 +247,10 @@ def time_series(adfobj):
                     vres = {}
                 #End if
 
-                #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                if len(case_names) > 1:
+                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                else:
+                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
                 print(f"\t - Plotting Time Series, {season}")
 
                 print("Plotting variable:",var)
