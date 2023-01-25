@@ -303,7 +303,7 @@ def time_series(adfobj):
                                             bbox_to_anchor=(0.122, 0.82,.05,.05))
                         plt.savefig(plot_name, facecolor='w')
                         #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, var, category=web_category, season=season, plot_type="TimeSeries")
+                        adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category, season=season, plot_type="TimeSeries")
                         #Close plots:
                         plt.close()
                     #End for (case loop)
