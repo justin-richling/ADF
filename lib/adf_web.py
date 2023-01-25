@@ -891,15 +891,17 @@ class AdfWeb(AdfObs):
                 ##################################
                 if multi_case_plots:
                     var = web_data.name
-                    if var in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]:
-                        #Check if the web data obj is table or not (plots)
+                    #for var in self.timeseries_var_list:
+                    if (var in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]) or (var in self.timeseries_var_list):
+                        
+                        #Extract plot_type:
                         ptype = web_data.plot_type
+
+                        #Check if the web data obj is table or not (plots)
                         if not web_data.data_frame:
                             if ptype!="TimeSeriesZ":
 
                                 season = web_data.season
-                                #Extract plot_type:
-                                #ptype = web_data.plot_type
 
                                 #Create a directory that will hold just the html files for individual images:
                                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
