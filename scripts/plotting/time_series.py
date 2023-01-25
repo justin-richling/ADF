@@ -234,7 +234,9 @@ def time_series(adfobj):
         #-------------------
         
         # - RESTOM
-        if "FSNT" and "FLNT" in ts_var_list:
+        #if ("FSNT" in ts_var_list) and ("FLNT" in ts_var_list):
+        if all(value in ts_var_list for value in ["FSNT","FLNT"]):
+        #if any((match := item) in ts_var_list for item in ["FSNT","FLNT"]):
    
             if season == "ANN":
                 var = "RESTOM"
