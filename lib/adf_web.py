@@ -470,8 +470,11 @@ class AdfWeb(AdfObs):
         table_html_info = OrderedDict()
         multi_table_html_info = OrderedDict()
 
+        ts_var_list = self.timeseries_var_list
+
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
+            
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
 
@@ -543,7 +546,7 @@ class AdfWeb(AdfObs):
                         category = web_data.category    
                         ptype = web_data.plot_type
 
-                        for var in self.timeseries_var_list:#multi_case_plots[web_data.plot_ext]:
+                        for var in ts_var_list:#multi_case_plots[web_data.plot_ext]:
                             #Initialize Ordered Dictionary for multi case plot type:
                             if ptype not in multi_mean_html_info:
                                 multi_mean_html_info[ptype] = OrderedDict()
@@ -891,8 +894,13 @@ class AdfWeb(AdfObs):
                 ##################################
                 if multi_case_plots:
                     var = web_data.name
-                    #for var in self.timeseries_var_list:
-                    if (var in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]) or (var in self.timeseries_var_list):
+                    multi_plot_vars = [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]
+
+                    #Add any external lists of variables for multi-case index:
+                    #example: time series plots
+                    multi_plot_vars += ts_var_list
+
+                    if var in multi_plot_vars:
                         
                         #Extract plot_type:
                         ptype = web_data.plot_type
@@ -953,7 +961,7 @@ class AdfWeb(AdfObs):
                                     with open(img_pages_dir / f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html", 'w', encoding='utf-8') as ofil:
                                                 ofil.write(rndr)
 
-                                print("multi_mean_html_info",multi_mean_html_info.keys(),"\n")
+                                #print("multi_mean_html_info",multi_mean_html_info.keys(),"\n")
                                 mean_ptype_file = main_site_img_path / f"multi_case_mean_diag_{web_data.plot_type}.html"    
                                 if not mean_ptype_file.exists():
 
