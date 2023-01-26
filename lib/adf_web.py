@@ -654,8 +654,8 @@ class AdfWeb(AdfObs):
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
 
             #End if (data-frame check)
-            print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info["TimeSeries"],"\n\n")
         #End for (web_data list loop)
+        print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info["TimeSeries"],"\n\n")
 
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
