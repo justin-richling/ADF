@@ -594,7 +594,7 @@ class AdfWeb(AdfObs):
                                     #End if
                         
 
-
+                print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
 
