@@ -571,7 +571,7 @@ class AdfWeb(AdfObs):
                             if season not in multi_mean_html_info[ptype][category][var]:
                                 multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                             #End if
-                            print(ptype,category,var,season,web_data.case_name,f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html\n")
+                            print(ptype,category,var,season,web_data.case,f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html\n")
 
                     #check to see if the user has multi-plots enabled
                     if multi_case_plots:
