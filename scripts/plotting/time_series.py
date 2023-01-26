@@ -345,7 +345,7 @@ def time_series(adfobj):
 
                 for case_idx, case_name in enumerate(case_names):
                     plot_name = Path(plot_location[case_idx]) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                    print("Path(plot_location[case_idx])",Path(plot_location[case_idx]),"\n")
+                    #print("Path(plot_location[case_idx])",Path(plot_location[case_idx]),"\n")
                     fig = plt.figure(figsize=(12,8))
                     ax = fig.add_subplot(111)
 
