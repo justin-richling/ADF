@@ -358,9 +358,9 @@ def time_series(adfobj):
                         
                     #if case_idx == len(case_base_names)-1:
                     if custom_leg == True:
-                        label=f"{labels[case_idx]} (baseline)"
+                        label=f"{labels[-1]} (baseline)"
                     else:
-                        label=f"{case_name} (baseline)"
+                        label=f"{data_name} (baseline)"
                     marker = "--"
 
                     ax.plot(yrs[case_name].astype(int), vals[var][data_name][season], marker, c='g',
