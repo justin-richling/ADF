@@ -544,11 +544,12 @@ class AdfWeb(AdfObs):
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     if web_data.plot_type == "TimeSeries":#if "time_series" in self.plotting_scripts:
-                        season = web_data.season
-                        category = web_data.category    
-                        ptype = web_data.plot_type
-
                         for var in ts_var_list:#multi_case_plots[web_data.plot_ext]:
+
+                            season = web_data.season
+                            category = web_data.category    
+                            ptype = web_data.plot_type
+
                             #Initialize Ordered Dictionary for multi case plot type:
                             if ptype not in multi_mean_html_info:
                                 multi_mean_html_info[ptype] = OrderedDict()
@@ -566,6 +567,8 @@ class AdfWeb(AdfObs):
                             if season not in multi_mean_html_info[ptype][category][var]:
                                 multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                             #End if
+
+                            print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
                     #check to see if the user has multi-plots enabled
                     if multi_case_plots:
                         if web_data.name in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]:
@@ -594,7 +597,7 @@ class AdfWeb(AdfObs):
                                     #End if
                         
 
-                print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
+                #print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
 
