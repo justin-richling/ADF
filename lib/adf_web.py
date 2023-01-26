@@ -541,14 +541,18 @@ class AdfWeb(AdfObs):
 
             #Now check all plot types
             if not web_data.data_frame:
+                season = web_data.season
+                category = web_data.category    
+                ptype = web_data.plot_type
                 #Check to see if there are multiple-cases
                 if main_site_path:
-                    if web_data.plot_type == "TimeSeries":#if "time_series" in self.plotting_scripts:
+                    #Check for time series multi-case plot
+                    if web_data.plot_type == "TimeSeries":
                         for var in ts_var_list:#multi_case_plots[web_data.plot_ext]:
 
-                            season = web_data.season
-                            category = web_data.category    
-                            ptype = web_data.plot_type
+                            #season = web_data.season
+                            #category = web_data.category    
+                            #ptype = web_data.plot_type
 
                             #Initialize Ordered Dictionary for multi case plot type:
                             if ptype not in multi_mean_html_info:
@@ -567,14 +571,16 @@ class AdfWeb(AdfObs):
                             if season not in multi_mean_html_info[ptype][category][var]:
                                 multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                             #End if
+                            print(f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html\n")
 
-                            #print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
                     #check to see if the user has multi-plots enabled
                     if multi_case_plots:
+                        #NOTE his will probably need to be updated to a cleaner conditional in case
+                        # we want to expand on external add on mutli-case plots... - JR
                         if (web_data.name in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]) and (web_data.plot_type != "TimeSeries"):
-                            season = web_data.season
-                            category = web_data.category    
-                            ptype = web_data.plot_type
+                            #season = web_data.season
+                            #category = web_data.category    
+                            #ptype = web_data.plot_type
 
                             if web_data.plot_ext in multi_case_plots.keys():
                                 for var in multi_case_plots[web_data.plot_ext]:
@@ -595,9 +601,12 @@ class AdfWeb(AdfObs):
                                     if season not in multi_mean_html_info[ptype][category][var]:
                                         multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                     #End if
-                        
+                                #End for (multi-case plot types)
+                            #End if (multi-case plot types loop)
+                        #End if (multi-case plots and not timeseries)
+                    #End if (multi-case plots)        
+                #End if (main_site)
 
-                #print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
 
@@ -655,7 +664,7 @@ class AdfWeb(AdfObs):
 
             #End if (data-frame check)
         #End for (web_data list loop)
-        print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info["TimeSeries"],"\n\n")
+        print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info["TimeSeries"].keys(),"\n\n")
 
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
