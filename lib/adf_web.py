@@ -571,7 +571,7 @@ class AdfWeb(AdfObs):
                             #print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
                     #check to see if the user has multi-plots enabled
                     if multi_case_plots:
-                        if web_data.name in ([item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]) and (web_data.plot_type != "TimeSeries"):
+                        if (web_data.name in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]) and (web_data.plot_type != "TimeSeries"):
                             season = web_data.season
                             category = web_data.category    
                             ptype = web_data.plot_type
