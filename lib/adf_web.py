@@ -568,7 +568,7 @@ class AdfWeb(AdfObs):
                                 multi_mean_html_info[ptype][category][var][season] = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                             #End if
 
-                            print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
+                            #print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info,"\n\n")
                     #check to see if the user has multi-plots enabled
                     if multi_case_plots:
                         if web_data.name in [item for sublist in [multi_case_plots[x] for x in multi_case_plots] for item in sublist]:
@@ -654,6 +654,7 @@ class AdfWeb(AdfObs):
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
 
             #End if (data-frame check)
+            print("\n\nOOOOOKKKKKAAAAAYYYY: multi_mean_html_info",multi_mean_html_info["TimeSeries"],"\n\n")
         #End for (web_data list loop)
 
         #Loop over all web data objects again:
