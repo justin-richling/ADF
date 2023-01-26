@@ -233,10 +233,10 @@ def time_series(adfobj):
         #-------------------
         
         # - RESTOM
-        if all(value in ts_var_list for value in ["FSNT","FLNT"]):
-            print("DID IT MAKE IT TO THIS POINT, AHHHHHHHHHHHH\n")
-   
-            if season == "ANN":
+        if season == "ANN":
+            if all(value in ts_var_list for value in ["FSNT","FLNT"]):
+                print("DID IT MAKE IT TO THIS POINT, AHHHHHHHHHHHH\n")
+            
                 var = "RESTOM"
                 if var in res:
                     vres = res[var]
@@ -254,9 +254,9 @@ def time_series(adfobj):
                     plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
                 else:
                     plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                print(f"\t - Plotting Time Series, {season}")
+                print(f"\t - Plotting RESTOM Time Series, {season}")
 
-                print("Plotting variable:",var)
+                #print("Plotting variable:",var,"\n")
 
                 fig = plt.figure(figsize=(12,8))
                 ax = fig.add_subplot(111)
@@ -345,7 +345,7 @@ def time_series(adfobj):
 
                 for case_idx, case_name in enumerate(case_names):
                     plot_name = Path(plot_location[case_idx]) / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-
+                    print("Path(plot_location[case_idx])",Path(plot_location[case_idx]),"\n")
                     fig = plt.figure(figsize=(12,8))
                     ax = fig.add_subplot(111)
 
