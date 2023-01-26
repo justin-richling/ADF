@@ -299,7 +299,7 @@ def time_series(adfobj):
                         plt.savefig(plot_name, facecolor='w')
                         #Add plot to website (if enabled):
                         adfobj.add_website_data(plot_name, var, case_name=case_name, category=web_category, season=season, plot_type="TimeSeries")
-                        adfobj.add_website_data(plot_name, var, web_category, season=season, plot_type="TimeSeries")
+                        #adfobj.add_website_data(plot_name, var, web_category, season=season, plot_type="TimeSeries")
                         #Close plots:
                         plt.close()
                     #End for (case loop)
@@ -390,7 +390,7 @@ def time_series(adfobj):
                 plt.savefig(plot_name, facecolor='w')
                 #Add plot to website (if enabled):
                 adfobj.add_website_data(plot_name, var, None, category=web_category, season=season, plot_type="TimeSeries",multi_case=True)
-                adfobj.add_website_data(plot_name, var, None, season=season, plot_type="TimeSeries",multi_case=True)
+                #adfobj.add_website_data(plot_name, var, None, season=season, plot_type="TimeSeries",multi_case=True)
                 #Close plots:
                 plt.close()
             #End if (season ANN)
