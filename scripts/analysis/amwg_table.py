@@ -443,9 +443,11 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
         case = str(val)+f"/amwg_table_{case_names[i]}.csv"
         df_case = pd.read_csv(case)
         
+        #If no custom nicknames, shorten column name to case number
         if test_nicknames[i] == case_names[i]:
             df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
             cols_comp.append(f"case {i+1}")
+        #Else, name columns after nicknames
         else:
             df_comp[['variable','unit',f"{test_nicknames[i]}"]] = df_case[['variable','unit','mean']]
             cols_comp.append(test_nicknames[i])

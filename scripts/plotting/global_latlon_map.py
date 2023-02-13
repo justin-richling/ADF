@@ -80,8 +80,9 @@ def global_latlon_map(adfobj):
 
     #Grab test case nickname(s)
     test_nicknames = adfobj.get_cam_info('case_nickname')
-    if test_nicknames == None:
-        test_nicknames = case_names
+    for idx,nick_name in enumerate(test_nicknames):
+        if nick_name == None:
+            test_nicknames[idx] = case_names[idx]
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,

@@ -8,6 +8,7 @@ plotting scripts.
 
 #import statements:
 from typing import Optional
+from pathlib import Path
 import numpy as np
 import xarray as xr
 import matplotlib as mpl
@@ -1685,11 +1686,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                                         dateline_direction_label=False)
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
-
     for var in multi_dict.keys():
-        for j in multi_dict[var].keys():
-            for season in multi_dict[var][j].keys():
-                from pathlib import Path
+        for case in multi_dict[var].keys():
+            for season in multi_dict[var][case].keys():
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 redo_plot = adfobj.get_basic_info('redo_plot')
                 if (not redo_plot) and Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file():
