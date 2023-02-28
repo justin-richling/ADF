@@ -391,6 +391,8 @@ class AdfWeb(AdfObs):
         if self.compare_obs:
             data_name = "Obs"
             baseline_yrs = ""
+            syear_baseline = ""
+            eyear_baseline = ""
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
 
