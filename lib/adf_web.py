@@ -736,8 +736,8 @@ class AdfWeb(AdfObs):
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
                     new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
-                    mean_table_rndr = mean_table_tmpl.render(new_dict)
-                    """mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                    #mean_table_rndr = mean_table_tmpl.render(new_dict)
+                    mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                              case1=case1,
                                                              case2=data_name,
                                                              case_yrs=case_yrs,
@@ -748,7 +748,7 @@ class AdfWeb(AdfObs):
                                                              multi_head=False,
                                                              multi=multi_layout,
                                                              case_sites=case_sites,
-                                                            )"""
+                                                            )
 
                     #Write mean diagnostic tables HTML file:
                     with open(mean_table_file, 'w', encoding='utf-8') as ofil:
