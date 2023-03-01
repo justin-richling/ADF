@@ -65,13 +65,12 @@ def global_latlon_map(adfobj):
 
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
-
+    #read_config_var('multi_case_plots')
     if len(case_names) > 1:
         #Check if multi-plots are desired from yaml file
-        if adfobj.read_config_var('multi_case_plots'):
+        if adfobj.get_multi_case_info["global_latlon_map"]:
             multi_plots = True
-            if multi_plots:
-                multi_dict = OrderedDict()
+            multi_dict = OrderedDict()
     else:
         multi_plots = False
 
@@ -155,11 +154,13 @@ def global_latlon_map(adfobj):
     
     # probably want to do this one variable at a time:
     for var in var_list:
+
+        #Check if multi-case scenario, if so grab details
         if multi_plots:
-            for multi_var in adfobj.read_config_var('multi_case_plots')["global_latlon_map"]:
+            #read_config_var('multi_case_plots')
+            for multi_var in adfobj.get_multi_case_info["global_latlon_map"]:
                 if multi_var not in multi_dict:
                     multi_dict[multi_var] = OrderedDict()
-
 
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
@@ -286,10 +287,6 @@ def global_latlon_map(adfobj):
                         mseasons = {}
                         oseasons = {}
                         dseasons = {} # hold the differences
-
-                        #Initialize Ordered Dictionary for variable:
-                        #if case_name not in restom_dict:
-                        #restom_dict[case_name] = OrderedDict()
 
                         #Loop over season dictionary:
                         for s in seasons:

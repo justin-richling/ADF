@@ -304,8 +304,6 @@ def amwg_table(adf):
 
     #End of model case loop
     #----------------------
-
-    #Check if observations are being comapred to, if so skip table comparison...
     test_case_names = adf.get_cam_info("cam_case_name", required=True)
 
     #Notify user that script has ended:
@@ -397,6 +395,12 @@ def _get_row_vals(data):
 #####
 
 def _df_comp_table(adf, output_location, base_output_location ,case_names):
+    """
+    Function to build case vs baseline AMWG table
+    -----
+        - Read in table data and create side by side comaprison table
+        - Write output to csv file and add to website
+    """
     
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
 
@@ -429,16 +433,28 @@ def _df_comp_table(adf, output_location, base_output_location ,case_names):
 #####
 
 def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
+    """
+    Function to build all case comparison AMWG table
+    ------
+        - Read in each previously made table from file
+          and compile full comparison.
+    """
 
+    #Create path to main website in mutli-case directory
     main_site_path = Path(adf.get_basic_info('cam_diag_plot_loc', required=True))
     output_csv_file_comp = main_site_path / "amwg_table_comp_all.csv"
+
+    #Create the "comparison" dataframe:
     df_comp = pd.DataFrame(dtype=object)
 
+    #Create new colummns
     cols_comp = ['variable', 'unit']
 
+    #Read baseline case
     baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
     df_base = pd.read_csv(baseline)
 
+    #Read all test cases and add to table
     for i,val in enumerate(csv_locs[:-1]): 
         case = str(val)+f"/amwg_table_{case_names[i]}.csv"
         df_case = pd.read_csv(case)
@@ -451,7 +467,8 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
         else:
             df_comp[['variable','unit',f"{test_nicknames[i]}"]] = df_case[['variable','unit','mean']]
             cols_comp.append(test_nicknames[i])
-    
+
+    #Add baseline cases to end of the table
     if test_nicknames[-1] == case_names[-1]:
         df_comp["baseline"] = df_base[['mean']]
         cols_comp.append("baseline")
@@ -459,17 +476,24 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
         df_comp[f"{test_nicknames[-1]} ( baseline )"] = df_base[['mean']]
         cols_comp.append(f"{test_nicknames[-1]} ( baseline )")
 
+    #Format the floats:
     for col in df_comp.columns:
+        #Ignore columns that don't contain floats
         if (col != 'variable') and (col != "unit"):
             if "baseline" not in col:
+
+                #Iterate over rows and check magnitude of value
                 for idx,row in enumerate(df_comp[col]):
+                    #Check if value is less than one, keep 3 non-zero decimal values
+                    #Else, keep 3 main digits, including decimal values
                     if np.abs(df_comp[col][idx]) < 1:
                         formatter = ".3g"
                     else:
                         formatter = ".3f"
-
+                    #Replace value in dataframe
                     df_comp.at[idx,col]= f'{df_comp[col][idx]:{formatter}}   ({(df_comp[col][idx]-df_base["mean"][idx]):{formatter}})'
         
+    #Finally, write data to csv
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):

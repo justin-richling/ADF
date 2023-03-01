@@ -1666,6 +1666,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
     ncols = 3
     nplots = len(nicknames[0])
 
+    # Check redo_plot. If set to True: remove old plot, if it already exists:
+    redo_plot = adfobj.get_basic_info('redo_plot')
+
     #Try and format spacing based on number of cases
     # NOTE: ** this will have to change if figsize or dpi change **
     if nplots < 4:
@@ -1678,7 +1681,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
         nrows = 2
 
     # specify the central longitude for the plot
-    central_longitude = 180
+    central_longitude = get_central_longitude(adfobj)
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
     # formatting for tick labels
     lon_formatter = LongitudeFormatter(number_format='0.0f',
@@ -1689,12 +1692,11 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
     for var in multi_dict.keys():
         for case in multi_dict[var].keys():
             for season in multi_dict[var][case].keys():
-                # Check redo_plot. If set to True: remove old plot, if it already exists:
-                redo_plot = adfobj.get_basic_info('redo_plot')
-                if (not redo_plot) and Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file():
+                file_path = f"{var}_{season}_{ptype}_multi_plot.png"
+                if (not redo_plot) and Path(wks / file_path).is_file():
                     #Continue to next iteration:
                     continue
-                elif (redo_plot) or (not Path(wks / f"{var}_{season}_{ptype}_multi_plot.png").is_file()):
+                elif (redo_plot) or (not Path(wks / file_path).is_file()):
                     fig_width = 15
                     fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
                     fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
@@ -1706,6 +1708,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                     plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.325)
                     axs[0,1].set_title("$\mathbf{Baseline}:$"+f'{nicknames[1]}\n', fontsize=12)
                     
+                    normfunc,_ = use_this_norm()
+
                     count = 0
                     img = []
                     titles = []
@@ -1721,11 +1725,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
 
                                 levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
                                 levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
-                                    
-                                normfunc, mplv = use_this_norm()
 
                                 # color normalization for difference
-                                if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+                                if (np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff)):
                                     normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
                                 else:
                                     normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
@@ -1734,15 +1736,15 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
 
                                 img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
                                                 cmap=cmap, norm=normdiff, 
-                                                transform=ccrs.PlateCarree()))
+                                                transform=proj))
 
                                 #Set individual plot titles (case name/nickname)
                                 titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
 
                                 axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
                                 axs[r,c].coastlines()
-                                axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
-                                axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
+                                axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=proj)
+                                axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=proj)
                                 axs[r,c].tick_params('both', length=5, width=1.5, which='major')
                                 axs[r,c].tick_params('both', length=5, width=1.5, which='minor')
                                 axs[r,c].xaxis.set_major_formatter(lon_formatter)
@@ -1753,10 +1755,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                                 axs[r,c].set_visible(False)
                             count = count + 1
                     # __COLORBARS__
-                    fig.colorbar(img[-1],  ax=axs.ravel().tolist(), orientation='horizontal',aspect=20,shrink=.5,location="bottom",anchor=(0.5,-0.3),extend='both')
+                    fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
+                                 aspect=20, shrink=.5, location="bottom",
+                                 anchor=(0.5,-0.3), extend='both')
                         
                     plt.subplots_adjust(wspace=0.3, hspace=hspace)
-                    fig.savefig(wks / f"{var}_{season}_{ptype}_multi_plot.png", bbox_inches='tight', dpi=300)
+                    fig.savefig(wks / file_path, bbox_inches='tight', dpi=300)
 
                     #Close plots:
                     plt.close()
