@@ -1175,10 +1175,11 @@ class AdfWeb(AdfObs):
                                "global_latlon_vect_map":"LatLon_Vector"}
 
             multi_plots = {"Tables": "html_table/mean_tables.html"}
-            for key in multi_case_plots:
-                #Update the dictionary to add any plot types specified in the yaml file
-                mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
-                multi_plots[multi_case_dict[key]] = mcase_plot
+            if multi_case_plots:
+                for key in multi_case_plots:
+                    #Update the dictionary to add any plot types specified in the yaml file
+                    mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
+                    multi_plots[multi_case_dict[key]] = mcase_plot
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
