@@ -488,7 +488,6 @@ def global_latlon_map(adfobj):
                 #End if (dimensions check and plotting pressure levels)
             #End for (case loop)
         #End for (obs/baseline loop)
-
     #End for (variable loop)
 
     #This will be a list of variables for multi-case plotting based off LatLon plot type
@@ -503,7 +502,11 @@ def global_latlon_map(adfobj):
         main_site_assets_path = main_site_path / "assets"
         main_site_assets_path.mkdir(exist_ok=True)
 
-        pf.multi_latlon_plots(main_site_assets_path, "LatLon", case_names, [test_nicknames,base_nickname], multi_dict, adfobj)
+        pf.multi_latlon_plots(main_site_assets_path, "LatLon", case_names,
+                             [test_nicknames,base_nickname], multi_dict,
+                             web_category, adfobj)
+        #adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
+        #                                                category=web_category, season=s, plot_type="LatLon")
 
         print("  ...lat/lon multi-case plots have been generated successfully.")
     #Notify user that script has ended:
