@@ -418,6 +418,15 @@ class AdfWeb(AdfObs):
         multi_case_plots = self.read_config_var('multi_case_plots')
         #Grab all variables for each multi-cacse plot type
         mvars = [i for sub in [multi_case_plots[x] for x in multi_case_plots] for i in sub]
+        print("mvars:",mvars,"\n")
+
+
+        mvars = []
+        for sub in [multi_case_plots[x] for x in multi_case_plots]:
+            for i in sub:
+                mvars.append(i)
+
+
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
