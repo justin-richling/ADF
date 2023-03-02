@@ -68,14 +68,15 @@ def global_latlon_map(adfobj):
     #read_config_var('multi_case_plots')
     if len(case_names) > 1:
         #Check if multi-plots are desired from yaml file
-        try:
-            if adfobj.get_multi_case_info("global_latlon_map"):
+        if adfobj.get_multi_case_info("global_latlon_map"):
                 multi_plots = True
                 multi_dict = OrderedDict()
-        except:
+        else:
             multi_plots = False
+        #End if (check for muli-case plots for LatLon)
     else:
         multi_plots = False
+    #End if (check for multiple cases)
 
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
