@@ -708,8 +708,8 @@ class AdfWeb(AdfObs):
                             ofil.write(table_rndr)
 
                 else:
-                    table_rndr = table_tmpl.render(rend_kwarg_dict)
                     rend_kwarg_dict["plot_types"] = plot_type_html
+                    table_rndr = table_tmpl.render(rend_kwarg_dict)
                     """table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
                                         case1=case1,
