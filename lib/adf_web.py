@@ -425,7 +425,7 @@ class AdfWeb(AdfObs):
         for sub in [multi_case_plots[x] for x in multi_case_plots]:
             for i in sub:
                 mvars.append(i)
-
+        print("mvars:",mvars,"\n")
 
 
         #Set plot type html dictionary (for Jinja templating):
