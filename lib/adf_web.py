@@ -440,7 +440,7 @@ class AdfWeb(AdfObs):
                 else:
                     print("What's happening here. Is it going through???")
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
-                                                                   f"mean_diag_{plot_type}.html")
+                                                                   f"multi_case_mean_diag_{plot_type}.html")
                 #End if
             #End for
         """else:
