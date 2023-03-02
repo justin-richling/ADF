@@ -416,17 +416,16 @@ class AdfWeb(AdfObs):
         #Dict for multi case if specified
         #Grab requested multi-case plots
         multi_case_plots = self.read_config_var('multi_case_plots')
+        
         #Grab all variables for each multi-cacse plot type
-        mvars = [i for sub in [multi_case_plots[x] for x in multi_case_plots] for i in sub]
-        print("mvars:",mvars,"\n")
+        #mvars = [i for sub in [multi_case_plots[x] for x in multi_case_plots] for i in sub]
+        #print("mvars:",mvars,"\n")
 
-
+        #Grab all variables for each multi-cacse plot type
         mvars = []
         for sub in [multi_case_plots[x] for x in multi_case_plots]:
             for i in sub:
                 mvars.append(i)
-        print("mvars:",mvars,"\n")
-
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -553,9 +552,9 @@ class AdfWeb(AdfObs):
             if not web_data.data_frame:
                 #Check to see if there are multiple-cases
                 if main_site_path:
-                    #check to see if the user has multi-plots enabled
+                    #Check to see if the user has multi-plots enabled
                     if multi_case_plots:
-                        #(varibale in multi-case plot variables)
+                        #Loop over each variable in multi-case plot variables
                         if web_data.name in mvars:
                             season = web_data.season
                             category = web_data.category
@@ -687,6 +686,7 @@ class AdfWeb(AdfObs):
                                   "multi_head": False,
                                   "multi": multi_layout,
                                   "case_sites": case_sites}
+
                 table_tmpl = jinenv.get_template('template_table.html')
 
                 if main_site_path:
@@ -750,6 +750,18 @@ class AdfWeb(AdfObs):
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
                     new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
+                    test_dict = {"title": main_title, "case1": case1,
+                                  "case2": data_name,
+                                  "case_yrs": case_yrs,
+                                  "base_name": data_name,
+                                  "baseline_yrs": baseline_yrs,
+                                  "amwg_tables": table_html_info,
+                                  "table_name": web_data.name,
+                                  "table_html": table_html,
+                                  "multi_head": False,
+                                  "multi": multi_layout,
+                                  "case_sites": case_sites}
+                    
                     
                     if main_site_path:
                         plot_types = multi_plot_type_html
@@ -767,8 +779,7 @@ class AdfWeb(AdfObs):
                                                              plot_types=plot_types,
                                                              multi_head=False,
                                                              multi=multi_layout,
-                                                             case_sites=case_sites,
-                                                            )
+                                                             case_sites=case_sites)
 
                     #Write mean diagnostic tables HTML file:
                     with open(mean_table_file, 'w', encoding='utf-8') as ofil:
@@ -964,7 +975,7 @@ class AdfWeb(AdfObs):
                                     rndr = tmpl.render(title=main_title,
                                                     var_title=var,
                                                     season_title=season,
-                                                    plottype_title=web_data.plot_type,
+                                                    plottype_title=ptype,
                                                     imgs=img_data,
                                                     base_name=data_name,
                                                     case_yrs=case_yrs,
@@ -972,14 +983,14 @@ class AdfWeb(AdfObs):
                                                     mydata=multi_mean_html_info[ptype],
                                                     plot_types=multi_plot_type_html,
                                                     multi=multi_layout,
-                                                    case_sites=case_sites) #The template rendered
+                                                    case_sites=case_sites)
 
                                     #Write HTML file:
                                     with open(img_pages_dir / multimean,
                                             'w', encoding='utf-8') as ofil:
                                         ofil.write(rndr)
 
-                                multi_mean = f"multi_case_mean_diag_{web_data.plot_type}.html"
+                                multi_mean = f"multi_case_mean_diag_{ptype}.html"
                                 mean_ptype_file = main_site_img_path / multi_mean
                                 if not mean_ptype_file.exists():
 
@@ -991,7 +1002,7 @@ class AdfWeb(AdfObs):
                                                                 case_yrs=case_yrs,
                                                                 baseline_yrs=baseline_yrs,
                                                                 mydata=multi_mean_html_info[ptype],
-                                                                curr_type=web_data.plot_type,
+                                                                curr_type=ptype,
                                                                 plot_types=multi_plot_type_html,
                                                                 multi=multi_layout,
                                                                 case_sites=case_sites)
@@ -1004,7 +1015,7 @@ class AdfWeb(AdfObs):
 
                                 #Check if the mean plot type and var page exists for this case:
                                 img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                                plot_page = f"plot_page_multi_case_{var}_{web_data.plot_type}.html"
+                                plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
                                 mean_ptype_plot_page = img_pages_dir / plot_page
 
                                 if not mean_ptype_plot_page.exists():
@@ -1015,16 +1026,15 @@ class AdfWeb(AdfObs):
                                     plot_page_rndr = page_tmpl.render(title=main_title,
                                                                 var_title=var,
                                                                 season_title=season,
-                                                                plottype_title=web_data.plot_type,
+                                                                plottype_title=ptype,
                                                                 base_name=data_name,
                                                                 case_yrs=case_yrs,
                                                                 baseline_yrs=baseline_yrs,
                                                                 mydata=multi_mean_html_info[ptype],
-                                                                curr_type=web_data.plot_type,
+                                                                curr_type=ptype,
                                                                 plot_types=multi_plot_type_html,
                                                                 multi=multi_layout,
-                                                                case_sites=case_sites,
-                                                                            )
+                                                                case_sites=case_sites)
 
                                     #Write mean diagnostic plots HTML file:
                                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
@@ -1059,8 +1069,7 @@ class AdfWeb(AdfObs):
                                                                     plot_types=plot_type_html,
                                                                     multi_head=True,
                                                                     multi=False,
-                                                                    case_sites=case_sites,
-                                                                    )
+                                                                    case_sites=case_sites)
 
                         #Write mean diagnostic tables HTML file:
                         with open(mean_table_file, 'w', encoding='utf-8') as ofil:
@@ -1156,17 +1165,19 @@ class AdfWeb(AdfObs):
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
+                #If not, just grab the files from the first test case directory
                 css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
                 shutil.copytree(css_files_dir, main_templates_path)
             #End if
 
             #Create multi-case site:
+            #Make a dictionary for plot type extensions for given plot type
             multi_case_dict = {"global_latlon_map":"LatLon",
                                "zonal_mean":"Zonal",
                                "meridional":"Meridional",
                                "global_latlon_vect_map":"LatLon_Vector"}
 
-            multi_plots = {"Tables": "html_table/mean_tables.html",}
+            multi_plots = {"Tables": "html_table/mean_tables.html"}
             for key in multi_case_plots:
                 #Update the dictionary to add any plot types specified in the yaml file
                 mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
@@ -1178,8 +1189,7 @@ class AdfWeb(AdfObs):
                                          case_sites=case_sites,
                                          base_name=data_name,
                                          baseline_yrs=baseline_yrs,
-                                         multi_plots=multi_plots,
-                                         )
+                                         multi_plots=multi_plots)
 
             #Write multi-case main HTML file:
             outputfile = main_site_path / "index.html"
