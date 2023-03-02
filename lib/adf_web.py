@@ -742,8 +742,10 @@ class AdfWeb(AdfObs):
                     #since all others are the same
                     new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
                     
-                    #multi_plot_type_html,plot_type_html
-                    plot_types = plot_type_html
+                    if main_site_path:
+                        plot_types = multi_plot_type_html
+                    else:
+                        plot_types = plot_type_html
                     
                     #mean_table_rndr = mean_table_tmpl.render(new_dict)
                     mean_table_rndr = mean_table_tmpl.render(title=main_title,
