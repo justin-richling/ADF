@@ -685,6 +685,7 @@ class AdfWeb(AdfObs):
                 if main_site_path:
                     if web_data.name != "case_comparison":
                         rend_kwarg_dict["plot_types"] = multi_plot_type_html
+                        print("multi_plot_type_html",multi_plot_type_html,"\n")
                         table_rndr = table_tmpl.render(rend_kwarg_dict)
                         """table_tmpl = jinenv.get_template('template_table.html')
                         table_rndr = table_tmpl.render(title=main_title,
@@ -709,6 +710,7 @@ class AdfWeb(AdfObs):
 
                 else:
                     rend_kwarg_dict["plot_types"] = plot_type_html
+                    print("plot_type_html",plot_type_html,"\n")
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
                     """table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
