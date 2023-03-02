@@ -1642,7 +1642,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
 # Multi-Case Multi-Plot Section
 ###############################
 
-def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
+def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj):
     """ This is a multi-case comparison of test minus baseline for each test case:
         wks: path for saved image.
                 Should be assets directory inside of the main_website directory
@@ -1692,11 +1692,11 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
     for var in multi_dict.keys():
         for case in multi_dict[var].keys():
             for season in multi_dict[var][case].keys():
-                file_path = f"{var}_{season}_{ptype}_multi_plot.png"
-                if (not redo_plot) and Path(wks / file_path).is_file():
+                file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+                if (not redo_plot) and Path(wks / file_name).is_file():
                     #Continue to next iteration:
                     continue
-                elif (redo_plot) or (not Path(wks / file_path).is_file()):
+                elif (redo_plot) or (not Path(wks / file_name).is_file()):
                     fig_width = 15
                     fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
                     fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
@@ -1760,7 +1760,22 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, adfobj):
                                  anchor=(0.5,-0.3), extend='both')
                         
                     plt.subplots_adjust(wspace=0.3, hspace=hspace)
-                    fig.savefig(wks / file_path, bbox_inches='tight', dpi=300)
+                    fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
+
+                    #Multi-case table comp web stuff
+                    #adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
+
+                    """
+                    def add_website_data(self, web_data, web_name, case_name,
+                         plot_ext = None,
+                         category = None,
+                         season = None,
+                         plot_type = "Special",
+                         multi_case=False):
+                    """
+
+                    adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
+                                                        category=web_category, season=season, plot_type="LatLon")
 
                     #Close plots:
                     plt.close()
