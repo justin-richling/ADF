@@ -647,6 +647,7 @@ class AdfWeb(AdfObs):
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
 
                 plot_types = plot_type_html
+                print("plot_type_html",plot_type_html,"\n")
                 #End if
 
                 #Check if plot image already handles multiple cases,
@@ -665,6 +666,7 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
+
                 rend_kwarg_dict = {"title": main_title, "case1": case1,
                                   "case2": data_name,
                                   "case_yrs": case_yrs,
