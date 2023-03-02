@@ -161,7 +161,6 @@ def global_latlon_map(adfobj):
 
         #Check if multi-case scenario, if so grab details
         if multi_plots:
-            #read_config_var('multi_case_plots')
             for multi_var in adfobj.get_multi_case_info("global_latlon_map"):
                 if multi_var not in multi_dict:
                     multi_dict[multi_var] = OrderedDict()
@@ -244,7 +243,7 @@ def global_latlon_map(adfobj):
                     print("    {} not found, making new directory".format(plot_loc))
                     plot_loc.mkdir(parents=True)
 
-                # load re-gridded model files:
+                #Load re-gridded model files:
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
                 mclim_ds = _load_dataset(mclim_fils)
 
@@ -252,18 +251,18 @@ def global_latlon_map(adfobj):
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
                 mdata = mclim_ds[var].squeeze()
 
-                # APPLY UNITS TRANSFORMATION IF SPECIFIED:
-                # NOTE: looks like our climo files don't have all their metadata
+                #APPLY UNITS TRANSFORMATION IF SPECIFIED:
+                #NOTE: looks like our climo files don't have all their metadata
                 mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                # update units
+                #Update units
                 mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
 
-                # Do the same for the baseline case if need be:
+                #Do the same for the baseline case if need be:
                 if not adfobj.compare_obs:
                     odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
                     # update units
                     odata.attrs['units'] = vres.get("new_unit", odata.attrs.get('units', 'none'))
-                # Or for observations:
+                #Or for observations:
                 else:
                     odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
                    # Note: we are going to assume that the specification ensures the conversion makes the units the same. Doesn't make sense to add a different unit.
@@ -497,7 +496,6 @@ def global_latlon_map(adfobj):
     #This will be a list of variables for multi-case plotting based off LatLon plot type
     if multi_plots:
         #Notify user that script has started:
-            
         print("\n  Generating lat/lon multi-case plots...")
 
         multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
@@ -509,8 +507,6 @@ def global_latlon_map(adfobj):
         pf.multi_latlon_plots(main_site_assets_path, "LatLon", case_names,
                              [test_nicknames,base_nickname], multi_dict,
                              web_category, adfobj)
-        #adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
-        #                                                category=web_category, season=s, plot_type="LatLon")
 
         print("  ...lat/lon multi-case plots have been generated successfully.")
     #Notify user that script has ended:
