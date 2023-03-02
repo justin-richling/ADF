@@ -441,9 +441,9 @@ class AdfWeb(AdfObs):
                                                                    f"mean_diag_{plot_type}.html")
                 #End if
             #End for
-        else:
+        """else:
             #Set to match standard plot type dict:
-            multi_plot_type_html = plot_type_html
+            multi_plot_type_html = plot_type_html"""
         #End if
 
         #Set main title for website:
@@ -646,8 +646,9 @@ class AdfWeb(AdfObs):
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
 
-                plot_types = plot_type_html
-                print("plot_type_html",plot_type_html,"\n")
+                #plot_types = plot_type_html
+                #multi_plot_type_html = plot_type_html
+                #print("plot_type_html",plot_type_html,"\n")
                 #End if
 
                 #Check if plot image already handles multiple cases,
@@ -673,7 +674,7 @@ class AdfWeb(AdfObs):
                                   "base_name": data_name,
                                   "baseline_yrs": baseline_yrs,
                                   "amwg_tables": table_html_info,
-                                  "plot_types": plot_types,
+                                  #"plot_types": plot_types,
                                   "table_name": web_data.name,
                                   "table_html": table_html,
                                   "multi_head": False,
@@ -683,6 +684,7 @@ class AdfWeb(AdfObs):
 
                 if main_site_path:
                     if web_data.name != "case_comparison":
+                        rend_kwarg_dict["plot_types"] = multi_plot_type_html
                         table_rndr = table_tmpl.render(rend_kwarg_dict)
                         """table_tmpl = jinenv.get_template('template_table.html')
                         table_rndr = table_tmpl.render(title=main_title,
@@ -707,6 +709,7 @@ class AdfWeb(AdfObs):
 
                 else:
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
+                    rend_kwarg_dict["plot_types"] = plot_type_html
                     """table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
                                         case1=case1,
