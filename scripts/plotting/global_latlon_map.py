@@ -155,7 +155,7 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    
+
     # probably want to do this one variable at a time:
     for var in var_list:
 
