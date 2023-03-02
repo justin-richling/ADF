@@ -433,10 +433,12 @@ class AdfWeb(AdfObs):
         if self.num_cases > 1:
             multi_plot_type_html = OrderedDict()
             for plot_type in self.__plot_type_multi:
+                print("plot_type",plot_type,"\n")
                 if plot_type == 'Tables':
                     multi_plot_type_html[plot_type] = os.path.join("html_table",
                                                                    "mean_tables.html")
                 else:
+                    print("What's happening here. Is it going through???")
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
                                                                    f"mean_diag_{plot_type}.html")
                 #End if
@@ -645,10 +647,6 @@ class AdfWeb(AdfObs):
 
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
-
-                #plot_types = plot_type_html
-                #multi_plot_type_html = plot_type_html
-                #print("plot_type_html",plot_type_html,"\n")
                 #End if
 
                 #Check if plot image already handles multiple cases,
