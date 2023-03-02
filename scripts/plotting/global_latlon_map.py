@@ -73,7 +73,7 @@ def global_latlon_map(adfobj):
                 multi_dict = OrderedDict()
         else:
             multi_plots = False
-        #End if (check for muli-case plots for LatLon)
+        #End if (check for multi-case plots for LatLon)
     else:
         multi_plots = False
     #End if (check for multiple cases)
