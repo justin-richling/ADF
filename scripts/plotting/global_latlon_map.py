@@ -118,6 +118,8 @@ def global_latlon_map(adfobj):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
+    #eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
