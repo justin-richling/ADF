@@ -768,6 +768,7 @@ class AdfWeb(AdfObs):
                         multi_head = "Table"
                     else:
                         plot_types = plot_type_html
+                        multi_head = False
                     
                     #mean_table_rndr = mean_table_tmpl.render(new_dict)
                     mean_table_rndr = mean_table_tmpl.render(title=main_title,
