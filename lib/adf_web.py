@@ -769,7 +769,7 @@ class AdfWeb(AdfObs):
                     else:
                         plot_types = plot_type_html
                         multi_head = False
-                    
+                    print("case1",case1,"\n")
                     #mean_table_rndr = mean_table_tmpl.render(new_dict)
                     mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                              case1=case1,
@@ -1060,6 +1060,7 @@ class AdfWeb(AdfObs):
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
+                        print("This should only be working under multi-case scenario, it it?")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
@@ -1144,6 +1145,7 @@ class AdfWeb(AdfObs):
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
                     if not mean_table_file.exists():
                         #Construct mean_table.html
+                        print("This should only be working under multi-case scenario, it it?")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
