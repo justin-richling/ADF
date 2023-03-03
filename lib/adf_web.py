@@ -717,6 +717,10 @@ class AdfWeb(AdfObs):
 
                 else:
                     rend_kwarg_dict["plot_types"] = plot_type_html
+                    if web_data.case == data_name:
+                        case1 = case_name
+                    rend_kwarg_dict["case1"] = plot_type_html
+
                     print("plot_type_html",plot_type_html,"\n")
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
                     """table_tmpl = jinenv.get_template('template_table.html')
