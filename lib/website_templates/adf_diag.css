@@ -1,3 +1,11 @@
+div-img
+{
+  background-image: url(cgd_logo.png), url(NCAR.gif);
+  background-position: top right, top left;
+  background-repeat: no-repeat, no-repeat;
+  border: 5px solid #555, 5px solid #555;
+  }
+
 nav.primary-navigation {
   margin: 0 auto;
   display: block;
