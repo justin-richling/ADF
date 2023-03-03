@@ -108,10 +108,10 @@ def global_latlon_map(adfobj):
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
 
-        #Grab baseline case nickname
+        """#Grab baseline case nickname
         base_nickname = adfobj.get_baseline_info('case_nickname')
         if base_nickname == None:
-            base_nickname = data_name
+            base_nickname = data_name"""
     #End if
 
     #Extract baseline years (which may be empty strings if using Obs):
