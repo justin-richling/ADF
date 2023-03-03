@@ -394,7 +394,7 @@ def _get_row_vals(data):
 
 #####
 
-def _df_comp_table(adf, output_location, base_output_location ,case_names):
+def _df_comp_table(adf, output_location, base_output_location, case_names):
     """
     Function to build case vs baseline AMWG table
     -----
