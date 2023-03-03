@@ -1099,7 +1099,7 @@ class AdfWeb(AdfObs):
                                                             plot_types=plot_type_html,
                                                             table_name=web_data.name,
                                                             table_html=table_html,
-                                                            multi_head="Table",
+                                                            multi_head=True,
                                                             multi=False,
                                                             case_sites=case_sites)
 
