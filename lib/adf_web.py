@@ -670,7 +670,6 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
-                print("case1",case1,"\n")
                 rend_kwarg_dict = {"title": main_title, "case1": case1,
                                   "case2": data_name,
                                   "case_yrs": case_yrs,
@@ -718,9 +717,9 @@ class AdfWeb(AdfObs):
                 else:
                     rend_kwarg_dict["plot_types"] = plot_type_html
                     if web_data.case == data_name:
-                        case1 = case_name
-                    rend_kwarg_dict["case1"] = plot_type_html
-
+                        #case1 = case_name
+                        rend_kwarg_dict["case1"] = case_name
+                    print("case1",rend_kwarg_dict["case1"],"\n")
                     print("plot_type_html",plot_type_html,"\n")
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
                     """table_tmpl = jinenv.get_template('template_table.html')
