@@ -687,6 +687,8 @@ class AdfWeb(AdfObs):
                 table_tmpl = jinenv.get_template('template_table.html')
 
                 if main_site_path:
+                    #Avoid single case comparison getting called here
+                    #There might be a better way, but for now it works - JR
                     if web_data.name != "case_comparison":
                         rend_kwarg_dict["plot_types"] = multi_plot_type_html
                         rend_kwarg_dict["multi_head"] = "Table" #True
@@ -1097,7 +1099,7 @@ class AdfWeb(AdfObs):
                                                             plot_types=plot_type_html,
                                                             table_name=web_data.name,
                                                             table_html=table_html,
-                                                            multi_head=True,
+                                                            multi_head="Table",
                                                             multi=False,
                                                             case_sites=case_sites)
 
