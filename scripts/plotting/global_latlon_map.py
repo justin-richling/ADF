@@ -81,11 +81,11 @@ def global_latlon_map(adfobj):
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
-    #Grab test case nickname(s)
+    """#Grab test case nickname(s)
     test_nicknames = adfobj.get_cam_info('case_nickname')
     for idx,nick_name in enumerate(test_nicknames):
         if nick_name == None:
-            test_nicknames[idx] = case_names[idx]
+            test_nicknames[idx] = case_names[idx]"""
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -118,7 +118,10 @@ def global_latlon_map(adfobj):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
-    #eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    base_nickname = adfobj.case_nicknames["base_nickname"]
+    #{"test_nicknames":test_nicknames,"base_nickname":base_nickname}
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
