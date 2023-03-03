@@ -670,7 +670,7 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
-
+                print("case1",case1,"\n")
                 rend_kwarg_dict = {"title": main_title, "case1": case1,
                                   "case2": data_name,
                                   "case_yrs": case_yrs,
@@ -769,7 +769,7 @@ class AdfWeb(AdfObs):
                     else:
                         plot_types = plot_type_html
                         multi_head = False
-                    print("case1",case1,"\n")
+                    #print("case1",case1,"\n")
                     #mean_table_rndr = mean_table_tmpl.render(new_dict)
                     mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                              case1=case1,
