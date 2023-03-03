@@ -800,7 +800,7 @@ class AdfWeb(AdfObs):
                             web_data.asset_path.stem]
 
                 #Check if plot image already handles multiple cases:
-                web_data.multi_case = False
+                #web_data.multi_case = False
                 if web_data.multi_case:
                     case1 = "Listed in plots."
                     plot_types = multi_plot_type_html
