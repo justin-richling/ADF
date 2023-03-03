@@ -167,7 +167,13 @@ class AdfInfo(AdfConfig):
             #End if
 
             data_name += f"_{syear_baseline}_{eyear_baseline}"
+
+            test_nicknames = self.get_cam_info('case_nickname')
+            base_nickname = self.get_baseline_info('case_nickname')
         #End if
+
+        self.__test_nicknames = test_nicknames
+        self.__base_nickname = base_nickname
 
         self.__syear_baseline = syear_baseline
         self.__eyear_baseline = eyear_baseline
@@ -368,6 +374,30 @@ class AdfInfo(AdfConfig):
         eyears = copy.copy(self.__eyears)
         return {"syears":syears,"eyears":eyears,
                 "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
+
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def case_nicknames(self):
+        """Return the "syear" and "eyear" integer values to the user if requested."""
+        #Grab test case nickname(s)
+        test_nicknames = copy.copy(self.__test_nicknames)
+
+        #Case names:
+        case_names = self.get_cam_info('cam_case_name', required=True)
+        for idx,nick_name in enumerate(test_nicknames):
+            if nick_name == None:
+                test_nicknames[idx] = case_names[idx]
+            
+        #Set data name to baseline case name:
+        data_name = self.get_baseline_info('cam_case_name', required=True)
+
+        #Grab test case nickname(s)
+        base_nickname = copy.copy(self.__base_nickname)
+
+        if base_nickname == None:
+            base_nickname = data_name
+
+        return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
 
     #########
 
