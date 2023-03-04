@@ -945,7 +945,8 @@ class AdfWeb(AdfObs):
                         var = web_data.name
                         ext = web_data.plot_ext
                         
-                        if multi_case_plots:
+                        #if multi_case_plots:
+                        if 1==1:
                             #Check if variable is in desired multi-case plot:
                             if var in mvars:
                                 #Check if the web data obj not a table
