@@ -675,17 +675,6 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
-                
-                """if main_site_path:
-                    #Check to see if the user has multi-plots enabled
-                    if not multi_case_plots:
-                        p = f"plot_page_multi_case_{name}_{season}_{ptype}_Mean.html"
-                        multi_mean_html_info[ptype][category][name][season] = p"""
-            
-            """if main_site_path:
-                #Check to see if the user has multi-plots enabled
-                if not multi_case_plots:
-                   multi_mean_html_info = mean_html_info"""
             #End if (data-frame check)
         #End for (web_data list loop)
 
