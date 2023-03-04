@@ -602,6 +602,11 @@ class AdfWeb(AdfObs):
                 #Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
                     mean_html_info[ptype] = OrderedDict()
+                    if main_site_path:
+                        #Check to see if the user has multi-plots enabled
+                        if not multi_case_plots:
+                            if ptype not in mean_html_info:
+                                multi_mean_html_info[ptype]
                 #End if
 
                 #Check if category has been provided for this web data:
@@ -622,6 +627,11 @@ class AdfWeb(AdfObs):
 
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
+                    if main_site_path:
+                        #Check to see if the user has multi-plots enabled
+                        if not multi_case_plots:
+                            if ptype not in mean_html_info[ptype]:
+                                multi_mean_html_info[ptype][category]
                 #End if
 
                 #Extract web data name (usually the variable name):
@@ -630,6 +640,11 @@ class AdfWeb(AdfObs):
                 #Initialize Ordered Dictionary for variable:
                 if name not in mean_html_info[ptype][category]:
                     mean_html_info[ptype][category][name] = OrderedDict()
+                    if main_site_path:
+                        #Check to see if the user has multi-plots enabled
+                        if not multi_case_plots:
+                            if ptype not in mean_html_info[ptype][category]:
+                                multi_mean_html_info[ptype][category][name]
                 #End if
 
                 #Determine season value:
@@ -641,11 +656,17 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
+                
+                if main_site_path:
+                    #Check to see if the user has multi-plots enabled
+                    if not multi_case_plots:
+                        p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                        multi_mean_html_info[ptype][category][name][season] = p
             
-            if main_site_path:
+            """if main_site_path:
                 #Check to see if the user has multi-plots enabled
                 if not multi_case_plots:
-                   multi_mean_html_info = mean_html_info
+                   multi_mean_html_info = mean_html_info"""
             #End if (data-frame check)
         #End for (web_data list loop)
 
