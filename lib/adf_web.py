@@ -588,18 +588,19 @@ class AdfWeb(AdfObs):
                         #End if (varibale in multi-case plot variables)
                     #else:
                     #Check to see if the user has multi-plots enabled
-                    if not multi_case_plots:
-                        print(ptype,category,var,season,web_data.case,"\n")
-                        if ptype not in multi_mean_html_info:
-                            multi_mean_html_info[ptype] = OrderedDict()
-                        if ptype not in multi_mean_html_info[ptype]:
-                            multi_mean_html_info[ptype][category] = OrderedDict()
-                        if ptype not in multi_mean_html_info[ptype][category]:
-                            multi_mean_html_info[ptype][category][var] = OrderedDict()
-                        #Check to see if the user has multi-plots enabled
-                        if not multi_case_plots:
-                            p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                            multi_mean_html_info[ptype][category][var][season] = p
+                    #if not multi_case_plots:
+                    print(ptype,category,var,season,web_data.case,"\n")
+                    if ptype not in multi_mean_html_info:
+                        multi_mean_html_info[ptype] = OrderedDict()
+                    if ptype not in multi_mean_html_info[ptype]:
+                        multi_mean_html_info[ptype][category] = OrderedDict()
+                    if ptype not in multi_mean_html_info[ptype][category]:
+                        multi_mean_html_info[ptype][category][var] = OrderedDict()
+
+                    #if 
+                    p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                    
+                    multi_mean_html_info[ptype][category][var][season] = p
 
                     #End if (multi-case plots)
                 #End if (multi-case scenario)
