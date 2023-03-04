@@ -71,8 +71,8 @@ def qbo(adfobj):
         #Add already-existing plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True) #multi_case=True
         #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True) #multi_case=True
-        adfobj.add_website_data(plot_loc_ts, "QBO", "QBO", season="QBOts", multi_case=True) #multi_case=True
-        adfobj.add_website_data(plot_loc_amp, "QBO", "QBO", season="QBOamp", multi_case=True) #multi_case=True
+        adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True) #multi_case=True
+        adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True) #multi_case=True
 
         #Continue to next iteration:
         return
@@ -149,7 +149,7 @@ def qbo(adfobj):
 
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True) #multi_case=True
-    adfobj.add_website_data(plot_loc_ts, "QBO", "QBO", season="QBOts", multi_case=True) #multi_case=True
+    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True) #multi_case=True
 
     #-----------------
 
@@ -177,7 +177,7 @@ def qbo(adfobj):
 
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True) #multi_case=True
-    adfobj.add_website_data(plot_loc_amp, "QBO", "QBO", season="QBOamp", multi_case=True) #multi_case=True
+    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True) #multi_case=True
 
     #-------------------
 
