@@ -163,7 +163,7 @@ def cam_taylor_diagram(adfobj):
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         if (not redo_plot) and plot_name.is_file():
             #Add already-existing plot to website (if enabled):
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
             #Continue to next iteration:
             continue
