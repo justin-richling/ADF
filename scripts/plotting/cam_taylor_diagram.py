@@ -63,6 +63,7 @@ def cam_taylor_diagram(adfobj):
         #Check if multi-plots are desired from yaml file
         #if adfobj.get_multi_case_info("global_latlon_map"):
         multi_plots = True
+        print("multi_plots = True\n")
 
         #End if (check for multi-case plots for LatLon)
     else:
