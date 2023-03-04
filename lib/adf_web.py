@@ -919,7 +919,7 @@ class AdfWeb(AdfObs):
                 #Create CSS templates file path:
                 main_templates_path = main_site_path / "templates"
 
-                #loop over cases:
+                #loop over all cases and make website directories:
                 for idx, case_name in enumerate(case_names):
                     #Check if case name is present in plot
                     if case_name in self.__case_web_paths:
