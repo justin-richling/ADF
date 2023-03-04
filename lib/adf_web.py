@@ -1087,6 +1087,8 @@ class AdfWeb(AdfObs):
                             #else:
                     if not multi_case_plots:
                         print("Is it making it here??\n")
+                        var = web_data.name
+                        ext = web_data.plot_ext
                         season = web_data.season
                         ptype = web_data.plot_type
 
