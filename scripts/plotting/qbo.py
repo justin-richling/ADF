@@ -69,10 +69,10 @@ def qbo(adfobj):
     # Check redo_plot. If set to True: remove old plots, if they already exist:
     if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
         #Add already-existing plot to website (if enabled):
-        #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True) #multi_case=True
-        #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True) #multi_case=True
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True) #multi_case=True
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True) #multi_case=True
+        #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+        #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+        adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+        adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
 
         #Continue to next iteration:
         return
@@ -148,8 +148,8 @@ def qbo(adfobj):
     fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True) #multi_case=True
-    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True) #multi_case=True
+    #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
 
     #-----------------
 
@@ -176,8 +176,8 @@ def qbo(adfobj):
     fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True) #multi_case=True
-    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True) #multi_case=True
+    #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
 
     #-------------------
 
