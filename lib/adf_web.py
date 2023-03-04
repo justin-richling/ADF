@@ -1084,7 +1084,8 @@ class AdfWeb(AdfObs):
                                             ofil.write(plot_page_rndr)
                                         #End with
                                     #End if (mean_ptype_plot_page exists)
-                            else:
+                            #else:
+                            if not multi_case_plots:
                                 print("Is it making it here??\n")
                                 season = web_data.season
                                 ptype = web_data.plot_type
