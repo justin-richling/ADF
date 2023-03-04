@@ -1086,11 +1086,12 @@ class AdfWeb(AdfObs):
                                     #End if (mean_ptype_plot_page exists)
                             #else:
                     if not multi_case_plots:
-                        print("Is it making it here??\n")
+                        print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
                         var = web_data.name
                         ext = web_data.plot_ext
                         season = web_data.season
                         ptype = web_data.plot_type
+                        print(var,ext,season,ptype,web_data.case)
 
                         #Move file to assets directory:
                         shutil.copy(web_data.data, web_data.asset_path)
