@@ -216,7 +216,7 @@ def cam_taylor_diagram(adfobj):
             main_site_assets_path = main_site_path / "assets"
             main_site_assets_path.mkdir(exist_ok=True)
 
-            plot_loc / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
+            plot_name = plot_loc / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
             fig.savefig(plot_name, bbox_inches='tight')
             #Add plot to website (if enabled):
             #web_data, web_name, case_name
