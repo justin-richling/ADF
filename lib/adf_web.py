@@ -589,6 +589,7 @@ class AdfWeb(AdfObs):
                     #else:
                     #Check to see if the user has multi-plots enabled
                     if not multi_case_plots:
+                        print(ptype,category,var,season,web_data.case,"\n")
                         if ptype not in multi_mean_html_info:
                             multi_mean_html_info[ptype] = OrderedDict()
                         if ptype not in multi_mean_html_info[ptype]:
