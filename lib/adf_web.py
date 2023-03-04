@@ -547,16 +547,20 @@ class AdfWeb(AdfObs):
 
             #Now check all plot types
             if not web_data.data_frame:
+                season = web_data.season
+                category = web_data.category
+                ptype = web_data.plot_type
+                var = web_data.name
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
                     if multi_case_plots:
                     #if 1==1:
                         #Loop over each variable in multi-case plot variables
-                        if web_data.name in mvars:
-                            season = web_data.season
-                            category = web_data.category
-                            ptype = web_data.plot_type
+                        if var in mvars:
+                            #season = web_data.season
+                            #category = web_data.category
+                            #ptype = web_data.plot_type
                             #Check if plot ext is in requested multi-case plot types
                             if web_data.plot_ext in multi_case_plots.keys():
                                 for var in multi_case_plots[web_data.plot_ext]:
@@ -591,6 +595,10 @@ class AdfWeb(AdfObs):
                             multi_mean_html_info[ptype][category] = OrderedDict()
                         if ptype not in multi_mean_html_info[ptype][category]:
                             multi_mean_html_info[ptype][category][name] = OrderedDict()
+                        #Check to see if the user has multi-plots enabled
+                        if not multi_case_plots:
+                            p = f"plot_page_multi_case_{name}_{season}_{ptype}_Mean.html"
+                            multi_mean_html_info[ptype][category][name][season] = p
 
                     #End if (multi-case plots)
                 #End if (multi-case scenario)
@@ -665,11 +673,11 @@ class AdfWeb(AdfObs):
                 #Initialize Ordered Dictionary for season:
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
                 
-                if main_site_path:
+                """if main_site_path:
                     #Check to see if the user has multi-plots enabled
                     if not multi_case_plots:
                         p = f"plot_page_multi_case_{name}_{season}_{ptype}_Mean.html"
-                        multi_mean_html_info[ptype][category][name][season] = p
+                        multi_mean_html_info[ptype][category][name][season] = p"""
             
             """if main_site_path:
                 #Check to see if the user has multi-plots enabled
@@ -976,15 +984,17 @@ class AdfWeb(AdfObs):
                     #it really only needs to run once since the plots are
                     #already made with all cases.
                     #So just grab the first test case:
+                    season = web_data.season
+                    ptype = web_data.plot_type
+                    var = web_data.name
+                    ext = web_data.plot_ext
                     case1 = self.get_cam_info('cam_case_name', required=True)[0]
                     if str(web_data.case) == str(case1):
 
-                        #frame = web_data.data_frame
-                        var = web_data.name
-                        ext = web_data.plot_ext
                         
-                        #if multi_case_plots:
-                        if 1==1:
+                        
+                        if multi_case_plots:
+                        #if 1==1:
                             #Check if variable is in desired multi-case plot:
                             if var in mvars:
                                 print("Nothing should be going here\n")
@@ -1099,10 +1109,10 @@ class AdfWeb(AdfObs):
                     #If multi-case plot not specified 
                     if not multi_case_plots:
                         print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
-                        var = web_data.name
-                        ext = web_data.plot_ext
-                        season = web_data.season
-                        ptype = web_data.plot_type
+                        #var = web_data.name
+                        #ext = web_data.plot_ext
+                        #season = web_data.season
+                        #ptype = web_data.plot_type
                         print(var,ext,season,ptype,web_data.case)
 
                         #Move file to assets directory:
