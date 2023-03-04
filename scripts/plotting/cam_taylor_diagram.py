@@ -11,6 +11,7 @@ When multiple test cases are provided, they are plotted with different colors.
 #
 # --- imports and configuration ---
 #
+from collections import OrderedDict
 from pathlib import Path
 import numpy as np
 import xarray as xr
@@ -56,6 +57,19 @@ def cam_taylor_diagram(adfobj):
     test_nicknames = adfobj.get_cam_info('case_nickname')
     if test_nicknames == None:
         test_nicknames = case_names
+
+    #read_config_var('multi_case_plots')
+    if len(case_names) > 1:
+        #Check if multi-plots are desired from yaml file
+        if adfobj.get_multi_case_info("global_latlon_map"):
+                multi_plots = True
+                multi_dict = OrderedDict()
+        else:
+            multi_plots = False
+        #End if (check for multi-case plots for LatLon)
+    else:
+        multi_plots = False
+    #End if (check for multiple cases)
 
     case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
 
@@ -190,6 +204,27 @@ def cam_taylor_diagram(adfobj):
 
         #Add plot to website (if enabled):
         adfobj.add_website_data(plot_name, "TaylorDiag", None, season=s, multi_case=True) #multi_case=True
+
+        #This will be a list of variables for multi-case plotting based off LatLon plot type
+        if multi_plots:
+            #Notify user that script has started:
+            print("\n  Generating Taylor Diagram multi-case plots...")
+
+            multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
+            main_site_path = multi_path / "main_website"
+            main_site_path.mkdir(exist_ok=True)
+            main_site_assets_path = main_site_path / "assets"
+            main_site_assets_path.mkdir(exist_ok=True)
+
+            plot_loc / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
+            fig.savefig(plot_name, bbox_inches='tight')
+            #Add plot to website (if enabled):
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, season=s, multi_case=True) #multi_case=True
+
+            #adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
+            #                         category=web_category, season=season, plot_type="LatLon",multi_case=True)
+
+            print("  ...Taylor Diagram multi-case plots have been generated successfully.")
 
     #Notify user that script has ended:
     print("  ...Taylor Diagrams have been generated successfully.")
