@@ -1083,6 +1083,108 @@ class AdfWeb(AdfObs):
                                             ofil.write(plot_page_rndr)
                                         #End with
                                     #End if (mean_ptype_plot_page exists)
+                            else:
+                                season = web_data.season
+                                ptype = web_data.plot_type
+
+                                #Move file to assets directory:
+                                shutil.copy(web_data.data, web_data.asset_path)
+
+                                #Check if category has been provided for this web data:
+                                if web_data.category:
+                                    #If so, then just use directly:
+                                    category = web_data.category
+                                else:
+
+                                    #Check if variable in defaults dictionary:
+                                    if web_data.name in var_defaults_dict:
+                                        #If so, then extract category from dictionary:
+                                        category = var_defaults_dict[web_data.name].get("category",
+                                                                            "No category yet")
+                                    else:
+                                        category = 'No category yet'
+                                    #End if
+                                #End if
+
+                                #Create output HTML file path:
+                                img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
+                                multi_plot_page = f"{var}_{season}_{ptype}_multi_plot.png"
+                                img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
+                                                            start=main_site_img_path),
+                                                            multi_plot_page]
+
+                                multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                if not (img_pages_dir / multimean).exists():
+                                    tmpl = jinenv.get_template('template_multi_case.html')
+                                    rndr = tmpl.render(title=main_title,
+                                                        var_title=var,
+                                                        season_title=season,
+                                                        plottype_title=ptype,
+                                                        imgs=img_data,
+                                                        base_name=data_name,
+                                                        case_yrs=case_yrs,
+                                                        baseline_yrs=baseline_yrs,
+                                                        mydata=multi_mean_html_info[ptype],
+                                                        plot_types=multi_plot_type_html,
+                                                        multi=multi_layout,
+                                                        case_sites=case_sites)
+
+                                    #Write HTML file:
+                                    with open(img_pages_dir / multimean,
+                                                'w', encoding='utf-8') as ofil:
+                                        ofil.write(rndr)
+
+                                multi_mean = f"multi_case_mean_diag_{ptype}.html"
+                                mean_ptype_file = main_site_img_path / multi_mean
+                                if not mean_ptype_file.exists():
+
+                                    #Construct individual plot type mean_diag
+                                    #html files, if they don't already exist:
+                                    tmp = jinenv.get_template('template_multi_case_mean_diag.html')
+                                    mean_rndr = tmp.render(title=main_title,
+                                                                    base_name=data_name,
+                                                                    case_yrs=case_yrs,
+                                                                    baseline_yrs=baseline_yrs,
+                                                                    mydata=multi_mean_html_info[ptype],
+                                                                    curr_type=ptype,
+                                                                    plot_types=multi_plot_type_html,
+                                                                    multi=multi_layout,
+                                                                    case_sites=case_sites)
+
+                                    #Write mean diagnostic plots HTML file:
+                                    with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
+                                        ofil.write(mean_rndr)
+                                    #End with
+                                #End if (mean_ptype exists)
+
+                                #Check if the mean plot type and var page exists for this case:
+                                img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
+                                plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
+                                mean_ptype_plot_page = img_pages_dir / plot_page
+
+                                if not mean_ptype_plot_page.exists():
+
+                                    #Construct individual plot type mean_diag
+                                    #html files, if they don't already exist:
+                                    page_tmpl = jinenv.get_template('template_multi_case_var.html')
+                                    plot_page_rndr = page_tmpl.render(title=main_title,
+                                                                    var_title=var,
+                                                                    season_title=season,
+                                                                    plottype_title=ptype,
+                                                                    base_name=data_name,
+                                                                    case_yrs=case_yrs,
+                                                                    baseline_yrs=baseline_yrs,
+                                                                    mydata=multi_mean_html_info[ptype],
+                                                                    curr_type=ptype,
+                                                                    plot_types=multi_plot_type_html,
+                                                                    multi=multi_layout,
+                                                                    case_sites=case_sites)
+
+                                    #Write mean diagnostic plots HTML file:
+                                    with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
+                                        ofil.write(plot_page_rndr)
+                                    #End with
+                                #End if (mean_ptype_plot_page exists)
 
                         #End if (not web_data.data_frame)
                     #End if (baseline_name)
@@ -1227,7 +1329,7 @@ class AdfWeb(AdfObs):
                                "global_latlon_vect_map":"LatLon_Vector"}
 
             multi_plots = {"Tables": "html_table/mean_tables.html",
-                           "Special":"html_img/mean_diag_Special.html"}
+                           "Special":"html_img/multi_case_mean_diag_Special.html"}
             if multi_case_plots:
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
