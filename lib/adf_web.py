@@ -606,7 +606,7 @@ class AdfWeb(AdfObs):
                         #Check to see if the user has multi-plots enabled
                         if not multi_case_plots:
                             if ptype not in mean_html_info:
-                                multi_mean_html_info[ptype]
+                                multi_mean_html_info[ptype] = OrderedDict()
                 #End if
 
                 #Check if category has been provided for this web data:
@@ -631,7 +631,7 @@ class AdfWeb(AdfObs):
                         #Check to see if the user has multi-plots enabled
                         if not multi_case_plots:
                             if ptype not in mean_html_info[ptype]:
-                                multi_mean_html_info[ptype][category]
+                                multi_mean_html_info[ptype][category] = OrderedDict()
                 #End if
 
                 #Extract web data name (usually the variable name):
@@ -644,7 +644,7 @@ class AdfWeb(AdfObs):
                         #Check to see if the user has multi-plots enabled
                         if not multi_case_plots:
                             if ptype not in mean_html_info[ptype][category]:
-                                multi_mean_html_info[ptype][category][name]
+                                multi_mean_html_info[ptype][category][name] = OrderedDict()
                 #End if
 
                 #Determine season value:
