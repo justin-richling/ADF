@@ -968,7 +968,7 @@ class AdfWeb(AdfObs):
                 #Create CSS templates file path:
                 main_templates_path = main_site_path / "templates"
 
-                """#loop over all cases and make website directories:
+                #loop over all cases and make website directories:
                 for idx, case_name in enumerate(case_names):
                     #Check if case name is present in plot
                     if case_name in self.__case_web_paths:
@@ -976,7 +976,7 @@ class AdfWeb(AdfObs):
                         website_dir = self.__case_web_paths[case_name]['website_dir']
                         if not website_dir.is_dir():
                             #Copy website directory to "main site" directory:
-                            shutil.copytree(website_dir, main_site_path / case_name)"""
+                            shutil.copytree(website_dir, main_site_path / case_name)
 
 
                 #Multi Case Plots
