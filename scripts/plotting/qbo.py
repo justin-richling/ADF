@@ -177,7 +177,7 @@ def qbo(adfobj):
 
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "ug", season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
 
     #-------------------
 
