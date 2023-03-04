@@ -977,6 +977,7 @@ class AdfWeb(AdfObs):
                         if 1==1:
                             #Check if variable is in desired multi-case plot:
                             if var in mvars:
+                                print("Nothing should be going here\n")
                                 #Check if the web data obj not a table
                                 #and if the plot_type is in given multi-case plot set
                                 #if (not frame) and (ext in multi_case_plots):
