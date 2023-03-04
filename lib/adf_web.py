@@ -1204,7 +1204,8 @@ class AdfWeb(AdfObs):
                                "meridional":"Meridional",
                                "global_latlon_vect_map":"LatLon_Vector"}
 
-            multi_plots = {"Tables": "html_table/mean_tables.html"}
+            multi_plots = {"Tables": "html_table/mean_tables.html",
+                           "Special":"html_img/mean_diag_Special.html"}
             if multi_case_plots:
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
