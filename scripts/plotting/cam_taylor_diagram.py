@@ -220,6 +220,7 @@ def cam_taylor_diagram(adfobj):
             plot_loc / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
             fig.savefig(plot_name, bbox_inches='tight')
             #Add plot to website (if enabled):
+            #web_data, web_name, case_name
             adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
             adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
