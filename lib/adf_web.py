@@ -482,7 +482,7 @@ class AdfWeb(AdfObs):
         table_html_info = OrderedDict()
         multi_table_html_info = OrderedDict()
 
-        if main_site_path:
+        """if main_site_path:
             #Loop over all web data objects AGAIN:
             for web_data in self.__website_data:
 
@@ -497,7 +497,7 @@ class AdfWeb(AdfObs):
                         website_dir = self.__case_web_paths[case_name]['website_dir']
                         if not website_dir.is_dir():
                             #Copy website directory to "main site" directory:
-                            shutil.copytree(website_dir, main_site_path / case_name)
+                            shutil.copytree(website_dir, main_site_path / case_name)"""
 
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
