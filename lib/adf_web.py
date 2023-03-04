@@ -961,14 +961,14 @@ class AdfWeb(AdfObs):
 
         # --- Starting multi-case plots if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - -
-        """if main_site_path:
+        if main_site_path:
             #Loop over all web data objects AGAIN:
             for web_data in self.__website_data:
 
                 #Create CSS templates file path:
                 main_templates_path = main_site_path / "templates"
 
-                #loop over all cases and make website directories:
+                """#loop over all cases and make website directories:
                 for idx, case_name in enumerate(case_names):
                     #Check if case name is present in plot
                     if case_name in self.__case_web_paths:
