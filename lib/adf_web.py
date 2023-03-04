@@ -605,7 +605,7 @@ class AdfWeb(AdfObs):
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
                     if not multi_case_plots:
-                        if ptype not in mean_html_info:
+                        if ptype not in multi_mean_html_info:
                             multi_mean_html_info[ptype] = OrderedDict()
                 #End if
 
@@ -630,7 +630,7 @@ class AdfWeb(AdfObs):
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
                     if not multi_case_plots:
-                        if ptype not in mean_html_info[ptype]:
+                        if ptype not in multi_mean_html_info[ptype]:
                             multi_mean_html_info[ptype][category] = OrderedDict()
                 #End if
 
@@ -643,7 +643,7 @@ class AdfWeb(AdfObs):
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
                     if not multi_case_plots:
-                        if ptype not in mean_html_info[ptype][category]:
+                        if ptype not in multi_mean_html_info[ptype][category]:
                             multi_mean_html_info[ptype][category][name] = OrderedDict()
                 #End if
 
