@@ -607,15 +607,15 @@ class AdfWeb(AdfObs):
                     print(ptype,category,var,season,"\n")
                     if ptype not in multi_mean_html_info:
                         multi_mean_html_info[ptype] = OrderedDict()
-                    if ptype not in multi_mean_html_info[ptype]:
+                    if category not in multi_mean_html_info[ptype]:
                         multi_mean_html_info[ptype][category] = OrderedDict()
-                    if ptype not in multi_mean_html_info[ptype][category]:
+                    if var not in multi_mean_html_info[ptype][category]:
                         multi_mean_html_info[ptype][category][var] = OrderedDict()
 
                     #if 
                     p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                     #print("p",p,"\n")
-                    if ptype not in multi_mean_html_info[ptype][category][var]:
+                    if season not in multi_mean_html_info[ptype][category][var]:
                         multi_mean_html_info[ptype][category][var][season] = p
 
                     #End if (multi-case plots)
