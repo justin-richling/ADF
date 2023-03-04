@@ -482,6 +482,23 @@ class AdfWeb(AdfObs):
         table_html_info = OrderedDict()
         multi_table_html_info = OrderedDict()
 
+        if main_site_path:
+            #Loop over all web data objects AGAIN:
+            for web_data in self.__website_data:
+
+                #Create CSS templates file path:
+                main_templates_path = main_site_path / "templates"
+
+                #loop over all cases and make website directories:
+                for idx, case_name in enumerate(case_names):
+                    #Check if case name is present in plot
+                    if case_name in self.__case_web_paths:
+                        #Extract website directory:
+                        website_dir = self.__case_web_paths[case_name]['website_dir']
+                        if not website_dir.is_dir():
+                            #Copy website directory to "main site" directory:
+                            shutil.copytree(website_dir, main_site_path / case_name)
+
         #If this is a multi-case instance, then copy website to "main" directory:
         if main_site_path:
             self.__case_web_paths["multi-case"]['img_pages_dir'].mkdir(exist_ok=True)
@@ -941,17 +958,10 @@ class AdfWeb(AdfObs):
         #End for (web data loop)
 
         print("multi_mean_html_info",multi_mean_html_info,"\n")
-        for i in multi_mean_html_info:
-            print(i)
-        print()
-        for i in multi_mean_html_info:
-            for j in i:
-                print(j)
-        print()
 
         # --- Starting multi-case plots if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - -
-        if main_site_path:
+        """if main_site_path:
             #Loop over all web data objects AGAIN:
             for web_data in self.__website_data:
 
@@ -966,7 +976,7 @@ class AdfWeb(AdfObs):
                         website_dir = self.__case_web_paths[case_name]['website_dir']
                         if not website_dir.is_dir():
                             #Copy website directory to "main site" directory:
-                            shutil.copytree(website_dir, main_site_path / case_name)
+                            shutil.copytree(website_dir, main_site_path / case_name)"""
 
 
                 #Multi Case Plots
