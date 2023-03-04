@@ -830,6 +830,7 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
+                print("mean_ptype_file",mean_ptype_file,"\n")
                 if not mean_ptype_file.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
