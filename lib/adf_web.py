@@ -791,7 +791,7 @@ class AdfWeb(AdfObs):
                         ofil.write(mean_table_rndr)
                     #End with
                 #End if
-            #End if (web_data.data_frame)
+            #End if (tables)
             else: #Plot image
 
                 #Create output HTML file path:
@@ -877,6 +877,7 @@ class AdfWeb(AdfObs):
                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
                         ofil.write(plot_page_rndr)
                     #End with
+            #End plot images
             #End if (data frame)
 
             #Also check if index page exists for this case:
@@ -928,9 +929,12 @@ class AdfWeb(AdfObs):
                             #Copy website directory to "main site" directory:
                             shutil.copytree(website_dir, main_site_path / case_name)
 
+                
+
                 #Multi Case Plots
                 #################
-                if multi_case_plots:
+                #if multi_case_plots:
+                if 1==1:
                     #This currently runs web_data.case for every case, but in reality
                     #it really only needs to run once since the plots are
                     #already made with all cases.
