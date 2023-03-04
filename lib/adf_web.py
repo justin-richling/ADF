@@ -644,7 +644,7 @@ class AdfWeb(AdfObs):
             
             if main_site_path:
                 #Check to see if the user has multi-plots enabled
-                if multi_case_plots:
+                if not multi_case_plots:
                    multi_mean_html_info = mean_html_info
             #End if (data-frame check)
         #End for (web_data list loop)
@@ -1199,6 +1199,7 @@ class AdfWeb(AdfObs):
 
             #Create multi-case site:
             #Make a dictionary for plot type extensions for given plot type
+            #This can probably be populated in the for-loops during html creation...
             multi_case_dict = {"global_latlon_map":"LatLon",
                                "zonal_mean":"Zonal",
                                "meridional":"Meridional",
