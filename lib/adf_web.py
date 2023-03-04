@@ -550,7 +550,8 @@ class AdfWeb(AdfObs):
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
-                    if multi_case_plots:
+                    #if multi_case_plots:
+                    if 1==1:
                         #Loop over each variable in multi-case plot variables
                         if web_data.name in mvars:
                             season = web_data.season
