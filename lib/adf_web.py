@@ -495,6 +495,7 @@ class AdfWeb(AdfObs):
                     if case_name in self.__case_web_paths:
                         #Extract website directory:
                         website_dir = self.__case_web_paths[case_name]['website_dir']
+                        print(website_dir)
                         if not website_dir.is_dir():
                             #Copy website directory to "main site" directory:
                             shutil.copytree(website_dir, main_site_path / case_name)
