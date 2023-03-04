@@ -858,7 +858,7 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                print("mean_ptype_file",mean_ptype_file,"\n")
+                #print("mean_ptype_file",mean_ptype_file,"\n")
                 if not mean_ptype_file.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
@@ -1084,6 +1084,7 @@ class AdfWeb(AdfObs):
                                         #End with
                                     #End if (mean_ptype_plot_page exists)
                             else:
+                                print("Is it making it here??\n")
                                 season = web_data.season
                                 ptype = web_data.plot_type
 
@@ -1206,7 +1207,7 @@ class AdfWeb(AdfObs):
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
-                        print("This should only be working under multi-case scenario, it it?")
+                        #print("This should only be working under multi-case scenario, it it?")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
