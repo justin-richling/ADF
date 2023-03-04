@@ -201,8 +201,8 @@ def cam_taylor_diagram(adfobj):
         print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
         #Add plot to website (if enabled):
-        #adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-        #adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
         #This will be a list of variables for multi-case plotting based off LatLon plot type
         if multi_plots:
