@@ -116,8 +116,8 @@ def qbo(adfobj):
     ncases = len(case_loc)
 
     case_nicknames = test_nicknames +[base_nickname]
-    casedat = [ _load_dataset(case_loc[i], case_nicknames[i],'U') for i in range(0,ncases,1) ]
-    #casedat = [ _load_dataset(case_loc[i], case_names[i],'U') for i in range(0,ncases,1) ]
+    #casedat = [ _load_dataset(case_loc[i], case_nicknames[i],'U') for i in range(0,ncases,1) ]
+    casedat = [ _load_dataset(case_loc[i], case_names[i],'U') for i in range(0,ncases,1) ]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
@@ -157,7 +157,7 @@ def qbo(adfobj):
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
             ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
-                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_names[icase])
+                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_nicknames[icase])
             casecount=casecount+1
         else:
             warnings.warn("The QBO diagnostics can only manage up to twelve cases!")
