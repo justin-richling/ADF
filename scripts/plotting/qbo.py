@@ -158,6 +158,13 @@ def qbo(adfobj):
     #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
     adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
 
+    if multi_plots:
+        plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
+        fig.savefig(plot_loc_ts_multi, bbox_inches='tight', facecolor='white')
+        adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="QBOts",
+                                multi_case=True,plot_type = "Special")
+
+
     #-----------------
 
     #---Dunkerton and Delisi QBO amplitude
@@ -181,10 +188,16 @@ def qbo(adfobj):
 
     ax.legend(loc='upper left')
     fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
-
+    
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
     adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+
+    if multi_plots:
+        plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
+        fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
+        adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp",
+                                multi_case=True,plot_type = "Special")
 
     #-------------------
     #This will be a list of variables for multi-case plotting based off LatLon plot type
