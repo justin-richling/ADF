@@ -630,7 +630,7 @@ def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, n
 
     for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
             print(bottom_of_text + n*height_of_lines,"\n")
-            text = wks.text(0.9, 0.6+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+            text = wks.text(0.99, 0.45+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
             color=c, va='top', transform=wks.transAxes, fontsize=10)
             n += 1
 
