@@ -78,8 +78,8 @@ def qbo(adfobj):
         #Add already-existing plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
         #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+        adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+        adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
 
         #Continue to next iteration:
         return
@@ -156,7 +156,7 @@ def qbo(adfobj):
 
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = "QBO", season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
 
     #-----------------
 
@@ -184,7 +184,7 @@ def qbo(adfobj):
 
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = "QBO", season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
 
     #-------------------
     #This will be a list of variables for multi-case plotting based off LatLon plot type
@@ -197,16 +197,16 @@ def qbo(adfobj):
         main_site_assets_path = main_site_path / "assets"
         main_site_assets_path.mkdir(exist_ok=True)
 
-        plot_loc_amp = main_site_assets_path / f'QBOamp_multi_plot.{plot_type}'
-        plot_loc_ts  = main_site_assets_path / f'QBOts_multi_plot.{plot_type}'
+        plot_loc_amp = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
+        plot_loc_ts  = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
 
         fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
         fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
         #Add plot to website (if enabled):
 
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, category="QBO", season="QBOamp",
+        adfobj.add_website_data(plot_loc_amp, "QBO", None, category=None, season="QBOamp",
                                 multi_case=True,plot_type = "Special")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, category="QBO", season="QBOts",
+        adfobj.add_website_data(plot_loc_ts, "QBO", None, category=None, season="QBOts",
                                 multi_case=True,plot_type = "Special")
 
     #Notify user that script has ended:
