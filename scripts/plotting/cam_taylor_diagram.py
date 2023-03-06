@@ -161,7 +161,6 @@ def cam_taylor_diagram(adfobj):
     #
     for s in seasons:
 
-        plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
         print(f"\t - Plotting Taylor Diagram, {s}")
 
         # Check redo_plot. If set to True: remove old plot, if it already exists:
@@ -220,7 +219,10 @@ def cam_taylor_diagram(adfobj):
                 #Add plot to website (if enabled):
                 #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
                 adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        
 
+        plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+        
         #case_nicknames = test_nicknames + [base_nickname]
         ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
