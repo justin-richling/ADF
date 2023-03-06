@@ -196,7 +196,7 @@ def cam_taylor_diagram(adfobj):
                 fig_m, ax_m = taylor_plot_setup(title=f"Taylor Diagram - {s}",
                                     baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
                 #case_nicknames = test_nicknames + [base_nickname]
-                ax_m = taylor_plot_finalize(ax_m, test_nicknames[i], case_colors[i], syear_cases[i], eyear_cases[i], needs_bias_labels=True)
+                ax_m = taylor_plot_finalize(ax_m, test_nicknames[i], case_colors[i], syear_cases[i], eyear_cases[i], needs_bias_labels=True,multi=True)
                 #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
                 # add text with variable names:
                 txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
@@ -618,7 +618,7 @@ def plot_taylor_data(wks, df, **kwargs):
     return wks
 
 
-def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, needs_bias_labels=True):
+def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, needs_bias_labels=True, multi=False):
     """Apply final formatting to a Taylor diagram.
         wks -> Axes object that has passed through taylor_plot_setup and plot_taylor_data
         casenames -> list of case names for the legend
@@ -649,12 +649,21 @@ def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, n
 
     case_pos = 0.75
     wks.text(0.99, case_pos, "Cases:", va='top', transform=wks.transAxes, fontsize=10)
-    for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
+
+    if multi:
+        for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
             print(case_pos-((case_idx+1)*height_of_lines),"\n")
             #text = wks.text(0.99, 0.58+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
-            text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+            text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases}-{eyear_cases}",
                             color=c, va='top', transform=wks.transAxes, fontsize=10)
             n += 1
+    else:
+        for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
+                print(case_pos-((case_idx+1)*height_of_lines),"\n")
+                #text = wks.text(0.99, 0.58+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+                text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+                                color=c, va='top', transform=wks.transAxes, fontsize=10)
+                n += 1
 
     # BIAS LEGEND
     if needs_bias_labels:
