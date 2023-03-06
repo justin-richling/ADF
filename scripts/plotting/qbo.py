@@ -43,9 +43,17 @@ def qbo(adfobj):
     #read_config_var('multi_case_plots')
     if len(case_names) > 1:
         multi_plots = True
-    else:
-        multi_plots = False
+        
+        multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
+        main_site_path = multi_path / "main_website"
+        main_site_path.mkdir(exist_ok=True)
+        main_site_assets_path = main_site_path / "assets"
+        main_site_assets_path.mkdir(exist_ok=True)
+    #else:
+    #    multi_plots = False
     #End if (check for multiple cases)
+
+   
 
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
@@ -158,7 +166,8 @@ def qbo(adfobj):
     #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
     adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
 
-    if multi_plots:
+    if multi_plots:#Notify user that script has started:
+        print("\n  Generating qbo multi-case plots...")
         plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_ts_multi, bbox_inches='tight', facecolor='white')
         adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="QBOts",
@@ -200,27 +209,6 @@ def qbo(adfobj):
                                 multi_case=True,plot_type = "Special")
 
     #-------------------
-    #This will be a list of variables for multi-case plotting based off LatLon plot type
-    if multi_plots:
-        #Notify user that script has started:
-        print("\n  Generating qbo multi-case plots...")
-        multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
-        main_site_path = multi_path / "main_website"
-        main_site_path.mkdir(exist_ok=True)
-        main_site_assets_path = main_site_path / "assets"
-        main_site_assets_path.mkdir(exist_ok=True)
-
-        plot_loc_amp = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
-        plot_loc_ts  = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
-
-        fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
-        fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
-        #Add plot to website (if enabled):
-
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, category=None, season="QBOamp",
-                                multi_case=True,plot_type = "Special")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, category=None, season="QBOts",
-                                multi_case=True,plot_type = "Special")
 
     #Notify user that script has ended:
     print("  ...QBO plots have been generated successfully.")
