@@ -93,7 +93,7 @@ def qbo(adfobj):
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
         case_loc.append(base_loc)
-        case_name.append(base_name)
+        case_names.append(base_name)
     #End if
 
     #----Read in the OBS (ERA5, 5S-5N average already
@@ -101,13 +101,13 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
-    casedat = [ _load_dataset(case_loc[i], case_name[i],'U') for i in range(0,ncases,1) ]
+    casedat = [ _load_dataset(case_loc[i], case_names[i],'U') for i in range(0,ncases,1) ]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
     for idx, dat in enumerate(casedat):
         if 'U' not in dat.variables:
-            warnings.warn(f"QBO: case {case_name[idx]} contains no 'U' field, skipping...")
+            warnings.warn(f"QBO: case {case_names[idx]} contains no 'U' field, skipping...")
             bad_idxs.append(idx)
         #End if
     #End for
@@ -141,7 +141,7 @@ def qbo(adfobj):
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
             ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
-                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_name[icase])
+                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_names[icase])
             casecount=casecount+1
         else:
             warnings.warn("The QBO diagnostics can only manage up to twelve cases!")
@@ -177,7 +177,7 @@ def qbo(adfobj):
     ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
 
     for icase in range(0,ncases,1):
-        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_name[icase])
+        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_names[icase])
 
     ax.legend(loc='upper left')
     fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
