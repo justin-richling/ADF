@@ -1001,7 +1001,8 @@ class AdfWeb(AdfObs):
                                     ptype = web_data.plot_type
 
                                     #Move file to assets directory:
-                                    shutil.copy(web_data.data, web_data.asset_path)
+                                    if not web_data.data.is_file():
+                                        shutil.copy(web_data.data, web_data.asset_path)
 
                                     #Check if category has been provided for this web data:
                                     if web_data.category:
@@ -1110,7 +1111,8 @@ class AdfWeb(AdfObs):
                         print(var,ext,season,ptype,web_data.case)
 
                         #Move file to assets directory:
-                        shutil.copy(web_data.data, web_data.asset_path)
+                        if not web_data.data.is_file():
+                            shutil.copy(web_data.data, web_data.asset_path)
 
                         #Check if category has been provided for this web data:
                         if web_data.category:
