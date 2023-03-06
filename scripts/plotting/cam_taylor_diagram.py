@@ -159,7 +159,7 @@ def cam_taylor_diagram(adfobj):
         if (not redo_plot) and plot_name.is_file():
             #Add already-existing plot to website (if enabled):
             #adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
             #Continue to next iteration:
             continue
@@ -202,8 +202,8 @@ def cam_taylor_diagram(adfobj):
         print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
         #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-        adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
         #This will be a list of variables for multi-case plotting based off LatLon plot type
         if multi_plots:
@@ -220,9 +220,9 @@ def cam_taylor_diagram(adfobj):
             fig.savefig(plot_name, bbox_inches='tight')
             #Add plot to website (if enabled):
             #web_data, web_name, case_name
-
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            #category="TaylorDiag"
+            #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
             #adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
             #                         category=web_category, season=season, plot_type="LatLon",multi_case=True,plot_type = "Special")
