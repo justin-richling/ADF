@@ -201,7 +201,7 @@ def cam_taylor_diagram(adfobj):
                 fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
 
 
-                plot_name = plot_loc[i] / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+                plot_name = Path(plot_location[i]) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
                 fig.savefig(plot_name, bbox_inches='tight')
                 print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
