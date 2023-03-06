@@ -209,7 +209,7 @@ def cam_taylor_diagram(adfobj):
                 #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
                 adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
         
-
+        #if not multi_plots:
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
         print(f"\t - Plotting Taylor Diagram, {s}")
 
@@ -230,14 +230,29 @@ def cam_taylor_diagram(adfobj):
         # add text with variable names:
         txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
         fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
-        fig.savefig(plot_name, bbox_inches='tight')
-        print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
-        #Add plot to website (if enabled):
-        #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-        adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        if multi_plots:
+            plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
+            fig.savefig(plot_name, bbox_inches='tight')
+            #Add plot to website (if enabled):
+            #web_data, web_name, case_name
+            #category="TaylorDiag"
+            #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
-        #This will be a list of variables for multi-case plotting based off LatLon plot type
+            #adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
+            #                         category=web_category, season=season, plot_type="LatLon",multi_case=True,plot_type = "Special")
+
+            print("  ...Taylor Diagram multi-case plots have been generated successfully.")
+        else:
+            fig.savefig(plot_name, bbox_inches='tight')
+            print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
+
+            #Add plot to website (if enabled):
+            #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+
+        """#This will be a list of variables for multi-case plotting based off LatLon plot type
         if multi_plots:
             #Notify user that script has started:
             print("\n  Generating Taylor Diagram multi-case plots...")
@@ -253,7 +268,7 @@ def cam_taylor_diagram(adfobj):
             #adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
             #                         category=web_category, season=season, plot_type="LatLon",multi_case=True,plot_type = "Special")
 
-            print("  ...Taylor Diagram multi-case plots have been generated successfully.")
+            print("  ...Taylor Diagram multi-case plots have been generated successfully.")"""
 
     #Notify user that script has ended:
     print("  ...Taylor Diagrams have been generated successfully.")
