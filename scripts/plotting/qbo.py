@@ -201,7 +201,7 @@ def qbo(adfobj):
     ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
 
     for icase in range(0,ncases,1):
-        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_names[icase])
+        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
     ax.legend(loc='upper left')
     fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
