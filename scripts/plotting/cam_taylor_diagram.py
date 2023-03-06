@@ -608,10 +608,10 @@ def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, n
     """
     # CASE LEGEND -- Color-coded
     bottom_of_text = 0.05
-    number_of_lines = len(casenames)
+    #number_of_lines = len(casenames)
     height_of_lines = 0.03
-    text = wks.text(0.052, 0.08, "Cases:",
-            color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)
+    """text = wks.text(0.052, 0.08, "Cases:",
+            color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)"""
     n = 0
     """for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
 
@@ -628,11 +628,13 @@ def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, n
     """txtstrs2 = [f"{s}  yrs: {syear_cases[i]}-{eyear_cases[i]}" for i, (s, c) in enumerate(zip(casenames, casecolors))]
     wks.text(0.9, 0.6+ n*height_of_lines, "\n".join(txtstrs2), va='top')"""
 
-    wks.text(0.99, 0.75, "Cases:", va='top', transform=wks.transAxes, fontsize=10)
+    case_pos = 0.75
+    wks.text(0.99, case_pos, "Cases:", va='top', transform=wks.transAxes, fontsize=10)
     for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
-            print(0.58+bottom_of_text + n*height_of_lines,"\n")
-            text = wks.text(0.99, 0.58+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
-            color=c, va='top', transform=wks.transAxes, fontsize=10)
+            print(case_pos-((case_idx+1)*height_of_lines),"\n")
+            #text = wks.text(0.99, 0.58+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+            text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+                            color=c, va='top', transform=wks.transAxes, fontsize=10)
             n += 1
 
     # BIAS LEGEND
