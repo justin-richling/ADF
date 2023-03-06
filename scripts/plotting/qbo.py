@@ -40,6 +40,11 @@ def qbo(adfobj):
     plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
 
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    base_nickname = adfobj.case_nicknames["base_nickname"]
+    case_nicknames = test_nicknames +[base_nickname]
+
     #read_config_var('multi_case_plots')
     if len(case_names) > 1:
         multi_plots = True
@@ -109,7 +114,10 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
-    casedat = [ _load_dataset(case_loc[i], case_names[i],'U') for i in range(0,ncases,1) ]
+
+    case_nicknames = test_nicknames +[base_nickname]
+    casedat = [ _load_dataset(case_loc[i], case_nicknames[i],'U') for i in range(0,ncases,1) ]
+    #casedat = [ _load_dataset(case_loc[i], case_names[i],'U') for i in range(0,ncases,1) ]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
