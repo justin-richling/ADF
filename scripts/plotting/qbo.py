@@ -167,8 +167,8 @@ def qbo(adfobj):
 
     ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
     
-    pad = 0.075*ncases
-    _set_ymargin(ax, top=pad, bottom=0.1)
+    #pad = 0.075*ncases
+    #_set_ymargin(ax, top=pad, bottom=0.1)
 
     #Save figure to file:
     fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
