@@ -62,7 +62,13 @@ def cam_taylor_diagram(adfobj):
         #Check if multi-plots are desired from yaml file
         #if adfobj.get_multi_case_info("global_latlon_map"):
         multi_plots = True
-        print("multi_plots = True\n")
+
+        #Set from adf_info?
+        multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
+        main_site_path = multi_path / "main_website"
+        main_site_path.mkdir(exist_ok=True)
+        main_site_assets_path = main_site_path / "assets"
+        main_site_assets_path.mkdir(exist_ok=True)
 
         #End if (check for multi-case plots for LatLon)
     else:
@@ -86,7 +92,10 @@ def cam_taylor_diagram(adfobj):
             plot_loc = Path(plot_location[0])
         else:
             print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
-            plot_loc = Path(plot_location[0])
+            if multi_plots:
+                plot_loc = main_site_path
+            else:
+                plot_loc = Path(plot_location[0])
     else:
         plot_loc = Path(plot_location)
 
@@ -229,12 +238,6 @@ def cam_taylor_diagram(adfobj):
         if multi_plots:
             #Notify user that script has started:
             print("\n  Generating Taylor Diagram multi-case plots...")
-
-            multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
-            main_site_path = multi_path / "main_website"
-            main_site_path.mkdir(exist_ok=True)
-            main_site_assets_path = main_site_path / "assets"
-            main_site_assets_path.mkdir(exist_ok=True)
 
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
             fig.savefig(plot_name, bbox_inches='tight')
