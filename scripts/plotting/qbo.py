@@ -166,6 +166,9 @@ def qbo(adfobj):
     #End for
 
     ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
+    
+    pad = 0.075*ncases
+    _set_ymargin(ax, top=pad, bottom=0.1)
 
     #Save figure to file:
     fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
@@ -373,5 +376,17 @@ def blue2red_cmap(n, nowhite = False):
 
     return mymap
 
+def _set_ymargin(ax, top, bottom):
+    """
+    Allow for custom padding of plot lines and axes borders
+    -----
+    """
+    ax.set_ymargin(0)
+    ax.autoscale_view()
+    lim = ax.get_ylim()
+    delta = np.diff(lim)
+    top = lim[1] + delta*top
+    bottom = lim[0] - delta*bottom
+    ax.set_ylim(bottom,top)
 
 
