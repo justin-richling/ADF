@@ -192,6 +192,23 @@ def cam_taylor_diagram(adfobj):
         for i, case in enumerate(case_names):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
 
+            if multi_plots:
+                #case_nicknames = test_nicknames + [base_nickname]
+                ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
+                #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
+                # add text with variable names:
+                txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
+                fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
+
+
+                plot_name = plot_loc[i] / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+                fig.savefig(plot_name, bbox_inches='tight')
+                print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
+
+                #Add plot to website (if enabled):
+                #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+                adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+
         #case_nicknames = test_nicknames + [base_nickname]
         ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
