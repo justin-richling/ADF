@@ -193,6 +193,7 @@ def cam_taylor_diagram(adfobj):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
 
             if multi_plots:
+                ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
                 fig_m, ax_m = taylor_plot_setup(title=f"Taylor Diagram - {s}",
                                     baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
                 #case_nicknames = test_nicknames + [base_nickname]
