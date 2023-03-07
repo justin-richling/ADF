@@ -682,7 +682,7 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
-        print("mean_html_info",mean_html_info,"\n")
+        #print("mean_html_info",mean_html_info,"\n")
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
             if web_data.data_frame:
@@ -871,6 +871,9 @@ class AdfWeb(AdfObs):
                     ofil.write(rndr)
                 #End with
 
+                print("web_data.plot_type",web_data.plot_type,"\n")
+                if web_data.plot_type == "Special":
+                    print("Umm ok...")
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
                 print("mean_ptype_file",mean_ptype_file,"\n")
