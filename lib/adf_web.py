@@ -678,8 +678,8 @@ class AdfWeb(AdfObs):
                 #End if
 
                 #Initialize Ordered Dictionary for season:
-                print("web_data.html_file.name",web_data.html_file.name,"\n")
                 if "multi_plot" not in str(web_data.html_file.name):
+                    print("web_data.html_file.name",web_data.html_file.name,"\n")
                     mean_html_info[ptype][category][name][season] = web_data.html_file.name
             #End if (data-frame check)
         #End for (web_data list loop)
