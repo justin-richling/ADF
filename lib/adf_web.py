@@ -438,12 +438,10 @@ class AdfWeb(AdfObs):
         if self.num_cases > 1:
             multi_plot_type_html = OrderedDict()
             for plot_type in self.__plot_type_multi:
-                print("plot_type",plot_type,"\n")
                 if plot_type == 'Tables':
                     multi_plot_type_html[plot_type] = os.path.join("html_table",
                                                                    "mean_tables.html")
                 else:
-                    print("What's happening here. Is it going through???")
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
                                                                    f"multi_case_mean_diag_{plot_type}.html")
                     #multi_plot_type_html[plot_type] = os.path.join("html_img", f"mean_diag_{plot_type}.html")
@@ -605,7 +603,7 @@ class AdfWeb(AdfObs):
                             #End if
                         #End if (varibale in multi-case plot variables)
 
-                    print(ptype,category,var,season,"\n")
+                    #print(ptype,category,var,season,"\n")
                     if ptype not in multi_mean_html_info:
                         multi_mean_html_info[ptype] = OrderedDict()
                     if category not in multi_mean_html_info[ptype]:
@@ -757,8 +755,8 @@ class AdfWeb(AdfObs):
                     if web_data.case == data_name:
                         #case1 = case_name
                         rend_kwarg_dict["case1"] = case_name
-                    print("case1",rend_kwarg_dict["case1"],"\n")
-                    print("plot_type_html",plot_type_html,"\n")
+                    #print("case1",rend_kwarg_dict["case1"],"\n")
+                    #print("plot_type_html",plot_type_html,"\n")
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
                     """table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
@@ -1106,12 +1104,12 @@ class AdfWeb(AdfObs):
 
                     #If multi-case plot not specified 
                     if not multi_case_plots:
-                        print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
+                        #print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
                         #var = web_data.name
                         #ext = web_data.plot_ext
                         #season = web_data.season
                         #ptype = web_data.plot_type
-                        print(var,ext,season,ptype,web_data.case)
+                        #print(var,ext,season,ptype,web_data.case)
 
                         #Move file to assets directory:
                         if not web_data.data.is_file():
@@ -1318,7 +1316,7 @@ class AdfWeb(AdfObs):
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
                     if not mean_table_file.exists():
                         #Construct mean_table.html
-                        print("This should only be working under multi-case scenario, it it?")
+                        #print("This should only be working under multi-case scenario, it it?")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
