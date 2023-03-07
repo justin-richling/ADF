@@ -854,7 +854,7 @@ class AdfWeb(AdfObs):
                 #print("plot_types",plot_types,"\n")
                 #print("web_data.html_file",web_data.html_file,"\n")
                 if "main_website" not in str(web_data.html_file):
-                    print("web_data.html_file",web_data.html_file,"\n")
+                    #print("web_data.html_file",web_data.html_file,"\n")
                     tmpl = jinenv.get_template('template.html')  #Set template
                     rndr = tmpl.render(title=main_title,
                                     var_title=web_data.name,
