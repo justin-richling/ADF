@@ -682,7 +682,7 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
-        #print("mean_html_info",mean_html_info,"\n")
+        print("mean_html_info",mean_html_info["Special"]["None"]["TaylorDiag"],"\n")
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
             if web_data.data_frame:
