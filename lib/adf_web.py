@@ -630,7 +630,10 @@ class AdfWeb(AdfObs):
 
                 #Move file to assets directory:
                 #if not web_data.data.is_file():
-                shutil.copy(web_data.data, web_data.asset_path)
+                try:
+                    shutil.copy(web_data.data, web_data.asset_path)
+                except:
+                    pass
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
