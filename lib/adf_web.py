@@ -510,6 +510,7 @@ class AdfWeb(AdfObs):
             for idx, case_name in enumerate(case_names):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
+                    print(case_name)
                     #Add path to case_sites dictionary:
                     case_dir_ext = f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}"
                     base_dir_ext = f"{data_name}_{syear_baseline}_{eyear_baseline}"
@@ -621,6 +622,7 @@ class AdfWeb(AdfObs):
                 #End if (multi-case scenario)
 
                 #Create a directory that will hold just the html files for individual images:
+                print("self.__case_web_paths[web_data.case]['img_pages_dir']",self.__case_web_paths[web_data.case]['img_pages_dir'],"\n")
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
 
                 #Create a directory that will hold copies of the actual images:
