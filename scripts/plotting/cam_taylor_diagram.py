@@ -207,7 +207,7 @@ def cam_taylor_diagram(adfobj):
 
                 #Add plot to website (if enabled):
                 #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-                adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, plot_type = "Special") #multi_case=True,plot_type = "Special"
+                adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special") #multi_case=True,plot_type = "Special"
         
         #if not multi_plots:
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
