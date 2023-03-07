@@ -451,7 +451,7 @@ class AdfWeb(AdfObs):
             #Set to match standard plot type dict:
             multi_plot_type_html = plot_type_html"""
         #End if
-        print("multi_plot_type_html",multi_plot_type_html,"\n")
+        #print("multi_plot_type_html",multi_plot_type_html,"\n")
         #Set main title for website:
         main_title = "CAM Diagnostics"
 
