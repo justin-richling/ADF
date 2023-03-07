@@ -217,7 +217,7 @@ def cam_taylor_diagram(adfobj):
         if (not redo_plot) and plot_name.is_file():
             #Add already-existing plot to website (if enabled):
             #adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
             #Continue to next iteration:
             continue
@@ -250,7 +250,7 @@ def cam_taylor_diagram(adfobj):
 
             #Add plot to website (if enabled):
             #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
         """#This will be a list of variables for multi-case plotting based off LatLon plot type
         if multi_plots:
