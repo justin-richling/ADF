@@ -851,7 +851,7 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case"""
                 plot_types = plot_type_html
                 #End if
-
+                print("plot_types",plot_types,"\n")
                 tmpl = jinenv.get_template('template.html')  #Set template
                 rndr = tmpl.render(title=main_title,
                                    var_title=web_data.name,
