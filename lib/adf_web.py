@@ -622,10 +622,10 @@ class AdfWeb(AdfObs):
                 #End if (multi-case scenario)
 
                 #Create a directory that will hold just the html files for individual images:
-                print("self.__case_web_paths[web_data.case]['img_pages_dir']",self.__case_web_paths[web_data.case]['img_pages_dir'],"\n")
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
 
                 #Create a directory that will hold copies of the actual images:
+                print("self.__case_web_paths[web_data.case]['assets_dir']",self.__case_web_paths[web_data.case]['assets_dir'],"\n")
                 self.__case_web_paths[web_data.case]['assets_dir'].mkdir(exist_ok=True)
 
                 #Move file to assets directory:
