@@ -681,7 +681,6 @@ class AdfWeb(AdfObs):
                 mean_html_info[ptype][category][name][season] = web_data.html_file.name
             #End if (data-frame check)
         #End for (web_data list loop)
-        print("mean_html_info",mean_html_info,"\n")
 
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
@@ -833,7 +832,9 @@ class AdfWeb(AdfObs):
                     #End with
                 #End if
             #End if (tables)
+            
             else: #Plot image
+                print("mean_html_info",mean_html_info,"\n")
 
                 #Create output HTML file path:
                 img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
@@ -841,14 +842,14 @@ class AdfWeb(AdfObs):
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
 
-                """#Check if plot image already handles multiple cases:
+                #Check if plot image already handles multiple cases:
                 web_data.multi_case = False
                 if main_site_path:
                 #if web_data.multi_case:
                     case1 = "Listed in plots."
                     plot_types = multi_plot_type_html
                 else:
-                    case1 = web_data.case"""
+                    case1 = web_data.case
                 plot_types = plot_type_html
                 #End if
                 print("plot_types",plot_types,"\n")
@@ -873,7 +874,7 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                #print("mean_ptype_file",mean_ptype_file,"\n")
+                print("mean_ptype_file",mean_ptype_file,"\n")
                 if not mean_ptype_file.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
