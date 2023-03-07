@@ -852,27 +852,27 @@ class AdfWeb(AdfObs):
                 plot_types = plot_type_html
                 #End if
                 #print("plot_types",plot_types,"\n")
-                print("web_data.html_file",web_data.html_file,"\n")
-                if "main_website" in web_data.html_file:
-                    pass
-                tmpl = jinenv.get_template('template.html')  #Set template
-                rndr = tmpl.render(title=main_title,
-                                   var_title=web_data.name,
-                                   season_title=web_data.season,
-                                   plottype_title=web_data.plot_type,
-                                   imgs=img_data,
-                                   case1=case1,
-                                   case2=data_name,
-                                   case_yrs=case_yrs,
-                                   baseline_yrs=baseline_yrs,
-                                   mydata=mean_html_info[web_data.plot_type],
-                                   plot_types=plot_types,
-                                   multi=multi_layout) #The template rendered
+                #print("web_data.html_file",web_data.html_file,"\n")
+                if "main_website" not in str(web_data.html_file):
+                    print("web_data.html_file",web_data.html_file,"\n")
+                    tmpl = jinenv.get_template('template.html')  #Set template
+                    rndr = tmpl.render(title=main_title,
+                                    var_title=web_data.name,
+                                    season_title=web_data.season,
+                                    plottype_title=web_data.plot_type,
+                                    imgs=img_data,
+                                    case1=case1,
+                                    case2=data_name,
+                                    case_yrs=case_yrs,
+                                    baseline_yrs=baseline_yrs,
+                                    mydata=mean_html_info[web_data.plot_type],
+                                    plot_types=plot_types,
+                                    multi=multi_layout) #The template rendered
 
-                #Write HTML file:
-                with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
-                    ofil.write(rndr)
-                #End with
+                    #Write HTML file:
+                    with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
+                        ofil.write(rndr)
+                    #End with
 
                 #print("web_data.plot_type",web_data.plot_type,"\n")
                 #if web_data.plot_type == "Special":
