@@ -755,14 +755,14 @@ class AdfWeb(AdfObs):
                         with open(html_file, 'w', encoding='utf-8') as ofil:
                             ofil.write(table_rndr)
 
-                else:
-                    rend_kwarg_dict["plot_types"] = plot_type_html
-                    if web_data.case == data_name:
+                #else:
+                rend_kwarg_dict["plot_types"] = plot_type_html
+                if web_data.case == data_name:
                         #case1 = case_name
-                        rend_kwarg_dict["case1"] = case_name
-                    #print("case1",rend_kwarg_dict["case1"],"\n")
-                    #print("plot_type_html",plot_type_html,"\n")
-                    table_rndr = table_tmpl.render(rend_kwarg_dict)
+                    rend_kwarg_dict["case1"] = case_name
+                #print("case1",rend_kwarg_dict["case1"],"\n")
+                #print("plot_type_html",plot_type_html,"\n")
+                table_rndr = table_tmpl.render(rend_kwarg_dict)
                     """table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
                                         case1=case1,
@@ -779,10 +779,10 @@ class AdfWeb(AdfObs):
                                         case_sites=case_sites,
                                         )"""
 
-                    #Write mean diagnostic tables HTML file:
-                    html_file = web_data.html_file
-                    with open(html_file, 'w', encoding='utf-8') as ofil:
-                        ofil.write(table_rndr)
+                #Write mean diagnostic tables HTML file:
+                html_file = web_data.html_file
+                with open(html_file, 'w', encoding='utf-8') as ofil:
+                    ofil.write(table_rndr)
 
 
                 #Check if the mean plot type page exists for this case (or for multi-case):
