@@ -682,6 +682,7 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
+        print("mean_html_info",mean_html_info,"\n")
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
             if web_data.data_frame:
@@ -834,8 +835,6 @@ class AdfWeb(AdfObs):
             #End if (tables)
             
             else: #Plot image
-                print("mean_html_info",mean_html_info,"\n")
-
                 #Create output HTML file path:
                 img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
                 #print("img_pages_dir",img_pages_dir,web_data.asset_path,"\n")
