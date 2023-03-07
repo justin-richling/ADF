@@ -763,7 +763,7 @@ class AdfWeb(AdfObs):
                 #print("case1",rend_kwarg_dict["case1"],"\n")
                 #print("plot_type_html",plot_type_html,"\n")
                 table_rndr = table_tmpl.render(rend_kwarg_dict)
-                    """table_tmpl = jinenv.get_template('template_table.html')
+                """table_tmpl = jinenv.get_template('template_table.html')
                     table_rndr = table_tmpl.render(title=main_title,
                                         case1=case1,
                                         case2=data_name,
