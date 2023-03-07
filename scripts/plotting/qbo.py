@@ -54,8 +54,6 @@ def qbo(adfobj):
         main_site_path.mkdir(exist_ok=True)
         main_site_assets_path = main_site_path / "assets"
         main_site_assets_path.mkdir(exist_ok=True)
-    #else:
-    #    multi_plots = False
     #End if (check for multiple cases)
 
    
