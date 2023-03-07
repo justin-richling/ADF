@@ -950,7 +950,7 @@ class AdfWeb(AdfObs):
 
         #End for (web data loop)
 
-        print("multi_mean_html_info",multi_mean_html_info,"\n")
+        #print("multi_mean_html_info",multi_mean_html_info,"\n")
 
         # --- Starting multi-case plots if activated ---
         # - - - - - - - - - - - - - - - - - - - - - - - -
