@@ -446,6 +446,7 @@ class AdfWeb(AdfObs):
                     print("What's happening here. Is it going through???")
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
                                                                    f"multi_case_mean_diag_{plot_type}.html")
+                    #multi_plot_type_html[plot_type] = os.path.join("html_img", f"mean_diag_{plot_type}.html")
                 #End if
             #End for
         """else:
@@ -830,20 +831,22 @@ class AdfWeb(AdfObs):
                 #End if
             #End if (tables)
             else: #Plot image
+                print()
 
                 #Create output HTML file path:
                 img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
 
-                #Check if plot image already handles multiple cases:
+                """#Check if plot image already handles multiple cases:
                 web_data.multi_case = False
-                if web_data.multi_case:
+                if main_site_path:
+                #if web_data.multi_case:
                     case1 = "Listed in plots."
                     plot_types = multi_plot_type_html
                 else:
-                    case1 = web_data.case
-                    plot_types = plot_type_html
+                    case1 = web_data.case"""
+                plot_types = plot_type_html
                 #End if
 
                 tmpl = jinenv.get_template('template.html')  #Set template
