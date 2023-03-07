@@ -829,10 +829,10 @@ class AdfWeb(AdfObs):
                 #End if
             #End if (tables)
             else: #Plot image
-                print()
 
                 #Create output HTML file path:
                 img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
+                print("img_pages_dir",img_pages_dir,"\n")
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
 
