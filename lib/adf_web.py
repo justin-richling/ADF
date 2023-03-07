@@ -629,8 +629,8 @@ class AdfWeb(AdfObs):
                 self.__case_web_paths[web_data.case]['assets_dir'].mkdir(exist_ok=True)
 
                 #Move file to assets directory:
-                if not web_data.data.is_file():
-                    shutil.copy(web_data.data, web_data.asset_path)
+                #if not web_data.data.is_file():
+                shutil.copy(web_data.data, web_data.asset_path)
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
