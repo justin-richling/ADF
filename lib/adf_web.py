@@ -307,7 +307,7 @@ class AdfWeb(AdfObs):
 
             
             html_name = f'plot_page_{web_data.stem}.html'
-            print(case_name)
+            print(web_name,case_name,"\n")
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
