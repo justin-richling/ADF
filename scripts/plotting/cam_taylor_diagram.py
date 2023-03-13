@@ -213,7 +213,7 @@ def cam_taylor_diagram(adfobj):
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
         print(f"\t - Plotting Taylor Diagram, {s}")
 
-        # Check redo_plot. If set to True: remove old plot, if it already exists:
+        """# Check redo_plot. If set to True: remove old plot, if it already exists:
         if (not redo_plot) and plot_name.is_file():
             #Add already-existing plot to website (if enabled):
             #adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
@@ -222,7 +222,7 @@ def cam_taylor_diagram(adfobj):
             #Continue to next iteration:
             continue
         elif (redo_plot) and plot_name.is_file():
-            plot_name.unlink()
+            plot_name.unlink()"""
         
         #case_nicknames = test_nicknames + [base_nickname]
         ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
@@ -244,13 +244,13 @@ def cam_taylor_diagram(adfobj):
             #                         category=web_category, season=season, plot_type="LatLon",multi_case=True,plot_type = "Special")
 
             print("  ...Taylor Diagram multi-case plots have been generated successfully.")
-        else:
+        """else:
             fig.savefig(plot_name, bbox_inches='tight')
             print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
             #Add plot to website (if enabled):
             #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special"
+            adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special""""
 
         """#This will be a list of variables for multi-case plotting based off LatLon plot type
         if multi_plots:
