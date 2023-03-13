@@ -84,7 +84,7 @@ def qbo(adfobj):
     #that the QBO plot will be kept in the first case directory:
     print(f"\t QBO plots will be saved here: {plot_locations[0]}")
 
-    # Check redo_plot. If set to True: remove old plots, if they already exist:
+    """# Check redo_plot. If set to True: remove old plots, if they already exist:
     if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
         #Add already-existing plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
@@ -99,7 +99,7 @@ def qbo(adfobj):
             plot_loc_ts.unlink()
         if plot_loc_amp.is_file():
             plot_loc_amp.unlink()
-    #End if
+    #End if"""
 
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
@@ -165,20 +165,50 @@ def qbo(adfobj):
     
     #pad = 0.075*ncases
     #_set_ymargin(ax, top=pad, bottom=0.1)
-
+    """
     #Save figure to file:
     fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special")"""
 
     if multi_plots:#Notify user that script has started:
         print("\n  Generating qbo multi-case plots...")
+        
+
         plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_ts_multi, bbox_inches='tight', facecolor='white')
         adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="QBOts",
+                                multi_case=True,plot_type="Special")
+    
+    else:
+        #Save figure to file:
+        fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
+
+        #Add plot to website (if enabled):
+        #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+        adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
+                                multi_case=True,plot_type="Special")
+
+
+    """if multi_plots:
+        for icase in range(0,ncases,1):
+            ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
+
+        plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
+        fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
+        adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOts",
                                 multi_case=True,plot_type = "Special")
+    else:
+        ax.plot(modamp[0], -np.log10(modamp[0].lev), linewidth=2, label=case_nicknames[0])
+
+        ax.legend(loc='upper left')
+        fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
+        
+        #Add plot to website (if enabled):
+        #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOts", multi_case=True,plot_type = "Special")"""
 
 
     #-----------------
@@ -199,7 +229,7 @@ def qbo(adfobj):
 
     ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
 
-    for icase in range(0,ncases,1):
+    """for icase in range(0,ncases,1):
         ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
     ax.legend(loc='upper left')
@@ -207,14 +237,27 @@ def qbo(adfobj):
     
     #Add plot to website (if enabled):
     #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True"""
 
+
+    
     if multi_plots:
+        for icase in range(0,ncases,1):
+            ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
+
         plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
         adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp",
                                 multi_case=True,plot_type = "Special")
+    else:
+        ax.plot(modamp[0], -np.log10(modamp[0].lev), linewidth=2, label=case_nicknames[0])
 
+        ax.legend(loc='upper left')
+        fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
+        
+        #Add plot to website (if enabled):
+        #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
     #-------------------
 
     #Notify user that script has ended:
