@@ -286,7 +286,28 @@ class AdfWeb(AdfObs):
             #End if
             asset_path = None
         else:
+
+            """#If multi-case, then save under the "multi-case" directory:
+            if self.num_cases > 1:
+                #multi_tbl_dir = self.__case_web_paths['multi-case']["img_pages_dir"]
+
+                html_name = f'plot_page_{web_data.stem}.html'
+                print(case_name)
+                html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
+                asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name"""
+       
+            """else:
+                html_name = f'plot_page_{web_data.stem}.html'
+                print(case_name)
+                html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
+                asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name"""
+            #End if
+
+
+
+            
             html_name = f'plot_page_{web_data.stem}.html'
+            print(case_name)
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
