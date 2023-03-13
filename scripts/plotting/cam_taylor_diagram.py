@@ -231,6 +231,11 @@ def cam_taylor_diagram(adfobj):
         txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
         fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
 
+        fig.savefig(plot_name, bbox_inches='tight')
+        print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
+
+        adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        
         if multi_plots:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
             fig.savefig(plot_name, bbox_inches='tight')
