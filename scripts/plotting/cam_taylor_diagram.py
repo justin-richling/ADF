@@ -240,7 +240,7 @@ def cam_taylor_diagram(adfobj):
             print("  ...Taylor Diagram multi-case plots have been generated successfully.")
         else:
             plot_name = Path(plot_loc) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
-            fig_m.savefig(plot_name, bbox_inches='tight')
+            fig.savefig(plot_name, bbox_inches='tight')
             print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
             #Add plot to website (if enabled):
