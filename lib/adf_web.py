@@ -704,7 +704,6 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
-        #print("mean_html_info",mean_html_info["Special"].keys(),"\n")
         #Loop over all web data objects again:
         for idx,web_data in enumerate(self.__website_data):
             if web_data.data_frame:
@@ -1395,7 +1394,8 @@ class AdfWeb(AdfObs):
                                "global_latlon_vect_map":"LatLon_Vector"}
 
             multi_plots = {"Tables": "html_table/mean_tables.html",
-                           "Special":"html_img/multi_case_mean_diag_Special.html"}
+                           #"Special":"html_img/multi_case_mean_diag_Special.html"
+                           }
             if multi_case_plots:
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
