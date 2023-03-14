@@ -219,17 +219,6 @@ def cam_taylor_diagram(adfobj):
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
         print(f"\t - Plotting Taylor Diagram, {s}")
 
-        """# Check redo_plot. If set to True: remove old plot, if it already exists:
-        if (not redo_plot) and plot_name.is_file():
-            #Add already-existing plot to website (if enabled):
-            #adfobj.add_website_data(plot_name, "TaylorDiag", None, category="TaylorDiag", season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special"
-
-            #Continue to next iteration:
-            continue
-        elif (redo_plot) and plot_name.is_file():
-            plot_name.unlink()"""
-        
         if multi_plots:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
 
@@ -250,7 +239,8 @@ def cam_taylor_diagram(adfobj):
 
             print("  ...Taylor Diagram multi-case plots have been generated successfully.")
         else:
-            plot_name = Path(plot_loc) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+            #plot_name = Path(plot_loc) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+            plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
 
             # Check redo_plot. If set to True: remove old plot, if it already exists:
             if (not redo_plot) and plot_name.is_file():
