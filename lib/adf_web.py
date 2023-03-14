@@ -307,7 +307,7 @@ class AdfWeb(AdfObs):
 
             
             html_name = f'plot_page_{web_data.stem}.html'
-            print(web_name,case_name,"\n")
+            #print(web_name,case_name,"\n")
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
@@ -699,7 +699,7 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 if "multi_plot" not in str(web_data.html_file.name):
-                    print("web_data.html_file.name",web_data.html_file.name,"\n")
+                    #print("web_data.html_file.name",web_data.html_file.name,"\n")
                     mean_html_info[ptype][category][name][season] = web_data.html_file.name
             #End if (data-frame check)
         #End for (web_data list loop)
@@ -925,7 +925,7 @@ class AdfWeb(AdfObs):
                 #Check if the mean plot type and var page exists for this case:
                 plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
                 mean_ptype_plot_page = img_pages_dir / plot_page
-                print("mean_ptype_plot_page",mean_ptype_plot_page,"\n")
+                #print("mean_ptype_plot_page",mean_ptype_plot_page,"\n")
                 if not mean_ptype_plot_page.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
@@ -1025,7 +1025,7 @@ class AdfWeb(AdfObs):
                         #if 1==1:
                             #Check if variable is in desired multi-case plot:
                             if var in mvars:
-                                print("Nothing should be going here\n")
+                                #print("Nothing should be going here\n")
                                 #Check if the web data obj not a table
                                 #and if the plot_type is in given multi-case plot set
                                 #if (not frame) and (ext in multi_case_plots):
