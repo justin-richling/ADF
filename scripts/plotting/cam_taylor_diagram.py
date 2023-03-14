@@ -209,7 +209,11 @@ def cam_taylor_diagram(adfobj):
                 #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
                 adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special") #multi_case=True,plot_type = "Special"
         
-        #if not multi_plots:
+            ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=True)
+            #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
+            # add text with variable names:
+            txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
+            fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
         print(f"\t - Plotting Taylor Diagram, {s}")
 
