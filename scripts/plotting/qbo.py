@@ -235,11 +235,13 @@ def qbo(adfobj):
 
                 ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
                 ax.legend(loc='upper left')
+
+                plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
+
                 fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
                 plt.close()
                 #Add plot to website (if enabled):
                 #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-                plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
                 adfobj.add_website_data(plot_loc_amp, "QBO", case_names[icase], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
 
     """for icase in range(0,ncases,1):
