@@ -206,10 +206,10 @@ def cam_taylor_diagram(adfobj):
                 print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
                 #Add plot to website (if enabled):
-                #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-                adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special") #multi_case=True,plot_type = "Special"
+                #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
+                adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special") 
         
-            ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=True)
+            ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=False)
             #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
             # add text with variable names:
             txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
