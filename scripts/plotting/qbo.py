@@ -223,6 +223,7 @@ def qbo(adfobj):
 
                 ax = fig.add_axes([0.05,0.6,0.4,0.4])
                 ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
+                ax.plot(modamp[-1], -np.log10(modamp[-1].lev), linewidth=2, label=base_nickname)
 
                 ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
 
@@ -233,7 +234,6 @@ def qbo(adfobj):
                 ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
                 ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
 
-                ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
                 ax.legend(loc='upper left')
 
                 plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
