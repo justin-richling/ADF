@@ -883,7 +883,7 @@ class AdfWeb(AdfObs):
                                     season_title=web_data.season,
                                     plottype_title=web_data.plot_type,
                                     imgs=img_data,
-                                    case1=case1,
+                                    case1=web_data.case,
                                     case2=data_name,
                                     case_yrs=case_yrs,
                                     baseline_yrs=baseline_yrs,
