@@ -180,8 +180,6 @@ def cam_taylor_diagram(adfobj):
         #
         # -- PLOTTING (one per season) --
         #
-        #fig, ax = taylor_plot_setup(title=f"Taylor Diagram - {s}",
-        #                            baseline=f"Baseline: {data_name}  yrs: {syear_baseline}-{eyear_baseline}")
 
         fig, ax = taylor_plot_setup(title=f"Taylor Diagram - {s}",
                                     baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
@@ -189,26 +187,29 @@ def cam_taylor_diagram(adfobj):
         for i, case in enumerate(case_names):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
 
+            #If multi-case, make all individual case vs baseline taylor diagram
             if multi_plots:
                 fig_m, ax_m = taylor_plot_setup(title=f"Taylor Diagram - {s}",
                                     baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
                 ax_m = plot_taylor_data(ax_m, result_by_case[case], case_color=case_colors[i], use_bias=True)
-                #case_nicknames = test_nicknames + [base_nickname]
-                ax_m = taylor_plot_finalize(ax_m, test_nicknames[i], case_colors[i], syear_cases[i], eyear_cases[i], needs_bias_labels=True,multi=True)
-                #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
+                ax_m = taylor_plot_finalize(ax_m, test_nicknames[i], case_colors[i],
+                                            syear_cases[i], eyear_cases[i],
+                                            needs_bias_labels=True,multi=True)
+
                 # add text with variable names:
                 txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
                 fig_m.text(0.9, 0.9, "\n".join(txtstrs), va='top')
 
-                print("plot_location[i]",plot_location[i],"\n")
                 plot_name = Path(plot_location[i]) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
                 fig_m.savefig(plot_name, bbox_inches='tight')
                 print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
                 #Add plot to website (if enabled):
                 #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
-                adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special") 
-        
+                adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special")
+            #End if (multi-case)
+        #End for (cases)
+
         ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=False)
         #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         # add text with variable names:
@@ -229,56 +230,21 @@ def cam_taylor_diagram(adfobj):
         elif (redo_plot) and plot_name.is_file():
             plot_name.unlink()"""
         
-        """#case_nicknames = test_nicknames + [base_nickname]
-        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
-        #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
-        # add text with variable names:
-        txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
-        fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
-
-        fig.savefig(plot_name, bbox_inches='tight')
-        print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
-
-        adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s,plot_type = "Special") """
-        
         if multi_plots:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
             fig.savefig(plot_name, bbox_inches='tight')
-            #Add plot to website (if enabled):
-            #web_data, web_name, case_name
-            #category="TaylorDiag"
-            #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
 
-            #adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
-            #                         category=web_category, season=season, plot_type="LatLon",multi_case=True,plot_type = "Special")
+            #Add plot to website (if enabled):
+            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
 
             print("  ...Taylor Diagram multi-case plots have been generated successfully.")
-        '''else:
-            fig.savefig(plot_name, bbox_inches='tight')
+        else:
+            plot_name = Path(plot_loc) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+            fig_m.savefig(plot_name, bbox_inches='tight')
             print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
             #Add plot to website (if enabled):
-            #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special"'''
-
-        """#This will be a list of variables for multi-case plotting based off LatLon plot type
-        if multi_plots:
-            #Notify user that script has started:
-            print("\n  Generating Taylor Diagram multi-case plots...")
-
-            plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
-            fig.savefig(plot_name, bbox_inches='tight')
-            #Add plot to website (if enabled):
-            #web_data, web_name, case_name
-            #category="TaylorDiag"
-            #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special") #multi_case=True,plot_type = "Special"
-
-            #adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
-            #                         category=web_category, season=season, plot_type="LatLon",multi_case=True,plot_type = "Special")
-
-            print("  ...Taylor Diagram multi-case plots have been generated successfully.")"""
+            adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
 
     #Notify user that script has ended:
     print("  ...Taylor Diagrams have been generated successfully.")
