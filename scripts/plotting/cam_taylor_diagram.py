@@ -232,6 +232,17 @@ def cam_taylor_diagram(adfobj):
         
         if multi_plots:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
+
+            # Check redo_plot. If set to True: remove old plot, if it already exists:
+            if (not redo_plot) and plot_name.is_file():
+                #Add already-existing plot to website (if enabled):
+                adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
+
+                #Continue to next iteration:
+                continue
+            elif (redo_plot) and plot_name.is_file():
+                plot_name.unlink()
+            
             fig.savefig(plot_name, bbox_inches='tight')
 
             #Add plot to website (if enabled):
@@ -240,12 +251,23 @@ def cam_taylor_diagram(adfobj):
             print("  ...Taylor Diagram multi-case plots have been generated successfully.")
         else:
             plot_name = Path(plot_loc) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+
+            # Check redo_plot. If set to True: remove old plot, if it already exists:
+            if (not redo_plot) and plot_name.is_file():
+                #Add already-existing plot to website (if enabled):
+                adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
+
+                #Continue to next iteration:
+                continue
+            elif (redo_plot) and plot_name.is_file():
+                plot_name.unlink()
+
             fig.savefig(plot_name, bbox_inches='tight')
             print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
-
+        #End if (multi-case check)
     #Notify user that script has ended:
     print("  ...Taylor Diagrams have been generated successfully.")
 
