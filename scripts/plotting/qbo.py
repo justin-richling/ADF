@@ -153,6 +153,25 @@ def qbo(adfobj):
     casecount=0
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
+
+            if multi_plots:
+                #----QBO timeseries plots
+                fig_m = plt.figure(figsize=(16,16))
+
+                #x1, x2, y1, y2 = plotpos()
+                ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
+                ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
+                                        x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], 
+                                        case_nicknames[icase])
+                ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
+                #Save figure to file:
+                fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
+
+                #Add plot to website (if enabled):
+                #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
+                adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
+                                        multi_case=True,plot_type="Special")
+            
             ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
                 x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_nicknames[icase])
             casecount=casecount+1
