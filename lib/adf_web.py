@@ -906,9 +906,10 @@ class AdfWeb(AdfObs):
                     
                     mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
                     if web_data.plot_type == "Special":
-                        print("img_pages_dir",img_pages_dir)
-                        print("mean_ptype_file",mean_ptype_file)
-                        print("case1",web_data.case,"\n")
+                        if web_data.name == "QBO":
+                            print("img_pages_dir",img_pages_dir)
+                            print("mean_ptype_file",mean_ptype_file)
+                            print("case1",web_data.case,"\n")
                     if not mean_ptype_file.exists():
 
                         #Construct individual plot type mean_diag html files, if they don't
