@@ -903,14 +903,14 @@ class AdfWeb(AdfObs):
                 if web_data.plot_type == "Special":
                     print("img_pages_dir",img_pages_dir)
                     print("mean_ptype_file",mean_ptype_file)
-                    print("case1",case1,"\n")
+                    print("case1",web_data.case,"\n")
                 if not mean_ptype_file.exists():
 
                     #Construct individual plot type mean_diag html files, if they don't
                     #already exist:
                     mean_tmpl = jinenv.get_template('template_mean_diag.html')
                     mean_rndr = mean_tmpl.render(title=main_title,
-                                                 case1=case1,
+                                                 case1=web_data.case,
                                                  case2=data_name,
                                                  case_yrs=case_yrs,
                                                  baseline_yrs=baseline_yrs,
