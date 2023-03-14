@@ -209,14 +209,14 @@ def qbo(adfobj):
         adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="QBOts",
                                 multi_case=True,plot_type="Special")
     
-    else:
+    """else:
         #Save figure to file:
         fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
         adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
-                                multi_case=True,plot_type="Special")
+                                multi_case=True,plot_type="Special")"""
 
 
     """if multi_plots:
