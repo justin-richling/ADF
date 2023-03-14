@@ -858,10 +858,10 @@ class AdfWeb(AdfObs):
             
             else: #Plot image
                 #Create output HTML file path:
-                img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
+                """img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
                 #print("img_pages_dir",img_pages_dir,web_data.asset_path,"\n")
                 img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
-                            web_data.asset_path.stem]
+                            web_data.asset_path.stem]"""
 
                 #Check if plot image already handles multiple cases:
                 """web_data.multi_case = False
@@ -876,6 +876,11 @@ class AdfWeb(AdfObs):
                 #print("plot_types",plot_types,"\n")
                 #print("web_data.html_file",web_data.html_file,"\n")
                 if "main_website" not in str(web_data.html_file):
+                    img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
+                    #print("img_pages_dir",img_pages_dir,web_data.asset_path,"\n")
+                    img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
+                            web_data.asset_path.stem]
+
                     #print("web_data.html_file",web_data.html_file,"\n")
                     tmpl = jinenv.get_template('template.html')  #Set template
                     rndr = tmpl.render(title=main_title,
