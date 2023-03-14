@@ -625,19 +625,20 @@ class AdfWeb(AdfObs):
                             #End if
                         #End if (varibale in multi-case plot variables)
 
-                    #print(ptype,category,var,season,"\n")
-                    if ptype not in multi_mean_html_info:
-                        multi_mean_html_info[ptype] = OrderedDict()
-                    if category not in multi_mean_html_info[ptype]:
-                        multi_mean_html_info[ptype][category] = OrderedDict()
-                    if var not in multi_mean_html_info[ptype][category]:
-                        multi_mean_html_info[ptype][category][var] = OrderedDict()
+                    else:
+                        #print(ptype,category,var,season,"\n")
+                        if ptype not in multi_mean_html_info:
+                            multi_mean_html_info[ptype] = OrderedDict()
+                        if category not in multi_mean_html_info[ptype]:
+                            multi_mean_html_info[ptype][category] = OrderedDict()
+                        if var not in multi_mean_html_info[ptype][category]:
+                            multi_mean_html_info[ptype][category][var] = OrderedDict()
 
-                    #if 
-                    p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                    #print("p",p,"\n")
-                    if season not in multi_mean_html_info[ptype][category][var]:
-                        multi_mean_html_info[ptype][category][var][season] = p
+                        #if 
+                        p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                        #print("p",p,"\n")
+                        if season not in multi_mean_html_info[ptype][category][var]:
+                            multi_mean_html_info[ptype][category][var][season] = p
 
                     #End if (multi-case plots)
                 #End if (multi-case scenario)
@@ -1029,8 +1030,6 @@ class AdfWeb(AdfObs):
                         case1 = self.get_cam_info('cam_case_name', required=True)[0]
                         if str(web_data.case) == str(case1):
 
-                        
-                        
                         #if multi_case_plots:
                         #if 1==1:
                             #Check if variable is in desired multi-case plot:
