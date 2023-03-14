@@ -896,67 +896,67 @@ class AdfWeb(AdfObs):
                         ofil.write(rndr)
                     #End with
 
-                #print("web_data.plot_type",web_data.plot_type,"\n")
-                #Check if the mean plot type page exists for this case:
-                
-                mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                if web_data.plot_type == "Special":
-                    print("img_pages_dir",img_pages_dir)
-                    print("mean_ptype_file",mean_ptype_file)
-                    print("case1",web_data.case,"\n")
-                if not mean_ptype_file.exists():
+                    #print("web_data.plot_type",web_data.plot_type,"\n")
+                    #Check if the mean plot type page exists for this case:
+                    
+                    mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
+                    if web_data.plot_type == "Special":
+                        print("img_pages_dir",img_pages_dir)
+                        print("mean_ptype_file",mean_ptype_file)
+                        print("case1",web_data.case,"\n")
+                    if not mean_ptype_file.exists():
 
-                    #Construct individual plot type mean_diag html files, if they don't
-                    #already exist:
-                    mean_tmpl = jinenv.get_template('template_mean_diag.html')
-                    mean_rndr = mean_tmpl.render(title=main_title,
-                                                 case1=web_data.case,
-                                                 case2=data_name,
-                                                 case_yrs=case_yrs,
-                                                 baseline_yrs=baseline_yrs,
-                                                 mydata=mean_html_info[web_data.plot_type],
-                                                 curr_type=web_data.plot_type,
-                                                 plot_types=plot_types,
-                                                 multi=multi_layout)
+                        #Construct individual plot type mean_diag html files, if they don't
+                        #already exist:
+                        mean_tmpl = jinenv.get_template('template_mean_diag.html')
+                        mean_rndr = mean_tmpl.render(title=main_title,
+                                                    case1=web_data.case,
+                                                    case2=data_name,
+                                                    case_yrs=case_yrs,
+                                                    baseline_yrs=baseline_yrs,
+                                                    mydata=mean_html_info[web_data.plot_type],
+                                                    curr_type=web_data.plot_type,
+                                                    plot_types=plot_types,
+                                                    multi=multi_layout)
 
-                    #Write mean diagnostic plots HTML file:
-                    with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
-                        ofil.write(mean_rndr)
-                    #End with
-                #End if (mean_ptype exists)
+                        #Write mean diagnostic plots HTML file:
+                        with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
+                            ofil.write(mean_rndr)
+                        #End with
+                    #End if (mean_ptype exists)
 
-                #Check if the mean plot type and var page exists for this case:
-                plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
-                mean_ptype_plot_page = img_pages_dir / plot_page
-                #print("mean_ptype_plot_page",mean_ptype_plot_page,"\n")
-                if not mean_ptype_plot_page.exists():
+                    #Check if the mean plot type and var page exists for this case:
+                    plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
+                    mean_ptype_plot_page = img_pages_dir / plot_page
+                    #print("mean_ptype_plot_page",mean_ptype_plot_page,"\n")
+                    if not mean_ptype_plot_page.exists():
 
-                    #Construct individual plot type mean_diag html files, if they don't
-                    #already exist:
-                    plot_page_tmpl = jinenv.get_template('template_var.html')
-                    plot_page_rndr = plot_page_tmpl.render(title=main_title,
-                                                 var_title=web_data.name,
-                                                 season_title=web_data.season,
-                                                 plottype_title=web_data.plot_type,
-                                                 case1=web_data.case,
-                                                 case2=data_name,
-                                                 case_yrs=case_yrs,
-                                                 baseline_yrs=baseline_yrs,
-                                                 mydata=mean_html_info[web_data.plot_type],
-                                                 curr_type=web_data.plot_type,
-                                                 plot_types=plot_types,
-                                                 multi=multi_layout)
+                        #Construct individual plot type mean_diag html files, if they don't
+                        #already exist:
+                        plot_page_tmpl = jinenv.get_template('template_var.html')
+                        plot_page_rndr = plot_page_tmpl.render(title=main_title,
+                                                    var_title=web_data.name,
+                                                    season_title=web_data.season,
+                                                    plottype_title=web_data.plot_type,
+                                                    case1=web_data.case,
+                                                    case2=data_name,
+                                                    case_yrs=case_yrs,
+                                                    baseline_yrs=baseline_yrs,
+                                                    mydata=mean_html_info[web_data.plot_type],
+                                                    curr_type=web_data.plot_type,
+                                                    plot_types=plot_types,
+                                                    multi=multi_layout)
 
-                    #Write mean diagnostic plots HTML file:
-                    with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                        ofil.write(plot_page_rndr)
-                    #End with
-            #End plot images
-            #End if (data frame)
+                        #Write mean diagnostic plots HTML file:
+                        with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
+                            ofil.write(plot_page_rndr)
+                        #End with
+                #End plot images
+                #End if (data frame)
 
-            #Also check if index page exists for this case:
-            index_html_file = \
-                self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
+                #Also check if index page exists for this case:
+                index_html_file = \
+                    self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
             #Re-et plot types list:
             if web_data.case == 'multi-case':
