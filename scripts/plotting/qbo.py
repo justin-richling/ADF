@@ -158,6 +158,7 @@ def qbo(adfobj):
                 if icase != ncases-1:
                     print(icase)
                     plot_loc_ts  = Path(plot_locations[icase]) / f'QBOts.{plot_type}'
+                    print("plot_loc_ts",plot_loc_ts,"\n")
                     #----QBO timeseries plots
                     fig_m = plt.figure(figsize=(16,16))
 
