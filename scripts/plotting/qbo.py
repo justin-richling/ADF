@@ -153,9 +153,9 @@ def qbo(adfobj):
     casecount=0
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
-
+            print(icase)
             if multi_plots:
-                if icase != ncases:
+                if icase != ncases-1:
                     #----QBO timeseries plots
                     fig_m = plt.figure(figsize=(16,16))
 
