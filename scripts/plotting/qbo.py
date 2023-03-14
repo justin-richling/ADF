@@ -175,7 +175,7 @@ def qbo(adfobj):
 
                 #Add plot to website (if enabled):
                 #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-                adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
+                adfobj.add_website_data(plot_loc_ts, "QBO", case_names[icase], category=None, season="QBOts",
                                         multi_case=True,plot_type="Special")
             
             ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
