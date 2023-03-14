@@ -215,7 +215,7 @@ def qbo(adfobj):
     obsamp = calcddamp(obs)
     modamp = [ calcddamp(casedat_5S_5N[i]) for i in range(0,ncases,1) ]
 
-    for icase in range(0,ncases-1,1):
+    for icase in range(0,ncases,1):
         if multi_plots:
             if icase != ncases-1:
                 fig = plt.figure(figsize=(16,16))
