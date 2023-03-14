@@ -254,6 +254,9 @@ def qbo(adfobj):
 
     
     if multi_plots:
+        fig = plt.figure(figsize=(16,16))
+
+        ax = fig.add_axes([0.05,0.6,0.4,0.4])
         for icase in range(0,ncases,1):
             ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
