@@ -497,6 +497,7 @@ class AdfWeb(AdfObs):
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
         multi_mean_html_info = OrderedDict()
+        multi_plot_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -602,23 +603,23 @@ class AdfWeb(AdfObs):
                             if web_data.plot_ext in multi_case_plots.keys():
                                 for var in multi_case_plots[web_data.plot_ext]:
                                     #Initialize Ordered Dictionary for multi case plot type:
-                                    if ptype not in multi_mean_html_info:
-                                        multi_mean_html_info[ptype] = OrderedDict()
+                                    if ptype not in multi_plot_html_info:
+                                        multi_plot_html_info[ptype] = OrderedDict()
                                     #End if
 
                                     #Initialize Ordered Dictionary for category:
-                                    if category not in multi_mean_html_info[ptype]:
-                                        multi_mean_html_info[ptype][category] = OrderedDict()
+                                    if category not in multi_plot_html_info[ptype]:
+                                        multi_plot_html_info[ptype][category] = OrderedDict()
                                     #End if
 
                                     #Initialize Ordered Dictionary for variable:
-                                    if var not in multi_mean_html_info[ptype][category]:
-                                        multi_mean_html_info[ptype][category][var] = OrderedDict()
+                                    if var not in multi_plot_html_info[ptype][category]:
+                                        multi_plot_html_info[ptype][category][var] = OrderedDict()
                                     #End if
 
-                                    if season not in multi_mean_html_info[ptype][category][var]:
+                                    if season not in multi_plot_html_info[ptype][category][var]:
                                         p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                                        multi_mean_html_info[ptype][category][var][season] = p
+                                        multi_plot_html_info[ptype][category][var][season] = p
                                     #End if
                                 #End for
                             #End if
@@ -1023,16 +1024,18 @@ class AdfWeb(AdfObs):
                     ptype = web_data.plot_type
                     var = web_data.name
                     ext = web_data.plot_ext
-                    case1 = self.get_cam_info('cam_case_name', required=True)[0]
-                    if str(web_data.case) == str(case1):
+                    
+                    if multi_case_plots:
+                        case1 = self.get_cam_info('cam_case_name', required=True)[0]
+                        if str(web_data.case) == str(case1):
 
                         
                         
-                        if multi_case_plots:
+                        #if multi_case_plots:
                         #if 1==1:
                             #Check if variable is in desired multi-case plot:
                             if var in mvars:
-                                #print("Nothing should be going here\n")
+                                print(f"{var}\n")
                                 #Check if the web data obj not a table
                                 #and if the plot_type is in given multi-case plot set
                                 #if (not frame) and (ext in multi_case_plots):
@@ -1069,6 +1072,7 @@ class AdfWeb(AdfObs):
                                                             multi_plot_page]
 
                                     multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                    print(ptype,"\n")
                                     if not (img_pages_dir / multimean).exists():
                                         tmpl = jinenv.get_template('template_multi_case.html')
                                         rndr = tmpl.render(title=main_title,
@@ -1079,7 +1083,7 @@ class AdfWeb(AdfObs):
                                                         base_name=data_name,
                                                         case_yrs=case_yrs,
                                                         baseline_yrs=baseline_yrs,
-                                                        mydata=multi_mean_html_info[ptype],
+                                                        mydata=multi_plot_html_info[ptype],
                                                         plot_types=multi_plot_type_html,
                                                         multi=multi_layout,
                                                         case_sites=case_sites)
@@ -1100,7 +1104,7 @@ class AdfWeb(AdfObs):
                                                                     base_name=data_name,
                                                                     case_yrs=case_yrs,
                                                                     baseline_yrs=baseline_yrs,
-                                                                    mydata=multi_mean_html_info[ptype],
+                                                                    mydata=multi_plot_html_info[ptype],
                                                                     curr_type=ptype,
                                                                     plot_types=multi_plot_type_html,
                                                                     multi=multi_layout,
@@ -1129,7 +1133,7 @@ class AdfWeb(AdfObs):
                                                                     base_name=data_name,
                                                                     case_yrs=case_yrs,
                                                                     baseline_yrs=baseline_yrs,
-                                                                    mydata=multi_mean_html_info[ptype],
+                                                                    mydata=multi_plot_html_info[ptype],
                                                                     curr_type=ptype,
                                                                     plot_types=multi_plot_type_html,
                                                                     multi=multi_layout,
@@ -1143,7 +1147,9 @@ class AdfWeb(AdfObs):
                 
 
                     #If multi-case plot not specified 
-                    if not multi_case_plots:
+                    #if not multi_case_plots:
+                    if 1==1:
+                        print("Shouldn't be getting here, eh?\n")
                         #print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
                         #var = web_data.name
                         #ext = web_data.plot_ext
