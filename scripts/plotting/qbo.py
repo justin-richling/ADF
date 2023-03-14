@@ -216,8 +216,8 @@ def qbo(adfobj):
     obsamp = calcddamp(obs)
     modamp = [ calcddamp(casedat_5S_5N[i]) for i in range(0,ncases,1) ]
 
-    for icase in range(0,ncases,1):
-        if multi_plots:
+    if multi_plots:
+        for icase in range(0,ncases,1):
             if icase != ncases-1:
                 fig = plt.figure(figsize=(16,16))
 
@@ -255,9 +255,26 @@ def qbo(adfobj):
     adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True"""
 
 
+
+
+    fig = plt.figure(figsize=(16,16))
+
+    ax = fig.add_axes([0.05,0.6,0.4,0.4])
     
+
+    ax.set_ylim(-np.log10(150),-np.log10(1))
+    ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3),-np.log10(1)])
+    ax.set_yticklabels(['100','30','10','3','1'], fontsize=12)
+    ax.set_ylabel('Pressure (hPa)', fontsize=12)
+    ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
+    ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
+    ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
+    for icase in range(0,ncases,1):
+        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
+
+    ax.legend(loc='upper left')
     if multi_plots:
-        fig = plt.figure(figsize=(16,16))
+        """fig = plt.figure(figsize=(16,16))
 
         ax = fig.add_axes([0.05,0.6,0.4,0.4])
     
@@ -268,24 +285,37 @@ def qbo(adfobj):
         ax.set_ylabel('Pressure (hPa)', fontsize=12)
         ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
         ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
-        ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
-        for icase in range(0,ncases,1):
+        ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')"""
+        """for icase in range(0,ncases,1):
             ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
-        ax.legend(loc='upper left')
+        ax.legend(loc='upper left')"""
         plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
         adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp",
                                 multi_case=True,plot_type = "Special")
-    """else:
-        ax.plot(modamp[0], -np.log10(modamp[0].lev), linewidth=2, label=case_nicknames[0])
+    else:
+        """fig = plt.figure(figsize=(16,16))
 
-        ax.legend(loc='upper left')
+        ax = fig.add_axes([0.05,0.6,0.4,0.4])
+        ax.set_ylim(-np.log10(150),-np.log10(1))
+        ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3),-np.log10(1)])
+        ax.set_yticklabels(['100','30','10','3','1'], fontsize=12)
+        ax.set_ylabel('Pressure (hPa)', fontsize=12)
+        ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
+        ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
+
+        ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')"""
+
+        """for icase in range(0,ncases,1):
+            ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
+
+        ax.legend(loc='upper left')"""
         fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
         
         #Add plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")"""
+        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
     #-------------------
 
     #Notify user that script has ended:
