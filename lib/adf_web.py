@@ -984,8 +984,8 @@ class AdfWeb(AdfObs):
 
         #print("multi_mean_html_info",multi_mean_html_info,"\n")
 
-        # --- Starting multi-case plots if activated ---
-        # - - - - - - - - - - - - - - - - - - - - - - - -
+        # --- Checking for multi-case diagnostics ---
+        # - - - - - - - - - - - - - - - - - - - - - -
         if main_site_path:
             #Loop over all web data objects AGAIN:
             for web_data in self.__website_data:
@@ -1005,9 +1005,8 @@ class AdfWeb(AdfObs):
                             shutil.copytree(website_dir, main_site_path / case_name)
 
 
-                #Multi Case Plots
-                #################
-                #if multi_case_plots:
+                #Starting multi-case plots if activated
+                # - - - - - - - - - - - - - - - - - - -
                 if not web_data.data_frame:
                     #This currently runs web_data.case for every case, but in reality
                     #it really only needs to run once since the plots are
