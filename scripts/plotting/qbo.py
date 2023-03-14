@@ -164,7 +164,7 @@ def qbo(adfobj):
                     ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
                     
                     ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
-                                            x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], 
+                                            x1[1],x2[1],y1[1],y2[1], 
                                             case_nicknames[icase])
                     
                     ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[ncases-1],minny,
