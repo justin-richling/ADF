@@ -224,7 +224,7 @@ def cam_taylor_diagram(adfobj):
         elif (redo_plot) and plot_name.is_file():
             plot_name.unlink()"""
         
-        #case_nicknames = test_nicknames + [base_nickname]
+        """#case_nicknames = test_nicknames + [base_nickname]
         ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         # add text with variable names:
@@ -234,7 +234,7 @@ def cam_taylor_diagram(adfobj):
         fig.savefig(plot_name, bbox_inches='tight')
         print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
-        adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special"
+        adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s,plot_type = "Special") #multi_case=True,plot_type = "Special""""
         
         if multi_plots:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
