@@ -224,10 +224,7 @@ def qbo(adfobj):
                 ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
                 ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
-                
-                fig = plt.figure(figsize=(16,16))
 
-                ax = fig.add_axes([0.05,0.6,0.4,0.4])
                 ax.set_ylim(-np.log10(150),-np.log10(1))
                 ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3),-np.log10(1)])
                 ax.set_yticklabels(['100','30','10','3','1'], fontsize=12)
