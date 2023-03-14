@@ -891,11 +891,5 @@ OMEGAT:
   colormap: "PuOr_r"
   diff_colormap: "coolwarm"
   plot_log_pressure: True
-
-QBO:
-  category: "QBO"
-
-TAYLOR:
-  category: "TAYLOR"
 #-----------
 #End of File
