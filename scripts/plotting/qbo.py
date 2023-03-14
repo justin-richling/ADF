@@ -192,16 +192,6 @@ def qbo(adfobj):
 
     ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
     
-    #pad = 0.075*ncases
-    #_set_ymargin(ax, top=pad, bottom=0.1)
-    """
-    #Save figure to file:
-    fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
-
-    #Add plot to website (if enabled):
-    #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-    adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special")"""
-
     if multi_plots:#Notify user that script has started:
         print("\n  Generating qbo multi-case plots...")
         
@@ -219,44 +209,38 @@ def qbo(adfobj):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
         adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
                                 multi_case=True,plot_type="Special")
-
-
-    """if multi_plots:
-        for icase in range(0,ncases,1):
-            ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
-
-        plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
-        fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
-        adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOts",
-                                multi_case=True,plot_type = "Special")
-    else:
-        ax.plot(modamp[0], -np.log10(modamp[0].lev), linewidth=2, label=case_nicknames[0])
-
-        ax.legend(loc='upper left')
-        fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
-        
-        #Add plot to website (if enabled):
-        #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOts", multi_case=True,plot_type = "Special")"""
-
-
     #-----------------
 
     #---Dunkerton and Delisi QBO amplitude
     obsamp = calcddamp(obs)
     modamp = [ calcddamp(casedat_5S_5N[i]) for i in range(0,ncases,1) ]
 
-    fig = plt.figure(figsize=(16,16))
+    for icase in range(0,ncases-1,1):
+        fig = plt.figure(figsize=(16,16))
 
-    ax = fig.add_axes([0.05,0.6,0.4,0.4])
-    ax.set_ylim(-np.log10(150),-np.log10(1))
-    ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3),-np.log10(1)])
-    ax.set_yticklabels(['100','30','10','3','1'], fontsize=12)
-    ax.set_ylabel('Pressure (hPa)', fontsize=12)
-    ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
-    ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
+        ax = fig.add_axes([0.05,0.6,0.4,0.4])
+        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
-    ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
+        ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
+        
+        fig = plt.figure(figsize=(16,16))
+
+        ax = fig.add_axes([0.05,0.6,0.4,0.4])
+        ax.set_ylim(-np.log10(150),-np.log10(1))
+        ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3),-np.log10(1)])
+        ax.set_yticklabels(['100','30','10','3','1'], fontsize=12)
+        ax.set_ylabel('Pressure (hPa)', fontsize=12)
+        ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
+        ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
+
+        ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
+        ax.legend(loc='upper left')
+        fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
+        
+        #Add plot to website (if enabled):
+        #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
+        plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
+        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[icase], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
 
     """for icase in range(0,ncases,1):
         ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
@@ -278,7 +262,7 @@ def qbo(adfobj):
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
         adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp",
                                 multi_case=True,plot_type = "Special")
-    else:
+    """else:
         ax.plot(modamp[0], -np.log10(modamp[0].lev), linewidth=2, label=case_nicknames[0])
 
         ax.legend(loc='upper left')
@@ -286,7 +270,7 @@ def qbo(adfobj):
         
         #Add plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
+        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")"""
     #-------------------
 
     #Notify user that script has ended:
