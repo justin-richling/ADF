@@ -160,9 +160,15 @@ def qbo(adfobj):
 
                 #x1, x2, y1, y2 = plotpos()
                 ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
+                
                 ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
                                         x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], 
                                         case_nicknames[icase])
+                
+                ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
+                                            x1[-1],x2[-1],y1[-1],y2[-1], 
+                                            base_nickname)
+
                 ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
                 #Save figure to file:
                 fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
