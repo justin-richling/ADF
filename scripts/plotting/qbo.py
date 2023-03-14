@@ -166,7 +166,7 @@ def qbo(adfobj):
                                             x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], 
                                             case_nicknames[icase])
                     
-                    ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
+                    ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[-1],minny,
                                                 x1[-1],x2[-1],y1[-1],y2[-1], 
                                                 base_nickname)
 
