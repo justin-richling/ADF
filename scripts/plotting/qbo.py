@@ -173,7 +173,7 @@ def qbo(adfobj):
 
                     ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[1]-0.035,y1[1]-0.03)
                     #Save figure to file:
-                    fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
+                    fig_m.savefig(Path(plot_locations[icase]), bbox_inches='tight', facecolor='white')
 
                     #Add plot to website (if enabled):
                     #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
