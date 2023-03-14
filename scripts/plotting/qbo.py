@@ -85,23 +85,6 @@ def qbo(adfobj):
     #that the QBO plot will be kept in the first case directory:
     print(f"\t QBO plots will be saved here: {plot_locations[0]}")
 
-    """# Check redo_plot. If set to True: remove old plots, if they already exist:
-    if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
-        #Add already-existing plot to website (if enabled):
-        #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-        #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, category = None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-
-        #Continue to next iteration:
-        return
-    elif (redo_plot):
-        if plot_loc_ts.is_file():
-            plot_loc_ts.unlink()
-        if plot_loc_amp.is_file():
-            plot_loc_amp.unlink()
-    #End if"""
-
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
         case_loc.append(base_loc)
@@ -149,20 +132,19 @@ def qbo(adfobj):
 
     x1, x2, y1, y2 = plotpos()
     ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
-    print(ncases)
+
     casecount=0
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
-            
+            #Check if this is multi-case diagnostics
             if multi_plots:
                 if icase != ncases-1:
                     print(icase)
                     plot_loc_ts  = Path(plot_locations[icase]) / f'QBOts.{plot_type}'
-                    print("plot_loc_ts",plot_loc_ts,"\n")
+
                     #----QBO timeseries plots
                     fig_m = plt.figure(figsize=(16,16))
 
-                    #x1, x2, y1, y2 = plotpos()
                     ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
                     
                     ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
@@ -178,10 +160,9 @@ def qbo(adfobj):
                     fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
 
                     #Add plot to website (if enabled):
-                    #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
                     adfobj.add_website_data(plot_loc_ts, "QBO", case_names[icase], category=None, season="QBOts",
                                             multi_case=True,plot_type="Special")
-            
+            #End if (multi-case)
             ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
                 x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_nicknames[icase])
             casecount=casecount+1
@@ -218,6 +199,7 @@ def qbo(adfobj):
 
     if multi_plots:
         for icase in range(0,ncases,1):
+            #Skip baseline case
             if icase != ncases-1:
                 fig = plt.figure(figsize=(16,16))
 
@@ -241,22 +223,10 @@ def qbo(adfobj):
                 fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
                 plt.close()
                 #Add plot to website (if enabled):
-                #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
                 adfobj.add_website_data(plot_loc_amp, "QBO", case_names[icase], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
-
-    """for icase in range(0,ncases,1):
-        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
-
-    ax.legend(loc='upper left')
-    fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
-    
-    #Add plot to website (if enabled):
-    #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
-    adfobj.add_website_data(plot_loc_amp, "QBO", None, category = None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True"""
-
-
-
-
+            #End if (not baseline)
+        #End for (cases)
+    #End if (multi-case)
     fig = plt.figure(figsize=(16,16))
 
     ax = fig.add_axes([0.05,0.6,0.4,0.4])
