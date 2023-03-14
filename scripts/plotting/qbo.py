@@ -235,7 +235,7 @@ def qbo(adfobj):
                 ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
                 ax.legend(loc='upper left')
                 fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
-                
+                plt.close()
                 #Add plot to website (if enabled):
                 #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
                 plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
@@ -257,9 +257,19 @@ def qbo(adfobj):
         fig = plt.figure(figsize=(16,16))
 
         ax = fig.add_axes([0.05,0.6,0.4,0.4])
+    
+
+        ax.set_ylim(-np.log10(150),-np.log10(1))
+        ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3),-np.log10(1)])
+        ax.set_yticklabels(['100','30','10','3','1'], fontsize=12)
+        ax.set_ylabel('Pressure (hPa)', fontsize=12)
+        ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
+        ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
+        ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
         for icase in range(0,ncases,1):
             ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
+        ax.legend(loc='upper left')
         plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
         adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp",
