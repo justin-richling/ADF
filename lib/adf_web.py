@@ -714,7 +714,7 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 if "multi_plot" not in str(web_data.html_file.name):
-                    print("web_data.html_file.name",web_data.html_file.name,"\n")
+                    #print("web_data.html_file.name",web_data.html_file.name,"\n")
                     #Initialize Ordered Dictionary for plot type:
                     if ptype not in mean_html_info:
                         mean_html_info[ptype] = OrderedDict()
