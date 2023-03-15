@@ -568,10 +568,36 @@ class AdfWeb(AdfObs):
 
             #Now check all plot types
             if not web_data.data_frame:
-                season = web_data.season
-                category = web_data.category
+
+                #Determine season value:
+                if web_data.season:
+                    season = web_data.season
+                else:
+                    season = "plot" #Just have the link be labeled "plot".
+                #End if
+
+                #Extract plot_type:
                 ptype = web_data.plot_type
+
+                #Extract web data name (usually the variable name):
                 var = web_data.name
+
+                #Check if category has been provided for this web data:
+                if web_data.category:
+                    #If so, then just use directly:
+                    category = web_data.category
+                else:
+
+                    #Check if variable in defaults dictionary:
+                    if web_data.name in var_defaults_dict:
+                        #If so, then extract category from dictionary:
+                        category = var_defaults_dict[web_data.name].get("category",
+                                                                        "No category yet")
+                    else:
+                        category = 'No category yet'
+                    #End if
+                #End if
+
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
@@ -644,14 +670,14 @@ class AdfWeb(AdfObs):
                     pass
 
                 #Extract plot_type:
-                ptype = web_data.plot_type
+                #ptype = web_data.plot_type
 
-                #Initialize Ordered Dictionary for plot type:
+                """#Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
                     mean_html_info[ptype] = OrderedDict()
-                #End if
+                #End if"""
 
-                #Check if category has been provided for this web data:
+                """#Check if category has been provided for this web data:
                 if web_data.category:
                     #If so, then just use directly:
                     category = web_data.category
@@ -665,31 +691,42 @@ class AdfWeb(AdfObs):
                     else:
                         category = 'No category yet'
                     #End if
-                #End if
-
-                if category not in mean_html_info[ptype]:
+                #End if"""
+                
+                """if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
-                #End if
+                #End if"""
 
                 #Extract web data name (usually the variable name):
-                name = web_data.name
+                #name = web_data.name
+                
+                """#Initialize Ordered Dictionary for variable:
+                if var not in mean_html_info[ptype][category]:
+                    mean_html_info[ptype][category][var] = OrderedDict()
+                #End if"""
 
-                #Initialize Ordered Dictionary for variable:
-                if name not in mean_html_info[ptype][category]:
-                    mean_html_info[ptype][category][name] = OrderedDict()
-                #End if
-
-                #Determine season value:
+                """#Determine season value:
                 if web_data.season:
                     season = web_data.season
                 else:
                     season = "plot" #Just have the link be labeled "plot".
-                #End if
+                #End if"""
 
                 #Initialize Ordered Dictionary for season:
                 if "multi_plot" not in str(web_data.html_file.name):
                     print("web_data.html_file.name",web_data.html_file.name,"\n")
-                    mean_html_info[ptype][category][name][season] = web_data.html_file.name
+                    #Initialize Ordered Dictionary for plot type:
+                    if ptype not in mean_html_info:
+                        mean_html_info[ptype] = OrderedDict()
+                    #End if
+                    if category not in mean_html_info[ptype]:
+                        mean_html_info[ptype][category] = OrderedDict()
+                    #End if
+                    #Initialize Ordered Dictionary for variable:
+                    if var not in mean_html_info[ptype][category]:
+                        mean_html_info[ptype][category][var] = OrderedDict()
+                    #End if
+                    mean_html_info[ptype][category][var][season] = web_data.html_file.name
 
             #End if (data-frame check)
         #End for (web_data list loop)
