@@ -1663,8 +1663,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                 Needed to test if redo_plot is called in config yaml file
     """
 
-    ncols = 3
+    
     nplots = len(nicknames[0])
+    if nplots > 2:
+        ncols = 3
+    else:
+        ncols = 2
 
     # Check redo_plot. If set to True: remove old plot, if it already exists:
     redo_plot = adfobj.get_basic_info('redo_plot')
