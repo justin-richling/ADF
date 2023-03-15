@@ -155,7 +155,7 @@ def qbo(adfobj):
                                                 x1[ncases-1],x2[ncases-1],y1[ncases-1],y2[ncases-1], 
                                                 base_nickname)
 
-                    ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[2]-0.035,y1[2]-0.03)
+                    ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[3]-0.035,y1[3]-0.03)
                     #Save figure to file:
                     fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
 
