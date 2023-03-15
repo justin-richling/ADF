@@ -1170,7 +1170,9 @@ class AdfWeb(AdfObs):
 
                     #If multi-case plot not specified 
                     #if not multi_case_plots:
-                    if 1==1:
+                    #if 1==1:
+                    print("pytpe",ptype,"\n")
+                    if ptype != "LatLon":
                         #print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
                         #var = web_data.name
                         #ext = web_data.plot_ext
