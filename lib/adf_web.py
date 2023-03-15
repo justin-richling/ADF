@@ -593,7 +593,6 @@ class AdfWeb(AdfObs):
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
                     if multi_case_plots:
-                    #if 1==1:
                         #Loop over each variable in multi-case plot variables
                         if var in mvars:
                             #season = web_data.season
@@ -619,11 +618,12 @@ class AdfWeb(AdfObs):
 
                                     if season not in multi_plot_html_info[ptype][category][var]:
                                         p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                        print("multi-case multi-plot p",p,"\n")
                                         multi_plot_html_info[ptype][category][var][season] = p
                                     #End if
                                 #End for
                             #End if
-                        #End if (varibale in multi-case plot variables)
+                        #End if (variable in multi-case plot variables)
 
                     #else:
                     #print(ptype,category,var,season,"\n")
@@ -638,7 +638,7 @@ class AdfWeb(AdfObs):
                         multi_mean_html_info[ptype][category][var] = OrderedDict()
 
                     p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                    #print("p",p,"\n")
+                    print("multi-case single plot p",p,"\n")
                     if season not in multi_mean_html_info[ptype][category][var]:
                         multi_mean_html_info[ptype][category][var][season] = p
 
@@ -1150,7 +1150,6 @@ class AdfWeb(AdfObs):
                     #If multi-case plot not specified 
                     #if not multi_case_plots:
                     if 1==1:
-                        print("Shouldn't be getting here, eh?\n")
                         #print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
                         #var = web_data.name
                         #ext = web_data.plot_ext
