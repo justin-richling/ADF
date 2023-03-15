@@ -441,9 +441,17 @@ class AdfWeb(AdfObs):
         if multi_case_plots:
             #Grab all variables for each multi-case plot type
             mvars = []
+            #sub should be a list of all vars from plot map extentions, right?
+            #x is iterative for all plot map extensions
             for sub in [multi_case_plots[x] for x in multi_case_plots]:
+                print("sub",sub,"\n")
                 for i in sub:
                     mvars.append(i)
+
+        multi_case_dict = {"global_latlon_map":"LatLon",
+                               "zonal_mean":"Zonal",
+                               "meridional":"Meridional",
+                               "global_latlon_vect_map":"LatLon_Vector"}
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -604,9 +612,7 @@ class AdfWeb(AdfObs):
                     if multi_case_plots:
                         #Loop over each variable in multi-case plot variables
                         if var in mvars:
-                            #season = web_data.season
-                            #category = web_data.category
-                            #ptype = web_data.plot_type
+
                             #Check if plot ext is in requested multi-case plot types
                             if web_data.plot_ext in multi_case_plots.keys():
                                 for var in multi_case_plots[web_data.plot_ext]:
@@ -1171,9 +1177,10 @@ class AdfWeb(AdfObs):
                     #If multi-case plot not specified 
                     #if not multi_case_plots:
                     #if 1==1:
-                    print("pytpe",ptype,"\n")
-                    if ptype != "LatLon":
-                        #print(f"Is it making it here??\n{multi_mean_html_info[ptype]}\n")
+                    #if ptype != "LatLon":
+                    print("ext",ext,"\n")
+                    if ext not in multi_case_dict:
+                        print(f"{ext} made it through\n")
                         #var = web_data.name
                         #ext = web_data.plot_ext
                         #season = web_data.season
