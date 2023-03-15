@@ -262,6 +262,7 @@ def qbo(adfobj):
         ax.legend(loc='upper left')"""
         plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
+        plt.close()
         adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp",
                                 multi_case=True,plot_type = "Special")
     else:
@@ -282,6 +283,7 @@ def qbo(adfobj):
 
         ax.legend(loc='upper left')"""
         fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
+        plt.close()
         
         #Add plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_amp, "QBO", None, season="QBOamp", multi_case=True,plot_type = "Special") #multi_case=True
