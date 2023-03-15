@@ -448,10 +448,20 @@ class AdfWeb(AdfObs):
                 for i in sub:
                     mvars.append(i)
 
+        #Create multi-case site:
+        #Make a dictionary for plot type extensions for given plot type
+        #This can probably be populated in the for-loops during html creation...
+        #Or it should be declared somewhere higher up, like adf_info or something
         multi_case_dict = {"global_latlon_map":"LatLon",
                                "zonal_mean":"Zonal",
                                "meridional":"Meridional",
                                "global_latlon_vect_map":"LatLon_Vector"}
+
+        #This one should be auto popoulated for sure
+        #TODO: Do that what was said prior to this line, but no further, Harry
+        multi_plots = {"Tables": "html_table/mean_tables.html",
+                           "Special":"html_img/multi_case_mean_diag_Special.html"
+                           }
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -1421,7 +1431,7 @@ class AdfWeb(AdfObs):
                 shutil.copytree(css_files_dir, main_templates_path)
             #End if
 
-            #Create multi-case site:
+            """#Create multi-case site:
             #Make a dictionary for plot type extensions for given plot type
             #This can probably be populated in the for-loops during html creation...
             multi_case_dict = {"global_latlon_map":"LatLon",
@@ -1431,7 +1441,8 @@ class AdfWeb(AdfObs):
 
             multi_plots = {"Tables": "html_table/mean_tables.html",
                            "Special":"html_img/multi_case_mean_diag_Special.html"
-                           }
+                           }"""
+
             if multi_case_plots:
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
