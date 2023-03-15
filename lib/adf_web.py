@@ -629,18 +629,18 @@ class AdfWeb(AdfObs):
                     #print(ptype,category,var,season,"\n")
                     #TODO: Need to isolate the multi-case multi-plots from the multi-case regular plots
                     #in the html_info dictionaries... 
-                    
-                    if ptype not in multi_mean_html_info:
-                        multi_mean_html_info[ptype] = OrderedDict()
-                    if category not in multi_mean_html_info[ptype]:
-                        multi_mean_html_info[ptype][category] = OrderedDict()
-                    if var not in multi_mean_html_info[ptype][category]:
-                        multi_mean_html_info[ptype][category][var] = OrderedDict()
+                    if "multi_plot" not in str(web_data.html_file.name):
+                        if ptype not in multi_mean_html_info:
+                            multi_mean_html_info[ptype] = OrderedDict()
+                        if category not in multi_mean_html_info[ptype]:
+                            multi_mean_html_info[ptype][category] = OrderedDict()
+                        if var not in multi_mean_html_info[ptype][category]:
+                            multi_mean_html_info[ptype][category][var] = OrderedDict()
 
-                    p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                    print("multi-case single plot p",p,"\n")
-                    if season not in multi_mean_html_info[ptype][category][var]:
-                        multi_mean_html_info[ptype][category][var][season] = p
+                        p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                        print("multi-case single plot p",p,"\n")
+                        if season not in multi_mean_html_info[ptype][category][var]:
+                            multi_mean_html_info[ptype][category][var][season] = p
 
                     #End if (multi-case plots)
                 #End if (multi-case scenario)
@@ -908,11 +908,11 @@ class AdfWeb(AdfObs):
                     #Check if the mean plot type page exists for this case:
                     
                     mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                    if web_data.plot_type == "Special":
+                    """if web_data.plot_type == "Special":
                         if web_data.name == "QBO":
                             print("img_pages_dir",img_pages_dir)
                             print("mean_ptype_file",mean_ptype_file)
-                            print("case1",web_data.case,"\n")
+                            print("case1",web_data.case,"\n")"""
                     if not mean_ptype_file.exists():
 
                         #Construct individual plot type mean_diag html files, if they don't
@@ -1036,7 +1036,6 @@ class AdfWeb(AdfObs):
                         #if 1==1:
                             #Check if variable is in desired multi-case plot:
                             if var in mvars:
-                                print(f"{var}\n")
                                 #Check if the web data obj not a table
                                 #and if the plot_type is in given multi-case plot set
                                 #if (not frame) and (ext in multi_case_plots):
@@ -1073,7 +1072,6 @@ class AdfWeb(AdfObs):
                                                             multi_plot_page]
 
                                     multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                                    print(ptype,"\n")
                                     if not (img_pages_dir / multimean).exists():
                                         tmpl = jinenv.get_template('template_multi_case.html')
                                         rndr = tmpl.render(title=main_title,
