@@ -1421,7 +1421,7 @@ class AdfWeb(AdfObs):
                                "global_latlon_vect_map":"LatLon_Vector"}
 
             multi_plots = {"Tables": "html_table/mean_tables.html",
-                           #"Special":"html_img/multi_case_mean_diag_Special.html"
+                           "Special":"html_img/multi_case_mean_diag_Special.html"
                            }
             if multi_case_plots:
                 for key in multi_case_plots:
