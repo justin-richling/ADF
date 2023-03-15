@@ -1675,10 +1675,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
     #Try and format spacing based on number of cases
     # NOTE: ** this will have to change if figsize or dpi change **
-    if nplots < 4:
+    """if nplots < 4:
         hspace = -1.0
     else:
-        hspace = -0.85
+        hspace = -0.85"""
+    hspace = -0.85
+    
 
     nrows = int(np.ceil(nplots/ncols))
     if nrows < 2:
