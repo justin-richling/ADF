@@ -203,7 +203,7 @@ def cam_taylor_diagram(adfobj):
                 plot_name = Path(plot_location[i]) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
                 fig_m.savefig(plot_name, bbox_inches='tight')
                 print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
-
+                plt.close()
                 #Add plot to website (if enabled):
                 #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
                 adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special")
@@ -233,6 +233,7 @@ def cam_taylor_diagram(adfobj):
                 plot_name.unlink()
             
             fig.savefig(plot_name, bbox_inches='tight')
+            plt.close()
 
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
@@ -254,7 +255,7 @@ def cam_taylor_diagram(adfobj):
 
             fig.savefig(plot_name, bbox_inches='tight')
             print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
-
+            plt.close()
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
         #End if (multi-case check)
