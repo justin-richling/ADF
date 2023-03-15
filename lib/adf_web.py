@@ -628,6 +628,8 @@ class AdfWeb(AdfObs):
                     #End if (multi-case plots)
                 #End if (multi-case scenario)
 
+                #Individual cases
+                #This will be used if multi-case diagnostics as well
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
 
@@ -686,8 +688,9 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 if "multi_plot" not in str(web_data.html_file.name):
-                    #print("web_data.html_file.name",web_data.html_file.name,"\n")
+                    print("web_data.html_file.name",web_data.html_file.name,"\n")
                     mean_html_info[ptype][category][name][season] = web_data.html_file.name
+
             #End if (data-frame check)
         #End for (web_data list loop)
 
