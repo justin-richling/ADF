@@ -1684,7 +1684,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     print("number of rows:",nrows,"\n")
 
     if nrows == 1:
-        y_title = 0.25
+        y_title = 0.265
     else:
         y_title = 0.315
 
