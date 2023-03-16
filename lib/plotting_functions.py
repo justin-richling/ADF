@@ -1681,8 +1681,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
         hspace = -0.85    
 
     nrows = int(np.ceil(nplots/ncols))
-    print("number of rows:",nrows,"\n")
-
     if nrows == 1:
         y_title = 0.265
     else:
@@ -1765,38 +1763,16 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                 #Clear left over subplots if they don't fill the row x column matrix
                                 axs[r,c].set_visible(False)
                             count = count + 1
+
                     # __COLORBARS__
                     fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
                                  aspect=20, shrink=.5, location="bottom",
                                  anchor=(0.5,-0.3), extend='both')
                         
+                    #Clean up the spacing a bit
                     plt.subplots_adjust(wspace=0.3, hspace=hspace)
-
-                    """# Check redo_plot. If set to True: remove old plot, if it already exists:
-                    redo_plot = adfobj.get_basic_info('redo_plot')
-                    if (not redo_plot) and plot_name.is_file():
-                        #Add already-existing plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
-                                                            category=web_category, season=s, plot_type="LatLon")
-
-                        #Continue to next iteration:
-                        continue
-                    elif (redo_plot) and plot_name.is_file():
-                        plot_name.unlink()"""
     
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
-
-                    #Multi-case table comp web stuff
-                    #adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
-
-                    """
-                    def add_website_data(self, web_data, web_name, case_name,
-                         plot_ext = None,
-                         category = None,
-                         season = None,
-                         plot_type = "Special",
-                         multi_case=False):
-                    """
 
                     adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
                                                         category=web_category, season=season, plot_type="LatLon",multi_case=True)
