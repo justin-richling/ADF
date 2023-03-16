@@ -1686,9 +1686,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     print("number of rows:",nrows,"\n")
 
     if nrows == 1:
-        y_title = 0.225
+        y_title = 0.2
     else:
-        y_title = 0.325
+        y_title = 0.3
 
     if nrows < 2:
         nrows = 2
@@ -1718,8 +1718,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                             subplot_kw={"projection": proj})
 
                     #Set figure title
-                    plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16, y=0.325)#y=0.325 y=0.225
-                    #axs[0,1].set_title("$\mathbf{Baseline}:$"+f'{nicknames[1]}\n', fontsize=12)
+                    plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
                     
                     normfunc,_ = use_this_norm()
 
