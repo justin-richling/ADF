@@ -129,6 +129,8 @@ def qbo(adfobj):
 
     #----QBO timeseries plots
     fig = plt.figure(figsize=(16,16))
+    #ax.set_title('QBO Time Series', fontsize=14)
+    fig_m.suptitle('QBO Time Series', fontsize=14)
 
     x1, x2, y1, y2 = plotpos()
     ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
@@ -144,6 +146,7 @@ def qbo(adfobj):
 
                     #----QBO timeseries plots
                     fig_m = plt.figure(figsize=(16,16))
+                    fig_m.suptitle('QBO Time Series', fontsize=14)
 
                     #Plot ERA5 data
                     ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
@@ -159,8 +162,6 @@ def qbo(adfobj):
                                                 base_nickname)
 
                     ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[2]-0.035,y1[2]-0.03)
-
-                    ax_m.set_title('QBO Time Series', fontsize=14)
 
                     #Save figure to file:
                     fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
@@ -179,7 +180,6 @@ def qbo(adfobj):
     #End for
     print("ncases:",ncases,"\n","casecount",casecount,"\n")
     ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
-    ax.set_title('QBO Time Series', fontsize=14)
     
     if multi_plots:#Notify user that script has started:
         print("\n  Generating qbo multi-case plots...")
