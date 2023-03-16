@@ -1190,7 +1190,6 @@ class AdfWeb(AdfObs):
                     #if ptype != "LatLon":
                     #print("ext",ext,"\n")
                     if ext not in multi_case_dict:
-                        print(f"{ext} made it through\n")
                         #var = web_data.name
                         #ext = web_data.plot_ext
                         #season = web_data.season
