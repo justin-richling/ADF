@@ -152,6 +152,7 @@ def qbo(adfobj):
                     ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
                                             x1[1],x2[1],y1[1],y2[1], 
                                             case_nicknames[icase])
+
                     #Plot baseline
                     ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[-1],minny,
                                                 x1[2],x2[2],y1[2],y2[2], 
@@ -403,6 +404,7 @@ def plotqbotimeseries(fig, dat, ny, x1, x2, y1, y2, title):
     ax.set_yticklabels(['1000','300','100','30','10','3','1'])
     ax.set_ylabel('Pressure (hPa)')
     ax.set_title(title, fontsize=14)
+    ax.set_xlabel("Years",fontsize=14,labelpad=20)
 
     return ax
 
