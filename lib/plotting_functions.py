@@ -1712,7 +1712,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                             subplot_kw={"projection": proj})
 
                     #Set figure title
-                    plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.4)#y=0.325
+                    plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.225)#y=0.325
                     axs[0,1].set_title("$\mathbf{Baseline}:$"+f'{nicknames[1]}\n', fontsize=12)
                     
                     normfunc,_ = use_this_norm()
