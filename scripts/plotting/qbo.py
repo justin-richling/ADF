@@ -402,9 +402,9 @@ def plotqbotimeseries(fig, dat, ny, x1, x2, y1, y2, title):
     ax.set_yticks([-np.log10(1000),-np.log10(300),-np.log10(100),-np.log10(30),-np.log10(10),
                    -np.log10(3),-np.log10(1)])
     ax.set_yticklabels(['1000','300','100','30','10','3','1'])
-    ax.set_ylabel('Pressure (hPa)')
+    ax.set_ylabel('Pressure (hPa)', fontsize=12)
     ax.set_title(title, fontsize=14)
-    ax.set_xlabel("Years",fontsize=14,labelpad=20)
+    #ax.set_xlabel("Years",fontsize=12,labelpad=10)
 
     return ax
 
