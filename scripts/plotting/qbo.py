@@ -176,7 +176,7 @@ def qbo(adfobj):
             break
         #End if
     #End for
-
+    print("ncases:",ncases,"\n","casecount",casecount,"\n")
     ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
     ax.set_title('QBO Time Series', fontsize=14)
     
