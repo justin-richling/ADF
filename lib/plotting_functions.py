@@ -1675,14 +1675,15 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
     #Try and format spacing based on number of cases
     # NOTE: ** this will have to change if figsize or dpi change **
-    """if nplots < 4:
+    if nplots < 4:
         hspace = -1.0
     else:
-        hspace = -0.85"""
-    hspace = -0.85
+        hspace = -0.85
+    #hspace = -0.85
     
 
     nrows = int(np.ceil(nplots/ncols))
+    print(nrows,"\n")
     if nrows < 2:
         nrows = 2
 
@@ -1711,7 +1712,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                             subplot_kw={"projection": proj})
 
                     #Set figure title
-                    plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.325)
+                    plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16,y=0.4)#y=0.325
                     axs[0,1].set_title("$\mathbf{Baseline}:$"+f'{nicknames[1]}\n', fontsize=12)
                     
                     normfunc,_ = use_this_norm()
