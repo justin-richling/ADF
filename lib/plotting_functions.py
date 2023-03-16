@@ -1678,9 +1678,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     if nplots < 4:
         hspace = -1.0
     else:
-        hspace = -0.85
-    #hspace = -0.85
-    
+        hspace = -0.85    
 
     nrows = int(np.ceil(nplots/ncols))
     print("number of rows:",nrows,"\n")
@@ -1688,7 +1686,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     if nrows == 1:
         y_title = 0.25
     else:
-        y_title = 0.3
+        y_title = 0.315
 
     if nrows < 2:
         nrows = 2
