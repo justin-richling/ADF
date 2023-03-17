@@ -798,24 +798,9 @@ class AdfWeb(AdfObs):
                     #There might be a better way, but for now it works - JR
                     if web_data.name != "case_comparison":
                         rend_kwarg_dict["plot_types"] = multi_plot_type_html
-                        rend_kwarg_dict["multi_head"] = "Table" #True
-                        #print("multi_plot_type_html",multi_plot_type_html,"\n")
+                        rend_kwarg_dict["multi_head"] = "Table"
+
                         table_rndr = table_tmpl.render(rend_kwarg_dict)
-                        """table_tmpl = jinenv.get_template('template_table.html')
-                        table_rndr = table_tmpl.render(title=main_title,
-                                        case1=case1,
-                                        case2=data_name,
-                                        case_yrs=case_yrs,
-                                        base_name=data_name,
-                                        baseline_yrs=baseline_yrs,
-                                        amwg_tables=table_html_info,
-                                        plot_types=plot_types,
-                                        table_name=web_data.name,
-                                        table_html=table_html,
-                                        multi_head=False,
-                                        multi=multi_layout,
-                                        case_sites=case_sites,
-                                        )"""
 
                         #Write mean diagnostic tables HTML file:
                         html_file = web_data.html_file[0]
@@ -827,24 +812,8 @@ class AdfWeb(AdfObs):
                     if web_data.case == data_name:
                             #case1 = case_name
                         rend_kwarg_dict["case1"] = case_name
-                    #print("case1",rend_kwarg_dict["case1"],"\n")
-                    #print("plot_type_html",plot_type_html,"\n")
+
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
-                    """table_tmpl = jinenv.get_template('template_table.html')
-                        table_rndr = table_tmpl.render(title=main_title,
-                                            case1=case1,
-                                            case2=data_name,
-                                            case_yrs=case_yrs,
-                                            base_name=data_name,
-                                            baseline_yrs=baseline_yrs,
-                                            amwg_tables=table_html_info,
-                                            plot_types=plot_types,
-                                            table_name=web_data.name,
-                                            table_html=table_html,
-                                            multi_head=False,
-                                            multi=multi_layout,
-                                            case_sites=case_sites,
-                                            )"""
 
                     #Write mean diagnostic tables HTML file:
                     html_file = web_data.html_file
@@ -1030,6 +999,7 @@ class AdfWeb(AdfObs):
                                             multi=multi_layout)
 
             #Write Mean diagnostics index HTML file:
+            print("index_html_file",index_html_file,"\n")
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
                 ofil.write(index_rndr)
             #End with
