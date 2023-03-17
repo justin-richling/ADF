@@ -941,6 +941,9 @@ class AdfWeb(AdfObs):
                                     multi=multi_layout) #The template rendered
 
                     #Write HTML file:
+                    print("web_data.html_file",web_data.html_file,"\n")
+                    if self.compare_obs:
+                        file = web_data.html_file
                     with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                         ofil.write(rndr)
                     #End with
