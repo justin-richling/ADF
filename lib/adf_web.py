@@ -1381,7 +1381,7 @@ class AdfWeb(AdfObs):
                         table_keys = [web_data.case,data_name,"case_comparison"]
                         #case_table_dict = {key: multi_table_html_info[key] for key in table_keys}
 
-                        table_dict = {}
+                        case_table_dict = {}
                         for key in table_keys:
                             print("AHHHH",key,"\n")
                             if self.compare_obs:
