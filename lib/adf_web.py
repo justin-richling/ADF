@@ -651,7 +651,7 @@ class AdfWeb(AdfObs):
                                 #End for
                             #End if
                         #End if (variable in multi-case plot variables)
-
+                    print("multi_plot_html_info ptypes: ",multi_plot_html_info.keys(),"\n")
                     #else:
                     #print(ptype,category,var,season,"\n")
                     #TODO: Need to isolate the multi-case multi-plots from the multi-case regular plots
@@ -1165,6 +1165,7 @@ class AdfWeb(AdfObs):
                                     multi_mean = f"multi_case_mean_diag_{ptype}.html"
                                     mean_ptype_file = main_site_img_path / multi_mean
                                     if not mean_ptype_file.exists():
+                                        print("multi_mean page?", mean_ptype_file)
 
                                         #Construct individual plot type mean_diag
                                         #html files, if they don't already exist:
