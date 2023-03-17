@@ -655,7 +655,7 @@ class AdfWeb(AdfObs):
                                                 multi_plot_html_info[ptype][category][var][season] = p
                                             #End if
                                         else:
-                                            print(f"Looks like this is obs comparison and {var} is not available in current datasets, skipping. Womp Womp :frowny face:")
+                                            print(f"Looks like this is obs comparison and {var} is not in available datasets, skipping. Womp Womp :frowny face:")
                                         #End if (obs w/ available var)
                                     #End if (comapre obs)
                                 #End for
