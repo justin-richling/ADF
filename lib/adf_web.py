@@ -1335,7 +1335,7 @@ class AdfWeb(AdfObs):
                 #############################
                 if web_data.data_frame:
                     #if self.compare_obs:
-                    if "Obs"
+                    #if "Obs"
                     table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
 
                     #Check if the mean plot type page exists for this case (or for multi-case):
