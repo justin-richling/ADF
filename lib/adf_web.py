@@ -651,9 +651,7 @@ class AdfWeb(AdfObs):
                                 #End for
                             #End if
                         #End if (variable in multi-case plot variables)
-                    print("multi_plot_html_info ptypes: ",multi_plot_html_info.keys(),"\n")
-                    #else:
-                    #print(ptype,category,var,season,"\n")
+
                     #TODO: Need to isolate the multi-case multi-plots from the multi-case regular plots
                     #in the html_info dictionaries... 
                     if "multi_plot" not in str(web_data.html_file.name):
@@ -910,9 +908,6 @@ class AdfWeb(AdfObs):
                                     multi=multi_layout) #The template rendered
 
                     #Write HTML file:
-                    print("web_data.html_file",web_data.html_file,"\n")
-                    if self.compare_obs:
-                        file = web_data.html_file
                     with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                         ofil.write(rndr)
                     #End with
@@ -1136,7 +1131,6 @@ class AdfWeb(AdfObs):
                                     multi_mean = f"multi_case_mean_diag_{ptype}.html"
                                     mean_ptype_file = main_site_img_path / multi_mean
                                     if not mean_ptype_file.exists():
-                                        print("multi_mean page?", mean_ptype_file)
 
                                         #Construct individual plot type mean_diag
                                         #html files, if they don't already exist:
@@ -1317,15 +1311,12 @@ class AdfWeb(AdfObs):
 
                     table_dict = {}
                     for key in table_keys:
-                        #print("AHHHH",key,"\n")
                         if self.compare_obs:
                             if (key != "Obs") and (key != "case_comparison"):
-                                print(key)
                                 table_dict[key] = multi_table_html_info[key]
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
-                        #print("This should only be working under multi-case scenario, it it?")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
@@ -1355,10 +1346,8 @@ class AdfWeb(AdfObs):
 
                         case_table_dict = {}
                         for key in table_keys:
-                            #print("AHHHH",key,"\n")
                             if self.compare_obs:
                                 if (key != "Obs") and (key != "case_comparison"):
-                                    print(key)
                                     case_table_dict[key] = multi_table_html_info[key]
 
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
@@ -1419,7 +1408,6 @@ class AdfWeb(AdfObs):
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
                     if not mean_table_file.exists():
                         #Construct mean_table.html
-                        #print("This should only be working under multi-case scenario, it it?")
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case1=web_data.case,
