@@ -119,6 +119,9 @@ class AdfInfo(AdfConfig):
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
 
+        #Grab test case nickname(s)
+        test_nicknames = self.get_cam_info('case_nickname')
+
         #Check if a CAM vs AMWG obs comparison is being performed:
         if self.__compare_obs:
 
@@ -168,15 +171,14 @@ class AdfInfo(AdfConfig):
             #End if
 
             data_name += f"_{syear_baseline}_{eyear_baseline}"
-            base_nickname = self.get_baseline_info('case_nickname')
-
-        test_nicknames = self.get_cam_info('case_nickname')
-        
+            base_nickname = self.get_baseline_info('case_nickname')        
         #End if
 
+        #Initialize case nicknames:
         self.__test_nicknames = test_nicknames
-        self.__base_nickname = base_nickname
+        self.__base_nickname = base_nickname\
 
+        #Initialize baseline climo years:
         self.__syear_baseline = syear_baseline
         self.__eyear_baseline = eyear_baseline
         #Create plot location variable for potential use by the website generator.
@@ -235,9 +237,9 @@ class AdfInfo(AdfConfig):
             if case_idx == 0:
                 first_case_dir = direc_name
             #End if
-
         #End for
-
+        
+        #Initialize case climo years:
         self.__syears = syears
         self.__eyears = eyears
 
@@ -380,7 +382,7 @@ class AdfInfo(AdfConfig):
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
     def case_nicknames(self):
-        """Return the "syear" and "eyear" integer values to the user if requested."""
+        """Return the test case and baseline nicknames to the user if requested."""
         #Grab test case nickname(s)
         test_nicknames = copy.copy(self.__test_nicknames)
 
@@ -393,8 +395,8 @@ class AdfInfo(AdfConfig):
         #Grab test case nickname(s)
         base_nickname = copy.copy(self.__base_nickname)
 
+        #Grab baseline nickname
         if base_nickname == None:
-            #base_nickname = data_name
             base_nickname = self.get_baseline_info('cam_case_name', required=True)
 
         return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
