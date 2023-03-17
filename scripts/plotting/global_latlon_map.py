@@ -78,14 +78,9 @@ def global_latlon_map(adfobj):
         multi_plots = False
     #End if (check for multiple cases)
 
+    #Grab case climo years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
-
-    """#Grab test case nickname(s)
-    test_nicknames = adfobj.get_cam_info('case_nickname')
-    for idx,nick_name in enumerate(test_nicknames):
-        if nick_name == None:
-            test_nicknames[idx] = case_names[idx]"""
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -102,26 +97,19 @@ def global_latlon_map(adfobj):
         if not var_obs_dict:
             print("No observations found to plot against, so no lat/lon maps will be generated.")
             return
-
     else:
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
-
-        """#Grab baseline case nickname
-        base_nickname = adfobj.get_baseline_info('case_nickname')
-        if base_nickname == None:
-            base_nickname = data_name"""
     #End if
 
-    #Extract baseline years (which may be empty strings if using Obs):
+    #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
     base_nickname = adfobj.case_nicknames["base_nickname"]
-    #{"test_nicknames":test_nicknames,"base_nickname":base_nickname}
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.

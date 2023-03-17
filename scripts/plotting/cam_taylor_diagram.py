@@ -50,6 +50,7 @@ def cam_taylor_diagram(adfobj):
     #       test case(s) == case(s) to be diagnosed  will be called `case` (assumes a list)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)  # Loop over these
 
+    #Grab case climo years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
@@ -113,7 +114,7 @@ def cam_taylor_diagram(adfobj):
         data_loc = adfobj.get_baseline_info("cam_climo_loc", required=True)
     #End if
 
-    #Extract baseline years (which may be empty strings if using Obs):
+    #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
@@ -160,9 +161,6 @@ def cam_taylor_diagram(adfobj):
     # LOOP OVER SEASON
     #
     for s in seasons:
-
-        
-
         # hold the data in a DataFrame for each case
         # variable | correlation | stddev ratio | bias
         df_template = pd.DataFrame(index=var_list, columns=['corr', 'ratio', 'bias'])
@@ -204,8 +202,8 @@ def cam_taylor_diagram(adfobj):
                 fig_m.savefig(plot_name, bbox_inches='tight')
                 print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
                 plt.close()
+
                 #Add plot to website (if enabled):
-                #adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
                 adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special")
             #End if (multi-case)
         #End for (cases)
@@ -240,7 +238,6 @@ def cam_taylor_diagram(adfobj):
 
             print("  ...Taylor Diagram multi-case plots have been generated successfully.")
         else:
-            #plot_name = Path(plot_loc) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
             plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
 
             # Check redo_plot. If set to True: remove old plot, if it already exists:
@@ -256,6 +253,7 @@ def cam_taylor_diagram(adfobj):
             fig.savefig(plot_name, bbox_inches='tight')
             print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
             plt.close()
+
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
         #End if (multi-case check)
@@ -638,40 +636,19 @@ def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, n
     """
     # CASE LEGEND -- Color-coded
     bottom_of_text = 0.05
-    #number_of_lines = len(casenames)
     height_of_lines = 0.03
-    """text = wks.text(0.052, 0.08, "Cases:",
-            color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)"""
-    n = 0
-    """for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
-
-            text = wks.text(0.052, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
-            color=c, ha='left', va='bottom', transform=wks.transAxes, fontsize=10)
-            n += 1"""
-    
-    """for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
-            print(bottom_of_text + n*height_of_lines,"\n")
-            text = wks.text(0.9, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
-            color=c, ha='left', va='bottom', transform=wks.transAxes, fontsize=10)
-            n += 1"""
-
-    """txtstrs2 = [f"{s}  yrs: {syear_cases[i]}-{eyear_cases[i]}" for i, (s, c) in enumerate(zip(casenames, casecolors))]
-    wks.text(0.9, 0.6+ n*height_of_lines, "\n".join(txtstrs2), va='top')"""
 
     case_pos = 0.75
     wks.text(0.99, case_pos, "Cases:", va='top', transform=wks.transAxes, fontsize=10)
 
+    n = 0
     if multi:
         for case_idx, (s, c) in enumerate(zip([casenames], [casecolors])):
-            #print(case_pos-((case_idx+1)*height_of_lines),"\n")
-            #text = wks.text(0.99, 0.58+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
             text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases}-{eyear_cases}",
                             color=c, va='top', transform=wks.transAxes, fontsize=10)
             n += 1
     else:
         for case_idx, (s, c) in enumerate(zip(casenames, casecolors)):
-                #print(case_pos-((case_idx+1)*height_of_lines),"\n")
-                #text = wks.text(0.99, 0.58+bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
                 text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
                                 color=c, va='top', transform=wks.transAxes, fontsize=10)
                 n += 1
