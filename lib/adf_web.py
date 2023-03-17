@@ -1342,7 +1342,6 @@ class AdfWeb(AdfObs):
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
                     table_keys = [web_data.case,data_name,"case_comparison"]
                     #table_dict = {key: multi_table_html_info[key] for key in table_keys}
-                                 #{key: multi_table_html_info[key] for key in table_key}
 
                     table_dict = {}
                     for key in table_keys:
