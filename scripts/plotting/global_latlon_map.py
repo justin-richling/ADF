@@ -90,7 +90,6 @@ def global_latlon_map(adfobj):
 
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
-        base_nickname = "Obs"
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
