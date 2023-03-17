@@ -199,7 +199,6 @@ def global_latlon_map(adfobj):
         # otherwise defaults to 180
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
 
-        print("Checking for obs vars?",data_list,"\n")
         #loop over different data sets to plot model against:
         for data_src in data_list:
 
