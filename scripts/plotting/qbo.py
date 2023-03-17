@@ -212,7 +212,10 @@ def qbo(adfobj):
 
                 ax = fig.add_axes([0.05,0.6,0.4,0.4])
                 ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
-                ax.plot(modamp[-1], -np.log10(modamp[-1].lev), linewidth=2, label=base_nickname)
+                
+                #Check to plot baseline if not compared to obs
+                if not adfobj.compare_obs:
+                    ax.plot(modamp[-1], -np.log10(modamp[-1].lev), linewidth=2, label=base_nickname)
 
                 ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
 
