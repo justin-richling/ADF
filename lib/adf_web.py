@@ -1347,7 +1347,8 @@ class AdfWeb(AdfObs):
                     table_dict = {}
                     for key in table_keys:
                         print("AHHHH",key,"\n")
-                        table_dict[key] = multi_table_html_info[key]
+                        if key != "Obs":
+                            table_dict[key] = multi_table_html_info[key]
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
