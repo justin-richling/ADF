@@ -547,7 +547,7 @@ class AdfWeb(AdfObs):
         else:
             #make empty list for non multi-case web generation
             case_sites = []
-        
+        print("is this a obs comparison?",self.compare_obs)
         print("obs var list:",self.var_obs_dict)
 
         #Loop over all web data objects:
