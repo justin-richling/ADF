@@ -540,8 +540,6 @@ class AdfWeb(AdfObs):
                         base_dir_ext = f"{data_name}"
                     else:
                         base_dir_ext = f"{data_name}_{syear_baseline}_{eyear_baseline}"
-                    print("case_name in loop:",case_name)
-                    print("base_dir_ext",base_dir_ext,"\n")
                     case_sites[case_name] = [os.path.join(os.curdir,
                                              f"{case_dir_ext}_vs_{base_dir_ext}",
                                              "index.html"),syear_cases[idx],eyear_cases[idx]]
@@ -999,7 +997,6 @@ class AdfWeb(AdfObs):
                                             multi=multi_layout)
 
             #Write Mean diagnostics index HTML file:
-            print("index_html_file",index_html_file,"\n")
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
                 ofil.write(index_rndr)
             #End with
