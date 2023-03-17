@@ -1333,87 +1333,55 @@ class AdfWeb(AdfObs):
                 # Will look into - JR
                 #############################
                 if web_data.data_frame:
-                    table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
+                    if self.compare_obs:
+                        table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
 
-                    #Check if the mean plot type page exists for this case (or for multi-case):
-                    mean_table_file = table_pages_dir_indv / "mean_tables.html"
-                    table_keys = [web_data.case,data_name,"case_comparison"]
-                    table_dict = {key: multi_table_html_info[key] for key in table_keys}
-                                 #{key: multi_table_html_info[key] for key in table_key}
-
-                    if not mean_table_file.exists():
-                        #Construct mean_table.html
-                        #print("This should only be working under multi-case scenario, it it?")
-                        mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
-                        mean_table_rndr = mean_table_tmpl.render(title=main_title,
-                                                                    case1=web_data.case,
-                                                                    case2=data_name,
-                                                                    case_yrs=case_yrs,
-                                                                    base_name=data_name,
-                                                                    baseline_yrs=baseline_yrs,
-                                                                    amwg_tables=table_dict,
-                                                                    plot_types=plot_type_html,
-                                                                    multi_head=True,
-                                                                    multi=False,
-                                                                    case_sites=case_sites)
-
-                        #Write mean diagnostic tables HTML file:
-                        with open(mean_table_file, 'w', encoding='utf-8') as ofil:
-                            ofil.write(mean_table_rndr)
-                        #End with
-
-                    #Loop through all test cases (exclude baseline)
-                    if web_data.case != data_name:
-                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                            float_format='{:6g}'.format)
-
-                        #Construct amwg_table.html
+                        #Check if the mean plot type page exists for this case (or for multi-case):
+                        mean_table_file = table_pages_dir_indv / "mean_tables.html"
                         table_keys = [web_data.case,data_name,"case_comparison"]
-                        case_table_dict = {key: multi_table_html_info[key] for key in table_keys}
-                        indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
+                        table_dict = {key: multi_table_html_info[key] for key in table_keys}
+                                    #{key: multi_table_html_info[key] for key in table_key}
 
-                        if not indv_html.exists():
-                            table_tmpl = jinenv.get_template('template_table.html')
-                            table_rndr = table_tmpl.render(title=main_title,
-                                                            case1=web_data.case,
-                                                            case2=data_name,
-                                                            case_yrs=case_yrs,
-                                                            base_name=data_name,
-                                                            baseline_yrs=baseline_yrs,
-                                                            amwg_tables=case_table_dict,
-                                                            plot_types=plot_type_html,
-                                                            table_name=web_data.name,
-                                                            table_html=table_html,
-                                                            multi_head=True,
-                                                            multi=False,
-                                                            case_sites=case_sites)
+                        if not mean_table_file.exists():
+                            #Construct mean_table.html
+                            #print("This should only be working under multi-case scenario, it it?")
+                            mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
+                            mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                                                                        case1=web_data.case,
+                                                                        case2=data_name,
+                                                                        case_yrs=case_yrs,
+                                                                        base_name=data_name,
+                                                                        baseline_yrs=baseline_yrs,
+                                                                        amwg_tables=table_dict,
+                                                                        plot_types=plot_type_html,
+                                                                        multi_head=True,
+                                                                        multi=False,
+                                                                        case_sites=case_sites)
 
                             #Write mean diagnostic tables HTML file:
-                            with open(indv_html, 'w', encoding='utf-8') as ofil:
-                                ofil.write(table_rndr)
+                            with open(mean_table_file, 'w', encoding='utf-8') as ofil:
+                                ofil.write(mean_table_rndr)
+                            #End with
 
-                    #Baseline case added to all test case directories
-                    # - this block should only run once when web_data is the baseline case
-                    else:
-                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                            float_format='{:6g}'.format)
+                        #Loop through all test cases (exclude baseline)
+                        if web_data.case != data_name:
+                            table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                                float_format='{:6g}'.format)
 
-                        for case_name in case_names:
-                            table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
-                            table_key = [case_name,data_name,"case_comparison"]
-                            #           [web_data.case,data_name,"case_comparison"]
-                            base_table_dict = {key: multi_table_html_info[key] for key in table_key}
+                            #Construct amwg_table.html
+                            table_keys = [web_data.case,data_name,"case_comparison"]
+                            case_table_dict = {key: multi_table_html_info[key] for key in table_keys}
+                            indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
 
-                            sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
-                            if not sp_html.exists():
+                            if not indv_html.exists():
                                 table_tmpl = jinenv.get_template('template_table.html')
                                 table_rndr = table_tmpl.render(title=main_title,
-                                                                case1=case_name,
+                                                                case1=web_data.case,
                                                                 case2=data_name,
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
                                                                 baseline_yrs=baseline_yrs,
-                                                                amwg_tables=base_table_dict,
+                                                                amwg_tables=case_table_dict,
                                                                 plot_types=plot_type_html,
                                                                 table_name=web_data.name,
                                                                 table_html=table_html,
@@ -1421,32 +1389,66 @@ class AdfWeb(AdfObs):
                                                                 multi=False,
                                                                 case_sites=case_sites)
 
-                                with open(sp_html, 'w', encoding='utf-8') as ofil:
+                                #Write mean diagnostic tables HTML file:
+                                with open(indv_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
 
-                    #Check if the mean plot type page exists for this case:
-                    mean_table_file = table_pages_dir_indv / "mean_tables.html"
-                    if not mean_table_file.exists():
-                        #Construct mean_table.html
-                        #print("This should only be working under multi-case scenario, it it?")
-                        mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
-                        mean_table_rndr = mean_table_tmpl.render(title=main_title,
-                                                                    case1=web_data.case,
+                        #Baseline case added to all test case directories
+                        # - this block should only run once when web_data is the baseline case
+                        else:
+                            table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                                float_format='{:6g}'.format)
+
+                            for case_name in case_names:
+                                table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
+                                table_key = [case_name,data_name,"case_comparison"]
+                                #           [web_data.case,data_name,"case_comparison"]
+                                base_table_dict = {key: multi_table_html_info[key] for key in table_key}
+
+                                sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
+                                if not sp_html.exists():
+                                    table_tmpl = jinenv.get_template('template_table.html')
+                                    table_rndr = table_tmpl.render(title=main_title,
+                                                                    case1=case_name,
                                                                     case2=data_name,
                                                                     case_yrs=case_yrs,
                                                                     base_name=data_name,
                                                                     baseline_yrs=baseline_yrs,
-                                                                    amwg_tables=table_dict,
+                                                                    amwg_tables=base_table_dict,
                                                                     plot_types=plot_type_html,
+                                                                    table_name=web_data.name,
+                                                                    table_html=table_html,
                                                                     multi_head=True,
                                                                     multi=False,
                                                                     case_sites=case_sites)
 
-                        #Write mean diagnostic tables HTML file:
-                        with open(mean_table_file, 'w', encoding='utf-8') as ofil:
-                            ofil.write(mean_table_rndr)
-                        #End with
-                    #End if
+                                    with open(sp_html, 'w', encoding='utf-8') as ofil:
+                                        ofil.write(table_rndr)
+
+                        #Check if the mean plot type page exists for this case:
+                        mean_table_file = table_pages_dir_indv / "mean_tables.html"
+                        if not mean_table_file.exists():
+                            #Construct mean_table.html
+                            #print("This should only be working under multi-case scenario, it it?")
+                            mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
+                            mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                                                                        case1=web_data.case,
+                                                                        case2=data_name,
+                                                                        case_yrs=case_yrs,
+                                                                        base_name=data_name,
+                                                                        baseline_yrs=baseline_yrs,
+                                                                        amwg_tables=table_dict,
+                                                                        plot_types=plot_type_html,
+                                                                        multi_head=True,
+                                                                        multi=False,
+                                                                        case_sites=case_sites)
+
+                            #Write mean diagnostic tables HTML file:
+                            with open(mean_table_file, 'w', encoding='utf-8') as ofil:
+                                ofil.write(mean_table_rndr)
+                            #End with
+                        #End if
+                    #End if (observations)
                 #End if (web_data.data_frame)
             #End for (model case loop)
 
