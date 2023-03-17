@@ -625,7 +625,8 @@ class AdfWeb(AdfObs):
                     #Check to see if the user has multi-plots enabled
                     if multi_case_plots:
                         if (self.compare_obs) and (var not in self.var_obs_dict):
-                            pass
+                            print(f"Looks like this is obs comparison and {var} is not availaible in current datasets, skipping. Womp Womp :frowny face:")
+                            #pass
                         else:
                             #Loop over each variable in multi-case plot variables
                             if var in mvars:
