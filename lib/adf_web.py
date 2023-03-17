@@ -1345,7 +1345,7 @@ class AdfWeb(AdfObs):
 
                     table_dict = {}
                     for key in table_keys:
-                        print("AHHHH",key,"\n")
+                        #print("AHHHH",key,"\n")
                         if self.compare_obs:
                             if (key != "Obs") and (key != "case_comparison"):
                                 print(key)
@@ -1383,7 +1383,7 @@ class AdfWeb(AdfObs):
 
                         case_table_dict = {}
                         for key in table_keys:
-                            print("AHHHH",key,"\n")
+                            #print("AHHHH",key,"\n")
                             if self.compare_obs:
                                 if (key != "Obs") and (key != "case_comparison"):
                                     print(key)
