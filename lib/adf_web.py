@@ -641,9 +641,13 @@ class AdfWeb(AdfObs):
                                     #End if
 
                                     #Initialize Ordered Dictionary for variable:
-                                    if var not in multi_plot_html_info[ptype][category]:
-                                        multi_plot_html_info[ptype][category][var] = OrderedDict()
-                                    #End if
+                                    if (self.compare_obs) and (var in self.var_obs_dict):
+                                        if var not in multi_plot_html_info[ptype][category]:
+                                            multi_plot_html_info[ptype][category][var] = OrderedDict()
+                                        #End if
+                                    if not self.compare_obs:
+                                        if var not in multi_plot_html_info[ptype][category]:
+                                            multi_plot_html_info[ptype][category][var] = OrderedDict()
 
                                     if season not in multi_plot_html_info[ptype][category][var]:
                                         p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
