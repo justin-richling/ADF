@@ -917,11 +917,10 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case"""
                 plot_types = plot_type_html
                 #End if
-                #print("plot_types",plot_types,"\n")
-                #print("web_data.html_file",web_data.html_file,"\n")
+
                 if "main_website" not in str(web_data.html_file):
                     img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
-                    #print("img_pages_dir",img_pages_dir,web_data.asset_path,"\n")
+
                     img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
 
