@@ -128,6 +128,7 @@ class AdfInfo(AdfConfig):
 
             #Also set data name for use below:
             data_name = "Obs"
+            base_nickname = "Obs"
 
             #Set the baseline years to empty strings:
             syear_baseline = ""
@@ -167,9 +168,10 @@ class AdfInfo(AdfConfig):
             #End if
 
             data_name += f"_{syear_baseline}_{eyear_baseline}"
-
-            test_nicknames = self.get_cam_info('case_nickname')
             base_nickname = self.get_baseline_info('case_nickname')
+
+        test_nicknames = self.get_cam_info('case_nickname')
+        
         #End if
 
         self.__test_nicknames = test_nicknames
