@@ -750,6 +750,7 @@ class AdfWeb(AdfObs):
         #End for (web_data list loop)
 
         #Loop over all web data objects again:
+        #NOTE: This will be for non multi-case diagnostics
         for idx,web_data in enumerate(self.__website_data):
             if web_data.data_frame:
                 #Create output HTML file path:
@@ -1003,8 +1004,7 @@ class AdfWeb(AdfObs):
                         with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
                             ofil.write(plot_page_rndr)
                         #End with
-                #End plot images
-                #End if (data frame)
+                    #End if (mean_ptype_plot_page)
 
             #Also check if index page exists for this case:
             index_html_file = \
@@ -1033,10 +1033,9 @@ class AdfWeb(AdfObs):
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
                 ofil.write(index_rndr)
             #End with
-
+            
+            #End if (plot images)
         #End for (web data loop)
-
-        #print("multi_mean_html_info",multi_mean_html_info,"\n")
 
         # --- Checking for multi-case diagnostics ---
         # - - - - - - - - - - - - - - - - - - - - - -
