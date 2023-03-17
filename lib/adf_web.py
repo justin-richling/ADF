@@ -641,7 +641,7 @@ class AdfWeb(AdfObs):
                                 if web_data.plot_ext in multi_case_plots.keys():
                                     for var in multi_case_plots[web_data.plot_ext]:
                                         #print(var)
-                                        if (self.compare_obs) and (var not in self.var_obs_dict):
+                                        if (self.compare_obs) and (var in self.var_obs_dict):
                                             print(f"Looks like this is obs comparison and {var} is not available in current datasets, skipping. Womp Womp :frowny face:")
                                             #Initialize Ordered Dictionary for multi case plot type:
                                             if ptype not in multi_plot_html_info:
