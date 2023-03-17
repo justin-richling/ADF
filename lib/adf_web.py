@@ -622,8 +622,7 @@ class AdfWeb(AdfObs):
                     #End if
                 #End if
                 
-                #print(self.var_obs_dict)
-                print(var)
+                #print(var)
                 
                 #Check to see if there are multiple-cases
                 if main_site_path:
@@ -635,7 +634,7 @@ class AdfWeb(AdfObs):
                         else:
                             #Loop over each variable in multi-case plot variables
                             if var in mvars:
-
+                                print(var)
                                 #Check if plot ext is in requested multi-case plot types
                                 if web_data.plot_ext in multi_case_plots.keys():
                                     for var in multi_case_plots[web_data.plot_ext]:
