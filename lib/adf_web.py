@@ -536,7 +536,12 @@ class AdfWeb(AdfObs):
                 if case_name in self.__case_web_paths:
                     #Add path to case_sites dictionary:
                     case_dir_ext = f"{case_name}_{syear_cases[idx]}_{eyear_cases[idx]}"
-                    base_dir_ext = f"{data_name}_{syear_baseline}_{eyear_baseline}"
+                    if self.compare_obs:
+                        base_dir_ext = f"{data_name}"
+                    else:
+                        base_dir_ext = f"{data_name}_{syear_baseline}_{eyear_baseline}"
+                    print("case_name in loop:",case_name)
+                    print("base_dir_ext",base_dir_ext,"\n")
                     case_sites[case_name] = [os.path.join(os.curdir,
                                              f"{case_dir_ext}_vs_{base_dir_ext}",
                                              "index.html"),syear_cases[idx],eyear_cases[idx]]
