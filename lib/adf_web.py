@@ -630,16 +630,11 @@ class AdfWeb(AdfObs):
                     if multi_case_plots:
                         #Loop over each variable in multi-case plot variables
                         if var in mvars:
-
-                            if 1==2:
-                                print("this can't be right. OMG everything I know is wrong!")
-                            else:
-                                #Check if plot ext is in requested multi-case plot types
-                                if web_data.plot_ext in multi_case_plots.keys():
-                                    for var in multi_case_plots[web_data.plot_ext]:
-                                        #print(var)
-                                        if (self.compare_obs) and (var in self.var_obs_dict):
-                                            print(f"Looks like this is obs comparison and {var} is not available in current datasets, skipping. Womp Womp :frowny face:")
+                            #Check if plot ext is in requested multi-case plot types
+                            if web_data.plot_ext in multi_case_plots.keys():
+                                for var in multi_case_plots[web_data.plot_ext]:
+                                    if self.compare_obs:# and (var in self.var_obs_dict):
+                                        if var in self.var_obs_dict:
                                             #Initialize Ordered Dictionary for multi case plot type:
                                             if ptype not in multi_plot_html_info:
                                                 multi_plot_html_info[ptype] = OrderedDict()
@@ -659,12 +654,16 @@ class AdfWeb(AdfObs):
                                                 print("Ugg:",p,"\n")
                                                 multi_plot_html_info[ptype][category][var][season] = p
                                             #End if
-                                    #End for
-                                #End if
+                                        else:
+                                            print(f"Looks like this is obs comparison and {var} is not available in current datasets, skipping. Womp Womp :frowny face:")
+                                        #End if (obs w/ available var)
+                                    #End if (comapre obs)
+                                #End for
                             #End if
                         #End if (variable in multi-case plot variables)
+                    #End if multi-case multi-plots
 
-                    #TODO: Need to isolate the multi-case multi-plots from the multi-case regular plots
+                    #Need to isolate the multi-case multi-plots from the multi-case regular plots
                     #in the html_info dictionaries... 
                     if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
