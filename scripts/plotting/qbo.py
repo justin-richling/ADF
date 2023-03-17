@@ -43,7 +43,7 @@ def qbo(adfobj):
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
     base_nickname = adfobj.case_nicknames["base_nickname"]
-    case_nicknames = test_nicknames +[base_nickname]
+    case_nicknames = test_nicknames + [base_nickname]
 
     #read_config_var('multi_case_plots')
     multi_plots = False
@@ -156,10 +156,11 @@ def qbo(adfobj):
                                             x1[1],x2[1],y1[1],y2[1], 
                                             case_nicknames[icase])
 
-                    #Plot baseline
-                    ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[-1],minny,
-                                                x1[2],x2[2],y1[2],y2[2], 
-                                                base_nickname)
+                    #Check to plot baseline if not compared to obs
+                    if not adfobj.compare_obs:
+                        ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[-1],minny,
+                                                    x1[2],x2[2],y1[2],y2[2], 
+                                                    base_nickname)
 
                     ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[2]-0.035,y1[2]-0.03)
 
