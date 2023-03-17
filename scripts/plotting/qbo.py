@@ -140,7 +140,6 @@ def qbo(adfobj):
             #Check if this is multi-case diagnostics
             if multi_plots:
                 if icase != ncases-1:
-                    print(icase)
                     plot_loc_ts  = Path(plot_locations[icase]) / f'QBOts.{plot_type}'
 
                     #----QBO timeseries plots
@@ -178,8 +177,8 @@ def qbo(adfobj):
             break
         #End if
     #End for
-    print("ncases:",ncases,"\n","casecount",casecount,"\n")
-    ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
+    #ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
+    ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[ncases]-0.035,y1[ncases]-0.03)
     
     if multi_plots:#Notify user that script has started:
         print("\n  Generating qbo multi-case plots...")

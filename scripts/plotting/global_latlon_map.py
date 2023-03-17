@@ -211,6 +211,8 @@ def global_latlon_map(adfobj):
                 oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
 
             oclim_ds = _load_dataset(oclim_fils)
+            print("oclim_ds:",oclim_ds)
+            print("var:",var,"\n")
             if oclim_ds is None:
                 print("WARNING: Did not find any oclim_fils. Will try to skip.")
                 print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")

@@ -584,7 +584,6 @@ class AdfWeb(AdfObs):
                     if web_data.name != "case_comparison":
                         table_html_info[web_data.name] = web_data.html_file[0].name
 
-                    print("web_data.html_file[0].name",web_data.html_file[0].name,"\n")
                     multi_table_html_info[web_data.name] = web_data.html_file[0].name
                 else:
                     table_html_info[web_data.name] = web_data.html_file.name
