@@ -129,7 +129,6 @@ def qbo(adfobj):
 
     #----QBO timeseries plots
     fig = plt.figure(figsize=(16,16))
-    #ax.set_title('QBO Time Series', fontsize=14)
     fig.suptitle('QBO Time Series', fontsize=14)
 
     x1, x2, y1, y2 = plotpos()
