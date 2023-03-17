@@ -547,6 +547,8 @@ class AdfWeb(AdfObs):
         else:
             #make empty list for non multi-case web generation
             case_sites = []
+        
+        print("obs var list:",self.var_obs_dict)
 
         #Loop over all web data objects:
         for web_data in self.__website_data:
@@ -619,7 +621,10 @@ class AdfWeb(AdfObs):
                         category = 'No category yet'
                     #End if
                 #End if
-
+                
+                #print(self.var_obs_dict)
+                print(var)
+                
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
