@@ -31,6 +31,7 @@ dictionaries.
 from pathlib import Path
 import copy
 import os
+from this import d
 import numpy as np
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
@@ -390,14 +391,19 @@ class AdfInfo(AdfConfig):
             if nick_name == None:
                 test_nicknames[idx] = case_names[idx]
             
-        #Set data name to baseline case name:
-        data_name = self.get_baseline_info('cam_case_name', required=True)
+        """if self.__compare_obs:
+            data_name = d
+
+        else:
+            #Set data name to baseline case name:
+            data_name = self.get_baseline_info('cam_case_name', required=True)"""
 
         #Grab test case nickname(s)
         base_nickname = copy.copy(self.__base_nickname)
 
         if base_nickname == None:
-            base_nickname = data_name
+            #base_nickname = data_name
+            base_nickname = self.get_baseline_info('cam_case_name', required=True)
 
         return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
 
