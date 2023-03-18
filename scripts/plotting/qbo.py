@@ -132,7 +132,16 @@ def qbo(adfobj):
     fig.suptitle('QBO Time Series', fontsize=14)
 
     x1, x2, y1, y2 = plotpos()
-    ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
+    #ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
+
+    if (adfobj.compare_obs) and (not multi_plots):
+        xo1 = 0.18
+        xo2 = 0.45
+        xm1 = 0.55
+        xm2 = 0.82
+        ax = plotqbotimeseries(fig_m, obs, minny, xo1, xo2, y1[0], y2[0],'ERA5')
+    else:
+        ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
     #casecount=0
     for icase in range(0,ncases,1):
@@ -206,8 +215,14 @@ def qbo(adfobj):
                     adfobj.add_website_data(plot_loc_ts, "QBO", case_names[icase], category=None, season="QBOts",
                                             multi_case=True,plot_type="Special")
             #End if (multi-case)
-            ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
-                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_nicknames[icase])
+
+            #Check if compared vs baseline obs, alter x-positions
+            if (adfobj.compare_obs) and (not multi_plots):
+                ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
+                        xm1,xm2,y1[icase+1],y2[icase+1], case_nicknames[icase])
+            else:
+                ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
+                        x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_nicknames[icase])
             #casecount=casecount+1
         else:
             warnings.warn("The QBO diagnostics can only manage up to twelve cases!")
