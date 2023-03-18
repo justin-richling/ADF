@@ -154,7 +154,7 @@ def qbo(adfobj):
                                             x1[1],x2[1],y1[1],y2[1], 
                                             case_nicknames[icase])"""
 
-                    #Check to plot baseline if not compared to obs
+                    #Check if compared vs baseline obs, alter x-positions
                     if adfobj.compare_obs:
                         """#Plot ERA5 data
                         ax_m = plotqbotimeseries(fig_m, obs, minny, 0.18, 0.45, y1[0], y2[0],'ERA5')
@@ -168,7 +168,7 @@ def qbo(adfobj):
                         xo2 = 0.45
                         xm1 = 0.55
                         xm2 = 0.82
-
+                    #No observation baseline
                     else:
                         """#Plot ERA5 data
                         ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
@@ -186,6 +186,7 @@ def qbo(adfobj):
                         ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[-1],minny,
                                                     x1[2],x2[2],y1[2],y2[2], 
                                                     base_nickname)
+                    #End if (compare obs)
 
                     #Plot ERA5 data
                     ax_m = plotqbotimeseries(fig_m, obs, minny, xo1, xo2, y1[0], y2[0],'ERA5')
@@ -195,6 +196,7 @@ def qbo(adfobj):
                                             xm1, xm2, y1[2], y2[2], 
                                             case_nicknames[icase])
 
+                    #Plot colorbar
                     ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[2]-0.035,y1[2]-0.03)
 
                     #Save figure to file:
