@@ -139,7 +139,7 @@ def qbo(adfobj):
         xo2 = 0.45
         xm1 = 0.55
         xm2 = 0.82
-        ax = plotqbotimeseries(fig_m, obs, minny, xo1, xo2, y1[0], y2[0],'ERA5')
+        ax = plotqbotimeseries(fig, obs, minny, xo1, xo2, y1[0], y2[0],'ERA5')
     else:
         ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
