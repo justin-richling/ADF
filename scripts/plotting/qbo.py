@@ -149,16 +149,25 @@ def qbo(adfobj):
                     #Plot ERA5 data
                     ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
                     
-                    #Plot individual case
+                    """#Plot individual case
                     ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
                                             x1[1],x2[1],y1[1],y2[1], 
-                                            case_nicknames[icase])
+                                            case_nicknames[icase])"""
 
                     #Check to plot baseline if not compared to obs
                     if not adfobj.compare_obs:
+                        #Plot individual case
+                        ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
+                                                x1[1],x2[1],y1[1],y2[1], 
+                                                case_nicknames[icase])
                         ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[-1],minny,
                                                     x1[2],x2[2],y1[2],y2[2], 
                                                     base_nickname)
+                    else:
+                        #Plot individual case
+                        ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
+                                                x1[2],x2[2],y1[2],y2[2], 
+                                                case_nicknames[icase])
 
                     ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[2]-0.035,y1[2]-0.03)
 
