@@ -155,7 +155,21 @@ def qbo(adfobj):
                                             case_nicknames[icase])"""
 
                     #Check to plot baseline if not compared to obs
-                    if not adfobj.compare_obs:
+                    if adfobj.compare_obs:
+                        """#Plot ERA5 data
+                        ax_m = plotqbotimeseries(fig_m, obs, minny, 0.18, 0.45, y1[0], y2[0],'ERA5')
+
+                        #Plot individual case
+                        ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
+                                                0.55, 0.82, y1[2], y2[2], 
+                                                case_nicknames[icase])"""
+
+                        xo1 = 0.18
+                        xo2 = 0.45
+                        xm1 = 0.55
+                        xm2 = 0.82
+
+                    else:
                         """#Plot ERA5 data
                         ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
@@ -172,18 +186,6 @@ def qbo(adfobj):
                         ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[-1],minny,
                                                     x1[2],x2[2],y1[2],y2[2], 
                                                     base_nickname)
-                    else:
-                        xo1 = 0.18
-                        xo2 = 0.45
-                        xm1 = 0.55
-                        xm2 = 0.82
-                        """#Plot ERA5 data
-                        ax_m = plotqbotimeseries(fig_m, obs, minny, 0.18, 0.45, y1[0], y2[0],'ERA5')
-
-                        #Plot individual case
-                        ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
-                                                0.55, 0.82, y1[2], y2[2], 
-                                                case_nicknames[icase])"""
 
                     #Plot ERA5 data
                     ax_m = plotqbotimeseries(fig_m, obs, minny, xo1, xo2, y1[0], y2[0],'ERA5')
