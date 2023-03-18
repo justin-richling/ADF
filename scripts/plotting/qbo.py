@@ -78,8 +78,8 @@ def qbo(adfobj):
     #End if
 
     #Set path for QBO figures:
-    plot_loc_ts  = Path(plot_locations[0]) / f'QBOts.{plot_type}'
-    plot_loc_amp = Path(plot_locations[0]) / f'QBOamp.{plot_type}'
+    #plot_loc_ts  = Path(plot_locations[0]) / f'QBOts.{plot_type}'
+    #plot_loc_amp = Path(plot_locations[0]) / f'QBOamp.{plot_type}'
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:
