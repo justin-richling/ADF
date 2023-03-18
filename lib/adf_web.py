@@ -630,6 +630,7 @@ class AdfWeb(AdfObs):
                     if multi_case_plots:
                         #Loop over each variable in multi-case plot variables
                         if var in mvars:
+                            print("var:",var,"\n")
                             #Check if plot ext is in requested multi-case plot types
                             if web_data.plot_ext in multi_case_plots.keys():
                                 for var in multi_case_plots[web_data.plot_ext]:
@@ -658,25 +659,26 @@ class AdfWeb(AdfObs):
                                         #    print(f"Looks like this is obs comparison and {var} is not in available datasets, skipping. Womp Womp :frowny face:")
                                         #End if (obs w/ available var)
                                     #End if (comapre obs)
-                                #Initialize Ordered Dictionary for multi case plot type:
-                                if ptype not in multi_plot_html_info:
-                                    multi_plot_html_info[ptype] = OrderedDict()
-                                #End if
+                                    else:
+                                        #Initialize Ordered Dictionary for multi case plot type:
+                                        if ptype not in multi_plot_html_info:
+                                            multi_plot_html_info[ptype] = OrderedDict()
+                                        #End if
 
-                                #Initialize Ordered Dictionary for category:
-                                if category not in multi_plot_html_info[ptype]:
-                                    multi_plot_html_info[ptype][category] = OrderedDict()
-                                 #End if
+                                        #Initialize Ordered Dictionary for category:
+                                        if category not in multi_plot_html_info[ptype]:
+                                            multi_plot_html_info[ptype][category] = OrderedDict()
+                                        #End if
 
-                                if var not in multi_plot_html_info[ptype][category]:
-                                    multi_plot_html_info[ptype][category][var] = OrderedDict()
-                                #End if
+                                        if var not in multi_plot_html_info[ptype][category]:
+                                            multi_plot_html_info[ptype][category][var] = OrderedDict()
+                                        #End if
 
-                                if season not in multi_plot_html_info[ptype][category][var]:
-                                    p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                                    print("Ugg:",p,"\n")
-                                    multi_plot_html_info[ptype][category][var][season] = p
-                                #End if
+                                        if season not in multi_plot_html_info[ptype][category][var]:
+                                            p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                            print("Ugg:",p,"\n")
+                                            multi_plot_html_info[ptype][category][var][season] = p
+                                        #End if
                                 #End for
                             #End if
                         #End if (variable in multi-case plot variables)
