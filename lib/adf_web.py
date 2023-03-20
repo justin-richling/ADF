@@ -955,8 +955,11 @@ class AdfWeb(AdfObs):
             #End if (plot images)
         #End for (web data loop)
 
+
+        # - - - - - - - - - - - - - - - - - - - - - -
         # --- Checking for multi-case diagnostics ---
         # - - - - - - - - - - - - - - - - - - - - - -
+
         if main_site_path:
             #Loop over all web data objects AGAIN:
             for web_data in self.__website_data:
