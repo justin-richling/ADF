@@ -1245,6 +1245,7 @@ class AdfWeb(AdfObs):
                 # Will look into - JR
                 #############################
                 if web_data.data_frame:
+                    print("Yes, ok now were are working on multi-case setup for indiviudal tables\n")
                     #Grab single case table path
                     table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
 
@@ -1257,8 +1258,9 @@ class AdfWeb(AdfObs):
                     for key in table_keys:
                         if self.compare_obs:
                             if (key != "Obs") and (key != "case_comparison"):
+                                print("key")
                                 table_dict[key] = multi_table_html_info[key]
-
+                    print("table_dict",table_dict,"\n")
                     if not mean_table_file.exists():
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
