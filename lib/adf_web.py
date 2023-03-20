@@ -1261,6 +1261,8 @@ class AdfWeb(AdfObs):
                             if (key != "Obs") and (key != "case_comparison"):
                                 print("key",key,"\n")
                                 table_dict[key] = multi_table_html_info[key]
+                        else:
+                            table_dict[key] = multi_table_html_info[key]
                     print("table_dict",table_dict,"\n")
                     if not mean_table_file.exists():
                         #Construct mean_table.html
@@ -1296,6 +1298,8 @@ class AdfWeb(AdfObs):
                             if self.compare_obs:
                                 if (key != "Obs") and (key != "case_comparison"):
                                     case_table_dict[key] = multi_table_html_info[key]
+                            else:
+                                case_table_dict[key] = multi_table_html_info[key]
 
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
 
