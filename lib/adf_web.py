@@ -652,7 +652,7 @@ class AdfWeb(AdfObs):
 
                                             p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                             if season not in multi_plot_html_info[ptype][category][var]:
-                                                print("Ugg:",p,"\n")
+                                                #print("Ugg:",p,"\n")
                                                 multi_plot_html_info[ptype][category][var][season] = p
                                             #End if
                                         #End if (obs w/ available var)
@@ -673,7 +673,7 @@ class AdfWeb(AdfObs):
 
                                         p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                         if season not in multi_plot_html_info[ptype][category][var]:
-                                            print("Ugg:",p,"\n")
+                                            #print("Ugg:",p,"\n")
                                             multi_plot_html_info[ptype][category][var][season] = p
                                         #End if
                                     #End if (comapre obs)
