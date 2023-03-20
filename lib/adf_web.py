@@ -1256,6 +1256,7 @@ class AdfWeb(AdfObs):
 
                     table_dict = {}
                     for key in table_keys:
+                        print("key")
                         if self.compare_obs:
                             if (key != "Obs") and (key != "case_comparison"):
                                 print("key")
@@ -1350,8 +1351,9 @@ class AdfWeb(AdfObs):
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
 
-                    #Check if the mean plot type page exists for this case:
+                    """#Check if the mean plot type page exists for this case:
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
+                    print("mean_table_file",mean_table_file,"\n")
                     if not mean_table_file.exists():
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
@@ -1370,7 +1372,7 @@ class AdfWeb(AdfObs):
                         #Write mean diagnostic tables HTML file:
                         with open(mean_table_file, 'w', encoding='utf-8') as ofil:
                             ofil.write(mean_table_rndr)
-                        #End with
+                        #End with"""
                     #End if
                 #End if (web_data.data_frame)
             #End for (model case loop)
