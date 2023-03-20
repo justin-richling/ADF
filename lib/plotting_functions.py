@@ -1700,7 +1700,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                         degree_symbol='')
     for var in multi_dict.keys():
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
-            print("check this var:",var,"\n")
             for case in multi_dict[var].keys():
                 for season in multi_dict[var][case].keys():
                     file_name = f"{var}_{season}_{ptype}_multi_plot.png"
