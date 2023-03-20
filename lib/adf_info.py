@@ -214,7 +214,6 @@ class AdfInfo(AdfConfig):
         for case_idx, case_name in enumerate(case_names):
 
             if syears[case_idx] is None or eyears[case_idx] is None:
-                #print(f"No given climo years for {case_name}...")
                 starting_location = Path(cam_hist_locs[case_idx])
                 files_list = sorted(starting_location.glob(hist_str+'.*.nc'))
                 case_climo_yrs = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
