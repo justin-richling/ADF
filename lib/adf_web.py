@@ -819,6 +819,7 @@ class AdfWeb(AdfObs):
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
                     new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
+                    print("new_dict.keys()",new_dict.keys(),"\n")
                     """test_dict = {"title": main_title, "case1": case1,
                                   "case2": data_name,
                                   "case_yrs": case_yrs,
