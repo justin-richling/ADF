@@ -161,11 +161,11 @@ class AdfInfo(AdfConfig):
                 base_climo_yrs = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
 
                 if syear_baseline is None:
-                    print(f"No given start year for {data_name}, using first found year...")
+                    print(f"\nNo given start year for {data_name}, using first found year...")
                     syear_baseline = int(base_climo_yrs[0])
                 #End if
                 if eyear_baseline is None:
-                    print(f"No given end year for {data_name}, using last found year...")
+                    print(f"No given end year for {data_name}, using last found year...\n")
                     eyear_baseline = int(base_climo_yrs[-1])
                 #End if
             #End if
