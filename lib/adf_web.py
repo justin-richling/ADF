@@ -285,29 +285,8 @@ class AdfWeb(AdfObs):
                 html_file = self.__case_web_paths[case_name]["table_pages_dir"] / html_name
             #End if
             asset_path = None
-        else:
-
-            """#If multi-case, then save under the "multi-case" directory:
-            if self.num_cases > 1:
-                #multi_tbl_dir = self.__case_web_paths['multi-case']["img_pages_dir"]
-
-                html_name = f'plot_page_{web_data.stem}.html'
-                print(case_name)
-                html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
-                asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name"""
-       
-            """else:
-                html_name = f'plot_page_{web_data.stem}.html'
-                print(case_name)
-                html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
-                asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name"""
-            #End if
-
-
-
-            
+        else:            
             html_name = f'plot_page_{web_data.stem}.html'
-            #print(web_name,case_name,"\n")
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
@@ -440,12 +419,12 @@ class AdfWeb(AdfObs):
         if multi_case_plots:
             #Grab all variables for each multi-case plot type
             mvars = []
-            #sub should be a list of all vars from plot map extentions, right?
-            #x is iterative for all plot map extensions
-            for sub in [multi_case_plots[x] for x in multi_case_plots]:
-                print("sub",sub,"\n")
-                for i in sub:
-                    mvars.append(i)
+            #ext are plot type extentions (keys for multi-case plots)
+            #var_list should be a list of all vars for each plot map extentions
+            #var is iterative for all plot map extensions
+            for var_list in [multi_case_plots[ext] for ext in multi_case_plots]:
+                for var in var_list:
+                    mvars.append(var)
 
         #Create multi-case site:
         #Make a dictionary for plot type extensions for given plot type
@@ -485,11 +464,7 @@ class AdfWeb(AdfObs):
                     #multi_plot_type_html[plot_type] = os.path.join("html_img", f"mean_diag_{plot_type}.html")
                 #End if
             #End for
-        """else:
-            #Set to match standard plot type dict:
-            multi_plot_type_html = plot_type_html"""
-        #End if
-        #print("multi_plot_type_html",multi_plot_type_html,"\n")
+
         #Set main title for website:
         main_title = "CAM Diagnostics"
 
@@ -824,19 +799,7 @@ class AdfWeb(AdfObs):
                     else:
                         plot_types = plot_type_html
 
-                    print("new_dict.keys()",new_dict.keys(),"\n")
                     mean_table_rndr = mean_table_tmpl.render(new_dict)
-                    """mean_table_rndr = mean_table_tmpl.render(title=main_title,
-                                                             case1=case1,
-                                                             case2=data_name,
-                                                             case_yrs=case_yrs,
-                                                             base_name=data_name,
-                                                             baseline_yrs=baseline_yrs,
-                                                             amwg_tables=table_html_info,
-                                                             plot_types=plot_types,
-                                                             multi_head=multi_head,
-                                                             multi=multi_layout,
-                                                             case_sites=case_sites)"""
 
                     #Write mean diagnostic tables HTML file:
                     with open(mean_table_file, 'w', encoding='utf-8') as ofil:
@@ -979,6 +942,125 @@ class AdfWeb(AdfObs):
                             shutil.copytree(website_dir, main_site_path / case_name)
 
 
+                #Starting multi-case tables if requested
+                # - - - - - - - - - - - - - - - - - - -
+                if web_data.data_frame:
+
+                    #Create all individual tables for the individual websites
+
+                    #Grab single case table path
+                    table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
+
+                    #Check if the mean plot type page exists for this case (or for multi-case):
+                    mean_table_file = table_pages_dir_indv / "mean_tables.html"
+                    table_keys = [web_data.case,data_name,"case_comparison"]
+
+                    table_dict = {}
+                    for key in table_keys:
+                        if self.compare_obs:
+                            if (key != "Obs") and (key != "case_comparison"):
+                                table_dict[key] = multi_table_html_info[key]
+                        else:
+                            table_dict[key] = multi_table_html_info[key]
+                    #End for
+
+                    if not mean_table_file.exists():
+                        #Construct mean_table.html
+                        mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
+                        mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                                                                    case1=web_data.case,
+                                                                    case2=data_name,
+                                                                    case_yrs=case_yrs,
+                                                                    base_name=data_name,
+                                                                    baseline_yrs=baseline_yrs,
+                                                                    amwg_tables=table_dict,
+                                                                    plot_types=plot_type_html,
+                                                                    multi_head=True,
+                                                                    multi=False,
+                                                                    case_sites=case_sites)
+
+                        #Write mean diagnostic tables HTML file:
+                        with open(mean_table_file, 'w', encoding='utf-8') as ofil:
+                            ofil.write(mean_table_rndr)
+                        #End with
+                    #End if
+
+                    #Loop through all test cases (exclude baseline)
+                    if web_data.case != data_name:
+                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                            float_format='{:6g}'.format)
+
+                        #Construct amwg_table.html
+                        table_keys = [web_data.case,data_name,"case_comparison"]
+
+                        case_table_dict = {}
+                        for key in table_keys:
+                            if self.compare_obs:
+                                if (key != "Obs") and (key != "case_comparison"):
+                                    case_table_dict[key] = multi_table_html_info[key]
+                            else:
+                                case_table_dict[key] = multi_table_html_info[key]
+                        #End for
+
+                        indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
+
+                        if not indv_html.exists():
+                            table_tmpl = jinenv.get_template('template_table.html')
+                            table_rndr = table_tmpl.render(title=main_title,
+                                                            case1=web_data.case,
+                                                            case2=data_name,
+                                                            case_yrs=case_yrs,
+                                                            base_name=data_name,
+                                                            baseline_yrs=baseline_yrs,
+                                                            amwg_tables=case_table_dict,
+                                                            plot_types=plot_type_html,
+                                                            table_name=web_data.name,
+                                                            table_html=table_html,
+                                                            multi_head=True,
+                                                            multi=False,
+                                                            case_sites=case_sites)
+
+                            #Write mean diagnostic tables HTML file:
+                            with open(indv_html, 'w', encoding='utf-8') as ofil:
+                                ofil.write(table_rndr)
+                        #end if (indv_html)
+
+                    #Baseline case added to all test case directories
+                    # - this block should only run once when web_data is the baseline case
+                    else:
+                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                            float_format='{:6g}'.format)
+
+                        for case_name in case_names:
+                            table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
+                            table_key = [case_name,data_name,"case_comparison"]
+                            #           [web_data.case,data_name,"case_comparison"]
+                            base_table_dict = {key: multi_table_html_info[key] for key in table_key}
+
+                            sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
+                            if not sp_html.exists():
+                                table_tmpl = jinenv.get_template('template_table.html')
+                                table_rndr = table_tmpl.render(title=main_title,
+                                                                case1=case_name,
+                                                                case2=data_name,
+                                                                case_yrs=case_yrs,
+                                                                base_name=data_name,
+                                                                baseline_yrs=baseline_yrs,
+                                                                amwg_tables=base_table_dict,
+                                                                plot_types=plot_type_html,
+                                                                table_name=web_data.name,
+                                                                table_html=table_html,
+                                                                multi_head=True,
+                                                                multi=False,
+                                                                case_sites=case_sites)
+
+                                with open(sp_html, 'w', encoding='utf-8') as ofil:
+                                    ofil.write(table_rndr)
+                            #End if (sp_html)
+                        #End for (case_names)
+                    #End if (baseline_name)
+
+
                 #Starting multi-case plots if requested
                 # - - - - - - - - - - - - - - - - - - -
                 if not web_data.data_frame:
@@ -1046,7 +1128,7 @@ class AdfWeb(AdfObs):
                                     with open(img_pages_dir / multimean,
                                             'w', encoding='utf-8') as ofil:
                                         ofil.write(rndr)
-                                 #End if
+                                 #End if (multimean)
 
                                 #Check if the mean plot type and var page exists for this case:
                                 img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
@@ -1133,7 +1215,7 @@ class AdfWeb(AdfObs):
                             with open(img_pages_dir / multimean,
                                                 'w', encoding='utf-8') as ofil:
                                 ofil.write(rndr)
-                        #End if
+                        #End if (multimean)
 
                         #Check if the mean plot type and var page exists for this case:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
@@ -1186,126 +1268,9 @@ class AdfWeb(AdfObs):
                                 ofil.write(mean_rndr)
                             #End with
                         #End if (mean_ptype exists)
-
-                        #End if (not web_data.data_frame)
-                    #End if (baseline_name)
-                
-                #Create all individual tables
-                #for the individual websites
-                #NOTE: This seems unecessary since they should be created
-                # above the multi case block (main_site_path if block) for single case...
-                # Will look into - JR
-                #############################
-                if web_data.data_frame:
-                    #Grab single case table path
-                    table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
-
-                    #Check if the mean plot type page exists for this case (or for multi-case):
-                    mean_table_file = table_pages_dir_indv / "mean_tables.html"
-                    table_keys = [web_data.case,data_name,"case_comparison"]
-                    #table_dict = {key: multi_table_html_info[key] for key in table_keys}
-
-                    table_dict = {}
-                    for key in table_keys:
-                        if self.compare_obs:
-                            if (key != "Obs") and (key != "case_comparison"):
-                                table_dict[key] = multi_table_html_info[key]
-                        else:
-                            table_dict[key] = multi_table_html_info[key]
-
-                    if not mean_table_file.exists():
-                        #Construct mean_table.html
-                        mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
-                        mean_table_rndr = mean_table_tmpl.render(title=main_title,
-                                                                    case1=web_data.case,
-                                                                    case2=data_name,
-                                                                    case_yrs=case_yrs,
-                                                                    base_name=data_name,
-                                                                    baseline_yrs=baseline_yrs,
-                                                                    amwg_tables=table_dict,
-                                                                    plot_types=plot_type_html,
-                                                                    multi_head=True,
-                                                                    multi=False,
-                                                                    case_sites=case_sites)
-
-                        #Write mean diagnostic tables HTML file:
-                        with open(mean_table_file, 'w', encoding='utf-8') as ofil:
-                            ofil.write(mean_table_rndr)
-                        #End with
-
-                    #Loop through all test cases (exclude baseline)
-                    if web_data.case != data_name:
-                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                            float_format='{:6g}'.format)
-
-                        #Construct amwg_table.html
-                        table_keys = [web_data.case,data_name,"case_comparison"]
-                        #case_table_dict = {key: multi_table_html_info[key] for key in table_keys}
-
-                        case_table_dict = {}
-                        for key in table_keys:
-                            if self.compare_obs:
-                                if (key != "Obs") and (key != "case_comparison"):
-                                    case_table_dict[key] = multi_table_html_info[key]
-                            else:
-                                case_table_dict[key] = multi_table_html_info[key]
-
-                        indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
-
-                        if not indv_html.exists():
-                            table_tmpl = jinenv.get_template('template_table.html')
-                            table_rndr = table_tmpl.render(title=main_title,
-                                                            case1=web_data.case,
-                                                            case2=data_name,
-                                                            case_yrs=case_yrs,
-                                                            base_name=data_name,
-                                                            baseline_yrs=baseline_yrs,
-                                                            amwg_tables=case_table_dict,
-                                                            plot_types=plot_type_html,
-                                                            table_name=web_data.name,
-                                                            table_html=table_html,
-                                                            multi_head=True,
-                                                            multi=False,
-                                                            case_sites=case_sites)
-
-                            #Write mean diagnostic tables HTML file:
-                            with open(indv_html, 'w', encoding='utf-8') as ofil:
-                                ofil.write(table_rndr)
-
-                    #Baseline case added to all test case directories
-                    # - this block should only run once when web_data is the baseline case
-                    else:
-                        table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                            float_format='{:6g}'.format)
-
-                        for case_name in case_names:
-                            table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
-                            table_key = [case_name,data_name,"case_comparison"]
-                            #           [web_data.case,data_name,"case_comparison"]
-                            base_table_dict = {key: multi_table_html_info[key] for key in table_key}
-
-                            sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
-                            if not sp_html.exists():
-                                table_tmpl = jinenv.get_template('template_table.html')
-                                table_rndr = table_tmpl.render(title=main_title,
-                                                                case1=case_name,
-                                                                case2=data_name,
-                                                                case_yrs=case_yrs,
-                                                                base_name=data_name,
-                                                                baseline_yrs=baseline_yrs,
-                                                                amwg_tables=base_table_dict,
-                                                                plot_types=plot_type_html,
-                                                                table_name=web_data.name,
-                                                                table_html=table_html,
-                                                                multi_head=True,
-                                                                multi=False,
-                                                                case_sites=case_sites)
-
-                                with open(sp_html, 'w', encoding='utf-8') as ofil:
-                                    ofil.write(table_rndr)
-                    #End if
+                    #End if (ext not in multi_case_dict)
                 #End if (web_data.data_frame)
-            #End for (model case loop)
+            #End for (web_data)
 
             #Also make sure CSS template files have been copied over:
             if not main_templates_path.is_dir():
@@ -1319,6 +1284,8 @@ class AdfWeb(AdfObs):
                     #Update the dictionary to add any plot types specified in the yaml file
                     mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
                     multi_plots[multi_case_dict[key]] = mcase_plot
+                #End for
+            #End if
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
