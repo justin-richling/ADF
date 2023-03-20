@@ -400,7 +400,6 @@ class AdfWeb(AdfObs):
         for case_idx, case_name in enumerate(case_names):
 
             if (syear_cases[case_idx] and eyear_cases[case_idx]) == None:
-                print(f"No given climo years for {case_name}...")
                 starting_location = Path(cam_ts_locs[case_idx])
                 files_list = sorted(starting_location.glob('*nc'))
                 #This assumes CAM file names stay with this convention
@@ -632,8 +631,10 @@ class AdfWeb(AdfObs):
                         if var in mvars:
                             #Check if plot ext is in requested multi-case plot types
                             if web_data.plot_ext in multi_case_plots.keys():
-                                for var in multi_case_plots[web_data.plot_ext]:
-                                    if self.compare_obs:# and (var in self.var_obs_dict):
+                                #for var in multi_case_plots[web_data.plot_ext]:
+                                #    if self.compare_obs:# and (var in self.var_obs_dict):
+                                if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
+                                    if 1==1:
                                         if var in self.var_obs_dict:
                                             #Initialize Ordered Dictionary for multi case plot type:
                                             if ptype not in multi_plot_html_info:
