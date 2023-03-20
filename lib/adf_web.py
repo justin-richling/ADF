@@ -1256,10 +1256,10 @@ class AdfWeb(AdfObs):
 
                     table_dict = {}
                     for key in table_keys:
-                        print("key")
+                        print(key)
                         if self.compare_obs:
                             if (key != "Obs") and (key != "case_comparison"):
-                                print("key")
+                                print("key",key,"\n")
                                 table_dict[key] = multi_table_html_info[key]
                     print("table_dict",table_dict,"\n")
                     if not mean_table_file.exists():
