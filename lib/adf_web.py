@@ -344,13 +344,21 @@ class AdfWeb(AdfObs):
 
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
-            multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
+            """multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
             main_site_path = multi_path / "main_website"
             main_site_path.mkdir(exist_ok=True)
             main_site_img_path = main_site_path / "html_img"
             main_site_img_path.mkdir(exist_ok=True)
             main_site_assets_path = main_site_path / "assets"
-            main_site_assets_path.mkdir(exist_ok=True)
+            main_site_assets_path.mkdir(exist_ok=True)"""
+
+            #Grab all case nickname(s)
+            main_site_path = self.main_site_paths["main_site_path"]
+            main_site_assets_path = self.main_site_paths["main_site_assets_path"]
+            main_site_img_path = self.main_site_paths["main_site_img_path"]
+            # {"main_site_path":main_site_path, "main_site_assets_path":main_site_assets_path,
+            #    "main_site_img_path":main_site_img_path}
+
             case_sites = OrderedDict()
             multi_layout = True
         else:
