@@ -834,14 +834,14 @@ class AdfWeb(AdfObs):
                     
                     if main_site_path:
                         plot_types = multi_plot_type_html
-                        #multi_head = "Table"
+                        multi_head = "Table"
                         new_dict["multi_head"] = "Table"
                     else:
                         plot_types = plot_type_html
-                        #multi_head = False
+                        multi_head = False
 
-                    mean_table_rndr = mean_table_tmpl.render(new_dict)
-                    """mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                    #mean_table_rndr = mean_table_tmpl.render(new_dict)
+                    mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                              case1=case1,
                                                              case2=data_name,
                                                              case_yrs=case_yrs,
@@ -851,7 +851,7 @@ class AdfWeb(AdfObs):
                                                              plot_types=plot_types,
                                                              multi_head=multi_head,
                                                              multi=multi_layout,
-                                                             case_sites=case_sites)"""
+                                                             case_sites=case_sites)
 
                     #Write mean diagnostic tables HTML file:
                     with open(mean_table_file, 'w', encoding='utf-8') as ofil:
