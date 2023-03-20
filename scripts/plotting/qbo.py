@@ -45,7 +45,6 @@ def qbo(adfobj):
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 
-    #read_config_var('multi_case_plots')
     multi_plots = False
     if len(case_names) > 1:
         multi_plots = True
