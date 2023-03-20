@@ -45,9 +45,8 @@ def qbo(adfobj):
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 
-    multi_plots = False
     if len(case_names) > 1:
-        multi_plots = True
+        multi_case = True
         
         """multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
         main_site_path = multi_path / "main_website"
@@ -57,6 +56,8 @@ def qbo(adfobj):
 
         #main_site_path = adfobj.main_site_paths["main_site_path"]
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+    else:
+        multi_case = False
     #End if (check for multiple cases)
 
    
@@ -136,7 +137,7 @@ def qbo(adfobj):
     x1, x2, y1, y2 = plotpos()
     #ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
-    if (adfobj.compare_obs) and (not multi_plots):
+    if (adfobj.compare_obs) and (not multi_case):
         xo1 = 0.18
         xo2 = 0.45
         xm1 = 0.55
@@ -149,7 +150,7 @@ def qbo(adfobj):
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
             #Check if this is multi-case diagnostics
-            if multi_plots:
+            if multi_case:
                 if icase != ncases-1:
                     plot_loc_ts  = Path(plot_locations[icase]) / f'QBOts.{plot_type}'
 
@@ -219,7 +220,7 @@ def qbo(adfobj):
             #End if (multi-case)
 
             #Check if compared vs baseline obs, alter x-positions
-            if (adfobj.compare_obs) and (not multi_plots):
+            if (adfobj.compare_obs) and (not multi_case):
                 ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
                         xm1,xm2,y1[icase+1],y2[icase+1], case_nicknames[icase])
             else:
@@ -234,7 +235,7 @@ def qbo(adfobj):
     #ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
     ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[ncases]-0.035,y1[ncases]-0.03)
     
-    if multi_plots:#Notify user that script has started:
+    if multi_case:#Notify user that script has started:
         print("\n  Generating qbo multi-case plots...")
         
 
@@ -257,7 +258,7 @@ def qbo(adfobj):
     obsamp = calcddamp(obs)
     modamp = [ calcddamp(casedat_5S_5N[i]) for i in range(0,ncases,1) ]
 
-    if multi_plots:
+    if multi_case:
         for icase in range(0,ncases,1):
             #Skip baseline case
             if icase != ncases-1:
@@ -308,7 +309,7 @@ def qbo(adfobj):
     ax.legend(loc='upper left')
 
     #
-    if multi_plots:
+    if multi_case:
         plot_loc_amp_multi = main_site_assets_path / f'QBO_QBOamp_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
 

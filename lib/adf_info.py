@@ -244,7 +244,7 @@ class AdfInfo(AdfConfig):
         self.__syears = syears
         self.__eyears = eyears
 
-        #Make dirs for multi-case diagnostics if applicable
+        #Make directoriess for multi-case diagnostics if applicable
         if len(case_names) > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
             main_site_path = multi_path / "main_website"

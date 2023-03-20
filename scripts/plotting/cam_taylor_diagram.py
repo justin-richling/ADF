@@ -59,7 +59,7 @@ def cam_taylor_diagram(adfobj):
     base_nickname = adfobj.case_nicknames["base_nickname"]
 
     if len(case_names) > 1:
-        multi_plots = True
+        multi_case = True
 
         """#Set from adf_info?
         multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
@@ -72,7 +72,7 @@ def cam_taylor_diagram(adfobj):
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
 
     else:
-        multi_plots = False
+        multi_case = False
     #End if (check for multiple cases)
 
     case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
@@ -92,7 +92,7 @@ def cam_taylor_diagram(adfobj):
             plot_loc = Path(plot_location[0])
         else:
             print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
-            if multi_plots:
+            if multi_case:
                 plot_loc = main_site_path
             else:
                 plot_loc = Path(plot_location[0])
@@ -185,7 +185,7 @@ def cam_taylor_diagram(adfobj):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
 
             #If multi-case, make all individual case vs baseline taylor diagram
-            if multi_plots:
+            if multi_case:
                 fig_m, ax_m = taylor_plot_setup(title=f"Taylor Diagram - {s}",
                                     baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
                 ax_m = plot_taylor_data(ax_m, result_by_case[case], case_color=case_colors[i], use_bias=True)
@@ -216,7 +216,7 @@ def cam_taylor_diagram(adfobj):
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
         print(f"\t - Plotting Taylor Diagram, {s}")
 
-        if multi_plots:
+        if multi_case:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
 
             # Check redo_plot. If set to True: remove old plot, if it already exists:
