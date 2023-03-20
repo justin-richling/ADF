@@ -513,11 +513,14 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
+        #Use this for multi-case diagnostic plots only
         multi_mean_html_info = OrderedDict()
+        #Use this for multi-case with multi-plots
         multi_plot_html_info = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
+        #Use this for multi-case diagnostic tables
         multi_table_html_info = OrderedDict()
 
         #If this is a multi-case instance, then copy website to "main" directory:
@@ -546,8 +549,6 @@ class AdfWeb(AdfObs):
         else:
             #make empty list for non multi-case web generation
             case_sites = []
-        print("is this a obs comparison?",self.compare_obs)
-        print("obs var list:",self.var_obs_dict)
 
         #Loop over all web data objects:
         for web_data in self.__website_data:
@@ -679,7 +680,8 @@ class AdfWeb(AdfObs):
                         #End if (variable in multi-case plot variables)
                     #End if multi-case multi-plots
 
-                    #Need to isolate the multi-case regular plots from the multi-case multi-plots above 
+                    #Need to isolate the multi-case regular plots from the multi-case multi-plots above
+                    #QUESTION: Is there a better way?
                     if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
                             multi_mean_html_info[ptype] = OrderedDict()
@@ -770,7 +772,6 @@ class AdfWeb(AdfObs):
                                   "base_name": data_name,
                                   "baseline_yrs": baseline_yrs,
                                   "amwg_tables": table_html_info,
-                                  #"plot_types": plot_types,
                                   "table_name": web_data.name,
                                   "table_html": table_html,
                                   "multi_head": False,
