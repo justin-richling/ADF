@@ -1064,7 +1064,8 @@ class AdfWeb(AdfObs):
                 #Starting multi-case plots if requested
                 # - - - - - - - - - - - - - - - - - - -
                 if not web_data.data_frame:
-
+                    
+                    #Extract plot details
                     season = web_data.season
                     ptype = web_data.plot_type
                     var = web_data.name
@@ -1096,7 +1097,7 @@ class AdfWeb(AdfObs):
                             #Check if variable is in desired multi-case plot
                             #and if plot_type is in given multi-case plot set:
                             if (var in mvars) and (ext in multi_case_plots):
-                                #if ext in multi_case_plots:
+
                                 #Move file to assets directory:
                                 if not web_data.data.is_file():
                                     shutil.copy(web_data.data, web_data.asset_path)
