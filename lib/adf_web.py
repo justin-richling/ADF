@@ -591,7 +591,6 @@ class AdfWeb(AdfObs):
 
             #Now check all plot types
             if not web_data.data_frame:
-
                 #Determine season value:
                 if web_data.season:
                     season = web_data.season
@@ -623,11 +622,13 @@ class AdfWeb(AdfObs):
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
+                    #if (multi_case_plots) and (var in mvars):
                     if multi_case_plots:
                         #Loop over each variable in multi-case plot variables
-                        if var in mvars:
+                        #if var in mvars:
+                        if 1==1:
                             #Check if plot ext is in requested multi-case plot types
-                            if web_data.plot_ext in multi_case_plots.keys():
+                            if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars):
                                 #if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
                                 for var in multi_case_plots[web_data.plot_ext]:
                                     if self.compare_obs:
@@ -681,8 +682,7 @@ class AdfWeb(AdfObs):
                         #End if (variable in multi-case plot variables)
                     #End if multi-case multi-plots
 
-                    #Need to isolate the multi-case multi-plots from the multi-case regular plots
-                    #in the html_info dictionaries... 
+                    #Need to isolate the multi-case regular plots from the multi-case multi-plots above 
                     if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
                             multi_mean_html_info[ptype] = OrderedDict()
@@ -718,49 +718,6 @@ class AdfWeb(AdfObs):
                 except:
                     pass
 
-                #Extract plot_type:
-                #ptype = web_data.plot_type
-
-                """#Initialize Ordered Dictionary for plot type:
-                if ptype not in mean_html_info:
-                    mean_html_info[ptype] = OrderedDict()
-                #End if"""
-
-                """#Check if category has been provided for this web data:
-                if web_data.category:
-                    #If so, then just use directly:
-                    category = web_data.category
-                else:
-
-                    #Check if variable in defaults dictionary:
-                    if web_data.name in var_defaults_dict:
-                        #If so, then extract category from dictionary:
-                        category = var_defaults_dict[web_data.name].get("category",
-                                                                        "No category yet")
-                    else:
-                        category = 'No category yet'
-                    #End if
-                #End if"""
-                
-                """if category not in mean_html_info[ptype]:
-                    mean_html_info[ptype][category] = OrderedDict()
-                #End if"""
-
-                #Extract web data name (usually the variable name):
-                #name = web_data.name
-                
-                """#Initialize Ordered Dictionary for variable:
-                if var not in mean_html_info[ptype][category]:
-                    mean_html_info[ptype][category][var] = OrderedDict()
-                #End if"""
-
-                """#Determine season value:
-                if web_data.season:
-                    season = web_data.season
-                else:
-                    season = "plot" #Just have the link be labeled "plot".
-                #End if"""
-
                 #Initialize Ordered Dictionary for season:
                 #Need to ignore plots that may be generated for multi-case diags
                 #NOTE: There is probably a better way to do this - JR
@@ -777,7 +734,6 @@ class AdfWeb(AdfObs):
                         mean_html_info[ptype][category][var] = OrderedDict()
                     #End if
                     mean_html_info[ptype][category][var][season] = web_data.html_file.name
-
             #End if (data-frame check)
         #End for (web_data list loop)
 
@@ -862,7 +818,7 @@ class AdfWeb(AdfObs):
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
                     new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
-                    test_dict = {"title": main_title, "case1": case1,
+                    """test_dict = {"title": main_title, "case1": case1,
                                   "case2": data_name,
                                   "case_yrs": case_yrs,
                                   "base_name": data_name,
@@ -872,18 +828,19 @@ class AdfWeb(AdfObs):
                                   "table_html": table_html,
                                   "multi_head": False,
                                   "multi": multi_layout,
-                                  "case_sites": case_sites}
+                                  "case_sites": case_sites}"""
                     
                     
                     if main_site_path:
                         plot_types = multi_plot_type_html
-                        multi_head = "Table"
+                        #multi_head = "Table"
+                        new_dict["multi_head"] = "Table"
                     else:
                         plot_types = plot_type_html
-                        multi_head = False
-                    #print("case1",case1,"\n")
-                    #mean_table_rndr = mean_table_tmpl.render(new_dict)
-                    mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                        #multi_head = False
+
+                    mean_table_rndr = mean_table_tmpl.render(new_dict)
+                    """mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                              case1=case1,
                                                              case2=data_name,
                                                              case_yrs=case_yrs,
@@ -893,7 +850,7 @@ class AdfWeb(AdfObs):
                                                              plot_types=plot_types,
                                                              multi_head=multi_head,
                                                              multi=multi_layout,
-                                                             case_sites=case_sites)
+                                                             case_sites=case_sites)"""
 
                     #Write mean diagnostic tables HTML file:
                     with open(mean_table_file, 'w', encoding='utf-8') as ofil:
@@ -903,24 +860,21 @@ class AdfWeb(AdfObs):
             #End if (tables)
             
             else: #Plot image
-                #Create output HTML file path:
-                """img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
-                #print("img_pages_dir",img_pages_dir,web_data.asset_path,"\n")
-                img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
-                            web_data.asset_path.stem]"""
-
+                """
                 #Check if plot image already handles multiple cases:
-                """web_data.multi_case = False
+                web_data.multi_case = False
                 if main_site_path:
                 #if web_data.multi_case:
                     case1 = "Listed in plots."
                     plot_types = multi_plot_type_html
                 else:
-                    case1 = web_data.case"""
+                    case1 = web_data.case
+                #End if"""
+
                 plot_types = plot_type_html
-                #End if
 
                 if "main_website" not in str(web_data.html_file):
+                    #Create output HTML file path:
                     img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
 
                     img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
@@ -946,15 +900,8 @@ class AdfWeb(AdfObs):
                         ofil.write(rndr)
                     #End with
 
-                    #print("web_data.plot_type",web_data.plot_type,"\n")
-                    #Check if the mean plot type page exists for this case:
-                    
+                    #Check if the mean plot type page exists for this case:                    
                     mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                    """if web_data.plot_type == "Special":
-                        if web_data.name == "QBO":
-                            print("img_pages_dir",img_pages_dir)
-                            print("mean_ptype_file",mean_ptype_file)
-                            print("case1",web_data.case,"\n")"""
                     if not mean_ptype_file.exists():
 
                         #Construct individual plot type mean_diag html files, if they don't
@@ -979,7 +926,6 @@ class AdfWeb(AdfObs):
                     #Check if the mean plot type and var page exists for this case:
                     plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
                     mean_ptype_plot_page = img_pages_dir / plot_page
-                    #print("mean_ptype_plot_page",mean_ptype_plot_page,"\n")
                     if not mean_ptype_plot_page.exists():
 
                         #Construct individual plot type mean_diag html files, if they don't
@@ -1184,44 +1130,8 @@ class AdfWeb(AdfObs):
                                         #End with
                                     #End if (mean_ptype exists)
 
-                                    """#Check if the mean plot type and var page exists for this case:
-                                    img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                                    plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
-                                    mean_ptype_plot_page = img_pages_dir / plot_page
-
-                                    if not mean_ptype_plot_page.exists():
-
-                                        #Construct individual plot type mean_diag
-                                        #html files, if they don't already exist:
-                                        page_tmpl = jinenv.get_template('template_multi_case_var.html')
-                                        plot_page_rndr = page_tmpl.render(title=main_title,
-                                                                    var_title=var,
-                                                                    season_title=season,
-                                                                    plottype_title=ptype,
-                                                                    base_name=data_name,
-                                                                    case_yrs=case_yrs,
-                                                                    baseline_yrs=baseline_yrs,
-                                                                    mydata=multi_plot_html_info[ptype],
-                                                                    curr_type=ptype,
-                                                                    plot_types=multi_plot_type_html,
-                                                                    multi=multi_layout,
-                                                                    case_sites=case_sites)
-
-                                        #Write mean diagnostic plots HTML file:
-                                        with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                                            ofil.write(plot_page_rndr)
-                                        #End with
-                                    #End if (mean_ptype_plot_page exists)"""
-                
-
                     #Loop over any non multi-case multi-plot scenarios
                     if ext not in multi_case_dict:
-                        #var = web_data.name
-                        #ext = web_data.plot_ext
-                        #season = web_data.season
-                        #ptype = web_data.plot_type
-                        #print(var,ext,season,ptype,web_data.case)
-
                         #Move file to assets directory:
                         if not web_data.data.is_file():
                             shutil.copy(web_data.data, web_data.asset_path)
@@ -1333,8 +1243,7 @@ class AdfWeb(AdfObs):
                 # Will look into - JR
                 #############################
                 if web_data.data_frame:
-                    #if self.compare_obs:
-                    #if "Obs"
+                    #Grab single case table path
                     table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
 
                     #Check if the mean plot type page exists for this case (or for multi-case):
@@ -1468,18 +1377,6 @@ class AdfWeb(AdfObs):
                 css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
                 shutil.copytree(css_files_dir, main_templates_path)
             #End if
-
-            """#Create multi-case site:
-            #Make a dictionary for plot type extensions for given plot type
-            #This can probably be populated in the for-loops during html creation...
-            multi_case_dict = {"global_latlon_map":"LatLon",
-                               "zonal_mean":"Zonal",
-                               "meridional":"Meridional",
-                               "global_latlon_vect_map":"LatLon_Vector"}
-
-            multi_plots = {"Tables": "html_table/mean_tables.html",
-                           "Special":"html_img/multi_case_mean_diag_Special.html"
-                           }"""
 
             if multi_case_plots:
                 for key in multi_case_plots:
