@@ -1658,6 +1658,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
         multi_dict: ordered dictionary of difference data for each var, test case, and season
                 multi_dict[var][case_name][s]
+        
+        web_category:
+                variable category
 
         adfobj: ADF object
                 Needed to test if redo_plot is called in config yaml file

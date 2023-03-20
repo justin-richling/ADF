@@ -176,7 +176,7 @@ class AdfInfo(AdfConfig):
 
         #Initialize case nicknames:
         self.__test_nicknames = test_nicknames
-        self.__base_nickname = base_nickname\
+        self.__base_nickname = base_nickname
 
         #Initialize baseline climo years:
         self.__syear_baseline = syear_baseline

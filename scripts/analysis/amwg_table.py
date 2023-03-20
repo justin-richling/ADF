@@ -114,11 +114,8 @@ def amwg_table(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
 
-    #Grab test case nickname(s)
-    test_nicknames = adf.get_cam_info('case_nickname')
-    for idx,nick_name in enumerate(test_nicknames):
-        if nick_name == None:
-            test_nicknames[idx] = case_names[idx]
+    #Grab all case nickname(s)
+    test_nicknames = adf.case_nicknames["test_nicknames"]
 
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
@@ -129,10 +126,10 @@ def amwg_table(adf):
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
 
         #Grab baseline case nickname
-        base_nickname = adf.get_baseline_info('case_nickname')
-        if base_nickname == None:
-            base_nickname = baseline_name
+        base_nickname = adf.case_nicknames["base_nickname"]
+
         test_nicknames += [base_nickname]
+
         if "CMIP" in baseline_name:
             print("CMIP files detected, skipping AMWG table (for now)...")
 

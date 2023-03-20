@@ -58,10 +58,7 @@ def cam_taylor_diagram(adfobj):
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
     base_nickname = adfobj.case_nicknames["base_nickname"]
 
-    #read_config_var('multi_case_plots')
     if len(case_names) > 1:
-        #Check if multi-plots are desired from yaml file
-        #if adfobj.get_multi_case_info("global_latlon_map"):
         multi_plots = True
 
         #Set from adf_info?
@@ -71,7 +68,6 @@ def cam_taylor_diagram(adfobj):
         main_site_assets_path = main_site_path / "assets"
         main_site_assets_path.mkdir(exist_ok=True)
 
-        #End if (check for multi-case plots for LatLon)
     else:
         multi_plots = False
     #End if (check for multiple cases)
