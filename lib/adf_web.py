@@ -373,9 +373,7 @@ class AdfWeb(AdfObs):
         cam_ts_locs = self.get_cam_info('cam_ts_loc', required=True)
 
         #Attempt to grab case start_years (not currently required):
-        ###########################################################
         # This is for the header in the html files for climo yrs
-        #NOTE this may break when going to multi case...
         syear_cases = self.get_cam_info('start_year')
         eyear_cases = self.get_cam_info('end_year')
 
@@ -925,6 +923,11 @@ class AdfWeb(AdfObs):
             
             #End if (plot images)
         #End for (web data loop)
+
+        # - - - - - - - - - - - - - - - - - - - - - -
+        # --- End single-case diagnostics ---
+        # - - - - - - - - - - - - - - - - - - - - - -
+
 
 
         # - - - - - - - - - - - - - - - - - - - - - -
