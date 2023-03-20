@@ -181,6 +181,7 @@ class AdfInfo(AdfConfig):
         #Initialize baseline climo years:
         self.__syear_baseline = syear_baseline
         self.__eyear_baseline = eyear_baseline
+
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
         #-------------------------------------------------------------------------
@@ -226,7 +227,8 @@ class AdfInfo(AdfConfig):
                     eyears[case_idx] = int(case_climo_yrs[-1])
                 #End if
             #End if
-
+            
+            #Append climo years to case directory
             case_name += f"_{syears[case_idx]}_{eyears[case_idx]}"
 
             #Set the final directory name and save it to plot_location:
