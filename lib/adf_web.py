@@ -610,7 +610,6 @@ class AdfWeb(AdfObs):
                     #If so, then just use directly:
                     category = web_data.category
                 else:
-
                     #Check if variable in defaults dictionary:
                     if web_data.name in var_defaults_dict:
                         #If so, then extract category from dictionary:
@@ -621,8 +620,6 @@ class AdfWeb(AdfObs):
                     #End if
                 #End if
                 
-                #print(var)
-                
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
@@ -631,11 +628,13 @@ class AdfWeb(AdfObs):
                         if var in mvars:
                             #Check if plot ext is in requested multi-case plot types
                             if web_data.plot_ext in multi_case_plots.keys():
-                                #for var in multi_case_plots[web_data.plot_ext]:
-                                #    if self.compare_obs:# and (var in self.var_obs_dict):
-                                if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
-                                    if 1==1:
+                                #if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
+                                for var in multi_case_plots[web_data.plot_ext]:
+                                    if self.compare_obs:
+                                        print(f"Requested obs var: {var}")
                                         if var in self.var_obs_dict:
+                                            print(f"Available obs var: {var}\n")
+
                                             #Initialize Ordered Dictionary for multi case plot type:
                                             if ptype not in multi_plot_html_info:
                                                 multi_plot_html_info[ptype] = OrderedDict()
@@ -650,15 +649,12 @@ class AdfWeb(AdfObs):
                                                 multi_plot_html_info[ptype][category][var] = OrderedDict()
                                             #End if
 
+                                            p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                             if season not in multi_plot_html_info[ptype][category][var]:
-                                                p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                                 print("Ugg:",p,"\n")
                                                 multi_plot_html_info[ptype][category][var][season] = p
                                             #End if
-                                        #else:
-                                        #    print(f"Looks like this is obs comparison and {var} is not in available datasets, skipping. Womp Womp :frowny face:")
                                         #End if (obs w/ available var)
-                                    #End if (comapre obs)
                                     else:
                                         #Initialize Ordered Dictionary for multi case plot type:
                                         if ptype not in multi_plot_html_info:
@@ -674,11 +670,12 @@ class AdfWeb(AdfObs):
                                             multi_plot_html_info[ptype][category][var] = OrderedDict()
                                         #End if
 
+                                        p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                         if season not in multi_plot_html_info[ptype][category][var]:
-                                            p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                             print("Ugg:",p,"\n")
                                             multi_plot_html_info[ptype][category][var][season] = p
                                         #End if
+                                    #End if (comapre obs)
                                 #End for
                             #End if
                         #End if (variable in multi-case plot variables)
@@ -689,17 +686,21 @@ class AdfWeb(AdfObs):
                     if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
                             multi_mean_html_info[ptype] = OrderedDict()
+                        #End if
+
                         if category not in multi_mean_html_info[ptype]:
                             multi_mean_html_info[ptype][category] = OrderedDict()
+                        #End if
+
                         if var not in multi_mean_html_info[ptype][category]:
                             multi_mean_html_info[ptype][category][var] = OrderedDict()
+                        #End if
 
                         p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                        #print("multi-case single plot p",p,"\n")
                         if season not in multi_mean_html_info[ptype][category][var]:
                             multi_mean_html_info[ptype][category][var][season] = p
-
-                    #End if (multi-case plots)
+                        #End if
+                    #End if (not multi-case multi-plots)
                 #End if (multi-case scenario)
 
                 #Individual cases
@@ -761,8 +762,9 @@ class AdfWeb(AdfObs):
                 #End if"""
 
                 #Initialize Ordered Dictionary for season:
+                #Need to ignore plots that may be generated for multi-case diags
+                #NOTE: There is probably a better way to do this - JR
                 if "multi_plot" not in str(web_data.html_file.name):
-                    #print("web_data.html_file.name",web_data.html_file.name,"\n")
                     #Initialize Ordered Dictionary for plot type:
                     if ptype not in mean_html_info:
                         mean_html_info[ptype] = OrderedDict()
