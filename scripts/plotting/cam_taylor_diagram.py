@@ -61,13 +61,6 @@ def cam_taylor_diagram(adfobj):
     if len(case_names) > 1:
         multi_case = True
 
-        """#Set from adf_info?
-        multi_path = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
-        main_site_path = multi_path / "main_website"
-        main_site_path.mkdir(exist_ok=True)
-        main_site_assets_path = main_site_path / "assets"
-        main_site_assets_path.mkdir(exist_ok=True)"""
-
         main_site_path = adfobj.main_site_paths["main_site_path"]
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
 
