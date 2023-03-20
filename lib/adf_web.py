@@ -734,6 +734,7 @@ class AdfWeb(AdfObs):
                         mean_html_info[ptype][category][var] = OrderedDict()
                     #End if
                     mean_html_info[ptype][category][var][season] = web_data.html_file.name
+                #End if (check for multi_plot)
             #End if (data-frame check)
         #End for (web_data list loop)
 
@@ -949,7 +950,7 @@ class AdfWeb(AdfObs):
                             ofil.write(plot_page_rndr)
                         #End with
                     #End if (mean_ptype_plot_page)
-
+                #End if (check for multi-case diags)
             #Also check if index page exists for this case:
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
