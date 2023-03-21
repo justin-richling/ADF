@@ -121,6 +121,8 @@ class AdfInfo(AdfConfig):
 
         #Grab test case nickname(s)
         test_nicknames = self.get_cam_info('case_nickname')
+        if test_nicknames is None:
+            test_nicknames = [None]*len(case_names)
 
         #Check if a CAM vs AMWG obs comparison is being performed:
         if self.__compare_obs:
