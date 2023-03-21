@@ -504,6 +504,7 @@ class AdfWeb(AdfObs):
             #Also add path to case_sites dictionary:
             #loop over cases:
             print("os.curdir",os.curdir,"\n")
+            print("main_site_path",main_site_path,"\n")
             for idx, case_name in enumerate(case_names):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
@@ -513,7 +514,7 @@ class AdfWeb(AdfObs):
                         base_dir_ext = f"{data_name}"
                     else:
                         base_dir_ext = f"{data_name}_{syear_baseline}_{eyear_baseline}"
-                    case_sites[case_name] = [os.path.join(os.curdir,
+                    case_sites[case_name] = [os.path.join(main_site_path,
                                              f"{case_dir_ext}_vs_{base_dir_ext}",
                                              "index.html"),syear_cases[idx],eyear_cases[idx]]
 
