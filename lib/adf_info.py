@@ -119,6 +119,9 @@ class AdfInfo(AdfConfig):
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
 
+        #Case names:
+        case_names = self.get_cam_info('cam_case_name', required=True)
+
         #Grab test case nickname(s)
         test_nicknames = self.get_cam_info('case_nickname')
         if test_nicknames is None:
@@ -191,9 +194,6 @@ class AdfInfo(AdfConfig):
 
         #Plot directory:
         plot_dir = self.get_basic_info('cam_diag_plot_loc', required=True)
-
-        #Case names:
-        case_names = self.get_cam_info('cam_case_name', required=True)
 
         #Start years (not currently required):
         syears = self.get_cam_info('start_year')
