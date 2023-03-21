@@ -248,7 +248,7 @@ class AdfInfo(AdfConfig):
         if len(case_names) > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
             print(multi_path)
-            multi_path.mkdir() #exist_ok=True
+            multi_path.mkdir(parents=True, exist_ok=True) #exist_ok=True
             main_site_path = multi_path / "main_website"
             main_site_path.mkdir(exist_ok=True)
             main_site_assets_path = main_site_path / "assets"
