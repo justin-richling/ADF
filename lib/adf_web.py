@@ -739,8 +739,8 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
-                rend_kwarg_dict = {"title": main_title, "case1": case1,
-                                  "case2": data_name,
+                rend_kwarg_dict = {"title": main_title, "case_name": case1,
+                                  "base_name": data_name,
                                   "case_yrs": case_yrs,
                                   "base_name": data_name,
                                   "baseline_yrs": baseline_yrs,
@@ -770,8 +770,7 @@ class AdfWeb(AdfObs):
                 else:
                     rend_kwarg_dict["plot_types"] = plot_type_html
                     if web_data.case == data_name:
-                            #case1 = case_name
-                        rend_kwarg_dict["case1"] = case_name
+                        rend_kwarg_dict["case_name"] = case_name
 
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
 
@@ -817,8 +816,21 @@ class AdfWeb(AdfObs):
                     img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
 
+                    rend_kwarg_dict = {"title": main_title,
+                                  "var_title": web_data.name,
+                                  "season_title": web_data.season,
+                                  "case_name": web_data.case,
+                                  "case_yrs": case_yrs,
+                                  "base_name": data_name,
+                                  "baseline_yrs": baseline_yrs,
+                                  "plottype_title": web_data.plot_type,
+                                  "imgs": img_data,
+                                  "mydata": mean_html_info[web_data.plot_type],
+                                  "plot_types": plot_types,
+                                  "multi": multi_layout}
+
                     tmpl = jinenv.get_template('template.html')  #Set template
-                    rndr = tmpl.render(title=main_title,
+                    """rndr = tmpl.render(title=main_title,
                                     var_title=web_data.name,
                                     season_title=web_data.season,
                                     plottype_title=web_data.plot_type,
@@ -829,7 +841,9 @@ class AdfWeb(AdfObs):
                                     baseline_yrs=baseline_yrs,
                                     mydata=mean_html_info[web_data.plot_type],
                                     plot_types=plot_types,
-                                    multi=multi_layout) #The template rendered
+                                    multi=multi_layout) #The template rendered"""
+
+                    rndr = tmpl.render(rend_kwarg_dict) #The template rendered
 
                     #Write HTML file:
                     with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
@@ -843,15 +857,20 @@ class AdfWeb(AdfObs):
                         #Construct individual plot type mean_diag html files, if they don't
                         #already exist:
                         mean_tmpl = jinenv.get_template('template_mean_diag.html')
-                        mean_rndr = mean_tmpl.render(title=main_title,
-                                                    case1=web_data.case,
-                                                    case2=data_name,
+
+                        templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}} 
+
+                        mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
+
+                        """mean_rndr = mean_tmpl.render(title=main_title,
+                                                    case_name=web_data.case,
+                                                    base_name=data_name,
                                                     case_yrs=case_yrs,
                                                     baseline_yrs=baseline_yrs,
                                                     mydata=mean_html_info[web_data.plot_type],
-                                                    curr_type=web_data.plot_type,
+                                                    plottype_title=web_data.plot_type,
                                                     plot_types=plot_types,
-                                                    multi=multi_layout)
+                                                    multi=multi_layout)"""
 
                         #Write mean diagnostic plots HTML file:
                         with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
@@ -867,18 +886,22 @@ class AdfWeb(AdfObs):
                         #Construct individual plot type mean_diag html files, if they don't
                         #already exist:
                         plot_page_tmpl = jinenv.get_template('template_var.html')
-                        plot_page_rndr = plot_page_tmpl.render(title=main_title,
+
+                        templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
+
+                        plot_page_rndr = plot_page_tmpl.render(templ_var_rend_kwarg_dict)
+
+                        """plot_page_rndr = plot_page_tmpl.render(title=main_title,
                                                     var_title=web_data.name,
                                                     season_title=web_data.season,
                                                     plottype_title=web_data.plot_type,
-                                                    case1=web_data.case,
-                                                    case2=data_name,
+                                                    case_name=web_data.case,
+                                                    base_name=data_name,
                                                     case_yrs=case_yrs,
                                                     baseline_yrs=baseline_yrs,
                                                     mydata=mean_html_info[web_data.plot_type],
-                                                    curr_type=web_data.plot_type,
                                                     plot_types=plot_types,
-                                                    multi=multi_layout)
+                                                    multi=multi_layout)"""
 
                         #Write mean diagnostic plots HTML file:
                         with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
@@ -901,13 +924,19 @@ class AdfWeb(AdfObs):
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
-            index_rndr = index_tmpl.render(title=index_title,
-                                            case1=web_data.case,
-                                            case2=data_name,
+
+            templ_idx_rend_kwarg_dict = {k: templ_rend_kwarg_dict[k] for k in templ_rend_kwarg_dict.keys() - {'mydata', 'plottype_title'}}
+            templ_idx_rend_kwarg_dict["title"] = index_title
+
+            index_rndr = index_tmpl.render(templ_idx_rend_kwarg_dict)
+
+            """index_rndr = index_tmpl.render(title=index_title,
+                                            case_name=web_data.case,
+                                            base_name=data_name,
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
-                                            plot_types=plot_types, #plot_type_html
-                                            multi=multi_layout)
+                                            plot_types=plot_types,
+                                            multi=multi_layout)"""
 
             #Write Mean diagnostics index HTML file:
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
@@ -972,8 +1001,8 @@ class AdfWeb(AdfObs):
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
-                                                                    case1=web_data.case,
-                                                                    case2=data_name,
+                                                                    case_name=web_data.case,
+                                                                    base_name=data_name,
                                                                     case_yrs=case_yrs,
                                                                     base_name=data_name,
                                                                     baseline_yrs=baseline_yrs,
@@ -1011,8 +1040,8 @@ class AdfWeb(AdfObs):
                         if not indv_html.exists():
                             table_tmpl = jinenv.get_template('template_table.html')
                             table_rndr = table_tmpl.render(title=main_title,
-                                                            case1=web_data.case,
-                                                            case2=data_name,
+                                                            case_name=web_data.case,
+                                                            base_name=data_name,
                                                             case_yrs=case_yrs,
                                                             base_name=data_name,
                                                             baseline_yrs=baseline_yrs,
@@ -1045,8 +1074,8 @@ class AdfWeb(AdfObs):
                             if not sp_html.exists():
                                 table_tmpl = jinenv.get_template('template_table.html')
                                 table_rndr = table_tmpl.render(title=main_title,
-                                                                case1=case_name,
-                                                                case2=data_name,
+                                                                case_name=case_name,
+                                                                base_name=data_name,
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
                                                                 baseline_yrs=baseline_yrs,
