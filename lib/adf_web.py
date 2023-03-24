@@ -1058,13 +1058,16 @@ class AdfWeb(AdfObs):
 
                             base_table_dict = {key: multi_table_html_info[key] for key in table_key}
 
+                            rend_kwarg_dict["case_name"] = case_name
+                            rend_kwarg_dict["amwg_tables"] = base_table_dict
+
                             sp_html = table_pages_dir_sp / f"amwg_table_{data_name}.html"
                             if not sp_html.exists():
 
                                 table_tmpl = jinenv.get_template('template_table.html')
 
-                                rend_kwarg_dict["case_name"] = case_name
-                                rend_kwarg_dict["amwg_tables"] = base_table_dict
+                                #rend_kwarg_dict["case_name"] = case_name
+                                #rend_kwarg_dict["amwg_tables"] = base_table_dict
 
                                 table_rndr = table_tmpl.render(rend_kwarg_dict)
 
