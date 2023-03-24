@@ -1139,10 +1139,26 @@ class AdfWeb(AdfObs):
                                                         start=main_site_img_path),
                                                         multi_plot_page]
 
+                                rend_kwarg_dict = {"title": main_title,
+                                                    "var_title": var,
+                                                    "season_title": season,
+                                                    "case_yrs": case_yrs,
+                                                    "base_name": data_name,
+                                                    "baseline_yrs": baseline_yrs,
+                                                    "plottype_title": ptype,
+                                                    "imgs": img_data,
+                                                    "mydata": multi_mean_html_info[ptype],
+                                                    "plot_types": multi_plot_type_html,
+                                                    "multi": multi_layout,
+                                                    "case_sites": case_sites} 
+
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                 if not (img_pages_dir / multimean).exists():
+                                    
                                     tmpl = jinenv.get_template('template_multi_case.html')
-                                    rndr = tmpl.render(title=main_title,
+
+                                    rndr = tmpl.render(rend_kwarg_dict)
+                                    """rndr = tmpl.render(title=main_title,
                                                     var_title=var,
                                                     season_title=season,
                                                     plottype_title=ptype,
@@ -1153,7 +1169,7 @@ class AdfWeb(AdfObs):
                                                     mydata=multi_plot_html_info[ptype],
                                                     plot_types=multi_plot_type_html,
                                                     multi=multi_layout,
-                                                    case_sites=case_sites)
+                                                    case_sites=case_sites)"""
 
                                     #Write HTML file:
                                     with open(img_pages_dir / multimean,
@@ -1168,10 +1184,15 @@ class AdfWeb(AdfObs):
 
                                 if not mean_ptype_plot_page.exists():
 
+                                    templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
+
                                     #Construct individual plot type mean_diag
                                     #html files, if they don't already exist:
                                     page_tmpl = jinenv.get_template('template_multi_case_var.html')
-                                    plot_page_rndr = page_tmpl.render(title=main_title,
+                                    
+                                    plot_page_rndr = page_tmpl.render(templ_var_rend_kwarg_dict)
+                                    
+                                    """plot_page_rndr = page_tmpl.render(title=main_title,
                                                                 var_title=var,
                                                                 season_title=season,
                                                                 plottype_title=ptype,
@@ -1181,7 +1202,7 @@ class AdfWeb(AdfObs):
                                                                 mydata=multi_plot_html_info[ptype],
                                                                 plot_types=multi_plot_type_html,
                                                                 multi=multi_layout,
-                                                                case_sites=case_sites)
+                                                                case_sites=case_sites)"""
 
                                     #Write mean diagnostic plots HTML file:
                                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
@@ -1193,10 +1214,15 @@ class AdfWeb(AdfObs):
                                 mean_ptype_file = main_site_img_path / multi_mean
                                 if not mean_ptype_file.exists():
 
+                                    templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}} 
+
                                     #Construct individual plot type mean_diag
                                     #html files, if they don't already exist:
                                     tmp = jinenv.get_template('template_multi_case_mean_diag.html')
-                                    mean_rndr = tmp.render(title=main_title,
+                                    
+                                    mean_rndr = tmp.render(templ_rend_kwarg_dict)
+                                    
+                                    """mean_rndr = tmp.render(title=main_title,
                                                                 base_name=data_name,
                                                                 case_yrs=case_yrs,
                                                                 baseline_yrs=baseline_yrs,
@@ -1204,7 +1230,7 @@ class AdfWeb(AdfObs):
                                                                 plottype_title=ptype,
                                                                 plot_types=multi_plot_type_html,
                                                                 multi=multi_layout,
-                                                                case_sites=case_sites)
+                                                                case_sites=case_sites)"""
 
                                     #Write mean diagnostic plots HTML file:
                                     with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
@@ -1224,9 +1250,6 @@ class AdfWeb(AdfObs):
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                             start=main_site_img_path),
                                                             multi_plot_page]
-
-
-
 
                         rend_kwarg_dict = {"title": main_title,
                                   "var_title": var,
