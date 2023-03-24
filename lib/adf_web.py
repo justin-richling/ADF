@@ -362,7 +362,7 @@ class AdfWeb(AdfObs):
         #Time series files for unspecified climo years
         cam_ts_locs = self.get_cam_info('cam_ts_loc', required=True)
 
-        #Attempt to grab case start_years (not currently required):
+        """#Attempt to grab case start_years (not currently required):
         # This is for the header in the html files for climo yrs
         syear_cases = self.get_cam_info('start_year')
         eyear_cases = self.get_cam_info('end_year')
@@ -380,7 +380,15 @@ class AdfWeb(AdfObs):
                 #This assumes CAM file names stay with this convention
                 #Better way to do this?
                 syear_cases[case_idx] = int(files_list[0].stem[-13:-9])
-                eyear_cases[case_idx] = int(files_list[0].stem[-6:-2])
+                eyear_cases[case_idx] = int(files_list[0].stem[-6:-2])"""
+
+        #Grab case climo years
+        syear_cases = self.climo_yrs["syears"]
+        eyear_cases = self.climo_yrs["eyears"]
+
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = self.climo_yrs["syear_baseline"]
+        eyear_baseline = self.climo_yrs["eyear_baseline"]
 
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
@@ -391,14 +399,14 @@ class AdfWeb(AdfObs):
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
 
-            #Attempt to grab baseline start_years (not currently required):
+            """#Attempt to grab baseline start_years (not currently required):
             syear_baseline = self.get_baseline_info('start_year')
             eyear_baseline = self.get_baseline_info('end_year')
 
             if (syear_baseline and eyear_baseline) == None:
                 syear_baseline = self.climo_yrs["syear_baseline"]
                 eyear_baseline = self.climo_yrs["eyear_baseline"]
-            #End if
+            #End if"""
             baseline_yrs=f"{syear_baseline} - {eyear_baseline}"
         #End if
 
@@ -431,7 +439,7 @@ class AdfWeb(AdfObs):
                                "meridional":"Meridional",
                                "global_latlon_vect_map":"LatLon_Vector"}
 
-        #This one should be auto popoulated ideally
+        #This one should be auto populated, ideally
         multi_plots = {"Tables": "html_table/mean_tables.html",
                            "Special":"html_img/multi_case_mean_diag_Special.html"
                            }
