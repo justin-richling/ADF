@@ -1147,7 +1147,7 @@ class AdfWeb(AdfObs):
                                                     "baseline_yrs": baseline_yrs,
                                                     "plottype_title": ptype,
                                                     "imgs": img_data,
-                                                    "mydata": multi_mean_html_info[ptype],
+                                                    "mydata": multi_plot_html_info[ptype],
                                                     "plot_types": multi_plot_type_html,
                                                     "multi": multi_layout,
                                                     "case_sites": case_sites} 
@@ -1252,17 +1252,17 @@ class AdfWeb(AdfObs):
                                                             multi_plot_page]
 
                         rend_kwarg_dict = {"title": main_title,
-                                  "var_title": var,
-                                  "season_title": season,
-                                  "case_yrs": case_yrs,
-                                  "base_name": data_name,
-                                  "baseline_yrs": baseline_yrs,
-                                  "plottype_title": ptype,
-                                  "imgs": img_data,
-                                  "mydata": multi_mean_html_info[ptype],
-                                  "plot_types": multi_plot_type_html,
-                                  "multi": multi_layout,
-                                  "case_sites": case_sites}                                    
+                                            "var_title": var,
+                                            "season_title": season,
+                                            "case_yrs": case_yrs,
+                                            "base_name": data_name,
+                                            "baseline_yrs": baseline_yrs,
+                                            "plottype_title": ptype,
+                                            "imgs": img_data,
+                                            "mydata": multi_mean_html_info[ptype],
+                                            "plot_types": multi_plot_type_html,
+                                            "multi": multi_layout,
+                                            "case_sites": case_sites}                                    
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                         if not (img_pages_dir / multimean).exists():
