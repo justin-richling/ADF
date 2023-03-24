@@ -971,7 +971,7 @@ class AdfWeb(AdfObs):
                                         "amwg_tables": table_dict,
                                         "table_name": web_data.name,
                                         "plot_types": plot_type_html,
-                                        "table_html": table_html,
+                                        #"table_html": table_html,
                                         "multi_head": True,
                                         "multi": False,
                                         "case_sites": case_sites}
@@ -980,11 +980,11 @@ class AdfWeb(AdfObs):
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
 
-                        tmpl_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}} 
+                        tmpl_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name'}} 
 
-                        #mean_table_rndr = mean_table_tmpl.render(tmpl_rend_kwarg_dict)
+                        mean_table_rndr = mean_table_tmpl.render(tmpl_rend_kwarg_dict)
 
-                        mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                        """mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case_name=web_data.case,
                                                                     case_yrs=case_yrs,
                                                                     base_name=data_name,
@@ -993,7 +993,7 @@ class AdfWeb(AdfObs):
                                                                     plot_types=plot_type_html,
                                                                     multi_head=True,
                                                                     multi=False,
-                                                                    case_sites=case_sites)
+                                                                    case_sites=case_sites)"""
 
                         #Write mean diagnostic tables HTML file:
                         with open(mean_table_file, 'w', encoding='utf-8') as ofil:
@@ -1025,10 +1025,11 @@ class AdfWeb(AdfObs):
 
                             tmpl_rend_kwarg_dict = rend_kwarg_dict
                             rend_kwarg_dict["amwg_tables"] = case_table_dict
+                            rend_kwarg_dict["table_html"] = table_html
 
-                            #table_rndr = table_tmpl.render(rend_kwarg_dict)
+                            table_rndr = table_tmpl.render(rend_kwarg_dict)
 
-                            table_rndr = table_tmpl.render(title=main_title,
+                            """table_rndr = table_tmpl.render(title=main_title,
                                                             case_name=web_data.case,
                                                             case_yrs=case_yrs,
                                                             base_name=data_name,
@@ -1039,7 +1040,7 @@ class AdfWeb(AdfObs):
                                                             table_html=table_html,
                                                             multi_head=True,
                                                             multi=False,
-                                                            case_sites=case_sites)
+                                                            case_sites=case_sites)"""
 
                             #Write mean diagnostic tables HTML file:
                             with open(indv_html, 'w', encoding='utf-8') as ofil:
@@ -1051,6 +1052,8 @@ class AdfWeb(AdfObs):
                     else:
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
+
+                        rend_kwarg_dict["table_html"] = table_html
 
                         for case_name in case_names:
                             table_pages_dir_sp = self.__case_web_paths[case_name]['table_pages_dir']
@@ -1069,9 +1072,9 @@ class AdfWeb(AdfObs):
                                 #rend_kwarg_dict["case_name"] = case_name
                                 #rend_kwarg_dict["amwg_tables"] = base_table_dict
 
-                                #table_rndr = table_tmpl.render(rend_kwarg_dict)
+                                table_rndr = table_tmpl.render(rend_kwarg_dict)
 
-                                table_rndr = table_tmpl.render(title=main_title,
+                                """table_rndr = table_tmpl.render(title=main_title,
                                                                 case_name=case_name,
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
@@ -1082,7 +1085,7 @@ class AdfWeb(AdfObs):
                                                                 table_html=table_html,
                                                                 multi_head=True,
                                                                 multi=False,
-                                                                case_sites=case_sites)
+                                                                case_sites=case_sites)"""
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
