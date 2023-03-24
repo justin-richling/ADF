@@ -1040,7 +1040,6 @@ class AdfWeb(AdfObs):
                             table_tmpl = jinenv.get_template('template_table.html')
                             table_rndr = table_tmpl.render(title=main_title,
                                                             case_name=web_data.case,
-                                                            base_name=data_name,
                                                             case_yrs=case_yrs,
                                                             base_name=data_name,
                                                             baseline_yrs=baseline_yrs,
@@ -1074,7 +1073,6 @@ class AdfWeb(AdfObs):
                                 table_tmpl = jinenv.get_template('template_table.html')
                                 table_rndr = table_tmpl.render(title=main_title,
                                                                 case_name=case_name,
-                                                                base_name=data_name,
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
                                                                 baseline_yrs=baseline_yrs,
