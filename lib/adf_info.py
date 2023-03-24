@@ -129,12 +129,6 @@ class AdfInfo(AdfConfig):
             for idx,case_name in enumerate(case_names):
                 test_nicknames[idx] = case_name
 
-        #Case names:
-        #case_names = self.get_cam_info('cam_case_name', required=True)
-        #for idx,nick_name in enumerate(test_nicknames):
-        #    if nick_name == None:
-        #        test_nicknames[idx] = case_names[idx]
-
         #Check if a CAM vs AMWG obs comparison is being performed:
         if self.__compare_obs:
 
@@ -414,21 +408,11 @@ class AdfInfo(AdfConfig):
     @property
     def case_nicknames(self):
         """Return the test case and baseline nicknames to the user if requested."""
-        #Grab test case nickname(s)
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
         test_nicknames = copy.copy(self.__test_nicknames)
-
-        """#Case names:
-        case_names = self.get_cam_info('cam_case_name', required=True)
-        for idx,nick_name in enumerate(test_nicknames):
-            if nick_name == None:
-                test_nicknames[idx] = case_names[idx]"""
-
-        #Grab test case nickname(s)
         base_nickname = copy.copy(self.__base_nickname)
-
-        """#Grab baseline nickname
-        if base_nickname == None:
-            base_nickname = self.get_baseline_info('cam_case_name', required=True)"""
 
         return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
 
