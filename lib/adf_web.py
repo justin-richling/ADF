@@ -1002,7 +1002,6 @@ class AdfWeb(AdfObs):
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                         mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case_name=web_data.case,
-                                                                    base_name=data_name,
                                                                     case_yrs=case_yrs,
                                                                     base_name=data_name,
                                                                     baseline_yrs=baseline_yrs,
