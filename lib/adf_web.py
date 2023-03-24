@@ -1179,7 +1179,6 @@ class AdfWeb(AdfObs):
                                                                 case_yrs=case_yrs,
                                                                 baseline_yrs=baseline_yrs,
                                                                 mydata=multi_plot_html_info[ptype],
-                                                                curr_type=ptype,
                                                                 plot_types=multi_plot_type_html,
                                                                 multi=multi_layout,
                                                                 case_sites=case_sites)
@@ -1202,7 +1201,7 @@ class AdfWeb(AdfObs):
                                                                 case_yrs=case_yrs,
                                                                 baseline_yrs=baseline_yrs,
                                                                 mydata=multi_plot_html_info[ptype],
-                                                                curr_type=ptype,
+                                                                plottype_title=ptype,
                                                                 plot_types=multi_plot_type_html,
                                                                 multi=multi_layout,
                                                                 case_sites=case_sites)
@@ -1266,7 +1265,6 @@ class AdfWeb(AdfObs):
                                                               case_yrs=case_yrs,
                                                               baseline_yrs=baseline_yrs,
                                                               mydata=multi_mean_html_info[ptype],
-                                                              curr_type=ptype,
                                                               plot_types=multi_plot_type_html,
                                                               multi=multi_layout,
                                                               case_sites=case_sites)
@@ -1289,7 +1287,7 @@ class AdfWeb(AdfObs):
                                                    case_yrs=case_yrs,
                                                    baseline_yrs=baseline_yrs,
                                                    mydata=multi_mean_html_info[ptype],
-                                                   curr_type=ptype,
+                                                   plottype_title=ptype,
                                                    plot_types=multi_plot_type_html,
                                                    multi=multi_layout,
                                                    case_sites=case_sites)
