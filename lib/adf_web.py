@@ -416,8 +416,7 @@ class AdfWeb(AdfObs):
         #Extract variable defaults dictionary (for categories):
         var_defaults_dict = self.variable_defaults
 
-        #Dict for multi case if specified
-        #Grab requested multi-case plots
+        #Extract requested multi-case multi-plots
         multi_case_plots = self.read_config_var('multi_case_plots')
 
         if multi_case_plots:
@@ -439,7 +438,7 @@ class AdfWeb(AdfObs):
                                "meridional":"Meridional",
                                "global_latlon_vect_map":"LatLon_Vector"}
 
-        #This one should be auto populated, ideally
+        #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
                            "Special":"html_img/multi_case_mean_diag_Special.html"
                            }
@@ -810,6 +809,7 @@ class AdfWeb(AdfObs):
             else: #Plot image
                 plot_types = plot_type_html
 
+                #Ensure that these will ignore any multi-case pages if they exist
                 if "main_website" not in str(web_data.html_file):
                     #Create output HTML file path:
                     img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
