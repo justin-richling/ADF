@@ -249,8 +249,7 @@ class AdfInfo(AdfConfig):
         #Make directoriess for multi-case diagnostics if applicable
         if len(case_names) > 1:
             multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
-            print(multi_path)
-            multi_path.mkdir(parents=True, exist_ok=True) #exist_ok=True
+            multi_path.mkdir(parents=True, exist_ok=True)
             main_site_path = multi_path / "main_website"
             main_site_path.mkdir(exist_ok=True)
             main_site_assets_path = main_site_path / "assets"
@@ -259,7 +258,6 @@ class AdfInfo(AdfConfig):
             main_site_img_path.mkdir(exist_ok=True)
 
             #Initialize multi-case directories:
-            self.__multi_path = multi_path
             self.__main_site_path = main_site_path
             self.__main_site_assets_path = main_site_assets_path
             self.__main_site_img_path = main_site_img_path
@@ -426,14 +424,11 @@ class AdfInfo(AdfConfig):
     @property
     def main_site_paths(self):
         """Return the directories for multi-case diags if applicable."""
-        multi_path = copy.copy(self.__multi_path)
         main_site_path = copy.copy(self.__main_site_path) #Send copies so a script doesn't modify the original
         main_site_assets_path = copy.copy(self.__main_site_assets_path)
         main_site_img_path = copy.copy(self.__main_site_img_path)
 
-        return {"multi_path":multi_path,
-                "main_site_path":main_site_path,
-                "main_site_assets_path":main_site_assets_path,
+        return {"main_site_path":main_site_path, "main_site_assets_path":main_site_assets_path,
                 "main_site_img_path":main_site_img_path}
 
     #########
