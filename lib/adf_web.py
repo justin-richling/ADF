@@ -982,9 +982,9 @@ class AdfWeb(AdfObs):
 
                         tmpl_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}} 
 
-                        mean_table_rndr = mean_table_tmpl.render(tmpl_rend_kwarg_dict)
+                        #mean_table_rndr = mean_table_tmpl.render(tmpl_rend_kwarg_dict)
 
-                        """mean_table_rndr = mean_table_tmpl.render(title=main_title,
+                        mean_table_rndr = mean_table_tmpl.render(title=main_title,
                                                                     case_name=web_data.case,
                                                                     case_yrs=case_yrs,
                                                                     base_name=data_name,
@@ -993,7 +993,7 @@ class AdfWeb(AdfObs):
                                                                     plot_types=plot_type_html,
                                                                     multi_head=True,
                                                                     multi=False,
-                                                                    case_sites=case_sites)"""
+                                                                    case_sites=case_sites)
 
                         #Write mean diagnostic tables HTML file:
                         with open(mean_table_file, 'w', encoding='utf-8') as ofil:
@@ -1026,9 +1026,9 @@ class AdfWeb(AdfObs):
                             tmpl_rend_kwarg_dict = rend_kwarg_dict
                             rend_kwarg_dict["amwg_tables"] = case_table_dict
 
-                            table_rndr = table_tmpl.render(rend_kwarg_dict)
+                            #table_rndr = table_tmpl.render(rend_kwarg_dict)
 
-                            """table_rndr = table_tmpl.render(title=main_title,
+                            table_rndr = table_tmpl.render(title=main_title,
                                                             case_name=web_data.case,
                                                             case_yrs=case_yrs,
                                                             base_name=data_name,
@@ -1039,7 +1039,7 @@ class AdfWeb(AdfObs):
                                                             table_html=table_html,
                                                             multi_head=True,
                                                             multi=False,
-                                                            case_sites=case_sites)"""
+                                                            case_sites=case_sites)
 
                             #Write mean diagnostic tables HTML file:
                             with open(indv_html, 'w', encoding='utf-8') as ofil:
@@ -1069,9 +1069,9 @@ class AdfWeb(AdfObs):
                                 #rend_kwarg_dict["case_name"] = case_name
                                 #rend_kwarg_dict["amwg_tables"] = base_table_dict
 
-                                table_rndr = table_tmpl.render(rend_kwarg_dict)
+                                #table_rndr = table_tmpl.render(rend_kwarg_dict)
 
-                                """table_rndr = table_tmpl.render(title=main_title,
+                                table_rndr = table_tmpl.render(title=main_title,
                                                                 case_name=case_name,
                                                                 case_yrs=case_yrs,
                                                                 base_name=data_name,
@@ -1082,7 +1082,7 @@ class AdfWeb(AdfObs):
                                                                 table_html=table_html,
                                                                 multi_head=True,
                                                                 multi=False,
-                                                                case_sites=case_sites)"""
+                                                                case_sites=case_sites)
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
                                     ofil.write(table_rndr)
