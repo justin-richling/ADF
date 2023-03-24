@@ -345,7 +345,6 @@ class AdfWeb(AdfObs):
         #If there is more than one non-baseline case, then create new website directory:
         if self.num_cases > 1:
             #Grab all multi-case diagnostic directories
-            multi_path = self.main_site_paths["multi_path"]
             main_site_path = self.main_site_paths["main_site_path"]
             main_site_assets_path = self.main_site_paths["main_site_assets_path"]
             main_site_img_path = self.main_site_paths["main_site_img_path"]
@@ -432,8 +431,7 @@ class AdfWeb(AdfObs):
                                "meridional":"Meridional",
                                "global_latlon_vect_map":"LatLon_Vector"}
 
-        #This one should be auto popoulated for sure
-        #TODO: Do that what was said prior to this line, but no further, Harry
+        #This one should be auto popoulated ideally
         multi_plots = {"Tables": "html_table/mean_tables.html",
                            "Special":"html_img/multi_case_mean_diag_Special.html"
                            }
@@ -503,7 +501,6 @@ class AdfWeb(AdfObs):
 
             #Also add path to case_sites dictionary:
             #loop over cases:
-            print("multi_path",multi_path,"\n")
             for idx, case_name in enumerate(case_names):
                 #Check if case name is present in plot
                 if case_name in self.__case_web_paths:
@@ -513,7 +510,7 @@ class AdfWeb(AdfObs):
                         base_dir_ext = f"{data_name}"
                     else:
                         base_dir_ext = f"{data_name}_{syear_baseline}_{eyear_baseline}"
-                    case_sites[case_name] = [os.path.join(multi_path,
+                    case_sites[case_name] = [os.path.join(os.curdir,
                                              f"{case_dir_ext}_vs_{base_dir_ext}",
                                              "index.html"),syear_cases[idx],eyear_cases[idx]]
 
