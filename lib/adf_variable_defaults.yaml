@@ -49,6 +49,11 @@
 # category  -> The website category the variable will be placed under.
 #
 #
+# TIME SERIES: (ts)
+#
+# rolling  -> Flag for 5-year rolling average mean
+#
+#
 # Final Note:  Please do not modify this file unless you plan to push your changes back to the ADF repo.
 #              If you would like to modify this file for your personal ADF runs then it is recommended
 #              to make a copy of this file, make modifications in that copy, and then point the ADF to

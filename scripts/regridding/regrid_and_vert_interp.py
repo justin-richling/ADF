@@ -200,7 +200,7 @@ def regrid_and_vert_interp(adf):
                         #Combine all target files together into a single data set:
                         tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
                     elif len(tclim_fils) == 0:
-                        print(f"\t - regridding {var} failed, no file. Continuing to next variable.")
+                        print(f"\t - regridding '{var}' failed, no file. Continuing to next variable.")
                         continue
                     else:
                         #Open single file as new xarray dataset:
@@ -217,7 +217,7 @@ def regrid_and_vert_interp(adf):
                         #Combine all cam files together into a single data set:
                         mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
                     elif len(mclim_fils) == 0:
-                        print(f"\t - regridding {var} failed, no file. Continuing to next variable.")
+                        print(f"\t - regridding '{var}' failed, no file. Continuing to next variable.")
                         continue
                     else:
                         #Open single file as new xarray dataset:

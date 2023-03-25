@@ -153,7 +153,7 @@ def amwg_table(adf):
 
     #Declare any derived quantities here:
     derived_vars = {"RESTOM":["FSNT", "FLNT"]}
-    derived_list = [item for sublist in list(derived_vars.values()) for item in sublist]
+    derived_list = [item for sublist in derived_vars.values() for item in sublist]
 
     #Create (empty) dictionary to use for the
     #derived calculations (inititally RESTOM radiation):
@@ -275,7 +275,7 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = _spatial_average(data)  # changes data "in place"
 
-            #Add necessary data for derived (RESTOM) calcs below
+            #Add necessary data for derived calcs below
             if var in derived_list:
                 derived_dict[case_name][var] = [data, unit_str]
 
@@ -486,7 +486,6 @@ def _derive_restom(case_name, derived_dict, output_csv_file, cols):
         df.to_csv(output_csv_file, header=cols, index=False)
     #End if
             
-    #last step is to add table dataframe to website (if enabled):
     table_df = pd.read_csv(output_csv_file)
 
     #Reorder RESTOM to top of tables

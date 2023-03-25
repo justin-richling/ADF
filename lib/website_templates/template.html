@@ -55,15 +55,15 @@
         {% for category, var_seas in mydata.items() %}
         {% for var_name, seas_files in var_seas.items() %}
         {% if var_name == var_title %}
-        {% for s in ["ANN","DJF","MAM","JJA","SON"] %}
+        {% for season in seasons %}
 
-        {% if s in seas_files.keys() %}
+        {% if season in seas_files.keys() %}
         <div class="grid-item">
-          <a href="../html_img/{{ seas_files[s] }}">{{ s }}</a>
+          <a href="../html_img/{{ seas_files[s] }}">{{ season }}</a>
         </div><!--grid-item-->
         {% else %}
         <div class="grid-item-blocked">
-          <a-blocked>{{ s }}</a-blocked>
+          <a-blocked>{{ season }}</a-blocked>
         </div><!--grid-item-blocked-->
         {% endif %}
 

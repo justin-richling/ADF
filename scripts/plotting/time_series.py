@@ -54,9 +54,6 @@ def time_series(adfobj):
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    data_name = adfobj.get_baseline_info('cam_case_name', required=True)
-    all_case_names = case_names + [data_name]
-    case_num = len(all_case_names)
 
     #Check for multi-case diagnostics
     if len(case_names) > 1:
@@ -67,13 +64,10 @@ def time_series(adfobj):
         multi_case = False
 
     case_ts_loc = adfobj.get_cam_info("cam_ts_loc", required=True)
-    data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
 
-    #Grab test case nickname(s)
-    test_nicknames = adfobj.get_cam_info('case_nickname')
-    for idx,nick_name in enumerate(test_nicknames):
-        if nick_name == None:
-            test_nicknames[idx] = case_names[idx]
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    base_nickname = adfobj.case_nicknames["base_nickname"]
 
     #CAUTION:
     #"data" here refers to either obs or a baseline simulation,
@@ -85,20 +79,20 @@ def time_series(adfobj):
         var_obs_dict = adfobj.var_obs_dict
         base_nickname = "Obs"
 
-        #If dictionary is empty, then there are no observations to regrid to,
+        #If dictionary is empty, then there are no observations to compare against,
         #so quit here:
         if not var_obs_dict:
-            print("No observations found to plot against, so no lat/lon maps will be generated.")
+            print("No observations found to plot against, so no time series plots will be generated.")
             return
 
     else:
-        data_name = adfobj.get_baseline_info("cam_case_name", required=True)
-
-        #Grab baseline case nickname
-        base_nickname = adfobj.get_baseline_info('case_nickname')
-        if base_nickname == None:
-            base_nickname = data_name
+        data_name = adfobj.get_baseline_info("cam_case_name")
+        data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
     #End if
+
+    #Bundle all case names
+    all_case_names = case_names + [data_name]
+    case_num = len(all_case_names)
 
     #Gather all nicknames
     all_nicknames = test_nicknames + [base_nickname]
@@ -112,7 +106,7 @@ def time_series(adfobj):
             plpth = Path(pl)
             #Check if plot output directory exists, and if not, then create it:
             if not plpth.is_dir():
-                print(f"\t    {pl} not found, making new directory")
+                print(f"\t    '{pl}' not found, making new directory")
                 plpth.mkdir(parents=True)
         if len(plot_location) == 1:
             plot_loc = Path(plot_location[0])
@@ -123,18 +117,18 @@ def time_series(adfobj):
         plot_loc = Path(plot_location)
 
     res = adfobj.variable_defaults #dict of variable-specific plot preferences
-    #or an empty dictionary if use_defaults was not specified in YAML.
+    #or an empty dictionary if use_defaults was not specified in config (YAML) file.
 
     #Set plot file type:
     #-- this should be set in basic_info_dict, but is not required
     #-- So check for it, and default to png
-    basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    basic_info_dict = adfobj.read_config_var("diag_basic_info", required=True)
     plot_type = basic_info_dict.get('plot_type', 'png')
     print(f"\t NOTE: Plot type is set to {plot_type}")
 
     #Check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
-    print(f"\t NOTE: redo_plot is set to {redo_plot}")
+    print(f"\t NOTE: redo_plot is set to '{redo_plot}'")
 
     #Set seasonal ranges (sans ANN):
     seasons = ["DJF","MAM","JJA","SON"]
@@ -209,10 +203,10 @@ def time_series(adfobj):
 
         for case_idx, case_name in enumerate(all_case_names):
             if var == "RESTOM":
-                fils = sorted(list(Path(case_ts_locs[case_idx]).glob(f"*FSNT*.nc")))
+                fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*FSNT*.nc"))
                 ts_ds = _load_dataset(fils)
                 avg_case_FSNT,_,yrs_case,unit = _data_calcs('FSNT',ts_ds=ts_ds,subset=None)
-                fils = sorted(list(Path(case_ts_locs[case_idx]).glob(f"*FLNT*.nc")))
+                fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*FLNT*.nc"))
                 ts_ds = _load_dataset(fils)
                 avg_case_FLNT,_,_,_ = _data_calcs("FLNT",ts_ds=ts_ds,subset=None)
                 if len(yrs_case) < 5:
@@ -239,7 +233,7 @@ def time_series(adfobj):
                     color_dict = {"color":colors[case_idx],"marker":"-"}
                 #End if
 
-                fils = sorted(list(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc")))
+                fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc"))
                 ts_ds = _load_dataset(fils)
 
                 #Check if variable has a vertical coordinate:
@@ -263,7 +257,7 @@ def time_series(adfobj):
             yrs_case_int = yrs_case.astype(int)
 
             name = all_nicknames[case_idx]
-            if case_idx == (len(all_case_names)-1):
+            if case_idx == (case_num-1):
                 name = f"{name} (baseline)"
 
             #Add case to plot (ax)
@@ -308,7 +302,7 @@ def time_series(adfobj):
     #Seasonally weighted plots
     # - DJF, MAM, JJA, SON
     ##########################
-    print("\n  Generating time series for seasonally weighted...")
+    print("\n  Generating seasonally weighted time series...")
     for var in ts_var_list_s:
 
         #Skip variables that have levels
@@ -431,7 +425,7 @@ def _data_calcs(var, ts_ds, subset=None):
     w = np.cos(np.radians(data.lat))
     avg = data.weighted(w).mean(dim=("lat","lon"))
 
-    yrs = np.unique([str(val.item().timetuple().tm_year).zfill(4) for _,val in enumerate(ts_ds["time"])])
+    yrs = np.unique([str(val.item().timetuple().tm_year).zfill(4) for val in ts_ds["time"]])
 
     return avg,month_length,yrs,unit
 
@@ -462,7 +456,7 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
 
     #Keep track of variables that have vertical levels for now
     #There is probably a better way to ignore these vars - JR
-    del_s = []
+    del_s = set()
 
     vals = OrderedDict()
     yrs = {}
@@ -471,7 +465,7 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
         if var not in vals:
             vals[var] = OrderedDict()
         for case_idx, case_name in enumerate(all_case_names):
-            fils = sorted(list(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc")))
+            fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc"))
             ts_ds = _load_dataset(fils)
 
             #Check if variable has a vertical coordinate:
@@ -484,7 +478,7 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
                     #Probably a better way to ignore variables
                     #with levels than this.
                     #Look into it - JR
-                    del_s.append(var)
+                    del_s.add(var)
 
             else:
                 data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
@@ -578,7 +572,8 @@ def _format_xaxis(ax, yrs):
     """
 
     #Grab all unique years and find min/max years
-    uniq_yrs = sorted({x for v in yrs.values() for x in v})
+    #uniq_yrs = sorted({x for v in yrs.values() for x in v})
+    uniq_yrs = sorted(x for v in yrs.values() for x in v)
     max_year = int(max(uniq_yrs))
     min_year = int(min(uniq_yrs))
 
