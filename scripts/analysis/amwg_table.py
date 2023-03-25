@@ -456,7 +456,7 @@ def _derive_restom(case_name, derived_dict, output_csv_file, cols):
     
     var = "RESTOM" #RESTOM = FSNT-FLNT
     print(f"\t - Variable '{var}' being added to table")
-    data = derived_dict[case_name]["FSNT"] - derived_dict[case_name]["FLNT"]
+    data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
      # In order to get correct statistics, average to annual or seasonal
     data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
