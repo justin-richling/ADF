@@ -285,6 +285,7 @@ def time_series(adfobj):
             fig = _make_fig_legend(case_num, fig)
 
             #Save plot
+            print("plot_loc",plot_loc,"\n")
             plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
             plt.savefig(plot_name, facecolor='w')
             plt.close()
