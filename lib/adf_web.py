@@ -626,7 +626,7 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
-
+                print("mean_html_info[web_data.plot_type]",mean_html_info[web_data.plot_type],"\n")
                 tmpl = jinenv.get_template('template.html')  #Set template
                 rndr = tmpl.render(title=main_title,
                                    var_title=web_data.name,
@@ -642,6 +642,7 @@ class AdfWeb(AdfObs):
                                    seasons=seasons) #The template rendered
 
                 #Write HTML file:
+                print("web_data.html_file",web_data.html_file,)
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
                 #End with
