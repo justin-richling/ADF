@@ -254,6 +254,7 @@ def amwg_chem_table(adf):
         durations.append((end_period-start_period).days*86400)
 
     #Get the files for each case and set of start and end years
+    print("\n",data_dirs,scenarios,start_dates,end_dates,"\n")
     Files,Lats,Lons,areas= Get_files(data_dirs,scenarios,start_dates,end_dates,area=True)
 
     # Files (list) can have serveral values
@@ -829,7 +830,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         current_dir=data_dirs[i]
         #scn=scenarios[i]
 
-        print("\n",current_dir,scn,start_periods[i],end_periods[i],"\n")
+        print("\nUMMMMMMMMMM",current_dir,scn,start_periods[i],end_periods[i],"\n")
 
         # find the needed the files
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
