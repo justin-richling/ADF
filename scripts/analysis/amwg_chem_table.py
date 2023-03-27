@@ -305,7 +305,7 @@ def amwg_chem_table(adf):
 
     # this is for finding tropospheric values
     Dic_crit={}
-
+    print("\n","scenarios",scenarios,"\n")
     for i,scn in enumerate(scenarios):
         print("\n",Files[scenarios[i]][0],"\n")
         tmp_file=xr.open_dataset(data_dirs[i]+Files[scenarios[i]][0])
