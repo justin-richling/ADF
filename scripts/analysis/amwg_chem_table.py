@@ -532,6 +532,9 @@ def list_files(directory,scenario,start_date,end_date):
     all_fileNames=[]
     #print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
+        print("all_filenames[i][0:scenario_len]",all_filenames[i][0:scenario_len])
+        print("scenario",scenario)
+        print(all_filenames[i][0:scenario_len]==scenario,"\n")
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
 
             print("This made it through:",directory+all_filenames[i],"\n")
