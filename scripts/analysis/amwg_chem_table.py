@@ -254,7 +254,7 @@ def amwg_chem_table(adf):
         durations.append((end_period-start_period).days*86400)
 
     #Get the files for each case and set of start and end years
-    print("\n",data_dirs,scenarios,start_dates,end_dates,"\n")
+    #print("\n",data_dirs,scenarios,start_dates,end_dates,"\n")
     Files,Lats,Lons,areas= Get_files(data_dirs,scenarios,start_dates,end_dates,area=True)
 
     # Files (list) can have serveral values
@@ -263,6 +263,7 @@ def amwg_chem_table(adf):
 
     # find the name of all the variables in the file.
     # this will help the code to work for the variables that are not in the files (assingn 0s)
+    print("WOW:",data_dirs[0]+Files[scenarios[0]][0])
     tmp_file=xr.open_dataset(data_dirs[0]+Files[scenarios[0]][0])
     ListVars=tmp_file.variables
     tmp_file.close()
