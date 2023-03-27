@@ -197,8 +197,6 @@ def amwg_chem_table(adf):
     #case_names[1] = case_names[1].replace(".001","._false_case.001")
     #--------------------------------------------------------------------------------------------
 
-    print(scenarios)
-
     # List of labels for printing and plotting uses
     #labels=['ne30x1']
     #labels=['ne30x8']
@@ -467,7 +465,7 @@ def amwg_chem_table(adf):
     # probably not needed in the actual ADF...
     #table_df = table_df.round({case_names[0]: 3, case_names[1]: 3})
     table_df.to_csv(output_csv_file, index=False)
-    print("Shoould've saved a csv file, please. Oh please, I neeeeeeed this to have worked, or else. That's it. I'm a goner...")
+    print("Should've saved a csv file, please. Oh please, I neeeeeeed this to have worked, or else. That's it. I'm a goner...")
     adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
 
     #Notify user that script has ended:
@@ -558,14 +556,18 @@ def list_files(directory,scenario,start_date,end_date):
             start_period = datetime.strptime(start_date, "%Y-%m-%d")
             end_period = datetime.strptime(end_date, "%Y-%m-%d")
             #print("scenario",scenario,"\n")
-            if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
+            """if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
                 if  (start_period<=filetime0<end_period) :
                     #print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
                     all_fileNames.append(all_filenames[i])
                 
             else:
                 if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
-                    all_fileNames.append(all_filenames[i])
+                    all_fileNames.append(all_filenames[i])"""
+
+            if  (start_period<=filetime0<end_period) :
+                #print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
+                all_fileNames.append(all_filenames[i])
                     
     print("Got the list of files (hopefully)...",len(all_fileNames))
     return all_fileNames
