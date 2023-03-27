@@ -769,7 +769,7 @@ def list_files(directory,scenario,start_date,end_date):
             
             # We need to only extract the files that are within the chosen dates.
             # first timestep is used for this purpose
-            print(time_bounds[0,0])
+            #print(time_bounds[0,0])
             
             # For CAM data
             filetime0=np.datetime64(time_bounds[0,0]) # beginning time of first timestep
@@ -777,7 +777,7 @@ def list_files(directory,scenario,start_date,end_date):
             
             start_period = datetime.strptime(start_date, "%Y-%m-%d")
             end_period = datetime.strptime(end_date, "%Y-%m-%d")
-            
+            print("scenario",scenario,"\n")
             if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
                 if  (start_period<=filetime0<end_period) :
                     print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
