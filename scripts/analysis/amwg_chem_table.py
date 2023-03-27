@@ -228,8 +228,8 @@ def amwg_chem_table(adf):
     #start_dates = ["1995-1-1", "1997-1-1"]
     #end_dates = ["1996-1-1", "1998-1-1"]
 
-    start_dates = ["1995-1-1", "1979-1-1"]
-    end_dates = ["1996-1-1", "1979-12-1"]
+    start_dates = ["1995-1-1", "1997-1-1"]
+    end_dates = ["1996-1-1", "1998-1-1"]
 
     #start_dates = ["1995-1-1"]
     #end_dates = ["1996-1-1"]
