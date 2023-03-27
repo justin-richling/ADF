@@ -305,6 +305,9 @@ def amwg_chem_table(adf):
 
     # this is for finding tropospheric values
     Dic_crit={}
+
+    print("\n\n","Files",Files,"\n\n")
+
     print("\n","scenarios",scenarios,"\n")
     for i,scn in enumerate(scenarios):
         print("\n",data_dirs[i],Files[scenarios[i]],"\n")
