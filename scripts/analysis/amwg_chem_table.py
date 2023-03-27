@@ -832,7 +832,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
 
         
         if "_copy" in current_dir:
-            scn.replace("001_copy.cam","001.cam")
+            scn = scn.replace("001_copy.cam","001.cam")
         print("\nUMMMMMMMMMM",current_dir,scn,start_periods[i],end_periods[i],"\n")
 
         # find the needed the files
