@@ -263,10 +263,11 @@ def amwg_chem_table(adf):
 
     # find the name of all the variables in the file.
     # this will help the code to work for the variables that are not in the files (assingn 0s)
-    print("WOW:",data_dirs[0]+Files[scenarios[0]][0])
-    tmp_file=xr.open_dataset(data_dirs[0]+Files[scenarios[0]][0])
-    ListVars=tmp_file.variables
-    tmp_file.close()
+    #for i,val in enumerate(start_dates):
+    #print("WOW:",data_dirs[0]+Files[scenarios[0]][0])
+    #tmp_file=xr.open_dataset(data_dirs[0]+Files[scenarios[0]][0])
+    #ListVars=tmp_file.variables
+    #mp_file.close()
 
     # All the possible variables 
     #print(ListVars)
@@ -279,237 +280,6 @@ def amwg_chem_table(adf):
     cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
     #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
 
-
-    """
-    # Chemistry tables
-    #-----------------
-    #Notify user that script has started:
-    print("\n  Calculating AMWG chemistry variable table...")
-
-    '''
-    NOTE - can probably make this more efficient/correct
-    '''
-    #Get dict for critical values and dict for case/variables mean ANN values
-    #Dic_crit,var_dict = make_var_dict(CHEMS)
-    dic_SE = create_dic_SE(CHEMS, ListVars, ext1_SE)
-    
-    #dic_SE = create_dic_SE(CHEMS)
-        
-    # extract all the data
-    var_dict={}
-
-    # this is for finding tropospheric values
-    Dic_crit={}
-
-    for i,scn in enumerate(scenarios):
-        
-        area=areas[scn]
-        current_lat=Lats[scn]
-        current_lon=Lons[scn]
-
-        if regional:
-            inside=Inside_SE(current_lat,current_lon,limit)
-        else:
-            if len(np.shape(area)) == 1:
-                inside=np.full((len(current_lon)),True)
-            else:
-                inside=np.full((len(current_lat),len(current_lon)),True)
-
-        current_dir=data_dirs[i]
-        current_files=Files[scn] 
-            
-        # Only for testing purposes
-        # -------------------------
-        if i !=0:
-            scn = scn.replace(".cam.h0","FAKE_NAME.cam.h0")
-        # Remove when in ADF testing
-        # -------------------------
-
-        var_dict[scn]={}
-        Dic_var_comp={}
-            
-        for _,var in enumerate(CHEMS):
-
-            # Components are: burden, chemical loss, chemical prod, dry deposition, 
-            #                 surface emissions, elevated emissions, chemical tendency
-            # I always add Lightning NOx production for gaseous species.
-            components=[var+'_BURDEN',var+'_CHML',var+'_CHMP',
-                        var+'_DDF',var+'_WDF', var+'_SF', var+'_CLXF',
-                        var+'_TEND',var+'_LNO']         
-
-            Dic_comp={}
-            for comp in components:
-                current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
-                    
-                Dic_comp[comp]=current_data
-            Dic_var_comp[var]=Dic_comp
-        var_dict[scn]= Dic_var_comp    
-
-        #Critical threshholds????
-        current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)  
-        Dic_crit[scn]=current_crit
-
-        print(f'Current Scenario: {scn}')
-        print(len(f'Current Scenario: {scn}')*'-','\n')
-        
-        if Tropospheric:
-            trop=np.where(current_crit>150,np.nan,current_crit)
-            strat=np.where(current_crit>150,current_crit,np.nan)
-        else:
-            trop=current_crit
-
-
-    thing_ext_full = {'_BURDEN':'_BURDEN',
-                  '_CHML':'_CHEM_LOSS','_CHMP':'_CHEM_PROD','_NET':'_NET',
-                  '_SF':'_EMIS',
-                  '_DDF':'_DRYDEP','_WDF':'_WETDEP',
-                  '_LIFETIME':'_LIFETIME',
-                  '_STE':'_STE',
-                  '_LNO':'_LNO'}
-
-    not_O3_ext = {k: v for k, v in thing_ext_full.items() if k in ['_BURDEN', '_CHML', '_SF','_LIFETIME','_LNO']}
-    O3_ext = thing_ext_full.copy()
-
-    #Create output file name:
-    output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
-    print("output_csv_file: ",output_csv_file,"\n")
-    
-    #Name the file after the test case
-    #output_csv_file = f'amwg_chem_table_{case_names[0]}.csv'
-
-
-    #Create the table
-    #----------------
-    print("For real, though, here comes the fun cooker.......................\n")
-    #cols = ['variable',"Test","Baseline"]
-    
-    #Use this for multi-case --> down the road a bit, yeah?
-    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
-    #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
-    
-    for current_var in CHEMS:
-
-        #Run O3 calcs
-        #------------
-        if current_var == "O3":
-            for key,ext in O3_ext.items():
-                row_values = []
-               
-                for i,scn in enumerate(scenarios):
-                    my_val = calc_chem_data(scn,current_var,var_dict,trop,
-                                            area,durations[i],inside)[key]
-
-                    if ext == "_BURDEN":
-                        new_ext = ext+" (Tg)"
-                    elif ext == "_LNO":
-                        new_ext = ext+" (TgN/yr)"
-                    elif ext == "_LIFETIME":
-                        new_ext = ext+" (days)"
-                        my_val = my_val*365
-                    else:
-                        new_ext = ext+" (Tg/yr)"
-
-                    row_values.append(np.round(my_val,3))
-
-                row_values = [current_var+new_ext]+row_values
-                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-
-                # Add entries to Pandas structure:
-                df = pd.DataFrame(dfentries,columns=cols)
-                if output_csv_file.is_file():
-                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
-                else:
-                    df.to_csv(output_csv_file, header=False, index=False)
-        
-        #Run most other variables
-        #--------------------------------------------
-        elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', "O3"]:
-            for key,ext in not_O3_ext.items():
-                row_values = []
-                for i,scn in enumerate(scenarios):
-                    my_val = calc_chem_data(scn,current_var,var_dict,trop,
-                                            area,durations[i],inside)[key]
-                
-                    if ext == "_BURDEN":
-                        new_ext = ext+" (Tg)"
-                    elif ext == "_LNO":
-                        new_ext = ext+" (TgN/yr)"
-                    elif ext == "_LIFETIME":
-                        if my_val < 1:
-                            my_val = my_val*365
-                            new_ext = ext+" (days)"
-                        else:
-                            new_ext = ext+" (yr)"
-                    else:
-                        new_ext = ext+" (Tg/yr)"
-
-                    row_values.append(np.round(my_val,3))
-
-                row_values = [current_var+new_ext]+row_values
-
-                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-                # Add entries to Pandas structure:
-                df = pd.DataFrame(dfentries,columns=cols)
-                if output_csv_file.is_file():
-                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
-                else:
-                    df.to_csv(output_csv_file, header=False, index=False)
-                    
-        #Run ISOP, Monoterpene, Methanol, and Acetone emmission calcs
-        #--------------------------------------------
-        elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
-            row_values = []
-            new_ext = "_EMIS (Tg/yr)"
-
-            for i,scn in enumerate(scenarios):
-                my_val = calc_chem_data(scn,current_var,var_dict,trop,
-                                            area,durations[i],inside)['_SF']
-                row_values.append(np.round(my_val,3))
-            row_values = [current_var+new_ext]+row_values
-
-            dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-            # Add entries to Pandas structure:
-            df = pd.DataFrame(dfentries,columns=cols)
-            if output_csv_file.is_file():
-                df.to_csv(output_csv_file, mode='a', header=False, index=False)
-            else:
-                df.to_csv(output_csv_file, header=False, index=False)
-
-    #Do some extracurricular work to clean up the tables
-    # - mostly to try and match the old AMWG chem tables
-    table_df = pd.read_csv(output_csv_file,names=cols)
-
-    # Change some compounds to match old AMWG chem table names
-    #table_df = table_df.replace('C10H16','Monoterpene', regex=True)
-    #table_df = table_df.replace('CH3OH','Methanol', regex=True)
-    #table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
-
-    # There's probably a better way to do this 
-    drop_vals = ["CH3CCL3_LNO","CO_LNO","O3_LNO"]
-    for val in drop_vals:
-        table_df = table_df[table_df["variable"].str.contains(val) == False]
-        table_df.reset_index(drop=True, inplace = True)
-
-    # Grab one LNO value (from CH4) change to LNO_PROD and add units
-    # Also, for no good reason, move to the bottom of table for completeness' sake
-    table_df = table_df.replace('CH4_LNO','LNO_PROD', regex=True)
-    print("Well, try this on for size: Finding the index for LNO_PROD:",table_df.index[table_df['variable'] == 'LNO_PROD (TgN/yr)'].tolist())
-    idx = table_df.index[table_df['variable'] == 'LNO_PROD (TgN/yr)'].tolist()[0]
-    table_df = table_df.append(table_df.iloc[idx], ignore_index=True)
-    table_df = table_df.drop([idx]).reset_index(drop=True)
-
-    table_df = table_df.drop_duplicates()
-
-    table_df.to_csv(output_csv_file, index=False)#  <------  header=False,
-    adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")
-
-    #Notify user that script has ended:
-    print("  ...AMWG chemistry variable table has been generated successfully.")
-    #End chemistry tables
-    #--------------------"""
-
-
-    print("For real, though, here comes the fun cooker.......................\n")
     # Aerosol tables
     #-----------------
 
@@ -528,7 +298,7 @@ def amwg_chem_table(adf):
     print("output_csv_file: ",output_csv_file,"\n")
 
     #Dic_crit,var_dict = make_var_dict(AEROSOLS)
-    dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
+    #dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
 
     # extract all the data
     var_dict={}
@@ -537,6 +307,11 @@ def amwg_chem_table(adf):
     Dic_crit={}
 
     for i,scn in enumerate(scenarios):
+        tmp_file=xr.open_dataset(data_dirs[i]+Files[scenarios[i]][0])
+        ListVars=tmp_file.variables
+        tmp_file.close()
+        
+        dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
         
         area=areas[scn]
         current_lat=Lats[scn]
