@@ -305,10 +305,8 @@ def amwg_chem_table(adf):
     # this is for finding tropospheric values
     Dic_crit={}
 
-    print("\n\n","Files",Files,"\n\n")
-
     for i,scn in enumerate(scenarios):
-        print("\n",data_dirs[i],Files[scenarios[i]],"\n")
+        #print("\n",data_dirs[i],Files[scenarios[i]],"\n")
         tmp_file=xr.open_dataset(data_dirs[i]+Files[scenarios[i]][0])
         ListVars=tmp_file.variables
         tmp_file.close()
@@ -532,12 +530,12 @@ def list_files(directory,scenario,start_date,end_date):
     all_fileNames=[]
     #print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
-        print("all_filenames[i][0:scenario_len]",all_filenames[i][0:scenario_len])
-        print("scenario",scenario)
-        print(all_filenames[i][0:scenario_len]==scenario,"\n")
+        #print("all_filenames[i][0:scenario_len]",all_filenames[i][0:scenario_len])
+        #print("scenario",scenario)
+        #print(all_filenames[i][0:scenario_len]==scenario,"\n")
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
 
-            print("This made it through:",directory+all_filenames[i],"\n")
+            #print("This made it through:",directory+all_filenames[i],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
