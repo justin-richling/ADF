@@ -307,7 +307,7 @@ def amwg_chem_table(adf):
     Dic_crit={}
     print("\n","scenarios",scenarios,"\n")
     for i,scn in enumerate(scenarios):
-        print("\n",Files[scenarios[i]][0],"\n")
+        print("\n",data_dirs[i],"\n")
         tmp_file=xr.open_dataset(data_dirs[i]+Files[scenarios[i]][0])
         ListVars=tmp_file.variables
         tmp_file.close()
