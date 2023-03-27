@@ -189,6 +189,7 @@ def amwg_chem_table(adf):
     #--------------------------------------------------------------------------------------------
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
+    print("scenarios",scenarios,"\n")
 
     # TESTING PURPOSES - will remove when comparing two actual cases
     # Change name of second case since it's a repeat of the first case
@@ -308,7 +309,6 @@ def amwg_chem_table(adf):
 
     print("\n\n","Files",Files,"\n\n")
 
-    print("\n","scenarios",scenarios,"\n")
     for i,scn in enumerate(scenarios):
         print("\n",data_dirs[i],Files[scenarios[i]],"\n")
         tmp_file=xr.open_dataset(data_dirs[i]+Files[scenarios[i]][0])
@@ -557,10 +557,10 @@ def list_files(directory,scenario,start_date,end_date):
             
             start_period = datetime.strptime(start_date, "%Y-%m-%d")
             end_period = datetime.strptime(end_date, "%Y-%m-%d")
-            print("scenario",scenario,"\n")
+            #print("scenario",scenario,"\n")
             if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
                 if  (start_period<=filetime0<end_period) :
-                    print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
+                    #print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
                     all_fileNames.append(all_filenames[i])
                 
             else:
@@ -613,7 +613,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         
         if "_copy" in current_dir:
             scn = scn.replace("001_copy.cam","001.cam")
-        print("\nUMMMMMMMMMM",current_dir,scn,start_periods[i],end_periods[i],"\n")
+        #print("\nUMMMMMMMMMM",current_dir,scn,start_periods[i],end_periods[i],"\n")
 
         # find the needed the files
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
