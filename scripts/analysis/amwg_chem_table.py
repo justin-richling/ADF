@@ -732,16 +732,16 @@ def list_files(directory,scenario,start_date,end_date):
     #all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
     print("directory: ",directory,"\n","start_date[0:4]: ",start_date[0:4],"\n")
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    print("start_filenames: ",start_filenames,"\n")
+    #print("start_filenames: ",start_filenames,"\n")
     all_start_filenames = [i.stem+".nc" for i in start_filenames]
 
     #all_end_filenames = glob.glob(f"{directory}/*.{end_date[0:4]}*")
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    print("end_filenames: ",end_filenames,"\n")
+    #print("end_filenames: ",end_filenames,"\n")
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
-    print("all_filenames: ",all_filenames,"\n")
+    #print("all_filenames: ",all_filenames,"\n")
     #print("all_filenames:",all_filenames)
 
     if len(all_filenames)==0 : sys.exit(" Directory has no outputs ")
@@ -749,7 +749,7 @@ def list_files(directory,scenario,start_date,end_date):
     
     # this is used to discern what files to extract
     scenario_len=len(scenario)
-    print(all_filenames[0])
+    #print(all_filenames[0])
     all_fileNames=[]
     #print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
