@@ -829,6 +829,8 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         current_dir=data_dirs[i]
         #scn=scenarios[i]
 
+        print("\n",current_dir,scn,start_periods[i],end_periods[i],"\n")
+
         # find the needed the files
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
         # get the Lat and Lons for each scenario
