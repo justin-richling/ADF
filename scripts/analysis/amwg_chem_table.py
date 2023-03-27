@@ -533,6 +533,8 @@ def list_files(directory,scenario,start_date,end_date):
     #print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
+
+            print("This made it through:",directory+all_filenames[i],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
@@ -618,6 +620,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         #print("\nUMMMMMMMMMM",current_dir,scn,start_periods[i],end_periods[i],"\n")
 
         # find the needed the files
+        print("current_dir",current_dir,"\n")
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
         print("current_files",current_files,"\n")
         # get the Lat and Lons for each scenario
