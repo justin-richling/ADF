@@ -570,7 +570,7 @@ class AdfWeb(AdfObs):
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
                     #if (multi_case_plots) and (var in mvars):
-                    if multi_case_plots:
+                    """if multi_case_plots:
                         #Loop over each variable in multi-case plot variables
                         #Check if plot ext is in requested multi-case plot types
                         if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars):
@@ -623,7 +623,41 @@ class AdfWeb(AdfObs):
 
                             #End for (var)
                         #End if (variable in multi-case plot variables)
+                    #End if multi-case multi-plots"""
+
+
+                    if multi_case_plots:
+                        #Loop over each variable in multi-case plot variables
+                        #Check if plot ext is in requested multi-case plot types
+                        if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars):
+                            print("VARRRRR - 1",var,"\n")
+
+
+                            #Initialize Ordered Dictionary for multi case plot type:
+                            if ptype not in multi_plot_html_info:
+                                multi_plot_html_info[ptype] = OrderedDict()
+                            #End if
+
+                            #Initialize Ordered Dictionary for category:
+                            if category not in multi_plot_html_info[ptype]:
+                                multi_plot_html_info[ptype][category] = OrderedDict()
+                            #End if
+
+                            if var not in multi_plot_html_info[ptype][category]:
+                                multi_plot_html_info[ptype][category][var] = OrderedDict()
+                            #End if
+
+                            p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                            if season not in multi_plot_html_info[ptype][category][var]:
+                                multi_plot_html_info[ptype][category][var][season] = p
+                            #End if
+
+                            #End for (var)
+                        #End if (variable in multi-case plot variables)
                     #End if multi-case multi-plots
+
+
+
                     #print("web_data.html_file.name",web_data.html_file.name,"\n")
                     #Need to isolate multi-case regular plots from the multi-case multi-plots
                     #QUESTION: Is there a better way?
