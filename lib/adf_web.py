@@ -739,7 +739,7 @@ class AdfWeb(AdfObs):
                 else:
                     rend_kwarg_dict["plot_types"] = plot_type_html
                     if web_data.case == data_name:
-                        rend_kwarg_dict["case_name"] = case1
+                        rend_kwarg_dict["case_name"] = web_data.case
 
                     table_rndr = table_tmpl.render(rend_kwarg_dict)
 
