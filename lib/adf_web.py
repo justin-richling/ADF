@@ -359,29 +359,6 @@ class AdfWeb(AdfObs):
         #Extract needed variables from yaml file:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
-        #Time series files for unspecified climo years
-        cam_ts_locs = self.get_cam_info('cam_ts_loc', required=True)
-
-        """#Attempt to grab case start_years (not currently required):
-        # This is for the header in the html files for climo yrs
-        syear_cases = self.get_cam_info('start_year')
-        eyear_cases = self.get_cam_info('end_year')
-
-        if (syear_cases and eyear_cases) == None:
-            syear_cases = [None]*len(case_names)
-            eyear_cases = [None]*len(case_names)
-
-        #Loop over model cases to catch all cases that have no climo years specified:
-        for case_idx, case_name in enumerate(case_names):
-
-            if (syear_cases[case_idx] and eyear_cases[case_idx]) == None:
-                starting_location = Path(cam_ts_locs[case_idx])
-                files_list = sorted(starting_location.glob('*nc'))
-                #This assumes CAM file names stay with this convention
-                #Better way to do this?
-                syear_cases[case_idx] = int(files_list[0].stem[-13:-9])
-                eyear_cases[case_idx] = int(files_list[0].stem[-6:-2])"""
-
         #Grab case climo years
         syear_cases = self.climo_yrs["syears"]
         eyear_cases = self.climo_yrs["eyears"]
@@ -399,14 +376,6 @@ class AdfWeb(AdfObs):
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
 
-            """#Attempt to grab baseline start_years (not currently required):
-            syear_baseline = self.get_baseline_info('start_year')
-            eyear_baseline = self.get_baseline_info('end_year')
-
-            if (syear_baseline and eyear_baseline) == None:
-                syear_baseline = self.climo_yrs["syear_baseline"]
-                eyear_baseline = self.climo_yrs["eyear_baseline"]
-            #End if"""
             baseline_yrs=f"{syear_baseline} - {eyear_baseline}"
         #End if
 
@@ -786,9 +755,10 @@ class AdfWeb(AdfObs):
 
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
+
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
-                    new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}                   
+                    new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}                 
 
                     if main_site_path:
                         plot_types = multi_plot_type_html
@@ -845,7 +815,8 @@ class AdfWeb(AdfObs):
                         #Construct individual plot type mean_diag html files, if they don't
                         #already exist:
                         mean_tmpl = jinenv.get_template('template_mean_diag.html')
-
+                        
+                        #Remove keys from main dictionary for this html page
                         templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}} 
 
                         mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
@@ -865,6 +836,7 @@ class AdfWeb(AdfObs):
                         #already exist:
                         plot_page_tmpl = jinenv.get_template('template_var.html')
 
+                        #Remove key from main dictionary for this html page
                         templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
 
                         plot_page_rndr = plot_page_tmpl.render(templ_var_rend_kwarg_dict)
@@ -974,7 +946,8 @@ class AdfWeb(AdfObs):
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
 
-                        tmpl_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name'}} 
+                        #Remove key from main dictionary for this html page
+                        tmpl_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name'}}
 
                         mean_table_rndr = mean_table_tmpl.render(tmpl_rend_kwarg_dict)
 
@@ -1132,6 +1105,7 @@ class AdfWeb(AdfObs):
 
                                 if not mean_ptype_plot_page.exists():
 
+                                    #Remove key from main dictionary for this html page
                                     templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
 
                                     #Construct individual plot type mean_diag
@@ -1149,8 +1123,9 @@ class AdfWeb(AdfObs):
                                 multi_mean = f"multi_case_mean_diag_{ptype}.html"
                                 mean_ptype_file = main_site_img_path / multi_mean
                                 if not mean_ptype_file.exists():
-
-                                    templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}} 
+                                    
+                                    #Remove keys from main dictionary for this html page
+                                    templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
 
                                     #Construct individual plot type mean_diag
                                     #html files, if they don't already exist:
@@ -1208,7 +1183,8 @@ class AdfWeb(AdfObs):
                         mean_ptype_plot_page = img_pages_dir / plot_page
 
                         if not mean_ptype_plot_page.exists():
-
+                            
+                            #Remove key from main dictionary for this html page
                             templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
 
                             #Construct individual plot type mean_diag
@@ -1226,8 +1202,9 @@ class AdfWeb(AdfObs):
                         multi_mean = f"multi_case_mean_diag_{ptype}.html"
                         mean_ptype_file = main_site_img_path / multi_mean
                         if not mean_ptype_file.exists():
-
-                            templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}} 
+                            
+                            #Remove keys from main dictionary for this html page
+                            templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
 
                             #Construct individual plot type mean_diag
                             #html files, if they don't already exist:
