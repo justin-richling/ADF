@@ -147,7 +147,7 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-
+    print("OBS VAR LIST: ",var_obs_dict,"\n")
     # probably want to do this one variable at a time:
     for var in var_list:
 
@@ -158,9 +158,10 @@ def global_latlon_map(adfobj):
                     multi_dict[multi_var] = OrderedDict()
 
         if adfobj.compare_obs:
-            print("VAR: ",var,"\n")
+            print("VAR: ",var)
             #Check if obs exist for the variable:
             if var in var_obs_dict:
+                print("OBS VAR: ",var,"\n")
                 #Note: In the future these may all be lists, but for
                 #now just convert the target_list.
                 #Extract target file:
