@@ -334,7 +334,7 @@ def global_latlon_map(adfobj):
                             if multi_plots:
                                 if var in adfobj.get_multi_case_info("global_latlon_map"):
                                     if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
-                                        print("MULTI-CASE VAR: ",var,"\n")
+                                        #print("MULTI-CASE VAR: ",var,"\n")
                                         multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
@@ -446,7 +446,7 @@ def global_latlon_map(adfobj):
                                 if multi_plots:
                                     if var in adfobj.get_multi_case_info("global_latlon_map"):
                                         if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
-                                            print("MULTI-CASE VAR: ",var,"\n")
+                                            #print("MULTI-CASE VAR: ",var,"\n")
                                             multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
@@ -496,6 +496,7 @@ def global_latlon_map(adfobj):
 
     #This will be a list of variables for multi-case plotting based off LatLon plot type
     if multi_plots:
+        print("multi_dict.keys()",multi_dict.keys(),"\n")
         #Notify user that script has started:
         print("\n  Generating lat/lon multi-case plots...")
 

@@ -624,7 +624,7 @@ class AdfWeb(AdfObs):
                             #End for (var)
                         #End if (variable in multi-case plot variables)
                     #End if multi-case multi-plots
-                    print("web_data.html_file.name",web_data.html_file.name,"\n")
+                    #print("web_data.html_file.name",web_data.html_file.name,"\n")
                     #Need to isolate multi-case regular plots from the multi-case multi-plots
                     #QUESTION: Is there a better way?
                     if "multi_plot" not in str(web_data.html_file.name):
