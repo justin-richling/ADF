@@ -147,7 +147,7 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    print("OBS VAR LIST: ",var_obs_dict,"\n")
+    #print("OBS VAR LIST: ",var_obs_dict,"\n")
     # probably want to do this one variable at a time:
     for var in var_list:
 
@@ -158,10 +158,10 @@ def global_latlon_map(adfobj):
                     multi_dict[multi_var] = OrderedDict()
 
         if adfobj.compare_obs:
-            print("VAR: ",var)
+            #print("VAR: ",var)
             #Check if obs exist for the variable:
             if var in var_obs_dict:
-                print("OBS VAR: ",var,"\n")
+                #print("OBS VAR: ",var,"\n")
                 #Note: In the future these may all be lists, but for
                 #now just convert the target_list.
                 #Extract target file:
@@ -226,7 +226,7 @@ def global_latlon_map(adfobj):
                 if multi_plots:
                     if var in adfobj.get_multi_case_info("global_latlon_map"):
                         if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
-                            print("MULTI-CASE VAR: ",var,"\n")
+                            #print("MULTI-CASE VAR: ",var,"\n")
                             multi_dict[var][case_name] = OrderedDict()
 
                 #Set case nickname:
