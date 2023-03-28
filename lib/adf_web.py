@@ -574,8 +574,9 @@ class AdfWeb(AdfObs):
                         #Loop over each variable in multi-case plot variables
                         #Check if plot ext is in requested multi-case plot types
                         if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars):
+                            print("VARRRRR - 1",var,"\n")
                             for var in multi_case_plots[web_data.plot_ext]:
-
+                                print("VARRRRR - 2",var,"\n")
                                 #Check if this is compared to observations
                                 if (self.compare_obs) and (var in self.var_obs_dict):
                                     print("VARRRRR",var,"\n")
