@@ -1143,6 +1143,7 @@ class AdfWeb(AdfObs):
                                 #End if (mean_ptype exists)
 
                     #Loop over any non multi-case multi-plot scenarios
+                    #ie multi-case Taylor Diagrams and multi-case QBO
                     if ext not in multi_case_dict:
                         #Move file to assets directory:
                         if not web_data.data.is_file():
