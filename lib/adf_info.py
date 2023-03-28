@@ -125,7 +125,6 @@ class AdfInfo(AdfConfig):
         #Grab test case nickname(s)
         test_nicknames = self.get_cam_info('case_nickname', required=True)
         if test_nicknames is None:
-            #test_nicknames = [None]*len(case_names)
             for idx,case_name in enumerate(case_names):
                 test_nicknames[idx] = case_name
 
