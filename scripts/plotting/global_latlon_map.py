@@ -158,7 +158,7 @@ def global_latlon_map(adfobj):
                     multi_dict[multi_var] = OrderedDict()
 
         if adfobj.compare_obs:
-            print(var)
+            print("VAR: ",var,"\n")
             #Check if obs exist for the variable:
             if var in var_obs_dict:
                 #Note: In the future these may all be lists, but for
