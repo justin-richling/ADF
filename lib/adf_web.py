@@ -397,8 +397,9 @@ class AdfWeb(AdfObs):
             for var_list in [multi_case_plots[ext] for ext in multi_case_plots]:
                 for var in var_list:
                     if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
+                        print("ARG:",var,"\n")
                         mvars.append(var)
-
+            print("mvars",mvars,"\n")
         #Create multi-case site:
         #Make a dictionary for plot type extensions for given plot type
         #This can probably be populated in the for-loops during html creation...
@@ -1061,7 +1062,7 @@ class AdfWeb(AdfObs):
                             #Check if variable is in desired multi-case plot
                             #and if plot_type is in given multi-case plot set:
                             if (var in mvars) and (ext in multi_case_plots):
-
+                                print("WTH:",var,"\n")
                                 #Move file to assets directory:
                                 if not web_data.data.is_file():
                                     shutil.copy(web_data.data, web_data.asset_path)
