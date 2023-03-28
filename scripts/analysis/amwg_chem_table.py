@@ -184,8 +184,10 @@ def amwg_chem_table(adf):
     #data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
     #           f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
 
-    data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
-               f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001_copy/']
+    """data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
+               f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001_copy/']"""
+    data_dirs=[f'{data_root_path2}{case_names[0]}/',
+               f'{data_root_path2}{case_names[-1]}/']
     #--------------------------------------------------------------------------------------------
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
@@ -233,8 +235,11 @@ def amwg_chem_table(adf):
     #start_dates = ["1995-1-1", "1997-1-1"]
     #end_dates = ["1996-1-1", "1998-1-1"]
 
-    start_dates = ["1995-1-1", "1997-1-1"]
-    end_dates = ["1996-1-1", "1998-1-1"]
+    """start_dates = ["1995-1-1", "1997-1-1"]
+    end_dates = ["1996-1-1", "1998-1-1"]"""
+
+    start_dates = ["2001-1-1", "2001-1-1"]
+    end_dates = ["2020-1-1", "2020-1-1"]
 
     #start_dates = ["1995-1-1"]
     #end_dates = ["1996-1-1"]
