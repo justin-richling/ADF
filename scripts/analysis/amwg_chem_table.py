@@ -573,9 +573,10 @@ def list_files(directory,scenario,start_date,end_date):
                 if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
                     all_fileNames.append(all_filenames[i])"""
 
-            if  (start_period<=filetime0<end_period) :
+            """if  (start_period<=filetime0<end_period) :
                 #print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
-                all_fileNames.append(all_filenames[i])
+                all_fileNames.append(all_filenames[i])"""
+            all_fileNames.append(all_filenames[i])
                     
     print("Got the list of files (hopefully)...",len(all_fileNames))
     return all_fileNames
