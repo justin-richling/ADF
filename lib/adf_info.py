@@ -88,6 +88,16 @@ class AdfInfo(AdfConfig):
             self.__num_cases = 1
         #End if
 
+        #Chemistry:
+        #----------
+        #Aerosols
+        if self.read_config_var("aerosol") is None:
+            self.__aerosol = False
+        else:
+            self.__aerosol = self.read_config_var("aerosol")
+
+        print("KIPPYKIYAY",self.__aerosol,"\n")
+
         #Loop over all items in config dict:
         for conf_var, conf_val in self.__cam_climo_info.items():
             if isinstance(conf_val, list):
@@ -103,12 +113,15 @@ class AdfInfo(AdfConfig):
         #End for
         #-------------------------------------------
 
-        #Read hist_str (component.hist_num) from the yaml file, or set to default
-        hist_str = self.get_basic_info('hist_str')
-        #If hist_str is not present, then default to 'cam.h0':
-        if not hist_str:
-            hist_str = 'cam.h0'
+        #Read history file number from the yaml file
+        hist_num = self.get_basic_info('hist_num')
+
+        #If hist_num is not present, then default to 'h0':
+        if not hist_num:
+            hist_num = 'h0'
         #End if
+
+        hist_str = '*.cam.'+hist_num
 
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
@@ -150,7 +163,7 @@ class AdfInfo(AdfConfig):
                 baseline_hist_locs = self.get_baseline_info('cam_hist_loc',
                                                     required=True)
                 starting_location = Path(baseline_hist_locs)
-                files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
+                files_list = sorted(starting_location.glob(hist_str+'.*.nc'))
                 base_climo_yrs = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
 
                 if syear_baseline is None:
@@ -163,11 +176,17 @@ class AdfInfo(AdfConfig):
                 #End if
             #End if
 
+            #Grab baseline nickname
+            base_nickname = self.get_baseline_info('case_nickname')
+            if base_nickname == None:
+                base_nickname = data_name
+
             data_name += f"_{syear_baseline}_{eyear_baseline}"
         #End if
 
         self.__syear_baseline = syear_baseline
         self.__eyear_baseline = eyear_baseline
+
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
         #-------------------------------------------------------------------------
@@ -178,6 +197,12 @@ class AdfInfo(AdfConfig):
 
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
+
+        #Grab test case nickname(s)
+        test_nicknames = self.get_cam_info('case_nickname', required=True)
+        if test_nicknames is None:
+            for idx,case_name in enumerate(case_names):
+                test_nicknames[idx] = case_name
 
         #Start years (not currently required):
         syears = self.get_cam_info('start_year')
@@ -202,7 +227,7 @@ class AdfInfo(AdfConfig):
             if syears[case_idx] is None or eyears[case_idx] is None:
                 print(f"No given climo years for {case_name}...")
                 starting_location = Path(cam_hist_locs[case_idx])
-                files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
+                files_list = sorted(starting_location.glob(hist_str+'.*.nc'))
                 case_climo_yrs = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
                 if syears[case_idx] is None:
                     print(f"No given start year for {case_name}, using first found year...")
@@ -229,6 +254,10 @@ class AdfInfo(AdfConfig):
 
         self.__syears = syears
         self.__eyears = eyears
+
+        #Initialize case nicknames:
+        self.__test_nicknames = test_nicknames
+        self.__base_nickname = base_nickname
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
@@ -365,6 +394,24 @@ class AdfInfo(AdfConfig):
         eyears = copy.copy(self.__eyears)
         return {"syears":syears,"eyears":eyears,
                 "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
+
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def case_nicknames(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        test_nicknames = copy.copy(self.__test_nicknames)
+        base_nickname = copy.copy(self.__base_nickname)
+
+        return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
+
+    # Create property needed to return "aerosol" logical to user:
+    @property
+    def aerosol(self):
+        """Return the "aerosol" logical to the user if requested."""
+        return self.__aerosol
 
     #########
 
