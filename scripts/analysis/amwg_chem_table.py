@@ -272,7 +272,7 @@ def amwg_chem_table(adf):
     #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
 
 
-    """
+    
     # Chemistry tables
     #-----------------
     #Notify user that script has started:
@@ -498,7 +498,7 @@ def amwg_chem_table(adf):
     #Notify user that script has ended:
     print("  ...AMWG chemistry variable table has been generated successfully.")
     #End chemistry tables
-    #--------------------"""
+    #--------------------
 
 
     print("For real, though, here comes the fun cooker.......................\n")
