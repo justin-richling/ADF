@@ -589,7 +589,7 @@ class AdfWeb(AdfObs):
                                     if category not in multi_plot_html_info[ptype]:
                                         multi_plot_html_info[ptype][category] = OrderedDict()
                                     #End if
-
+                                    print("multi_plot_html_info VAR",var,"\n")
                                     if var not in multi_plot_html_info[ptype][category]:
                                         multi_plot_html_info[ptype][category][var] = OrderedDict()
                                     #End if
