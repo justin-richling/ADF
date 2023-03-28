@@ -186,8 +186,8 @@ def amwg_chem_table(adf):
 
     """data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
                f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001_copy/']"""
-    data_dirs=[f'{data_root_path2}{case_names[0]}/',
-               f'{data_root_path2}{case_names[-1]}/']
+    data_dirs=[f'{data_root_path2}{case_names[0]}/atm/hist/',
+               f'{data_root_path2}{case_names[-1]}/atm/hist/']
     #--------------------------------------------------------------------------------------------
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
