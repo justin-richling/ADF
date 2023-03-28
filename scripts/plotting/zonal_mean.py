@@ -142,7 +142,7 @@ def zonal_mean(adfobj):
     #Should probably put these in the variables yaml file, eh?
     aerosol_dict = {"BC":["bc_a1", "bc_a4"],
                     "POM":["pom_a1", "pom_a4"],
-                    "SO4":["so4_a1", "so4_a2", "so4_a3","so4_a4","so4_a5"],
+                    "SO4":["so4_a1", "so4_a2", "so4_a3", "so4_a5"],
                     "SOA":["soa_a1", "soa_a2"],
                     "DUST":["dst_a1", "dst_a2", "dst_a3"],
                     "SeaSalt":["ncl_a1", "ncl_a2", "ncl_a3"]}
