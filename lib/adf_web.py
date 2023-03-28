@@ -622,7 +622,6 @@ class AdfWeb(AdfObs):
 
                             #End for (var)
                         #End if (variable in multi-case plot variables)
-                        print(multi_plot_html_info[ptype][category][var],"\n")
                     #End if multi-case multi-plots
                     
                     #Need to isolate multi-case regular plots from the multi-case multi-plots
@@ -635,7 +634,7 @@ class AdfWeb(AdfObs):
                         if category not in multi_mean_html_info[ptype]:
                             multi_mean_html_info[ptype][category] = OrderedDict()
                         #End if
-
+                        print("multi_mean_html_info VAR",var,"\n")
                         if var not in multi_mean_html_info[ptype][category]:
                             multi_mean_html_info[ptype][category][var] = OrderedDict()
                         #End if
