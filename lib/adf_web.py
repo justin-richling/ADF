@@ -1063,7 +1063,7 @@ class AdfWeb(AdfObs):
                             #Check if variable is in desired multi-case plot
                             #and if plot_type is in given multi-case plot set:
                             if (var in mvars) and (ext in multi_case_plots):
-                                print("WTH:",var,"\n")
+                                #print("WTH:",var,"\n")
                                 #Move file to assets directory:
                                 if not web_data.data.is_file():
                                     shutil.copy(web_data.data, web_data.asset_path)
@@ -1074,7 +1074,8 @@ class AdfWeb(AdfObs):
                                 img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                         start=main_site_img_path),
                                                         multi_plot_page]
-
+                                print(multi_plot_html_info[ptype])
+                                #print(multi_plot_html_info[ptype][category][var])
                                 rend_kwarg_dict = {"title": main_title,
                                                     "var_title": var,
                                                     "season_title": season,
