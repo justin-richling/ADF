@@ -459,9 +459,9 @@ def amwg_chem_table(adf):
 
     table_df = pd.read_csv(output_csv_file,names=cols)
 
-    print("BEFORE:",table_df)
+    #print("BEFORE:",table_df)
     table_df = table_df.replace('SULF','SO4', regex=True)
-    print("AFTER:",table_df)
+    #print("AFTER:",table_df)
 
     #output_csv_file_cleaned = output_csv_file.replace(".csv","_cleaned.csv")
     # Extra step here to ensure all values get actually rounded to 3 decimal places,
