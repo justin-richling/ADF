@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections import OrderedDict
 import numpy as np
 import xarray as xr
 import plotting_functions as pf
@@ -63,10 +64,9 @@ def zonal_mean(adfobj):
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
-    #Grab test case nickname(s)
-    test_nicknames = adfobj.get_cam_info('case_nickname')
-    if test_nicknames == None:
-        test_nicknames = case_names
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    base_nickname = adfobj.case_nicknames["base_nickname"]
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -88,16 +88,14 @@ def zonal_mean(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
-
-        #Grab baseline case nickname
-        base_nickname = adfobj.get_baseline_info('case_nickname')
-        if base_nickname == None:
-            base_nickname = data_name
     #End if
 
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+
+    #Chenistry
+    aerosol = adfobj.aerosol
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -128,8 +126,58 @@ def zonal_mean(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
 
+    #Set up case detail dictionary
+    #This is meant to be portable to other scripts
+    #Placeholder until intakeESM??? - JR
+    case_deets = {"years":{"syears":syear_cases,"eyears":eyear_cases,
+                                  "syear_baseline":syear_baseline,"eyear_baseline":eyear_baseline},
+                 "nicknames":{"cases":test_nicknames,
+                             "baseline":base_nickname},
+                 "case_names":{"cases":case_names,
+                               "baseline":data_name},
+                 "ptype":plot_type
+                }
+
+    #Set aerosol variables with constituents
+    #Should probably put these in the variables yaml file, eh?
+    aerosol_dict = {"BC":["bc_a1", "bc_a4"],
+                    "POM":["pom_a1", "pom_a4"],
+                    "SO4":["so4_a1", "so4_a2", "so4_a3","so4_a4","so4_a5"],
+                    "SOA":["soa_a1", "soa_a2"],
+                    "DUST":["dst_a1", "dst_a2", "dst_a3"],
+                    "SeaSalt":["ncl_a1", "ncl_a2", "ncl_a3"]}
+    aero_consts2 = [item for sublist in list(aerosol_dict.values()) for item in sublist]
+
+    #Grab all variables for each multi-case plot type
+    aero_consts = []
+    #ext are plot type extentions (keys for multi-case plots)
+     #var_list should be a list of all vars for each plot map extentions
+     #var is iterative for all plot map extensions
+    for var_listw in [aerosol_dict[ext] for ext in aerosol_dict]:
+        for varw in var_listw:
+            aero_consts.append(varw)
+
+    print(aero_consts,aero_consts2)
+
+    """if aerosol:
+        data_dict = OrderedDict()
+
+        #Initialize Ordered Dictionary for baseline case:
+        if data_name not in data_dict:
+            data_dict[data_name] = OrderedDict()"""
+    #if aerosol:
+    data_dict = OrderedDict()
+
+    #Initialize Ordered Dictionary for baseline case:
+    if data_name not in data_dict:
+        data_dict[data_name] = OrderedDict()
+    #else:
+    #    aero_consts = var_list
+
     #Loop over variables:
+    #for var in var_list:
     for var in var_list:
+        #if var not in aerosol_dict:
 
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
@@ -153,7 +201,8 @@ def zonal_mean(adfobj):
         #End if
 
         #Notify user of variable being plotted:
-        print(f"\t - zonal mean plots for {var}")
+        if var not in aero_consts:
+            print(f"\t - zonal mean plots for {var}")
 
         # Check res for any variable specific options that need to be used BEFORE going to the plot:
         if var in res:
@@ -163,8 +212,10 @@ def zonal_mean(adfobj):
 
         else:
             vres = {}
-        #End if
-
+        #End 
+        
+        case_deets["vres"] = vres
+        
         #loop over different data sets to plot model against:
         for data_src in data_list:
             # load data (observational) comparison files
@@ -179,6 +230,15 @@ def zonal_mean(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+
+                """if aerosol:
+                    #Initialize Ordered Dictionary for test case:
+                    if case_name not in data_dict:
+                        data_dict[case_name] = OrderedDict()"""
+                
+                #Initialize Ordered Dictionary for test case:
+                if case_name not in data_dict:
+                    data_dict[case_name] = OrderedDict()
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
@@ -226,7 +286,8 @@ def zonal_mean(adfobj):
 
                 #Notify user of level dimension:
                 if has_lev:
-                    print(f"\t   {var} has lev dimension.")
+                    if var not in aero_consts:
+                        print(f"\t   {var} has lev dimension.")
 
                 #
                 # Seasonal Averages
@@ -237,51 +298,93 @@ def zonal_mean(adfobj):
                 #Create new dictionaries:
                 mseasons = {}
                 oseasons = {}
+                dseasons = {} # hold the differences
 
                 #Loop over season dictionary:
                 for s in seasons:
+                    #print("WHAT IS THIS:",type(mdata.sel(time=seasons[s]).mean(dim='time')),"\n")
                     mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
                     oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
 
-                    # difference: each entry should be (lat, lon) or (plev, lat, lon)
-                    # dseasons[s] = mseasons[s] - oseasons[s]
-                    # difference will be calculated in plot_zonal_mean_and_save;
-                    # because we can let any pressure-level interpolation happen there
-                    # This could be re-visited for efficiency or improved code structure.
+                    """if aerosol:
+                        #Initialize Ordered Dictionary for season and variable:
+                        if s not in data_dict[case_name]:
+                            data_dict[case_name][s] = OrderedDict()
+                        if s not in data_dict[data_name]:
+                            data_dict[data_name][s] = OrderedDict()
 
-                    # time to make plot; here we'd probably loop over whatever plots we want for this variable
-                    # I'll just call this one "Zonal_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
-                    # NOTE: Up to this point, nothing really differs from global_latlon_map,
-                    #       so we could have made one script instead of two.
-                    #       Merging would make overall timing better because looping twice will double I/O steps.
-                    #
-                    plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                        data_dict[case_name][s][f"m{var}"] = {"mdata":mseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
+                        data_dict[data_name][s][f"o{var}"] = {"odata":oseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}"""
 
-                    # Check redo_plot. If set to True: remove old plot, if it already exists:
-                    if (not redo_plot) and plot_name.is_file():
-                        #Add already-existing plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, var, case_name, season=s,
-                                                plot_type="Zonal")
+                    #Initialize Ordered Dictionary for season and variable:
+                    if s not in data_dict[case_name]:
+                        data_dict[case_name][s] = OrderedDict()
+                    if s not in data_dict[data_name]:
+                        data_dict[data_name][s] = OrderedDict()
 
-                        #Continue to next iteration:
-                        continue
-                    elif (redo_plot) and plot_name.is_file():
-                        plot_name.unlink()
-                    #End if
+                    data_dict[case_name][s][f"m{var}"] = {"mdata":mseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
+                    data_dict[data_name][s][f"o{var}"] = {"odata":oseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
 
-                    #Create new plot:
-                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
-                                                [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                [syear_baseline,eyear_baseline],
-                                                mseasons[s], oseasons[s], has_lev, **vres)
+                    
+                    if var not in aero_consts:
+                        # difference: each entry should be (lat, lon) or (plev, lat, lon)
+                        # dseasons[s] = mseasons[s] - oseasons[s]
+                        # difference will be calculated in plot_zonal_mean_and_save;
+                        # because we can let any pressure-level interpolation happen there
+                        # This could be re-visited for efficiency or improved code structure.
 
-                    #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
+                        # time to make plot; here we'd probably loop over whatever plots we want for this variable
+                        # I'll just call this one "Zonal_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+                        # NOTE: Up to this point, nothing really differs from global_latlon_map,
+                        #       so we could have made one script instead of two.
+                        #       Merging would make overall timing better because looping twice will double I/O steps.
+                        #
+                        plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+
+                        # Check redo_plot. If set to True: remove old plot, if it already exists:
+                        if (not redo_plot) and plot_name.is_file():
+                            #Add already-existing plot to website (if enabled):
+                            adfobj.add_website_data(plot_name, var, case_name, season=s,
+                                                    plot_type="Zonal")
+
+                            #Continue to next iteration:
+                            continue
+                        elif (redo_plot) and plot_name.is_file():
+                            plot_name.unlink()
+                        #End if
+
+                        #Create new plot:
+                        pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
+                                                    [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                    [syear_baseline,eyear_baseline],
+                                                    mseasons[s], oseasons[s], has_lev, **vres)
+
+                        #Add plot to website (if enabled):
+                        adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
 
                 #End for (seasons loop)
             #End for (case names loop)
         #End for (obs/baseline loop)
     #End for (variables loop)
+
+    #User added script calls here?
+    #-----------------------------
+
+    #These will be for scripts that just piggy-back off data/info specific to zonal plotting
+    #
+    
+    # Chemistry
+    #----------
+    
+    # Aerosols
+    print("aerosol",aerosol,"\n")
+    #if aerosol:
+    import chemistry_maps as chem
+
+    chem.make_chem_maps(adfobj, "aerosol", data_dict, case_deets)        
+    ####
+
+    #End user added scripts
 
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
