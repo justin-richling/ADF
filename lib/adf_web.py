@@ -926,7 +926,7 @@ class AdfWeb(AdfObs):
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
-                        #Construct amwg_table.html
+                        """#Construct amwg_table.html
                         table_keys = [web_data.case,data_name,"case_comparison"]
 
                         case_table_dict = {}
@@ -936,7 +936,7 @@ class AdfWeb(AdfObs):
                                     case_table_dict[key] = multi_table_html_info[key]
                             else:
                                 case_table_dict[key] = multi_table_html_info[key]
-                        #End for
+                        #End for"""
 
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
 
@@ -944,7 +944,7 @@ class AdfWeb(AdfObs):
                             table_tmpl = jinenv.get_template('template_table.html')
 
                             tmpl_rend_kwarg_dict = rend_kwarg_dict
-                            rend_kwarg_dict["amwg_tables"] = case_table_dict
+                            #rend_kwarg_dict["amwg_tables"] = case_table_dict
                             rend_kwarg_dict["table_html"] = table_html
 
                             table_rndr = table_tmpl.render(rend_kwarg_dict)
