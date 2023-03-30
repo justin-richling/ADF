@@ -394,12 +394,11 @@ class AdfWeb(AdfObs):
             #ext are plot type extentions (keys for multi-case plots)
             #var_list should be a list of all vars for each plot map extentions
             #var is iterative for all plot map extensions
-            for var_list in [multi_case_plots[ext] for ext in multi_case_plots]:
-                for var in var_list:
-                    if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
-                        print("ARG:",var,"\n")
-                        mvars.append(var)
-            print("mvars",mvars,"\n")
+            for multi_var_list in [multi_case_plots[ext] for ext in multi_case_plots]:
+                for multi_var in multi_var_list:
+                    if ((self.compare_obs) and (multi_var in self.var_obs_dict)) or (not self.compare_obs):
+                        mvars.append(multi_var)
+
         #Create multi-case site:
         #Make a dictionary for plot type extensions for given plot type
         #This can probably be populated in the for-loops during html creation...
@@ -411,8 +410,7 @@ class AdfWeb(AdfObs):
 
         #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
-                           "Special":"html_img/multi_case_mean_diag_Special.html"
-                           }
+                       "Special":"html_img/multi_case_mean_diag_Special.html"}
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -569,114 +567,44 @@ class AdfWeb(AdfObs):
                 #Check to see if there are multiple-cases
                 if main_site_path:
                     #Check to see if the user has multi-plots enabled
-                    #if (multi_case_plots) and (var in mvars):
-                    """if multi_case_plots:
-                        #Loop over each variable in multi-case plot variables
-                        #Check if plot ext is in requested multi-case plot types
-                        if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars):
-                            print("VARRRRR - 1",var,"\n")
-                            for var in multi_case_plots[web_data.plot_ext]:
-                                print("VARRRRR - 2",var,"\n")
-                                #Check if this is compared to observations
-                                if (self.compare_obs) and (var in self.var_obs_dict):
-                                    print("VARRRRR",var,"\n")
-
-                                    #Initialize Ordered Dictionary for multi case plot type:
-                                    if ptype not in multi_plot_html_info:
-                                        multi_plot_html_info[ptype] = OrderedDict()
-                                    #End if
-
-                                    #Initialize Ordered Dictionary for category:
-                                    if category not in multi_plot_html_info[ptype]:
-                                        multi_plot_html_info[ptype][category] = OrderedDict()
-                                    #End if
-                                    #print("multi_plot_html_info VAR",var,"\n")
-                                    if var not in multi_plot_html_info[ptype][category]:
-                                        multi_plot_html_info[ptype][category][var] = OrderedDict()
-                                    #End if
-
-                                    p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                                    if season not in multi_plot_html_info[ptype][category][var]:
-                                        multi_plot_html_info[ptype][category][var][season] = p
-                                    #End if
-
-                                else:
-                                    #Initialize Ordered Dictionary for multi case plot type:
-                                    if ptype not in multi_plot_html_info:
-                                        multi_plot_html_info[ptype] = OrderedDict()
-                                    #End if
-
-                                    #Initialize Ordered Dictionary for category:
-                                    if category not in multi_plot_html_info[ptype]:
-                                        multi_plot_html_info[ptype][category] = OrderedDict()
-                                    #End if
-
-                                    if var not in multi_plot_html_info[ptype][category]:
-                                        multi_plot_html_info[ptype][category][var] = OrderedDict()
-                                    #End if
-
-                                    p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                                    if season not in multi_plot_html_info[ptype][category][var]:
-                                        multi_plot_html_info[ptype][category][var][season] = p
-                                    #End if
-                                #End if (comapre obs)
-
-                            #End for (var)
-                        #End if (variable in multi-case plot variables)
-                    #End if multi-case multi-plots"""
-
-
                     if multi_case_plots:
                         #Loop over each variable in multi-case plot variables
                         #Check if plot ext is in requested multi-case plot types
                         if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars):
-                            print("VARRRRR - 1",var,"\n")
 
                             #Initialize Ordered Dictionary for multi case plot type:
                             if ptype not in multi_plot_html_info:
                                 multi_plot_html_info[ptype] = OrderedDict()
                             #End if
-
                             #Initialize Ordered Dictionary for category:
                             if category not in multi_plot_html_info[ptype]:
                                 multi_plot_html_info[ptype][category] = OrderedDict()
                             #End if
-
                             if var not in multi_plot_html_info[ptype][category]:
                                 multi_plot_html_info[ptype][category][var] = OrderedDict()
                             #End if
-
                             p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                             if season not in multi_plot_html_info[ptype][category][var]:
                                 multi_plot_html_info[ptype][category][var][season] = p
                             #End if
-
-                            #End for (var)
                         #End if (variable in multi-case plot variables)
                     #End if multi-case multi-plots
 
-
-
-                    #print("web_data.html_file.name",web_data.html_file.name,"\n")
                     #Need to isolate multi-case regular plots from the multi-case multi-plots
                     #QUESTION: Is there a better way?
                     if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
                             multi_mean_html_info[ptype] = OrderedDict()
                         #End if
-
                         if category not in multi_mean_html_info[ptype]:
                             multi_mean_html_info[ptype][category] = OrderedDict()
                         #End if
-                        #print("multi_mean_html_info VAR",var,"\n")
                         if var not in multi_mean_html_info[ptype][category]:
                             multi_mean_html_info[ptype][category][var] = OrderedDict()
                         #End if
-
                         p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                         if season not in multi_mean_html_info[ptype][category][var]:
                             multi_mean_html_info[ptype][category][var][season] = p
-                        #print(multi_mean_html_info[ptype][category][var].keys())
                         #End if
                     #End if (not multi-case multi-plots)
                 #End if (multi-case scenario)
@@ -690,7 +618,6 @@ class AdfWeb(AdfObs):
                 self.__case_web_paths[web_data.case]['assets_dir'].mkdir(exist_ok=True)
 
                 #Move file to assets directory:
-                #if not web_data.data.is_file():
                 try:
                     shutil.copy(web_data.data, web_data.asset_path)
                 except:
@@ -824,17 +751,17 @@ class AdfWeb(AdfObs):
                             web_data.asset_path.stem]
 
                     rend_kwarg_dict = {"title": main_title,
-                                  "var_title": web_data.name,
-                                  "season_title": web_data.season,
-                                  "case_name": web_data.case,
-                                  "case_yrs": case_yrs,
-                                  "base_name": data_name,
-                                  "baseline_yrs": baseline_yrs,
-                                  "plottype_title": web_data.plot_type,
-                                  "imgs": img_data,
-                                  "mydata": mean_html_info[web_data.plot_type],
-                                  "plot_types": plot_types,
-                                  "multi": multi_layout}
+                                       "var_title": web_data.name,
+                                       "season_title": web_data.season,
+                                       "case_name": web_data.case,
+                                       "case_yrs": case_yrs,
+                                       "base_name": data_name,
+                                       "baseline_yrs": baseline_yrs,
+                                       "plottype_title": web_data.plot_type,
+                                       "imgs": img_data,
+                                       "mydata": mean_html_info[web_data.plot_type],
+                                       "plot_types": plot_types,
+                                       "multi": multi_layout}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
 
@@ -1049,9 +976,6 @@ class AdfWeb(AdfObs):
 
                                 table_tmpl = jinenv.get_template('template_table.html')
 
-                                #rend_kwarg_dict["case_name"] = case_name
-                                #rend_kwarg_dict["amwg_tables"] = base_table_dict
-
                                 table_rndr = table_tmpl.render(rend_kwarg_dict)
 
                                 with open(sp_html, 'w', encoding='utf-8') as ofil:
@@ -1097,7 +1021,6 @@ class AdfWeb(AdfObs):
                             #Check if variable is in desired multi-case plot
                             #and if plot_type is in given multi-case plot set:
                             if (var in mvars) and (ext in multi_case_plots):
-                                #print("WTH:",var,"\n")
                                 #Move file to assets directory:
                                 if not web_data.data.is_file():
                                     shutil.copy(web_data.data, web_data.asset_path)
@@ -1108,8 +1031,7 @@ class AdfWeb(AdfObs):
                                 img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                         start=main_site_img_path),
                                                         multi_plot_page]
-                                print(multi_plot_html_info[ptype])
-                                #print(multi_plot_html_info[ptype][category][var])
+
                                 rend_kwarg_dict = {"title": main_title,
                                                     "var_title": var,
                                                     "season_title": season,
