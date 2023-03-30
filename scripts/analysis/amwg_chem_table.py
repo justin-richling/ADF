@@ -117,13 +117,6 @@ def amwg_chem_table(adf):
     start_year = adf.climo_yrs["syears"]
     end_year = adf.climo_yrs["eyears"]
 
-    # My own code
-    # check if the directory has start year dash end year sub-directory
-    """input_ts_locs2 = []
-    for i,val in enumerate(input_ts_locs):
-        input_ts_locs2.append(f"{val}/{start_year[i]}-{end_year[i]}/")
-        input_ts_locs2.append(val)"""
-
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
@@ -133,8 +126,6 @@ def amwg_chem_table(adf):
         bl_syr = adf.climo_yrs["syear_baseline"]
         bl_eyr = adf.climo_yrs["eyear_baseline"]
 
-        input_ts_baseline2 = f"{input_ts_baseline}/{bl_syr}-{bl_eyr}/"
-
         if "CMIP" in baseline_name:
             print("CMIP files detected, skipping AMWG table (for now)...")
 
@@ -142,8 +133,6 @@ def amwg_chem_table(adf):
             #Append to case list:
             case_names.append(baseline_name)
             input_ts_locs.append(input_ts_baseline)
-            #input_ts_locs2.append(input_ts_baseline2)
-            #input_ts_locs2.append(input_ts_baseline)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
@@ -191,7 +180,7 @@ def amwg_chem_table(adf):
     #--------------------------------------------------------------------------------------------
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
-    print("scenarios",scenarios,"\n")
+    #print("scenarios",scenarios,"\n")
 
     # TESTING PURPOSES - will remove when comparing two actual cases
     # Change name of second case since it's a repeat of the first case
@@ -200,9 +189,6 @@ def amwg_chem_table(adf):
     #--------------------------------------------------------------------------------------------
 
     # List of labels for printing and plotting uses
-    #labels=['ne30x1']
-    #labels=['ne30x8']
-
     labels=['camChem']*len(case_names)
 
     # In CAM-Chem (or MUSICA-v0), user can save the outputs for only a box region.
@@ -232,12 +218,6 @@ def amwg_chem_table(adf):
     # Periods of Interest
     # -------------------
     # choose the period of interest. Plots will be averaged within this period
-    #start_dates = ["1995-1-1", "1997-1-1"]
-    #end_dates = ["1996-1-1", "1998-1-1"]
-
-    """start_dates = ["1995-1-1", "1997-1-1"]
-    end_dates = ["1996-1-1", "1998-1-1"]"""
-
     start_dates = ["2001-1-1", "2001-1-1"]
     end_dates = ["2020-1-1", "2020-1-1"]
 
@@ -258,7 +238,6 @@ def amwg_chem_table(adf):
         durations.append((end_period-start_period).days*86400)
 
     #Get the files for each case and set of start and end years
-    #print("\n",data_dirs,scenarios,start_dates,end_dates,"\n")
     Files,Lats,Lons,areas= Get_files(data_dirs,scenarios,start_dates,end_dates,area=True)
 
     # Files (list) can have serveral values
@@ -268,21 +247,15 @@ def amwg_chem_table(adf):
     # find the name of all the variables in the file.
     # this will help the code to work for the variables that are not in the files (assingn 0s)
     #for i,val in enumerate(start_dates):
-    #print("WOW:",data_dirs[0]+Files[scenarios[0]][0])
     #tmp_file=xr.open_dataset(data_dirs[0]+Files[scenarios[0]][0])
     #ListVars=tmp_file.variables
-    #mp_file.close()
+    #tmp_file.close()
 
     # All the possible variables 
     #print(ListVars)
-
-
     
-    #cols = ['variable',"Test","Baseline"]
-    
-    #Use this for multi-case --> down the road a bit, yeah?
+    #Use this for multi-case?
     cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
-    #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
 
     # Aerosol tables
     #-----------------
@@ -301,9 +274,6 @@ def amwg_chem_table(adf):
     output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
     print("output_csv_file: ",output_csv_file,"\n")
 
-    #Dic_crit,var_dict = make_var_dict(AEROSOLS)
-    #dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
-
     # extract all the data
     var_dict={}
 
@@ -311,7 +281,7 @@ def amwg_chem_table(adf):
     Dic_crit={}
 
     for i,scn in enumerate(scenarios):
-        #print("\n",data_dirs[i],Files[scenarios[i]],"\n")
+
         tmp_file=xr.open_dataset(data_dirs[i]+Files[scenarios[i]][0])
         ListVars=tmp_file.variables
         tmp_file.close()
@@ -332,13 +302,6 @@ def amwg_chem_table(adf):
 
         current_dir=data_dirs[i]
         current_files=Files[scn] 
-
-        # Only for testing purposes
-        # -------------------------
-        #if i !=0:
-        #    scn = scn.replace(".cam.h0","_FAKE_NAME.cam.h0")
-        # Remove when in ADF testing
-        # -------------------------
 
         var_dict[scn]={}
         Dic_var_comp={}
@@ -394,36 +357,26 @@ def amwg_chem_table(adf):
                         new_ext = ext+" (TgC)"
                 elif ext == "_LIFETIME":
                     if i == 0:
-                        print(current_var, "_LIFETIME", my_val,"\n")
                         if 0 < my_val < 1:
-                            print("THIS SHOULD BE CHANGING THE VALUE!!!!!!!!: ",current_var, "_LIFETIME", my_val,"\n")
                             my_val = my_val*365
                             new_ext = ext+" (days)"
-                            print("DID IT CHANGE????",my_val)
                             
                         elif my_val > 1:
-                            print("SHOULD BE A YEARLY VALUE SINCE IT IS GREATER THAN 1, VERN: ",current_var,my_val)
                             new_ext = ext+" (yr)"
                         elif int(my_val) == 0:
-                            print("SHOULD BE A YEARLY VALUE SINCE IT IS ZERO, VERN: ",current_var,my_val)
                             new_ext = ext+" (days)"
-                        print("AFTER: ",current_var, "_LIFETIME", my_val,"\n")
                     if i > 0:
                         #print(current_var, "_LIFETIME", my_val,"\n")
                         if 0 < my_val < 1:
-                            print("THIS SHOULD BE CHANGING THE VALUE for baseline!!!!!!!!: ",current_var, "_LIFETIME", my_val,"\n")
                             my_val = my_val*365
                             new_ext = ext+" (days)"
-                            #print("DID IT CHANGE????",my_val)
                 else:
                     if current_var == "SULF":
                         new_ext = ext+" (TgS/yr)"
                     else:
                         new_ext = ext+" (TgC/yr)"
-                print(f"Let's compare units now Vern for {scn}:",new_ext,"\n")
                 row_values.append(np.round(my_val,3))
             row_values = [current_var+new_ext]+row_values
-            print(row_values)
             
             dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
             # Add entries to Pandas structure:
@@ -459,9 +412,7 @@ def amwg_chem_table(adf):
 
     table_df = pd.read_csv(output_csv_file,names=cols)
 
-    #print("BEFORE:",table_df)
     table_df = table_df.replace('SULF','SO4', regex=True)
-    #print("AFTER:",table_df)
 
     #output_csv_file_cleaned = output_csv_file.replace(".csv","_cleaned.csv")
     # Extra step here to ensure all values get actually rounded to 3 decimal places,
@@ -506,41 +457,25 @@ def list_files(directory,scenario,start_date,end_date):
     # from files. 
     #           *** Flag for possible upgrade/update ***
     #
-    #import os,sys,glob
-    #all_filenames =list (file for file in os.listdir(directory) 
-    #     if os.path.isfile(os.path.join(directory, file)))
-    #print(sorted(all_filenames[0]))
 
-    #all_start_filenames = glob.glob(f"{directory}/*.{start_date[0:4]}*")
-    print("directory: ",directory,"\n","start_date[0:4]: ",start_date[0:4],"\n")
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    #print("start_filenames: ",start_filenames,"\n")
     all_start_filenames = [i.stem+".nc" for i in start_filenames]
 
-    #all_end_filenames = glob.glob(f"{directory}/*.{end_date[0:4]}*")
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    #print("end_filenames: ",end_filenames,"\n")
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
-    #print("all_filenames: ",all_filenames,"\n")
-    #print("all_filenames:",all_filenames)
+
 
     if len(all_filenames)==0 : sys.exit(" Directory has no outputs ")
-    #all_filenames.sort()
     
     # this is used to discern what files to extract
     scenario_len=len(scenario)
-    #print(all_filenames[0])
     all_fileNames=[]
-    #print("all_filenames[0][0:scenario_len]",all_filenames[0][-scenario_len+11:-11])
     for i in range(len(all_filenames)):
-        #print("all_filenames[i][0:scenario_len]",all_filenames[i][0:scenario_len])
-        #print("scenario",scenario)
-        #print(all_filenames[i][0:scenario_len]==scenario,"\n")
+
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
 
-            #print("This made it through:",directory+all_filenames[i],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
@@ -555,7 +490,6 @@ def list_files(directory,scenario,start_date,end_date):
             
             # We need to only extract the files that are within the chosen dates.
             # first timestep is used for this purpose
-            #print(time_bounds[0,0])
             
             # For CAM data
             filetime0=np.datetime64(time_bounds[0,0]) # beginning time of first timestep
@@ -563,7 +497,6 @@ def list_files(directory,scenario,start_date,end_date):
             
             start_period = datetime.strptime(start_date, "%Y-%m-%d")
             end_period = datetime.strptime(end_date, "%Y-%m-%d")
-            #print("scenario",scenario,"\n")
             """if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
                 if  (start_period<=filetime0<end_period) :
                     #print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
@@ -619,19 +552,11 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
     for i,scn in enumerate(scenarios):
 
         current_dir=data_dirs[i]
-        #scn=scenarios[i]
 
-        
-        #if "_copy" in current_dir:
-        #    scn = scn.replace("001_copy.cam","001.cam")
-        #print("\nUMMMMMMMMMM",current_dir,scn,start_periods[i],end_periods[i],"\n")
 
         # find the needed the files
-        print("current_dir",current_dir,"\n")
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
-        print("current_files",current_files,"\n")
         # get the Lat and Lons for each scenario
-        print(f"trying this file: {i}")
         tmp_file=xr.open_dataset(current_dir+current_files[0])
         lon=tmp_file['lon'+ext1_SE].data
         lon[lon > 180.] -= 360 # shift longitude from 0-360˚ to -180-180˚
@@ -747,7 +672,6 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
     #Flush out the nans and take mean
     all_data=np.nanmean(all_data,axis=0)
     
-    #print("Got the SE data (hopefully) ...")
     return all_data 
 
 #####
@@ -1001,7 +925,6 @@ def create_dic_SE(variables, ListVars, ext1_SE):
                     dic_SE[var+'_LNO']['LNO_COL_PROD'+ext1_SE]=1  # convert [Tg N/yr] to [Tg N /yr]        
                 else:
                     dic_SE[var+'_LNO']['DF_O3'+ext1_SE]=0
-    print("Made dict_SE (hopefully) ...")
     return dic_SE
 
 #####
@@ -1102,7 +1025,6 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     NET = CHMP-CHML
     thing_list['_NET'] = np.round(NET,5)
     
-    print("Got the SE final data calcs (hopefully) ...")
     return thing_list
 
 #####
