@@ -53,7 +53,7 @@ seasons = {"ANN": np.arange(1,13,1),
 aerosol_dict = {"BC":["bc_a1", "bc_a4"],
                 "POM":["pom_a1", "pom_a4"],
                 "SO4":["so4_a1", "so4_a2",  "so4_a3", "so4_a5"],
-                #"SOA":["soa_a1", "soa_a2"],
+                "SOA":["soa_a1", "soa_a2"],
                 "DUST":["dst_a1", "dst_a2", "dst_a3"],
                 "SeaSalt":["ncl_a1", "ncl_a2", "ncl_a3"]}
 
@@ -62,26 +62,15 @@ aerosol_dict = {"BC":["bc_a1", "bc_a4"],
 #
 def make_chem_maps(adfobj, diag, data_dict, case_deets):
     """
-    regional_map_multicase
-    input -> ADF object
+    Chemistry Map main function
+        * Initially start with Aerosol Zonal maps
+            - This probably can be expanded to LatLon if given single pressure levels?
 
-    Sketch of workflow:
-    - check for regional options (see module docstring),
-    - get case names/locations (time series are used),
-    - determine plot location and type
-    - detect per-variable plot options
-    - Loop through variables: make one multi-panel plot per variable
+        
     """
 
     # Notify user that script has started:
     print("\n  Generating zonal aerosol plots ...")
-
-    # We need to know:
-    # - Variable to plot
-    # - Region to plot
-    # - Years to include in average
-    # - Months/Season to include in average
-    # - Cases ... reference on left, test(s) to the right --> IMPOSE UPPER LIMIT OF 10 PANELS
 
     var_list = adfobj.diag_var_list
 
