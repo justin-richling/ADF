@@ -12,8 +12,6 @@ except ImportError:
     print("Please install module, e.g. 'pip install scipy'.")
 
 from datetime import datetime, timedelta
-import secrets
-from tty import setcbreak
 import numpy as np
 #import pandas as pd
 import xarray as xr
@@ -21,7 +19,7 @@ from pathlib import Path
 import sys
 import warnings  # use to warn user about missing files.
 
-# list of the variables to be caculated. 
+# list of the variables to be calculated. 
 CHEMS =["CH4",
         "CH3CCL3",
          "CO",
@@ -165,28 +163,16 @@ def amwg_chem_table(adf):
    
     # THIS NEEDS TO BE CHANGED
     #--------------------------------------------------------------------------------------------
-    data_root_path = '/glade/scratch/richling/archive/chem_diags/'
-    data_root_path2 = '/glade/scratch/tilmes/archive/'
-    #data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
-    #            f'{data_root_path2}f.cesm3_cam058_mom_e.FWscHIST_chemistry.ne30_L58.024/atm/hist/']
+    data_root_path2 = '/glade/scratch/richling/archive/chem_diags/'
+    data_root_path = '/glade/scratch/tilmes/archive/'
 
-    #data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
-    #           f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/']
-
-    """data_dirs=[f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/',
-               f'{data_root_path}f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001_copy/']"""
-    data_dirs=[f'{data_root_path2}{case_names[0]}/atm/hist/',
-               f'{data_root_path2}{case_names[-1]}/atm/hist/']
+    data_dirs=[f'{data_root_path}{case_names[0]}/atm/hist/',
+               f'{data_root_path}{case_names[-1]}/atm/hist/']
     #--------------------------------------------------------------------------------------------
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
     #print("scenarios",scenarios,"\n")
 
-    # TESTING PURPOSES - will remove when comparing two actual cases
-    # Change name of second case since it's a repeat of the first case
-    #--------------------------------------------------------------------------------------------
-    #case_names[1] = case_names[1].replace(".001","._false_case.001")
-    #--------------------------------------------------------------------------------------------
 
     # List of labels for printing and plotting uses
     labels=['camChem']*len(case_names)
@@ -218,19 +204,16 @@ def amwg_chem_table(adf):
     # Periods of Interest
     # -------------------
     # choose the period of interest. Plots will be averaged within this period
-    start_dates = ["2001-1-1", "2001-1-1"]
-    end_dates = ["2020-1-1", "2020-1-1"]
-
-    #start_dates = ["1995-1-1"]
-    #end_dates = ["1996-1-1"]
+    start_dates = [f"{start_year}-1-1", f"{start_year}-1-1"]
+    end_dates = [f"{end_year}-1-1", f"{end_year}-1-1"]
 
     start_periods = []
     end_periods = []
     durations = []
-    for i,val in enumerate(start_dates):
+    for val in start_dates:
     # convert date strings to datetime format
-        start_period = datetime.strptime(start_dates[i], "%Y-%m-%d")
-        end_period = datetime.strptime(end_dates[i], "%Y-%m-%d")
+        start_period = datetime.strptime(val, "%Y-%m-%d")
+        end_period = datetime.strptime(val, "%Y-%m-%d")
         
         start_periods.append(start_period)
         end_periods.append(end_period)
