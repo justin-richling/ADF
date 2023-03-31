@@ -151,13 +151,13 @@ def time_series(adfobj):
     #ie RESTOM is only desired (currently) for annual, not seasonally.
     #Simply add to this list for customization
     ign = ["RESTOM"]
-    try:
-        #Check to see if list of requested variables are in ts_var_list
-        for ign_var in ign:
-            ts_var_list_s = [x for x in ts_var_list if x != ign_var]
-    except:
+    """try:"""
+    #Check to see if list of requested variables are in ts_var_list
+    for ign_var in ign:
+        ts_var_list_s = [x for x in ts_var_list if x != ign_var]
+    """except:
         #This may not catch all the errors, but let's try (no pun)
-        ts_var_list_s = ts_var_list
+        ts_var_list_s = ts_var_list"""
 
     #Grab all the seasonally weighted data up front
     print("\n  Grabbing seasonally weighted data...")
