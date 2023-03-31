@@ -343,6 +343,10 @@ def time_series(adfobj):
                                 marker, c=colors[case_idx],label=label)
                     #End if
 
+                    #For the minor ticks, use no labels; default NullFormatter.
+                    ax.tick_params(which='major', length=7)
+                    ax.tick_params(which='minor', length=5)
+
                     #Attempt to set custom y-ranges
                     #Grab mins/maxes
                     y_mins.append(np.nanmin(vals[var][case_name][season]))
