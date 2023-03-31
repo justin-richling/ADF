@@ -438,6 +438,9 @@ class AdfWeb(AdfObs):
         #Set main title for website:
         main_title = "CAM Diagnostics"
 
+        #List of seasons
+        seasons = ["ANN","DJF","MAM","JJA","SON"]
+
         #Determine local directory:
         adf_lib_dir = Path(__file__).parent
 
@@ -682,7 +685,8 @@ class AdfWeb(AdfObs):
                                   "table_html": table_html,
                                   "multi_head": False,
                                   "multi": multi_layout,
-                                  "case_sites": case_sites}
+                                  "case_sites": case_sites,
+                                  "seasons": seasons}
 
                 table_tmpl = jinenv.get_template('template_table.html')
 
@@ -761,7 +765,8 @@ class AdfWeb(AdfObs):
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
-                                       "multi": multi_layout}
+                                       "multi": multi_layout,
+                                       "seasons": seasons}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
 
@@ -904,7 +909,8 @@ class AdfWeb(AdfObs):
                                         "plot_types": plot_type_html,
                                         "multi_head": True,
                                         "multi": False,
-                                        "case_sites": case_sites}
+                                        "case_sites": case_sites,
+                                        "seasons": seasons}
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
@@ -1043,7 +1049,8 @@ class AdfWeb(AdfObs):
                                                     "mydata": multi_plot_html_info[ptype],
                                                     "plot_types": multi_plot_type_html,
                                                     "multi": multi_layout,
-                                                    "case_sites": case_sites} 
+                                                    "case_sites": case_sites,
+                                                    "seasons": seasons} 
 
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                 if not (img_pages_dir / multimean).exists():
@@ -1124,7 +1131,8 @@ class AdfWeb(AdfObs):
                                             "mydata": multi_mean_html_info[ptype],
                                             "plot_types": multi_plot_type_html,
                                             "multi": multi_layout,
-                                            "case_sites": case_sites}                                    
+                                            "case_sites": case_sites,
+                                            "seasons": seasons}                                    
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                         if not (img_pages_dir / multimean).exists():
