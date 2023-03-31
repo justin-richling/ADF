@@ -197,32 +197,8 @@ def amwg_table(adf):
         #ocean fraction xarray data-array:
         ocn_frc_da = None
 
-        #Collect derived quantities
-        derived_vars = {}
-
         #Loop over CAM output variables:
         for var in var_list:
-
-
-
-            #Check res for any variable specific options that need to be used BEFORE going to the plot:
-            if var in res:
-                vres = res[var]
-                #If found then notify user, assuming debug log is enabled:
-                adf.debug_log(f"time_series: Found variable defaults for {var}")
-            else:
-                vres = {}
-            #End if
-            res = adf.variable_defaults #dict of variable-specific plot preferences
-            if 'constits' in vres:  
-                cons_list = vres['constits']
-                derived_vars["RESTOM"] = cons_list
-
-            ##Add necessary data for derived calcs below
-            #if var in derived_list:
-            #    derived_dict[case_name][var] = [data, unit_str]
-
-
 
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
@@ -302,9 +278,9 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = _spatial_average(data)  # changes data "in place"
 
-            """#Add necessary data for derived calcs below
+            #Add necessary data for derived calcs below
             if var in derived_list:
-                derived_dict[case_name][var] = [data, unit_str]"""
+                derived_dict[case_name][var] = [data, unit_str]
 
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
