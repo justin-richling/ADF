@@ -642,7 +642,7 @@ class AdfWeb(AdfObs):
                                    seasons=seasons) #The template rendered
 
                 #Write HTML file:
-                print("web_data.html_file",web_data.html_file,)
+                print("web_data.html_file",web_data.html_file,"\n")
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(rndr)
                 #End with
