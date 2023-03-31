@@ -135,6 +135,8 @@ def amwg_chem_table(adf):
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
     
+    start_periods = start_year+ [bl_syr]
+
     h_case = "h0"
 
     #Convert output location string to a Path object:
