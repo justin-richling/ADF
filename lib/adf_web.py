@@ -531,7 +531,6 @@ class AdfWeb(AdfObs):
                 #Add table HTML file to dictionary:
                 #Note:  Need to use data name instead of case name for tables.
                 if len(case_names) > 1:
-                    print("well, it made it here, right? RIGHT!?\n")
                     #Ignore case_comparison for each case, let m
                     if web_data.name != "case_comparison":
                         table_html_info[web_data.name] = web_data.html_file[0].name
