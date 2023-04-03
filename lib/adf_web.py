@@ -1019,6 +1019,7 @@ class AdfWeb(AdfObs):
                     season = web_data.season
                     ptype = web_data.plot_type
                     var = web_data.name
+                    print("VAR",var,"\n")
                     ext = web_data.plot_ext
 
                     #Check if category has been provided for this web data:
