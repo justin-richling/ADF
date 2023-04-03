@@ -530,6 +530,7 @@ class AdfWeb(AdfObs):
                 #Add table HTML file to dictionary:
                 #Note:  Need to use data name instead of case name for tables.
                 if len(case_names) > 1:
+                    print("well, it made it here, right? RIGHT!?\n")
                     #Add case_comparison for each case?
                     if web_data.name != "case_comparison":
                         table_html_info[web_data.name] = web_data.html_file[0].name
@@ -896,7 +897,7 @@ class AdfWeb(AdfObs):
                     table_keys = [web_data.case,data_name,"case_comparison"]
                     
 
-                    print("multi_table_html_info[case_comparison]: ",multi_table_html_info[key],"\n")
+                    print("multi_table_html_info[case_comparison]: ",multi_table_html_info["case_comparison"],"\n")
 
                     table_dict = {}
                     for key in table_keys:
