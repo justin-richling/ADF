@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ADF Mean Plots</title>
+    <link rel="stylesheet" href="../templates/adf_diag.css">
+  </head>
+  <body >
+    <div class="header">
+        <div id="screenFiller" style="background:url(../templates/NCAR.gif) top right no-repeat; border:5px solid #555;">
+            <div class="center"><h1> {{ title }}</h1></div>
+          <div class="center">
+            <nav role="navigation" class="primary-navigation">
+            <ul>
+              <li><a href="../">Multi-Case Home</a></li>
+              <li><a href="#">Plots &dtrif;</a>
+                <ul class="dropdown">
+                  {% for type, html_file in plot_types.items() %}
+                    <li><a href=../{{html_file}}> &nbsp; {{ type }}</a></li>
+                  {% endfor %}
+                </ul>
+              </li>
+              <li><a href="#">Links &dtrif;</a>
+                <ul class="dropdown">
+                  <li><a href="https://www.cesm.ucar.edu">CESM</a></li>
+                  <li><a href="https://www.cesm.ucar.edu/working_groups/Atmosphere/?ref=nav">AMWG</a></li>
+                  <li><a href="https://www.cgd.ucar.edu/amp/">AMP</a></li>
+                </ul>
+              </li>
+              <li><a href="https://github.com/NCAR/ADF">About</a></li>
+              <li><a href="https://github.com/NCAR/ADF/discussions">Contact</a></li>
+            </ul>
+          </nav>
+        </div><!--center-->
+        <div><h3>Click on case name for that ADF case vs baseline page</h3></div>
+        {% for case_name, case_dtls in case_sites.items() %}
+        <h2 style="display:inline; color:black;"> Test Case {{ loop.index }}: </h2>
+        <h2 style="display:inline;"><a href="../{{ case_dtls[0] }}">{{ case_name }}</a></h2>
+          <h2 style="display:inline; color:black;"> - years: {{ case_dtls[1] }} - {{ case_dtls[2] }}</h2><br>
+        {% endfor %}
+        <h2 style="display:inline; color:black;"> Baseline Case: </h2>
+        <h2 style="display:inline;">{{ base_name }}</h2>
+          <h2 style="display:inline; color:black;"> - years: {{ baseline_yrs }}</h2>
+      </div><!--screenFiller-->
+    </div><!--header-->
+
+    <div class="center">
+      <h1>All Case Comparison - {{ plottype_title }} Plots</h1>
+    </div>
+
+    <div class="grid-container">
+      {% for category, var_seas in mydata.items() %}
+      <div class="grid-item">
+        <div class="dropdown-vars" style="position: relative; display: inline-block;">
+          <h3 class="block">{{ category }}</h3>
+            <div class="grid-container" style="column-gap: 5px; row-gap: 5px; padding:2px">
+              {% for var_name, ptype_seas in var_seas.items() %}
+                <div class="grid-item-diag">
+                  <a href="../html_img/plot_page_multi_case_{{ var_name }}_{{ plottype_title }}.html"> {{ var_name }} </a><br>
+                </div><!--grid-item2-->
+              {% endfor %}
+            </div><!--grid-container-->
+            <script type="text/html"> </div></script>
+        </div><!--dropdown-vars-->
+      </div><!--grid-item-->
+      {% endfor %}
+    </div><!--grid-container-ptype-->
+
+  </body>
+</html>
