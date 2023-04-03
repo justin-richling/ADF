@@ -1146,7 +1146,10 @@ class AdfWeb(AdfObs):
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                             start=main_site_img_path),
                                                             multi_plot_page]
-
+                        if var == "qbo":
+                            html_seasons = ["QBOts","QBOamp"]
+                        else:
+                            html_seasons = seasons
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
                                             "season_title": season,
@@ -1159,7 +1162,7 @@ class AdfWeb(AdfObs):
                                             "plot_types": multi_plot_type_html,
                                             "multi": multi_layout,
                                             "case_sites": case_sites,
-                                            "seasons": seasons}                                    
+                                            "seasons": html_seasons}                                    
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                         if not (img_pages_dir / multimean).exists():
