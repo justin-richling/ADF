@@ -600,7 +600,20 @@ class AdfWeb(AdfObs):
 
                     #Need to isolate multi-case regular plots from the multi-case multi-plots
                     #QUESTION: Is there a better way?
-                    if "multi_plot" not in str(web_data.html_file.name):
+                    if ptype not in multi_mean_html_info:
+                        multi_mean_html_info[ptype] = OrderedDict()
+                    #End if
+                    if category not in multi_mean_html_info[ptype]:
+                        multi_mean_html_info[ptype][category] = OrderedDict()
+                    #End if
+                    if var not in multi_mean_html_info[ptype][category]:
+                        multi_mean_html_info[ptype][category][var] = OrderedDict()
+                    #End if
+                    p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                    if season not in multi_mean_html_info[ptype][category][var]:
+                        multi_mean_html_info[ptype][category][var][season] = p
+                    #End if
+                    """if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
                             multi_mean_html_info[ptype] = OrderedDict()
                         #End if
@@ -614,7 +627,7 @@ class AdfWeb(AdfObs):
                         if season not in multi_mean_html_info[ptype][category][var]:
                             multi_mean_html_info[ptype][category][var][season] = p
                         #End if
-                    #End if (not multi-case multi-plots)
+                    #End if (not multi-case multi-plots)"""
                 #End if (multi-case scenario)
                 print("multi_mean_html_info.keys()",multi_mean_html_info.keys(),"\n")
                 #Individual cases
