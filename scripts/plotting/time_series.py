@@ -120,6 +120,7 @@ def time_series(adfobj):
     else:
         plot_loc = Path(plot_location)
 
+    print("time series plot loc:",plot_loc,"\n")
     
 
     res = adfobj.variable_defaults #dict of variable-specific plot preferences
@@ -299,6 +300,7 @@ def time_series(adfobj):
             adfobj.add_website_data(plot_name, var, case,
                                     season=season,
                                     plot_type="TimeSeries",
+                                    plot_ext="time_series",
                                     multi_case=multi_case)
         #End if (min/max)
 
