@@ -616,7 +616,7 @@ class AdfWeb(AdfObs):
                         #End if
                     #End if (not multi-case multi-plots)
                 #End if (multi-case scenario)
-
+                print("multi_mean_html_info.keys()",multi_mean_html_info.keys(),"\n")
                 #Individual cases
                 #This will be used if multi-case diagnostics as well
                 #Create a directory that will hold just the html files for individual images:
