@@ -1148,6 +1148,7 @@ class AdfWeb(AdfObs):
                                                             start=main_site_img_path),
                                                             multi_plot_page]
                         if var == "QBO":
+                            print("making QBO 'seasons'")
                             html_seasons = ["QBOts","QBOamp"]
                         else:
                             html_seasons = seasons
