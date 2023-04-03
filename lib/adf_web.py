@@ -406,7 +406,8 @@ class AdfWeb(AdfObs):
         multi_case_dict = {"global_latlon_map":"LatLon",
                                "zonal_mean":"Zonal",
                                "meridional":"Meridional",
-                               "global_latlon_vect_map":"LatLon_Vector"}
+                               "global_latlon_vect_map":"LatLon_Vector",
+                               "time_series":"TimeSeries"}
 
         #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
@@ -536,9 +537,7 @@ class AdfWeb(AdfObs):
                         table_html_info[web_data.name] = web_data.html_file[0].name
                     #Also add to multi-case
                     if web_data.name == "case_comparison":
-                        print("Did this work?",web_data.name)
                         multi_table_html_info[web_data.name] = web_data.html_file[0].name
-                        print("multi_table_html_info[case_comparison]: ",multi_table_html_info,"\n")
                     multi_table_html_info[web_data.name] = web_data.html_file[0].name
                 else:
                     table_html_info[web_data.name] = web_data.html_file.name
@@ -895,9 +894,6 @@ class AdfWeb(AdfObs):
                     #Check if the mean plot type page exists for this case (or for multi-case):
                     mean_table_file = table_pages_dir_indv / "mean_tables.html"
                     table_keys = [web_data.case,data_name,"case_comparison"]
-                    
-
-                    print("multi_table_html_info[case_comparison]: ",multi_table_html_info["case_comparison"],"\n")
 
                     table_dict = {}
                     for key in table_keys:
