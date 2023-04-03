@@ -613,6 +613,7 @@ class AdfWeb(AdfObs):
                     print("season: ",season,"\n",p)
                     if season not in multi_mean_html_info[ptype][category][var]:
                         multi_mean_html_info[ptype][category][var][season] = p
+                        print("multi_mean_html_info[ptype][category][var][season]",multi_mean_html_info[ptype][category][var][season],"\n")
                     #End if
                     """if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
@@ -630,7 +631,7 @@ class AdfWeb(AdfObs):
                         #End if
                     #End if (not multi-case multi-plots)"""
                 #End if (multi-case scenario)
-                print("multi_mean_html_info.keys()",multi_mean_html_info.keys(),"\n")
+                #print("multi_mean_html_info.keys()",multi_mean_html_info.keys(),"\n")
                 #Individual cases
                 #This will be used if multi-case diagnostics as well
                 #Create a directory that will hold just the html files for individual images:
@@ -1016,6 +1017,7 @@ class AdfWeb(AdfObs):
 
                     #Extract plot details
                     season = web_data.season
+                    print("OOOKKKAAAYYY:",season,"\n")
                     ptype = web_data.plot_type
                     var = web_data.name
                     ext = web_data.plot_ext
