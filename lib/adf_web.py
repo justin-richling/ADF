@@ -1130,6 +1130,7 @@ class AdfWeb(AdfObs):
 
                     #Loop over any non multi-case multi-plot scenarios
                     #ie multi-case Taylor Diagrams and multi-case QBO
+                    print("WOSA:",season,ext,"\n")
                     if ext not in multi_case_dict:
                         #Move file to assets directory:
                         if not web_data.data.is_file():
