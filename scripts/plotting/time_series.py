@@ -308,7 +308,6 @@ def time_series(adfobj):
             adfobj.add_website_data(plot_name, var, case,
                                     season=season,
                                     plot_type="TimeSeries",
-                                    plot_ext="time_series",
                                     multi_case=multi_case)
         #End if (min/max)
 
