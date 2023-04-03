@@ -411,7 +411,8 @@ class AdfWeb(AdfObs):
 
         #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
-                       "Special":"html_img/multi_case_mean_diag_Special.html"}
+                        "Special":"html_img/multi_case_mean_diag_Special.html",
+                        "TimeSeries":"html_img/multi_case_mean_diag_TimeSeries"}
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -876,6 +877,7 @@ class AdfWeb(AdfObs):
         # - - - - - - - - - - - - - - - - - - - - - -
 
         if main_site_path:
+            multi_case_ptypes = {}
             #Loop over all web data objects AGAIN:
             for web_data in self.__website_data:
 
@@ -897,6 +899,7 @@ class AdfWeb(AdfObs):
                 #Starting multi-case tables if requested
                 # - - - - - - - - - - - - - - - - - - -
                 if web_data.data_frame:
+                    multi_case_ptypes["Tables"] = multi_plots["Tables"]
 
                     #Create all individual tables for the individual websites
 
@@ -1035,6 +1038,7 @@ class AdfWeb(AdfObs):
 
                     #Check for multi-case multi-plots
                     if multi_case_plots:
+                        #multi_case_ptypes[] = 
                         #This currently runs web_data.case for every case, but in reality
                         #it really only needs to run once since the plots are
                         #already made with all cases.
@@ -1124,8 +1128,11 @@ class AdfWeb(AdfObs):
                                 #End if (mean_ptype exists)
 
                     #Loop over any non multi-case multi-plot scenarios
-                    #ie multi-case Taylor Diagrams and multi-case QBO
+                    #ie multi-case Taylor Diagrams, QBO, Time Series plots, etc
                     if ext not in multi_case_dict:
+                        mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict['time_series']}.html"
+                        #multi_plots[multi_case_dict['time_series']] = mcase_plot
+                        multi_case_ptypes[ext] = mcase_plot
                         #Move file to assets directory:
                         if not web_data.data.is_file():
                             shutil.copy(web_data.data, web_data.asset_path)
@@ -1213,16 +1220,37 @@ class AdfWeb(AdfObs):
                 shutil.copytree(css_files_dir, main_templates_path)
             #End if
 
+            #multi_case_ptypes = {}
+
             if multi_case_plots:
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
                     mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
-                    multi_plots[multi_case_dict[key]] = mcase_plot
+                    multi_case_ptypes[multi_case_dict[key]] = mcase_plot
                 #End for
             #End if
             
-            mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict['time_series']}.html"
-            multi_plots[multi_case_dict['time_series']] = mcase_plot
+            #mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict['time_series']}.html"
+            #multi_plots[multi_case_dict['time_series']] = mcase_plot
+
+
+            """
+            
+            
+            multi_case_dict = {"global_latlon_map":"LatLon",
+                               "zonal_mean":"Zonal",
+                               "meridional":"Meridional",
+                               "global_latlon_vect_map":"LatLon_Vector",
+                               "time_series":"TimeSeries"}
+
+            multi_plots = {"Tables": "html_table/mean_tables.html",
+                           "Special":"html_img/multi_case_mean_diag_Special.html",
+                           "TimeSeries":"html_img/multi_case_mean_diag_TimeSeries"}
+            
+            
+            
+            """
+            #multi_case_ptypes["Tables"] = multi_plots["Tables"]
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
@@ -1230,7 +1258,7 @@ class AdfWeb(AdfObs):
                                          case_sites=case_sites,
                                          base_name=data_name,
                                          baseline_yrs=baseline_yrs,
-                                         multi_plots=multi_plots)
+                                         multi_plots=multi_case_ptypes)
 
             #Write multi-case main HTML file:
             outputfile = main_site_path / "index.html"
