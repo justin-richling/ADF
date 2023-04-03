@@ -1131,7 +1131,7 @@ class AdfWeb(AdfObs):
                         #Move file to assets directory:
                         if not web_data.data.is_file():
                             shutil.copy(web_data.data, web_data.asset_path)
-
+                        print("season2: ",season,"\n")
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                         multi_plot_page = f"{var}_{season}_{ptype}_multi_plot.png"
