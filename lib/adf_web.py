@@ -1131,7 +1131,7 @@ class AdfWeb(AdfObs):
                     #ie multi-case Taylor Diagrams, QBO, Time Series plots, etc
                     if ext not in multi_case_dict:
                         print(ext,"\n")
-                        if multi_case_dict[ext] in multi_plots:
+                        if (ext != None) and (multi_case_dict[ext] in multi_plots):
                             print("YEAH, OK:",multi_case_dict[ext],"\n")
                             mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[ext]}.html"
                             #multi_plots[multi_case_dict['time_series']] = mcase_plot
