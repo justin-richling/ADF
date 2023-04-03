@@ -295,9 +295,11 @@ def time_series(adfobj):
             #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
 
             #Save plot
-            plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-            #if multi_case:
-            #    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+            #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+            if multi_case:
+                plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+            else:
+                plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
             
             plt.savefig(plot_name, facecolor='w')
             plt.close()
@@ -380,9 +382,11 @@ def time_series(adfobj):
                 fig = _make_fig_legend(case_num, fig)
 
                 #Save plot
-                plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                #if multi_case:
-                #    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                if multi_case:
+                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                else:
+                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
                 plt.savefig(plot_name, facecolor='w')
                 plt.close()
 
