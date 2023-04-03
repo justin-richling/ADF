@@ -772,6 +772,12 @@ class AdfWeb(AdfObs):
                     img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
 
+                    if web_data.name == "QBO":
+                        print("making QBO 'seasons'")
+                        html_seasons = ["QBOts","QBOamp"]
+                    else:
+                        html_seasons = seasons
+
                     rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
@@ -784,7 +790,7 @@ class AdfWeb(AdfObs):
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
                                        "multi": multi_layout,
-                                       "seasons": seasons}
+                                       "seasons": html_seasons}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
 
