@@ -1130,9 +1130,12 @@ class AdfWeb(AdfObs):
                     #Loop over any non multi-case multi-plot scenarios
                     #ie multi-case Taylor Diagrams, QBO, Time Series plots, etc
                     if ext not in multi_case_dict:
-                        mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict['time_series']}.html"
-                        #multi_plots[multi_case_dict['time_series']] = mcase_plot
-                        multi_case_ptypes[ext] = mcase_plot
+                        if multi_case_dict[ext] in multi_plots:
+                            print("YEAH, OK:",multi_case_dict[ext],"\n")
+                            mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[ext]}.html"
+                            #multi_plots[multi_case_dict['time_series']] = mcase_plot
+                            multi_case_ptypes[ext] = mcase_plot
+
                         #Move file to assets directory:
                         if not web_data.data.is_file():
                             shutil.copy(web_data.data, web_data.asset_path)
