@@ -431,7 +431,6 @@ class AdfWeb(AdfObs):
                     multi_plot_type_html[plot_type] = os.path.join("html_table",
                                                                    "mean_tables.html")
                 else:
-                    print("plot_type",plot_type,"\n")
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
                                                         f"multi_case_mean_diag_{plot_type}.html")
                 #End if
@@ -610,10 +609,8 @@ class AdfWeb(AdfObs):
                         multi_mean_html_info[ptype][category][var] = OrderedDict()
                     #End if
                     p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                    print("season: ",season,"\n",p)
                     if season not in multi_mean_html_info[ptype][category][var]:
                         multi_mean_html_info[ptype][category][var][season] = p
-                        print("multi_mean_html_info[ptype][category][var][season]",multi_mean_html_info[ptype][category][var][season],"\n")
                     #End if
                     """if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
@@ -1017,7 +1014,6 @@ class AdfWeb(AdfObs):
 
                     #Extract plot details
                     season = web_data.season
-                    print("OOOKKKAAAYYY:",season,"\n")
                     ptype = web_data.plot_type
                     var = web_data.name
                     ext = web_data.plot_ext
@@ -1038,7 +1034,6 @@ class AdfWeb(AdfObs):
                     #End if
 
                     #Check for multi-case multi-plots
-                    print("multi_case_plots",multi_case_plots,"\n")
                     if multi_case_plots:
                         #This currently runs web_data.case for every case, but in reality
                         #it really only needs to run once since the plots are
@@ -1130,20 +1125,16 @@ class AdfWeb(AdfObs):
 
                     #Loop over any non multi-case multi-plot scenarios
                     #ie multi-case Taylor Diagrams and multi-case QBO
-                    print("WOSA:",season,ext,"\n")
                     if ext not in multi_case_dict:
                         #Move file to assets directory:
                         if not web_data.data.is_file():
                             shutil.copy(web_data.data, web_data.asset_path)
-                        print("season2: ",season,"\n")
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                         multi_plot_page = f"{var}_{season}_{ptype}_multi_plot.png"
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                             start=main_site_img_path),
                                                             multi_plot_page]
-                        print("img_data",img_data,"\n")
-                        #print("multi_mean_html_info[ptype]",multi_mean_html_info[ptype].keys())
 
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,

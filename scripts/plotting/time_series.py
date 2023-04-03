@@ -303,7 +303,6 @@ def time_series(adfobj):
 
             plt.savefig(plot_name, facecolor='w')
             plt.close()
-            print("Time series season:",season,"\n")
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, var, case,
                                     season=season,
