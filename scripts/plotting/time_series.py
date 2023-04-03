@@ -300,7 +300,7 @@ def time_series(adfobj):
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
             else:
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-            print("ANN plot_name ts:",plot_name,"\n")
+
             plt.savefig(plot_name, facecolor='w')
             plt.close()
 
