@@ -57,6 +57,10 @@ def time_series(adfobj):
 
     #Check for multi-case diagnostics
     if len(case_names) > 1:
+        #Grab all multi-case diagnostic directories
+        #main_site_path = adfobj.main_site_paths["main_site_path"]
+        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+        #main_site_img_path = adfobj.main_site_paths["main_site_img_path"]
         case = None
         multi_case = True
     else:
@@ -111,10 +115,12 @@ def time_series(adfobj):
         if len(plot_location) == 1:
             plot_loc = Path(plot_location[0])
         else:
-            print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
-            plot_loc = Path(plot_location[0])
+            print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {main_site_assets_path}")
+            plot_loc = main_site_assets_path
     else:
         plot_loc = Path(plot_location)
+
+    
 
     res = adfobj.variable_defaults #dict of variable-specific plot preferences
     #or an empty dictionary if use_defaults was not specified in config (YAML) file.
@@ -190,7 +196,6 @@ def time_series(adfobj):
         #5-yr rolling average
         #Currently RESTOM is defaulted to 5-yr rolling avg
         rolling = False
-
         if 'ts' in vres:
             if "rolling" in vres['ts']:
                 rolling = vres['ts']['rolling']
