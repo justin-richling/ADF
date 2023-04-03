@@ -1209,6 +1209,9 @@ class AdfWeb(AdfObs):
                     multi_plots[multi_case_dict[key]] = mcase_plot
                 #End for
             #End if
+            
+            mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict['time_series']}.html"
+            multi_plots[multi_case_dict['time_series']] = mcase_plot
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
