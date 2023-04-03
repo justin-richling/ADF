@@ -296,8 +296,8 @@ def time_series(adfobj):
 
             #Save plot
             plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-            if multi_case:
-                plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+            #if multi_case:
+            #    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
             
             plt.savefig(plot_name, facecolor='w')
             plt.close()
@@ -381,8 +381,8 @@ def time_series(adfobj):
 
                 #Save plot
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                if multi_case:
-                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                #if multi_case:
+                #    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
                 plt.savefig(plot_name, facecolor='w')
                 plt.close()
 
