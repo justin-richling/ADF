@@ -53,6 +53,14 @@ def time_series(adfobj):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
+
+    ts_opts = adfobj.read_config_var("time_series")
+    if not ts_opts:
+        print(
+            "Time series options were not specified, so time_series can not run. See documentation or config_cam_baseline_example.yaml for options to add to configuration file."
+        )
+        return
+
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Check for multi-case diagnostics

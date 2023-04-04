@@ -379,7 +379,19 @@ diag_var_list:
 
 # Option for time series plots
 time_series:
-    
+    ann_var_list:
+        - T
+        - TS
+        - SST
+        - PS
+        - RESTOM # Dont need FSNT/FLNT (ADF will take care of this as long as they are in diag_var_list)
+        - SWCF
+    season_var_list:
+        - T
+        - TS
+        - SST
+        - PS
+        - SWCF
 
 # Options for multi-case regional contour plots (./plotting/regional_map_multicase.py)
 # region_multicase:
