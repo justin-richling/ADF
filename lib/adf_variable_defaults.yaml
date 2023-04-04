@@ -733,7 +733,7 @@ RESTOM:
   category: "TOA energy flux"
   ts:
     rolling: True
-  constits:
+  constituents:
     ["FSNT","FLNT"]
 
 #+++++++++++++++++
