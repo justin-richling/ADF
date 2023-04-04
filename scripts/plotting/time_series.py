@@ -637,11 +637,18 @@ def _make_fig_legend(case_num, fig):
     #Gather labels based on case names and plotted line format (color, style, etc)
     lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
+
+    if case_num == 2:
+        y0 = 0.825
+    else:
+        y0 = 0.841-(0.009*case_num)
     
     """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
                 bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
+    """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
+                bbox_to_anchor=(0.12, 0.841-(0.009*case_num),.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
     fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
-                bbox_to_anchor=(0.12, 0.841-(0.009*case_num),.042,.05)) #bbox_to_anchor(x0, y0, width, height)
+                bbox_to_anchor=(0.12, y0,.042,.05)) #bbox_to_anchor(x0, y0, width, height)
     return fig
 
 ########
