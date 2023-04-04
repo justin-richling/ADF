@@ -640,7 +640,7 @@ def _make_fig_legend(case_num, fig):
     """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
                 bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
     fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
-                bbox_to_anchor=(0.12, 0.825-(0.005*case_num),.042,.05)) #bbox_to_anchor(x0, y0, width, height)
+                bbox_to_anchor=(0.12, 0.825-(0.008*case_num),.042,.05)) #bbox_to_anchor(x0, y0, width, height)
     return fig
 
 ########
