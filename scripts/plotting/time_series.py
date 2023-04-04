@@ -113,7 +113,7 @@ def time_series(adfobj):
             if not plpth.is_dir():
                 print(f"\t    '{pl}' not found, making new directory")
                 plpth.mkdir(parents=True)
-        if len(plot_location) == 1:
+        if len(plot_location) == 2:
             plot_loc = Path(plot_location[0])
         else:
             print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {main_site_assets_path}")
