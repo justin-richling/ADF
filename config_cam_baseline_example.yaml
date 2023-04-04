@@ -377,6 +377,10 @@ diag_var_list:
 
 #<Add more variables here.>
 
+# Option for time series plots
+time_series:
+    
+
 # Options for multi-case regional contour plots (./plotting/regional_map_multicase.py)
 # region_multicase:
 #     region_spec: [slat, nlat, wlon, elon]
