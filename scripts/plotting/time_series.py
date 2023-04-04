@@ -641,7 +641,7 @@ def _make_fig_legend(case_num, fig):
     if case_num == 2:
         y0 = 0.825
     else:
-        y0 = 0.825-(0.0075*case_num)
+        y0 = 0.825-(0.007*case_num)
     
     """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
                 bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
