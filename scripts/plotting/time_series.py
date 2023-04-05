@@ -360,8 +360,10 @@ def time_series(adfobj):
 
                     #Check if variable has a vertical coordinate:
                     if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
-                        print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                            "which is currently not supported for the time series plot. Skipping...")
+                        if season == "DJF":
+                        
+                            print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                                "which is currently not supported for the time series plot. Skipping...")
                         #Skip this variable and move to the next variable in var_list:
                         continue
 
@@ -395,10 +397,9 @@ def time_series(adfobj):
 
                 #Check if variable has a vertical coordinate:
                 if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
-                    if season == "DJF":
-                        print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                            "which is currently not supported for the time series plot. Skipping...")
+                    
                     #Skip this variable and move to the next variable in var_list:
+                    pass
                 else:
                     #Set Main title for subplots:
                     ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
