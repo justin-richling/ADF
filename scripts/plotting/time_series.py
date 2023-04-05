@@ -362,36 +362,42 @@ def time_series(adfobj):
                         print(f"\t   Variable '{var}' has a vertical dimension, "+\
                             "which is currently not supported for the time series plot. Skipping...")
                         #Skip this variable and move to the next variable in var_list:
-                        #continue
+                        continue
 
+                    #else:
+                    print(f"\t - time series for {var}")
+                    #Check for baseline, and set linestyle to dashed
+                    if case_name == data_name:
+                        label=f"{base_nickname} (baseline)"
+                        marker = "--"
+                        ax.plot(yrs[case_name].astype(int),
+                                vals[var][case_name][season],
+                                marker, c='g', label=label)
+                    #Set linestyle for test cases to solid line
                     else:
-                        print(var,"\n")
-                        #Check for baseline, and set linestyle to dashed
-                        if case_name == data_name:
-                            label=f"{base_nickname} (baseline)"
-                            marker = "--"
-                            ax.plot(yrs[case_name].astype(int),
-                                    vals[var][case_name][season],
-                                    marker, c='g', label=label)
-                        #Set linestyle for test cases to solid line
-                        else:
-                            label=f"{test_nicknames[case_idx]}"
-                            marker = "-"
-                            ax.plot(yrs[case_name].astype(int),
-                                    vals[var][case_name][season],
-                                    marker, c=colors[case_idx],label=label)
-                        #End if
+                        label=f"{test_nicknames[case_idx]}"
+                        marker = "-"
+                        ax.plot(yrs[case_name].astype(int),
+                                vals[var][case_name][season],
+                                marker, c=colors[case_idx],label=label)
+                    #End if
 
-                        #For the minor ticks, use no labels; default NullFormatter.
-                        ax.tick_params(which='major', length=7)
-                        ax.tick_params(which='minor', length=5)
+                    #For the minor ticks, use no labels; default NullFormatter.
+                    ax.tick_params(which='major', length=7)
+                    ax.tick_params(which='minor', length=5)
 
-                        #Attempt to set custom y-ranges
-                        #Grab mins/maxes
-                        y_mins.append(np.nanmin(vals[var][case_name][season]))
-                        y_maxs.append(np.nanmax(vals[var][case_name][season]))
-                    #End for (cases)
+                    #Attempt to set custom y-ranges
+                    #Grab mins/maxes
+                    y_mins.append(np.nanmin(vals[var][case_name][season]))
+                    y_maxs.append(np.nanmax(vals[var][case_name][season]))
+                #End for (cases)
 
+                #Check if variable has a vertical coordinate:
+                if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
+                    print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                        "which is currently not supported for the time series plot. Skipping...")
+                    #Skip this variable and move to the next variable in var_list:
+                else:
                     #Set Main title for subplots:
                     ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
                     
@@ -670,8 +676,7 @@ def _make_fig_legend(case_num, fig):
         y0 = 0.825
     else:
         y0 = 0.825-(0.008*case_num)
-    y0 = 0.825-(0.0075*case_num) # 4-case?
-    y0 = 0.825-(0.008*case_num) # 2-case?
+    y0 = 0.825-(0.0075*case_num)
     #y0 = 0.825-(0.006*case_num)
     """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
                 bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
