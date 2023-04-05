@@ -330,6 +330,7 @@ def time_series(adfobj):
     ##########################
     print("\n  Generating seasonally weighted time series...")
     for var in season_var_list:
+        print("VAR:",var,vals[var].keys(),"\n")
 
         #Skip variables that have levels
         #if var not in del_s:
