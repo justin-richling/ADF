@@ -336,6 +336,12 @@ def time_series(adfobj):
         #Skip variables that have levels
         #if var not in del_s:
         if 1==1:
+            #Check if variable has a vertical coordinate:
+            if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
+                print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                    "which is currently not supported for the time series plot. Skipping...")
+                #Skip this variable and move to the next variable in var_list:
+                continue
             print(f"\t - time series for {var}")
             vres = res[var]
 
