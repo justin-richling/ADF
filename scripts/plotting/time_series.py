@@ -61,6 +61,10 @@ def time_series(adfobj):
         )
         return
 
+    ann_var_list = ts_opts.get("ann_var_list", adfobj.diag_var_list)
+    season_var_list = ts_opts.get("season_var_list", adfobj.diag_var_list)
+
+
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Check for multi-case diagnostics
@@ -163,7 +167,7 @@ def time_series(adfobj):
 
     case_ts_locs = case_ts_loc + [data_ts_loc]
 
-    #Make a separate list to ignore seasonally weighted varaibles
+    '''#Make a separate list to ignore seasonally weighted varaibles
     #ie RESTOM is only desired (currently) for annual, not seasonally.
     #Simply add to this list for customization
     ign = ["RESTOM"]
@@ -173,11 +177,12 @@ def time_series(adfobj):
         ts_var_list_s = [x for x in ts_var_list if x != ign_var]
     """except:
         #This may not catch all the errors, but let's try (no pun)
-        ts_var_list_s = ts_var_list"""
+        ts_var_list_s = ts_var_list"""'''
 
     #Grab all the seasonally weighted data up front
     print("\n  Grabbing seasonally weighted data...")
-    vals, yrs, del_s, units = _get_seasonal_data(ts_var_list_s, all_case_names, case_ts_locs)
+    #vals, yrs, del_s, units = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
+    vals, yrs, units = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
     print("  ...Seasonally weighted data collected successfully")
     
     #Annual global weighted
@@ -186,7 +191,7 @@ def time_series(adfobj):
     season = "ANN"
     print(f"\n  Generating time series for {season}...")
     #Loop over variables:
-    for var in ts_var_list:
+    for var in ann_var_list:
         #Check res for any variable specific options that need to be used BEFORE going to the plot:
         if var in res:
             vres = res[var]
@@ -326,10 +331,11 @@ def time_series(adfobj):
     # - DJF, MAM, JJA, SON
     ##########################
     print("\n  Generating seasonally weighted time series...")
-    for var in ts_var_list_s:
+    for var in season_var_list:
 
         #Skip variables that have levels
-        if var not in del_s:
+        #if var not in del_s:
+        if 1==1:
             print(f"\t - time series for {var}")
             vres = res[var]
 
@@ -478,7 +484,7 @@ def seasonal_data(data, month_length):
 
 ########
 
-def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
+def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
     """
     Gather seasonally weighted data
     -----
@@ -487,12 +493,12 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
 
     #Keep track of variables that have vertical levels for now
     #There is probably a better way to ignore these vars - JR
-    del_s = set()
+    #del_s = set()
 
     vals = OrderedDict()
     yrs = {}
     units = {}
-    for var in ts_var_list:
+    for var in season_var_list:
         if var not in vals:
             vals[var] = OrderedDict()
         for case_idx, case_name in enumerate(all_case_names):
@@ -504,12 +510,12 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
                 print(f"\t   Variable '{var}' has a vertical dimension, "+\
                     "which is currently not supported for the time series plot. Skipping...")
 
-                if var in ts_var_list:
+                """if var in season_var_list:
                     #Keep track of vars with levels
                     #Probably a better way to ignore variables
                     #with levels than this.
                     #Look into it - JR
-                    del_s.add(var)
+                    del_s.add(var)"""
 
             else:
                 data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
@@ -548,7 +554,8 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
                         yrs_mean = [arr.sel(time=i).mean().values for i in yrs[case_name]]
                         vals[var][case_name][season] = yrs_mean
 
-    return vals, yrs, del_s, units
+    #return vals, yrs, del_s, units
+    return vals, yrs, units
 
 ########
 
