@@ -679,9 +679,9 @@ def _make_fig_legend(case_num, fig):
         y0 = 0.825
     else:
         y0 = 0.825-(0.008*(case_num-1))
-    0.008*2==0.016
+    print(y0)
     y0s = {3:0.8,
-           4:0.775,
+           4:y0,
            5:0.75}
     #y0 = 0.825-(0.0075*case_num) # 4-case?
     #y0 = 0.825-(0.008*case_num) # 
