@@ -331,6 +331,7 @@ def time_series(adfobj):
     ##########################
     print("\n  Generating seasonally weighted time series...")
     for var in season_var_list:
+        print(f"\t - time series for {var}")
         #print("VAR:",var,vals[var].keys(),"\n")
 
         #Skip variables that have levels
@@ -365,7 +366,7 @@ def time_series(adfobj):
                         continue
 
                     #else:
-                    print(f"\t - time series for {var}")
+                    
                     #Check for baseline, and set linestyle to dashed
                     if case_name == data_name:
                         label=f"{base_nickname} (baseline)"
