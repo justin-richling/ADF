@@ -395,8 +395,9 @@ def time_series(adfobj):
 
                 #Check if variable has a vertical coordinate:
                 if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
-                    print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                        "which is currently not supported for the time series plot. Skipping...")
+                    if season == "DJF":
+                        print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                            "which is currently not supported for the time series plot. Skipping...")
                     #Skip this variable and move to the next variable in var_list:
                 else:
                     #Set Main title for subplots:
@@ -517,7 +518,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
     yrs = {}
     units = {}
     for var in season_var_list:
-        print("var seaonal_data:",var,"\n")
+        #print("var seaonal_data:",var,"\n")
         if var not in vals:
             vals[var] = OrderedDict()
         for case_idx, case_name in enumerate(all_case_names):
