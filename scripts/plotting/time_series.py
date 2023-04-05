@@ -362,10 +362,9 @@ def time_series(adfobj):
                         print(f"\t   Variable '{var}' has a vertical dimension, "+\
                             "which is currently not supported for the time series plot. Skipping...")
                         #Skip this variable and move to the next variable in var_list:
-                        continue
+                        #continue
 
                     else:
-                        print(f"\t - time series for {var}")
                         #Check for baseline, and set linestyle to dashed
                         if case_name == data_name:
                             label=f"{base_nickname} (baseline)"
@@ -670,7 +669,8 @@ def _make_fig_legend(case_num, fig):
         y0 = 0.825
     else:
         y0 = 0.825-(0.008*case_num)
-    y0 = 0.825-(0.0075*case_num)
+    y0 = 0.825-(0.0075*case_num) # 4-case?
+    y0 = 0.825-(0.008*case_num) # 2-case?
     #y0 = 0.825-(0.006*case_num)
     """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
                 bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
