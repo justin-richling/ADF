@@ -63,6 +63,7 @@ def time_series(adfobj):
 
     ann_var_list = ts_opts.get("ann_var_list", adfobj.diag_var_list)
     season_var_list = ts_opts.get("season_var_list", adfobj.diag_var_list)
+    print(season_var_list)
 
 
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
