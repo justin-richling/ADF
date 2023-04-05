@@ -365,6 +365,7 @@ def time_series(adfobj):
                         #continue
 
                     else:
+                        print(var,"\n")
                         #Check for baseline, and set linestyle to dashed
                         if case_name == data_name:
                             label=f"{base_nickname} (baseline)"
