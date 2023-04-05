@@ -498,6 +498,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
     yrs = {}
     units = {}
     for var in season_var_list:
+        print("var seaonal_data:",var,"\n")
         if var not in vals:
             vals[var] = OrderedDict()
         for case_idx, case_name in enumerate(all_case_names):
@@ -520,7 +521,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
                 data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
                 units[var] = unit
                 mdata_seasonal_mean = seasonal_data(data, month_length)
-
+                print("seaosnal_data: var",var,"case",case_name,"\n")
                 if case_name not in vals[var]:
                     vals[var][case_name] = OrderedDict()
                 #print("vals[var].keys()",vals[var].keys(),"\n")
