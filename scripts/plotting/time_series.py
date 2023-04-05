@@ -331,7 +331,7 @@ def time_series(adfobj):
     ##########################
     print("\n  Generating seasonally weighted time series...")
     for var in season_var_list:
-        print("VAR:",var,vals[var].keys(),"\n")
+        #print("VAR:",var,vals[var].keys(),"\n")
 
         #Skip variables that have levels
         #if var not in del_s:
@@ -364,59 +364,60 @@ def time_series(adfobj):
                         #Skip this variable and move to the next variable in var_list:
                         continue
 
-                    print(f"\t - time series for {var}")
-                    #Check for baseline, and set linestyle to dashed
-                    if case_name == data_name:
-                        label=f"{base_nickname} (baseline)"
-                        marker = "--"
-                        ax.plot(yrs[case_name].astype(int),
-                                vals[var][case_name][season],
-                                marker, c='g', label=label)
-                    #Set linestyle for test cases to solid line
                     else:
-                        label=f"{test_nicknames[case_idx]}"
-                        marker = "-"
-                        ax.plot(yrs[case_name].astype(int),
-                                vals[var][case_name][season],
-                                marker, c=colors[case_idx],label=label)
-                    #End if
+                        print(f"\t - time series for {var}")
+                        #Check for baseline, and set linestyle to dashed
+                        if case_name == data_name:
+                            label=f"{base_nickname} (baseline)"
+                            marker = "--"
+                            ax.plot(yrs[case_name].astype(int),
+                                    vals[var][case_name][season],
+                                    marker, c='g', label=label)
+                        #Set linestyle for test cases to solid line
+                        else:
+                            label=f"{test_nicknames[case_idx]}"
+                            marker = "-"
+                            ax.plot(yrs[case_name].astype(int),
+                                    vals[var][case_name][season],
+                                    marker, c=colors[case_idx],label=label)
+                        #End if
 
-                    #For the minor ticks, use no labels; default NullFormatter.
-                    ax.tick_params(which='major', length=7)
-                    ax.tick_params(which='minor', length=5)
+                        #For the minor ticks, use no labels; default NullFormatter.
+                        ax.tick_params(which='major', length=7)
+                        ax.tick_params(which='minor', length=5)
 
-                    #Attempt to set custom y-ranges
-                    #Grab mins/maxes
-                    y_mins.append(np.nanmin(vals[var][case_name][season]))
-                    y_maxs.append(np.nanmax(vals[var][case_name][season]))
-                #End for (cases)
+                        #Attempt to set custom y-ranges
+                        #Grab mins/maxes
+                        y_mins.append(np.nanmin(vals[var][case_name][season]))
+                        y_maxs.append(np.nanmax(vals[var][case_name][season]))
+                    #End for (cases)
 
-                #Set Main title for subplots:
-                ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
-                
-                if rolling:
-                    ax.set_title(f"5-yr rolling average",loc="right")
+                    #Set Main title for subplots:
+                    ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
+                    
+                    if rolling:
+                        ax.set_title(f"5-yr rolling average",loc="right")
 
-                #Format axes
-                ax = _format_xaxis(ax, yrs)
-                ax = _format_yaxis(ax, case_num, units[var], **vres)
+                    #Format axes
+                    ax = _format_xaxis(ax, yrs)
+                    ax = _format_yaxis(ax, case_num, units[var], **vres)
 
-                #Set up legend
-                fig = _make_fig_legend(case_num, fig)
+                    #Set up legend
+                    fig = _make_fig_legend(case_num, fig)
 
-                #Save plot
-                #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                if multi_case:
-                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
-                else:
-                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                plt.savefig(plot_name, facecolor='w')
-                plt.close()
+                    #Save plot
+                    #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                    if multi_case:
+                        plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                    else:
+                        plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                    plt.savefig(plot_name, facecolor='w')
+                    plt.close()
 
-                #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_name, var, case, season=season,
-                                        plot_type="TimeSeries",
-                                        multi_case=multi_case)
+                    #Add plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, var, case, season=season,
+                                            plot_type="TimeSeries",
+                                            multi_case=multi_case)
                 #End for (cases)
             #End for (season)
         #End if (not in del_s)
