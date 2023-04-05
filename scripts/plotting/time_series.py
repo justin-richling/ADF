@@ -527,8 +527,8 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
 
             #Check if variable has a vertical coordinate:
             if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
-                print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                    "which is currently not supported for the time series plot. Skipping...")
+                #print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                #    "which is currently not supported for the time series plot. Skipping...")
 
                 """if var in season_var_list:
                     #Keep track of vars with levels
@@ -536,12 +536,13 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
                     #with levels than this.
                     #Look into it - JR
                     del_s.add(var)"""
+                pass
 
             else:
                 data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
                 units[var] = unit
                 mdata_seasonal_mean = seasonal_data(data, month_length)
-                print("seaosnal_data: var",var,"case",case_name,"\n")
+                #print("seaosnal_data: var",var,"case",case_name,"\n")
                 if case_name not in vals[var]:
                     vals[var][case_name] = OrderedDict()
                 #print("vals[var].keys()",vals[var].keys(),"\n")
@@ -677,7 +678,7 @@ def _make_fig_legend(case_num, fig):
     if case_num == 2:
         y0 = 0.825
     else:
-        y0 = 0.825-(0.008*case_num)
+        y0 = 0.825-(0.008*(case_num-1))
     #y0 = 0.825-(0.0075*case_num) # 4-case?
     #y0 = 0.825-(0.008*case_num) # 
     #y0 = 0.825-(0.01*case_num) # 2-case?
