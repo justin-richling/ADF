@@ -336,13 +336,6 @@ def time_series(adfobj):
         #Skip variables that have levels
         #if var not in del_s:
         if 1==1:
-            #Check if variable has a vertical coordinate:
-            if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
-                print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                    "which is currently not supported for the time series plot. Skipping...")
-                #Skip this variable and move to the next variable in var_list:
-                continue
-            print(f"\t - time series for {var}")
             vres = res[var]
 
             #Set plotting parameters based off whether the user wants
@@ -361,6 +354,17 @@ def time_series(adfobj):
                 y_mins = []
                 y_maxs = []
                 for case_idx, case_name in enumerate(all_case_names):
+                    fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc"))
+                    ts_ds = _load_dataset(fils)
+
+                    #Check if variable has a vertical coordinate:
+                    if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
+                        print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                            "which is currently not supported for the time series plot. Skipping...")
+                        #Skip this variable and move to the next variable in var_list:
+                        continue
+
+                    print(f"\t - time series for {var}")
                     #Check for baseline, and set linestyle to dashed
                     if case_name == data_name:
                         label=f"{base_nickname} (baseline)"
