@@ -115,7 +115,6 @@ def time_series(adfobj):
 
     #ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
-    print("len of plot location",len(plot_location),"\n")
     if not plot_location:
         plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
     if isinstance(plot_location, list):
@@ -133,7 +132,7 @@ def time_series(adfobj):
     else:
         plot_loc = Path(plot_location)
 
-    print("time series plot loc:",plot_loc,"\n")
+    #print("time series plot loc:",plot_loc,"\n")
     
 
     res = adfobj.variable_defaults #dict of variable-specific plot preferences
@@ -305,7 +304,6 @@ def time_series(adfobj):
             fig = _make_fig_legend(case_num, fig)
 
             #Save plot
-            print("plot_loc",plot_loc,"\n")
             #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
 
             #Save plot
