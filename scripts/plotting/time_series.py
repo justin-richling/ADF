@@ -524,7 +524,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
 
                 if case_name not in vals[var]:
                     vals[var][case_name] = OrderedDict()
-
+                print("vals[var].keys()",vals[var].keys(),"\n")
                 for season, arr in mdata_seasonal_mean:
                     #Weight DJF differently:
                     if season == "DJF":
@@ -553,6 +553,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
 
                         yrs_mean = [arr.sel(time=i).mean().values for i in yrs[case_name]]
                         vals[var][case_name][season] = yrs_mean
+                    
 
     #return vals, yrs, del_s, units
     return vals, yrs, units
