@@ -384,7 +384,7 @@ time_series:
         - TS
         - SST
         - PS
-        - RESTOM # Dont need FSNT/FLNT (ADF will take care of this as long as they are in diag_var_list)
+        - RESTOM # Dont need FSNT/FLNT (ADF will take care of this)
         - SWCF
     season_var_list:
         - T
