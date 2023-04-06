@@ -773,7 +773,6 @@ class AdfWeb(AdfObs):
                             web_data.asset_path.stem]
 
                     if web_data.name == "QBO":
-                        print("making QBO 'seasons'")
                         html_seasons = ["QBOts","QBOamp"]
                     else:
                         html_seasons = seasons
@@ -1025,7 +1024,6 @@ class AdfWeb(AdfObs):
                     season = web_data.season
                     ptype = web_data.plot_type
                     var = web_data.name
-                    print("VAR",var,"\n")
                     ext = web_data.plot_ext
 
                     #Check if category has been provided for this web data:
@@ -1137,9 +1135,7 @@ class AdfWeb(AdfObs):
                     #Loop over any non multi-case multi-plot scenarios
                     #ie multi-case Taylor Diagrams, QBO, Time Series plots, etc
                     if ext not in multi_case_dict:
-                        print(ptype,"\n")
                         if (ptype != None) and (ptype in multi_plots):
-                            print("YEAH, OK:",ptype,"\n")
                             mcase_plot = f"html_img/multi_case_mean_diag_{ptype}.html"
                             #multi_plots[multi_case_dict['time_series']] = mcase_plot
                             multi_case_ptypes[ptype] = mcase_plot
@@ -1154,7 +1150,6 @@ class AdfWeb(AdfObs):
                                                             start=main_site_img_path),
                                                             multi_plot_page]
                         if var == "QBO":
-                            print("making QBO 'seasons'")
                             html_seasons = ["QBOts","QBOamp"]
                         else:
                             html_seasons = seasons

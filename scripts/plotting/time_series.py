@@ -63,8 +63,6 @@ def time_series(adfobj):
 
     ann_var_list = ts_opts.get("ann_var_list", adfobj.diag_var_list)
     season_var_list = ts_opts.get("season_var_list", adfobj.diag_var_list)
-    print(season_var_list)
-
 
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
@@ -680,16 +678,12 @@ def _make_fig_legend(case_num, fig):
     #Gather labels based on case names and plotted line format (color, style, etc)
     lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-    print(case_num,"\n")
+    """print(case_num,"\n")
     if case_num == 2:
         y0 = 0.825
     else:
-        y0 = 0.825-(0.008*(case_num-1))
-    print(y0)
-    y0s = {2:0.85,
-           3:0.835,
-           4:0.79,
-           5:0.785}
+        y0 = 0.825-(0.008*(case_num-1))"""
+
     #y0 = 0.825-(0.0075*case_num) # 4-case?
     #y0 = 0.825-(0.008*case_num) # 
     #y0 = 0.825-(0.01*case_num) # 2-case?
