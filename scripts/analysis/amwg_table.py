@@ -328,6 +328,9 @@ def amwg_table(adf):
         #-------
         if "FSNT" and "FLNT" in var_list:
             _derive_restom(case_name, derived_dict, output_csv_file, cols)
+
+            #constituents
+            _derive_diff_var(case_name, var, var_consts, derived_dict, output_csv_file, cols)
         else:
             #Print message to debug log:
             adf.debug_log("RESTOM not calculated because FSNT and/or FLNT variables not in dataset")
@@ -548,6 +551,65 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
 
 #Derived quantity function space
 ################################
+
+
+
+def _derive_diff_var(case_name, var, var_consts, derived_dict, output_csv_file, cols):
+    
+    var = "RESTOM" #RESTOM = FSNT-FLNT
+    print(f"\t - Variable '{var}' being added to table")
+
+    #data = var_consts[0]
+
+    #Initialize the difference with the value of the first constituent
+    #then loop over the others
+    data = derived_dict[case_name][var_consts[0]][0]
+    for part in var_consts[1:]:
+        print(part,"\n")
+        data -=  derived_dict[case_name][part][0]
+        #derived_dict[case_name][part][0]
+    
+    #data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
+     # In order to get correct statistics, average to annual or seasonal
+    data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
+                                                                # NOTE: data will now have a 'year' dimension instead of 'time'
+    # These get written to our output file:
+    stats_list = _get_row_vals(data)
+    #Extract units string, if available:
+    if hasattr(data, 'units'):
+        unit_str = data.units
+    else:
+        unit_str = '--'
+    #End if
+    
+    row_values = [var, unit_str] + stats_list
+
+    # Format entries:
+    #NOTE: col (column) values were declared above
+    dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
+
+    # Add entries to Pandas structure:
+    df = pd.DataFrame(dfentries)
+
+    # Check if the output CSV file exists,
+    # if so, then append to it:
+    if output_csv_file.is_file():
+        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+    else:
+        df.to_csv(output_csv_file, header=cols, index=False)
+    #End if
+            
+    table_df = pd.read_csv(output_csv_file)
+
+    #Reorder RESTOM to top of tables
+    idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+    table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+    table_df = table_df.drop([idx+1]).reset_index(drop=True)
+    table_df = table_df.drop_duplicates()
+
+    #Re-save the csv file
+    table_df.to_csv(output_csv_file, header=cols, index=False)
+
 
 # RESTOM
 def _derive_restom(case_name, derived_dict, output_csv_file, cols):
