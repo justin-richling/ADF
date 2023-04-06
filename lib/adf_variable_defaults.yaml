@@ -51,7 +51,9 @@
 #
 # TIME SERIES: (ts)
 #
-# rolling  -> Flag for 5-year rolling average mean
+# rolling  -> Flag rolling average mean 
+#             ** currently only for annually calculated time series **
+# months   -> Number of months to average over
 #
 #
 # Final Note:  Please do not modify this file unless you plan to push your changes back to the ADF repo.
@@ -732,7 +734,8 @@ RESTOM:
       label : "Wm$^{-2}$"
   category: "TOA energy flux"
   ts:
-    rolling: True
+    rolling:
+      months: 60
   constituents:
     ["FSNT","FLNT"]
 
