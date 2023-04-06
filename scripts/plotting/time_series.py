@@ -210,10 +210,12 @@ def time_series(adfobj):
         #Set plotting parameters based off whether the user wants
         #5-yr rolling average
         #Currently RESTOM is defaulted to 5-yr rolling avg
-        rolling = False
+        #rolling = False
         if 'ts' in vres:
             if "rolling" in vres['ts']:
-                rolling = vres['ts']['rolling']
+                rolling = True
+                rolling_months = vres['ts']["rolling"]["months"]
+                print("rolling_months",rolling_months,"\n")
 
         #Loop over test cases:
         #----------------------
@@ -238,8 +240,8 @@ def time_series(adfobj):
                     else:
                         color_dict = {"color":colors[case_idx],"marker":"-*"}
                 else:
-                    FSNT_case = avg_case_FSNT.rolling(time=60,center=True).mean()
-                    FLNT_case = avg_case_FLNT.rolling(time=60,center=True).mean()
+                    FSNT_case = avg_case_FSNT.rolling(time=rolling_months,center=True).mean()
+                    FLNT_case = avg_case_FLNT.rolling(time=rolling_months,center=True).mean()
                     if case_name == data_name:
                         color_dict = {"color":'g',"marker":"--"}
                     else:
@@ -263,6 +265,8 @@ def time_series(adfobj):
                     #Skip this variable and move to the next variable in var_list:
                     continue
                 avg_case,_,yrs_case,unit = _data_calcs(var,ts_ds=ts_ds,subset=None)
+                if rolling:
+                    avg_case = avg_case.rolling(time=rolling_months,center=True).mean()
 
             #End if (RESTOM)
 
@@ -339,13 +343,14 @@ def time_series(adfobj):
         if 1==1:
             vres = res[var]
 
-            #Set plotting parameters based off whether the user wants
+            """#Set plotting parameters based off whether the user wants
             #5-yr rolling average
             rolling = False
 
             if 'ts' in vres:
                 if "rolling" in vres['ts']:
                     rolling = vres['ts']['rolling']
+                    rolling_months = vres['ts']["months"]"""
 
             for season in seasons:
                 fig = plt.figure(figsize=(12,8))
@@ -404,8 +409,8 @@ def time_series(adfobj):
                     #Set Main title for subplots:
                     ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
                     
-                    if rolling:
-                        ax.set_title(f"5-yr rolling average",loc="right")
+                    """if rolling:
+                        ax.set_title(f"5-yr rolling average",loc="right")"""
 
                     #Format axes
                     ax = _format_xaxis(ax, yrs)
