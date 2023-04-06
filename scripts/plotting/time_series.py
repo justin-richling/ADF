@@ -210,7 +210,7 @@ def time_series(adfobj):
         #Set plotting parameters based off whether the user wants
         #5-yr rolling average
         #Currently RESTOM is defaulted to 5-yr rolling avg
-        #rolling = False
+        rolling = False
         if 'ts' in vres:
             if "rolling" in vres['ts']:
                 rolling = True
@@ -265,7 +265,7 @@ def time_series(adfobj):
                     #Skip this variable and move to the next variable in var_list:
                     continue
                 avg_case,_,yrs_case,unit = _data_calcs(var,ts_ds=ts_ds,subset=None)
-                if rolling is not None:
+                if rolling:
                     avg_case = avg_case.rolling(time=rolling_months,center=True).mean()
 
             #End if (RESTOM)
@@ -295,7 +295,7 @@ def time_series(adfobj):
         #Set Main title for subplots:
         ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
         
-        if rolling is not None:
+        if rolling:
             ax.set_title(f"5-yr rolling average",loc="right")
 
         #Minor tweak to not plot variables that have vertical levels.
