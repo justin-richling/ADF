@@ -300,8 +300,8 @@ def amwg_table(adf):
                 data = _spatial_average(data)  # changes data "in place"
 
             #Add necessary data for derived calcs below
-            if var in derived_list:
-                derived_dict[case_name][var] = [data, unit_str]
+            #if var in derived_list:
+            #    derived_dict[case_name][var] = [data, unit_str]
 
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
