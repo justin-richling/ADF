@@ -157,8 +157,10 @@ def amwg_table(adf):
         output_locs.append(output_locs[0])
 
     #Declare any derived quantities here:
-    derived_vars = {"RESTOM":["FSNT", "FLNT"]}
+    #derived_vars = {"RESTOM":["FSNT", "FLNT"]}
+    derived_vars = []
     
+
     #derived_vars = {"RESTOM":something["constits"]}
 
     derived_list = [item for sublist in derived_vars.values() for item in sublist]
@@ -166,6 +168,8 @@ def amwg_table(adf):
     #Create (empty) dictionary to use for the
     #derived calculations (inititally RESTOM radiation):
     derived_dict = {}
+
+    derived_consts = {}
 
     #Hold output paths for csv files
     csv_locs = []
@@ -216,10 +220,16 @@ def amwg_table(adf):
 
             #Create list of time series files present for variable:
             ts_filenames = f'{case_name}.*.{var}.*nc'
-            ts_files = sorted(input_location.glob(ts_filenames))
+            ts_files = sorted(input_location.glob(ts_filenames))                
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
+                if (var in var_defaults) and (var_defaults[var]["derived"]):
+                    print(f"YIPPY KAIYAY MOTHER CLUCKER! {var} is a derived quantity with {var_defaults[var]['constituents']}\n")
+                    derived_vars.append(var)
+                    #for part in var_defaults[var]["constituents"]:
+                        #derived_dict[case_name][var] = part
+                    derived_consts[var] = var_defaults[var]["constituents"]
                 errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
@@ -324,7 +334,7 @@ def amwg_table(adf):
         #Space for derived quantities (ie RESTOM, etc.)
         #----------------------------------------------
         
-        # RESTOM
+        """# RESTOM
         #-------
         if "FSNT" and "FLNT" in var_list:
             _derive_restom(case_name, derived_dict, output_csv_file, cols)
@@ -335,11 +345,13 @@ def amwg_table(adf):
             #Print message to debug log:
             adf.debug_log("RESTOM not calculated because FSNT and/or FLNT variables not in dataset")
         #End if
-        #End RESTOM table addition
+        #End RESTOM table addition"""
 
         #Other derived quantity
         #-------
         #End Other table addition
+
+        #_derive_diff_var(case_name, var, derived_dict, output_csv_file, cols)
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
