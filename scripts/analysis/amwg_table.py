@@ -163,7 +163,7 @@ def amwg_table(adf):
 
     #derived_vars = {"RESTOM":something["constits"]}
 
-    derived_list = [item for sublist in derived_vars.values() for item in sublist]
+    #derived_list = [item for sublist in derived_vars.values() for item in sublist]
 
     #Create (empty) dictionary to use for the
     #derived calculations (inititally RESTOM radiation):
