@@ -110,6 +110,7 @@ def amwg_table(adf):
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     var_list     = adf.diag_var_list
+    var_list += ["RESTOM"]
     var_defaults = adf.variable_defaults
 
     #Check if ocean or land fraction exist
