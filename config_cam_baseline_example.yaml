@@ -379,6 +379,7 @@ diag_var_list:
 
 # Option for time series plots
 time_series:
+    #Variables for annual time series plots
     ann_var_list:
         - T
         - TS
@@ -386,6 +387,9 @@ time_series:
         - PS
         - RESTOM # Dont need FSNT/FLNT (ADF will take care of this)
         - SWCF
+
+    #Variables for seaonally weighted time series plots
+    # NOTE: RESTOM is currently only available for annual calculations
     season_var_list:
         - T
         - TS
