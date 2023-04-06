@@ -352,6 +352,7 @@ plotting_scripts:
     - polar_map
     - cam_taylor_diagram
     - qbo
+    #- time_series
     #- regional_map_multicase #To use this please un-comment and fill-out
                               #the "region_multicase" section below
 
@@ -378,24 +379,24 @@ diag_var_list:
 #<Add more variables here.>
 
 # Option for time series plots
-time_series:
-    #Variables for annual time series plots
-    ann_var_list:
-        - T
-        - TS
-        - SST
-        - PS
-        - RESTOM # Dont need FSNT/FLNT (ADF will take care of this)
-        - SWCF
-
-    #Variables for seaonally weighted time series plots
-    # NOTE: RESTOM is currently only available for annual calculations
-    season_var_list:
-        - T
-        - TS
-        - SST
-        - PS
-        - SWCF
+#time_series:
+#    #Variables for annual time series plots
+#    ann_var_list:
+#        - T
+#        - TS
+#        - SST
+#        - PS
+#        - RESTOM # Dont need FSNT/FLNT (ADF will take care of this)
+#        - SWCF
+#
+#    #Variables for seaonally weighted time series plots
+#    # NOTE: RESTOM is currently only available for annual calculations
+#    season_var_list:
+#        - T
+#        - TS
+#        - SST
+#        - PS
+#        - SWCF
 
 # Options for multi-case regional contour plots (./plotting/regional_map_multicase.py)
 # region_multicase:
