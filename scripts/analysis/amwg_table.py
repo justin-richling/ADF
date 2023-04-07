@@ -380,14 +380,17 @@ def amwg_table(adf):
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
-        adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
-        #End derived quantities
 
         #Reorder RESTOM to top of tables
         idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
         table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
         table_df = table_df.drop([idx+1]).reset_index(drop=True)
         table_df = table_df.drop_duplicates()
+
+        adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+        #End derived quantities
+
+        
     #End of model case loop
     #----------------------
     test_case_names = adf.get_cam_info("cam_case_name", required=True)
@@ -610,33 +613,11 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
         #var = "RESTOM" #RESTOM = FSNT-FLNT
         print(f"\t - Variable '{der_var}' being added to table")
 
-        #data = var_consts[0]
 
-        """#Initialize the difference with the value of the first constituent
-        #then loop over the others
-        data = derived_dict[case_name][var_consts[0]][0]
-        for part in var_consts[1:]:
-            print(part,"\n")
-            data -=  derived_dict[case_name][part][0]
-            #derived_dict[case_name][part][0]"""
-
-        print("YAHHOOO",derived_dict[case_name][consts[0]][0])
+        #print("YAHHOOO",derived_dict[case_name][consts[0]][0])
         data = derived_dict[case_name][consts[0]][0]
         for consts_var in consts[1:]:
-            #data -= derived_dict[case_name][consts_var][0]
             data -= derived_dict[case_name][consts_var][0]
-
-        """#Initialize the difference with the value of the first constituent
-        #then loop over the others
-        var_consts = derived_dict[case_name][der_var]
-        data = var_consts[0]
-        for part in var_consts[1:]:
-            print(part,"\n")
-            data -=  derived_dict[case_name][part][0]
-            #derived_dict[case_name][part][0]
-        
-        #data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]"""
-
 
         # In order to get correct statistics, average to annual or seasonal
         data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
