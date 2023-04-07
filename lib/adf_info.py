@@ -117,7 +117,7 @@ class AdfInfo(AdfConfig):
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
         #Initialize time series plot variable list:
-        self.__timeseries_var_list = self.read_config_var('timeseries_var_list')
+        self.__derived_var_list = self.read_config_var('derived_var_list')
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
@@ -362,11 +362,11 @@ class AdfInfo(AdfConfig):
 
     # Create property needed to return "timeseries_var_list" list to user:
     @property
-    def timeseries_var_list(self):
+    def derived_var_list(self):
         """Return a copy of the "timeseries_var_list" list to the user if requested."""
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable, as it is mutable and thus passed by reference:
-        return copy.copy(self.__timeseries_var_list)
+        return copy.copy(self.__derived_var_list)
 
     # Create property needed to return "basic_info" expanded dictionary to user:
     @property
