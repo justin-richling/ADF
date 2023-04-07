@@ -1,6 +1,8 @@
 #Import necessary modules:
 #------------------------
 from pathlib import Path  # python standard library
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 
 def global_latlon_vect_map(adfobj):
     """

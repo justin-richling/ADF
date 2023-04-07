@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap ## used to create custom colormaps
 import matplotlib.colors as mcolors
 import matplotlib as mpl
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 
 def my_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message

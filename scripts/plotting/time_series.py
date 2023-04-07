@@ -9,7 +9,8 @@ import matplotlib.ticker as ticker
 from matplotlib.ticker import MultipleLocator
 from matplotlib.lines import Line2D
 import time
-
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 import warnings  #use to warn user about missing files.
 
 def my_formatwarning(msg, *args, **kwargs):

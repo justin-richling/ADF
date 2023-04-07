@@ -18,6 +18,8 @@ import xarray as xr
 import pandas as pd
 import geocat.comp as gc  # use geocat's interpolation
 import matplotlib as mpl
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.legend_handler import HandlerTuple

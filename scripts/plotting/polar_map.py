@@ -8,8 +8,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-#import matplotlib.style as mplstyle
-#mplstyle.use('fast')
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import cartopy.crs as ccrs
 import cartopy.feature

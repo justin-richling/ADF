@@ -3,6 +3,8 @@ import numpy as np
 import xarray as xr
 import plotting_functions as pf
 import warnings  # use to warn user about missing files.
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 
 def my_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
