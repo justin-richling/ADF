@@ -3,6 +3,8 @@ from pathlib import Path
 from collections import OrderedDict
 import numpy as np
 import xarray as xr
+#import matplotlib.style as mplstyle
+#mplstyle.use('fast')
 import warnings  # use to warn user about missing files.
 
 #Format warning messages:
