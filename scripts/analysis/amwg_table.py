@@ -110,7 +110,7 @@ def amwg_table(adf):
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     var_list     = adf.diag_var_list
-    var_list += ["RESTOM"]
+    #var_list += ["RESTOM"]
     var_defaults = adf.variable_defaults
 
     #Check if ocean or land fraction exist
@@ -159,18 +159,18 @@ def amwg_table(adf):
 
     #Declare any derived quantities here:
     #derived_vars = {"RESTOM":["FSNT", "FLNT"]}
-    derived_vars = []
+    #derived_vars = []
     
+    #derived_consts[var] = var_defaults[var]["constituents"]
+    derived_vars = {"RESTOM":var_defaults["RESTOM"]["constituents"]}
 
-    #derived_vars = {"RESTOM":something["constits"]}
-
-    #derived_list = [item for sublist in derived_vars.values() for item in sublist]
+    derived_list = [item for sublist in derived_vars.values() for item in sublist]
 
     #Create (empty) dictionary to use for the
     #derived calculations (inititally RESTOM radiation):
     derived_dict = {}
 
-    derived_consts = {}
+    #derived_consts = {}
 
     #Hold output paths for csv files
     csv_locs = []
@@ -225,12 +225,10 @@ def amwg_table(adf):
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
-                if (var in var_defaults) and (var_defaults[var]["derived"]):
+                """if (var in var_defaults) and (var_defaults[var]["derived"]):
                     print(f"YIPPY KAIYAY MOTHER CLUCKER! {var} is a derived quantity with {var_defaults[var]['constituents']}\n")
                     derived_vars.append(var)
-                    #for part in var_defaults[var]["constituents"]:
-                        #derived_dict[case_name][var] = part
-                    derived_consts[var] = var_defaults[var]["constituents"]
+                    derived_consts[var] = var_defaults[var]["constituents"]"""
                 errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
@@ -301,8 +299,8 @@ def amwg_table(adf):
                 data = _spatial_average(data)  # changes data "in place"
 
             #Add necessary data for derived calcs below
-            #if var in derived_list:
-            #    derived_dict[case_name][var] = [data, unit_str]
+            if var in derived_list:
+                derived_dict[case_name][var] = [data, unit_str]
 
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
@@ -352,7 +350,7 @@ def amwg_table(adf):
         #-------
         #End Other table addition
 
-        #_derive_diff_var(case_name, var, derived_dict, output_csv_file, cols)
+        _derive_diff_var(case_name, derived_dict, output_csv_file, cols)
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
@@ -566,62 +564,71 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
 ################################
 
 
-
+#_derive_diff_var(case_name, derived_dict, output_csv_file, cols)
 def _derive_diff_var(case_name, var, var_consts, derived_dict, output_csv_file, cols):
     
-    var = "RESTOM" #RESTOM = FSNT-FLNT
-    print(f"\t - Variable '{var}' being added to table")
+    for var in derived_dict.keys():
+        #var = "RESTOM" #RESTOM = FSNT-FLNT
+        print(f"\t - Variable '{var}' being added to table")
 
-    #data = var_consts[0]
+        #data = var_consts[0]
+
+        """#Initialize the difference with the value of the first constituent
+        #then loop over the others
+        data = derived_dict[case_name][var_consts[0]][0]
+        for part in var_consts[1:]:
+            print(part,"\n")
+            data -=  derived_dict[case_name][part][0]
+            #derived_dict[case_name][part][0]"""
 
     #Initialize the difference with the value of the first constituent
-    #then loop over the others
-    data = derived_dict[case_name][var_consts[0]][0]
-    for part in var_consts[1:]:
-        print(part,"\n")
-        data -=  derived_dict[case_name][part][0]
-        #derived_dict[case_name][part][0]
-    
-    #data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
-     # In order to get correct statistics, average to annual or seasonal
-    data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
-                                                                # NOTE: data will now have a 'year' dimension instead of 'time'
-    # These get written to our output file:
-    stats_list = _get_row_vals(data)
-    #Extract units string, if available:
-    if hasattr(data, 'units'):
-        unit_str = data.units
-    else:
-        unit_str = '--'
-    #End if
-    
-    row_values = [var, unit_str] + stats_list
+        #then loop over the others
+        data = derived_dict[case_name][var]
+        for part in var_consts[1:]:
+            print(part,"\n")
+            data -=  derived_dict[case_name][part][0]
+            #derived_dict[case_name][part][0]
+        
+        #data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
+        # In order to get correct statistics, average to annual or seasonal
+        data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
+                                                                    # NOTE: data will now have a 'year' dimension instead of 'time'
+        # These get written to our output file:
+        stats_list = _get_row_vals(data)
+        #Extract units string, if available:
+        if hasattr(data, 'units'):
+            unit_str = data.units
+        else:
+            unit_str = '--'
+        #End if
+        
+        row_values = [var, unit_str] + stats_list
 
-    # Format entries:
-    #NOTE: col (column) values were declared above
-    dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
+        # Format entries:
+        #NOTE: col (column) values were declared above
+        dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
 
-    # Add entries to Pandas structure:
-    df = pd.DataFrame(dfentries)
+        # Add entries to Pandas structure:
+        df = pd.DataFrame(dfentries)
 
-    # Check if the output CSV file exists,
-    # if so, then append to it:
-    if output_csv_file.is_file():
-        df.to_csv(output_csv_file, mode='a', header=False, index=False)
-    else:
-        df.to_csv(output_csv_file, header=cols, index=False)
-    #End if
-            
-    table_df = pd.read_csv(output_csv_file)
+        # Check if the output CSV file exists,
+        # if so, then append to it:
+        if output_csv_file.is_file():
+            df.to_csv(output_csv_file, mode='a', header=False, index=False)
+        else:
+            df.to_csv(output_csv_file, header=cols, index=False)
+        #End if
+                
+        table_df = pd.read_csv(output_csv_file)
 
-    #Reorder RESTOM to top of tables
-    idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
-    table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-    table_df = table_df.drop([idx+1]).reset_index(drop=True)
-    table_df = table_df.drop_duplicates()
+        #Reorder RESTOM to top of tables
+        idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+        table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+        table_df = table_df.drop([idx+1]).reset_index(drop=True)
+        table_df = table_df.drop_duplicates()
 
-    #Re-save the csv file
-    table_df.to_csv(output_csv_file, header=cols, index=False)
+        #Re-save the csv file
+        table_df.to_csv(output_csv_file, header=cols, index=False)
 
 
 # RESTOM
