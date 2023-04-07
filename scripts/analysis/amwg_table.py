@@ -620,7 +620,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             data -=  derived_dict[case_name][part][0]
             #derived_dict[case_name][part][0]"""
 
-        data = 0
+        print("YAHHOOO",derived_dict[case_name][consts[0]][0])
         for consts_var in consts:
             data -= derived_dict[case_name][consts_var][0]
 
