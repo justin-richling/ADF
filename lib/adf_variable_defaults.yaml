@@ -736,7 +736,6 @@ RESTOM:
   ts:
     rolling:
       months: 60
-  derived: True
   constituents:
     ["FSNT","FLNT"]
 
