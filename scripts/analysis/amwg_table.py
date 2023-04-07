@@ -588,9 +588,10 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
     derived_vars -> dictioanry that houses derived variable as key and constituents as values
     derived_dict -> dictionary that houses consituents (all) as keys and data as value
                     * each key has data
+                    derived_dict[case_name][var] = [data, unit_str]
     """
     
-    for der_var in derived_vars.keys():
+    for der_var,consts in derived_vars.items():
         #var = "RESTOM" #RESTOM = FSNT-FLNT
         print(f"\t - Variable '{der_var}' being added to table")
 
@@ -604,7 +605,11 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             data -=  derived_dict[case_name][part][0]
             #derived_dict[case_name][part][0]"""
 
-        #Initialize the difference with the value of the first constituent
+        data = 0
+        for consts_var in consts:
+            data += derived_dict[case_name][consts_var][0]
+
+        """#Initialize the difference with the value of the first constituent
         #then loop over the others
         var_consts = derived_dict[case_name][der_var]
         data = var_consts[0]
@@ -613,7 +618,9 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             data -=  derived_dict[case_name][part][0]
             #derived_dict[case_name][part][0]
         
-        #data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
+        #data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]"""
+
+
         # In order to get correct statistics, average to annual or seasonal
         data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                     # NOTE: data will now have a 'year' dimension instead of 'time'
