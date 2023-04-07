@@ -377,7 +377,7 @@ diag_var_list:
     - LANDFRAC
 
 derived_var_list:
-    - RESTOM
+    - RESTOM #Currently only used in AMWG tables
 
 #<Add more variables here.>
 
