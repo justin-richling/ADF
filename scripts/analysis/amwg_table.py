@@ -251,12 +251,12 @@ def amwg_table(adf):
                 continue
             #End if'''
 
-            # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+            """# If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
                 errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
-            #End if
+            #End if"""
 
             #TEMPORARY:  For now, make sure only one file exists:
             if len(ts_files) != 1:
