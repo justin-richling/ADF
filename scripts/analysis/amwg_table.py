@@ -3,6 +3,7 @@ import xarray as xr
 import warnings
 import sys
 from pathlib import Path
+from collections import OrderedDict
 import warnings  # use to warn user about missing files.
 
 #Import "special" modules:
@@ -162,15 +163,20 @@ def amwg_table(adf):
     #derived_vars = []
     
     #derived_consts[var] = var_defaults[var]["constituents"]
-    derived_vars = {"RESTOM":var_defaults["RESTOM"]["constituents"]}
+    derived_vars = {}
+    derived_var_list = adf.derived_var_list
+    for derived_var in derived_var_list:
+        derived_vars[derived_var] = var_defaults[derived_var]["constituents"]
+    #derived_vars = {"RESTOM":var_defaults["RESTOM"]["constituents"]}
 
-    derived_list = [item for sublist in derived_vars.values() for item in sublist]
+    derived_consts_list = [item for sublist in derived_vars.values() for item in sublist]
 
     #Create (empty) dictionary to use for the
     #derived calculations (inititally RESTOM radiation):
     derived_dict = {}
 
-    #derived_consts = {}
+    #derived_dict = OrderedDict()
+    
 
     #Hold output paths for csv files
     csv_locs = []
@@ -209,6 +215,10 @@ def amwg_table(adf):
         #Save case name as a new key in the RESTOM dictonary:
         derived_dict[case_name] = {}
 
+        """#Initialize Ordered Dictionary for multi case plot type:
+        if case_name not in derived_dict:
+            derived_dict[case_name] = OrderedDict()"""
+
         #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
         ocn_frc_da = None
@@ -225,12 +235,19 @@ def amwg_table(adf):
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
-                """if (var in var_defaults) and (var_defaults[var]["derived"]):
+                if (var in var_defaults) and (var_defaults[var]["derived"]):
                     print(f"YIPPY KAIYAY MOTHER CLUCKER! {var} is a derived quantity with {var_defaults[var]['constituents']}\n")
-                    derived_vars.append(var)
-                    derived_consts[var] = var_defaults[var]["constituents"]"""
-                errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
-                warnings.warn(errmsg)
+                    #derived_vars.append(var)
+
+                    """#derived_dict[case_name] = {}
+                    #Initialize Ordered Dictionary for multi case plot type:
+                    if var not in derived_consts[case_name]:
+                        derived_consts[case_name][var] = OrderedDict()"""
+
+                    #derived_dict[case_name][var] = var_defaults[var]["constituents"]
+                else:
+                    errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
+                    warnings.warn(errmsg)
                 continue
             #End if
 
@@ -299,7 +316,7 @@ def amwg_table(adf):
                 data = _spatial_average(data)  # changes data "in place"
 
             #Add necessary data for derived calcs below
-            if var in derived_list:
+            if var in derived_consts_list:
                 derived_dict[case_name][var] = [data, unit_str]
 
             # In order to get correct statistics, average to annual or seasonal
@@ -565,11 +582,17 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
 
 
 #_derive_diff_var(case_name, derived_dict, output_csv_file, cols)
-def _derive_diff_var(case_name, var, var_consts, derived_dict, output_csv_file, cols):
+#def _derive_diff_var(case_name, var, var_consts, derived_dict, output_csv_file, cols):
+def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols):
+    """
+    derived_vars -> dictioanry that houses derived variable as key and constituents as values
+    derived_dict -> dictionary that houses consituents (all) as keys and data as value
+                    * each key has data
+    """
     
-    for var in derived_dict.keys():
+    for der_var in derived_vars.keys():
         #var = "RESTOM" #RESTOM = FSNT-FLNT
-        print(f"\t - Variable '{var}' being added to table")
+        print(f"\t - Variable '{der_var}' being added to table")
 
         #data = var_consts[0]
 
@@ -581,9 +604,10 @@ def _derive_diff_var(case_name, var, var_consts, derived_dict, output_csv_file, 
             data -=  derived_dict[case_name][part][0]
             #derived_dict[case_name][part][0]"""
 
-    #Initialize the difference with the value of the first constituent
+        #Initialize the difference with the value of the first constituent
         #then loop over the others
-        data = derived_dict[case_name][var]
+        var_consts = derived_dict[case_name][der_var]
+        data = var_consts[0]
         for part in var_consts[1:]:
             print(part,"\n")
             data -=  derived_dict[case_name][part][0]
@@ -602,7 +626,7 @@ def _derive_diff_var(case_name, var, var_consts, derived_dict, output_csv_file, 
             unit_str = '--'
         #End if
         
-        row_values = [var, unit_str] + stats_list
+        row_values = [der_var, unit_str] + stats_list
 
         # Format entries:
         #NOTE: col (column) values were declared above

@@ -376,6 +376,9 @@ diag_var_list:
     - FLNT
     - LANDFRAC
 
+derived_var_list:
+    - RESTOM
+
 #<Add more variables here.>
 
 # Option for time series plots
