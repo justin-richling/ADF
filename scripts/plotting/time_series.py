@@ -152,7 +152,7 @@ def time_series(adfobj):
     seasons = ["DJF","MAM","JJA","SON"]
 
     #Grab only time series variables from YAML file
-    ts_var_list = adfobj.timeseries_var_list
+    #ts_var_list = adfobj.timeseries_var_list
 
     #Set up the plots
     #################
