@@ -233,7 +233,7 @@ def amwg_table(adf):
             ts_filenames = f'{case_name}.*.{var}.*nc'
             ts_files = sorted(input_location.glob(ts_filenames))                
 
-            # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+            '''# If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
                 if (var in var_defaults) and (var_defaults[var]["derived"]):
                     print(f"YIPPY KAIYAY MOTHER CLUCKER! {var} is a derived quantity with {var_defaults[var]['constituents']}\n")
@@ -248,6 +248,13 @@ def amwg_table(adf):
                 else:
                     errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                     warnings.warn(errmsg)
+                continue
+            #End if'''
+
+            # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+            if not ts_files:
+                errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
+                warnings.warn(errmsg)
                 continue
             #End if
 
