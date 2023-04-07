@@ -367,7 +367,7 @@ def amwg_table(adf):
         #-------
         #End Other table addition
 
-        _derive_diff_var(case_name, derived_dict, output_csv_file, cols)
+        _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols)
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
