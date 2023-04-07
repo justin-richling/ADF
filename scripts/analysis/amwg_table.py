@@ -251,12 +251,12 @@ def amwg_table(adf):
                 continue
             #End if'''
 
-            """# If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+            # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
                 errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
-            #End if"""
+            #End if
 
             #TEMPORARY:  For now, make sure only one file exists:
             if len(ts_files) != 1:
@@ -351,6 +351,8 @@ def amwg_table(adf):
             else:
                 df.to_csv(output_csv_file, header=cols, index=False)
 
+        
+
         #End of var_list loop
         #--------------------
         
@@ -380,6 +382,12 @@ def amwg_table(adf):
         table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         #End derived quantities
+
+        #Reorder RESTOM to top of tables
+        idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+        table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+        table_df = table_df.drop([idx+1]).reset_index(drop=True)
+        table_df = table_df.drop_duplicates()
     #End of model case loop
     #----------------------
     test_case_names = adf.get_cam_info("cam_case_name", required=True)
@@ -614,7 +622,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
 
         data = 0
         for consts_var in consts:
-            data += derived_dict[case_name][consts_var][0]
+            data -= derived_dict[case_name][consts_var][0]
 
         """#Initialize the difference with the value of the first constituent
         #then loop over the others
@@ -659,11 +667,11 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
                 
         table_df = pd.read_csv(output_csv_file)
 
-        #Reorder RESTOM to top of tables
+        """#Reorder RESTOM to top of tables
         idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
         table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
         table_df = table_df.drop([idx+1]).reset_index(drop=True)
-        table_df = table_df.drop_duplicates()
+        table_df = table_df.drop_duplicates()"""
 
         #Re-save the csv file
         table_df.to_csv(output_csv_file, header=cols, index=False)
