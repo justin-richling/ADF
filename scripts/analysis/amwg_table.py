@@ -156,14 +156,21 @@ def amwg_table(adf):
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
+    #End if
 
     #Declare any derived quantities here:
+    #Create (empty) dictionary to use for the derived calculations:
+    derived_dict = {}
+    
+    #User defined derived variable list from run-time yaml
     derived_var_list = adf.derived_var_list
+
     if derived_var_list:
         derived_vars = {}
         print("derived_var_list:",derived_var_list,"\n")
         for derived_var in derived_var_list:
             derived_vars[derived_var] = var_defaults[derived_var]["constituents"]
+        #End for
 
         #derived_consts_list = [item for sublist in derived_vars.values() for item in sublist]
 
@@ -172,13 +179,11 @@ def amwg_table(adf):
         for const_set in derived_vars.values():
             for consts in const_set:
                 constituents.append(consts)
-
-        #Create (empty) dictionary to use for the derived calculations:
-        derived_dict = {}
-    
+            #End for
+        #End for
     else:
-        derived_dict = []
         derived_var_list = []
+    #End if (derived variables exist)
 
     #Hold output paths for csv files
     csv_locs = []
