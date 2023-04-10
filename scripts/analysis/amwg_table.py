@@ -680,7 +680,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             table_df = table_df.drop_duplicates()"""
 
             #Re-save the csv file
-            table_df.to_csv(output_csv_file, header=cols, index=False, mode='a')
+            table_df.to_csv(output_csv_file, header=cols, index=False)
             print("table variables DURING derived:",list(table_df['variable']),"\n")
         return table_df
 
