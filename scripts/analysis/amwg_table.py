@@ -652,6 +652,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
 
             #table_df[der_var] = [der_var, unit_str] + stats_list
             print("len(table_df.index)",len(table_df.index),"\n")
+            print("table_df",table_df,"\n")
             table_df.loc[len(table_df.index)] = [der_var, unit_str] + stats_list
             print("table_df",table_df,"\n")
 
