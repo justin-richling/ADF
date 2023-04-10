@@ -500,6 +500,7 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
     #Write the comparison dataframe to a new CSV file:
     cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
 
+    print(type(derived_var_list),derived_var_list,"\n")
     if "RESTOM" in derived_var_list:
         #Reorder RESTOM to top of tables
         idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
