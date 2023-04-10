@@ -500,9 +500,9 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
     #Read in test case and baseline dataframes:
     df_case = pd.read_csv(case)
     df_base = pd.read_csv(baseline)
-    print("df_case",df_case,"\n")
-    df_case = df_case.drop_duplicates()
-    print("df_case",df_case,"\n")
+    #print("df_case",df_case,"\n")
+    #f_case = df_case.drop_duplicates()
+    #print("df_case",df_case,"\n")
     #df_base.drop_duplicates()
 
     #Create a merged dataframe that contains only the variables
