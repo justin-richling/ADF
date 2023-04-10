@@ -160,6 +160,7 @@ def amwg_table(adf):
     #Declare any derived quantities here:
     derived_vars = {}
     derived_var_list = adf.derived_var_list
+    print("derived_var_list:",derived_var_list,"\n")
     for derived_var in derived_var_list:
         derived_vars[derived_var] = var_defaults[derived_var]["constituents"]
 
