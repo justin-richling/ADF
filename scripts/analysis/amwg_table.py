@@ -622,7 +622,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
 
         #if derived_dict:
 
-            print(f"\t - Variable '{der_var}' being added to table")
+            print(f"\t - Derived variable '{der_var}' being added to table")
 
 
             #print("YAHHOOO",derived_dict[case_name][consts[0]][0])
