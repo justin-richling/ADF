@@ -355,7 +355,7 @@ def amwg_table(adf):
         #Variable Difference derived quantaties (ie RESTOM, etc.)
         #-------
         if derived_dict:
-            table_df = _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols)
+            table_df = _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols, table_df)
 
             # last step is to add table dataframe to website (if enabled):
             #table_df = pd.read_csv(output_csv_file)
@@ -606,7 +606,7 @@ def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_var_l
 #Derived quantity function space
 ################################
 
-def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols):
+def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols, table_df):
     """
     derived_vars -> dictioanry that houses derived variable as key and constituents as values
     derived_dict -> dictionary that houses consituents (all) as keys and data as value
@@ -656,7 +656,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
                 df.to_csv(output_csv_file, header=cols, index=False)
             #End if
                     
-            table_df = pd.read_csv(output_csv_file)
+            #table_df = pd.read_csv(output_csv_file)
 
             """#Reorder RESTOM to top of tables
             idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
@@ -666,7 +666,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
 
             #Re-save the csv file
             table_df.to_csv(output_csv_file, header=cols, index=False)
-        return 
+        return table_df
 
 
 # RESTOM
