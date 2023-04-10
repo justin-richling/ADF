@@ -9,7 +9,8 @@ import matplotlib.ticker as ticker
 from matplotlib.ticker import MultipleLocator
 from matplotlib.lines import Line2D
 import time
-
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 import warnings  #use to warn user about missing files.
 
 def my_formatwarning(msg, *args, **kwargs):
@@ -53,10 +54,26 @@ def time_series(adfobj):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
+
+    ts_opts = adfobj.read_config_var("time_series")
+    if not ts_opts:
+        print(
+            "Time series options were not specified, so time_series can not run."+\
+            " See documentation or config_cam_baseline_example.yaml for options to add to configuration file."
+        )
+        return
+
+    ann_var_list = ts_opts.get("ann_var_list", adfobj.diag_var_list)
+    season_var_list = ts_opts.get("season_var_list", adfobj.diag_var_list)
+
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Check for multi-case diagnostics
     if len(case_names) > 1:
+        #Grab all multi-case diagnostic directories
+        #main_site_path = adfobj.main_site_paths["main_site_path"]
+        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+        #main_site_img_path = adfobj.main_site_paths["main_site_img_path"]
         case = None
         multi_case = True
     else:
@@ -108,13 +125,16 @@ def time_series(adfobj):
             if not plpth.is_dir():
                 print(f"\t    '{pl}' not found, making new directory")
                 plpth.mkdir(parents=True)
-        if len(plot_location) == 1:
+        if len(plot_location) == 2:
             plot_loc = Path(plot_location[0])
         else:
-            print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
-            plot_loc = Path(plot_location[0])
+            print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {main_site_assets_path}")
+            plot_loc = main_site_assets_path
     else:
         plot_loc = Path(plot_location)
+
+    #print("time series plot loc:",plot_loc,"\n")
+    
 
     res = adfobj.variable_defaults #dict of variable-specific plot preferences
     #or an empty dictionary if use_defaults was not specified in config (YAML) file.
@@ -134,7 +154,7 @@ def time_series(adfobj):
     seasons = ["DJF","MAM","JJA","SON"]
 
     #Grab only time series variables from YAML file
-    ts_var_list = adfobj.timeseries_var_list
+    #ts_var_list = adfobj.timeseries_var_list
 
     #Set up the plots
     #################
@@ -147,21 +167,22 @@ def time_series(adfobj):
 
     case_ts_locs = case_ts_loc + [data_ts_loc]
 
-    #Make a separate list to ignore seasonally weighted varaibles
+    '''#Make a separate list to ignore seasonally weighted varaibles
     #ie RESTOM is only desired (currently) for annual, not seasonally.
     #Simply add to this list for customization
     ign = ["RESTOM"]
-    try:
-        #Check to see if list of requested variables are in ts_var_list
-        for ign_var in ign:
-            ts_var_list_s = [x for x in ts_var_list if x != ign_var]
-    except:
+    """try:"""
+    #Check to see if list of requested variables are in ts_var_list
+    for ign_var in ign:
+        ts_var_list_s = [x for x in ts_var_list if x != ign_var]
+    """except:
         #This may not catch all the errors, but let's try (no pun)
-        ts_var_list_s = ts_var_list
+        ts_var_list_s = ts_var_list"""'''
 
     #Grab all the seasonally weighted data up front
     print("\n  Grabbing seasonally weighted data...")
-    vals, yrs, del_s, units = _get_seasonal_data(ts_var_list_s, all_case_names, case_ts_locs)
+    #vals, yrs, del_s, units = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
+    vals, yrs, units = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
     print("  ...Seasonally weighted data collected successfully")
     
     #Annual global weighted
@@ -170,7 +191,7 @@ def time_series(adfobj):
     season = "ANN"
     print(f"\n  Generating time series for {season}...")
     #Loop over variables:
-    for var in ts_var_list:
+    for var in ann_var_list:
         #Check res for any variable specific options that need to be used BEFORE going to the plot:
         if var in res:
             vres = res[var]
@@ -190,10 +211,11 @@ def time_series(adfobj):
         #5-yr rolling average
         #Currently RESTOM is defaulted to 5-yr rolling avg
         rolling = False
-
         if 'ts' in vres:
             if "rolling" in vres['ts']:
-                rolling = vres['ts']['rolling']
+                rolling = True
+                rolling_months = vres['ts']["rolling"]["months"]
+                print("rolling_months",rolling_months,"\n")
 
         #Loop over test cases:
         #----------------------
@@ -218,8 +240,8 @@ def time_series(adfobj):
                     else:
                         color_dict = {"color":colors[case_idx],"marker":"-*"}
                 else:
-                    FSNT_case = avg_case_FSNT.rolling(time=60,center=True).mean()
-                    FLNT_case = avg_case_FLNT.rolling(time=60,center=True).mean()
+                    FSNT_case = avg_case_FSNT.rolling(time=rolling_months,center=True).mean()
+                    FLNT_case = avg_case_FLNT.rolling(time=rolling_months,center=True).mean()
                     if case_name == data_name:
                         color_dict = {"color":'g',"marker":"--"}
                     else:
@@ -243,6 +265,8 @@ def time_series(adfobj):
                     #Skip this variable and move to the next variable in var_list:
                     continue
                 avg_case,_,yrs_case,unit = _data_calcs(var,ts_ds=ts_ds,subset=None)
+                if rolling:
+                    avg_case = avg_case.rolling(time=rolling_months,center=True).mean()
 
             #End if (RESTOM)
 
@@ -285,11 +309,17 @@ def time_series(adfobj):
             fig = _make_fig_legend(case_num, fig)
 
             #Save plot
-            print("plot_loc",plot_loc,"\n")
-            plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+            #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+
+            #Save plot
+            #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+            if multi_case:
+                plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+            else:
+                plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+
             plt.savefig(plot_name, facecolor='w')
             plt.close()
-
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, var, case,
                                     season=season,
@@ -304,20 +334,23 @@ def time_series(adfobj):
     # - DJF, MAM, JJA, SON
     ##########################
     print("\n  Generating seasonally weighted time series...")
-    for var in ts_var_list_s:
+    for var in season_var_list:
+        print(f"\t - time series for {var}")
+        #print("VAR:",var,vals[var].keys(),"\n")
 
         #Skip variables that have levels
-        if var not in del_s:
-            print(f"\t - time series for {var}")
+        #if var not in del_s:
+        if 1==1:
             vres = res[var]
 
-            #Set plotting parameters based off whether the user wants
+            """#Set plotting parameters based off whether the user wants
             #5-yr rolling average
             rolling = False
 
             if 'ts' in vres:
                 if "rolling" in vres['ts']:
                     rolling = vres['ts']['rolling']
+                    rolling_months = vres['ts']["months"]"""
 
             for season in seasons:
                 fig = plt.figure(figsize=(12,8))
@@ -327,6 +360,20 @@ def time_series(adfobj):
                 y_mins = []
                 y_maxs = []
                 for case_idx, case_name in enumerate(all_case_names):
+                    fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc"))
+                    ts_ds = _load_dataset(fils)
+
+                    #Check if variable has a vertical coordinate:
+                    if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
+                        if season == "DJF":
+                        
+                            print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                                "which is currently not supported for the time series plot. Skipping...")
+                        #Skip this variable and move to the next variable in var_list:
+                        continue
+
+                    #else:
+                    
                     #Check for baseline, and set linestyle to dashed
                     if case_name == data_name:
                         label=f"{base_nickname} (baseline)"
@@ -343,34 +390,48 @@ def time_series(adfobj):
                                 marker, c=colors[case_idx],label=label)
                     #End if
 
+                    #For the minor ticks, use no labels; default NullFormatter.
+                    ax.tick_params(which='major', length=7)
+                    ax.tick_params(which='minor', length=5)
+
                     #Attempt to set custom y-ranges
                     #Grab mins/maxes
                     y_mins.append(np.nanmin(vals[var][case_name][season]))
                     y_maxs.append(np.nanmax(vals[var][case_name][season]))
                 #End for (cases)
 
-                #Set Main title for subplots:
-                ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
-                
-                if rolling:
-                    ax.set_title(f"5-yr rolling average",loc="right")
+                #Check if variable has a vertical coordinate:
+                if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
+                    
+                    #Skip this variable and move to the next variable in var_list:
+                    pass
+                else:
+                    #Set Main title for subplots:
+                    ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
+                    
+                    """if rolling:
+                        ax.set_title(f"5-yr rolling average",loc="right")"""
 
-                #Format axes
-                ax = _format_xaxis(ax, yrs)
-                ax = _format_yaxis(ax, case_num, units[var], **vres)
+                    #Format axes
+                    ax = _format_xaxis(ax, yrs)
+                    ax = _format_yaxis(ax, case_num, units[var], **vres)
 
-                #Set up legend
-                fig = _make_fig_legend(case_num, fig)
+                    #Set up legend
+                    fig = _make_fig_legend(case_num, fig)
 
-                #Save plot
-                plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                plt.savefig(plot_name, facecolor='w')
-                plt.close()
+                    #Save plot
+                    #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                    if multi_case:
+                        plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                    else:
+                        plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                    plt.savefig(plot_name, facecolor='w')
+                    plt.close()
 
-                #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_name, var, case, season=season,
-                                        plot_type="TimeSeries",
-                                        multi_case=multi_case)
+                    #Add plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, var, case, season=season,
+                                            plot_type="TimeSeries",
+                                            multi_case=multi_case)
                 #End for (cases)
             #End for (season)
         #End if (not in del_s)
@@ -448,7 +509,7 @@ def seasonal_data(data, month_length):
 
 ########
 
-def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
+def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
     """
     Gather seasonally weighted data
     -----
@@ -457,12 +518,13 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
 
     #Keep track of variables that have vertical levels for now
     #There is probably a better way to ignore these vars - JR
-    del_s = set()
+    #del_s = set()
 
     vals = OrderedDict()
     yrs = {}
     units = {}
-    for var in ts_var_list:
+    for var in season_var_list:
+        #print("var seaonal_data:",var,"\n")
         if var not in vals:
             vals[var] = OrderedDict()
         for case_idx, case_name in enumerate(all_case_names):
@@ -471,24 +533,25 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
 
             #Check if variable has a vertical coordinate:
             if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
-                print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                    "which is currently not supported for the time series plot. Skipping...")
+                #print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                #    "which is currently not supported for the time series plot. Skipping...")
 
-                if var in ts_var_list:
+                """if var in season_var_list:
                     #Keep track of vars with levels
                     #Probably a better way to ignore variables
                     #with levels than this.
                     #Look into it - JR
-                    del_s.add(var)
+                    del_s.add(var)"""
+                pass
 
             else:
                 data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
                 units[var] = unit
                 mdata_seasonal_mean = seasonal_data(data, month_length)
-
+                #print("seaosnal_data: var",var,"case",case_name,"\n")
                 if case_name not in vals[var]:
                     vals[var][case_name] = OrderedDict()
-
+                #print("vals[var].keys()",vals[var].keys(),"\n")
                 for season, arr in mdata_seasonal_mean:
                     #Weight DJF differently:
                     if season == "DJF":
@@ -517,8 +580,10 @@ def _get_seasonal_data(ts_var_list, all_case_names, case_ts_locs):
 
                         yrs_mean = [arr.sel(time=i).mean().values for i in yrs[case_name]]
                         vals[var][case_name][season] = yrs_mean
+                    
 
-    return vals, yrs, del_s, units
+    #return vals, yrs, del_s, units
+    return vals, yrs, units
 
 ########
 
@@ -615,9 +680,25 @@ def _make_fig_legend(case_num, fig):
     #Gather labels based on case names and plotted line format (color, style, etc)
     lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-    
-    fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
-                bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)
+    """print(case_num,"\n")
+    if case_num == 2:
+        y0 = 0.825
+    else:
+        y0 = 0.825-(0.008*(case_num-1))"""
+
+    #y0 = 0.825-(0.0075*case_num) # 4-case?
+    #y0 = 0.825-(0.008*case_num) # 
+    #y0 = 0.825-(0.01*case_num) # 2-case?
+    #y0 = 0.825-(0.006*case_num)
+    """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
+                bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
+    """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
+                bbox_to_anchor=(0.12, 0.841-(0.009*case_num),.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
+    fig.legend(lines[:case_num+1], labels[:case_num+1],loc="upper left",
+                #bbox_to_anchor=(0.12, 1.025,.042,.05*(case_num-1))
+                bbox_to_anchor=(0.12, 0.835,.042,.05)
+                ) #bbox_to_anchor(x0, y0, width, height)
+                #y0s[case_num]
     return fig
 
 ########
