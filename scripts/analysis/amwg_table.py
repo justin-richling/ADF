@@ -387,7 +387,7 @@ def amwg_table(adf):
 
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
-                _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames)
+                _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_var_list)
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
 
