@@ -165,7 +165,7 @@ def amwg_table(adf):
         for derived_var in derived_var_list:
             derived_vars[derived_var] = var_defaults[derived_var]["constituents"]
 
-        derived_consts_list = [item for sublist in derived_vars.values() for item in sublist]
+        #derived_consts_list = [item for sublist in derived_vars.values() for item in sublist]
 
         #Make list of all constituents of derived variables
         constituents = []
@@ -304,7 +304,7 @@ def amwg_table(adf):
 
             #Add necessary data for derived calcs below
             if derived_var_list:
-                if var in derived_consts_list:
+                if var in constituents:
                     derived_dict[case_name][var] = [data, unit_str]
 
             # In order to get correct statistics, average to annual or seasonal
@@ -365,6 +365,8 @@ def amwg_table(adf):
 
     #Notify user that script has ended:
     print("  ...AMWG variable table has been generated successfully.")
+
+    #_df_comp_table(adf, output_location, base_output_location, case_names)
 
     #Check if observations are being comapred to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
@@ -488,6 +490,7 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
     #Write the comparison dataframe to a new CSV file:
     cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
 
+    #if "RESTOM" in 
     #Reorder RESTOM to top of tables
     idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
     df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
