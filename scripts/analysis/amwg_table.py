@@ -641,21 +641,23 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
                 unit_str = '--'
             #End if
             
-            row_values = [der_var, unit_str] + stats_list
+            #row_values = [der_var, unit_str] + stats_list
+
+            table_df[der_var] = [unit_str] + stats_list
 
             # Format entries:
             #NOTE: col (column) values were declared above
-            dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
+            #dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
 
             # Add entries to Pandas structure:
-            df = pd.DataFrame(dfentries)
+            #df = pd.DataFrame(dfentries)
 
             # Check if the output CSV file exists,
             # if so, then append to it:
-            if output_csv_file.is_file():
-                df.to_csv(output_csv_file, mode='a', header=False, index=False)
-            else:
-                df.to_csv(output_csv_file, header=cols, index=False)
+            #if output_csv_file.is_file():
+            #    df.to_csv(output_csv_file, mode='a', header=False, index=False)
+            #else:
+            #    df.to_csv(output_csv_file, header=cols, index=False)
             #End if
                     
             #table_df = pd.read_csv(output_csv_file)
@@ -667,7 +669,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             table_df = table_df.drop_duplicates()"""
 
             #Re-save the csv file
-            table_df.to_csv(output_csv_file, header=cols, index=False)
+            table_df.to_csv(output_csv_file, header=cols, index=False, mode='a')
             print("table variables DURING derived:",list(table_df['variable']),"\n")
         return table_df
 
@@ -698,6 +700,7 @@ def _derive_restom(case_name, derived_dict, output_csv_file, cols):
 
     # Add entries to Pandas structure:
     df = pd.DataFrame(dfentries)
+
 
     # Check if the output CSV file exists,
     # if so, then append to it:
