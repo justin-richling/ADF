@@ -152,11 +152,8 @@ def amwg_table(adf):
         output_locs.append(output_locs[0])
 
     #Declare any derived quantities here:
-    #derived_vars = {"RESTOM":["FSNT", "FLNT"]}
-    
-    #derived_vars = {"RESTOM":something["constits"]}
-
-    #derived_list = [item for sublist in derived_vars.values() for item in sublist]
+    derived_vars = {"RESTOM":["FSNT", "FLNT"]}
+    derived_list = [item for sublist in list(derived_vars.values()) for item in sublist]
 
     #Create (empty) dictionary to use for the
     #derived calculations (inititally RESTOM radiation):
@@ -197,32 +194,8 @@ def amwg_table(adf):
         #ocean fraction xarray data-array:
         ocn_frc_da = None
 
-        #Collect derived quantities
-        derived_vars = {}
-
         #Loop over CAM output variables:
         for var in var_list:
-
-
-
-            #Check res for any variable specific options that need to be used BEFORE going to the plot:
-            if var in res:
-                vres = res[var]
-                #If found then notify user, assuming debug log is enabled:
-                adf.debug_log(f"time_series: Found variable defaults for {var}")
-            else:
-                vres = {}
-            #End if
-            res = adf.variable_defaults #dict of variable-specific plot preferences
-            if 'constits' in vres:  
-                cons_list = vres['constits']
-                derived_vars["RESTOM"] = cons_list
-
-            ##Add necessary data for derived calcs below
-            #if var in derived_list:
-            #    derived_dict[case_name][var] = [data, unit_str]
-
-
 
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
@@ -302,9 +275,9 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = _spatial_average(data)  # changes data "in place"
 
-            """#Add necessary data for derived calcs below
+            #Add necessary data for derived (RESTOM) calcs below
             if var in derived_list:
-                derived_dict[case_name][var] = [data, unit_str]"""
+                derived_dict[case_name][var] = [data, unit_str]
 
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
@@ -483,7 +456,7 @@ def _derive_restom(case_name, derived_dict, output_csv_file, cols):
     
     var = "RESTOM" #RESTOM = FSNT-FLNT
     print(f"\t - Variable '{var}' being added to table")
-    data = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
+    data = derived_dict[case_name]["FSNT"] - derived_dict[case_name]["FLNT"]
      # In order to get correct statistics, average to annual or seasonal
     data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
@@ -513,6 +486,7 @@ def _derive_restom(case_name, derived_dict, output_csv_file, cols):
         df.to_csv(output_csv_file, header=cols, index=False)
     #End if
             
+    #last step is to add table dataframe to website (if enabled):
     table_df = pd.read_csv(output_csv_file)
 
     #Reorder RESTOM to top of tables
