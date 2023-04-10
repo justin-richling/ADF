@@ -370,7 +370,8 @@ def amwg_table(adf):
             table_df = table_df.drop_duplicates()
         else:
             print("No derived quantities found\n")
-        table_df = table_df.drop_duplicates()
+        #table_df = table_df.drop_duplicates()
+        table_df.to_csv(output_csv_file, header=cols, index=False)
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         #End derived quantities
 
