@@ -356,6 +356,7 @@ def amwg_table(adf):
         #Variable Difference derived quantaties (ie RESTOM, etc.)
         #-------
         if derived_dict:
+            print("output_csv_file",output_csv_file,"\n")
             table_df = _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols, table_df)
             print("table variables AFTER derived:",list(table_df['variable']),table_df,"\n")
 
@@ -652,6 +653,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             #table_df[der_var] = [der_var, unit_str] + stats_list
             print("len(table_df.index)",len(table_df.index),"\n")
             table_df.loc[len(table_df.index)] = [der_var, unit_str] + stats_list
+            print("table_df",table_df,"\n")
 
             # Format entries:
             #NOTE: col (column) values were declared above
