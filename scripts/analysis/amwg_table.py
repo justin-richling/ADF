@@ -348,6 +348,7 @@ def amwg_table(adf):
         #--------------------
         
         table_df = pd.read_csv(output_csv_file)
+        print("table variables BEFORE derived:",list(table_df['variable']),"\n")
 
         #Space for derived quantities
         #----------------------------
@@ -356,6 +357,7 @@ def amwg_table(adf):
         #-------
         if derived_dict:
             table_df = _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols, table_df)
+            print("table variables AFTER derived:",list(table_df['variable']),"\n")
 
             # last step is to add table dataframe to website (if enabled):
             #table_df = pd.read_csv(output_csv_file)
@@ -666,6 +668,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
 
             #Re-save the csv file
             table_df.to_csv(output_csv_file, header=cols, index=False)
+            print("table variables DURING derived:",list(table_df['variable']),"\n")
         return table_df
 
 
