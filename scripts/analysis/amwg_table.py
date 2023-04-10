@@ -337,16 +337,17 @@ def amwg_table(adf):
 
         #Variable Difference derived quantaties (ie RESTOM, etc.)
         #-------
-        _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols)
+        if derived_dict:
+            _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols)
 
-        # last step is to add table dataframe to website (if enabled):
-        table_df = pd.read_csv(output_csv_file)
+            # last step is to add table dataframe to website (if enabled):
+            table_df = pd.read_csv(output_csv_file)
 
-        #Reorder RESTOM to top of tables
-        idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
-        table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-        table_df = table_df.drop([idx+1]).reset_index(drop=True)
-        table_df = table_df.drop_duplicates()
+            #Reorder RESTOM to top of tables
+            idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+            table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+            table_df = table_df.drop([idx+1]).reset_index(drop=True)
+            table_df = table_df.drop_duplicates()
 
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         #End derived quantities
