@@ -167,20 +167,23 @@ def amwg_table(adf):
 
     if derived_var_list:
         derived_vars = {}
+        constituents = []
+
         print("derived_var_list:",derived_var_list,"\n")
         for derived_var in derived_var_list:
-            derived_vars[derived_var] = var_defaults[derived_var]["constituents"]
-        #End for
+            const_set= var_defaults[derived_var]["constituents"]
+            derived_vars[derived_var] = const_set
 
-        #derived_consts_list = [item for sublist in derived_vars.values() for item in sublist]
+            #for const_set in derived_vars.values():
+            for consts in const_set:
+                constituents.append(consts)
 
-        #Make list of all constituents of derived variables
+        """#Make list of all constituents of derived variables
         constituents = []
         for const_set in derived_vars.values():
             for consts in const_set:
                 constituents.append(consts)
-            #End for
-        #End for
+        #End for"""
     else:
         derived_var_list = []
     #End if (derived variables exist)
