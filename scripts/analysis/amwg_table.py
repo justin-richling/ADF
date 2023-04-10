@@ -499,6 +499,8 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
     #Read in test case and baseline dataframes:
     df_case = pd.read_csv(case)
     df_base = pd.read_csv(baseline)
+    df_case.drop_duplicates()
+    df_base.drop_duplicates()
 
     #Create a merged dataframe that contains only the variables
     #contained within both the test case and the baseline:
@@ -524,7 +526,6 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
         df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
         df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
         df_comp = df_comp.drop_duplicates()
-    df_comp.drop_duplicates()
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
