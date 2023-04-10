@@ -351,7 +351,8 @@ def amwg_table(adf):
             table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
             table_df = table_df.drop([idx+1]).reset_index(drop=True)
             table_df = table_df.drop_duplicates()
-
+        else:
+            print("No derived quantities found\n")
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         #End derived quantities
 
