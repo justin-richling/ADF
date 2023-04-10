@@ -58,7 +58,8 @@ def time_series(adfobj):
     ts_opts = adfobj.read_config_var("time_series")
     if not ts_opts:
         print(
-            "Time series options were not specified, so time_series can not run. See documentation or config_cam_baseline_example.yaml for options to add to configuration file."
+            "Time series options were not specified, so time_series can not run."+\
+            " See documentation or config_cam_baseline_example.yaml for options to add to configuration file."
         )
         return
 
@@ -359,17 +360,17 @@ def time_series(adfobj):
                 y_mins = []
                 y_maxs = []
                 for case_idx, case_name in enumerate(all_case_names):
-                    fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc"))
-                    ts_ds = _load_dataset(fils)
+                    #fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc"))
+                    #ts_ds = _load_dataset(fils)
 
-                    #Check if variable has a vertical coordinate:
-                    if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
-                        if season == "DJF":
-                        
-                            print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                                "which is currently not supported for the time series plot. Skipping...")
-                        #Skip this variable and move to the next variable in var_list:
-                        continue
+                    ##Check if variable has a vertical coordinate:
+                    #if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
+                    #    if season == "DJF":
+                    #    
+                    #        print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                    #            "which is currently not supported for the time series plot. Skipping...")
+                    #    #Skip this variable and move to the next variable in var_list:
+                    #    continue
 
                     #else:
                     
@@ -399,12 +400,40 @@ def time_series(adfobj):
                     y_maxs.append(np.nanmax(vals[var][case_name][season]))
                 #End for (cases)
 
-                #Check if variable has a vertical coordinate:
+                #Set Main title for subplots:
+                ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
+                    
+                    
+
+                #Format axes
+                ax = _format_xaxis(ax, yrs)
+                ax = _format_yaxis(ax, case_num, units[var], **vres)
+
+                #Set up legend
+                fig = _make_fig_legend(case_num, fig)
+
+                #Save plot
+                #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                if multi_case:
+                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
+                else:
+                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+                plt.savefig(plot_name, facecolor='w')
+                plt.close()
+
+                #Add plot to website (if enabled):
+                adfobj.add_website_data(plot_name, var, case, season=season,
+                                        plot_type="TimeSeries",
+                                        multi_case=multi_case)
+
+                """#Check if variable has a vertical coordinate:
                 if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
                     
                     #Skip this variable and move to the next variable in var_list:
-                    pass
-                else:
+                    pass"""
+
+                '''if ('lev' not in ts_ds.coords) or ('ilev' not in ts_ds.coords):
+                #else:
                     #Set Main title for subplots:
                     ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
                     
@@ -430,7 +459,7 @@ def time_series(adfobj):
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case, season=season,
                                             plot_type="TimeSeries",
-                                            multi_case=multi_case)
+                                            multi_case=multi_case)'''
                 #End for (cases)
             #End for (season)
         #End if (not in del_s)
@@ -511,6 +540,8 @@ def seasonal_data(data, month_length):
 def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
     """
     Gather seasonally weighted data
+    - DFJ, MAM, JJA, SON 
+        ** No ANN **
     -----
         - 
     """
@@ -530,56 +561,52 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
             fils = sorted(Path(case_ts_locs[case_idx]).glob(f"*{var}.*.nc"))
             ts_ds = _load_dataset(fils)
 
-            #Check if variable has a vertical coordinate:
+            """#Check if variable has a vertical coordinate:
             if 'lev' in ts_ds.coords or 'ilev' in ts_ds.coords:
                 #print(f"\t   Variable '{var}' has a vertical dimension, "+\
                 #    "which is currently not supported for the time series plot. Skipping...")
+                pass"""
 
-                """if var in season_var_list:
-                    #Keep track of vars with levels
-                    #Probably a better way to ignore variables
-                    #with levels than this.
-                    #Look into it - JR
-                    del_s.add(var)"""
-                pass
+            if ts_ds:
+                if ('lev' not in ts_ds.coords) or ('ilev' not in ts_ds.coords):
+                #else:
+                    data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
+                    units[var] = unit
+                    mdata_seasonal_mean = seasonal_data(data, month_length)
+                    #print("seaosnal_data: var",var,"case",case_name,"\n")
+                    if case_name not in vals[var]:
+                        vals[var][case_name] = OrderedDict()
+                    #print("vals[var].keys()",vals[var].keys(),"\n")
+                    for season, arr in mdata_seasonal_mean:
+                        #Weight DJF differently:
+                        if season == "DJF":
+                            #Get years
+                            yrs_s = []
+                            #Grab first year avialable for December
+                            for val in arr.time[1:]:
+                                yr = val.item().timetuple().tm_year
+                                #Need to put year in 4-digit expression
+                                #so grab leading zeros (ie yr 31 would be 0031)
+                                yrs_s.append(str(yr).zfill(4))
+                            yrs_s = np.unique(yrs_s)
+                            yrs[case_name] = yrs_s
 
-            else:
-                data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
-                units[var] = unit
-                mdata_seasonal_mean = seasonal_data(data, month_length)
-                #print("seaosnal_data: var",var,"case",case_name,"\n")
-                if case_name not in vals[var]:
-                    vals[var][case_name] = OrderedDict()
-                #print("vals[var].keys()",vals[var].keys(),"\n")
-                for season, arr in mdata_seasonal_mean:
-                    #Weight DJF differently:
-                    if season == "DJF":
-                        #Get years
-                        yrs_s = []
-                        #Grab first year avialable for December
-                        for val in arr.time[1:]:
-                            yr = val.item().timetuple().tm_year
-                            #Need to put year in 4-digit expression
-                            #so grab leading zeros (ie yr 31 would be 0031)
-                            yrs_s.append(str(yr).zfill(4))
-                        yrs_s = np.unique(yrs_s)
-                        yrs[case_name] = yrs_s
+                            yrs_mean = [arr.sel(time=i).mean().values for i in yrs[case_name]]
+                            vals[var][case_name][season] = yrs_mean
 
-                        yrs_mean = [arr.sel(time=i).mean().values for i in yrs[case_name]]
-                        vals[var][case_name][season] = yrs_mean
+                        else:
+                            #Get years
+                            yrs_s = []
+                            for val in arr.time:
+                                yr = val.item().timetuple().tm_year
+                                yrs_s.append(str(yr).zfill(4))
+                            yrs_s = np.unique(yrs_s)
+                            yrs[case_name] = yrs_s
 
-                    else:
-                        #Get years
-                        yrs_s = []
-                        for val in arr.time:
-                            yr = val.item().timetuple().tm_year
-                            yrs_s.append(str(yr).zfill(4))
-                        yrs_s = np.unique(yrs_s)
-                        yrs[case_name] = yrs_s
-
-                        yrs_mean = [arr.sel(time=i).mean().values for i in yrs[case_name]]
-                        vals[var][case_name][season] = yrs_mean
-                    
+                            yrs_mean = [arr.sel(time=i).mean().values for i in yrs[case_name]]
+                            vals[var][case_name][season] = yrs_mean
+                else:
+                    print(f"{var} not found, skipping...")    
 
     #return vals, yrs, del_s, units
     return vals, yrs, units
