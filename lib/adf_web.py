@@ -613,23 +613,8 @@ class AdfWeb(AdfObs):
                     if season not in multi_mean_html_info[ptype][category][var]:
                         multi_mean_html_info[ptype][category][var][season] = p
                     #End if
-                    """if "multi_plot" not in str(web_data.html_file.name):
-                        if ptype not in multi_mean_html_info:
-                            multi_mean_html_info[ptype] = OrderedDict()
-                        #End if
-                        if category not in multi_mean_html_info[ptype]:
-                            multi_mean_html_info[ptype][category] = OrderedDict()
-                        #End if
-                        if var not in multi_mean_html_info[ptype][category]:
-                            multi_mean_html_info[ptype][category][var] = OrderedDict()
-                        #End if
-                        p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                        if season not in multi_mean_html_info[ptype][category][var]:
-                            multi_mean_html_info[ptype][category][var][season] = p
-                        #End if
-                    #End if (not multi-case multi-plots)"""
                 #End if (multi-case scenario)
-                #print("multi_mean_html_info.keys()",multi_mean_html_info.keys(),"\n")
+
                 #Individual cases
                 #This will be used if multi-case diagnostics as well
                 #Create a directory that will hold just the html files for individual images:
@@ -957,18 +942,6 @@ class AdfWeb(AdfObs):
                         table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                             float_format='{:6g}'.format)
 
-                        """#Construct amwg_table.html
-                        table_keys = [web_data.case,data_name,"case_comparison"]
-
-                        case_table_dict = {}
-                        for key in table_keys:
-                            if self.compare_obs:
-                                if (key != "Obs") and (key != "case_comparison"):
-                                    case_table_dict[key] = multi_table_html_info[key]
-                            else:
-                                case_table_dict[key] = multi_table_html_info[key]
-                        #End for"""
-
                         indv_html = table_pages_dir_indv / f"amwg_table_{web_data.name}.html"
 
                         if not indv_html.exists():
@@ -1239,28 +1212,6 @@ class AdfWeb(AdfObs):
                     multi_case_ptypes[multi_case_dict[key]] = mcase_plot
                 #End for
             #End if
-            
-            #mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict['time_series']}.html"
-            #multi_plots[multi_case_dict['time_series']] = mcase_plot
-
-
-            """
-            
-            
-            multi_case_dict = {"global_latlon_map":"LatLon",
-                               "zonal_mean":"Zonal",
-                               "meridional":"Meridional",
-                               "global_latlon_vect_map":"LatLon_Vector",
-                               "time_series":"TimeSeries"}
-
-            multi_plots = {"Tables": "html_table/mean_tables.html",
-                           "Special":"html_img/multi_case_mean_diag_Special.html",
-                           "TimeSeries":"html_img/multi_case_mean_diag_TimeSeries"}
-            
-            
-            
-            """
-            #multi_case_ptypes["Tables"] = multi_plots["Tables"]
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
