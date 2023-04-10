@@ -175,6 +175,9 @@ def amwg_table(adf):
 
         #Create (empty) dictionary to use for the derived calculations:
         derived_dict = {}
+    
+    else:
+        derived_dict = False
 
     #Hold output paths for csv files
     csv_locs = []
