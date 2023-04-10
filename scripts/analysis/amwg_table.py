@@ -643,7 +643,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             
             #row_values = [der_var, unit_str] + stats_list
 
-            table_df[der_var] = [unit_str] + stats_list
+            table_df[der_var] = [der_var, unit_str] + stats_list
 
             # Format entries:
             #NOTE: col (column) values were declared above
