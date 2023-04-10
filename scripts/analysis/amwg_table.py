@@ -369,6 +369,7 @@ def amwg_table(adf):
             table_df = table_df.drop_duplicates()
         else:
             print("No derived quantities found\n")
+        table_df = table_df.drop_duplicates()
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         #End derived quantities
 
@@ -646,6 +647,7 @@ def _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, col
             #row_values = [der_var, unit_str] + stats_list
 
             #table_df[der_var] = [der_var, unit_str] + stats_list
+            print("len(table_df.index)",len(table_df.index),"\n")
             table_df.loc[len(table_df.index)] = [der_var, unit_str] + stats_list
 
             # Format entries:
