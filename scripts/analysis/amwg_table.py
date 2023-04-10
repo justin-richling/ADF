@@ -335,6 +335,8 @@ def amwg_table(adf):
         #End of var_list loop
         #--------------------
         
+        table_df = pd.read_csv(output_csv_file)
+
         #Space for derived quantities
         #----------------------------
 
@@ -344,7 +346,7 @@ def amwg_table(adf):
             _derive_diff_var(case_name, derived_dict, derived_vars, output_csv_file, cols)
 
             # last step is to add table dataframe to website (if enabled):
-            table_df = pd.read_csv(output_csv_file)
+            #table_df = pd.read_csv(output_csv_file)
 
             #Reorder RESTOM to top of tables
             idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
