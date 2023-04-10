@@ -182,7 +182,7 @@ def time_series(adfobj):
     #Grab all the seasonally weighted data up front
     print("\n  Grabbing seasonally weighted data...")
     #vals, yrs, del_s, units = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
-    vals, yrs, units = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
+    vals, yrs, units, season_var_list = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
     print("  ...Seasonally weighted data collected successfully")
     
     #Annual global weighted
@@ -549,6 +549,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
     #Keep track of variables that have vertical levels for now
     #There is probably a better way to ignore these vars - JR
     #del_s = set()
+    season_var_list_mod = []
 
     vals = OrderedDict()
     yrs = {}
@@ -570,6 +571,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
             if ts_ds:
                 if ('lev' not in ts_ds.coords) or ('ilev' not in ts_ds.coords):
                 #else:
+                    season_var_list_mod.append(var)
                     data,month_length,_,unit =_data_calcs(var,ts_ds=ts_ds,subset=None)
                     units[var] = unit
                     mdata_seasonal_mean = seasonal_data(data, month_length)
@@ -609,7 +611,7 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
                     print(f"{var} not found, skipping...")    
 
     #return vals, yrs, del_s, units
-    return vals, yrs, units
+    return vals, yrs, units, season_var_list_mod
 
 ########
 
