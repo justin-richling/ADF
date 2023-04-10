@@ -508,6 +508,8 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
     df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
     df_comp['baseline'] = df_merge[['mean_y']]
     
+    print(type(df_comp['case'].values),df_comp['baseline'].values)
+
     diffs = df_comp['case'].values-df_comp['baseline'].values
     df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
 
