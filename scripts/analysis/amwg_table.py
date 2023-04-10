@@ -377,7 +377,12 @@ def amwg_table(adf):
             if len(test_case_names) == 1:
                 #Create comparison table for both cases
                 print("\n  Making comparison table...")
-                _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
+
+                _df_comp_table(adf, output_location,
+                                Path(output_locs[0]),
+                                case_names,
+                                derived_var_list)
+
                 print("  ... Comparison table has been generated successfully")
 
             if len(test_case_names) > 1:
@@ -385,7 +390,12 @@ def amwg_table(adf):
                 _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames)
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
-                    _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
+
+                    _df_comp_table(adf, Path(output_locs[idx]),
+                                   Path(output_locs[0]),
+                                   [case,baseline_name],
+                                   derived_var_list)
+
                 print("  ... Multi-case comparison table has been generated successfully")
         #End if
     else:
@@ -458,7 +468,7 @@ def _get_row_vals(data):
 
 #####
 
-def _df_comp_table(adf, output_location, base_output_location, case_names):
+def _df_comp_table(adf, output_location, base_output_location, case_names, derived_var_list):
     """
     Function to build case vs baseline AMWG table
     -----
@@ -490,12 +500,12 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
     #Write the comparison dataframe to a new CSV file:
     cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
 
-    #if "RESTOM" in 
-    #Reorder RESTOM to top of tables
-    idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
-    df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
-    df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-    df_comp = df_comp.drop_duplicates()
+    if "RESTOM" in derived_var_list:
+        #Reorder RESTOM to top of tables
+        idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
+        df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
+        df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
+        df_comp = df_comp.drop_duplicates()
 
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
@@ -504,7 +514,7 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
 
 #####
 
-def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames):
+def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_var_list):
     """
     Function to build all case comparison AMWG table
     ------
@@ -566,10 +576,11 @@ def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames):
                     df_comp.at[idx,col]= f'{df_comp[col][idx]:{formatter}}   ({(df_comp[col][idx]-df_base["mean"][idx]):{formatter}})'
 
     #Reorder RESTOM to top of tables
-    idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
-    df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
-    df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-    df_comp = df_comp.drop_duplicates()
+    if "RESTOM" in derived_var_list:
+        idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
+        df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
+        df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
+        df_comp = df_comp.drop_duplicates()
 
     #Finally, write data to csv
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
