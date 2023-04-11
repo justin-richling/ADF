@@ -651,7 +651,7 @@ def _derive_var(case_name, derived_dict, derived_vars, derived_op, output_csv_fi
             if derived_op == "subtract":
                 data -= derived_dict[case_name][consts_var][0]
             if derived_op == "add":
-                data += derived_dict[case_name][consts_var][0]
+                data -= derived_dict[case_name][consts_var][0]
 
         # In order to get correct statistics, average to annual or seasonal
         data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
