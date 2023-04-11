@@ -1226,7 +1226,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
-                             adata, bdata, has_lev, **kwargs):
+                             adata, bdata, has_lev, log_p,**kwargs):
     """This is the default zonal mean plot:
         adata: data to plot ([lev], lat, [lon]).
                The vertical coordinate (lev) must be pressure levels.
@@ -1311,6 +1311,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(0.85)
         ax[-1].set_xlabel("LATITUDE")
+
+        if log_p:
+            [a.set_yscale("log") for a in ax]
+
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
     else:
         line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
