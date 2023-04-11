@@ -275,7 +275,7 @@ def zonal_mean(adfobj):
                     pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
                                                 [syear_baseline,eyear_baseline],
-                                                mseasons[s], oseasons[s], has_lev, **vres)
+                                                mseasons[s], oseasons[s], has_lev, log_p=False, **vres)
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
