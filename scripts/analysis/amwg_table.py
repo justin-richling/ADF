@@ -201,7 +201,7 @@ def amwg_table(adf):
                 else:
                     print(f"{derived_var} has no constituents and/or necessary operation. Check the variable yaml file")
             else:
-                print(f"{derived_var} not in yaml file")
+                print(f"{derived_var} not in variable yaml file")
     else:
         derived_var_list = []
     #End if (derived variables exist)
