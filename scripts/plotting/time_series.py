@@ -368,6 +368,7 @@ def time_series(adfobj):
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
             else:
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
+
             plt.savefig(plot_name, facecolor='w')
             plt.close()
 
@@ -375,7 +376,6 @@ def time_series(adfobj):
             adfobj.add_website_data(plot_name, var, case, season=season,
                                     plot_type="TimeSeries",
                                     multi_case=multi_case)
-
             #End for (cases)
         #End for (season)
     #End for (var)

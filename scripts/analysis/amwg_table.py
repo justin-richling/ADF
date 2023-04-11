@@ -170,6 +170,7 @@ def amwg_table(adf):
         constituents = []
         derived_op = {}
         for derived_var in derived_var_list:
+            print("derived_var:",derived_var,"\n")
             if derived_var in var_defaults:
                 print("derived_var",derived_var,"\n")
                 const_set= var_defaults[derived_var]["constituents"]
