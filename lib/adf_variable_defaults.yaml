@@ -56,6 +56,15 @@
 # months   -> Number of months to average over
 #
 #
+# DERIVED VARIABLES:
+#
+# operation  -> simple mathematical operation for calculating variable from constituents
+#               ie add or subtract all constituents.
+#                * Nothing that combines operations or complex operations yet
+#
+# constituents  -> list of necessary variables to derive desired variable
+#
+#
 # Final Note:  Please do not modify this file unless you plan to push your changes back to the ADF repo.
 #              If you would like to modify this file for your personal ADF runs then it is recommended
 #              to make a copy of this file, make modifications in that copy, and then point the ADF to
@@ -726,6 +735,10 @@ FLNTC:
   obs_name: "CERES_EBAF_Ed4.1"
   obs_var_name: "toa_lw_clr_t_mon"
   category: "TOA energy flux"
+
+HOT_GARBAGE:
+  operation:
+      "add"
 
 RESTOM:
   new_unit: "Wm$^{-2}$"

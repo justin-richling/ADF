@@ -183,19 +183,24 @@ def amwg_table(adf):
         derived_op = {}
 
         for derived_var in derived_var_list:
+
+            #Need to check if the variable exists in the variable yaml file
             if derived_var in var_defaults:
 
-                #Grab set of constituents for derived variable
-                const_set= var_defaults[derived_var]["constituents"]
-                derived_vars[derived_var] = const_set
+                #Check if necessary constituents and mathematical operations are in the yaml file as well
+                #if ("constituents" in var_defaults[derived_var]) and ("operation" in var_defaults[derived_var]):
+                if ("constituents" and "operation") in var_defaults[derived_var]:
+                    #Grab set of constituents for derived variable
+                    const_set= var_defaults[derived_var]["constituents"]
+                    derived_vars[derived_var] = const_set
 
-                #Add each constituent individually
-                #Seems like this could be streamlined? - JR
-                for consts in const_set:
-                    constituents.append(consts)
+                    #Add each constituent individually
+                    for consts in const_set:
+                        constituents.append(consts)
 
-                if "operation" in var_defaults[derived_var]:
                     derived_op[derived_var] = var_defaults[derived_var]["operation"]
+                else:
+                    pass
             else:
                 print(f"{derived_var} has no constituents. Check the variable yaml file")
     else:
