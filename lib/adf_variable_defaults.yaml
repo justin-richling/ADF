@@ -741,6 +741,7 @@ HOT_GARBAGE:
       "add"
 
 RESTOM:
+  #** derived quantity **
   new_unit: "Wm$^{-2}$"
   mpl:
     colorbar:

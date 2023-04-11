@@ -175,11 +175,12 @@ def amwg_table(adf):
         #Set of all constituents from all derived variables
         constituents = []
 
-        #Get derivation mathematical operation
+        #Get derived mathematical operation
         #NOTE: this is only for simple calculations:
         #ie add all constituents or subtract all constituents
         #TODO: find way to add complex derivation operations
         #ie operations that add and subtract, or add and divide, etc.
+        # -> probably be a list of operations?
         derived_op = {}
 
         for derived_var in derived_var_list:
