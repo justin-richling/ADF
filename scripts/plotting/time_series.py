@@ -8,9 +8,6 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.ticker import MultipleLocator
 from matplotlib.lines import Line2D
-import time
-import matplotlib.style as mplstyle
-mplstyle.use('fast')
 import warnings  #use to warn user about missing files.
 
 def my_formatwarning(msg, *args, **kwargs):
@@ -55,6 +52,7 @@ def time_series(adfobj):
     #Extract needed quantities from ADF object:
     #-----------------------------------------
 
+    #Timeseries yaml file options
     ts_opts = adfobj.read_config_var("time_series")
     if not ts_opts:
         print(
@@ -70,10 +68,8 @@ def time_series(adfobj):
 
     #Check for multi-case diagnostics
     if len(case_names) > 1:
-        #Grab all multi-case diagnostic directories
-        #main_site_path = adfobj.main_site_paths["main_site_path"]
+        #Grab all multi-case diagnostic directory
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
-        #main_site_img_path = adfobj.main_site_paths["main_site_img_path"]
         case = None
         multi_case = True
     else:
@@ -131,10 +127,7 @@ def time_series(adfobj):
             print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {main_site_assets_path}")
             plot_loc = main_site_assets_path
     else:
-        plot_loc = Path(plot_location)
-
-    #print("time series plot loc:",plot_loc,"\n")
-    
+        plot_loc = Path(plot_location)    
 
     res = adfobj.variable_defaults #dict of variable-specific plot preferences
     #or an empty dictionary if use_defaults was not specified in config (YAML) file.
@@ -150,11 +143,8 @@ def time_series(adfobj):
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to '{redo_plot}'")
 
-    #Set seasonal ranges (sans ANN):
+    #Set seasonal ranges
     seasons = ["DJF","MAM","JJA","SON"]
-
-    #Grab only time series variables from YAML file
-    #ts_var_list = adfobj.timeseries_var_list
 
     #Set up the plots
     #################
@@ -167,23 +157,9 @@ def time_series(adfobj):
 
     case_ts_locs = case_ts_loc + [data_ts_loc]
 
-    '''#Make a separate list to ignore seasonally weighted varaibles
-    #ie RESTOM is only desired (currently) for annual, not seasonally.
-    #Simply add to this list for customization
-    ign = ["RESTOM"]
-    """try:"""
-    #Check to see if list of requested variables are in ts_var_list
-    for ign_var in ign:
-        ts_var_list_s = [x for x in ts_var_list if x != ign_var]
-    """except:
-        #This may not catch all the errors, but let's try (no pun)
-        ts_var_list_s = ts_var_list"""'''
-
     #Grab all the seasonally weighted data up front
     print("\n  Grabbing seasonally weighted data...")
-    #vals, yrs, del_s, units = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
     vals, yrs, units, season_var_list = _get_seasonal_data(season_var_list, all_case_names, case_ts_locs)
-    print("  ...Seasonally weighted data collected successfully")
     
     #Annual global weighted
     #######################
@@ -306,13 +282,13 @@ def time_series(adfobj):
             ax = _format_xaxis(ax, yrs)
 
             #Set up legend
-            fig = _make_fig_legend(case_num, fig)
+            lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
+            lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
+
+            fig.legend(lines[:case_num+1], labels[:case_num+1],loc="upper left",
+                        bbox_to_anchor=(0.12, 0.835,.042,.05)) # bbox_to_anchor(x0, y0, width, height)
 
             #Save plot
-            #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-
-            #Save plot
-            #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
             if multi_case:
                 plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
             else:
@@ -381,7 +357,11 @@ def time_series(adfobj):
             ax = _format_yaxis(ax, case_num, units[var], **vres)
 
             #Set up legend
-            fig = _make_fig_legend(case_num, fig)
+            lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
+            lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
+
+            fig.legend(lines[:case_num+1], labels[:case_num+1],loc="upper left",
+                        bbox_to_anchor=(0.12, 0.835,.042,.05)) # bbox_to_anchor(x0, y0, width, height)
 
             #Save plot
             if multi_case:
@@ -475,15 +455,12 @@ def seasonal_data(data, month_length):
 def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
     """
     Gather seasonally weighted data
+    -----
     - DFJ, MAM, JJA, SON 
         ** No ANN **
-    -----
-        - 
     """
 
-    #Keep track of variables that have vertical levels for now
-    #There is probably a better way to ignore these vars - JR
-    #del_s = set()
+    #Ignore variables that have vertical levels for now
     season_var_list_mod = []
 
     vals = OrderedDict()
@@ -543,21 +520,6 @@ def _get_seasonal_data(season_var_list, all_case_names, case_ts_locs):
 
 ########
 
-def _set_ymargin(ax, top, bottom):
-    """
-    Allow for custom padding of plot lines and axes borders
-    -----
-    """
-    ax.set_ymargin(0)
-    ax.autoscale_view()
-    lim = ax.get_ylim()
-    delta = np.diff(lim)
-    top = lim[1] + delta*top
-    bottom = lim[0] - delta*bottom
-    ax.set_ylim(bottom,top)
-
-########
-
 def _format_yaxis(ax, case_num, unit, **kwargs):
     """
     Gather variable data and format y-axis
@@ -570,7 +532,6 @@ def _format_yaxis(ax, case_num, unit, **kwargs):
     #Set up plot details, if applicable from the adf_variable_defaults.yaml file
     if 'ts' in kwargs:
         if "units" in kwargs['ts']:
-            print("Looks like desired units are different than from raw file...\n")
             unit = kwargs['ts']["units"]
 
     ax.set_ylabel(unit,fontsize=20,labelpad=12)
@@ -578,7 +539,13 @@ def _format_yaxis(ax, case_num, unit, **kwargs):
     #Attempt flexible pad based on number of cases for both single and
     #multi-case scenarios, too
     pad = 0.075*case_num
-    _set_ymargin(ax, top=pad, bottom=0.1)
+    ax.set_ymargin(0)
+    ax.autoscale_view()
+    lim = ax.get_ylim()
+    delta = np.diff(lim)
+    top = lim[1] + delta*pad
+    bottom = lim[0] - delta*0.1
+    ax.set_ylim(bottom,top)
 
     return ax
 
@@ -622,40 +589,6 @@ def _format_xaxis(ax, yrs):
         ax.xaxis.set_minor_locator(MultipleLocator(1))
 
     return ax
-
-########
-
-def _make_fig_legend(case_num, fig):
-    """
-    Defualt matplotlib legend
-    -----
-        - This will just plot the colored lines and case names as given by the adf obj
-          Function to generate legend and labels for all plots
-    """
-    
-    #Gather labels based on case names and plotted line format (color, style, etc)
-    lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
-    lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-    """print(case_num,"\n")
-    if case_num == 2:
-        y0 = 0.825
-    else:
-        y0 = 0.825-(0.008*(case_num-1))"""
-
-    #y0 = 0.825-(0.0075*case_num) # 4-case?
-    #y0 = 0.825-(0.008*case_num) # 
-    #y0 = 0.825-(0.01*case_num) # 2-case?
-    #y0 = 0.825-(0.006*case_num)
-    """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
-                bbox_to_anchor=(0.12, 0.825,.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
-    """fig.legend(lines[:case_num+1], labels[:case_num+1],loc="center left",
-                bbox_to_anchor=(0.12, 0.841-(0.009*case_num),.042,.05)) #bbox_to_anchor(x0, y0, width, height)"""
-    fig.legend(lines[:case_num+1], labels[:case_num+1],loc="upper left",
-                #bbox_to_anchor=(0.12, 1.025,.042,.05*(case_num-1))
-                bbox_to_anchor=(0.12, 0.835,.042,.05)
-                ) #bbox_to_anchor(x0, y0, width, height)
-                #y0s[case_num]
-    return fig
 
 ########
 
