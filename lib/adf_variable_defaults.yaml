@@ -736,6 +736,8 @@ RESTOM:
   ts:
     rolling:
       months: 60
+  operation:
+    "subtract"
   constituents:
     ["FSNT","FLNT"]
 
