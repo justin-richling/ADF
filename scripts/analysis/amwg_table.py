@@ -189,7 +189,6 @@ def amwg_table(adf):
 
                 #Check if necessary constituents and mathematical operations are in the yaml file as well
                 if ("constituents" in var_defaults[derived_var]) and ("operation" in var_defaults[derived_var]):
-                #if ("constituents" and "operation") in var_defaults[derived_var]:
                     #Grab set of constituents for derived variable
                     const_set= var_defaults[derived_var]["constituents"]
                     derived_vars[derived_var] = const_set
@@ -200,7 +199,7 @@ def amwg_table(adf):
 
                     derived_op[derived_var] = var_defaults[derived_var]["operation"]
                 else:
-                    print(f"{derived_var} has no constituents or necessary operation. Check the variable yaml file")
+                    print(f"{derived_var} has no constituents and/or necessary operation. Check the variable yaml file")
             else:
                 print(f"{derived_var} not in yaml file")
     else:
