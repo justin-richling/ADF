@@ -197,7 +197,7 @@ def amwg_table(adf):
                 if "operation" in var_defaults[derived_var]:
                     derived_op[derived_var] = var_defaults[derived_var]["operation"]
             else:
-                print(f"{derived_var} has no comstituents. Check the variable yaml file")
+                print(f"{derived_var} has no constituents. Check the variable yaml file")
     else:
         derived_var_list = []
     #End if (derived variables exist)
