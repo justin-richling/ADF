@@ -355,24 +355,25 @@ def amwg_table(adf):
         #Space for derived quantities
         #----------------------------
 
-        #Variable Difference derived quantaties (ie RESTOM, etc.)
+        #Variable difference/additoion derived quantaties (ie RESTOM, etc.)
         #-------
         if derived_dict:
             table_df = _derive_var(case_name, derived_dict, derived_vars, derived_op,
                                     output_csv_file, cols, table_df)
 
-            # last step is to add table dataframe to website (if enabled):
-            #table_df = pd.read_csv(output_csv_file)
-
-            #Reorder RESTOM to top of tables
-            idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
-            table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-            table_df = table_df.drop([idx+1]).reset_index(drop=True)
-            table_df = table_df.drop_duplicates()
+            if "RESTOM" in derived_vars:
+                #Reorder RESTOM to top of tables
+                """idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+                table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+                table_df = table_df.drop([idx+1]).reset_index(drop=True)
+                table_df = table_df.drop_duplicates()"""
+                table_df = _reorder_restom(table_df)
         else:
             print("No derived quantities found\n")
 
+        #Save updated table to csv
         table_df.to_csv(output_csv_file, header=cols, index=False)
+
         # last step is to add table dataframe to website (if enabled):
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         #End derived quantities
@@ -384,8 +385,6 @@ def amwg_table(adf):
 
     #Notify user that script has ended:
     print("  ...AMWG variable table has been generated successfully.")
-
-    #_df_comp_table(adf, output_location, base_output_location, case_names)
 
     #Check if observations are being comapred to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
@@ -407,6 +406,7 @@ def amwg_table(adf):
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
                 _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_var_list)
+
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
 
@@ -487,9 +487,9 @@ def _get_row_vals(data):
 
 #####
 
-def _df_comp_table(adf, output_location, base_output_location, case_names, derived_var_list):
+def _df_comp_table(adf, output_location, base_output_location, case_names, derived_vars):
     """
-    Function to build case vs baseline AMWG table
+    Function to build individual case vs baseline comparison AMWG table
     -----
         - Read in table data and create side by side comaprison table
         - Write output to csv file and add to website
@@ -519,12 +519,15 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
     #Write the comparison dataframe to a new CSV file:
     cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
 
-    if "RESTOM" in derived_var_list:
+    if "RESTOM" in derived_vars:
         #Reorder RESTOM to top of tables
-        idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
+        """idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
         df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
         df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-        df_comp = df_comp.drop_duplicates()
+        df_comp = df_comp.drop_duplicates()"""
+        df_comp = _reorder_restom(df_comp)
+    
+    #Save updated table to csv
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
@@ -532,7 +535,7 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
 
 #####
 
-def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_var_list):
+def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_vars):
     """
     Function to build all case comparison AMWG table
     ------
@@ -594,16 +597,17 @@ def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_var_l
                     df_comp.at[idx,col]= f'{df_comp[col][idx]:{formatter}}   ({(df_comp[col][idx]-df_base["mean"][idx]):{formatter}})'
 
     #Reorder RESTOM to top of tables
-    if "RESTOM" in derived_var_list:
-        idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
+    if "RESTOM" in derived_vars:
+        """idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
         df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
         df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-        df_comp = df_comp.drop_duplicates()
+        df_comp = df_comp.drop_duplicates()"""
+        df_comp = _reorder_restom(df_comp)
 
-    #Finally, write data to csv
+    #Save updated table to csv
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
-    #Add comparison table dataframe to website (if enabled):
+    #Add all case comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
 
 #####
@@ -655,6 +659,16 @@ def _derive_var(case_name, derived_dict, derived_vars, derived_op, output_csv_fi
         table_df.to_csv(output_csv_file, header=cols, index=False)
     return table_df
 ######
+
+def _reorder_restom(table_df):
+    """
+    Function to move RESTOM to top of table
+    """
+    idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+    table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+    table_df = table_df.drop([idx+1]).reset_index(drop=True)
+    table_df = table_df.drop_duplicates()
+    return table_df
 
 '''def _derive_var_diff(case_name, derived_dict, derived_vars, output_csv_file, cols, table_df):
     """
