@@ -165,32 +165,39 @@ def amwg_table(adf):
     #User defined derived variable list from run-time yaml
     derived_var_list = adf.derived_var_list
 
+    #Check if any derived variables are present in yaml file
     if derived_var_list:
+
+        #Set dictionary of derived variables
+        #This will have variables as keys and list of constituents as values
         derived_vars = {}
+
+        #Set of all constituents from all derived variables
         constituents = []
+
+        #Get derivation mathematical operation
+        #NOTE: this is only for simple calculations:
+        #ie add all constituents or subtract all constituents
+        #TODO: find way to add complex derivation operations
+        #ie operations that add and subtract, or add and divide, etc.
         derived_op = {}
+
         for derived_var in derived_var_list:
-            print("derived_var:",derived_var,"\n")
             if derived_var in var_defaults:
-                print("derived_var",derived_var,"\n")
+
+                #Grab set of constituents for derived variable
                 const_set= var_defaults[derived_var]["constituents"]
                 derived_vars[derived_var] = const_set
 
-                #for const_set in derived_vars.values():
+                #Add each constituent individually
+                #Seems like this could be streamlined? - JR
                 for consts in const_set:
                     constituents.append(consts)
 
                 if "operation" in var_defaults[derived_var]:
                     derived_op[derived_var] = var_defaults[derived_var]["operation"]
             else:
-                print(f"{var} has no comstituents. Check the variable yaml file")
-
-        """#Make list of all constituents of derived variables
-        constituents = []
-        for const_set in derived_vars.values():
-            for consts in const_set:
-                constituents.append(consts)
-        #End for"""
+                print(f"{derived_var} has no comstituents. Check the variable yaml file")
     else:
         derived_var_list = []
     #End if (derived variables exist)
