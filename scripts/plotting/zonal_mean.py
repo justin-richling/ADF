@@ -288,14 +288,14 @@ def zonal_mean(adfobj):
                     if has_lev:
                         plot_name = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
 
-                        # Check redo_plot. If set to True: remove old plot, if it already exists:
+                        """# Check redo_plot. If set to True: remove old plot, if it already exists:
                         if (not redo_plot) and plot_name.is_file():
                             #Continue to next iteration:
                             continue
 
                         elif (redo_plot) and plot_name.is_file():
                             plot_name.unlink()
-                        #End if
+                        #End if"""
 
                         pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
