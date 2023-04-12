@@ -745,7 +745,7 @@ class AdfDiag(AdfWeb):
 
         for i in plot_func_names:
             #print(type(i))
-            if type(i) == "dict":
+            if type(i) is dict:
                 print("Getting there\n",i.values())
         
         #If no scripts are listed, then exit routine:
