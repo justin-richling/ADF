@@ -376,10 +376,6 @@ def amwg_table(adf):
 
             if "RESTOM" in derived_vars:
                 #Reorder RESTOM to top of tables
-                """idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
-                table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-                table_df = table_df.drop([idx+1]).reset_index(drop=True)
-                table_df = table_df.drop_duplicates()"""
                 table_df = _reorder_restom(table_df)
         else:
             print("No derived quantities found\n")
@@ -534,10 +530,6 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
 
     if "RESTOM" in derived_vars:
         #Reorder RESTOM to top of tables
-        """idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
-        df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
-        df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-        df_comp = df_comp.drop_duplicates()"""
         df_comp = _reorder_restom(df_comp)
     
     #Save updated table to csv
@@ -609,12 +601,8 @@ def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_vars)
                     #Replace value in dataframe
                     df_comp.at[idx,col]= f'{df_comp[col][idx]:{formatter}}   ({(df_comp[col][idx]-df_base["mean"][idx]):{formatter}})'
 
-    #Reorder RESTOM to top of tables
     if "RESTOM" in derived_vars:
-        """idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
-        df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
-        df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-        df_comp = df_comp.drop_duplicates()"""
+        #Reorder RESTOM to top of tables
         df_comp = _reorder_restom(df_comp)
 
     #Save updated table to csv
@@ -622,11 +610,24 @@ def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_vars)
 
     #Add all case comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
+######
 
+def _reorder_restom(table_df):
+    """
+    Function to move RESTOM to top of table
+    """
+    idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+    table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+    table_df = table_df.drop([idx+1]).reset_index(drop=True)
+    table_df = table_df.drop_duplicates()
+    return table_df
 #####
 
 #Derived quantity function space
 ################################
+
+def derive_restom():
+    return
 
 def _derive_var(case_name, derived_dict, derived_vars, derived_op, output_csv_file, cols, table_df):
     """
@@ -673,98 +674,8 @@ def _derive_var(case_name, derived_dict, derived_vars, derived_op, output_csv_fi
         #Re-save the csv file
         table_df.to_csv(output_csv_file, header=cols, index=False)
     return table_df
+
 ######
-
-def _reorder_restom(table_df):
-    """
-    Function to move RESTOM to top of table
-    """
-    idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
-    table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-    table_df = table_df.drop([idx+1]).reset_index(drop=True)
-    table_df = table_df.drop_duplicates()
-    return table_df
-
-'''def _derive_var_diff(case_name, derived_dict, derived_vars, output_csv_file, cols, table_df):
-    """
-    Function to calculate dervived quantity from simple subtraction of constituents
-    --------
-
-    derived_vars -> dictioanry that houses derived variable as key and constituents as values
-    derived_dict -> dictionary that houses consituents (all) as keys and data as value
-                        * independent of derived var, just collection of all constituents
-                        * derived_dict[case_name][constituent] = [mean_data, unit]
-    """
-    if derived_dict:
-        for der_var,consts in derived_vars.items():
-
-            print(f"\t - Derived variable '{der_var}' being added to table")
-
-            data = derived_dict[case_name][consts[0]][0]
-            for consts_var in consts[1:]:
-                data -= derived_dict[case_name][consts_var][0]
-
-            # In order to get correct statistics, average to annual or seasonal
-            data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
-                                                                        # NOTE: data will now have a 'year' dimension instead of 'time'
-            # These get written to our output file:
-            stats_list = _get_row_vals(data)
-            #Extract units string, if available:
-            if hasattr(data, 'units'):
-                unit_str = data.units
-            else:
-                unit_str = '--'
-            #End if
-
-            #Add derived variable to table
-            table_df.loc[len(table_df.index)] = [der_var, unit_str] + stats_list
-
-            #Re-save the csv file
-            table_df.to_csv(output_csv_file, header=cols, index=False)
-        return table_df
-######
-'''
-
-'''
-def _derive_var_add(case_name, derived_dict, derived_vars, output_csv_file, cols, table_df):
-    """
-    Function to calculate dervived quantity from simple addition of constituents
-    --------
-
-    derived_vars -> dictioanry that houses derived variable as key and constituents as values
-    derived_dict -> dictionary that houses consituents (all) as keys and data as value
-                        * independent of derived var, just collection of all constituents
-                        * derived_dict[case_name][constituent] = [mean_data, unit]
-    """
-    if derived_dict:
-        for der_var,consts in derived_vars.items():
-
-            print(f"\t - Derived variable '{der_var}' being added to table")
-
-            data = derived_dict[case_name][consts[0]][0]
-            for consts_var in consts[1:]:
-                data += derived_dict[case_name][consts_var][0]
-
-            # In order to get correct statistics, average to annual or seasonal
-            data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
-                                                                        # NOTE: data will now have a 'year' dimension instead of 'time'
-            # These get written to our output file:
-            stats_list = _get_row_vals(data)
-            #Extract units string, if available:
-            if hasattr(data, 'units'):
-                unit_str = data.units
-            else:
-                unit_str = '--'
-            #End if
-
-            #Add derived variable to table
-            table_df.loc[len(table_df.index)] = [der_var, unit_str] + stats_list
-
-            #Re-save the csv file
-            table_df.to_csv(output_csv_file, header=cols, index=False)
-        return table_df
-######
-'''
 
 ##############
 #END OF SCRIPT
