@@ -1313,14 +1313,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         ax[-1].set_xlabel("LATITUDE")
 
         if log_p:
-            print(f"\t   {wks} is getting the log-p treatment.")
             [a.set_yscale("log") for a in ax]
 
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
     else:
-        if log_p:
-            print(f"\t   {wks} has no levs, skipping the log-p treatment.")
-            return
         line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4") # #1f77b4 -> matplotlib standard blue
         line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
