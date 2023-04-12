@@ -53,7 +53,7 @@ def time_series(adfobj):
     #-----------------------------------------
 
     #Timeseries yaml file options
-    ts_opts = adfobj.read_config_var("time_series")
+    ts_opts = adfobj.read_config_var("time_series_var_list")
     if not ts_opts:
         print(
             "Time series options were not specified, so time_series can not run."+\
