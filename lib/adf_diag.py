@@ -744,7 +744,6 @@ class AdfDiag(AdfWeb):
         print("TRY this:",plot_func_names,"\n")
 
         for i in plot_func_names:
-            #print(type(i))
             if type(i) is dict:
                 print("Getting there\n",i.values())
         
@@ -774,6 +773,8 @@ class AdfDiag(AdfWeb):
         #Run the listed scripts:
         self.__diag_scripts_caller("plotting", plot_func_names,
                                    log_section = "create_plots")
+
+        #self.__
 
     #########
 
