@@ -281,14 +281,17 @@ def zonal_mean(adfobj):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
 
                     #Create new plot with log-p:
-                    plot_name = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
-                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
-                                                [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                [syear_baseline,eyear_baseline],
-                                                mseasons[s], oseasons[s], has_lev, log_p=True, **vres)
+                    #Notify user of level dimension:
+                    if has_lev:
+                        print(f"\t   {var} has lev dimension.")
+                        plot_name = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                        pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
+                                                    [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                    [syear_baseline,eyear_baseline],
+                                                    mseasons[s], oseasons[s], has_lev, log_p=True, **vres)
 
-                    #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, f"{var}_logp", case_name, season=s, plot_type="Zonal")
+                        #Add plot to website (if enabled):
+                        adfobj.add_website_data(plot_name, f"{var}_logp", case_name, season=s, plot_type="Zonal")
 
                 #End for (seasons loop)
             #End for (case names loop)
