@@ -744,6 +744,7 @@ class AdfDiag(AdfWeb):
         print("TRY this:",plot_func_names,"\n")
 
         for i in plot_func_names:
+            print(type(i))
             if type(i) == "dictionary":
                 print("Getting there\n")
         
