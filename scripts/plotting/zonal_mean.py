@@ -1,4 +1,5 @@
 from pathlib import Path
+from unicodedata import category
 import numpy as np
 import xarray as xr
 import plotting_functions as pf
@@ -282,8 +283,6 @@ def zonal_mean(adfobj):
 
                     #Create new plot with log-p:
                     if has_lev:
-                        print(f"\t   {var} should be also getting log-p plots...")
-                        #Notify user of level dimension:
                         plot_name = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
                         pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
@@ -291,7 +290,7 @@ def zonal_mean(adfobj):
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, **vres)
 
                         #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, f"{var}_logp", case_name, season=s, plot_type="Zonal")
+                        adfobj.add_website_data(plot_name, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
 
                 #End for (seasons loop)
             #End for (case names loop)
