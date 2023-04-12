@@ -51,8 +51,8 @@ def zonal_mean(adfobj):
     #Notify user that script has started:
     print("\n  Generating zonal mean plots...")
 
-    umm = adfobj.plottting_scripts("zonal_mean")
-    print("test 1, 2, 3...",umm)
+    #umm = adfobj.plottting_scripts("zonal_mean")
+    #print("test 1, 2, 3...",umm)
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------

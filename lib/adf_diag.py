@@ -741,6 +741,8 @@ class AdfDiag(AdfWeb):
                                                    # args(list), kwargs(dict), and module(str)
 
 
+        print("TRY this:",plot_func_names,"\n")
+        
         #If no scripts are listed, then exit routine:
         if not plot_func_names:
             print("\n  Nothing listed under 'plotting_scripts', so no plots will be made.")

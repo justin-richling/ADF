@@ -122,6 +122,8 @@ class AdfInfo(AdfConfig):
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
 
+        #self.__cam_bl_climo_info = self.read_config_var('plotting_scripts')
+
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
