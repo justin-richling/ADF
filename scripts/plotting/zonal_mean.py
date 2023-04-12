@@ -283,7 +283,7 @@ def zonal_mean(adfobj):
                     #Create new plot with log-p:
                     #Notify user of level dimension:
                     if has_lev:
-                        print(f"\t   {var} has lev dimension.")
+                        print(f"\t   {var} is getting the log-p treatment.")
                         plot_name = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
                         pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
