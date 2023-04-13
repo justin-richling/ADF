@@ -744,8 +744,10 @@ class AdfDiag(AdfWeb):
         print("TRY this:",plot_func_names,"\n")
 
         for i in plot_func_names:
-            if type(i) is dict:
+            #if type(i) is dict:
+            if i == "zonal_mean":
                 print("Getting there\n",i.values())
+
         
         #If no scripts are listed, then exit routine:
         if not plot_func_names:
