@@ -751,7 +751,7 @@ class AdfDiag(AdfWeb):
                 for key,val in i.items():
                     if val[0] == "log_p":
                         print("Yippie!")
-                        self.log_p == True
+                        self.log_p = True
 
         
         #If no scripts are listed, then exit routine:
