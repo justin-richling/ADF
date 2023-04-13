@@ -53,7 +53,7 @@ def zonal_mean(adfobj):
 
     #umm = adfobj.plottting_scripts("zonal_mean")
     print(dir(AdfDiag))
-    #print("test 1, 2, 3...",AdfDiag.log_p)
+    print("test 1, 2, 3...",AdfDiag.log_press)
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
