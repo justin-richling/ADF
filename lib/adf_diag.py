@@ -748,9 +748,10 @@ class AdfDiag(AdfWeb):
             if type(i) is dict:
             #if i == "zonal_mean":
                 print("Getting there\n",i.values())
-                if i.values() == "log_p":
-                    print("Yippie!")
-                    self.log_p == True
+                for key,val in i.items():
+                    if val[0] == "log_p":
+                        print("Yippie!")
+                        self.log_p == True
 
         
         #If no scripts are listed, then exit routine:
