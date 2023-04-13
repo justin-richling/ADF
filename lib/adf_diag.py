@@ -731,8 +731,6 @@ class AdfDiag(AdfWeb):
                 for key,val in i.items():
                     if val[0] == "log_p":
                         self.__log_p = True
-                    
-            
         return self.__log_p
 
     def create_plots(self):
