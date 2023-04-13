@@ -275,7 +275,8 @@ def zonal_mean(adfobj):
                                                 plot_type="Zonal")
 
                         #Continue to next iteration:
-                        continue
+                        #continue
+                        pass
                     elif (redo_plot) and plot_name.is_file():
                         plot_name.unlink()
                     #End if
@@ -292,25 +293,25 @@ def zonal_mean(adfobj):
                     #Create new plot with log-p:
                     if has_lev:
                         print("WTF??")
-                        plot_name = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                        plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
 
-                        """# Check redo_plot. If set to True: remove old plot, if it already exists:
-                        if (not redo_plot) and plot_name.is_file():
+                        # Check redo_plot. If set to True: remove old plot, if it already exists:
+                        if (not redo_plot) and plot_name_log.is_file():
                             #Continue to next iteration:
                             continue
 
-                        elif (redo_plot) and plot_name.is_file():
-                            plot_name.unlink()
-                        #End if"""
+                        elif (redo_plot) and plot_name_log.is_file():
+                            plot_name_log.unlink()
+                        #End if
 
-                        pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
+                        pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, base_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
                                                         [syear_baseline,eyear_baseline],
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, **vres)
 
                         #Add plot to website (if enabled):
                         print("this is working right?")
-                        adfobj.add_website_data(plot_name, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
+                        adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
 
                 #End for (seasons loop)
             #End for (case names loop)
