@@ -721,6 +721,20 @@ class AdfDiag(AdfWeb):
 
     #########
 
+    def log_press(self):
+        plot_func_names = self.__plotting_scripts
+        print("TRY this:",plot_func_names,"\n")
+        self.__log_p = False
+        for i in plot_func_names:
+            print(i)
+            if type(i) is dict:
+                for key,val in i.items():
+                    if val[0] == "log_p":
+                        self.__log_p = True
+                    
+            
+        return self.__log_p
+
     def create_plots(self):
 
         """
@@ -741,14 +755,14 @@ class AdfDiag(AdfWeb):
                                                    # args(list), kwargs(dict), and module(str)
 
 
-        print("TRY this:",plot_func_names,"\n")
+        """print("TRY this:",plot_func_names,"\n")
 
         for i in plot_func_names:
             print(i)
             if type(i) is dict:
                 for key,val in i.items():
                     if val[0] == "log_p":
-                        self.__log_p = True
+                        self.__log_p = True"""
 
         
         #If no scripts are listed, then exit routine:
