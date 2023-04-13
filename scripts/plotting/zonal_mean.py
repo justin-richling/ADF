@@ -308,6 +308,7 @@ def zonal_mean(adfobj):
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, **vres)
 
                         #Add plot to website (if enabled):
+                        print("this is working right?")
                         adfobj.add_website_data(plot_name, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
 
                 #End for (seasons loop)
