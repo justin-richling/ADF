@@ -274,8 +274,7 @@ def zonal_mean(adfobj):
                         adfobj.add_website_data(plot_name, var, case_name, season=s,
                                                 plot_type="Zonal")
 
-                        #Continue to next iteration:
-                        #continue
+                        #Continue to log-p plots:
                         pass
                     elif (redo_plot) and plot_name.is_file():
                         plot_name.unlink()
@@ -292,7 +291,6 @@ def zonal_mean(adfobj):
 
                     #Create new plot with log-p:
                     if has_lev:
-                        print("WTF??")
                         plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
 
                         # Check redo_plot. If set to True: remove old plot, if it already exists:
