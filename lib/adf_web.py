@@ -1112,7 +1112,6 @@ class AdfWeb(AdfObs):
                     if ext not in multi_case_dict:
                         if (ptype != None) and (ptype in multi_plots):
                             mcase_plot = f"html_img/multi_case_mean_diag_{ptype}.html"
-                            #multi_plots[multi_case_dict['time_series']] = mcase_plot
                             multi_case_ptypes[ptype] = mcase_plot
 
                         #Move file to assets directory:
