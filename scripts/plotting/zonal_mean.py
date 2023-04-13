@@ -291,6 +291,7 @@ def zonal_mean(adfobj):
 
                     #Create new plot with log-p:
                     if has_lev:
+                        print("WTF??")
                         plot_name = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
 
                         """# Check redo_plot. If set to True: remove old plot, if it already exists:
