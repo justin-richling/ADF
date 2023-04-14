@@ -1,9 +1,7 @@
 import numpy as np
 import xarray as xr
-import warnings
 import sys
 from pathlib import Path
-from collections import OrderedDict
 import warnings  # use to warn user about missing files.
 
 #Import "special" modules:
@@ -13,7 +11,6 @@ except ImportError:
     print("Scipy module does not exist in python path, but is needed for amwg_table.")
     print("Please install module, e.g. 'pip install scipy'.")
     sys.exit(1)
-#End except
 
 try:
     import pandas as pd
@@ -21,7 +18,6 @@ except ImportError:
     print("Pandas module does not exist in python path, but is needed for amwg_table.")
     print("Please install module, e.g. 'pip install pandas'.")
     sys.exit(1)
-#End except
 
 #Import ADF-specific modules:
 import plotting_functions as pf
@@ -50,7 +46,6 @@ def amwg_table(adf):
     input_ts_locs   -> Location(s) of CAM time series files provided by "cam_ts_loc"
     output_loc      -> Location to write AMWG table files to, provided by "cam_diag_plot_loc"
     var_list        -> List of CAM output variables provided by "diag_var_list"
-    var_defaults    -> Dict that has keys that are variable names and values that are plotting preferences/defaults.
 
     and if doing a CAM baseline comparison:
 
@@ -61,6 +56,8 @@ def amwg_table(adf):
 
     #Import necessary modules:
     from adf_base import AdfError
+    
+
 
     #Additional information:
     #----------------------
@@ -108,7 +105,7 @@ def amwg_table(adf):
     print("\n  Calculating AMWG variable table...")
 
 
-    #Extract needed quantities from ADF object:
+   #Extract needed quantities from ADF object:
     #-----------------------------------------
     var_list     = adf.diag_var_list
     var_defaults = adf.variable_defaults
@@ -135,9 +132,7 @@ def amwg_table(adf):
 
     #Grab all case nickname(s)
     test_nicknames = adf.case_nicknames["test_nicknames"]
-    base_nickname = adf.case_nicknames["base_nickname"]
-    all_nicknames = test_nicknames + [base_nickname]
-    
+
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
     #Check if a baseline simulation is also being used:
@@ -145,6 +140,11 @@ def amwg_table(adf):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+
+        #Grab baseline case nickname
+        base_nickname = adf.case_nicknames["base_nickname"]
+
+        test_nicknames += [base_nickname]
 
         if "CMIP" in baseline_name:
             print("CMIP files detected, skipping AMWG table (for now)...")
@@ -156,56 +156,17 @@ def amwg_table(adf):
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
-    #End if
 
     #Declare any derived quantities here:
-    #Create (empty) dictionary to use for the derived calculations:
-    derived_dict = {}
+    derived_vars = {"RESTOM":["FSNT", "FLNT"]}
     
-    #User defined derived variable list from run-time yaml
-    derived_var_list = adf.derived_var_list
+    #derived_vars = {"RESTOM":something["constits"]}
 
-    #Check if any derived variables are present in yaml file
-    if derived_var_list:
+    derived_list = [item for sublist in derived_vars.values() for item in sublist]
 
-        #Set dictionary of derived variables
-        #This will have variables as keys and list of constituents as values
-        derived_vars = {}
-
-        #Set of all constituents from all derived variables
-        constituents = []
-
-        #Get derived mathematical operation
-        #NOTE: this is only for simple calculations:
-        #ie add all constituents or subtract all constituents
-        #TODO: find way to add complex derivation operations
-        #ie operations that add and subtract, or add and divide, etc.
-        # -> probably be a list of operations?
-        derived_op = {}
-
-        for derived_var in derived_var_list:
-
-            #Need to check if the variable exists in the variable yaml file
-            if derived_var in var_defaults:
-
-                #Check if necessary constituents and mathematical operations are in the yaml file as well
-                if ("constituents" in var_defaults[derived_var]) and ("operation" in var_defaults[derived_var]):
-                    #Grab set of constituents for derived variable
-                    const_set= var_defaults[derived_var]["constituents"]
-                    derived_vars[derived_var] = const_set
-
-                    #Add each constituent individually
-                    for consts in const_set:
-                        constituents.append(consts)
-
-                    derived_op[derived_var] = var_defaults[derived_var]["operation"]
-                else:
-                    print(f"{derived_var} has no constituents and/or necessary operation. Check the variable yaml file")
-            else:
-                print(f"{derived_var} not in variable yaml file")
-    else:
-        derived_var_list = []
-    #End if (derived variables exist)
+    #Create (empty) dictionary to use for the
+    #derived calculations (inititally RESTOM radiation):
+    derived_dict = {}
 
     #Hold output paths for csv files
     csv_locs = []
@@ -218,7 +179,7 @@ def amwg_table(adf):
 
         #Generate input file path:
         input_location = Path(input_ts_locs[case_idx])
-
+        
         #Add output paths for csv files
         csv_locs.append(output_locs[case_idx])
 
@@ -239,11 +200,13 @@ def amwg_table(adf):
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
         if Path(output_csv_file).is_file():
             Path.unlink(output_csv_file)
-        #End if
 
-        #Save case name as a new key in the derived quantities dictonary:
-        if derived_var_list:
-            derived_dict[case_name] = {}
+        #These are created in regridding/regrid_and_vert_interp.py script
+        mean_case = output_location/f"stats_mean_{case_names[case_idx]}.csv"
+        mean_df_case = pd.read_csv(mean_case)
+
+        #Save case name as a new key in the RESTOM dictonary:
+        derived_dict[case_name] = {}
 
         #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
@@ -257,21 +220,19 @@ def amwg_table(adf):
 
             #Create list of time series files present for variable:
             ts_filenames = f'{case_name}.*.{var}.*nc'
-            ts_files = sorted(input_location.glob(ts_filenames))                
+            ts_files = sorted(input_location.glob(ts_filenames))
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
                 errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
-            #End if
 
             #TEMPORARY:  For now, make sure only one file exists:
             if len(ts_files) != 1:
                 errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
                 errmsg += f" Multiple files were found for the variable '{var}'"
                 raise AdfError(errmsg)
-            #End if
 
             #Load model data from file:
             data = _load_data(ts_files[0], var)
@@ -288,7 +249,6 @@ def amwg_table(adf):
                       "which is currently not supported for the AMWG Table. Skipping...")
                 #Skip this variable and move to the next variable in var_list:
                 continue
-            #End if
 
             #Extract defaults for variable:
             var_default_dict = var_defaults.get(var, {})
@@ -330,21 +290,33 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = _spatial_average(data)  # changes data "in place"
 
+            #Grab mean value from csv file
+            data_mean = mean_df_case[mean_df_case["var"]==var]["mean"].values[0]
+
             #Add necessary data for derived calcs below
-            if derived_var_list:
-                if var in constituents:
-                    derived_dict[case_name][var] = [data, unit_str]
+            if var in derived_list:
+                derived_dict[case_name][var] = [data_mean, data, unit_str]
+
+            """#Add necessary data for RESTOM calcs below
+            if var == "FLNT":
+                restom_dict[case_name][var] = data
+                data_flnt = mean_df_case[mean_df_case["var"]==var]["mean"].values[0] # regridded data for FLNT mean
+                #Copy units for RESTOM as well:
+                restom_units = unit_str
+            if var == "FSNT":
+                restom_dict[case_name][var] = data
+                data_fsnt = mean_df_case[mean_df_case["var"]==var]["mean"].values[0] # regridded data for FSNT mean"""
 
             # In order to get correct statistics, average to annual or seasonal
             data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                               # NOTE: data will now have a 'year' dimension instead of 'time'
-
+            
             # create a dataframe:
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
-
-            # These get written to our output file:
-            stats_list = _get_row_vals(data)
+            
+            # These get written to our output file: 
+            stats_list = _get_row_vals(data, data_mean)
             row_values = [var, unit_str] + stats_list
 
             # Format entries:
@@ -362,34 +334,30 @@ def amwg_table(adf):
 
         #End of var_list loop
         #--------------------
+
+        #Space for derived quantities (ie RESTOM, etc.)
+        #----------------------------------------------
         
-        table_df = pd.read_csv(output_csv_file)
-
-        #Space for derived quantities
-        #----------------------------
-
-        #Variable difference/additoion derived quantaties (ie RESTOM, etc.)
+        # RESTOM
         #-------
-        if derived_dict:
-            table_df = _derive_var(case_name, derived_dict, derived_vars, derived_op,
-                                    output_csv_file, cols, table_df)
-
-            if "RESTOM" in derived_vars:
-                #Reorder RESTOM to top of tables
-                table_df = _reorder_restom(table_df)
+        if "FSNT" and "FLNT" in var_list:
+            _derive_restom(case_name, derived_dict, output_csv_file, cols)
         else:
-            print("No derived quantities found\n")
+            #Print message to debug log:
+            adf.debug_log("RESTOM not calculated because FSNT and/or FLNT variables not in dataset")
+        #End if
+        #End RESTOM table addition
 
-        #Save updated table to csv
-        table_df.to_csv(output_csv_file, header=cols, index=False)
+        #Other derived quantity
+        #-------
+        #End Other table addition
 
         # last step is to add table dataframe to website (if enabled):
+        table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         #End derived quantities
-
-        
     #End of model case loop
-    #----------------------
+
     test_case_names = adf.get_cam_info("cam_case_name", required=True)
 
     #Notify user that script has ended:
@@ -404,26 +372,15 @@ def amwg_table(adf):
             if len(test_case_names) == 1:
                 #Create comparison table for both cases
                 print("\n  Making comparison table...")
-
-                _df_comp_table(adf, output_location,
-                                Path(output_locs[0]),
-                                case_names,
-                                derived_var_list)
-
+                _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
                 print("  ... Comparison table has been generated successfully")
 
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
-                _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_var_list)
-
+                _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames)
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
-
-                    _df_comp_table(adf, Path(output_locs[idx]),
-                                   Path(output_locs[0]),
-                                   [case,baseline_name],
-                                   derived_var_list)
-
+                    _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
                 print("  ... Multi-case comparison table has been generated successfully")
         #End if
     else:
@@ -436,18 +393,18 @@ def amwg_table(adf):
 ##################
 
 def _load_data(dataloc, varname):
+    import xarray as xr
     ds = xr.open_dataset(dataloc)
     return ds[varname]
 
 #####
 
 def _spatial_average(indata):
-
-    #Make sure there is no veritcal level dimension:
+    import xarray as xr
+    import numpy as np
+    import warnings
     assert 'lev' not in indata.coords
     assert 'ilev' not in indata.coords
-
-    #Calculate spatial weights:
     if 'lat' in indata.coords:
         weights = np.cos(np.deg2rad(indata.lat))
         weights.name = "weights"
@@ -458,28 +415,23 @@ def _spatial_average(indata):
     else:
         weights = xr.DataArray(1.)
         weights.name = "weights"
-    #End if
-
-    #Apply weights to input data:
     weighted = indata.weighted(weights)
-
     # we want to average over all non-time dimensions
     avgdims = [dim for dim in indata.dims if dim != 'time']
     return weighted.mean(dim=avgdims)
 
 #####
 
-def _get_row_vals(data):
-
+def _get_row_vals(data,data_mean):    
     # Now that data is (time,), we can do our simple stats:
-
-    data_mean = data.data.mean()
+ 
+    #data_mean = data.data.mean()
     #Conditional Formatting depending on type of float
     if np.abs(data_mean) < 1:
         formatter = ".3g"
     else:
         formatter = ".3f"
-
+  
     data_sample = len(data)
     data_std = data.std()
     data_sem = data_std / data_sample
@@ -496,9 +448,9 @@ def _get_row_vals(data):
 
 #####
 
-def _df_comp_table(adf, output_location, base_output_location, case_names, derived_vars):
+def _df_comp_table(adf, output_location, base_output_location, case_names):
     """
-    Function to build individual case vs baseline comparison AMWG table
+    Function to build case vs baseline AMWG table
     -----
         - Read in table data and create side by side comaprison table
         - Write output to csv file and add to website
@@ -527,12 +479,6 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
 
     #Write the comparison dataframe to a new CSV file:
     cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
-
-    if "RESTOM" in derived_vars:
-        #Reorder RESTOM to top of tables
-        df_comp = _reorder_restom(df_comp)
-    
-    #Save updated table to csv
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
@@ -540,7 +486,7 @@ def _df_comp_table(adf, output_location, base_output_location, case_names, deriv
 
 #####
 
-def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_vars):
+def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     """
     Function to build all case comparison AMWG table
     ------
@@ -568,21 +514,21 @@ def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_vars)
         df_case = pd.read_csv(case)
         
         #If no custom nicknames, shorten column name to case number
-        if all_nicknames[i] == case_names[i]:
+        if test_nicknames[i] == case_names[i]:
             df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
             cols_comp.append(f"case {i+1}")
         #Else, name columns after nicknames
         else:
-            df_comp[['variable','unit',f"{all_nicknames[i]}"]] = df_case[['variable','unit','mean']]
-            cols_comp.append(all_nicknames[i])
+            df_comp[['variable','unit',f"{test_nicknames[i]}"]] = df_case[['variable','unit','mean']]
+            cols_comp.append(test_nicknames[i])
 
     #Add baseline cases to end of the table
-    if all_nicknames[-1] == case_names[-1]:
+    if test_nicknames[-1] == case_names[-1]:
         df_comp["baseline"] = df_base[['mean']]
         cols_comp.append("baseline")
     else:
-        df_comp[f"{all_nicknames[-1]} ( baseline )"] = df_base[['mean']]
-        cols_comp.append(f"{all_nicknames[-1]} ( baseline )")
+        df_comp[f"{test_nicknames[-1]} ( baseline )"] = df_base[['mean']]
+        cols_comp.append(f"{test_nicknames[-1]} ( baseline )")
 
     #Format the floats:
     for col in df_comp.columns:
@@ -600,80 +546,64 @@ def _df_multi_comp_table(adf, csv_locs, case_names, all_nicknames, derived_vars)
                         formatter = ".3f"
                     #Replace value in dataframe
                     df_comp.at[idx,col]= f'{df_comp[col][idx]:{formatter}}   ({(df_comp[col][idx]-df_base["mean"][idx]):{formatter}})'
-
-    if "RESTOM" in derived_vars:
-        #Reorder RESTOM to top of tables
-        df_comp = _reorder_restom(df_comp)
-
-    #Save updated table to csv
+        
+    #Finally, write data to csv
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
-    #Add all case comparison table dataframe to website (if enabled):
+    #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
-######
 
-def _reorder_restom(table_df):
-    """
-    Function to move RESTOM to top of table
-    """
-    idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
-    table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-    table_df = table_df.drop([idx+1]).reset_index(drop=True)
-    table_df = table_df.drop_duplicates()
-    return table_df
 #####
 
 #Derived quantity function space
 ################################
 
-def derive_restom():
-    return
+# RESTOM
+def _derive_restom(case_name, derived_dict, output_csv_file, cols):
+    
+    var = "RESTOM" #RESTOM = FSNT-FLNT
+    print(f"\t - Variable '{var}' being added to table")
+    data_mean = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
+    data = derived_dict[case_name]["FSNT"][1] - derived_dict[case_name]["FLNT"][1]
+     # In order to get correct statistics, average to annual or seasonal
+    data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
+                                                                # NOTE: data will now have a 'year' dimension instead of 'time'
+    # These get written to our output file:
+    stats_list = _get_row_vals(data, data_mean)
+    #Extract units string, if available:
+    if hasattr(data, 'units'):
+        unit_str = data.units
+    else:
+        unit_str = 'W/m2'
+    #End if
+    
+    row_values = [var, unit_str] + stats_list
 
-def _derive_var(case_name, derived_dict, derived_vars, derived_op, output_csv_file, cols, table_df):
-    """
-    Function to calculate dervived quantity from simple operation of constituents
-        - currently only addition or subtraction
-        - will expand as necessary - JR
-    --------
+    # Format entries:
+    #NOTE: col (column) values were declared above
+    dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
 
-    derived_vars -> dictioanry that houses derived variable as key and constituents as values
-    derived_dict -> dictionary that houses consituents (all) as keys and data as value
-                        * independent of derived variable, just collection of all constituents
-                        * derived_dict[case_name][constituent] = [mean_data, unit]
-    derived_op   -> dictionary that holds basic operation of constituents
-                        * currently only addition or subtraction, nothing complex
-    """
+    # Add entries to Pandas structure:
+    df = pd.DataFrame(dfentries)
 
-    for der_var,consts in derived_vars.items():
-        print(f"\t - Derived variable '{der_var}' being added to table")
+    # Check if the output CSV file exists,
+    # if so, then append to it:
+    if output_csv_file.is_file():
+        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+    else:
+        df.to_csv(output_csv_file, header=cols, index=False)
+    #End if
+            
+    table_df = pd.read_csv(output_csv_file)
 
-        data = derived_dict[case_name][consts[0]][0]
-        for consts_var in consts[1:]:
+    #Reorder RESTOM to top of tables
+    idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+    table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+    table_df = table_df.drop([idx+1]).reset_index(drop=True)
+    table_df = table_df.drop_duplicates()
 
-            #data -= derived_dict[case_name][consts_var][0]
-            if derived_op[der_var] == "subtract":
-                data -= derived_dict[case_name][consts_var][0]
-            if derived_op[der_var] == "add":
-                data -= derived_dict[case_name][consts_var][0]
-
-        # In order to get correct statistics, average to annual or seasonal
-        data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
-                                                                        # NOTE: data will now have a 'year' dimension instead of 'time'
-        # These get written to our output file:
-        stats_list = _get_row_vals(data)
-        #Extract units string, if available:
-        if hasattr(data, 'units'):
-            unit_str = data.units
-        else:
-            unit_str = '--'
-        #End if
-
-        #Add derived variable to table
-        table_df.loc[len(table_df.index)] = [der_var, unit_str] + stats_list
-
-        #Re-save the csv file
-        table_df.to_csv(output_csv_file, header=cols, index=False)
-    return table_df
+    #Re-save the csv file
+    table_df.to_csv(output_csv_file, header=cols, index=False)
 
 ######
 
