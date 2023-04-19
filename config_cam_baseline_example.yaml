@@ -151,6 +151,11 @@ diag_cam_climo:
     #Name of CAM case (or CAM run name):
     cam_case_name: b.e20.BHIST.f09_g17.20thC.297_05
 
+    #Case nickname
+    #If left blank, it will default to cam_case_name
+    # ** NOTE: if nickname starts with a zero, the string must be in quotes! **
+    case_nickname: ${diag_cam_climo.cam_case_name}
+
     #Location of CAM history (h0) files:
     #Example test files
     cam_hist_loc: /glade/p/cesm/ADF/${diag_cam_climo.cam_case_name}
@@ -200,6 +205,10 @@ diag_cam_climo:
     #cam_case_name:
     #    - b.e20.BHIST.f09_g17.20thC.297_05
     #    - b1850.f19_g17.validation_mct.004
+
+    #case_nickname: 
+    #    - nickname 1
+    #    - "026c"
 
     #calc_cam_climo:
     #    - true
@@ -258,6 +267,11 @@ diag_cam_baseline_climo:
 
     #Name of CAM baseline case:
     cam_case_name: b.e20.BHIST.f09_g16.20thC.125.02
+
+    #Case nickname
+    #If left blank or if missing, nickname will default to baseline cam_case_name
+    # ** NOTE: if nickname starts with a zero, the string must be in quotes! **
+    case_nickname: ${diag_cam_baseline_climo.cam_case_name}
 
     #Location of CAM baseline history (h0) files:
     #Example test files
@@ -352,7 +366,6 @@ plotting_scripts:
     - polar_map
     - cam_taylor_diagram
     - qbo
-    #- time_series
     #- regional_map_multicase #To use this please un-comment and fill-out
                               #the "region_multicase" section below
 
@@ -376,30 +389,16 @@ diag_var_list:
     - FLNT
     - LANDFRAC
 
-derived_var_list:
-    - RESTOM #Currently only used in AMWG tables
-
 #<Add more variables here.>
 
-# Option for time series plots
-#time_series:
-#    #Variables for annual time series plots
-#    ann_var_list:
-#        - T
-#        - TS
-#        - SST
-#        - PS
-#        - RESTOM # Dont need FSNT/FLNT (ADF will take care of this)
-#        - SWCF
-#
-#    #Variables for seaonally weighted time series plots
-#    # NOTE: RESTOM is currently only available for annual calculations
-#    season_var_list:
-#        - T
-#        - TS
-#        - SST
-#        - PS
-#        - SWCF
+# Make mulit-plot comparison image for specified plots types
+# This will only run if there are more than one specified test cases declared above
+# NOTE: These plot types also need to be present above in the plotting_scripts section (for now) and variables in the diag_var_list
+# NOTE: Only global LatLon multi-case plots are available at this time - more are coming. JR
+multi_case_plots:
+    global_latlon_map:
+        - SST
+        - PSL
 
 # Options for multi-case regional contour plots (./plotting/regional_map_multicase.py)
 # region_multicase:
