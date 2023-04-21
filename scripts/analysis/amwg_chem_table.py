@@ -259,7 +259,7 @@ def amwg_chem_table(adf):
         else:
             trop=current_crit
 
-    thing_ext_full = {'_BURDEN':'_BURDEN',
+    comp_ext_full = {'_BURDEN':'_BURDEN',
                   '_CHML':'_CHEM_LOSS','_CHMP':'_CHEM_PROD','_NET':'_NET',
                   '_SF':'_EMIS',
                   '_DDF':'_DRYDEP','_WDF':'_WETDEP',
@@ -267,8 +267,11 @@ def amwg_chem_table(adf):
                   '_STE':'_STE',
                   '_LNO':'_LNO'}
 
-    not_O3_ext = {k: v for k, v in thing_ext_full.items() if k in ['_BURDEN', '_CHML', '_SF','_LIFETIME','_LNO']}
-    O3_ext = thing_ext_full.copy()
+    #O3 has been causing issues, let's try and separate O3 from other variables...
+    #It seems to be missing components:
+    # 'BURDEN', 'CHML', 'SF','LIFETIME', and 'LNO'
+    not_O3_ext = {k: v for k, v in comp_ext_full.items() if k in ['_BURDEN', '_CHML', '_SF','_LIFETIME','_LNO']}
+    O3_ext = comp_ext_full.copy()
 
     #Create output file name:
     output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
@@ -314,7 +317,7 @@ def amwg_chem_table(adf):
                     df.to_csv(output_csv_file, header=False, index=False)
         
         #Run most other variables
-        #--------------------------------------------
+        #------------------------
         elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', "O3"]:
             for key,ext in not_O3_ext.items():
                 row_values = []
@@ -348,7 +351,7 @@ def amwg_chem_table(adf):
                     df.to_csv(output_csv_file, header=False, index=False)
                     
         #Run ISOP, Monoterpene, Methanol, and Acetone emmission calcs
-        #--------------------------------------------
+        #------------------------------------------------------------
         elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
             row_values = []
             new_ext = "_EMIS (Tg/yr)"
@@ -376,6 +379,7 @@ def amwg_chem_table(adf):
     #table_df = table_df.replace('CH3OH','Methanol', regex=True)
     #table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
 
+    #Looks like LNO calculated in each variable are the same value, so just use one LNO??
     # There's probably a better way to do this 
     drop_vals = ["CH3CCL3_LNO","CO_LNO","O3_LNO"]
     for val in drop_vals:
@@ -634,7 +638,6 @@ def list_files(directory,scenario,start_date,end_date):
             if '.h0' in scenario:
                 all_fileNames.append(all_filenames[i])
         
-    print("all_fileNames:",all_fileNames,"\n")                
     return all_fileNames
 
 #####
@@ -793,7 +796,6 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
     #Flush out the nans and take mean
     all_data=np.nanmean(all_data,axis=0)
     
-    #print("Got the SE data (hopefully) ...")
     return all_data 
 
 #####
@@ -1047,7 +1049,6 @@ def create_dic_SE(variables, ListVars, ext1_SE):
                     dic_SE[var+'_LNO']['LNO_COL_PROD'+ext1_SE]=1  # convert [Tg N/yr] to [Tg N /yr]        
                 else:
                     dic_SE[var+'_LNO']['DF_O3'+ext1_SE]=0
-    print("Made dict_SE (hopefully) ...")
     return dic_SE
 
 #####
@@ -1065,7 +1066,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
      - returns list of final budget values
     """
     
-    thing_list = {}
+    chem_dict = {}
     
     # Burden      
     spc_burd=var_dict[scn][var][var+'_BURDEN']       
@@ -1073,7 +1074,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_burden=np.nansum(spc_burd*area,axis=0)
     burden=np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
     BURDEN = np.ma.sum(burden*1e-9)
-    thing_list['_BURDEN'] = np.round(BURDEN,5)
+    chem_dict['_BURDEN'] = np.round(BURDEN,5)
 
     # Chemical Loss
     spc_chml=var_dict[scn][var][var+'_CHML'] 
@@ -1081,7 +1082,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_chml=np.nansum(spc_chml*area,axis=0)
     chml=np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
     CHML = np.ma.sum(chml*duration*1e-9)
-    thing_list['_CHML'] = np.round(CHML,5)
+    chem_dict['_CHML'] = np.round(CHML,5)
 
     # Chemical Production
     spc_chmp=var_dict[scn][var][var+'_CHMP'] 
@@ -1089,14 +1090,14 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_chmp=np.nansum(spc_chmp*area,axis=0)
     chmp=np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
     CHMP = np.ma.sum(chmp*duration*1e-9)
-    thing_list['_CHMP'] = np.round(CHMP,5)
+    chem_dict['_CHMP'] = np.round(CHMP,5)
         
     # Surface Emissions
     spc_sf=var_dict[scn][var][var+'_SF'] 
     tmp_sf=spc_sf
     sf=np.ma.masked_where(inside==False,tmp_sf*area)  #convert Kg/m2/s to Tg/yr
     SF = np.ma.sum(sf*duration*1e-9)
-    thing_list['_SF'] = np.round(SF,5)
+    chem_dict['_SF'] = np.round(SF,5)
 
     # Elevated Emissions
     if var == "CO":
@@ -1107,21 +1108,21 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
         tmp_clxf=np.nansum(spc_clxf*area,axis=0)
         clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
         CLXF = np.ma.sum(clxf*duration*1e-9)
-    thing_list['_CLXF'] = np.round(CLXF,5)
+    chem_dict['_CLXF'] = np.round(CLXF,5)
 
     # Dry Deposition Flux 
     spc_ddf=var_dict[scn][var][var+'_DDF'] 
     tmp_ddf=spc_ddf
     ddf=np.ma.masked_where(inside==False,tmp_ddf*area)  #convert Kg/m2/s to Tg/yr
     DDF = np.ma.sum(ddf*duration*1e-9)
-    thing_list['_DDF'] = np.round(DDF,5)
+    chem_dict['_DDF'] = np.round(DDF,5)
             
     # Wet Deposition Flux   
     spc_wdf=var_dict[scn][var][var+'_WDF'] 
     tmp_wdf=spc_wdf
     wdf=np.ma.masked_where(inside==False,tmp_wdf*area)  #convert Kg/m2/s to Tg/yr
     WDF = np.ma.sum(wdf*duration*1e-9)
-    thing_list['_WDF'] = np.round(WDF,5)
+    chem_dict['_WDF'] = np.round(WDF,5)
              
     # Chemical Tendency
     spc_tnd=var_dict[scn][var][var+'_TEND'] 
@@ -1129,33 +1130,32 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_tnd=np.nansum(spc_tnd,axis=0)
     tnd=np.ma.masked_where(inside==False,tmp_tnd)  #convert Kg/s to Tg/yr
     TND = np.ma.sum(tnd*duration*1e-9)
-    thing_list['_TEND'] = np.round(TND,5)
+    chem_dict['_TEND'] = np.round(TND,5)
     
     # Stratospheric-Tropospheric Exchange
     STE=DDF-TND
-    thing_list['_STE'] = np.round(STE,5)
+    chem_dict['_STE'] = np.round(STE,5)
 
     # LifeTime = Burden/(loss+deposition)
     LT=BURDEN/(CHML+DDF-WDF)*duration/86400/365 # days
-    thing_list['_LIFETIME'] = np.round(LT,5)
+    chem_dict['_LIFETIME'] = np.round(LT,5)
 
     # Lightning NOX production
     spc_lno=var_dict[scn][var][var+'_LNO']
     tmp_lno=np.ma.masked_where(inside==False,spc_lno)  
     LNO = np.ma.sum(tmp_lno)
-    thing_list['_LNO'] = np.round(LNO,5)
+    chem_dict['_LNO'] = np.round(LNO,5)
     
     NET = CHMP-CHML
-    thing_list['_NET'] = np.round(NET,5)
+    chem_dict['_NET'] = np.round(NET,5)
     
-    print("Got the SE final data calcs (hopefully) ...")
-    return thing_list
+    return chem_dict
 
 #####
 
 def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
     
-    thing_list = {}
+    aerosol_dict = {}
     
     # Burden      
     spc_burd=var_dict[scn][var][var+'_BURDEN']       
@@ -1163,7 +1163,7 @@ def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_burden=np.nansum(spc_burd*area,axis=0)
     burden=np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
     BURDEN = np.ma.sum(burden*1e-9)
-    thing_list['_BURDEN'] = np.round(BURDEN,5)
+    aerosol_dict['_BURDEN'] = np.round(BURDEN,5)
 
     # Chemical Loss
     spc_chml=var_dict[scn][var][var+'_CHML'] 
@@ -1171,7 +1171,7 @@ def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_chml=np.nansum(spc_chml*area,axis=0)
     chml=np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
     CHML = np.ma.sum(chml*duration*1e-9)
-    thing_list['_CHML'] = np.round(CHML,5)
+    aerosol_dict['_CHML'] = np.round(CHML,5)
     
     # Chemical Production
     spc_chmp=var_dict[scn][var][var+'_CHMP'] 
@@ -1179,21 +1179,21 @@ def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_chmp=np.nansum(spc_chmp*area,axis=0)
     chmp=np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
     CHMP = np.ma.sum(chmp*duration*1e-9)
-    thing_list['_CHMP'] = np.round(CHMP,5)
+    aerosol_dict['_CHMP'] = np.round(CHMP,5)
         
     # Surface Emissions
     spc_sf=var_dict[scn][var][var+'_SF'] 
     tmp_sf=spc_sf
     sf=np.ma.masked_where(inside==False,tmp_sf*area)  #convert Kg/m2/s to Tg/yr
     SF = np.ma.sum(sf*duration*1e-9)
-    thing_list['_SF'] = np.round(SF,5)
+    aerosol_dict['_SF'] = np.round(SF,5)
  
     # Elevated Emissions
     spc_clxf=var_dict[scn][var][var+'_CLXF'] 
     tmp_clxf=np.nansum(spc_clxf*area,axis=0)
     clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
     CLXF = np.ma.sum(clxf*duration*1e-9)
-    thing_list['_CLXF'] = np.round(CLXF,5)
+    aerosol_dict['_CLXF'] = np.round(CLXF,5)
     
     # Dry Deposition Flux      
     spc_ddfa=var_dict[scn][var][var+'_DDF'] 
@@ -1202,7 +1202,7 @@ def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_ddf=spc_ddf
     ddf=np.ma.masked_where(inside==False,tmp_ddf*area)  #convert Kg/m2/s to Tg/yr
     DDF = np.ma.sum(ddf*duration*1e-9)
-    thing_list['_DDF'] = np.round(DDF,5)
+    aerosol_dict['_DDF'] = np.round(DDF,5)
             
     # Wet deposition
     spc_wdfa=var_dict[scn][var][var+'_WDF'] 
@@ -1211,18 +1211,18 @@ def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
     tmp_wdf=spc_wdf
     wdf=np.ma.masked_where(inside==False,tmp_wdf*area)  #convert Kg/m2/s to Tg/yr
     WDF = np.ma.sum(wdf*duration*1e-9)
-    thing_list['_WDF'] = np.round(WDF,5)
+    aerosol_dict['_WDF'] = np.round(WDF,5)
             
     # gas-aerosol Exchange
     spc_gaex=var_dict[scn][var][var+'_GAEX'] 
     tmp_gaex=spc_gaex
     gaex=np.ma.masked_where(inside==False,tmp_gaex*area)  #convert Kg/m2/s to Tg/yr
     GAEX = np.ma.sum(gaex*duration*1e-9)
-    thing_list['_GAEX'] = np.round(GAEX,5)      
+    aerosol_dict['_GAEX'] = np.round(GAEX,5)      
             
     # LifeTime = Burden/(loss+deposition)
     LT=BURDEN/(CHML+DDF-WDF)* duration/86400 # days   
-    thing_list['_LIFETIME'] = np.round(LT,5)
+    aerosol_dict['_LIFETIME'] = np.round(LT,5)
             
     if var=='SULF':     
         # Aqueous Chemistry
@@ -1230,16 +1230,16 @@ def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
         tmp_aqs=spc_aqs
         aqs=np.ma.masked_where(inside==False,tmp_aqs*area)  #convert Kg/m2/s to Tg/yr
         AQS = np.ma.sum(aqs*duration*1e-9)
-        thing_list['_AQS'] = np.round(AQS,5)    
+        aerosol_dict['_AQS'] = np.round(AQS,5)    
         
         # Nucleation
         spc_nucl=var_dict[scn][var][var+'_NUCL'] 
         tmp_nucl=spc_nucl
         nucl=np.ma.masked_where(inside==False,tmp_nucl*area)  #convert Kg/m2/s to Tg/yr
         NUCL = np.ma.sum(nucl*duration*1e-9)
-        thing_list['_NUCL'] = np.round(NUCL,5)
+        aerosol_dict['_NUCL'] = np.round(NUCL,5)
 
-    return thing_list
+    return aerosol_dict
 
 #####
 
