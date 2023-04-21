@@ -611,7 +611,7 @@ def list_files(directory,scenario,start_date,end_date):
     all_fileNames=[]
 
     for i in range(len(all_filenames)):
-        print(all_filenames[i],"\n",scenario,"\n",all_filenames[i]==scenario)
+        print(all_filenames[i][0:scenario_len],"\n",scenario,"\n",all_filenames[i][0:scenario_len]==scenario)
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
             print(directory+all_filenames[i],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
