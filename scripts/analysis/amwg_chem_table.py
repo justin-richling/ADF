@@ -145,7 +145,7 @@ def amwg_chem_table(adf):
 
     # Look for specific h-case    
     #scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
-    scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
+    scenarios = [f'{ix}.{h_case}' for ix in case_names]
 
 
     # In CAM-Chem (or MUSICA-v0), user can save the outputs for only a box region.
