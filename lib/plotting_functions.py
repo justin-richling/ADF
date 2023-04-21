@@ -612,7 +612,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
-                      mdlfld, obsfld, diffld, **kwargs):
+                      mdlfld, obsfld, diffld, obs=False, **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
 
     kwargs -> optional dictionary of plotting options
@@ -737,8 +737,25 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     st.set_y(0.85)
 
     #Set case nickname and climo years:
-    ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    #if obs:
+    #    ax[0].set_title(f"{obs_var}"+"$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+    #    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+
+    #Set plot titles
+    case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+    base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+    ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
+
+    if obs:
+        obs_var = kwargs["obs_var_name"]
+        base_title = "$\mathbf{Variable}:$"+f"{obs_var}\n"+base_title
+        #ax[1].set_title(f"{obs_var}"+"$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+        ax[1].set_title(base_title, loc='left', fontsize=8) #fontsize=tiFontSize
+    else:
+        ax[1].set_title(base_title, loc='left', fontsize=8)
+
+    #ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+    #ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
 
     #Set stats: area_avg
     ax[0].set_title(f"Mean: {mdlfld.weighted(wgt).mean().item():5.2f}\nMax: {mdlfld.max():5.2f}\nMin: {mdlfld.min():5.2f}", loc='right',
