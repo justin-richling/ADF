@@ -132,6 +132,7 @@ def amwg_chem_table(adf):
 
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
     cam_hist_locs = cam_hist_locs + [adf.get_baseline_info("cam_hist_loc", required=True)]
+    print(cam_hist_locs)
     #Create path object for the CAM history file(s) location:
     data_dirs = []
     for case_idx,case in enumerate(case_names):
