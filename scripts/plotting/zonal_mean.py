@@ -83,6 +83,8 @@ def zonal_mean(adfobj):
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
 
+        #data_name = vres["obs_file"][:-3]
+
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
         if not var_obs_dict:
@@ -140,7 +142,7 @@ def zonal_mean(adfobj):
                  "nicknames":{"cases":test_nicknames,
                              "baseline":base_nickname},
                  "case_names":{"cases":case_names,
-                               "baseline":data_name},
+                               "baseline":""},
                  "ptype":plot_type
                 }
 
@@ -212,7 +214,8 @@ def zonal_mean(adfobj):
         #End 
         
         case_deets["vres"] = vres
-        
+        data_name = vres["obs_file"][:-3]
+        case_deets["data_name"] = data_name
         #loop over different data sets to plot model against:
         for data_src in data_list:
             # load data (observational) comparison files
