@@ -135,7 +135,7 @@ def amwg_chem_table(adf):
     #Create path object for the CAM history file(s) location:
     data_dirs = []
     for case_idx,case in enumerate(case_names):
-        data_dirs.append(Path(cam_hist_locs[case_idx]))
+        data_dirs.append(cam_hist_locs[case_idx])
     print("data_dirs TRY",data_dirs,"\n")
 
     
