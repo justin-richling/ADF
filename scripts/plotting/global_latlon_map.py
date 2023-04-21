@@ -67,7 +67,7 @@ def global_latlon_map(adfobj):
 
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
-    #read_config_var('multi_case_plots')
+
     if len(case_names) > 1:
         #Check if multi-plots are desired from yaml file
         if adfobj.get_multi_case_info("global_latlon_map"):
@@ -89,6 +89,7 @@ def global_latlon_map(adfobj):
     # Until those are both treated the same (via intake-esm or similar)
     # we will do a simple check and switch options as needed:
     if adfobj.get_basic_info("compare_obs"):
+        obs = True
 
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
@@ -99,6 +100,7 @@ def global_latlon_map(adfobj):
             print("No observations found to plot against, so no lat/lon maps will be generated.")
             return
     else:
+        obs = False
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
@@ -163,7 +165,6 @@ def global_latlon_map(adfobj):
             #print("VAR: ",var)
             #Check if obs exist for the variable:
             if var in var_obs_dict:
-                #print("OBS VAR: ",var,"\n")
                 #Note: In the future these may all be lists, but for
                 #now just convert the target_list.
                 #Extract target file:
@@ -193,6 +194,31 @@ def global_latlon_map(adfobj):
             #Extract category (if available):
             web_category = vres.get("category", None)
 
+            #If observation, get dataset name
+            if adfobj.compare_obs:
+
+                #Get raw obs name, remove the ".nc"
+                #data_name = str(dclimo_loc)[:-3]
+                data_name = vres["obs_file"][:-3]
+                print("data_name in LatLon:",data_name,"\n")
+
+                #Or make nickname off short name in var config yaml
+                base_nickname = data_list[0]
+                base_nickname = data_name
+
+                """#Check if obervation file has name (obs_file) or nickname (obs_name)
+                #:NOTE: obs_file is the full netcdf file name
+                #   Where obs_name seems like it is a nickname attribute
+                #
+                ob_name = "obs_file" # "obs_name"
+                if ob_name in vres:
+                    base_nickname = vres[ob_name]
+                    
+                    #If obs_file is called, remove the ".nc"
+                    if ob_name == "obs_file":
+                        base_nickname = base_nickname[:-3]
+                    print("base_nickname",base_nickname,"\n")"""
+
         else:
             vres = {}
             web_category = None
@@ -214,6 +240,9 @@ def global_latlon_map(adfobj):
                 oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
 
             oclim_ds = _load_dataset(oclim_fils)
+
+            if 'month' in oclim_ds:
+                oclim_ds = oclim_ds.rename({'month': 'time'})
 
             if oclim_ds is None:
                 print("WARNING: Did not find any oclim_fils. Will try to skip.")
@@ -300,7 +329,7 @@ def global_latlon_map(adfobj):
                                 #themselves.
                                 timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
                                 mdata['time']=timefix
-                                odata['time']=timefix
+                                odata['time']=timefix #This breaks if time not in file...
 
                                 #Calculate monthly weights based on number of days:
                                 month_length = mdata.time.dt.days_in_month
@@ -336,7 +365,6 @@ def global_latlon_map(adfobj):
                             if multi_plots:
                                 if var in adfobj.get_multi_case_info("global_latlon_map"):
                                     if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
-                                        #print("MULTI-CASE VAR: ",var,"\n")
                                         multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
@@ -366,7 +394,7 @@ def global_latlon_map(adfobj):
                             pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
-                                                 mseasons[s], oseasons[s], dseasons[s], **vres)
+                                                 mseasons[s], oseasons[s], dseasons[s], obs, **vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", 
@@ -477,7 +505,7 @@ def global_latlon_map(adfobj):
                                 pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], obs, **vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
@@ -498,7 +526,6 @@ def global_latlon_map(adfobj):
 
     #This will be a list of variables for multi-case plotting based off LatLon plot type
     if multi_plots:
-        print("multi_dict.keys()",multi_dict.keys(),"\n")
         #Notify user that script has started:
         print("\n  Generating lat/lon multi-case plots...")
 
