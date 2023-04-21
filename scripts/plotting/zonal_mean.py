@@ -215,7 +215,7 @@ def zonal_mean(adfobj):
         
         case_deets["vres"] = vres
         data_name = vres["obs_file"][:-3]
-        case_deets["data_name"] = data_name
+        case_deets["baseline"] = data_name
         #loop over different data sets to plot model against:
         for data_src in data_list:
             # load data (observational) comparison files
