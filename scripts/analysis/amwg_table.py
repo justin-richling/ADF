@@ -626,9 +626,6 @@ def _reorder_restom(table_df):
 #Derived quantity function space
 ################################
 
-def derive_restom():
-    return
-
 def _derive_var(case_name, derived_dict, derived_vars, derived_op, output_csv_file, cols, table_df):
     """
     Function to calculate dervived quantity from simple operation of constituents
