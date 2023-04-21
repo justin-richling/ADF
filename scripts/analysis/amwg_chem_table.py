@@ -611,9 +611,9 @@ def list_files(directory,scenario,start_date,end_date):
                 if time_bounds0==time_bounds1:
                     continue # initial file
             
-            # We need to only extract the files that are within the chosen dates.
+            #I think the ADF will take care of the below time bounds check...
+            """# We need to only extract the files that are within the chosen dates.
             # first timestep is used for this purpose
-            #print(time_bounds[0,0])
             
             # For CAM data
             filetime0=np.datetime64(time_bounds[0,0]) # beginning time of first timestep
@@ -629,10 +629,10 @@ def list_files(directory,scenario,start_date,end_date):
                 
             else:
                 if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
-                    all_fileNames.append(all_filenames[i])
+                    all_fileNames.append(all_filenames[i])"""
 
-            #if '.h0' in scenario:
-            #    all_fileNames.append(all_filenames[i])
+            if '.h0' in scenario:
+                all_fileNames.append(all_filenames[i])
         
     print("all_fileNames:",all_fileNames,"\n")                
     return all_fileNames
