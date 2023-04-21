@@ -611,6 +611,7 @@ def list_files(directory,scenario,start_date,end_date):
     all_fileNames=[]
 
     for i in range(len(all_filenames)):
+        print(all_filenames[i][0:scenario_len],"\n",scenario,"\n",all_filenames[i][0:scenario_len]==scenario)
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
             print(directory+all_filenames[i],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
@@ -690,7 +691,6 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
 
         # find the needed the files
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
-        print(current_dir+current_files[i],"\n")
         # get the Lat and Lons for each scenario
         tmp_file=xr.open_dataset(current_dir+current_files[i])
         lon=tmp_file['lon'+ext1_SE].data
