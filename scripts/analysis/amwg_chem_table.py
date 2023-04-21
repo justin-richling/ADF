@@ -630,14 +630,14 @@ def list_files(directory,scenario,start_date,end_date):
             # first timestep is used for this purpose
             #print(time_bounds[0,0])
             
-            """# For CAM data
+            # For CAM data
             filetime0=np.datetime64(time_bounds[0,0]) # beginning time of first timestep
             filetime1=np.datetime64(time_bounds[0,1]) # ending time of first timestep
             
             start_period = datetime.strptime(start_date, "%Y-%m-%d")
             end_period = datetime.strptime(end_date, "%Y-%m-%d")
             
-            if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
+            """if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
                 if  (start_period<=filetime0<end_period) :
                     print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
                     all_fileNames.append(all_filenames[i])
@@ -646,7 +646,8 @@ def list_files(directory,scenario,start_date,end_date):
                 if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
                     all_fileNames.append(all_filenames[i])"""
 
-            all_fileNames.append(all_filenames[i])
+            if '.h0' in scenario:
+                all_fileNames.append(all_filenames[i])
                     
     return all_fileNames
 
