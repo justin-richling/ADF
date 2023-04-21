@@ -126,7 +126,23 @@ def amwg_chem_table(adf):
     #--------------------------------------------------------------------------------------------
     data_root_path2 = '/glade/scratch/tilmes/archive/'
     data_dirs = [f'{data_root_path2}{case}/atm/hist/' for case in case_names]
+    print("data_dirs",data_dirs,"\n")
+    #cam_hist_loc
     #--------------------------------------------------------------------------------------------
+
+    cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    cam_hist_locs = cam_hist_locs + [adf.get_baseline_info("cam_hist_loc", required=True)]
+    #Create path object for the CAM history file(s) location:
+    data_dirs = []
+    for case_idx,case in enumerate(case_names):
+        data_dirs.append(Path(cam_hist_locs[case_idx]))
+    print("data_dirs TRY",data_dirs,"\n")
+
+    
+
+
+
+
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
 
