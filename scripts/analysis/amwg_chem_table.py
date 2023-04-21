@@ -118,37 +118,22 @@ def amwg_chem_table(adf):
     if not output_location.is_dir():
         print(f"\t    {output_locs[0]} not found, making new directory")
         output_location.mkdir(parents=True)
-    #End gathering case, path, and data info
-    #-----------------------------------------
 
-   
-    # THIS NEEDS TO BE CHANGED
-    #--------------------------------------------------------------------------------------------
-    data_root_path2 = '/glade/scratch/tilmes/archive/'
-    data_dirs = [f'{data_root_path2}{case}/atm/hist/' for case in case_names]
-    print("data_dirs",data_dirs,"\n")
-    #cam_hist_loc
-    #--------------------------------------------------------------------------------------------
-
+    #Grab history file locations from config yaml file
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
     cam_hist_locs = cam_hist_locs + [adf.get_baseline_info("cam_hist_loc", required=True)]
-    print(cam_hist_locs)
+
     #Create path object for the CAM history file(s) location:
     data_dirs = []
     for case_idx,case in enumerate(case_names):
         data_dirs.append(cam_hist_locs[case_idx])
-    print("data_dirs TRY",data_dirs,"\n")
 
-    
-
-
+    #End gathering case, path, and data info
+    #-----------------------------------------
 
 
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
-    #scenarios = [f'{ix}.{h_case}' for ix in case_names]
-    print(scenarios)
-
 
     # In CAM-Chem (or MUSICA-v0), user can save the outputs for only a box region.
     # ext1_SE: string specifying if the files are for only a region, which changes to variable names.
@@ -613,9 +598,7 @@ def list_files(directory,scenario,start_date,end_date):
     all_fileNames=[]
 
     for i in range(len(all_filenames)):
-        #print("YAHHOO",all_filenames[i][0:scenario_len],"\n",scenario,"\n",all_filenames[i][0:scenario_len]==scenario)
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
-            print(directory+all_filenames[i],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
@@ -639,17 +622,17 @@ def list_files(directory,scenario,start_date,end_date):
             start_period = datetime.strptime(start_date, "%Y-%m-%d")
             end_period = datetime.strptime(end_date, "%Y-%m-%d")
             
-            """if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
+            if '.h0' in scenario: # this is hard coded. User should change it (e.g. to ".h1") accordingly to reflect monthly files.
                 if  (start_period<=filetime0<end_period) :
                     print ('list_files_SE Warning: "h0" is hard-coded to contain monthly files. If not, change it in the function.') 
                     all_fileNames.append(all_filenames[i])
                 
             else:
                 if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
-                    all_fileNames.append(all_filenames[i])"""
+                    all_fileNames.append(all_filenames[i])
 
-            if '.h0' in scenario:
-                all_fileNames.append(all_filenames[i])
+            #if '.h0' in scenario:
+            #    all_fileNames.append(all_filenames[i])
         
     print("all_fileNames:",all_fileNames,"\n")                
     return all_fileNames
