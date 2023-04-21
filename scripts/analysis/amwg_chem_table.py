@@ -145,7 +145,7 @@ def amwg_chem_table(adf):
 
     # Look for specific h-case    
     #scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
-    scenarios = [f'{ix}.{h_case}' for ix in case_names]
+    scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
 
 
     # In CAM-Chem (or MUSICA-v0), user can save the outputs for only a box region.
@@ -611,7 +611,7 @@ def list_files(directory,scenario,start_date,end_date):
     all_fileNames=[]
 
     for i in range(len(all_filenames)):
-        print(all_filenames[i][0:scenario_len],"\n",scenario,"\n",all_filenames[i][0:scenario_len]==scenario)
+        print(all_filenames[i],"\n",scenario,"\n",all_filenames[i]==scenario)
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
             print(directory+all_filenames[i],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
