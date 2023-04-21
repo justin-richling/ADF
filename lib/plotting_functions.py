@@ -1243,7 +1243,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
-                             adata, bdata, has_lev, log_p,**kwargs):
+                             adata, bdata, has_lev, log_p, obs, **kwargs):
     """This is the default zonal mean plot:
         adata: data to plot ([lev], lat, [lon]).
                The vertical coordinate (lev) must be pressure levels.
@@ -1287,6 +1287,13 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         tiFontSize = 11
     #End if
 
+
+    case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+    base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+    if obs:
+        obs_var = kwargs["obs_var_name"]
+        base_title = "$\mathbf{Variable}:$"+f"{obs_var}\n"+base_title
+
     if has_lev:
 
         # calculate zonal average:
@@ -1318,9 +1325,20 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
         #End if
 
+        #case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+        #base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+        #ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
+        ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
+        if obs:
+            #obs_var = kwargs["obs_var_name"]
+            #base_title = "$\mathbf{Variable}:$"+f"{obs_var}\n"+base_title
+            ax[1].set_title(base_title, loc='left', fontsize=8) #fontsize=tiFontSize
+        else:
+            ax[1].set_title(base_title, loc='left', fontsize=8)
+        
         #Set case nickname and climo years:
-        ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8)
-        ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+        #ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8)
+        #ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
         ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
         # style the plot:
@@ -1338,6 +1356,9 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                         color="#1f77b4") # #1f77b4 -> matplotlib standard blue
         line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
                         color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
+        if obs:
+            line3 = Line2D([0], [0], label="$\mathbf{Variable}:$"+f"{obs_var}",
+                        color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
         azm = zonal_mean_xr(adata)
         bzm = zonal_mean_xr(bdata)
@@ -1352,7 +1373,11 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(adata['lat'], azm, ax=ax[0],color="#1f77b4") # #1f77b4 -> matplotlib standard blue
         zonal_plot(bdata['lat'], bzm, ax=ax[0],color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
-        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+        if obs:
+            fig.legend(handles=[line,line2,line3],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+                   borderaxespad=0.0,fontsize=6,frameon=False)
+        else:
+            fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
                    borderaxespad=0.0,fontsize=6,frameon=False)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
