@@ -68,7 +68,7 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    baseline_name = adf.get_baseline_info("cam_case_name", required=True)
+    
 
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
@@ -95,7 +95,6 @@ def regrid_and_vert_interp(adf):
 
     #Regrid target variables (either obs or a baseline run):
     if adf.compare_obs:
-
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
 
@@ -107,7 +106,7 @@ def regrid_and_vert_interp(adf):
         #End if
 
     else:
-
+        baseline_name = adf.get_baseline_info("cam_case_name", required=True)
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
@@ -155,6 +154,7 @@ def regrid_and_vert_interp(adf):
                     #now just convert the target_list.
                     #Extract target file:
                     tclimo_loc = var_obs_dict[var]["obs_file"]
+                    #tclimo_locs.append(var_obs_dict[var]["obs_file"])
                     #Extract target list (eventually will be a list, for now need to convert):
                     target_list = [var_obs_dict[var]["obs_name"]]
                 else:
@@ -246,7 +246,9 @@ def regrid_and_vert_interp(adf):
                                                                  **regrid_kwargs)
 
                     #Finally, write re-gridded data to output file:
-                    save_to_nc(rgdata_interp, regridded_file_loc)
+                    #save_to_nc(rgdata_interp, regridded_file_loc)
+
+                    make_mean_csv(rgdata_interp, var, case_name, output_location)
 
                     #Now vertically interpolate baseline (target) climatology,
                     #if applicable:
@@ -286,9 +288,39 @@ def regrid_and_vert_interp(adf):
                         #Write interpolated baseline climatology to file:
                         save_to_nc(tgdata_interp, interp_bl_file)
 
+                        #make_mean_csv(tgdata_interp, var, baseline_name, output_location)
                     #End if
                 else:
                     print("\t Regridded file already exists, so skipping...")
+
+                    """tic = time.perf_counter()
+                    mclim_fils = sorted(rgclimo_loc.glob(f"*{case_name}_{var}_*.nc"))
+
+                    ds = _load_dataset(mclim_fils)
+                    rgdata_interp = ds[var]
+
+                    #make_mean_csv(rgdata_interp, var, case_name, output_location)
+
+                    if case_idx == 0:
+                        # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                        if adf.compare_obs:
+                            #For now, only grab one file (but convert to list for use below)
+                            oclim_fils = [tclimo_loc]
+                        else:
+                            #oclim_fils = sorted(tclimo_loc.glob(f"{baseline_name}_{var}_baseline.nc"))
+                            oclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_*.nc"))
+
+                        #This breaks if regridded obs file already exits??
+                        ds_baseline = _load_dataset(oclim_fils)
+                        
+                        rgdata_interp = ds_baseline[var]
+
+                        make_mean_csv(rgdata_interp, var, baseline_name, output_location)
+                        toc = time.perf_counter()
+                        #print(f"table {var} w/baseline takes {toc-tic:0.4f} seconds to add to csv\n")
+                    else:
+                        toc = time.perf_counter()
+                        #print(f"table {var} w/o baseline takes {toc-tic:0.4f} seconds to add to csv\n")"""
 
                 #End if (file check)
             #End do (target list)
@@ -462,6 +494,8 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, *
     #Regrid variable to target dataset (if available):
     if regrid_dataset:
 
+        #print("OOOOKKKKAAAAAYYYY:",dir(regrid_dataset),"\n")
+
         #Extract grid info from target data:
         if 'time' in regrid_dataset.coords:
             if 'lev' in regrid_dataset.coords:
@@ -469,6 +503,9 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, *
             else:
                 tgrid = regrid_dataset.isel(time=0).squeeze()
             #End if
+        if 'month' in regrid_dataset.coords:
+            print("Looks like time is not in the coord. Better start praying...")
+            tgrid = regrid_dataset.isel(month=0).squeeze()
         #End if
 
         #Regrid model data to match target grid:
@@ -595,6 +632,46 @@ def regrid_data(fromthis, tothis, method=1):
         result = geocat.comp.linint2(fromthis, newlon, newlat, False)
         result.name = fromthis.name
         return result
+    #End if
+
+#####
+
+def make_mean_csv(rgdata_interp, var_name, case_name, output_location):
+    if not output_location.is_dir():
+        print(f"\t    {output_location} not found, making new directory")
+        output_location.mkdir(parents=True)
+
+    timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
+    lat = rgdata_interp['lat']
+    wgt = np.cos(np.radians(lat))
+    
+    rgdata_interp['time']=timefix
+
+    #Calculate monthly weights based on number of days:
+    month_length = rgdata_interp.time.dt.days_in_month
+    weights_ann = month_length / month_length.sum()
+    data = (rgdata_interp * weights_ann).sum(dim='time')
+    
+    data_mean = data.weighted(wgt).mean().item()
+
+    cols = ['case', "var", 'mean']
+    row_values = [case_name,var_name,data_mean]
+
+    # Format entries:
+    dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
+
+    # Add entries to Pandas structure:
+    df = pd.DataFrame(dfentries)
+
+    #Create output file name:
+    output_csv_file = output_location / f"stats_mean_{case_name}.csv"
+
+    # Check if the output CSV file exists,
+    # if so, then append to it:
+    if output_csv_file.is_file():
+        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+    else:
+        df.to_csv(output_csv_file, header=cols, index=False)
     #End if
 
 #####
