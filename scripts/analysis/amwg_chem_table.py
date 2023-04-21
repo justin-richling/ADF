@@ -144,7 +144,8 @@ def amwg_chem_table(adf):
 
 
     # Look for specific h-case    
-    scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
+    #scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
+    scenarios = [f'{ix}.{h_case}' for ix in case_names]
 
 
     # In CAM-Chem (or MUSICA-v0), user can save the outputs for only a box region.
@@ -701,7 +702,6 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
                 areas[scn]=tmp_area*Earth_area/np.nansum(tmp_area)
 
             except KeyError:
-                print("I think a key error happened\n")
                 dlon= np.abs(lon[1]-lon[0])
                 dlat= np.abs(lat[1]-lat[0])
 
