@@ -84,6 +84,7 @@ def zonal_mean(adfobj):
         var_obs_dict = adfobj.var_obs_dict
 
         #data_name = vres["obs_file"][:-3]
+        data_name = base_nickname
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
