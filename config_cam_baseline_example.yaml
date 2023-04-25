@@ -141,7 +141,7 @@ diag_basic_info:
 diag_cam_climo:
 
     #Calculate climatologies?
-    #If false, neither the climatology or time-series files will be created:
+    #If false, then diagnostics assumes the climatology files exist and will be skipped:
     calc_cam_climo: true
 
     #Overwrite CAM climatology files?
@@ -170,6 +170,7 @@ diag_cam_climo:
 
     #Do time series files need to be generated?
     #If True, then diagnostics assumes that model files are already time series.
+    #Or time series files already exist.
     #If False, or if simply not present, then diagnostics will attempt to create
     #time series files from history (time-slice) files:
     cam_ts_done: false
