@@ -487,7 +487,7 @@ class AdfWeb(AdfObs):
                     else:
                         base_dir_ext = f"{data_name}_{syear_baseline}_{eyear_baseline}"
                     case_sites[case_name] = [os.path.join("../",
-                                             f"{case_dir_ext}_vs_{base_dir_ext}",
+                                             f"{case_dir_ext}_vs_{base_dir_ext}","website",
                                              "index.html"),syear_cases[idx],eyear_cases[idx]]
 
         else:
