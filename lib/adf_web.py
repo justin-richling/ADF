@@ -361,7 +361,6 @@ class AdfWeb(AdfObs):
         for case_idx, case_name in enumerate(case_names):
 
             if (syear_cases[case_idx] and eyear_cases[case_idx]) == None:
-                print(f"No given climo years for {case_name}...")
                 starting_location = Path(cam_ts_locs[case_idx])
                 files_list = sorted(starting_location.glob('*nc'))
                 #This assumes CAM file names stay with this convention
@@ -422,6 +421,9 @@ class AdfWeb(AdfObs):
 
         #Set main title for website:
         main_title = "CAM Diagnostics"
+
+        #List of seasons
+        seasons = ["ANN","DJF","MAM","JJA","SON"]
 
         #Determine local directory:
         adf_lib_dir = Path(__file__).parent
@@ -635,7 +637,8 @@ class AdfWeb(AdfObs):
                                    case_yrs=case_yrs,
                                    baseline_yrs=baseline_yrs,
                                    mydata=mean_html_info[web_data.plot_type],
-                                   plot_types=plot_types) #The template rendered
+                                   plot_types=plot_types,
+                                   seasons=seasons) #The template rendered
 
                 #Write HTML file:
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
@@ -681,7 +684,8 @@ class AdfWeb(AdfObs):
                                                  baseline_yrs=baseline_yrs,
                                                  mydata=mean_html_info[web_data.plot_type],
                                                  curr_type=web_data.plot_type,
-                                                 plot_types=plot_types)
+                                                 plot_types=plot_types,
+                                                 seasons=seasons)
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
