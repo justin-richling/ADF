@@ -123,7 +123,6 @@ def tem(adf):
     output_loc = adf.get_basic_info("tem_loc")
     #If path not specified, skip TEM calculation?
     if output_loc is None:
-        print("\n TEM diagnostics not activated.")
         return
     else:
         #Notify user that script has started:
