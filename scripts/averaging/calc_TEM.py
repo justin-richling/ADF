@@ -5,6 +5,7 @@ from numpy import ma
 from datetime import date
 import matplotlib.pyplot as plt
 from pathlib import Path
+from glob import glob
 
 
 def calc_TEM(adf):
@@ -74,7 +75,10 @@ def calc_TEM(adf):
         #End if
 
         # open input file
-        hist_files = f"{starting_location}/*h4.{start_year}*.nc"
+        hist_files1 = glob(f"{starting_location}/*h4.{start_year}*.nc")
+        hist_files2 = glob(f"{starting_location}/*h4.{end_year}*.nc")
+        hist_files = hist_files1 + hist_files2
+
         print("hist_files",hist_files,"\n")
 
         ds = xr.open_mfdataset(hist_files)
