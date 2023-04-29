@@ -85,6 +85,7 @@ def calc_TEM(adf):
 
         #iterate over the times in a dataset
         for count, value in enumerate(ds.time.values):
+            print(value)
             if count == 0:
                 dstem0 = calc_tem(ds.squeeze().isel(time=count))
             else:
