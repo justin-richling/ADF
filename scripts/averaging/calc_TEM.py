@@ -1,7 +1,3 @@
-#########
-# Helpers
-#########
-
 import xarray as xr
 import numpy as np
 from scipy import integrate
@@ -10,15 +6,6 @@ from datetime import date
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-
-
-
-#Main-like function?
-
-
-#NOTE: !* Need per case, right? *!
-
-#Or is this only for test case?????
 
 def calc_TEM(adf):
     overwrite_output = True
@@ -86,73 +73,17 @@ def calc_TEM(adf):
             output_loc.unlink()
         #End if
 
-
-        # Maybe keep this??
-        """#Create empty list:
-        files_list = []
-
-        #Loop over start and end years:
-        for year in range(start_year, end_year+1):
-            #Add files to main file list:
-            for fname in starting_location.glob(f'{hist_str}.*{str(year).zfill(4)}-*.nc'):
-                files_list.append(fname)
-            #End for
-        #End for
-
-        #Create ordered list of CAM history files:
-        hist_files = sorted(files_list)"""
-
-
-
-
-
-
-
-
-        """#Open an xarray dataset from the first model history file:
-        hist_file_ds = xr.open_dataset(hist_files[0], decode_cf=False, decode_times=False)
-
-        #Get a list of data variables in the 1st hist file:
-        hist_file_var_list = list(hist_file_ds.data_vars)
-        #Note: could use `open_mfdataset`, but that can become very slow;
-        #      This approach effectively assumes that all files contain the same variables.
-
-        #INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
-        first_file_split = str(hist_files[0]).split(".")
-        if first_file_split[-1] == "nc":
-            time_string_start = first_file_split[-2].replace("-","")
-        else:
-            time_string_start = first_file_split[-1].replace("-","")
-        last_file_split = str(hist_files[-1]).split(".")
-        if last_file_split[-1] == "nc":
-            time_string_finish = last_file_split[-2].replace("-","")
-        else:
-            time_string_finish = last_file_split[-1].replace("-","")
-        time_string = "-".join([time_string_start, time_string_finish])"""
-
-        #NEED: history files!
-
         # open input file
-        # note: for processing multiple files, simpy use xr.open_mfdataset()
-        test_files = '/glade/scratch/hannay/archive/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001/atm/hist/*h4.*.nc'
-        print("test_files",test_files,"\n")
-        
-        print("starting_location",starting_location,"\n")
-        test_files = f"{starting_location}/*h4.{start_year}*.nc"
-        print("test_files",test_files,"\n")
+        hist_files = f"{starting_location}/*h4.{start_year}*.nc"
+        print("hist_files",hist_files,"\n")
 
-        #test_files = cam_hist_locs.glob(hist_str+'.*.nc')
-
-        ds = xr.open_mfdataset(test_files)#hist_files 
+        ds = xr.open_mfdataset(hist_files)
 
         #iterate over the times in a dataset
-
         for count, value in enumerate(ds.time.values):
             if count == 0:
-                print('first date', value)
                 dstem0 = calc_tem(ds.squeeze().isel(time=count))
             else:
-                print(count, value)
                 dstem = calc_tem(ds.squeeze().isel(time=count))
                 dstem0 = xr.concat([dstem0, dstem],'time')
 
@@ -163,6 +94,11 @@ def calc_TEM(adf):
         dstem0['lev']=ds['lev']
 
         output_loc_idx = Path(output_loc) / case_name
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not rgclimo_loc.is_dir():
+            print(f"    {rgclimo_loc} not found, making new directory")
+            rgclimo_loc.mkdir(parents=True)
+        #End if
 
         # write output to a netcdf file
         dstem0.to_netcdf(output_loc_idx / f'{case_name}.TEMdiag.nc', 
