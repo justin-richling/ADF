@@ -15,10 +15,6 @@ def calc_TEM(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)    
-    
-    #Notify user that script has started:
-    print("\n  Generating CAM TEM diagnostics files...")
-
 
     #Use test case settings, which are already lists:
     case_names    = adf.get_cam_info("cam_case_name", required=True)
@@ -28,7 +24,11 @@ def calc_TEM(adf):
     
     #If path not specified, skip TEM calculation?
     if output_loc is None:
+        print("\n TEM diagnostics not activated.")
         return
+    else:
+        #Notify user that script has started:
+        print("\n  Generating CAM TEM diagnostics files...")
     
     start_years   = adf.climo_yrs["syears"]
     end_years     = adf.climo_yrs["eyears"]
