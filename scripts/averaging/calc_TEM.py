@@ -10,7 +10,6 @@ from glob import glob
 
 def calc_TEM(adf):
     overwrite_output = True
-    #adf.
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     #output_locs = adf.plot_location
