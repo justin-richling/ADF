@@ -24,7 +24,7 @@ def calc_TEM(adf):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
-    output_loc = adf.get_basic_info("tem_loc", required=True)
+    output_loc = adf.get_basic_info("tem_loc")
     
     #If path not specified, skip TEM calculation?
     if output_loc is None:
