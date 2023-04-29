@@ -75,7 +75,9 @@ def tem(adf):
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
 
-
+    #Grab all case nickname(s)
+    test_nicknames = adf.case_nicknames["test_nicknames"]
+    base_nickname = adf.case_nicknames["base_nickname"]
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -184,7 +186,7 @@ def tem(adf):
         plt.subplots_adjust(wspace=0.3, hspace=hspace)
 
         #Set figure title
-        plt.suptitle(f'TEM Diagnostics: {case_name} - ANN\nyrs: {syear_cases[idx]} - {eyear_cases[idx]}', fontsize=16, y=.91)
+        plt.suptitle(f'TEM Diagnostics: {test_nicknames[idx]} - ANN\nyrs: {syear_cases[idx]} - {eyear_cases[idx]}', fontsize=16, y=.91)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)

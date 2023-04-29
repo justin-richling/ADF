@@ -79,13 +79,10 @@ def calc_TEM(adf):
         ehist_files = glob(f"{starting_location}/*h4.{end_year}*.nc")
         hist_files = sorted(shist_files + ehist_files)
 
-        print("hist_files",hist_files,"\n")
-
         ds = xr.open_mfdataset(hist_files)
 
         #iterate over the times in a dataset
         for count, value in enumerate(ds.time.values):
-            print(value)
             if count == 0:
                 dstem0 = calc_tem(ds.squeeze().isel(time=count))
             else:
