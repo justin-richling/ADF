@@ -75,9 +75,9 @@ def calc_TEM(adf):
         #End if
 
         # open input file
-        hist_files1 = glob(f"{starting_location}/*h4.{start_year}*.nc")
-        hist_files2 = glob(f"{starting_location}/*h4.{end_year}*.nc")
-        hist_files = hist_files1 + hist_files2
+        shist_files = glob(f"{starting_location}/*h4.{start_year}*.nc")
+        ehist_files = glob(f"{starting_location}/*h4.{end_year}*.nc")
+        hist_files = shist_files + ehist_files
 
         print("hist_files",hist_files,"\n")
 
