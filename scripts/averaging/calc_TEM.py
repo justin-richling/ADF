@@ -95,9 +95,9 @@ def calc_TEM(adf):
 
         output_loc_idx = Path(output_loc) / case_name
         #Check if re-gridded directory exists, and if not, then create it:
-        if not rgclimo_loc.is_dir():
-            print(f"    {rgclimo_loc} not found, making new directory")
-            rgclimo_loc.mkdir(parents=True)
+        if not output_loc_idx.is_dir():
+            print(f"    {output_loc_idx} not found, making new directory")
+            output_loc_idx.mkdir(parents=True)
         #End if
 
         # write output to a netcdf file
