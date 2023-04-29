@@ -123,7 +123,9 @@ def tem(adf):
 
 
     #Location to saved TEM netCDF files
-    output_loc = adf.get_basic_info("tem_loc", required=True)
+    output_loc = adf.get_basic_info("tem_loc")
+    if output_loc is None:
+        return
     
     #Loop over model cases:
     for idx,case_name in enumerate(case_names):

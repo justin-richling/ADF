@@ -10,9 +10,8 @@ from glob import glob
 
 def calc_TEM(adf):
     overwrite_output = True
+
     #Special ADF variable which contains the output paths for
-    #all generated plots and tables for each case:
-    #output_locs = adf.plot_location
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)    
@@ -27,17 +26,16 @@ def calc_TEM(adf):
 
     output_loc = adf.get_basic_info("tem_loc", required=True)
     
+    #If path not specified, skip TEM calculation?
+    if output_loc is None:
+        return
+    
     start_years   = adf.climo_yrs["syears"]
     end_years     = adf.climo_yrs["eyears"]
 
-    #Read history file number from the yaml file
+    #Set defualt to h4
+    #TODO: Read this history file number from the yaml file?
     hist_num = "h4"
-
-    #hist_num = adf.get_basic_info('hist_num')
-    #If hist_num is not present, then default to 'h0':
-    #if not hist_num:
-    #    hist_num = 'h4'
-    #End if
 
     #Loop over cases:
     for case_idx, case_name in enumerate(case_names):
@@ -67,13 +65,13 @@ def calc_TEM(adf):
             adf.end_diag_fail(emsg)
         #End if
 
-        #Check if re-gridded file already exists and over-writing is allowed:
+        #Check if TEM file already exists and over-writing is allowed:
         if Path(output_loc).is_file() and overwrite_output:
             #If so, then delete current file:
             output_loc.unlink()
         #End if
 
-        # open input file
+        # open input files
         shist_files = glob(f"{starting_location}/*h4.{start_year}*.nc")
         ehist_files = glob(f"{starting_location}/*h4.{end_year}*.nc")
         hist_files = sorted(shist_files + ehist_files)
@@ -81,7 +79,7 @@ def calc_TEM(adf):
         ds = xr.open_mfdataset(hist_files)
 
         #iterate over the times in a dataset
-        for count, value in enumerate(ds.time.values):
+        for count in ds.time.values:
             if count == 0:
                 dstem0 = calc_tem(ds.squeeze().isel(time=count))
             else:
