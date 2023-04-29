@@ -42,7 +42,7 @@ def calc_TEM(adf):
     #Loop over cases:
     for case_idx, case_name in enumerate(case_names):
 
-        print(f"\t Processing TEM idagnostics for case '{case_name}' :")
+        print(f"\t Processing TEM diagnostics for case '{case_name}' :")
 
         #Extract start and end year values:
         start_year = start_years[case_idx]
@@ -106,6 +106,8 @@ def calc_TEM(adf):
                             unlimited_dims='time', 
                             mode = 'w' )
 
+    #Notify user that script has ended:
+    print("  ...TEM diagnostics have been calculated successfully.")
 
 
 
