@@ -75,7 +75,7 @@ def calc_TEM(adf):
         ehist = glob(f"{starting_location}/*h4.{end_year}*.nc")
         hist_files = sorted(shist + ehist)
 
-        ds = xr.open_mfdataset(shist)
+        ds = xr.open_mfdataset(hist_files)
 
         print("ds.time.values",ds.time.values,"\n")
 
