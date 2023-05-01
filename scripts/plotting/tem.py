@@ -130,9 +130,14 @@ def tem(adf):
     
     #Loop over model cases:
     for idx,case_name in enumerate(case_names):
+
+        #Extract start and end year values:
+        start_year = syear_cases[idx]
+        end_year   = eyear_cases[idx]
+
         #Ope the TEM file
         output_loc_idx = Path(output_loc) / case_name
-        tem = output_loc_idx / f'{case_name}.TEMdiag.nc'
+        tem = output_loc_idx / f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
 
         ds = xr.open_dataset(tem)
 
