@@ -150,9 +150,9 @@ def tem(adf):
         # Row 1
         axs[0,0].set_title('First Plot')
         ds.uzm.isel(time=-1).plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1])
-        axs[0,0].set_title('Zonal-Mean zonal wind')
+        axs[0,0].set_title(ds.uzm.long_name)
         ds.vzm.isel(time=-1).plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1])
-        axs[0,1].set_title('Zonal-Mean meridional wind')
+        axs[0,1].set_title(ds.vzm.long_name)
 
         # Row 2
         ds.epfy.isel(time=-1).plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1])
