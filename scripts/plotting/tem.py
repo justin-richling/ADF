@@ -148,8 +148,7 @@ def tem(adf):
                                 facecolor='w', edgecolor='k', sharex=True)
         
         # Row 1
-        axs[0,0].set_title('First Plot')
-        ds.uzm.isel(time=-1).plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1])
+        ds.uzm.isel(time=-1).plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],cbar_kwargs={'label': ds.uzm.units})
         axs[0,0].set_title(ds.uzm.long_name)
         ds.vzm.isel(time=-1).plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1])
         axs[0,1].set_title(ds.vzm.long_name)
