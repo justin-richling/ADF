@@ -150,15 +150,15 @@ def tem(adf):
         # Row 1
         axs[0,0].set_title('First Plot')
         ds.uzm.isel(time=-1).plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1])
-        axs[0,0].set_title('uzm')
+        axs[0,0].set_title('Zonal-Mean zonal wind')
         ds.vzm.isel(time=-1).plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1])
-        axs[0,1].set_title('vzm')
+        axs[0,1].set_title('Zonal-Mean meridional wind')
 
         # Row 2
         ds.epfy.isel(time=-1).plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1])
-        axs[1,0].set_title('epfy')
+        axs[1,0].set_title(ds.epfy.long_name)
         ds.epfz.isel(time=-1).plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1])
-        axs[1,1].set_title('epfz')
+        axs[1,1].set_title(ds.epfz.long_name)
 
         # Row 3
         ds.vtem.isel(time=-1).plot.contourf(ax=axs[2,0], levels = 21, y='lev', yscale='log',
@@ -166,29 +166,29 @@ def tem(adf):
         ds.vtem.isel(time=-1).plot.contour(ax=axs[2,0], levels = 11, y='lev', yscale='log',
                                             vmax=3,vmin=-3,ylim=[1e2,1],
                                             colors='black', linestyles=None)
-        axs[2,0].set_title('vtem')
+        axs[2,0].set_title(ds.vtem.long_name)
 
         ds.wtem.isel(time=-1).plot.contourf(ax=axs[2,1], levels = 21, y='lev', yscale='log',
                                             vmax=0.005,vmin=-0.005,ylim=[1e2,1], cmap='RdBu_r')
         ds.wtem.isel(time=-1).plot.contour(ax=axs[2,1], levels = 7, y='lev', yscale='log',
                                            vmax=0.03,vmin=-0.03,ylim=[1e2,1], 
                                            colors='black', linestyles=None)
-        axs[2,1].set_title('wtem')
+        axs[2,1].set_title(ds.wtem.long_name)
 
         # Row 4
         ds.psitem.isel(time=-1).plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
                                               vmax=5e9,ylim=[1e2,2])
-        axs[3,0].set_title('psitem')
+        axs[3,0].set_title(ds.psitem.long_name)
 
         ds.utendepfd.isel(time=-1).plot(ax=axs[3,1], y='lev', yscale='log',
                                         vmax=0.0001,vmin=-0.0001,ylim=[1e2,2])
-        axs[3,1].set_title('utendepfd')
+        axs[3,1].set_title(ds.utendepfd.long_name)
 
         # Row 5
         ds.utendvtem.isel(time=-1).plot(ax=axs[4,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1])
-        axs[4,0].set_title('utendvtem')
+        axs[4,0].set_title(ds.utendvtem.long_name)
         ds.utendwtem.isel(time=-1).plot(ax=axs[4,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1])
-        axs[4,1].set_title('utendwtem')
+        axs[4,1].set_title(ds.utendwtem.long_name)
         
         #Adjust subplots
         hspace = 0.3
