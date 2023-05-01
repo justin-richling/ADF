@@ -77,6 +77,8 @@ def calc_TEM(adf):
 
         ds = xr.open_mfdataset(shist)
 
+        print("ds.time.values",ds.time.values,"\n")
+
         #iterate over the times in a dataset
         for count in ds.time.values:
             if count == 0:
