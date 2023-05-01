@@ -77,7 +77,7 @@ def calc_TEM(adf):
 
         ds = xr.open_mfdataset(hist_files)
 
-        """#iterate over the times in a dataset
+        #iterate over the times in a dataset
         for idx,_ in enumerate(ds.time.values):
             if idx == 0:
                 dstem0 = calc_tem(ds.squeeze().isel(time=idx))
@@ -85,17 +85,7 @@ def calc_TEM(adf):
                 dstem = calc_tem(ds.squeeze().isel(time=idx))
                 dstem0 = xr.concat([dstem0, dstem],'time')
             #End if
-        #End if"""
-
-        # #iterate over the times in a dataset
-        for idx,ds_date in enumerate(ds.time.values):
-            if idx == 0:
-                dstem0 = calc_tem(ds.squeeze().sel(time=ds_date))
-            else:
-                dstem = calc_tem(ds.squeeze().sel(time=ds_date))
-                dstem0 = xr.concat([dstem0, dstem],'time')
-            #End if
-        #End if    
+        #End if
 
         #Update the attributes
         dstem0.attrs = ds.attrs
