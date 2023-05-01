@@ -98,7 +98,7 @@ def tem(adf):
     #End if
 
     #case_names = case_names + [data_name]
-    
+
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adf.climo_yrs["syear_baseline"]
     eyear_baseline = adf.climo_yrs["eyear_baseline"]
@@ -130,23 +130,22 @@ def tem(adf):
     
     #Loop over model cases:
     for idx,case_name in enumerate(case_names):
+        #Ope the TEM file
         output_loc_idx = Path(output_loc) / case_name
         tem = output_loc_idx / f'{case_name}.TEMdiag.nc'
-
 
         ds = xr.open_dataset(tem)
 
         #Location to save plots
         plot_name = str(plot_location)+"/"+case_name+"_tem.png"
 
+        #Plot TEM
         nrows = 5
         ncols = 2
         fig_width = 15
         fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
-        fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
-                                    sharex=True,
-                                    #sharey=True,
-                                    )
+        fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
+                                facecolor='w', edgecolor='k', sharex=True)
         
         # Row 1
         axs[0,0].set_title('First Plot')
@@ -162,20 +161,27 @@ def tem(adf):
         axs[1,1].set_title('epfz')
 
         # Row 3
-        ds.vtem.isel(time=-1).plot.contourf(ax=axs[2,0], levels = 21, y='lev', yscale='log',vmax=3,vmin=-3,ylim=[1e2,1], cmap = 'RdBu_r')
-        ds.vtem.isel(time=-1).plot.contour(ax=axs[2,0], levels = 11, y='lev', yscale='log',vmax=3,vmin=-3,ylim=[1e2,1],
+        ds.vtem.isel(time=-1).plot.contourf(ax=axs[2,0], levels = 21, y='lev', yscale='log',
+                                            vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r')
+        ds.vtem.isel(time=-1).plot.contour(ax=axs[2,0], levels = 11, y='lev', yscale='log',
+                                            vmax=3,vmin=-3,ylim=[1e2,1],
                                             colors='black', linestyles=None)
         axs[2,0].set_title('vtem')
 
-        ds.wtem.isel(time=-1).plot.contourf(ax=axs[2,1], levels = 21, y='lev', yscale='log',vmax=0.005,vmin=-0.005,ylim=[1e2,1], cmap = 'RdBu_r')
-        ds.wtem.isel(time=-1).plot.contour(ax=axs[2,1], levels = 7, y='lev', yscale='log',vmax=0.03,vmin=-0.03,ylim=[1e2,1], 
-                                        colors='black', linestyles=None)
+        ds.wtem.isel(time=-1).plot.contourf(ax=axs[2,1], levels = 21, y='lev', yscale='log',
+                                            vmax=0.005,vmin=-0.005,ylim=[1e2,1], cmap='RdBu_r')
+        ds.wtem.isel(time=-1).plot.contour(ax=axs[2,1], levels = 7, y='lev', yscale='log',
+                                           vmax=0.03,vmin=-0.03,ylim=[1e2,1], 
+                                           colors='black', linestyles=None)
         axs[2,1].set_title('wtem')
 
         # Row 4
-        ds.psitem.isel(time=-1).plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',vmax=5e9,ylim=[1e2,2])
+        ds.psitem.isel(time=-1).plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
+                                              vmax=5e9,ylim=[1e2,2])
         axs[3,0].set_title('psitem')
-        ds.utendepfd.isel(time=-1).plot(ax=axs[3,1], y='lev', yscale='log',vmax=0.0001,vmin=-0.0001,ylim=[1e2,2])
+
+        ds.utendepfd.isel(time=-1).plot(ax=axs[3,1], y='lev', yscale='log',
+                                        vmax=0.0001,vmin=-0.0001,ylim=[1e2,2])
         axs[3,1].set_title('utendepfd')
 
         # Row 5
