@@ -75,7 +75,7 @@ def calc_TEM(adf):
         ehist = glob(f"{starting_location}/*h4.{end_year}*.nc")
         hist_files = sorted(shist + ehist)
 
-        ds = xr.open_mfdataset(hist_files)
+        ds = xr.open_mfdataset(shist)
 
         #iterate over the times in a dataset
         for count in ds.time.values:
