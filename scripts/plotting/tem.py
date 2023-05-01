@@ -128,99 +128,111 @@ def tem(adf):
         #Notify user that script has started:
         print("\n  Generating TEM plots...")
     
+    #Set seasonal ranges:
+    seasons = {"ANN": np.arange(1,13,1),
+               #"DJF": [12, 1, 2],
+               #"JJA": [6, 7, 8],
+               #"MAM": [3, 4, 5],
+               #"SON": [9, 10, 11]
+               }
+
     #Loop over model cases:
     for idx,case_name in enumerate(case_names):
 
-        #Extract start and end year values:
-        start_year = syear_cases[idx]
-        end_year   = eyear_cases[idx]
+        #Loop over season dictionary:
+        for s in seasons:
 
-        #Ope the TEM file
-        output_loc_idx = Path(output_loc) / case_name
-        tem = output_loc_idx / f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
+            #Extract start and end year values:
+            start_year = syear_cases[idx]
+            end_year   = eyear_cases[idx]
 
-        ds = xr.open_dataset(tem)
+            #Ope the TEM file
+            output_loc_idx = Path(output_loc) / case_name
+            tem = output_loc_idx / f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
 
-        #Location to save plots
-        plot_name = str(plot_location)+"/"+case_name+"_tem.png"
+            ds = xr.open_dataset(tem)
 
-        #Plot TEM
-        nrows = 5
-        ncols = 2
-        fig_width = 15
-        fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
-        fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
-                                facecolor='w', edgecolor='k', sharex=True)
-        
-        # Row 1
-        #------------------------------------------------------------------------------------------
-        ds.uzm.isel(time=-1).plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
-                                  cbar_kwargs={'label': ds.uzm.units})
-        axs[0,0].set_title(ds.uzm.long_name)
-        ds.vzm.isel(time=-1).plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
-                                  cbar_kwargs={'label': ds.vzm.units})
-        axs[0,1].set_title(ds.vzm.long_name)
+            #Location to save plots
+            #plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+            plot_name = plot_location / f"{case_name}_{s}_TEM.png"
 
-        # Row 2
-        #------------------------------------------------------------------------------------------
-        ds.epfy.isel(time=-1).plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
-                                   cbar_kwargs={'label': ds.epfy.units})
-        axs[1,0].set_title(ds.epfy.long_name)
-        ds.epfz.isel(time=-1).plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
-                                   cbar_kwargs={'label': ds.epfz.units})
-        axs[1,1].set_title(ds.epfz.long_name)
+            #Plot TEM
+            nrows = 5
+            ncols = 2
+            fig_width = 15
+            fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
+            fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
+                                    facecolor='w', edgecolor='k', sharex=True)
+            
+            # Row 1
+            #------------------------------------------------------------------------------------------
+            ds.uzm.isel(time=-1).plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
+                                    cbar_kwargs={'label': ds.uzm.units})
+            axs[0,0].set_title(ds.uzm.long_name)
+            ds.vzm.isel(time=-1).plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
+                                    cbar_kwargs={'label': ds.vzm.units})
+            axs[0,1].set_title(ds.vzm.long_name)
 
-        # Row 3
-        #------------------------------------------------------------------------------------------
-        ds.vtem.isel(time=-1).plot.contourf(ax=axs[2,0], levels = 21, y='lev', yscale='log',
-                                            vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
-                                            cbar_kwargs={'label': ds.vtem.units})
-        ds.vtem.isel(time=-1).plot.contour(ax=axs[2,0], levels = 11, y='lev', yscale='log',
-                                            vmax=3,vmin=-3,ylim=[1e2,1],
+            # Row 2
+            #------------------------------------------------------------------------------------------
+            ds.epfy.isel(time=-1).plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
+                                    cbar_kwargs={'label': ds.epfy.units})
+            axs[1,0].set_title(ds.epfy.long_name)
+            ds.epfz.isel(time=-1).plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
+                                    cbar_kwargs={'label': ds.epfz.units})
+            axs[1,1].set_title(ds.epfz.long_name)
+
+            # Row 3
+            #------------------------------------------------------------------------------------------
+            ds.vtem.isel(time=-1).plot.contourf(ax=axs[2,0], levels = 21, y='lev', yscale='log',
+                                                vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
+                                                cbar_kwargs={'label': ds.vtem.units})
+            ds.vtem.isel(time=-1).plot.contour(ax=axs[2,0], levels = 11, y='lev', yscale='log',
+                                                vmax=3,vmin=-3,ylim=[1e2,1],
+                                                colors='black', linestyles=None)
+            axs[2,0].set_title(ds.vtem.long_name)
+
+            ds.wtem.isel(time=-1).plot.contourf(ax=axs[2,1], levels = 21, y='lev', yscale='log',
+                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
+                                                cbar_kwargs={'label': ds.wtem.units})
+            ds.wtem.isel(time=-1).plot.contour(ax=axs[2,1], levels = 7, y='lev', yscale='log',
+                                            vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
-        axs[2,0].set_title(ds.vtem.long_name)
+            axs[2,1].set_title(ds.wtem.long_name)
 
-        ds.wtem.isel(time=-1).plot.contourf(ax=axs[2,1], levels = 21, y='lev', yscale='log',
-                                            vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
-                                            cbar_kwargs={'label': ds.wtem.units})
-        ds.wtem.isel(time=-1).plot.contour(ax=axs[2,1], levels = 7, y='lev', yscale='log',
-                                           vmax=0.03, vmin=-0.03, ylim=[1e2,1],
-                                           colors='black', linestyles=None)
-        axs[2,1].set_title(ds.wtem.long_name)
+            # Row 4
+            #------------------------------------------------------------------------------------------
+            ds.psitem.isel(time=-1).plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
+                                                vmax=5e9, ylim=[1e2,2],
+                                                cbar_kwargs={'label': ds.psitem.units})
+            axs[3,0].set_title(ds.psitem.long_name)
 
-        # Row 4
-        #------------------------------------------------------------------------------------------
-        ds.psitem.isel(time=-1).plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
-                                              vmax=5e9, ylim=[1e2,2],
-                                              cbar_kwargs={'label': ds.psitem.units})
-        axs[3,0].set_title(ds.psitem.long_name)
+            ds.utendepfd.isel(time=-1).plot(ax=axs[3,1], y='lev', yscale='log',
+                                            vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
+                                            cbar_kwargs={'label': ds.utendepfd.units})
+            axs[3,1].set_title(ds.utendepfd.long_name)
 
-        ds.utendepfd.isel(time=-1).plot(ax=axs[3,1], y='lev', yscale='log',
-                                        vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
-                                        cbar_kwargs={'label': ds.utendepfd.units})
-        axs[3,1].set_title(ds.utendepfd.long_name)
+            # Row 5
+            #------------------------------------------------------------------------------------------
+            ds.utendvtem.isel(time=-1).plot(ax=axs[4,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
+                                            cbar_kwargs={'label': ds.utendvtem.units})
+            axs[4,0].set_title(ds.utendvtem.long_name)
+            ds.utendwtem.isel(time=-1).plot(ax=axs[4,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
+                                            cbar_kwargs={'label': ds.utendwtem.units})
+            axs[4,1].set_title(ds.utendwtem.long_name)
+            
+            #Adjust subplots
+            hspace = 0.3
+            plt.subplots_adjust(wspace=0.3, hspace=hspace)
 
-        # Row 5
-        #------------------------------------------------------------------------------------------
-        ds.utendvtem.isel(time=-1).plot(ax=axs[4,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
-                                        cbar_kwargs={'label': ds.utendvtem.units})
-        axs[4,0].set_title(ds.utendvtem.long_name)
-        ds.utendwtem.isel(time=-1).plot(ax=axs[4,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
-                                        cbar_kwargs={'label': ds.utendwtem.units})
-        axs[4,1].set_title(ds.utendwtem.long_name)
-        
-        #Adjust subplots
-        hspace = 0.3
-        plt.subplots_adjust(wspace=0.3, hspace=hspace)
+            #Set figure title
+            plt.suptitle(f'TEM Diagnostics: {test_nicknames[idx]} - {s}\nyrs: {syear_cases[idx]} - {eyear_cases[idx]}', fontsize=16, y=.91)
 
-        #Set figure title
-        plt.suptitle(f'TEM Diagnostics: {test_nicknames[idx]} - ANN\nyrs: {syear_cases[idx]} - {eyear_cases[idx]}', fontsize=16, y=.91)
+            #Write the figure to provided workspace/file:
+            fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
-        #Write the figure to provided workspace/file:
-        fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-
-        #Add plot to website (if enabled):
-        adf.add_website_data(plot_name, "TEM", case_name, season="ANN")
+            #Add plot to website (if enabled):
+            adf.add_website_data(plot_name, "TEM", case_name, season=s)
 
 
 ##############
