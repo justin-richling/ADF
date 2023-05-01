@@ -100,7 +100,7 @@ def calc_TEM(adf):
         #End if
 
         # write output to a netcdf file
-        dstem0.to_netcdf(output_loc_idx / f'{case_name}.TEMdiag.nc', 
+        dstem0.to_netcdf(output_loc_idx / f'{case_name}.TEMdiag_{start_year}-{end_year}.nc', 
                             unlimited_dims='time', 
                             mode = 'w' )
 
