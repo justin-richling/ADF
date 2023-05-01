@@ -80,11 +80,11 @@ def calc_TEM(adf):
         print("ds.time.values",ds.time.values,"\n")
 
         #iterate over the times in a dataset
-        for count in ds.time.values:
-            if count == 0:
-                dstem0 = calc_tem(ds.squeeze().isel(time=count))
+        for idx, ds_date in enumerate(ds.time.values):
+            if idx == 0:
+                dstem0 = calc_tem(ds.squeeze().isel(time=ds_date))
             else:
-                dstem = calc_tem(ds.squeeze().isel(time=count))
+                dstem = calc_tem(ds.squeeze().isel(time=ds_date))
                 dstem0 = xr.concat([dstem0, dstem],'time')
             #End if
         #End if    
