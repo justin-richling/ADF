@@ -11,8 +11,7 @@ from glob import glob
 def calc_TEM(adf):
     overwrite_output = True
 
-    #Special ADF variable which contains the output paths for
-
+    #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)    
 
@@ -20,6 +19,7 @@ def calc_TEM(adf):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
+    #New TEM netCDF file save location
     output_loc = adf.get_basic_info("tem_loc")
     
     #If path not specified, skip TEM calculation?
@@ -32,7 +32,7 @@ def calc_TEM(adf):
     start_years   = adf.climo_yrs["syears"]
     end_years     = adf.climo_yrs["eyears"]
 
-    #Set defualt to h4
+    #Set default to h4
     #TODO: Read this history file number from the yaml file?
     hist_num = "h4"
 
@@ -71,9 +71,9 @@ def calc_TEM(adf):
         #End if
 
         # open input files
-        shist_files = glob(f"{starting_location}/*h4.{start_year}*.nc")
-        ehist_files = glob(f"{starting_location}/*h4.{end_year}*.nc")
-        hist_files = sorted(shist_files + ehist_files)
+        shist = glob(f"{starting_location}/*h4.{start_year}*.nc")
+        ehist = glob(f"{starting_location}/*h4.{end_year}*.nc")
+        hist_files = sorted(shist + ehist)
 
         ds = xr.open_mfdataset(hist_files)
 
@@ -84,11 +84,12 @@ def calc_TEM(adf):
             else:
                 dstem = calc_tem(ds.squeeze().isel(time=count))
                 dstem0 = xr.concat([dstem0, dstem],'time')
+            #End if
+        #End if    
 
+        #Update the attributes
         dstem0.attrs = ds.attrs
-
         dstem0.attrs['created'] = str(date.today())
-
         dstem0['lev']=ds['lev']
 
         output_loc_idx = Path(output_loc) / case_name
