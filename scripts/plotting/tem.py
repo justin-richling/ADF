@@ -173,6 +173,7 @@ def tem(adf):
             """#Adjust subplots
             hspace = 0.3
             plt.subplots_adjust(wspace=0.3, hspace=hspace)
+            """
 
             #Set figure title
             yrs = {syear_cases[idx]} - {eyear_cases[idx]}
@@ -183,7 +184,7 @@ def tem(adf):
             fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
             #Add plot to website (if enabled):
-            adf.add_website_data(plot_name, "TEM", case_name, season=s)"""
+            adf.add_website_data(plot_name, "TEM", case_name, season=s)
 
 def tem_plot(ds, axs, s, var_list, res):
 
