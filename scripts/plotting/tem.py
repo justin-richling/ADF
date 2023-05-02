@@ -130,10 +130,10 @@ def tem(adf):
     
     #Set seasonal ranges:
     seasons = {"ANN": np.arange(1,13,1),
-               #"DJF": [12, 1, 2],
-               #"JJA": [6, 7, 8],
-               #"MAM": [3, 4, 5],
-               #"SON": [9, 10, 11]
+               "DJF": [12, 1, 2],
+               "JJA": [6, 7, 8],
+               "MAM": [3, 4, 5],
+               "SON": [9, 10, 11]
                }
 
     var_list = ['uzm','vzm','epfy','epfz','vtem','wtem',
@@ -176,7 +176,7 @@ def tem(adf):
             """
 
             #Set figure title
-            yrs = {syear_cases[idx]} - {eyear_cases[idx]}
+            yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
             plt.suptitle(f'TEM Diagnostics: {test_nicknames[idx]} - {s}\nyrs: {yrs}', 
                             fontsize=16, y=.91)
 
