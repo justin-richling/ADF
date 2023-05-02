@@ -225,7 +225,7 @@ def tem_plot(ds, axs, s, var_list, res):
         #vres["axs"]
         #res["ylim"]
         #vres["units"]
-        if vres["vmin"]:
+        """if vres["vmin"]:
             vmin = vres["vmin"]
         else:
             vmin = None
@@ -242,7 +242,7 @@ def tem_plot(ds, axs, s, var_list, res):
                          vmin=vmin, vmax=vmax, ylim=vres["ylim"],
                          cmap=cmap, cbar_kwargs={'label': vres["units"]})
         
-        axs[vres["axs"][0],vres["axs"][1]].set_title(vres["long_name"])
+        axs[vres["axs"][0],vres["axs"][1]].set_title(vres["long_name"])"""
 
         # Row 1
         #------------------------------------------------------------------------------------------
