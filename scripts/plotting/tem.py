@@ -462,7 +462,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
     #Adjust subplots
     hspace = 0.3
-    plt.subplots_adjust(wspace=0.8, hspace=hspace)
+    plt.subplots_adjust(wspace=0.65, hspace=hspace)
 
     return axs
 
