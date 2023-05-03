@@ -216,9 +216,9 @@ def tem(adf):
             #axs[0,1].text(base_name, loc="center")
 
             #Setup and plot the sub-plots
-            if len(case_names) > 1:
-                print("making more than one set of TEM diags")
-                tem_plot(ds, ds_base, axs, s, var_list, res)
+            #if len(case_names) > 1:
+            #    print("making more than one set of TEM diags")
+            tem_plot(ds, ds_base, axs, s, var_list, res)
 
             """if len(case_names) == 1:
                 print("making just one set of TEM diags")
