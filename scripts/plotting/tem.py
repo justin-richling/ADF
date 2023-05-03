@@ -237,196 +237,6 @@ def tem(adf):
         #Add plot to website (if enabled):
         adf.add_website_data(plot_name, "TEM", case_name, season=s)
 
-def tem_plot_single(ds, axs, s, var_list, res):
-
-    for var in var_list:
-        mdata = ds[var].squeeze()
-        vres = res[var]
-
-        #Create array to avoid weighting missing values:
-        md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
-
-        #Calculate monthly weights based on number of days:
-        month_length = mdata.time.dt.days_in_month
-        weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
-
-        #Create array to avoid weighting missing values:
-        md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
-
-        #Calculate monthly weights based on number of days:
-        month_length = mdata.time.dt.days_in_month
-        weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
-
-
-        #Calculate monthly-weighted seasonal averages:
-        mseasons = {}
-        if s == 'ANN':
-
-            #Calculate annual weights (i.e. don't group by season):
-            weights_ann = month_length / month_length.sum()
-
-            mseasons[s] = (mdata * weights_ann).sum(dim='time')
-            mseasons[s] = mseasons[s] / (md_ones*weights_ann).sum(dim='time')
-
-
-        else:
-            #this is inefficient because we do same calc over and over
-            mseasons[s] = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
-            wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
-            mseasons[s] = mseasons[s] / wgt_denom
-
-        """if vres["vmin"]:
-            vmin = vres["vmin"]
-        else:
-            vmin = None
-        if vres["vmax"]:
-            vmax = vres["vmax"]
-        else:
-            vmax = None
-        if vres["cmap"]:
-            cmap = vres["cmap"]
-        else:
-            cmap = None
-
-        mseasons[s].plot(ax=axs[vres["axs"][0],vres["axs"][1]], y='lev', yscale='log',
-                         vmin=vmin, vmax=vmax, ylim=vres["ylim"],
-                         cmap=cmap, cbar_kwargs={'label': vres["units"]})
-        
-        axs[vres["axs"][0],vres["axs"][1]].set_title(vres["long_name"])"""
-
-        # Row 1
-        #------------------------------------------------------------------------------------------
-        if var == "uzm":
-            mseasons[s].plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
-                                    cbar_kwargs={'label': ds[var].units})
-            axs[0,0].set_title(ds[var].long_name)
-        
-        if var == "vzm":
-            mseasons[s].plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
-                                    cbar_kwargs={'label': ds[var].units})
-            axs[0,1].set_title(ds[var].long_name)
-
-        # Row 2
-        #------------------------------------------------------------------------------------------
-        if var == "epfy":
-            mseasons[s].plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
-                                    cbar_kwargs={'label': ds[var].units})
-            axs[1,0].set_title(ds[var].long_name)
-        
-        if var == "epfz":
-            mseasons[s].plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
-                                    cbar_kwargs={'label': ds[var].units})
-            axs[1,1].set_title(ds[var].long_name)
-
-        # Row 3
-        #------------------------------------------------------------------------------------------
-        if var == "vtem":
-            mseasons[s].plot.contourf(ax=axs[2,0], levels = 21, y='lev', yscale='log',
-                                                vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
-                                                cbar_kwargs={'label': ds[var].units})
-            mseasons[s].plot.contour(ax=axs[2,0], levels = 11, y='lev', yscale='log',
-                                                vmax=3,vmin=-3,ylim=[1e2,1],
-                                                colors='black', linestyles=None)
-            axs[2,0].set_title(ds[var].long_name)
-
-        if var == "wtem":
-            mseasons[s].plot.contourf(ax=axs[2,1], levels = 21, y='lev', yscale='log',
-                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
-                                                cbar_kwargs={'label': ds[var].units})
-            mseasons[s].plot.contour(ax=axs[2,1], levels = 7, y='lev', yscale='log',
-                                            vmax=0.03, vmin=-0.03, ylim=[1e2,1],
-                                            colors='black', linestyles=None)
-            axs[2,1].set_title(ds[var].long_name)
-
-        # Row 4
-        #------------------------------------------------------------------------------------------
-        if var == "psitem":
-            mseasons[s].plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
-                                                vmax=5e9, ylim=[1e2,2],
-                                                cbar_kwargs={'label': ds[var].units})
-            axs[3,0].set_title(ds[var].long_name)
-
-        if var == "utendepfd":
-            mseasons[s].plot(ax=axs[3,1], y='lev', yscale='log',
-                                            vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
-                                            cbar_kwargs={'label': ds[var].units})
-            axs[3,1].set_title(ds[var].long_name)
-
-        # Row 5
-        #------------------------------------------------------------------------------------------
-        if var == "utendvtem":
-            mseasons[s].plot(ax=axs[4,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
-                                            cbar_kwargs={'label': ds[var].units})
-            axs[4,0].set_title(ds[var].long_name)
-
-        if var == "utendwtem":
-            mseasons[s].plot(ax=axs[4,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
-                                            cbar_kwargs={'label': ds[var].units})
-            axs[4,1].set_title(ds[var].long_name)
-            
-
-    """# Row 1
-    #------------------------------------------------------------------------------------------
-    ds.uzm.isel(time=-1).plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
-                            cbar_kwargs={'label': ds.uzm.units})
-    axs[0,0].set_title(ds.uzm.long_name)
-    ds.vzm.isel(time=-1).plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
-                            cbar_kwargs={'label': ds.vzm.units})
-    axs[0,1].set_title(ds.vzm.long_name)
-
-    # Row 2
-    #------------------------------------------------------------------------------------------
-    ds.epfy.isel(time=-1).plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
-                            cbar_kwargs={'label': ds.epfy.units})
-    axs[1,0].set_title(ds.epfy.long_name)
-    ds.epfz.isel(time=-1).plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
-                            cbar_kwargs={'label': ds.epfz.units})
-    axs[1,1].set_title(ds.epfz.long_name)
-
-    # Row 3
-    #------------------------------------------------------------------------------------------
-    ds.vtem.isel(time=-1).plot.contourf(ax=axs[2,0], levels = 21, y='lev', yscale='log',
-                                        vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
-                                        cbar_kwargs={'label': ds.vtem.units})
-    ds.vtem.isel(time=-1).plot.contour(ax=axs[2,0], levels = 11, y='lev', yscale='log',
-                                        vmax=3,vmin=-3,ylim=[1e2,1],
-                                        colors='black', linestyles=None)
-    axs[2,0].set_title(ds.vtem.long_name)
-
-    ds.wtem.isel(time=-1).plot.contourf(ax=axs[2,1], levels = 21, y='lev', yscale='log',
-                                        vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
-                                        cbar_kwargs={'label': ds.wtem.units})
-    ds.wtem.isel(time=-1).plot.contour(ax=axs[2,1], levels = 7, y='lev', yscale='log',
-                                    vmax=0.03, vmin=-0.03, ylim=[1e2,1],
-                                    colors='black', linestyles=None)
-    axs[2,1].set_title(ds.wtem.long_name)
-
-    # Row 4
-    #------------------------------------------------------------------------------------------
-    ds.psitem.isel(time=-1).plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
-                                        vmax=5e9, ylim=[1e2,2],
-                                        cbar_kwargs={'label': ds.psitem.units})
-    axs[3,0].set_title(ds.psitem.long_name)
-
-    ds.utendepfd.isel(time=-1).plot(ax=axs[3,1], y='lev', yscale='log',
-                                    vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
-                                    cbar_kwargs={'label': ds.utendepfd.units})
-    axs[3,1].set_title(ds.utendepfd.long_name)
-
-    # Row 5
-    #------------------------------------------------------------------------------------------
-    ds.utendvtem.isel(time=-1).plot(ax=axs[4,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
-                                    cbar_kwargs={'label': ds.utendvtem.units})
-    axs[4,0].set_title(ds.utendvtem.long_name)
-    ds.utendwtem.isel(time=-1).plot(ax=axs[4,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
-                                    cbar_kwargs={'label': ds.utendwtem.units})
-    axs[4,1].set_title(ds.utendwtem.long_name)"""
-
-    #Adjust subplots
-    hspace = 0.3
-    plt.subplots_adjust(wspace=0.7, hspace=hspace)
-
-    return axs
 
 
 def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
@@ -449,33 +259,30 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
 
         #Calculate monthly-weighted seasonal averages:
-        mseasons = {}
-        oseasons = {}
-        dseasons = {}
         if s == 'ANN':
 
             #Calculate annual weights (i.e. don't group by season):
             weights_ann = month_length / month_length.sum()
 
-            mseasons[s] = (mdata * weights_ann).sum(dim='time')
-            mseasons[s] = mseasons[s] / (md_ones*weights_ann).sum(dim='time')
+            mseasons = (mdata * weights_ann).sum(dim='time')
+            mseasons = mseasons / (md_ones*weights_ann).sum(dim='time')
 
-            oseasons[s] = (odata * weights_ann).sum(dim='time')
-            oseasons[s] = oseasons[s] / (od_ones*weights_ann).sum(dim='time')
+            oseasons = (odata * weights_ann).sum(dim='time')
+            oseasons = oseasons / (od_ones*weights_ann).sum(dim='time')
 
 
         else:
             #this is inefficient because we do same calc over and over
-            mseasons[s] = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
+            mseasons = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
             wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
-            mseasons[s] = mseasons[s] / wgt_denom
+            mseasons = mseasons / wgt_denom
 
-            oseasons[s] = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
+            oseasons = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
             wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
-            oseasons[s] = oseasons[s] / wgt_denom
+            oseasons = oseasons / wgt_denom
 
         # difference: each entry should be (lat, lon)
-        dseasons[s] = mseasons[s] - oseasons[s]
+        dseasons = mseasons - oseasons
 
         #Run through vars and plot each against the baseline on same row
         #Each column will be a case, ie (test, base), or (test, test, base) , ...
@@ -484,161 +291,161 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         # Var 1
         #------------------------------------------------------------------------------------------
         if var == "uzm":
-            mseasons[s].plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
+            mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
             axs[0,0].set_title(f"{case_names[0]}\n{ds[var].long_name}")
 
-            oseasons[s].plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
+            oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,1].set_title(f"{case_names[1]}\n{ds_base[var].long_name}")
 
-            dseasons[s].plot(ax=axs[0,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[0,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,2].set_title("Test - Baseline")
 
         # Var 2
         #------------------------------------------------------------------------------------------
         if var == "epfy":
-            mseasons[s].plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
+            mseasons.plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
             axs[1,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
+            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[1,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[1,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,2].set_title("Test - Baseline")
         
         # Var 3
         #------------------------------------------------------------------------------------------
         if var == "epfz":
-            mseasons[s].plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
+            mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
             axs[2,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
+            oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[2,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[2,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,2].set_title("Test - Baseline")
 
         # Var 4
         #------------------------------------------------------------------------------------------
         if var == "vtem":
-            mseasons[s].plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            mseasons[s].plot.contour(ax=axs[3,0], levels = 11, y='lev', yscale='log',
+            mseasons.plot.contour(ax=axs[3,0], levels = 11, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
             axs[3,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot.contourf(ax=axs[3,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[3,1], levels = 21, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds_base[var].units})
-            oseasons[s].plot.contour(ax=axs[3,1], levels = 11, y='lev', yscale='log',
+            oseasons.plot.contour(ax=axs[3,1], levels = 11, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
             axs[3,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[3,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[3,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[3,2].set_title("Test - Baseline")
 
         # Var 5
         #------------------------------------------------------------------------------------------
         if var == "wtem":
-            mseasons[s].plot.contourf(ax=axs[4,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[4,0], levels = 21, y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            mseasons[s].plot.contour(ax=axs[4,0], levels = 7, y='lev', yscale='log',
+            mseasons.plot.contour(ax=axs[4,0], levels = 7, y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
             axs[4,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot.contourf(ax=axs[4,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[4,1], levels = 21, y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds_base[var].units})
-            oseasons[s].plot.contour(ax=axs[4,1], levels = 7, y='lev', yscale='log',
+            oseasons.plot.contour(ax=axs[4,1], levels = 7, y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
             axs[4,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[4,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[4,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[4,2].set_title("Test - Baseline")
 
         # Var 6
         #------------------------------------------------------------------------------------------
         if var == "psitem":
-            mseasons[s].plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
             axs[5,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds_base[var].units})
             axs[5,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[5,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[5,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[5,2].set_title("Test - Baseline")
 
         # Var 7
         #------------------------------------------------------------------------------------------
         if var == "utendepfd":
-            mseasons[s].plot(ax=axs[6,0], y='lev', yscale='log',
+            mseasons.plot(ax=axs[6,0], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
             axs[6,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot(ax=axs[6,1], y='lev', yscale='log',
+            oseasons.plot(ax=axs[6,1], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[6,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[6,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[6,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[6,2].set_title("Test - Baseline")
 
         # Var 8
         #------------------------------------------------------------------------------------------
         if var == "utendvtem":
-            mseasons[s].plot(ax=axs[7,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
+            mseasons.plot(ax=axs[7,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
             axs[7,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
+            oseasons.plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[7,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[7,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[7,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[7,2].set_title("Test - Baseline")
 
         # Var 9
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
-            mseasons[s].plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
+            mseasons.plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
             axs[8,0].set_title(ds[var].long_name)
 
-            oseasons[s].plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
+            oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[8,1].set_title(ds_base[var].long_name)
 
-            dseasons[s].plot(ax=axs[8,2], y='lev', yscale='log',
+            dseasons.plot(ax=axs[8,2], y='lev', #yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[8,2].set_title("Test - Baseline")
 
     #Adjust subplots
     hspace = 0.3
-    plt.subplots_adjust(wspace=1, hspace=hspace)
+    plt.subplots_adjust(wspace=0.7, hspace=hspace)
 
     return axs
 
