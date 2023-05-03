@@ -245,9 +245,9 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         vres = res[var]
 
         mdata = ds[var].squeeze()
-        mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+        ##mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
         odata = ds_base[var].squeeze()
-        odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+        ##odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
         
 
         #Create array to avoid weighting missing values:
