@@ -100,6 +100,8 @@ def tem(adf):
     base_nickname = adf.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames.append(base_nickname)
 
+    print("case_nicknames",case_nicknames,"\n")
+
     #case_names = case_names + [base_name]
     if base_name:
         case_names.append(base_name)
