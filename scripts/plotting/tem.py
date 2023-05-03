@@ -69,13 +69,6 @@ def tem(adf):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adf.get_cam_info("cam_case_name", required=True)
 
-    syear_cases = adf.climo_yrs["syears"]
-    eyear_cases = adf.climo_yrs["eyears"]
-
-    #Grab all case nickname(s)
-    test_nicknames = adf.case_nicknames["test_nicknames"]
-    base_nickname = adf.case_nicknames["base_nickname"]
-
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -84,24 +77,39 @@ def tem(adf):
 
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
-        base_nickname = "Obs"
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
         if not var_obs_dict:
-            print("No observations found to plot against, so no lat/lon maps will be generated.")
+            print("No observations found to plot against, so TEM maps won't be generated.")
             return
-
     else:
-        data_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
-
+        base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
     #End if
 
-    #case_names = case_names + [data_name]
+    #Extract test case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
 
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adf.climo_yrs["syear_baseline"]
     eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+    #Grab all case nickname(s)
+    test_nicknames = adf.case_nicknames["test_nicknames"]
+    base_nickname = adf.case_nicknames["base_nickname"]
+    case_nicknames = test_nicknames.append(base_nickname)
+
+    #case_names = case_names + [base_name]
+    if base_name:
+        case_names.append(base_name)
+        syear_cases.append(syear_baseline)
+        eyear_cases.append(eyear_baseline)
+
+    '''if syear_baseline:
+        syear_cases.append(syear_baseline)
+    if eyear_baseline:
+        eyear_cases.append(eyear_baseline)'''
 
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -136,15 +144,34 @@ def tem(adf):
                "SON": [9, 10, 11]
                }
 
-    var_list = ['uzm','vzm','epfy','epfz','vtem','wtem',
+    var_list_og = ['uzm','vzm','epfy','epfz','vtem','wtem',
      'psitem','utendepfd','utendvtem','utendwtem']
 
-    #Loop over model cases:
-    for idx,case_name in enumerate(case_names):
-        #for var in var_list:
+    if "qbo" in adf._AdfDiag__plotting_scripts:
+        var_list = ['uzm','epfy','epfz','vtem','wtem',
+                    'psitem','utendepfd','utendvtem','utendwtem']
+    else:
+        var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+
+    print(var_list)
+    
+    #Setup TEM plots
+    nrows = len(var_list)
+    ncols = 2
+    fig_width = 15
+    fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
+
+    #Loop over season dictionary:
+    for s in seasons:
+        
+        fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
+                                facecolor='w', edgecolor='k', sharex=True)
+
+        #Loop over model cases:
+        for idx,case_name in enumerate(case_names):
 
         #Loop over season dictionary:
-        for s in seasons:
+        #for s in seasons:
 
             #Extract start and end year values:
             start_year = syear_cases[idx]
@@ -157,27 +184,27 @@ def tem(adf):
             ds = xr.open_dataset(tem)
 
             #Location to save plots
-            #plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
-            plot_name = plot_location / f"{case_name}_{s}_TEM.png"
+            plot_name = plot_location / f"{case_name}_{s}_TEM_Mean.png"
 
-            #Plot TEM
+            """#Plot TEM
             nrows = 5
             ncols = 2
             fig_width = 15
             fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
             fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
-                                    facecolor='w', edgecolor='k', sharex=True)
-            
-            axs = tem_plot(ds, axs, s, var_list, res)
-            
-            """#Adjust subplots
-            hspace = 0.3
-            plt.subplots_adjust(wspace=0.3, hspace=hspace)
-            """
+                                    facecolor='w', edgecolor='k', sharex=True)"""
+
+            #Setup and plot the sub-plots
+            if len(case_names) > 1:
+                tem_plot(ds, idx, axs, s, var_list, res)
+
+            if len(case_names) == 1:
+                tem_plot_single(ds, axs, s, var_list, res)
+
 
             #Set figure title
             yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
-            plt.suptitle(f'TEM Diagnostics: {test_nicknames[idx]} - {s}\nyrs: {yrs}', 
+            plt.suptitle(f'TEM Diagnostics: {case_nicknames[idx]} - {s}\nyrs: {yrs}', 
                             fontsize=16, y=.91)
 
             #Write the figure to provided workspace/file:
@@ -186,7 +213,7 @@ def tem(adf):
             #Add plot to website (if enabled):
             adf.add_website_data(plot_name, "TEM", case_name, season=s)
 
-def tem_plot(ds, axs, s, var_list, res):
+def tem_plot_single(ds, axs, s, var_list, res):
 
     for var in var_list:
         mdata = ds[var].squeeze()
@@ -206,6 +233,7 @@ def tem_plot(ds, axs, s, var_list, res):
         month_length = mdata.time.dt.days_in_month
         weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
 
+
         #Calculate monthly-weighted seasonal averages:
         mseasons = {}
         if s == 'ANN':
@@ -222,10 +250,7 @@ def tem_plot(ds, axs, s, var_list, res):
             mseasons[s] = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
             wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
             mseasons[s] = mseasons[s] / wgt_denom
-        
-        #vres["axs"]
-        #res["ylim"]
-        #vres["units"]
+
         """if vres["vmin"]:
             vmin = vres["vmin"]
         else:
@@ -314,6 +339,7 @@ def tem_plot(ds, axs, s, var_list, res):
             mseasons[s].plot(ax=axs[4,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
             axs[4,1].set_title(ds[var].long_name)
+            
 
     """# Row 1
     #------------------------------------------------------------------------------------------
@@ -377,5 +403,121 @@ def tem_plot(ds, axs, s, var_list, res):
     plt.subplots_adjust(wspace=0.3, hspace=hspace)
 
     return axs
+
+
+def tem_plot(ds, idx, axs, s, var_list, res):
+
+    for var in var_list:
+        mdata = ds[var].squeeze()
+        vres = res[var]
+
+        #Create array to avoid weighting missing values:
+        md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
+
+        #Calculate monthly weights based on number of days:
+        month_length = mdata.time.dt.days_in_month
+        weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+
+        #Create array to avoid weighting missing values:
+        md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
+
+        #Calculate monthly weights based on number of days:
+        month_length = mdata.time.dt.days_in_month
+        weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+
+        #Calculate monthly-weighted seasonal averages:
+        mseasons = {}
+        if s == 'ANN':
+
+            #Calculate annual weights (i.e. don't group by season):
+            weights_ann = month_length / month_length.sum()
+
+            mseasons[s] = (mdata * weights_ann).sum(dim='time')
+            mseasons[s] = mseasons[s] / (md_ones*weights_ann).sum(dim='time')
+
+
+        else:
+            #this is inefficient because we do same calc over and over
+            mseasons[s] = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
+            wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
+            mseasons[s] = mseasons[s] / wgt_denom
+
+        #Run through vars and plot each against the baseline on same row
+        #Each column will be a case, ie (test, base), or (test, test, base) , ...
+        #                         column: 0  ,   1         0,     1,    2     ...
+
+        # Var 1
+        #------------------------------------------------------------------------------------------
+        if var == "uzm":
+            mseasons[s].plot(ax=axs[0,idx], y='lev', yscale='log',ylim=[1e3,1],
+                                    cbar_kwargs={'label': ds[var].units})
+            axs[0,idx].set_title(ds[var].long_name)
+
+        # Var 2
+        #------------------------------------------------------------------------------------------
+        if var == "epfy":
+            mseasons[s].plot(ax=axs[1,idx], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
+                                    cbar_kwargs={'label': ds[var].units})
+            axs[1,idx].set_title(ds[var].long_name)
+        
+        # Var 3
+        #------------------------------------------------------------------------------------------
+        if var == "epfz":
+            mseasons[s].plot(ax=axs[2,idx], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
+                                    cbar_kwargs={'label': ds[var].units})
+            axs[1,idx].set_title(ds[var].long_name)
+
+        # Var 4
+        #------------------------------------------------------------------------------------------
+        if var == "vtem":
+            mseasons[s].plot.contourf(ax=axs[3,idx], levels = 21, y='lev', yscale='log',
+                                                vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
+                                                cbar_kwargs={'label': ds[var].units})
+            mseasons[s].plot.contour(ax=axs[3,idx], levels = 11, y='lev', yscale='log',
+                                                vmax=3,vmin=-3,ylim=[1e2,1],
+                                                colors='black', linestyles=None)
+            axs[3,idx].set_title(ds[var].long_name)
+
+        # Var 5
+        #------------------------------------------------------------------------------------------
+        if var == "wtem":
+            mseasons[s].plot.contourf(ax=axs[4,idx], levels = 21, y='lev', yscale='log',
+                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
+                                                cbar_kwargs={'label': ds[var].units})
+            mseasons[s].plot.contour(ax=axs[4,idx], levels = 7, y='lev', yscale='log',
+                                            vmax=0.03, vmin=-0.03, ylim=[1e2,1],
+                                            colors='black', linestyles=None)
+            axs[4,idx].set_title(ds[var].long_name)
+
+        # Var 6
+        #------------------------------------------------------------------------------------------
+        if var == "psitem":
+            mseasons[s].plot.contourf(ax=axs[5,idx], levels = 21, y='lev', yscale='log',
+                                                vmax=5e9, ylim=[1e2,2],
+                                                cbar_kwargs={'label': ds[var].units})
+            axs[5,idx].set_title(ds[var].long_name)
+
+        # Var 7
+        #------------------------------------------------------------------------------------------
+        if var == "utendepfd":
+            mseasons[s].plot(ax=axs[6,idx], y='lev', yscale='log',
+                                            vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
+                                            cbar_kwargs={'label': ds[var].units})
+            axs[6,idx].set_title(ds[var].long_name)
+
+        # Var 8
+        #------------------------------------------------------------------------------------------
+        if var == "utendvtem":
+            mseasons[s].plot(ax=axs[7,idx], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
+                                            cbar_kwargs={'label': ds[var].units})
+            axs[7,idx].set_title(ds[var].long_name)
+
+        # Var 9
+        #------------------------------------------------------------------------------------------
+
+        if var == "utendwtem":
+            mseasons[s].plot(ax=axs[8,idx], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
+                                            cbar_kwargs={'label': ds[var].units})
+            axs[8,idx].set_title(ds[var].long_name)
 ##############
 #END OF SCRIPT
