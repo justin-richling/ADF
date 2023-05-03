@@ -229,7 +229,7 @@ def tem(adf):
         #Set figure title
         #yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
         #{test_nicknames[idx]}
-        plt.suptitle(f'TEM Diagnostics: {s}', fontsize=16, y=.9)
+        plt.suptitle(f'TEM Diagnostics: {s}\n', fontsize=16, y=.9)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -293,7 +293,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
         # Var 1
         #------------------------------------------------------------------------------------------
-        if var == "uzm":
+        """if var == "uzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
             axs[0,0].set_title(f"{case_names[0]}\n{ds[var].long_name}")
@@ -304,7 +304,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,2].set_title("Test - Baseline")
+            axs[0,2].set_title("Test - Baseline")"""
 
         # Var 2
         #------------------------------------------------------------------------------------------
