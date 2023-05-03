@@ -229,7 +229,7 @@ def tem(adf):
         #Set figure title
         #yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
         #{test_nicknames[idx]}
-        plt.suptitle(f'TEM Diagnostics: {s}\n', fontsize=16, y=.9)
+        plt.suptitle(f'TEM Diagnostics: {s}\n\n', fontsize=18, y=.9)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -467,7 +467,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
     #Adjust subplots
     hspace = 0.3
-    plt.subplots_adjust(wspace=0.65, hspace=hspace)
+    plt.subplots_adjust(wspace=0.5, hspace=hspace)
 
     return axs
 
