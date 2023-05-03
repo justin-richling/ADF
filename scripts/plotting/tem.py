@@ -167,8 +167,7 @@ def tem(adf):
 
     ds_base = xr.open_dataset(tem_base)
 
-    #Location to save plots
-    plot_name = plot_location / f"{s}_TEM_Mean.png"
+    
 
 
 
@@ -181,6 +180,8 @@ def tem(adf):
 
     #Loop over season dictionary:
     for s in seasons:
+        #Location to save plots
+        plot_name = plot_location / f"{s}_TEM_Mean.png"
         
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
                                 facecolor='w', edgecolor='k', sharex=True)
