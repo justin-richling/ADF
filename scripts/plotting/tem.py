@@ -304,7 +304,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,1].set_title(f"{case_names[1]}\n{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],
+            dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,2].set_title("Test - Baseline")
 
@@ -320,7 +320,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,1].set_title(f"{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6, ylim=[1e2,1],
+            dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6, ylim=[1e2,1],cmap="BrBG",
                           #vmin=dseasons, vmax=,
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,2].set_title("Test - Baseline")
@@ -337,7 +337,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             axs[2,1].set_title(f"{ds_base[var].long_name}\n")
 
             dseasons = mseasons-oseasons
-            dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5, ylim=[1e2,1],
+            dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5, ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,2].set_title("Test - Baseline")
 
@@ -360,7 +360,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 colors='black', linestyles=None)
             axs[3,1].set_title(f"{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3, ylim=[1e2,1],
+            dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3, ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[3,2].set_title("Test - Baseline")
 
@@ -383,7 +383,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             colors='black', linestyles=None)
             axs[4,1].set_title(f"{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[4,2], y='lev', yscale='log', vmax=0.005, vmin=-0.005, ylim=[1e2,1],
+            dseasons.plot(ax=axs[4,2], y='lev', yscale='log', vmax=0.005, vmin=-0.005, ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[4,2].set_title("Test - Baseline")
 
@@ -400,7 +400,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 cbar_kwargs={'label': ds_base[var].units})
             axs[5,1].set_title(f"{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9, ylim=[1e2,1],
+            dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9, ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[5,2].set_title("Test - Baseline")
 
@@ -417,7 +417,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[6,1].set_title(f"{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001, ylim=[1e2,1],
+            dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001, ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[6,2].set_title("Test - Baseline")
 
@@ -432,7 +432,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[7,1].set_title(f"{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e2,1],
+            dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[7,2].set_title("Test - Baseline")
 
@@ -447,7 +447,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[8,1].set_title(f"{ds_base[var].long_name}\n")
 
-            dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e2,1],
+            dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[8,2].set_title("Test - Baseline")
 
