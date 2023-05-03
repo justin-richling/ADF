@@ -98,7 +98,7 @@ def tem(adf):
     #Grab all case nickname(s)
     test_nicknames = adf.case_nicknames["test_nicknames"]
     base_nickname = adf.case_nicknames["base_nickname"]
-    #case_nicknames = test_nicknames + [base_nickname]
+    case_nicknames = test_nicknames + [base_nickname]
 
     #print("case_nicknames",case_nicknames,"\n")
 
@@ -219,7 +219,7 @@ def tem(adf):
             #Setup and plot the sub-plots
             #if len(case_names) > 1:
             #    print("making more than one set of TEM diags")
-            tem_plot(ds, ds_base, axs, s, var_list, res)
+            tem_plot(ds, ds_base, case_nicknames, axs, s, var_list, res)
 
             """if len(case_names) == 1:
                 print("making just one set of TEM diags")
