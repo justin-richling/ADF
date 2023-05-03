@@ -298,11 +298,11 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         if var == "uzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
-            axs[0,0].set_title(f"{case_names[0]}\n{ds[var].long_name}")
+            axs[0,0].set_title(f"{case_names[0]}\n\n{ds[var].long_name}")
 
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,1].set_title(f"{case_names[1]}\n{ds_base[var].long_name}")
+            axs[0,1].set_title(f"{case_names[1]}\n\n{ds_base[var].long_name}")
 
             dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
