@@ -229,7 +229,7 @@ def tem(adf):
         #Set figure title
         #yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
         #{test_nicknames[idx]}
-        plt.suptitle(f'TEM Diagnostics: {s}\n', fontsize=16, y=.91)
+        plt.suptitle(f'TEM Diagnostics: {s}', fontsize=16, y=.85)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -424,12 +424,12 @@ def tem_plot_single(ds, axs, s, var_list, res):
 
     #Adjust subplots
     hspace = 0.3
-    plt.subplots_adjust(wspace=0.3, hspace=hspace)
+    plt.subplots_adjust(wspace=0.4, hspace=hspace)
 
     return axs
 
 
-def tem_plot(ds, ds_base, axs, s, var_list, res):
+def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
     for var in var_list:
         vres = res[var]
@@ -486,11 +486,11 @@ def tem_plot(ds, ds_base, axs, s, var_list, res):
         if var == "uzm":
             mseasons[s].plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
-            axs[0,0].set_title(ds[var].long_name)
+            axs[0,0].set_title(f"{case_names[0]}\n{ds[var].long_name}")
 
             oseasons[s].plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,1].set_title(ds_base[var].long_name)
+            axs[0,1].set_title(f"{case_names[1]}\n{ds_base[var].long_name}")
 
             dseasons[s].plot(ax=axs[0,2], y='lev', yscale='log',
                                     cbar_kwargs={'label': ds_base[var].units})
