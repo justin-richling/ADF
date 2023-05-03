@@ -97,9 +97,8 @@ def tem(adf):
 
     #Grab all case nickname(s)
     test_nicknames = adf.case_nicknames["test_nicknames"]
-    print("test_nicknames",test_nicknames,'\n')
     base_nickname = adf.case_nicknames["base_nickname"]
-    case_nicknames = test_nicknames.append(base_nickname)
+    case_nicknames = test_nicknames + [base_nickname]
 
     print("case_nicknames",case_nicknames,"\n")
 
