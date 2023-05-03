@@ -53,6 +53,7 @@ def calc_TEM(adf):
 
 
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    cam_hist_locs = [adf.get_baseline_info("cam_hist_loc", required=True)]
 
     #New TEM netCDF file save location
     output_loc = adf.get_basic_info("tem_loc")
