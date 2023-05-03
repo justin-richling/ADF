@@ -175,7 +175,7 @@ def tem(adf):
     #Setup TEM plots
     nrows = len(var_list)
     ncols = 3
-    fig_width = 15
+    fig_width = 20
     fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
 
     #Loop over season dictionary:
@@ -240,7 +240,7 @@ def tem(adf):
 
 
 def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
-
+    print("Season:",s,"\n")
     for var in var_list:
         vres = res[var]
 
@@ -449,7 +449,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
     #Adjust subplots
     hspace = 0.3
-    plt.subplots_adjust(wspace=0.4, hspace=hspace)
+    plt.subplots_adjust(wspace=0.8, hspace=hspace)
 
     return axs
 
