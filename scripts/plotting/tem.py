@@ -273,7 +273,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             # difference: each entry should be (lat, lon)
             dseasons = mseasons - oseasons
 
-            print(var,dseasons.min(),dseasons.max())
+            print(var,dseasons.values.min(),dseasons.values.max())
 
         else:
             #this is inefficient because we do same calc over and over
@@ -321,6 +321,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             axs[1,1].set_title(f"{ds_base[var].long_name}\n")
 
             dseasons.plot(ax=axs[1,2], y='lev', yscale='log', ylim=[1e2,1],
+                          #vmin=dseasons, vmax=,
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,2].set_title("Test - Baseline")
         
