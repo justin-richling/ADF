@@ -273,6 +273,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             # difference: each entry should be (lat, lon)
             dseasons = mseasons - oseasons
 
+            print(var,dseasons.min(),dseasons.max())
+
         else:
             #this is inefficient because we do same calc over and over
             mseasons = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
@@ -293,7 +295,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
         # Var 1
         #------------------------------------------------------------------------------------------
-        """if var == "uzm":
+        if var == "uzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
             axs[0,0].set_title(f"{case_names[0]}\n{ds[var].long_name}")
@@ -304,7 +306,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,2].set_title("Test - Baseline")"""
+            axs[0,2].set_title("Test - Baseline")
 
         # Var 2
         #------------------------------------------------------------------------------------------
