@@ -336,6 +336,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,1].set_title(f"{ds_base[var].long_name}\n")
 
+            dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[2,2], y='lev', yscale='log', ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,2].set_title("Test - Baseline")
