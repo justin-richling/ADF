@@ -302,7 +302,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,1].set_title(f"{case_names[1]}\n{ds_base[var].long_name}\n")
+            axs[0,1].set_title(f"{case_names[1]}\n{ds_base[var].long_name}")
 
             dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
