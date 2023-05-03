@@ -229,7 +229,7 @@ def tem(adf):
         #Set figure title
         #yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
         #{test_nicknames[idx]}
-        plt.suptitle(f'TEM Diagnostics: {s}', fontsize=16, y=.85)
+        plt.suptitle(f'TEM Diagnostics: {s}', fontsize=16, y=.9)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -424,7 +424,7 @@ def tem_plot_single(ds, axs, s, var_list, res):
 
     #Adjust subplots
     hspace = 0.3
-    plt.subplots_adjust(wspace=0.4, hspace=hspace)
+    plt.subplots_adjust(wspace=0.7, hspace=hspace)
 
     return axs
 
@@ -506,6 +506,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons[s].plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,1].set_title(ds_base[var].long_name)
+
+            dseasons[s].plot(ax=axs[1,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[1,2].set_title("Test - Baseline")
         
         # Var 3
         #------------------------------------------------------------------------------------------
@@ -517,6 +521,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons[s].plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,1].set_title(ds_base[var].long_name)
+
+            dseasons[s].plot(ax=axs[2,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[2,2].set_title("Test - Baseline")
 
         # Var 4
         #------------------------------------------------------------------------------------------
@@ -537,6 +545,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 colors='black', linestyles=None)
             axs[3,1].set_title(ds_base[var].long_name)
 
+            dseasons[s].plot(ax=axs[3,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[3,2].set_title("Test - Baseline")
+
         # Var 5
         #------------------------------------------------------------------------------------------
         if var == "wtem":
@@ -556,6 +568,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             colors='black', linestyles=None)
             axs[4,1].set_title(ds_base[var].long_name)
 
+            dseasons[s].plot(ax=axs[4,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[4,2].set_title("Test - Baseline")
+
         # Var 6
         #------------------------------------------------------------------------------------------
         if var == "psitem":
@@ -568,6 +584,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds_base[var].units})
             axs[5,1].set_title(ds_base[var].long_name)
+
+            dseasons[s].plot(ax=axs[5,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[5,2].set_title("Test - Baseline")
 
         # Var 7
         #------------------------------------------------------------------------------------------
@@ -582,6 +602,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[6,1].set_title(ds_base[var].long_name)
 
+            dseasons[s].plot(ax=axs[6,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[6,2].set_title("Test - Baseline")
+
         # Var 8
         #------------------------------------------------------------------------------------------
         if var == "utendvtem":
@@ -593,6 +617,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[7,1].set_title(ds_base[var].long_name)
 
+            dseasons[s].plot(ax=axs[7,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[7,2].set_title("Test - Baseline")
+
         # Var 9
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
@@ -603,6 +631,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons[s].plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[8,1].set_title(ds_base[var].long_name)
+
+            dseasons[s].plot(ax=axs[8,2], y='lev', yscale='log',
+                                    cbar_kwargs={'label': ds_base[var].units})
+            axs[8,2].set_title("Test - Baseline")
+
+    #Adjust subplots
+    hspace = 0.3
+    plt.subplots_adjust(wspace=0.7, hspace=hspace)
+
+    return axs
 
 ##############
 #END OF SCRIPT
