@@ -153,7 +153,7 @@ def tem(adf):
     else:
         var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
-    print(var_list)
+    print(len(case_names),var_list)
     
     #Setup TEM plots
     nrows = len(var_list)
@@ -196,9 +196,11 @@ def tem(adf):
 
             #Setup and plot the sub-plots
             if len(case_names) > 1:
+                print("making more than one set of TEM diags")
                 tem_plot(ds, idx, axs, s, var_list, res)
 
             if len(case_names) == 1:
+                print("making just one set of TEM diags")
                 tem_plot_single(ds, axs, s, var_list, res)
 
 
