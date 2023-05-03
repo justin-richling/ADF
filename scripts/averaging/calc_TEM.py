@@ -17,6 +17,41 @@ def calc_TEM(adf):
 
     #Use test case settings, which are already lists:
     case_names    = adf.get_cam_info("cam_case_name", required=True)
+
+    # CAUTION:
+    # "data" here refers to either obs or a baseline simulation,
+    # Until those are both treated the same (via intake-esm or similar)
+    # we will do a simple check and switch options as needed:
+    if adf.get_basic_info("compare_obs"):
+
+        #Extract variable-obs dictionary:
+        var_obs_dict = adf.var_obs_dict
+
+        #If dictionary is empty, then  there are no observations to regrid to,
+        #so quit here:
+        if not var_obs_dict:
+            print("No observations found to plot against, so TEM maps won't be generated.")
+            return
+    else:
+        base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
+    #End if
+
+    #Extract test case years
+    start_years   = adf.climo_yrs["syears"]
+    end_years     = adf.climo_yrs["eyears"]
+
+    #Extract baseline years (which may be empty strings if using Obs):
+    syear_baseline = adf.climo_yrs["syear_baseline"]
+    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+    #case_names = case_names + [base_name]
+    if base_name:
+        case_names.append(base_name)
+        start_years.append(syear_baseline)
+        end_years.append(eyear_baseline)
+
+
+
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
     #New TEM netCDF file save location
@@ -28,9 +63,7 @@ def calc_TEM(adf):
     else:
         #Notify user that script has started:
         print("\n  Generating CAM TEM diagnostics files...")
-    
-    start_years   = adf.climo_yrs["syears"]
-    end_years     = adf.climo_yrs["eyears"]
+
 
     #Set default to h4
     #TODO: Read this history file number from the yaml file?
