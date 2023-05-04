@@ -280,7 +280,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         #Each column will be a case, ie (test, base), or (test, test, base) , ...
         #                         column: 0  ,   1         0,     1,    2     ...
 
-        label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+        #label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
 
         # Var 1
         #------------------------------------------------------------------------------------------
