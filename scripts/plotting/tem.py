@@ -202,29 +202,12 @@ def tem(adf):
 
             ds = xr.open_dataset(tem)
 
-            #Location to save plots
-            #plot_name = plot_location / f"{case_name}_{s}_TEM_Mean.png"
-
-            """#Plot TEM
-            nrows = 5
-            ncols = 2
-            fig_width = 15
-            fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
-            fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
-                                    facecolor='w', edgecolor='k', sharex=True)"""
-
-            #axs[0,idx].text(case_name, loc="center")
-            #axs[0,1].text(base_name, loc="center")
-
             #Setup and plot the sub-plots
             #if len(case_names) > 1:
             #    print("making more than one set of TEM diags")
             tem_plot(ds, ds_base, case_nicknames, axs, s, var_list, res)
 
-            """if len(case_names) == 1:
-                print("making just one set of TEM diags")
-                tem_plot_single(ds, axs, s, var_list, res)"""
-
+    
 
         #Set figure title
         #yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
@@ -287,6 +270,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             
             # difference: each entry should be (lat, lon)
             #dseasons = mseasons - oseasons
+
+        dseasons = mseasons-oseasons
         
 
         #Run through vars and plot each against the baseline on same row
@@ -298,13 +283,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         if var == "uzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
-            axs[0,0].set_title(f"{case_names[0]}\n\n{ds[var].long_name}")
+            axs[0,0].set_title(f"\n\n{ds[var].long_name}",fontsize=16)
 
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,1].set_title(f"{case_names[1]}\n\n{ds_base[var].long_name}",fontsize=18)
+            axs[0,1].set_title(f"{case_names[1]}\n\n{ds_base[var].long_name}",fontsize=16)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,2].set_title("Test - Baseline")
@@ -320,7 +305,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
             
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -337,7 +322,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -362,7 +347,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 colors='black', linestyles=None)
             axs[3,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -387,7 +372,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             colors='black', linestyles=None)
             axs[4,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -406,7 +391,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 cbar_kwargs={'label': ds_base[var].units})
             axs[5,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -425,7 +410,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[6,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -443,7 +428,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[7,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[7,2].set_title("Test - Baseline")
@@ -460,13 +445,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[8,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
 
-            dseasons = mseasons-oseasons
+            #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[8,2].set_title("Test - Baseline")
 
     #Adjust subplots
-    hspace = 0.3
+    hspace = 0.4
     plt.subplots_adjust(wspace=0.5, hspace=hspace)
 
     return axs
