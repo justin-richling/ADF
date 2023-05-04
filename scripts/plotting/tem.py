@@ -207,12 +207,14 @@ def tem(adf):
             #    print("making more than one set of TEM diags")
             tem_plot(ds, ds_base, case_nicknames, axs, s, var_list, res)
 
+        #ds = xr.open_mfdataset()
+
     
 
         #Set figure title
         #yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
         #{test_nicknames[idx]}
-        plt.suptitle(f'TEM Diagnostics: {s}\n', fontsize=20, y=.93)
+        plt.suptitle(f'TEM Diagnostics: {s}\n', fontsize=22, y=.9)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -292,7 +294,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,2].set_title("Test - Baseline")
+            axs[0,2].set_title("Test - Baseline\n\n\n",fontsize=14)
 
         # Var 2
         #------------------------------------------------------------------------------------------
@@ -303,13 +305,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[1,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[1,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
             
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[1,2].set_title("Test - Baseline")
+            axs[1,2].set_title("")
         
         # Var 3
         #------------------------------------------------------------------------------------------
@@ -320,13 +322,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[2,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[2,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[2,2].set_title("Test - Baseline")
+            axs[2,2].set_title("")
 
         # Var 4
         #------------------------------------------------------------------------------------------
@@ -345,13 +347,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot.contour(ax=axs[3,1], levels = 11, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
-            axs[3,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[3,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[3,2].set_title("Test - Baseline")
+            axs[3,2].set_title("")
 
         # Var 5
         #------------------------------------------------------------------------------------------
@@ -370,13 +372,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot.contour(ax=axs[4,1], levels = 7, y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
-            axs[4,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[4,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[4,2].set_title("Test - Baseline")
+            axs[4,2].set_title("")
 
         # Var 6
         #------------------------------------------------------------------------------------------
@@ -389,13 +391,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds_base[var].units})
-            axs[5,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[5,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[5,2].set_title("Test - Baseline")
+            axs[5,2].set_title("")
 
         # Var 7
         #------------------------------------------------------------------------------------------
@@ -408,13 +410,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[6,1], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds_base[var].units})
-            axs[6,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[6,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[6,2].set_title("Test - Baseline")
+            axs[6,2].set_title("")
 
         # Var 8
         #------------------------------------------------------------------------------------------
@@ -426,12 +428,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
-            axs[7,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[7,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[7,2].set_title("Test - Baseline")
+            axs[7,2].set_title("")
 
         # Var 9
         #------------------------------------------------------------------------------------------
@@ -443,12 +445,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
-            axs[8,1].set_title(f"{ds_base[var].long_name}\n",fontsize=18)
+            axs[8,1].set_title(f"{ds_base[var].long_name}\n",fontsize=14)
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[8,2].set_title("Test - Baseline")
+            axs[8,2].set_title("")
 
     #Adjust subplots
     hspace = 0.4
