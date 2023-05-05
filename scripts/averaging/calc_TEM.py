@@ -30,10 +30,11 @@ def calc_TEM(adf):
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
         if not var_obs_dict:
-            print("No observations found to plot against, so TEM maps won't be generated.")
+            print("Observations declared, so TEM will be generated from obs file(s).")
+            print("Thank you for your time and have a pleasnt day, klown shoes!")
             return
-        else:
-            base_name = "Obs"
+        #else:
+        #    base_name = "Obs"
     else:
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
