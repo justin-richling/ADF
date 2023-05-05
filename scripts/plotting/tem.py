@@ -301,7 +301,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,2].set_title("$\mathbf{Baseline}$"+"\n\n\n",fontsize=14)
+            axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
             axs[0,2].set_xticks(np.arange(-80,81,20))
 
         # Var 2
