@@ -155,7 +155,7 @@ def tem(adf):
 
 
 
-
+    print(res)
     if adf.get_basic_info("compare_obs"):
         tem_base = []
         for var in var_list:
