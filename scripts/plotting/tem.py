@@ -184,7 +184,7 @@ def tem(adf):
         plot_name = plot_location / f"{s}_TEM_Mean.png"
         
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
-                                facecolor='w', edgecolor='k', sharex=True)
+                                facecolor='w', edgecolor='k', sharex=False)
 
         #Loop over model cases:
         for idx,case_name in enumerate(case_names):
