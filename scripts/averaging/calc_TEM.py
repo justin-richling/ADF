@@ -18,6 +18,14 @@ def calc_TEM(adf):
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
     #cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
 
+    #Extract test case years
+    start_years   = adf.climo_yrs["syears"]
+    end_years     = adf.climo_yrs["eyears"]
+
+    #Extract baseline years (which may be empty strings if using Obs):
+    syear_baseline = adf.climo_yrs["syear_baseline"]
+    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
     """# CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -39,21 +47,19 @@ def calc_TEM(adf):
     if not adf.get_basic_info("compare_obs"):
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
-    #End if
 
-    #Extract test case years
-    start_years   = adf.climo_yrs["syears"]
-    end_years     = adf.climo_yrs["eyears"]
-
-    #Extract baseline years (which may be empty strings if using Obs):
-    syear_baseline = adf.climo_yrs["syear_baseline"]
-    eyear_baseline = adf.climo_yrs["eyear_baseline"]
-
-    #case_names = case_names + [base_name]
-    if base_name:
         case_names.append(base_name)
         start_years.append(syear_baseline)
         end_years.append(eyear_baseline)
+    #End if
+
+    
+
+    """#case_names = case_names + [base_name]
+    if base_name:
+        case_names.append(base_name)
+        start_years.append(syear_baseline)
+        end_years.append(eyear_baseline)"""
 
     #New TEM netCDF file save location
     output_loc = adf.get_basic_info("tem_loc")
