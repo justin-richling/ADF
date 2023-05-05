@@ -155,8 +155,8 @@ def tem(adf):
 
 
 
-    print(res)
     if adf.get_basic_info("compare_obs"):
+        obs_loc = adf.get_basic_info("obs_data_loc")
         tem_base = []
         for var in var_list:
             if var in res:
@@ -164,7 +164,7 @@ def tem(adf):
                 #Open the observation TEM files
                 #input_loc_idx = Path(tem_loc) / base_name
                 obs_file = res[var]["obs_file"]
-                tem_base.append(obs_file)
+                tem_base.append(Path(obs_loc) / obs_file)
 
         tem_base = np.array(tem_base)
         tem_base = np.unique(tem_base)
