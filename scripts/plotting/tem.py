@@ -186,9 +186,6 @@ def tem(adf):
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
                                 facecolor='w', edgecolor='k')
 
-        # Set the ticks and ticklabels for all x-axes
-        plt.setp(axs, xticks=np.arange(-80,81,20), xlabel=['latitude'])
-
         #Loop over model cases:
         for idx,case_name in enumerate(case_names):
 
@@ -474,6 +471,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[8,2].set_title("")
+
+    # Set the ticks and ticklabels for all x-axes
+    #NOTE: This has to come after all subplots have been done,
+    #I am assuming this is because of the way xarray plots info automatically for labels and titles
+    #This is to change the default xarray labels for each instance of the xarray plot method
+    plt.setp(axs, xticks=np.arange(-80,81,20), xlabel='latitude')
 
     #Adjust subplots
     hspace = 0.4
