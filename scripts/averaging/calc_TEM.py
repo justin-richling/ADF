@@ -18,7 +18,7 @@ def calc_TEM(adf):
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
     #cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
 
-    # CAUTION:
+    """# CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
     # we will do a simple check and switch options as needed:
@@ -35,7 +35,8 @@ def calc_TEM(adf):
             return
         #else:
         #    base_name = "Obs"
-    else:
+    else:"""
+    if not adf.get_basic_info("compare_obs"):
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
     #End if
