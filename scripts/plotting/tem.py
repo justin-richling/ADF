@@ -83,6 +83,8 @@ def tem(adf):
         if not var_obs_dict:
             print("No observations found to plot against, so TEM maps won't be generated.")
             return
+        else:
+            base_name = "Obs"
     else:
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
     #End if
