@@ -105,8 +105,8 @@ def calc_TEM(adf):
         #End if
 
         # open input files
-        shist = glob(f"{starting_location}/*h4.{start_year}*.nc")
-        ehist = glob(f"{starting_location}/*h4.{end_year}*.nc")
+        shist = glob(f"{starting_location}/*{hist_num}.{start_year}*.nc")
+        ehist = glob(f"{starting_location}/*{hist_num}.{end_year}*.nc")
         hist_files = sorted(shist + ehist)
 
         ds = xr.open_mfdataset(hist_files)
