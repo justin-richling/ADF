@@ -226,6 +226,9 @@ def tem(adf):
 
 def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
     print("Season:",s,"\n")
+
+    plt.setp(axs, title="")
+
     for var in var_list:
         vres = res[var]
 
@@ -284,67 +287,50 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
         var_name = ds_base[var].long_name.replace(" ", "\ ")
 
-        # Var 1
+        # uzm
         #------------------------------------------------------------------------------------------
         if var == "uzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
             axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
-            #axs[0,0].set_xticks(np.arange(-80,81,20))
-            #axs[0,0].set_xlim([max([lat.min(), -90.]), min([lat.max(), 90.])])
-            axs[0,0].set_xlabel("latitude")
 
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-            #axs[0,1].set_xticks(np.arange(-80,81,20))
-            #axs[0,1].set_xlabel("latitude")
 
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
-            #axs[0,2].set_xticks(np.arange(-80,81,20))
-            #axs[0,2].set_xlabel("latitude")
 
-        # Var 2
+        # epfy
         #------------------------------------------------------------------------------------------
         if var == "epfy":
             mseasons.plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
-            axs[1,0].set_title("")
-            #axs[1,0].set_xticks(np.arange(-80,81,20))
 
             oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[1,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-            #axs[1,1].set_xticks(np.arange(-80,81,20))
             
             dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[1,2].set_title("")
-            #axs[1,2].set_xticks(np.arange(-80,81,20))
         
-        # Var 3
+        # epfz
         #------------------------------------------------------------------------------------------
         if var == "epfz":
             mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
-            axs[2,0].set_title("")
-            #axs[2,0].set_xticks(np.arange(-80,81,20))
 
             oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[2,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-            #axs[2,1].set_xticks(np.arange(-80,81,20))
 
             dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[2,2].set_title("")
-            #axs[2,2].set_xticks(np.arange(-80,81,20))
 
-        # Var 4
+        # vtem
         #------------------------------------------------------------------------------------------
         if var == "vtem":
             mseasons.plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
@@ -353,8 +339,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot.contour(ax=axs[3,0], levels = 11, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
-            axs[3,0].set_title("")
-            #axs[3,0].set_xticks(np.arange(-80,81,20))
 
             oseasons.plot.contourf(ax=axs[3,1], levels = 21, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
@@ -363,15 +347,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
             axs[3,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-            #axs[3,1].set_xticks(np.arange(-80,81,20))
 
             dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[3,2].set_title("")
-            #axs[3,2].set_xticks(np.arange(-80,81,20))
 
-        # Var 5
+        # wtem
         #------------------------------------------------------------------------------------------
         if var == "wtem":
             mseasons.plot.contourf(ax=axs[4,0], levels = 21, y='lev', yscale='log',
@@ -380,8 +361,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot.contour(ax=axs[4,0], levels = 7, y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
-            axs[4,0].set_title("")
-            #axs[4,0].set_xticks(np.arange(-80,81,20))
 
             oseasons.plot.contourf(ax=axs[4,1], levels = 21, y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
@@ -390,63 +369,50 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
             axs[4,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-            #axs[4,1].set_xticks(np.arange(-80,81,20))
 
             dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[4,2].set_title("")
-            #axs[4,2].set_xticks(np.arange(-80,81,20))
 
-        # Var 6
+        # psitem
         #------------------------------------------------------------------------------------------
         if var == "psitem":
             mseasons.plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
-            axs[5,0].set_title("")
-            #axs[5,0].set_xticks(np.arange(-80,81,20))
 
             oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds_base[var].units})
             axs[5,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-            #axs[5,1].set_xticks(np.arange(-80,81,20))
+
 
             dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[5,2].set_title("")
-            #axs[5,2].set_xticks(np.arange(-80,81,20))
 
-        # Var 7
+        # utendepfd
         #------------------------------------------------------------------------------------------
         if var == "utendepfd":
             mseasons.plot(ax=axs[6,0], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
-            axs[6,0].set_title("")
-            #axs[6,0].set_xticks(np.arange(-80,81,20))
 
             oseasons.plot(ax=axs[6,1], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds_base[var].units})
             axs[6,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-            #axs[6,1].set_xticks(np.arange(-80,81,20))
 
             dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[6,2].set_title("")
-            #axs[6,2].set_xticks(np.arange(-80,81,20))
 
-        # Var 8
+        # utendvtem
         #------------------------------------------------------------------------------------------
         if var == "utendvtem":
             print("I guess utendvtem went through....")
             mseasons.plot(ax=axs[7,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
-            axs[7,0].set_title("")
 
             oseasons.plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
@@ -454,15 +420,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[7,2].set_title("")
 
-        # Var 9
+        # utendwtem
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
             print("I guess utendwtem went through....")
             mseasons.plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
-            axs[8,0].set_title("")
 
             oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
@@ -470,7 +434,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[8,2].set_title("")
 
     # Set the ticks and ticklabels for all x-axes
     #NOTE: This has to come after all subplots have been done,
