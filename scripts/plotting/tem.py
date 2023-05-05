@@ -292,17 +292,20 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
             axs[0,0].set_xticks(np.arange(-80,81,20))
             #axs[0,0].set_xlim([max([lat.min(), -90.]), min([lat.max(), 90.])])
+            axs[0,0].set_xlabel("latitude")
 
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
             axs[0,1].set_xticks(np.arange(-80,81,20))
+            axs[0,1].set_xlabel("latitude")
 
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
             axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
             axs[0,2].set_xticks(np.arange(-80,81,20))
+            axs[0,2].set_xlabel("latitude")
 
         # Var 2
         #------------------------------------------------------------------------------------------
