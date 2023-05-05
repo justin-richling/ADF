@@ -69,6 +69,9 @@ def tem(adf):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adf.get_cam_info("cam_case_name", required=True)
 
+    res = adf.variable_defaults # will be dict of variable-specific plot preferences
+    # or an empty dictionary if use_defaults was not specified in YAML.
+
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -85,6 +88,9 @@ def tem(adf):
             return
         else:
             base_name = "Obs"
+            #input_loc_idx = Path(tem_loc) / base_name
+            #tem_base = input_loc_idx / f'{base_name}.TEMdiag.nc'
+            #ds_base = xr.open_dataset(tem_base)
     else:
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
     #End if
@@ -101,23 +107,7 @@ def tem(adf):
     test_nicknames = adf.case_nicknames["test_nicknames"]
     base_nickname = adf.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
-
-    #print("case_nicknames",case_nicknames,"\n")
-
-    """#case_names = case_names + [base_name]
-    if base_name:
-        case_names.append(base_name)
-        syear_cases.append(syear_baseline)
-        eyear_cases.append(eyear_baseline)"""
-
-    '''if syear_baseline:
-        syear_cases.append(syear_baseline)
-    if eyear_baseline:
-        eyear_cases.append(eyear_baseline)'''
-
-    res = adf.variable_defaults # will be dict of variable-specific plot preferences
-    # or an empty dictionary if use_defaults was not specified in YAML.
-
+ 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
     # -- So check for it, and default to png
@@ -163,10 +153,17 @@ def tem(adf):
 
 
     if adf.get_basic_info("compare_obs"):
-        #Open the observation TEM files
-        input_loc_idx = Path(tem_loc) / base_name
-        tem_base = input_loc_idx / f'{base_name}.TEMdiag.nc'
-        ds_base = xr.open_dataset(tem_base)
+        tem_base = []
+        for var in var_list:
+            if var in var_obs_dict:
+                #Open the observation TEM files
+                input_loc_idx = Path(tem_loc) / base_name
+                obs_file = res[var]["obs_file"]
+                tem_base.append(obs_file)
+
+        tem_base = np.array(tem_base)
+        tem_base = np.unique(tem_base)
+        ds_base = xr.open_mfdataset(tem_base)
     else:
         #Open the baseline TEM file, if it exists
         input_loc_idx = Path(tem_loc) / base_name
