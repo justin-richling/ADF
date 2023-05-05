@@ -164,13 +164,7 @@ def tem(adf):
     #Open the baseline TEM file, if it exists
     output_loc_idx = Path(tem_loc) / base_name
     tem_base = output_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
-
     ds_base = xr.open_dataset(tem_base)
-
-    
-
-
-
     
     #Setup TEM plots
     nrows = len(var_list)
@@ -230,6 +224,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
         mdata = ds[var].squeeze()
         ##mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+
         odata = ds_base[var].squeeze()
         ##odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 

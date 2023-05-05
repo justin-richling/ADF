@@ -15,9 +15,6 @@ def calc_TEM(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)    
 
-    #Use test case settings, which are already lists:
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
-
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -49,8 +46,6 @@ def calc_TEM(adf):
         case_names.append(base_name)
         start_years.append(syear_baseline)
         end_years.append(eyear_baseline)
-
-
 
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
     cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
