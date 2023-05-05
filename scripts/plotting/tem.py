@@ -214,7 +214,7 @@ def tem(adf):
         #Set figure title
         yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
         #{test_nicknames[idx]}
-        plt.suptitle(f'TEM Diagnostics: {s} - yrs: {yrs}\n', fontsize=22, y=.925)
+        plt.suptitle(f'TEM Diagnostics: {s} - yrs: {yrs}\n', fontsize=24, y=.928)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -301,7 +301,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             #dseasons = mseasons-oseasons
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,2].set_title("Test - Baseline\n\n\n",fontsize=14)
+            axs[0,2].set_title("$\mathbf{Baseline}$"+"\n\n\n",fontsize=14)
             axs[0,2].set_xticks(np.arange(-80,81,20))
 
         # Var 2
