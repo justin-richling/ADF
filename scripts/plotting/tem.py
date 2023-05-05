@@ -290,15 +290,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         if var == "uzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
-            axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
 
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
 
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
-            axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
 
         # epfy
         #------------------------------------------------------------------------------------------
@@ -344,7 +341,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot.contour(ax=axs[3,1], levels = 11, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
-            #axs[3,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
 
             dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
@@ -366,7 +362,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot.contour(ax=axs[4,1], levels = 7, y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
-            #axs[4,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
 
             dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
@@ -382,8 +377,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds_base[var].units})
-            #axs[5,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
-
 
             dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
@@ -399,7 +392,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[6,1], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds_base[var].units})
-            #axs[6,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
 
             dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
@@ -414,7 +406,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
-            #axs[7,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
 
             dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -428,7 +419,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds_base[var].units})
-            ##axs[8,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
 
             dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds_base[var].units})
@@ -440,11 +430,15 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
     plt.setp(axs, xticks=np.arange(-80,81,20), xlabel='latitude', title="")
 
 
-
-    #plt.sca(axes[1, 1])
-    #plt.xticks(range(3), ['A', 'Big', 'Cat'], color='red')
+    #Set titles of subplots
+    #Set case names in first sibplot only
+    axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
+    axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
+    axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
+    #Set variable name on center plot
     for i in range(1,len(var_list)):
         axs[i,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
+    
     #Adjust subplots
     hspace = 0.4
     plt.subplots_adjust(wspace=0.5, hspace=hspace)
