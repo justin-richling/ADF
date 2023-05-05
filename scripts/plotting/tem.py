@@ -283,7 +283,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
         #label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
 
-        var_name = ds_base[var].long_name.replace(" ", "\ ")
+        #var_name = ds_base[var].long_name.replace(" ", "\ ")
 
         # uzm
         #------------------------------------------------------------------------------------------
@@ -437,7 +437,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
     #Set variable name on center plot
     for i in range(1,len(var_list)):
-        axs[i,1].set_title("$\mathbf{"+var_list[i]+"}$"+"\n",fontsize=14)
+        var_name = ds_base[var_list[i]].long_name.replace(" ", "\ ")
+        axs[i,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
     
     #Adjust subplots
     hspace = 0.4
