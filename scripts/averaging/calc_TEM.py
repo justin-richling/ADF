@@ -9,7 +9,7 @@ from glob import glob
 
 
 def calc_TEM(adf):
-    overwrite_output = True
+    overwrite_output = False#True
 
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
