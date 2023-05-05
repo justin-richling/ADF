@@ -72,6 +72,8 @@ def tem(adf):
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
+    print("ITS MAKING IT HERE RIGHT???!?!?!?!?!?!?!\n")
+
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -158,6 +160,7 @@ def tem(adf):
         tem_base = []
         for var in var_list:
             if var in res:
+                print(f"Howdity dooty! {var}")
                 #Open the observation TEM files
                 #input_loc_idx = Path(tem_loc) / base_name
                 obs_file = res[var]["obs_file"]
@@ -212,7 +215,7 @@ def tem(adf):
 
         #Set figure title
         yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
-        #{test_nicknames[idx]}
+
         plt.suptitle(f'TEM Diagnostics: {s} - yrs: {yrs}\n', fontsize=24, y=.928)
 
         #Write the figure to provided workspace/file:
