@@ -162,11 +162,16 @@ def tem(adf):
 
 
 
-
-    #Open the baseline TEM file, if it exists
-    output_loc_idx = Path(tem_loc) / base_name
-    tem_base = output_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
-    ds_base = xr.open_dataset(tem_base)
+    if adf.get_basic_info("compare_obs"):
+        #Open the observation TEM files
+        input_loc_idx = Path(tem_loc) / base_name
+        tem_base = input_loc_idx / f'{base_name}.TEMdiag.nc'
+        ds_base = xr.open_dataset(tem_base)
+    else:
+        #Open the baseline TEM file, if it exists
+        input_loc_idx = Path(tem_loc) / base_name
+        tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
+        ds_base = xr.open_dataset(tem_base)
     
     #Setup TEM plots
     nrows = len(var_list)
