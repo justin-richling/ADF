@@ -104,13 +104,13 @@ def calc_TEM(adf):
             adf.end_diag_fail(emsg)
         #End if
 
-        #Check if TEM file already exists and over-writing is allowed:
+        """#Check if TEM file already exists and over-writing is allowed:
         if Path(output_loc).is_file() and overwrite_output:
             #If so, then delete current file:
             output_loc.unlink()
         #End if
         else:
-            return
+            return"""
 
         # open input files
         shist = glob(f"{starting_location}/*{hist_num}.{start_year}*.nc")
