@@ -436,8 +436,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
     axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
     #Set variable name on center plot
-    for i,var_name in enumerate(var_list):
-        axs[i+1,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
+    for i in range(1,8):
+        axs[i+1,1].set_title("$\mathbf{"+var_list[i]+"}$"+"\n",fontsize=14)
     
     #Adjust subplots
     hspace = 0.4
