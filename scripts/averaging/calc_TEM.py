@@ -103,6 +103,8 @@ def calc_TEM(adf):
             #If so, then delete current file:
             output_loc.unlink()
         #End if
+        else:
+            return
 
         # open input files
         shist = glob(f"{starting_location}/*{hist_num}.{start_year}*.nc")
