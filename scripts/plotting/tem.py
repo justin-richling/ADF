@@ -156,14 +156,15 @@ def tem(adf):
     if adf.get_basic_info("compare_obs"):
         tem_base = []
         for var in var_list:
-            if var in var_obs_dict:
+            if var in res:
                 #Open the observation TEM files
-                input_loc_idx = Path(tem_loc) / base_name
+                #input_loc_idx = Path(tem_loc) / base_name
                 obs_file = res[var]["obs_file"]
                 tem_base.append(obs_file)
 
         tem_base = np.array(tem_base)
         tem_base = np.unique(tem_base)
+        print(tem_base)
         ds_base = xr.open_mfdataset(tem_base)
     else:
         #Open the baseline TEM file, if it exists
