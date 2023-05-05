@@ -443,7 +443,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
     #plt.sca(axes[1, 1])
     #plt.xticks(range(3), ['A', 'Big', 'Cat'], color='red')
-    for i in range(1,9):
+    for i in range(1,len(var_list)):
         axs[i,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
     #Adjust subplots
     hspace = 0.4
