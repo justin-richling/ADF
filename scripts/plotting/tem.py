@@ -80,14 +80,15 @@ def tem(adf):
 
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
+        base_name = "Obs"
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
-        if not var_obs_dict:
-            print("No observations found to plot against, so TEM maps won't be generated.")
-            return
-        else:
-            base_name = "Obs"
+        #if not var_obs_dict:
+        #    print("No observations found to plot against, so TEM maps won't be generated.")
+        #    return
+        #else:
+            #base_name = "Obs"
             #input_loc_idx = Path(tem_loc) / base_name
             #tem_base = input_loc_idx / f'{base_name}.TEMdiag.nc'
             #ds_base = xr.open_dataset(tem_base)
