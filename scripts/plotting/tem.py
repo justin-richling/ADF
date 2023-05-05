@@ -209,8 +209,6 @@ def tem(adf):
 
         #ds = xr.open_mfdataset()
 
-    
-
         #Set figure title
         yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
         #{test_nicknames[idx]}
@@ -234,7 +232,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         ##mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
         odata = ds_base[var].squeeze()
         ##odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-        
 
         #Create array to avoid weighting missing values:
         md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
@@ -256,11 +253,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons = (odata * weights_ann).sum(dim='time')
             oseasons = oseasons / (od_ones*weights_ann).sum(dim='time')
 
-            # difference: each entry should be (lat, lon)
-            #dseasons = mseasons - oseasons
-
-            #print(var,dseasons.values.min(),dseasons.values.max())
-
         else:
             #this is inefficient because we do same calc over and over
             mseasons = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
@@ -270,20 +262,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
             wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
             oseasons = oseasons / wgt_denom
-            
-            # difference: each entry should be (lat, lon)
-            #dseasons = mseasons - oseasons
 
+        #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
         
 
         #Run through vars and plot each against the baseline on same row
         #Each column will be a case, ie (test, base), or (test, test, base) , ...
         #                         column: 0  ,   1         0,     1,    2     ...
-
-        #label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
-
-        #var_name = ds_base[var].long_name.replace(" ", "\ ")
 
         # uzm
         #------------------------------------------------------------------------------------------
@@ -305,7 +291,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            #axs[1,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
             
             dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
@@ -319,7 +304,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
             oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds_base[var].units})
-            #axs[2,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
 
             dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
@@ -400,7 +384,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         # utendvtem
         #------------------------------------------------------------------------------------------
         if var == "utendvtem":
-            print("I guess utendvtem went through....")
             mseasons.plot(ax=axs[7,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
@@ -413,7 +396,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         # utendwtem
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
-            print("I guess utendwtem went through....")
             mseasons.plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
