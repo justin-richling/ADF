@@ -184,11 +184,9 @@ def tem(adf):
         plot_name = plot_location / f"{s}_TEM_Mean.png"
         
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
-                                facecolor='w', edgecolor='k', xticks=np.arange(-80,81,20),
-                                xlabel="latitude"
-                                )
+                                facecolor='w', edgecolor='k')
 
-        # Set the ticks and ticklabels for all axes
+        # Set the ticks and ticklabels for all x-axes
         plt.setp(axs, xticks=np.arange(-80,81,20), xticklabels=len(np.arange(-80,81,20))*['latitude'])
 
         #Loop over model cases:
