@@ -126,6 +126,7 @@ def tem(adf):
     tem_loc = adf.get_basic_info("tem_loc")
     #If path not specified, skip TEM calculation?
     if tem_loc is None:
+        print("Wow, I guess it's the end of us. It's the end of us, it's the end of uuuuuussssssss......")
         return
     else:
         #Notify user that script has started:
