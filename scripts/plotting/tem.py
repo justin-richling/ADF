@@ -187,7 +187,7 @@ def tem(adf):
                                 facecolor='w', edgecolor='k')
 
         # Set the ticks and ticklabels for all x-axes
-        plt.setp(axs, xticks=np.arange(-80,81,20), xticklabels=len(np.arange(-80,81,20))*['latitude'])
+        plt.setp(axs, xticks=np.arange(-80,81,20), xlabels=len(np.arange(-80,81,20))*['latitude'])
 
         #Loop over model cases:
         for idx,case_name in enumerate(case_names):
