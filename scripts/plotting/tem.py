@@ -471,13 +471,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
     #Set titles of subplots
     #Set case names in first sibplot only
-    uzm = ds_base["uzm"].long_name.replace(" ", "\ ")
+    uzm = ds["uzm"].long_name.replace(" ", "\ ")
     axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
     axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
     #Set variable name on center plot
     for i in range(1,len(var_list)):
-        var_name = ds_base[var_list[i]].long_name.replace(" ", "\ ")
+        var_name = ds[var_list[i]].long_name.replace(" ", "\ ")
         axs[i,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
     
     #Adjust subplots
