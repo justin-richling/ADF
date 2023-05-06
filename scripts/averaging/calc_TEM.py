@@ -51,6 +51,8 @@ def calc_TEM(adf):
         case_names.append(base_name)
         start_years.append(syear_baseline)
         end_years.append(eyear_baseline)
+    else:
+        base_name = "Obs"
     #End if
 
     
