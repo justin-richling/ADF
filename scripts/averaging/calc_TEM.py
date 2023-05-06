@@ -105,6 +105,8 @@ def calc_TEM(adf):
         start_year = str(ds_base.time[0])[0:4]
         end_year = str(ds_base.time[-1])[0:4]
 
+        print("huh?",ds_base.time[0],"\n")
+
         """#iterate over the times in a dataset
         for idx,_ in enumerate(ds_base.time.values):
             if idx == 0:
