@@ -104,6 +104,7 @@ def tem(adf):
 
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adf.climo_yrs["syear_baseline"]
+    print("Obs syear_baseline",syear_baseline,"\n")
     eyear_baseline = adf.climo_yrs["eyear_baseline"]
 
     #Grab all case nickname(s)
@@ -156,7 +157,7 @@ def tem(adf):
 
 
     if adf.get_basic_info("compare_obs"):
-        obs_loc = adf.get_basic_info("obs_data_loc")
+        '''obs_loc = adf.get_basic_info("obs_data_loc")
         tem_base = []
         for var in var_list:
             if var in res:
@@ -175,13 +176,21 @@ def tem(adf):
         #ds_base['lev']= ds_base.level.rename({'level': 'lev'})
         print(dir(ds_base))
         print(ds_base['lev'])
-        y_base = "level"
+        y_base = "level"'''
+
+        input_loc_idx = Path(tem_loc) / base_name
+        tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
+        ds_base = xr.open_dataset(tem_base)
+
     else:
         #Open the baseline TEM file, if it exists
         input_loc_idx = Path(tem_loc) / base_name
         tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
         ds_base = xr.open_dataset(tem_base)
         y_base= "lev"
+
+
+    
     
     #Setup TEM plots
     nrows = len(var_list)

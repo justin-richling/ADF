@@ -102,8 +102,8 @@ def calc_TEM(adf):
         tem_base = np.unique(tem_base)
 
         ds_base = xr.open_mfdataset(tem_base)
-        start_year = ds_base.time[0]
-        end_year = ds_base.time[-1]
+        start_year = ds_base.time[0][0:4]
+        end_year = ds_base.time[-1][0:4]
 
         """#iterate over the times in a dataset
         for idx,_ in enumerate(ds_base.time.values):
