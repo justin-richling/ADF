@@ -102,8 +102,8 @@ def calc_TEM(adf):
         tem_base = np.unique(tem_base)
 
         ds_base = xr.open_mfdataset(tem_base)
-        start_year = str(ds.time[0].values)[0:4]
-        end_year = str(ds.time[-1].values)[0:4]
+        start_year = str(ds_base.time[0].values)[0:4]
+        end_year = str(ds_base.time[-1].values)[0:4]
 
         print("huh?",start_year,"\n")
 
