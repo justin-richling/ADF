@@ -171,8 +171,8 @@ def tem(adf):
 
         ds_base = xr.open_mfdataset(tem_base)
         print(dir(ds_base),"\n\n")
-        ds_base.reset_index(['level'], drop = True)
-        ds_base['lev']= ds_base.level.rename({'level': 'lev'})
+        #ds_base.reset_index(['level'], drop = True)
+        #ds_base['lev']= ds_base.level.rename({'level': 'lev'})
         print(dir(ds_base))
     else:
         #Open the baseline TEM file, if it exists
