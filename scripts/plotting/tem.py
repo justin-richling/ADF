@@ -5,6 +5,7 @@ import xarray as xr
 import warnings  # use to warn user about missing files.
 from datetime import date
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from scipy import integrate
 from numpy import ma
@@ -261,7 +262,7 @@ def tem(adf):
             #Setup and plot the sub-plots
             #if len(case_names) > 1:
             #    print("making more than one set of TEM diags")
-            tem_plot(ds, ds_base, case_nicknames, axs, s, var_list, res)
+            tem_plot(adf, ds, ds_base, case_nicknames, axs, s, var_list, res)
 
         #ds = xr.open_mfdataset()
 
@@ -278,7 +279,7 @@ def tem(adf):
 
 
 
-def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
+def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
     print("Season:",s,"\n")
 
     for var in var_list:
@@ -288,6 +289,9 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         ##mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
         odata = ds_base[var].squeeze()
+        if adf.get_basic_info("compare_obs"):
+            timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
+            odata['time']=timefix
         ##odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
         #Create array to avoid weighting missing values:
@@ -297,6 +301,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
         #Calculate monthly weights based on number of days:
         month_length = mdata.time.dt.days_in_month
         weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+        
 
         #Calculate monthly-weighted seasonal averages:
         if s == 'ANN':
