@@ -321,8 +321,8 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
             mseasons = mseasons / wgt_denom
 
-            if adf.get_basic_info("compare_obs"):
-                odata = odata.sel(time=slice('1999-01-01', '2000-01-01'))
+            #if adf.get_basic_info("compare_obs"):
+            #    odata = odata.sel(time=slice('1999-01-01', '2000-01-01'))
             oseasons = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
             wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
             oseasons = oseasons / wgt_denom
