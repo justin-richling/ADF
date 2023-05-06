@@ -178,6 +178,9 @@ def tem(adf):
         print(ds_base['lev'])
         y_base = "level"'''
 
+        syear_baseline = "1979"
+        eyear_baseline = "2020"
+
         input_loc_idx = Path(tem_loc) / base_name
         tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
         ds_base = xr.open_dataset(tem_base)
