@@ -170,7 +170,7 @@ def tem(adf):
         tem_base = np.unique(tem_base)
 
         ds_base = xr.open_mfdataset(tem_base)
-        print(dir(ds_base))
+        print(dir(ds_base),"\n\n")
         ds_base.reset_index(['level'], drop = True)
         ds_base['lev']= ds_base.level.rename({'level': 'lev'})
         print(dir(ds_base))
