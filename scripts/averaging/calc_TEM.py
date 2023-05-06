@@ -76,6 +76,58 @@ def calc_TEM(adf):
     #TODO: Read this history file number from the yaml file?
     hist_num = "h4"
 
+    res = adf.variable_defaults # will be dict of variable-specific plot preferences
+    # or an empty dictionary if use_defaults was not specified in YAML.
+
+    if "qbo" in adf._AdfDiag__plotting_scripts:
+        var_list = ['uzm','epfy','epfz','vtem','wtem',
+                    'psitem','utendepfd','utendvtem','utendwtem']
+    else:
+        var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+
+    if adf.get_basic_info("compare_obs"):
+        obs_loc = adf.get_basic_info("obs_data_loc")
+        tem_base = []
+        for var in var_list:
+            if var in res:
+                print(f"Howdity dooty! {var}")
+                #Open the observation TEM files
+                #input_loc_idx = Path(tem_loc) / base_name
+                obs_file = res[var]["obs_file"]
+                tem_base.append(Path(obs_loc) / obs_file)
+
+        tem_base = np.array(tem_base)
+        tem_base = np.unique(tem_base)
+
+        ds_base = xr.open_mfdataset(tem_base)
+        start_year = ds_base.time[0]
+        end_year = ds_base.time[-1]
+
+
+        #Update the attributes
+        dstem0.attrs = ds_base.attrs
+        dstem0.attrs['created'] = str(date.today())
+        dstem0['lev']=ds_base['level']
+
+        output_loc_idx = Path(output_loc) / base_name
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not output_loc_idx.is_dir():
+            print(f"    {output_loc_idx} not found, making new directory")
+            output_loc_idx.mkdir(parents=True)
+        #End if
+
+        
+
+        # write output to a netcdf file
+        dstem0.to_netcdf(output_loc_idx / f'{base_name}.TEMdiag_{start_year}-{end_year}.nc', 
+                            unlimited_dims='time', 
+                            mode = 'w' )
+
+
+
+
+
+
     #Loop over cases:
     for case_idx, case_name in enumerate(case_names):
 
