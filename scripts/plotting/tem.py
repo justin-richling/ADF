@@ -187,7 +187,7 @@ def tem(adf):
 
         ds_ok = ds.copy()
         ds_base = xr.Dataset({'uzm': xr.Variable(('time', 'lev', 'zalat'), ds_ok.uzm.data),
-                              'vzm': xr.Variable(('time', 'lev', 'zalat'), ds_ok.vzm.data),
+                              #'vzm': xr.Variable(('time', 'lev', 'zalat'), ds_ok.vzm.data),
                               'epfy': xr.Variable(('time', 'lev', 'zalat'), ds_ok.epfy.data),
                               'epfz': xr.Variable(('time', 'lev', 'zalat'), ds_ok.epfz.data),
                               'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_ok.vtem.data),
