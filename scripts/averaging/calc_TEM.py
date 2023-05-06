@@ -118,6 +118,7 @@ def calc_TEM(adf):
         dstem0.attrs = ds_base.attrs
         dstem0.attrs['created'] = str(date.today())
         dstem0['lev']=ds_base['level']
+        dstem0['zalat']=ds_base['lat']
 
         output_loc_idx = Path(output_loc) / base_name
         #Check if re-gridded directory exists, and if not, then create it:
