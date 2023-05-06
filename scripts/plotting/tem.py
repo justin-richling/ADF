@@ -174,6 +174,7 @@ def tem(adf):
         #ds_base.reset_index(['level'], drop = True)
         #ds_base['lev']= ds_base.level.rename({'level': 'lev'})
         print(dir(ds_base))
+        print(ds_base['lev'])
     else:
         #Open the baseline TEM file, if it exists
         input_loc_idx = Path(tem_loc) / base_name
