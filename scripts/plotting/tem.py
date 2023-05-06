@@ -175,11 +175,13 @@ def tem(adf):
         #ds_base['lev']= ds_base.level.rename({'level': 'lev'})
         print(dir(ds_base))
         print(ds_base['lev'])
+        y_base = "level"
     else:
         #Open the baseline TEM file, if it exists
         input_loc_idx = Path(tem_loc) / base_name
         tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
         ds_base = xr.open_dataset(tem_base)
+        y_base = "lev"
     
     #Setup TEM plots
     nrows = len(var_list)
@@ -214,7 +216,7 @@ def tem(adf):
             #Setup and plot the sub-plots
             #if len(case_names) > 1:
             #    print("making more than one set of TEM diags")
-            tem_plot(ds, ds_base, case_nicknames, axs, s, var_list, res)
+            tem_plot(ds, ds_base, case_nicknames, axs, s, y_base, var_list, res)
 
         #ds = xr.open_mfdataset()
 
@@ -231,7 +233,7 @@ def tem(adf):
 
 
 
-def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
+def tem_plot(ds, ds_base, case_names, axs, s, y_base, var_list, res):
     print("Season:",s,"\n")
 
     for var in var_list:
@@ -287,7 +289,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
+            oseasons.plot(ax=axs[0,1], y=y_base, yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
@@ -299,7 +301,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
+            oseasons.plot(ax=axs[1,1], y=y_base, yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
             
             dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
@@ -312,7 +314,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
+            oseasons.plot(ax=axs[2,1], y=y_base, yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
             dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
@@ -329,10 +331,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[3,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[3,1], levels = 21, y=y_base, yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            oseasons.plot.contour(ax=axs[3,1], levels = 11, y='lev', yscale='log',
+            oseasons.plot.contour(ax=axs[3,1], levels = 11, y=y_base, yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
@@ -350,10 +352,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[4,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[4,1], levels = 21, y=y_base, yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            oseasons.plot.contour(ax=axs[4,1], levels = 7, y='lev', yscale='log',
+            oseasons.plot.contour(ax=axs[4,1], levels = 7, y=y_base, yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
@@ -368,7 +370,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[5,1], levels = 21, y=y_base, yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
 
@@ -383,7 +385,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[6,1], y='lev', yscale='log',
+            oseasons.plot(ax=axs[6,1], y=y_base, yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
 
@@ -397,7 +399,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot(ax=axs[7,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
+            oseasons.plot(ax=axs[7,1], y=y_base, yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
             dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
@@ -409,7 +411,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
+            oseasons.plot(ax=axs[8,1], y=y_base, yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
             dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
