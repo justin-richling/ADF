@@ -224,7 +224,6 @@ def tem(adf):
         input_loc_idx = Path(tem_loc) / base_name
         tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
         ds_base = xr.open_dataset(tem_base)
-        y_base= "lev"
 
 
     
@@ -323,7 +322,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
 
         #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
-        
+        print(dseasons)
 
         #Run through vars and plot each against the baseline on same row
         #Each column will be a case, ie (test, base), or (test, test, base) , ...
