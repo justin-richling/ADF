@@ -103,6 +103,16 @@ def calc_TEM(adf):
         start_year = ds_base.time[0]
         end_year = ds_base.time[-1]
 
+        #iterate over the times in a dataset
+        for idx,_ in enumerate(ds_base.time.values):
+            if idx == 0:
+                dstem0 = calc_tem(ds_base.squeeze().isel(time=idx))
+            else:
+                dstem = calc_tem(ds_base.squeeze().isel(time=idx))
+                dstem0 = xr.concat([dstem0, dstem],'time')
+            #End if
+        #End if
+
 
         #Update the attributes
         dstem0.attrs = ds_base.attrs
