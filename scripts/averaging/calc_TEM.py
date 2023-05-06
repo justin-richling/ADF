@@ -103,7 +103,7 @@ def calc_TEM(adf):
         start_year = ds_base.time[0]
         end_year = ds_base.time[-1]
 
-        #iterate over the times in a dataset
+        """#iterate over the times in a dataset
         for idx,_ in enumerate(ds_base.time.values):
             if idx == 0:
                 dstem0 = calc_tem(ds_base.squeeze().isel(time=idx))
@@ -111,14 +111,21 @@ def calc_TEM(adf):
                 dstem = calc_tem(ds_base.squeeze().isel(time=idx))
                 dstem0 = xr.concat([dstem0, dstem],'time')
             #End if
-        #End if
+        #End if"""
 
 
-        #Update the attributes
+        """#Update the attributes
         dstem0.attrs = ds_base.attrs
         dstem0.attrs['created'] = str(date.today())
         dstem0['lev']=ds_base['level']
-        dstem0['zalat']=ds_base['lat']
+        dstem0['zalat']=ds_base['lat']"""
+
+        #Update the attributes
+        #dstem0.attrs = ds_base.attrs
+        #dstem0.attrs['created'] = str(date.today())
+        ds_base.attrs['created'] = str(date.today())
+        ds_base['lev']=ds_base['level']
+        ds_base['zalat']=ds_base['lat']
 
         output_loc_idx = Path(output_loc) / base_name
         #Check if re-gridded directory exists, and if not, then create it:
