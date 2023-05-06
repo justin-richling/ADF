@@ -183,7 +183,41 @@ def tem(adf):
 
         input_loc_idx = Path(tem_loc) / base_name
         tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
-        ds_base = xr.open_dataset(tem_base)
+        ds = xr.open_dataset(tem_base)
+
+        ds_ok = ds.copy()
+        ds_base = xr.Dataset({'uzm': xr.Variable(('time', 'lev', 'zalat'), ds_ok.uzm.data),
+                              'vzm': xr.Variable(('time', 'lev', 'zalat'), ds_ok.vzm.data),
+                              'epfy': xr.Variable(('time', 'lev', 'zalat'), ds_ok.epfy.data),
+                              'epfz': xr.Variable(('time', 'lev', 'zalat'), ds_ok.epfz.data),
+                              'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_ok.vtem.data),
+                              'wtem': xr.Variable(('time', 'lev', 'zalat'), ds_ok.wtem.data),
+                              'psitem': xr.Variable(('time', 'lev', 'zalat'), ds_ok.psitem.data),
+                              'utendepfd': xr.Variable(('time', 'lev', 'zalat'), ds_ok.utendepfd.data),
+                              'utendvtem': xr.Variable(('time', 'lev', 'zalat'), ds_ok.utendvtem.data),
+                              'utendwtem': xr.Variable(('time', 'lev', 'zalat'), ds_ok.utendwtem.data),
+                              'lev': xr.Variable('lev', ds_ok.level.values),
+                              'zalat': xr.Variable('zalat', ds_ok.lat.values),
+                              'time': xr.Variable('time', ds_ok.time.values)
+                })
+
+        """
+         date = ds.date,
+         datesec = ds.datesec,
+          time_bnds = ds.time_bnds,
+                                      uzm = uzm,
+                                      vzm = vzm, 
+                                      epfy = epfy,
+                                      epfz = epfz,
+                                      vtem = vtem,
+                                      wtem = wtem,
+                                      psitem = psitem,
+                                      utendepfd = utendepfd,
+                                      utendvtem = utendvtem,
+                                      utendwtem = utendwtem
+        """
+
+        
 
     else:
         #Open the baseline TEM file, if it exists
