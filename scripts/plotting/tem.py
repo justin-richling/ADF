@@ -289,7 +289,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[0,1], y=y_base, yscale='log',ylim=[1e3,1],
+            oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
             dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
