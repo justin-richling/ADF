@@ -289,9 +289,9 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
         ##mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
         odata = ds_base[var].squeeze()
-        if adf.get_basic_info("compare_obs"):
-            timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
-            odata['time']=timefix
+        #if adf.get_basic_info("compare_obs"):
+        #    timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
+        #    odata['time']=timefix
         ##odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
         #Create array to avoid weighting missing values:
