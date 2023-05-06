@@ -337,10 +337,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
-                                    cbar_kwargs={'label': ds[var].units})
+            #dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
 
-        # epfy
+        """# epfy
         #------------------------------------------------------------------------------------------
         if var == "epfy":
             mseasons.plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
@@ -460,7 +460,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res):
                                             cbar_kwargs={'label': ds[var].units})
 
             dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
-                                    cbar_kwargs={'label': ds[var].units})
+                                    cbar_kwargs={'label': ds[var].units})"""
 
     # Set the ticks and ticklabels for all x-axes
     #NOTE: This has to come after all subplots have been done,
