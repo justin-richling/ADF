@@ -68,7 +68,7 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    baseline_name = adf.get_baseline_info("cam_case_name", required=True)
+    #baseline_name = adf.get_baseline_info("cam_case_name")
 
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
@@ -98,6 +98,9 @@ def regrid_and_vert_interp(adf):
 
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
+        baseline_name = "Obs"
+
+        
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
@@ -111,6 +114,8 @@ def regrid_and_vert_interp(adf):
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
+
+        baseline_name = adf.get_baseline_info("cam_case_name")
     #End if
 
     #-----------------------------------------
