@@ -609,6 +609,8 @@ Q:
 
 T:
   category: "State"
+  obs_file: "ERAI_all_climo.nc"
+  obs_name: "ERAI"
 
 OMEGA:
   category: "State"
