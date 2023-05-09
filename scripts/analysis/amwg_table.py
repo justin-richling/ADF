@@ -219,15 +219,6 @@ def amwg_table(adf):
 
         #Loop over CAM output variables:
         for var in var_list:
-            if adf.compare_obs:
-                #Check if obs exist for the variable:
-                if var in var_obs_dict:
-                    #Note: In the future these may all be lists, but for
-                    #now just convert the target_list.
-                    #Extract target file:
-                    tclimo_loc = var_obs_dict[var]["obs_file"]
-                    #Extract target list (eventually will be a list, for now need to convert):
-                    target_list = [var_obs_dict[var]["obs_name"]]
 
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
