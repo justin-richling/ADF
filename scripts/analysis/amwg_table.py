@@ -109,6 +109,7 @@ def amwg_table(adf):
     #-----------------------------------------
     var_list     = adf.diag_var_list
     var_defaults = adf.variable_defaults
+    var_obs_dict = adf.var_obs_dict
 
     #Check if ocean or land fraction exist
     #in the variable list:
@@ -196,10 +197,14 @@ def amwg_table(adf):
 
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+        mean_case = output_location/f"stats_mean_{case_name}.csv"
 
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
-        if Path(output_csv_file).is_file():
-            Path.unlink(output_csv_file)
+        if Path(mean_case).is_file():
+            #Path.unlink(output_csv_file)
+            table_df = pd.read_csv(mean_case)
+            adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+
 
         #These are created in regridding/regrid_and_vert_interp.py script
         mean_case = output_location/f"stats_mean_{case_names[case_idx]}.csv"
@@ -214,6 +219,15 @@ def amwg_table(adf):
 
         #Loop over CAM output variables:
         for var in var_list:
+            if adf.compare_obs:
+                #Check if obs exist for the variable:
+                if var in var_obs_dict:
+                    #Note: In the future these may all be lists, but for
+                    #now just convert the target_list.
+                    #Extract target file:
+                    tclimo_loc = var_obs_dict[var]["obs_file"]
+                    #Extract target list (eventually will be a list, for now need to convert):
+                    target_list = [var_obs_dict[var]["obs_name"]]
 
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
