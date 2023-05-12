@@ -293,7 +293,7 @@ def regrid_and_vert_interp(adf):
                         #Write interpolated baseline climatology to file:
                         save_to_nc(tgdata_interp, interp_bl_file)
 
-                        #make_mean_csv(tgdata_interp, var, baseline_name, output_location)
+                        make_mean_csv(tgdata_interp, var, baseline_name, output_location)
                     #End if
                 else:
                     print("\t Regridded file already exists, so skipping...")
