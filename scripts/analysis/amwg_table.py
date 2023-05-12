@@ -160,7 +160,8 @@ def amwg_table(adf):
 
     #Declare any derived quantities here:
     derived_vars = {"RESTOM":["FSNT", "FLNT"]}
-    
+    #derived_vars = {"COOLVAR":["PART1", "PART2"]}
+
     #derived_vars = {"RESTOM":something["constits"]}
 
     derived_list = [item for sublist in derived_vars.values() for item in sublist]
