@@ -101,6 +101,9 @@ def make_chem_maps(adfobj, diag, data_dict, case_deets):
 
 # Aerosols
 def aerosol_plot(adfobj, var, data_dict, case_deets):
+    """
+    This assumes all composite variables are a linear combination of constituents
+    """
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
