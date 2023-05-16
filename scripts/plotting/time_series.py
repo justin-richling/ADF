@@ -590,13 +590,13 @@ def _format_xaxis(ax, yrs):
     ax.set_xlabel("Years",fontsize=15,labelpad=20)
 
     #x-axis ticks and numbers
-    if max_year > 120:
+    if max_year-min_year > 120:
         ax.xaxis.set_major_locator(MultipleLocator(20))
         ax.xaxis.set_minor_locator(MultipleLocator(10))
-    if 10 <= max_year <= 120:
+    if 10 <= max_year-min_year <= 120:
         ax.xaxis.set_major_locator(MultipleLocator(5))
         ax.xaxis.set_minor_locator(MultipleLocator(1))
-    if 0 < max_year < 10:
+    if 0 < max_year-min_year < 10:
         ax.xaxis.set_major_locator(MultipleLocator(1))
         ax.xaxis.set_minor_locator(MultipleLocator(1))
 
