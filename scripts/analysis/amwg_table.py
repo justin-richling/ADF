@@ -192,6 +192,10 @@ def amwg_table(adf):
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
+
+        # create a dataframe:
+        cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
+                    'standard error', '95% CI', 'trend', 'trend p-value']
         table_df.to_csv(output_csv_file, header=cols, index=False)
         adf.add_website_data(table_df, case_names[0], case_names[0], plot_type="Tables")
 
