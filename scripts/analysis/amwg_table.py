@@ -172,11 +172,18 @@ def amwg_table(adf):
 
     #Hold output paths for csv files
     csv_locs = []
-
+    import glob
     if adf.compare_obs:
         print("output_locs[0]",output_locs[0],"\n")
         #Convert output location string to a Path object:
-        arg = "/glade/scratch/richling/adf-output/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001/diag-plot/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_1995_2006_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001_1995_2006"
+        "/glade/scratch/richling/adf-output/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001/diag-plot/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_1995_2006_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001_1995_2006"
+        arg = "/glade/scratch/richling/adf-output/"
+        non_obs_baseline_name = "f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001"
+        comp_base = f"{case_names[0]}_vs_{non_obs_baseline_name}/diag-plot/"
+        comp_yrs = f"{case_names[0]}_1995_2006_vs_{non_obs_baseline_name}_1995_2006"
+
+        arg = arg+comp_base+comp_yrs
+        
         input_location = Path(arg)
         
         #csv_locs.append(output_locs[0])
