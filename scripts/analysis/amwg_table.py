@@ -183,6 +183,7 @@ def amwg_table(adf):
 
         #Create output file name:
         output_csv_file = input_location / f"amwg_table_{case_names[0]}.csv"
+        
         #mean_case = input_location/f"stats_mean_{case_names[0]}.csv"
 
         #These are created in regridding/regrid_and_vert_interp.py script
@@ -191,6 +192,7 @@ def amwg_table(adf):
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
+        table_df.to_csv(output_csv_file, header=cols, index=False)
         adf.add_website_data(table_df, case_names[0], case_names[0], plot_type="Tables")
 
         return
