@@ -176,20 +176,22 @@ def amwg_table(adf):
     if adf.compare_obs:
         print("output_locs[0]",output_locs[0],"\n")
         #Convert output location string to a Path object:
-        output_location = Path(output_locs[0])
-        csv_locs.append(output_locs[0])
+        arg = "/glade/scratch/richling/adf-output/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001/diag-plot/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_1995_2006_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001_1995_2006"
+        input_location = Path(arg)
+        
+        #csv_locs.append(output_locs[0])
 
         #Create output file name:
-        output_csv_file = output_location / f"amwg_table_{case_names[0]}.csv"
-        mean_case = output_location/f"stats_mean_{case_names[0]}.csv"
+        output_csv_file = input_location / f"amwg_table_{case_names[0]}.csv"
+        #mean_case = input_location/f"stats_mean_{case_names[0]}.csv"
 
         #These are created in regridding/regrid_and_vert_interp.py script
-        mean_case = output_location/f"stats_mean_{case_names[case_idx]}.csv"
-        mean_df_case = pd.read_csv(mean_case)
+        #mean_case = output_location/f"stats_mean_{case_names[case_idx]}.csv"
+        #mean_df_case = pd.read_csv(mean_case)
 
         # last step is to add table dataframe to website (if enabled):
-        #table_df = pd.read_csv(output_csv_file)
-        #adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+        table_df = pd.read_csv(output_csv_file)
+        adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
 
         return
 
