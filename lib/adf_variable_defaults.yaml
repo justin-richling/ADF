@@ -149,7 +149,7 @@ AODVISdn:
   scale_factor: 1
   add_offset: 0
   new_unit: ""
-  obs_file: "MOD08_M3_192x288_AOD_2001-2020_climo.nc"
+  obs_file: "/glade/work/richling/data/AOD_data/MOD08_M3_192x288_AOD_2001-2020_climo.nc"
   obs_name: "MODIS"
   obs_var_name: "AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean"
 
