@@ -253,7 +253,7 @@ def regrid_and_vert_interp(adf):
                     #Finally, write re-gridded data to output file:
                     save_to_nc(rgdata_interp, regridded_file_loc)
 
-                    #make_mean_csv(rgdata_interp, var, case_name, output_location)
+                    make_mean_csv(rgdata_interp, var, case_name, output_location)
 
                     #Now vertically interpolate baseline (target) climatology,
                     #if applicable:
