@@ -183,7 +183,7 @@ def amwg_table(adf):
 
         #Create output file name:
         input_csv_file = input_location / f"amwg_table_{case_names[0]}.csv"
-        output_csv_file = output_locs[0] / f"amwg_table_{case_names[0]}.csv"
+        output_csv_file = Path(output_locs[0]) / f"amwg_table_{case_names[0]}.csv"
         
         #mean_case = input_location/f"stats_mean_{case_names[0]}.csv"
 
