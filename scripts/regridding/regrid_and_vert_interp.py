@@ -298,7 +298,7 @@ def regrid_and_vert_interp(adf):
                 else:
                     print("\t Regridded file already exists, so skipping...")
 
-                    tic = time.perf_counter()
+                    """tic = time.perf_counter()
                     mclim_fils = sorted(rgclimo_loc.glob(f"*{case_name}_{var}_*.nc"))
 
                     ds = _load_dataset(mclim_fils)
@@ -324,7 +324,7 @@ def regrid_and_vert_interp(adf):
                     else:
                         toc = time.perf_counter()
                         print(f"table {var} w/o baseline takes {toc-tic:0.4f} seconds to add to csv\n")
-
+"""
                 #End if (file check)
             #End do (target list)
         #End do (variable list)
