@@ -182,7 +182,8 @@ def amwg_table(adf):
         #csv_locs.append(output_locs[0])
 
         #Create output file name:
-        output_csv_file = input_location / f"amwg_table_{case_names[0]}.csv"
+        input_csv_file = input_location / f"amwg_table_{case_names[0]}.csv"
+        output_csv_file = output_locs[0] / f"amwg_table_{case_names[0]}.csv"
         
         #mean_case = input_location/f"stats_mean_{case_names[0]}.csv"
 
@@ -191,7 +192,7 @@ def amwg_table(adf):
         #mean_df_case = pd.read_csv(mean_case)
 
         # last step is to add table dataframe to website (if enabled):
-        table_df = pd.read_csv(output_csv_file)
+        table_df = pd.read_csv(input_csv_file)
 
         # create a dataframe:
         cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
