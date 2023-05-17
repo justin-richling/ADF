@@ -585,7 +585,7 @@ def list_files(directory,scenario,start_date,end_date):
     # from files. 
     #           *** Flag for possible upgrade/update ***
     #
-
+    print(sorted(Path(directory).glob(f'*')))
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
     print("start_filenames",start_filenames)
     all_start_filenames = [i.stem+".nc" for i in start_filenames]
