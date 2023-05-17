@@ -587,10 +587,14 @@ def list_files(directory,scenario,start_date,end_date):
     #
 
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
+    print("start_filenames",start_filenames)
     all_start_filenames = [i.stem+".nc" for i in start_filenames]
+    print("all_start_filenames",all_start_filenames)
 
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
+    print("end_filenames",end_filenames)
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
+    print("all_end_filenames",all_end_filenames)
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
