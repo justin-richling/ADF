@@ -190,6 +190,7 @@ def zonal_mean(adfobj):
                 data_list = [var_obs_dict[var]["obs_name"]]
                 #Extract target variable name:
                 data_var = var_obs_dict[var]["obs_var"]
+                data_name = vres["obs_file"][:-3]
             else:
                 dmsg = f"No obs found for variable `{var}`, zonal mean plotting skipped."
                 adfobj.debug_log(dmsg)
@@ -215,7 +216,7 @@ def zonal_mean(adfobj):
         #End 
         
         case_deets["vres"] = vres
-        data_name = vres["obs_file"][:-3]
+        
         case_deets["baseline"] = data_name
         #loop over different data sets to plot model against:
         for data_src in data_list:
