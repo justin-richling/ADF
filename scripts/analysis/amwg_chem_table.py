@@ -214,6 +214,7 @@ def amwg_chem_table(adf):
     output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
 
     if output_csv_file.is_file():
+        print(f"'{output_csv_file}' already exists, so skipping partner!\n")
         return
 
     for i,scn in enumerate(scenarios):
@@ -425,6 +426,7 @@ def amwg_chem_table(adf):
     output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
 
     if output_csv_file.is_file():
+        print(f"'{output_csv_file}' already exists, so skipping partner!\n")
         return
 
     dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
