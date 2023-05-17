@@ -215,7 +215,7 @@ def amwg_chem_table(adf):
 
     if output_csv_file.is_file():
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
-        table_df = pd.read_csv(output_csv_file,names=cols)
+        table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
         pass
 
@@ -430,7 +430,7 @@ def amwg_chem_table(adf):
 
     if output_csv_file.is_file():
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
-        table_df = pd.read_csv(output_csv_file,names=cols)
+        table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
         pass
 
