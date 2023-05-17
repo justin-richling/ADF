@@ -272,8 +272,10 @@ def global_latlon_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 #Load re-gridded model files:
-                print(f"{data_src}_{case_name}_{var}\n")
+                print(f"{data_src}_{case_name}_{var}")
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                print("mclimo_rg_loc",mclimo_rg_loc)
+                print("mclim_fils",mclim_fils,"\n")
                 mclim_ds = _load_dataset(mclim_fils)
 
                 #Extract variable of interest
