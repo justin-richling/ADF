@@ -283,10 +283,6 @@ def amwg_chem_table(adf):
         not_O3_ext = {k: v for k, v in comp_ext_full.items() if k in ['_BURDEN', '_CHML', '_SF','_LIFETIME','_LNO']}
         O3_ext = comp_ext_full.copy()
 
-        #Create output file name:
-        #output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
-        
-
         #Create the table
         #----------------
         
@@ -364,6 +360,7 @@ def amwg_chem_table(adf):
             #Run ISOP, Monoterpene, Methanol, and Acetone emmission calcs
             #------------------------------------------------------------
             elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
+                print("current_var",current_var,"\n")
                 row_values = []
                 new_ext = "_EMIS (Tg/yr)"
 
@@ -418,7 +415,7 @@ def amwg_chem_table(adf):
 
 
 
-    # Aerosol tables
+    """# Aerosol tables
     #-----------------
     #Notify user that script has started:
     print("\n  Calculating AMWG aerosol variable table...")
@@ -573,7 +570,7 @@ def amwg_chem_table(adf):
 
         #Notify user that script has ended:
         print("  ...AMWG aerosol variable table has been generated successfully.")
-    #End if aerosol table exists
+    #End if aerosol table exists"""
 
 ##################
 # Helper functions
