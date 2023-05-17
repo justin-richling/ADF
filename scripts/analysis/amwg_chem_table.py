@@ -133,8 +133,8 @@ def amwg_chem_table(adf):
 
 
     # Look for specific h-case    
-    #scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
-    scenarios = [f'{ix}.{h_case}' for ix in case_names]
+    scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
+    #scenarios = [f'{ix}.{h_case}' for ix in case_names]
 
     # In CAM-Chem (or MUSICA-v0), user can save the outputs for only a box region.
     # ext1_SE: string specifying if the files are for only a region, which changes to variable names.
@@ -586,18 +586,18 @@ def list_files(directory,scenario,start_date,end_date):
     # from files. 
     #           *** Flag for possible upgrade/update ***
     #
-    for i in sorted(Path(directory).glob(f'*')):
-        print(i)
+    #for i in sorted(Path(directory).glob(f'*')):
+    #    print(i)
     print("start_date[0:4]",start_date[0:4],"\n")
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    print("start_filenames",start_filenames)
+    #print("start_filenames",start_filenames)
     all_start_filenames = [i.stem+".nc" for i in start_filenames]
-    print("all_start_filenames",all_start_filenames)
+    #print("all_start_filenames",all_start_filenames)
 
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    print("end_filenames",end_filenames)
+    #print("end_filenames",end_filenames)
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
-    print("all_end_filenames",all_end_filenames)
+    #print("all_end_filenames",all_end_filenames)
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
