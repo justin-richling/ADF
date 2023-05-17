@@ -246,7 +246,7 @@ def regrid_and_vert_interp(adf):
                                                                  **regrid_kwargs)
 
                     #Finally, write re-gridded data to output file:
-                    #save_to_nc(rgdata_interp, regridded_file_loc)
+                    save_to_nc(rgdata_interp, regridded_file_loc)
 
                     make_mean_csv(rgdata_interp, var, case_name, output_location)
 
