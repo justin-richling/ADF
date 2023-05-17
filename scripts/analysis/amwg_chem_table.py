@@ -629,7 +629,8 @@ def list_files(directory,scenario,start_date,end_date):
             # first timestep is used for this purpose
             
             # For CAM data
-            """filetime0=np.datetime64(time_bounds[0,0]) # beginning time of first timestep
+            """
+            filetime0=np.datetime64(time_bounds[0,0]) # beginning time of first timestep
             filetime1=np.datetime64(time_bounds[0,1]) # ending time of first timestep
             
             start_period = datetime.strptime(start_date, "%Y-%m-%d")
@@ -642,7 +643,8 @@ def list_files(directory,scenario,start_date,end_date):
                 
             else:
                 if (start_period<=filetime0<end_period) or (start_period<=filetime1<end_period):
-                    all_fileNames.append(all_filenames[i])"""
+                    all_fileNames.append(all_filenames[i])
+            """
 
             if '.h0' in scenario:
                 all_fileNames.append(all_filenames[i])
