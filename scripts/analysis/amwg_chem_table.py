@@ -595,6 +595,8 @@ def list_files(directory,scenario,start_date,end_date):
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
     if len(all_filenames)==0 : sys.exit(" Directory has no outputs ")
+    if len(all_filenames)==0:
+        return
     #all_filenames.sort()
     
     # this is used to discern what files to extract
