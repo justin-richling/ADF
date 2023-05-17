@@ -210,6 +210,12 @@ def amwg_chem_table(adf):
     # this is for finding tropospheric values
     Dic_crit={}
 
+    #Create output file name:
+    output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
+
+    if output_csv_file.is_file():
+        return
+
     for i,scn in enumerate(scenarios):
         
         area=areas[scn]
@@ -275,7 +281,8 @@ def amwg_chem_table(adf):
     O3_ext = comp_ext_full.copy()
 
     #Create output file name:
-    output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
+    #output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
+    
 
     #Create the table
     #----------------
@@ -404,6 +411,8 @@ def amwg_chem_table(adf):
     #End chemistry tables
     #--------------------
 
+
+
     # Aerosol tables
     #-----------------
     #Notify user that script has started:
@@ -414,6 +423,9 @@ def amwg_chem_table(adf):
 
     #Create output file name:
     output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
+
+    if output_csv_file.is_file():
+        return
 
     dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
 
