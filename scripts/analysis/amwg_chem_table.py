@@ -217,200 +217,201 @@ def amwg_chem_table(adf):
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
         table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
-        pass
-
-    for i,scn in enumerate(scenarios):
         
-        area=areas[scn]
-        current_lat=Lats[scn]
-        current_lon=Lons[scn]
-
-        if regional:
-            inside=Inside_SE(current_lat,current_lon,limit)
-        else:
-            if len(np.shape(area)) == 1:
-                inside=np.full((len(current_lon)),True)
-            else:
-                inside=np.full((len(current_lat),len(current_lon)),True)
-
-        current_dir=data_dirs[i]
-        current_files=Files[scn] 
-
-        var_dict[scn]={}
-        Dic_var_comp={}
+    else:
+        for i,scn in enumerate(scenarios):
             
-        for _,var in enumerate(CHEMS):
+            area=areas[scn]
+            current_lat=Lats[scn]
+            current_lon=Lons[scn]
 
-            # Components are: burden, chemical loss, chemical prod, dry deposition, 
-            #                 surface emissions, elevated emissions, chemical tendency
-            # I always add Lightning NOx production for gaseous species.
-            components=[var+'_BURDEN',var+'_CHML',var+'_CHMP',
-                        var+'_DDF',var+'_WDF', var+'_SF', var+'_CLXF',
-                        var+'_TEND',var+'_LNO']         
-
-            Dic_comp={}
-            for comp in components:
-                current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
-                    
-                Dic_comp[comp]=current_data
-            Dic_var_comp[var]=Dic_comp
-        var_dict[scn]= Dic_var_comp    
-
-        #Critical threshholds????
-        current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)  
-        Dic_crit[scn]=current_crit
-
-        print(f'\nCurrent Scenario: {scn}')
-        print(len(f'Current Scenario: {scn}')*'-','\n')
-        
-        if Tropospheric:
-            trop=np.where(current_crit>150,np.nan,current_crit)
-            strat=np.where(current_crit>150,current_crit,np.nan)
-        else:
-            trop=current_crit
-
-    comp_ext_full = {'_BURDEN':'_BURDEN',
-                  '_CHML':'_CHEM_LOSS','_CHMP':'_CHEM_PROD','_NET':'_NET',
-                  '_SF':'_EMIS',
-                  '_DDF':'_DRYDEP','_WDF':'_WETDEP',
-                  '_LIFETIME':'_LIFETIME',
-                  '_STE':'_STE',
-                  '_LNO':'_LNO'}
-
-    #O3 has been causing issues, let's try and separate O3 from other variables...
-    #It seems to be missing components:
-    # 'BURDEN', 'CHML', 'SF','LIFETIME', and 'LNO'
-    not_O3_ext = {k: v for k, v in comp_ext_full.items() if k in ['_BURDEN', '_CHML', '_SF','_LIFETIME','_LNO']}
-    O3_ext = comp_ext_full.copy()
-
-    #Create output file name:
-    #output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
-    
-
-    #Create the table
-    #----------------
-    
-    #Use this for multi-case --> down the road a bit, yeah?
-    cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
-    
-    for current_var in CHEMS:
-
-        #Run O3 calcs
-        #------------
-        if current_var == "O3":
-            for key,ext in O3_ext.items():
-                row_values = []
-               
-                for i,scn in enumerate(scenarios):
-                    my_val = calc_chem_data(scn,current_var,var_dict,trop,
-                                            area,durations[i],inside)[key]
-
-                    if ext == "_BURDEN":
-                        new_ext = ext+" (Tg)"
-                    elif ext == "_LNO":
-                        new_ext = ext+" (TgN/yr)"
-                    elif ext == "_LIFETIME":
-                        new_ext = ext+" (days)"
-                        my_val = my_val*365
-                    else:
-                        new_ext = ext+" (Tg/yr)"
-
-                    row_values.append(np.round(my_val,3))
-
-                row_values = [current_var+new_ext]+row_values
-                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-
-                # Add entries to Pandas structure:
-                df = pd.DataFrame(dfentries,columns=cols)
-                if output_csv_file.is_file():
-                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
-                else:
-                    df.to_csv(output_csv_file, header=False, index=False)
-        
-        #Run most other variables
-        #------------------------
-        elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', "O3"]:
-            for key,ext in not_O3_ext.items():
-                row_values = []
-                for i,scn in enumerate(scenarios):
-                    my_val = calc_chem_data(scn,current_var,var_dict,trop,
-                                            area,durations[i],inside)[key]
-                
-                    if ext == "_BURDEN":
-                        new_ext = ext+" (Tg)"
-                    elif ext == "_LNO":
-                        new_ext = ext+" (TgN/yr)"
-                    elif ext == "_LIFETIME":
-                        if my_val < 1:
-                            my_val = my_val*365
-                            new_ext = ext+" (days)"
-                        else:
-                            new_ext = ext+" (yr)"
-                    else:
-                        new_ext = ext+" (Tg/yr)"
-
-                    row_values.append(np.round(my_val,3))
-
-                row_values = [current_var+new_ext]+row_values
-
-                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-                # Add entries to Pandas structure:
-                df = pd.DataFrame(dfentries,columns=cols)
-                if output_csv_file.is_file():
-                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
-                else:
-                    df.to_csv(output_csv_file, header=False, index=False)
-                    
-        #Run ISOP, Monoterpene, Methanol, and Acetone emmission calcs
-        #------------------------------------------------------------
-        elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
-            row_values = []
-            new_ext = "_EMIS (Tg/yr)"
-
-            for i,scn in enumerate(scenarios):
-                my_val = calc_chem_data(scn,current_var,var_dict,trop,
-                                            area,durations[i],inside)['_SF']
-                row_values.append(np.round(my_val,3))
-            row_values = [current_var+new_ext]+row_values
-
-            dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-            # Add entries to Pandas structure:
-            df = pd.DataFrame(dfentries,columns=cols)
-            if output_csv_file.is_file():
-                df.to_csv(output_csv_file, mode='a', header=False, index=False)
+            if regional:
+                inside=Inside_SE(current_lat,current_lon,limit)
             else:
-                df.to_csv(output_csv_file, header=False, index=False)
+                if len(np.shape(area)) == 1:
+                    inside=np.full((len(current_lon)),True)
+                else:
+                    inside=np.full((len(current_lat),len(current_lon)),True)
 
-    #Do some extracurricular work to clean up the tables
-    # - mostly to try and match the old AMWG chem tables
-    table_df = pd.read_csv(output_csv_file,names=cols)
+            current_dir=data_dirs[i]
+            current_files=Files[scn] 
 
-    # Change some compounds to match old AMWG chem table names
-    #table_df = table_df.replace('C10H16','Monoterpene', regex=True)
-    #table_df = table_df.replace('CH3OH','Methanol', regex=True)
-    #table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
+            var_dict[scn]={}
+            Dic_var_comp={}
+                
+            for _,var in enumerate(CHEMS):
 
-    #Looks like LNO calculated in each variable are the same value, so just use one LNO??
-    # There's probably a better way to do this 
-    drop_vals = ["CH3CCL3_LNO","CO_LNO","O3_LNO"]
-    for val in drop_vals:
-        table_df = table_df[table_df["variable"].str.contains(val) == False]
-        table_df.reset_index(drop=True, inplace = True)
+                # Components are: burden, chemical loss, chemical prod, dry deposition, 
+                #                 surface emissions, elevated emissions, chemical tendency
+                # I always add Lightning NOx production for gaseous species.
+                components=[var+'_BURDEN',var+'_CHML',var+'_CHMP',
+                            var+'_DDF',var+'_WDF', var+'_SF', var+'_CLXF',
+                            var+'_TEND',var+'_LNO']         
 
-    # Grab one LNO value (from CH4) change to LNO_PROD and add units
-    # Also, for no good reason, move to the bottom of table for completeness' sake
-    table_df = table_df.replace('CH4_LNO','LNO_PROD', regex=True)
-    idx = table_df.index[table_df['variable'] == 'LNO_PROD (TgN/yr)'].tolist()[0]
-    table_df = table_df.append(table_df.iloc[idx], ignore_index=True)
-    table_df = table_df.drop([idx]).reset_index(drop=True)
+                Dic_comp={}
+                for comp in components:
+                    current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
+                        
+                    Dic_comp[comp]=current_data
+                Dic_var_comp[var]=Dic_comp
+            var_dict[scn]= Dic_var_comp    
 
-    table_df = table_df.drop_duplicates()
+            #Critical threshholds????
+            current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)  
+            Dic_crit[scn]=current_crit
 
-    table_df.to_csv(output_csv_file, index=False)
-    adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")
+            print(f'\nCurrent Scenario: {scn}')
+            print(len(f'Current Scenario: {scn}')*'-','\n')
+            
+            if Tropospheric:
+                trop=np.where(current_crit>150,np.nan,current_crit)
+                strat=np.where(current_crit>150,current_crit,np.nan)
+            else:
+                trop=current_crit
 
-    #Notify user that script has ended:
-    print("  ...AMWG chemistry variable table has been generated successfully.")
+        comp_ext_full = {'_BURDEN':'_BURDEN',
+                    '_CHML':'_CHEM_LOSS','_CHMP':'_CHEM_PROD','_NET':'_NET',
+                    '_SF':'_EMIS',
+                    '_DDF':'_DRYDEP','_WDF':'_WETDEP',
+                    '_LIFETIME':'_LIFETIME',
+                    '_STE':'_STE',
+                    '_LNO':'_LNO'}
+
+        #O3 has been causing issues, let's try and separate O3 from other variables...
+        #It seems to be missing components:
+        # 'BURDEN', 'CHML', 'SF','LIFETIME', and 'LNO'
+        not_O3_ext = {k: v for k, v in comp_ext_full.items() if k in ['_BURDEN', '_CHML', '_SF','_LIFETIME','_LNO']}
+        O3_ext = comp_ext_full.copy()
+
+        #Create output file name:
+        #output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
+        
+
+        #Create the table
+        #----------------
+        
+        #Use this for multi-case --> down the road a bit, yeah?
+        cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
+        
+        for current_var in CHEMS:
+
+            #Run O3 calcs
+            #------------
+            if current_var == "O3":
+                for key,ext in O3_ext.items():
+                    row_values = []
+                
+                    for i,scn in enumerate(scenarios):
+                        my_val = calc_chem_data(scn,current_var,var_dict,trop,
+                                                area,durations[i],inside)[key]
+
+                        if ext == "_BURDEN":
+                            new_ext = ext+" (Tg)"
+                        elif ext == "_LNO":
+                            new_ext = ext+" (TgN/yr)"
+                        elif ext == "_LIFETIME":
+                            new_ext = ext+" (days)"
+                            my_val = my_val*365
+                        else:
+                            new_ext = ext+" (Tg/yr)"
+
+                        row_values.append(np.round(my_val,3))
+
+                    row_values = [current_var+new_ext]+row_values
+                    dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+
+                    # Add entries to Pandas structure:
+                    df = pd.DataFrame(dfentries,columns=cols)
+                    if output_csv_file.is_file():
+                        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                    else:
+                        df.to_csv(output_csv_file, header=False, index=False)
+            
+            #Run most other variables
+            #------------------------
+            elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', "O3"]:
+                for key,ext in not_O3_ext.items():
+                    row_values = []
+                    for i,scn in enumerate(scenarios):
+                        my_val = calc_chem_data(scn,current_var,var_dict,trop,
+                                                area,durations[i],inside)[key]
+                    
+                        if ext == "_BURDEN":
+                            new_ext = ext+" (Tg)"
+                        elif ext == "_LNO":
+                            new_ext = ext+" (TgN/yr)"
+                        elif ext == "_LIFETIME":
+                            if my_val < 1:
+                                my_val = my_val*365
+                                new_ext = ext+" (days)"
+                            else:
+                                new_ext = ext+" (yr)"
+                        else:
+                            new_ext = ext+" (Tg/yr)"
+
+                        row_values.append(np.round(my_val,3))
+
+                    row_values = [current_var+new_ext]+row_values
+
+                    dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                    # Add entries to Pandas structure:
+                    df = pd.DataFrame(dfentries,columns=cols)
+                    if output_csv_file.is_file():
+                        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                    else:
+                        df.to_csv(output_csv_file, header=False, index=False)
+                        
+            #Run ISOP, Monoterpene, Methanol, and Acetone emmission calcs
+            #------------------------------------------------------------
+            elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
+                row_values = []
+                new_ext = "_EMIS (Tg/yr)"
+
+                for i,scn in enumerate(scenarios):
+                    my_val = calc_chem_data(scn,current_var,var_dict,trop,
+                                                area,durations[i],inside)['_SF']
+                    row_values.append(np.round(my_val,3))
+                row_values = [current_var+new_ext]+row_values
+
+                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                # Add entries to Pandas structure:
+                df = pd.DataFrame(dfentries,columns=cols)
+                if output_csv_file.is_file():
+                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                else:
+                    df.to_csv(output_csv_file, header=False, index=False)
+
+        #Do some extracurricular work to clean up the tables
+        # - mostly to try and match the old AMWG chem tables
+        table_df = pd.read_csv(output_csv_file,names=cols)
+
+        # Change some compounds to match old AMWG chem table names
+        #table_df = table_df.replace('C10H16','Monoterpene', regex=True)
+        #table_df = table_df.replace('CH3OH','Methanol', regex=True)
+        #table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
+
+        #Looks like LNO calculated in each variable are the same value, so just use one LNO??
+        # There's probably a better way to do this 
+        drop_vals = ["CH3CCL3_LNO","CO_LNO","O3_LNO"]
+        for val in drop_vals:
+            table_df = table_df[table_df["variable"].str.contains(val) == False]
+            table_df.reset_index(drop=True, inplace = True)
+
+        # Grab one LNO value (from CH4) change to LNO_PROD and add units
+        # Also, for no good reason, move to the bottom of table for completeness' sake
+        table_df = table_df.replace('CH4_LNO','LNO_PROD', regex=True)
+        idx = table_df.index[table_df['variable'] == 'LNO_PROD (TgN/yr)'].tolist()[0]
+        table_df = table_df.append(table_df.iloc[idx], ignore_index=True)
+        table_df = table_df.drop([idx]).reset_index(drop=True)
+
+        table_df = table_df.drop_duplicates()
+
+        table_df.to_csv(output_csv_file, index=False)
+        adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")
+
+        #Notify user that script has ended:
+        print("  ...AMWG chemistry variable table has been generated successfully.")
+    #End if chem table csv exists
     #End chemistry tables
     #--------------------
 
@@ -432,146 +433,147 @@ def amwg_chem_table(adf):
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
         table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
-        pass
-
-    dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
-
-    # extract all the data
-    var_dict={}
-
-    # this is for finding tropospheric values
-    Dic_crit={}
-
-    for i,scn in enumerate(scenarios):
         
-        area=areas[scn]
-        current_lat=Lats[scn]
-        current_lon=Lons[scn]
+    else:
+        dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
 
-        if regional:
-            inside=Inside_SE(current_lat,current_lon,limit)
-        else:
-            if len(np.shape(area)) == 1:
-                inside=np.full((len(current_lon)),True)
-            else:
-                inside=np.full((len(current_lat),len(current_lon)),True)
+        # extract all the data
+        var_dict={}
 
-        current_dir=data_dirs[i]
-        current_files=Files[scn] 
+        # this is for finding tropospheric values
+        Dic_crit={}
 
-        var_dict[scn]={}
-        Dic_var_comp={}
-
-        for _,current_var in enumerate(AEROSOLS):
-            # Components are: burden, chemical loss, chemical prod, dry deposition,
-            #                 surface emissions, elevated emissions, wet deposition, gas-aerosol exchange
-
-            if current_var=='SULF':
-                # For SULF we also have AQS and NUCLEATION
-                components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
-                            current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
-                            current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC',current_var+'_AQS',
-                            current_var+'_NUCL']
-            else:
-                components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
-                            current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
-                            current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC']
-
-            Dic_comp={}
-            for comp in components:
-                current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
-                    
-                Dic_comp[comp]=current_data
-            Dic_var_comp[current_var]=Dic_comp
-        var_dict[scn]= Dic_var_comp
-
-        #Critical threshholds????
-        current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
-        Dic_crit[scn]=current_crit
-
-        if Tropospheric:
-            trop=np.where(current_crit>150,np.nan,current_crit)
-            strat=np.where(current_crit>150,current_crit,np.nan)
-        else:
-            trop=current_crit
-
-    for current_var in AEROSOLS:
-        for key,ext in aerosols_ext.items():
-            row_values = []
-
-            for i,scn in enumerate(scenarios):
-                my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
-                                                area,durations[i],inside)[key]
+        for i,scn in enumerate(scenarios):
             
-                if ext == "_BURDEN":
-                    if current_var == "SULF":
-                        new_ext = ext+" (TgS)"
-                    else:
-                        new_ext = ext+" (TgC)"
-                elif ext == "_LIFETIME":
-                    if i == 0:
-                        if 0 < my_val < 1:
-                            my_val = my_val*365
-                            new_ext = ext+" (days)"
-                            
-                        elif my_val > 1:
-                            new_ext = ext+" (yr)"
-                        elif int(my_val) == 0:
-                            new_ext = ext+" (days)"
-                    if i > 0:
-                        if 0 < my_val < 1:
-                            my_val = my_val*365
-                            new_ext = ext+" (days)"
+            area=areas[scn]
+            current_lat=Lats[scn]
+            current_lon=Lons[scn]
+
+            if regional:
+                inside=Inside_SE(current_lat,current_lon,limit)
+            else:
+                if len(np.shape(area)) == 1:
+                    inside=np.full((len(current_lon)),True)
                 else:
-                    if current_var == "SULF":
-                        new_ext = ext+" (TgS/yr)"
-                    else:
-                        new_ext = ext+" (TgC/yr)"
+                    inside=np.full((len(current_lat),len(current_lon)),True)
 
-                row_values.append(np.round(my_val,3))
-            row_values = [current_var+new_ext]+row_values
-            
-            dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-            # Add entries to Pandas structure:
-            df = pd.DataFrame(dfentries,columns=cols)
-            if output_csv_file.is_file():
-                df.to_csv(output_csv_file, mode='a', header=False, index=False)
+            current_dir=data_dirs[i]
+            current_files=Files[scn] 
+
+            var_dict[scn]={}
+            Dic_var_comp={}
+
+            for _,current_var in enumerate(AEROSOLS):
+                # Components are: burden, chemical loss, chemical prod, dry deposition,
+                #                 surface emissions, elevated emissions, wet deposition, gas-aerosol exchange
+
+                if current_var=='SULF':
+                    # For SULF we also have AQS and NUCLEATION
+                    components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
+                                current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
+                                current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC',current_var+'_AQS',
+                                current_var+'_NUCL']
+                else:
+                    components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
+                                current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
+                                current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC']
+
+                Dic_comp={}
+                for comp in components:
+                    current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
+                        
+                    Dic_comp[comp]=current_data
+                Dic_var_comp[current_var]=Dic_comp
+            var_dict[scn]= Dic_var_comp
+
+            #Critical threshholds????
+            current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
+            Dic_crit[scn]=current_crit
+
+            if Tropospheric:
+                trop=np.where(current_crit>150,np.nan,current_crit)
+                strat=np.where(current_crit>150,current_crit,np.nan)
             else:
-                df.to_csv(output_csv_file, header=False, index=False)
-            #End scenarios
-        #End keys()        
-        
-        # Add aqueous calc for SO4 only
-        if current_var == "SULF":
+                trop=current_crit
 
-            for key,ext in {'_AQS':'_AQ_PROD',}.items():
+        for current_var in AEROSOLS:
+            for key,ext in aerosols_ext.items():
                 row_values = []
 
                 for i,scn in enumerate(scenarios):
                     my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
-                                                area,durations[i],inside)[key]
+                                                    area,durations[i],inside)[key]
+                
+                    if ext == "_BURDEN":
+                        if current_var == "SULF":
+                            new_ext = ext+" (TgS)"
+                        else:
+                            new_ext = ext+" (TgC)"
+                    elif ext == "_LIFETIME":
+                        if i == 0:
+                            if 0 < my_val < 1:
+                                my_val = my_val*365
+                                new_ext = ext+" (days)"
+                                
+                            elif my_val > 1:
+                                new_ext = ext+" (yr)"
+                            elif int(my_val) == 0:
+                                new_ext = ext+" (days)"
+                        if i > 0:
+                            if 0 < my_val < 1:
+                                my_val = my_val*365
+                                new_ext = ext+" (days)"
+                    else:
+                        if current_var == "SULF":
+                            new_ext = ext+" (TgS/yr)"
+                        else:
+                            new_ext = ext+" (TgC/yr)"
+
                     row_values.append(np.round(my_val,3))
-                new_ext = ext+" (TgS/yr)"
                 row_values = [current_var+new_ext]+row_values
-            
+                
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 # Add entries to Pandas structure:
                 df = pd.DataFrame(dfentries,columns=cols)
                 if output_csv_file.is_file():
                     df.to_csv(output_csv_file, mode='a', header=False, index=False)
                 else:
-                    df.to_csv(output_csv_file, header=False, index=False)   
-        # End if - SULF
+                    df.to_csv(output_csv_file, header=False, index=False)
+                #End scenarios
+            #End keys()        
+            
+            # Add aqueous calc for SO4 only
+            if current_var == "SULF":
 
-    table_df = pd.read_csv(output_csv_file,names=cols)
+                for key,ext in {'_AQS':'_AQ_PROD',}.items():
+                    row_values = []
 
-    table_df = table_df.replace('SULF','SO4', regex=True)
+                    for i,scn in enumerate(scenarios):
+                        my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
+                                                    area,durations[i],inside)[key]
+                        row_values.append(np.round(my_val,3))
+                    new_ext = ext+" (TgS/yr)"
+                    row_values = [current_var+new_ext]+row_values
+                
+                    dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                    # Add entries to Pandas structure:
+                    df = pd.DataFrame(dfentries,columns=cols)
+                    if output_csv_file.is_file():
+                        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                    else:
+                        df.to_csv(output_csv_file, header=False, index=False)   
+            # End if - SULF
 
-    table_df.to_csv(output_csv_file, index=False)
-    adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
+        table_df = pd.read_csv(output_csv_file,names=cols)
 
-    #Notify user that script has ended:
-    print("  ...AMWG aerosol variable table has been generated successfully.")
+        table_df = table_df.replace('SULF','SO4', regex=True)
+
+        table_df.to_csv(output_csv_file, index=False)
+        adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
+
+        #Notify user that script has ended:
+        print("  ...AMWG aerosol variable table has been generated successfully.")
+    #End if aerosol table exists
 
 ##################
 # Helper functions
