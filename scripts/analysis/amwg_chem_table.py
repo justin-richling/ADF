@@ -688,6 +688,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         current_dir=data_dirs[i]
 
         # find the needed the files
+        print("start_periods[i],end_periods[i]",start_periods[i],end_periods[i],"\n")
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
         # get the Lat and Lons for each scenario
         tmp_file=xr.open_dataset(current_dir+current_files[i])
