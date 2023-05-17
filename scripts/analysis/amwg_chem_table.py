@@ -215,7 +215,9 @@ def amwg_chem_table(adf):
 
     if output_csv_file.is_file():
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
-        return
+        table_df = pd.read_csv(output_csv_file,names=cols)
+        adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
+        pass
 
     for i,scn in enumerate(scenarios):
         
@@ -414,6 +416,7 @@ def amwg_chem_table(adf):
 
 
 
+
     # Aerosol tables
     #-----------------
     #Notify user that script has started:
@@ -427,7 +430,9 @@ def amwg_chem_table(adf):
 
     if output_csv_file.is_file():
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
-        return
+        table_df = pd.read_csv(output_csv_file,names=cols)
+        adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
+        pass
 
     dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
 
