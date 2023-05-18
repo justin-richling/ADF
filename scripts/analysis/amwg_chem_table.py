@@ -810,6 +810,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
 
     # gas constanct
     Rgas=287.04 #[J/K/Kg]=8.314/0.028965
+    print("var",var,"\n")
         
     all_data=[]
     for file in files:
