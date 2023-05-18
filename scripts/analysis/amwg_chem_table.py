@@ -214,6 +214,7 @@ def amwg_chem_table(adf):
     toc = time.perf_counter()
     print(f"create_dic_SE took {toc - tic:0.4f} seconds")
 
+    print(dic_SE.keys())
     print(dic_SE["O3"].keys())
         
     # extract all the data
