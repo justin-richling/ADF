@@ -215,7 +215,7 @@ def amwg_chem_table(adf):
     print(f"create_dic_SE took {toc - tic:0.4f} seconds")
 
     print(dic_SE.keys())
-    print(dic_SE["O3"].keys())
+    print(dic_SE["O3"])
         
     # extract all the data
     var_dict={}
