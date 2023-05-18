@@ -13,6 +13,7 @@ except ImportError:
 
 from datetime import datetime, timedelta
 import time
+import timeit
 import numpy as np
 #import pandas as pd
 import xarray as xr
@@ -271,6 +272,7 @@ def amwg_chem_table(adf):
             current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
             toc = time.perf_counter()
             print(f"SEbudget took {toc - tic:0.4f} seconds")
+            print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1))
             Dic_crit[scn]=current_crit
 
             print(f'\nCurrent Scenario: {scn}')
