@@ -822,6 +822,10 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         #print(list(ds.keys()))
     
         for i in dic_SE[var].keys():
+            if i == "O3_Loss":
+                i = "O3_CHML"
+            if i == "O3_Prod":
+                i = "O3_CHMP"
             #print(i,"\n")
             #Check to see if the product is in the actual dataset, if not, move on and set to 0
             if i in ds:
