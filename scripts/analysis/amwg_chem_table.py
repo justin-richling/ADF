@@ -814,7 +814,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         print("Uhhh",data_dir+file,"\n")
         ds=xr.open_dataset(data_dir+file)
         data=[]
-        print(ds.variables)
+        print(list(ds.keys()))
     
         for i in dic_SE[var].keys():
             #Check to see if the product is in the actual dataset, if not, move on and set to 0
