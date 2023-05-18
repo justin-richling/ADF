@@ -12,6 +12,7 @@ except ImportError:
     print("Please install module, e.g. 'pip install scipy'.")
 
 from datetime import datetime, timedelta
+import time
 import numpy as np
 #import pandas as pd
 import xarray as xr
@@ -179,8 +180,11 @@ def amwg_chem_table(adf):
         
         durations.append((end_period-start_period).days*86400)
 
+    tic = time.perf_counter()
     #Get the files for each case and set of start and end years
     Files,Lats,Lons,areas= Get_files(data_dirs,scenarios,start_dates,end_dates,area=True)
+    toc = time.perf_counter()
+    print(f"Get_files took {toc - tic:0.4f} seconds")
 
     # Files (list) can have serveral values
     # It looks like tmp_file is only one case at a time???
@@ -202,7 +206,10 @@ def amwg_chem_table(adf):
     '''
     #Get dict for critical values and dict for case/variables mean ANN values
     #Dic_crit,var_dict = make_var_dict(CHEMS)
+    tic = time.perf_counter()
     dic_SE = create_dic_SE(CHEMS, ListVars, ext1_SE)
+    toc = time.perf_counter()
+    print(f"create_dic_SE took {toc - tic:0.4f} seconds")
         
     # extract all the data
     var_dict={}
@@ -213,10 +220,13 @@ def amwg_chem_table(adf):
     #Create output file name:
     output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
 
-    if output_csv_file.is_file():
+    """if output_csv_file.is_file():
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
         table_df = pd.read_csv(output_csv_file)
-        adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")
+        adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")"""
+    
+    if 1==0:
+        print("this should never run!")
         
     else:
         for i,scn in enumerate(scenarios):
@@ -257,7 +267,10 @@ def amwg_chem_table(adf):
             var_dict[scn]= Dic_var_comp    
 
             #Critical threshholds????
-            current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)  
+            tic = time.perf_counter()
+            current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
+            toc = time.perf_counter()
+            print(f"SEbudget took {toc - tic:0.4f} seconds")
             Dic_crit[scn]=current_crit
 
             print(f'\nCurrent Scenario: {scn}')
@@ -298,8 +311,11 @@ def amwg_chem_table(adf):
                     row_values = []
                 
                     for i,scn in enumerate(scenarios):
+                        tic = time.perf_counter()
                         my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
+                        toc = time.perf_counter()
+                        print(f"calc_chem_data for O3 took {toc - tic:0.4f} seconds")
 
                         if ext == "_BURDEN":
                             new_ext = ext+" (Tg)"
@@ -329,8 +345,11 @@ def amwg_chem_table(adf):
                 for key,ext in not_O3_ext.items():
                     row_values = []
                     for i,scn in enumerate(scenarios):
+                        tic = time.perf_counter()
                         my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
+                        toc = time.perf_counter()
+                        print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
                     
                         if ext == "_BURDEN":
                             new_ext = ext+" (Tg)"
@@ -365,8 +384,11 @@ def amwg_chem_table(adf):
                 new_ext = "_EMIS (Tg/yr)"
 
                 for i,scn in enumerate(scenarios):
+                    tic = time.perf_counter()
                     my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)['_SF']
+                    toc = time.perf_counter()
+                    print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
                     row_values.append(np.round(my_val,3))
                 row_values = [current_var+new_ext]+row_values
 
