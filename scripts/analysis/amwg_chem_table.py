@@ -181,6 +181,7 @@ def amwg_chem_table(adf):
         
         durations.append((end_period-start_period).days*86400)
 
+    print(timeit.timeit(lambda: Get_files(data_dirs,scenarios,start_dates,end_dates,area=True), number=1),"\n")
     tic = time.perf_counter()
     #Get the files for each case and set of start and end years
     Files,Lats,Lons,areas= Get_files(data_dirs,scenarios,start_dates,end_dates,area=True)
@@ -207,6 +208,7 @@ def amwg_chem_table(adf):
     '''
     #Get dict for critical values and dict for case/variables mean ANN values
     #Dic_crit,var_dict = make_var_dict(CHEMS)
+    print(timeit.timeit(lambda: create_dic_SE(CHEMS, ListVars, ext1_SE), number=1),"\n")
     tic = time.perf_counter()
     dic_SE = create_dic_SE(CHEMS, ListVars, ext1_SE)
     toc = time.perf_counter()
@@ -266,13 +268,16 @@ def amwg_chem_table(adf):
                     Dic_comp[comp]=current_data
                 Dic_var_comp[var]=Dic_comp
             var_dict[scn]= Dic_var_comp    
+            
+
+            print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1),"\n")
 
             #Critical threshholds????
             tic = time.perf_counter()
             current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
             toc = time.perf_counter()
             print(f"SEbudget took {toc - tic:0.4f} seconds")
-            print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1))
+            #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1))
             Dic_crit[scn]=current_crit
 
             print(f'\nCurrent Scenario: {scn}')
