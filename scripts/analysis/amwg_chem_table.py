@@ -214,7 +214,7 @@ def amwg_chem_table(adf):
     toc = time.perf_counter()
     print(f"create_dic_SE took {toc - tic:0.4f} seconds")
 
-    print(dic_SE.keys())
+    print(dic_SE["O3"].keys())
         
     # extract all the data
     var_dict={}
@@ -811,6 +811,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
     # gas constanct
     Rgas=287.04 #[J/K/Kg]=8.314/0.028965
     print("var",var,"\n")
+    
         
     all_data=[]
     for file in files:
@@ -823,7 +824,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
             #print(i,"\n")
             #Check to see if the product is in the actual dataset, if not, move on and set to 0
             if i in ds:
-                print(f"Looks like {var} is {i} for {file}, so good to go...\n")
+                #print(f"Looks like {var} is {i} for {file}, so good to go...\n")
                 data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
             else:
                 print(f"Looks like {var} is missing {i} for {file}, so skipping...\n")
