@@ -813,13 +813,13 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         
     all_data=[]
     for file in files:
-        print("Uhhh",data_dir+file,"\n")
+        #print("Uhhh",data_dir+file,"\n")
         ds=xr.open_dataset(data_dir+file)
         data=[]
         #print(list(ds.keys()))
     
         for i in dic_SE[var].keys():
-            print(i,"\n")
+            #print(i,"\n")
             #Check to see if the product is in the actual dataset, if not, move on and set to 0
             if i in ds:
                 data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
