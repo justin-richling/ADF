@@ -213,6 +213,8 @@ def amwg_chem_table(adf):
     dic_SE = create_dic_SE(CHEMS, ListVars, ext1_SE)
     toc = time.perf_counter()
     print(f"create_dic_SE took {toc - tic:0.4f} seconds")
+
+    print(dic_SE.keys())
         
     # extract all the data
     var_dict={}
@@ -971,6 +973,7 @@ def create_dic_SE(variables, ListVars, ext1_SE):
             # rho and delP will be applied when reading the files in SEbudget function.   
 
             if key=='O3'+ext1_SE: 
+                print("Is this actually happening?\n")
                 # for O3, we should not include fast cycling reactions
                 # As a result, we use below diagnostics in the model
                 dic_SE[var+'_CHML'][key+'_Loss'+ext1_SE]=MW[var]*1e3/avo/gr
