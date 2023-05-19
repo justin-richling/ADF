@@ -1199,6 +1199,14 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     chem_dict['_SF'] = np.round(SF,5)
 
     # Elevated Emissions
+    #spc_clxf=Dic_scn_var_comp[current_scn][current_var][current_var+'_CLXF']
+    spc_clxf=var_dict[scn][var][var+'_CLXF']
+    tmp_clxf=np.nansum(spc_clxf*area,axis=0)
+    clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
+    CLXF = np.ma.sum(clxf*duration*1e-9)
+    chem_dict['_CLXF'] = np.round(CLXF,5)
+
+    """# Elevated Emissions
     if var == "CO":
         print(f"Smoethign is borken with {var}")
         CLXF = np.nan
@@ -1207,7 +1215,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
         tmp_clxf=np.nansum(spc_clxf*area,axis=0)
         clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
         CLXF = np.ma.sum(clxf*duration*1e-9)
-    chem_dict['_CLXF'] = np.round(CLXF,5)
+    chem_dict['_CLXF'] = np.round(CLXF,5)"""
 
     # Dry Deposition Flux 
     spc_ddf=var_dict[scn][var][var+'_DDF'] 
