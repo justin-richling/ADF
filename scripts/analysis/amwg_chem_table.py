@@ -376,7 +376,7 @@ def amwg_chem_table(adf):
                             new_ext = ext+" (Tg)"
                         elif ext == "_LNO":
                             new_ext = ext+" (TgN/yr)"
-                        elif ext == "_LIFETIME":
+                        elif ext == "_LIFETIME": # will come out as years!!
                             if my_val < 1:
                                 my_val = my_val*365
                                 new_ext = ext+" (days)"
