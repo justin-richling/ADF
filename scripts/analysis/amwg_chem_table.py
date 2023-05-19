@@ -139,6 +139,7 @@ def amwg_chem_table(adf):
 
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
+    print("scenarios info:",len(scenarios),scenarios)
     #scenarios = [f'{ix}.{h_case}' for ix in case_names]
 
     # In CAM-Chem (or MUSICA-v0), user can save the outputs for only a box region.
@@ -741,7 +742,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
     areas={}
     Earth_rad=6.371e6 # Earth Radius in m 
 
-    
+    j_bizzle = 0
     for i,scn in enumerate(scenarios):
 
         current_dir=data_dirs[i]
@@ -779,7 +780,9 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         Lons[scn]=lon
         areas[scn]=area
 
-    print("Got the files, lats, lons, and areas (hopefully)...")
+        j_bizzle += 1
+
+    print(f"Got the files, lats, lons, and areas (hopefully)...\nj_bizzle={j_bizzle}")
     return files, Lats, Lons, areas
 
 #####
