@@ -642,16 +642,14 @@ def list_files(directory,scenario,start_date,end_date):
     # from files. 
     #           *** Flag for possible upgrade/update ***
     #
-    #for i in sorted(Path(directory).glob(f'*')):
-    #    print(i)
-    print("start_date[0:4]",start_date[0:4],"\n")
+
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    print("start_filenames",start_filenames,"\n")
-    all_start_filenames = [i.stem+".nc" for i in start_filenames]
+    #print("start_filenames",start_filenames,"\n")
+    all_start_filenames = [i.stem+".nc" for i in start_filenames] # Grab just the file names themselves
     print("all_start_filenames",all_start_filenames,"\n")
 
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    print("end_filenames",end_filenames,"\n")
+    #print("end_filenames",end_filenames,"\n")
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
     print("all_end_filenames",all_end_filenames,"\n")
     
@@ -661,12 +659,16 @@ def list_files(directory,scenario,start_date,end_date):
         print(" Directory has no outputs ")
         return
     all_filenames.sort()
+    print("all_filenames",all_filenames,"\n")
 
     
     # this is used to discern what files to extract
     scenario_len=len(scenario)
     all_fileNames=[]
 
+
+    #TODO: This section can be cleaned up and made more efficient
+    #Right now it is doing a lot (?) of loops to check for files, there probably is a better way
     for i in range(len(all_filenames)):
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
