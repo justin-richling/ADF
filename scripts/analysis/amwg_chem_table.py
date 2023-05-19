@@ -185,7 +185,7 @@ def amwg_chem_table(adf):
         
         durations.append((end_period-start_period).days*86400)
 
-    print(timeit.timeit(lambda: Get_files(data_dirs,scenarios,start_dates,end_dates,area=True), number=1),"\n")
+    #print(timeit.timeit(lambda: Get_files(data_dirs,scenarios,start_dates,end_dates,area=True), number=1),"\n")
     tic = time.perf_counter()
     #Get the files for each case and set of start and end years
     Files,Lats,Lons,areas= Get_files(data_dirs,scenarios,start_dates,end_dates,area=True)
