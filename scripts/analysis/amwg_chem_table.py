@@ -317,7 +317,8 @@ def amwg_chem_table(adf):
 
         #Create the table
         #----------------
-        print("\n*************\nactually making the tables now\n*************\\n")
+        #print("\n*************\nactually making the tables now\n*************\n")
+        print(f"\n{len(f'Current Scenario: {scn}')*'-'}\nactually making the tables now\n{len(f'Current Scenario: {scn}')*'-'}\n")
         #Use this for multi-case --> down the road a bit, yeah?
         cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
         
@@ -668,7 +669,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
 
     # gas constanct
     Rgas=287.04 #[J/K/Kg]=8.314/0.028965
-    print("var",var,"\n")
+    #print("var",var,"\n")
     
         
     all_data=[]
