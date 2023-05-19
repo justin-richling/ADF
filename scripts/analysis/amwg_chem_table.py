@@ -457,6 +457,172 @@ def amwg_chem_table(adf):
     #End chemistry tables
     #--------------------
 
+
+
+
+
+
+
+    # Aerosol tables
+    #-----------------
+    #Notify user that script has started:
+    print("\n  Calculating AMWG aerosol variable table...")
+
+    aerosols_ext = {'_BURDEN':'_BURDEN','_CHMP':'_CHEM_PROD','_SF':'_EMIS',
+                     '_DDF':'_DRYDEP','_WDF':'_WETDEP','_LIFETIME':'_LIFETIME'}
+
+    #Create output file name:
+    output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
+
+    if output_csv_file.is_file():
+        print(f"'{output_csv_file}' already exists, so skipping partner!\n")
+        table_df = pd.read_csv(output_csv_file)
+        adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
+        
+    else:
+        dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
+
+        # extract all the data
+        var_dict={}
+
+        # this is for finding tropospheric values
+        Dic_crit={}
+
+        for i,scn in enumerate(scenarios):
+            
+            area=areas[scn]
+            current_lat=Lats[scn]
+            current_lon=Lons[scn]
+
+            if regional:
+                inside=Inside_SE(current_lat,current_lon,limit)
+            else:
+                if len(np.shape(area)) == 1:
+                    inside=np.full((len(current_lon)),True)
+                else:
+                    inside=np.full((len(current_lat),len(current_lon)),True)
+
+            current_dir=data_dirs[i]
+            current_files=Files[scn] 
+
+            var_dict[scn]={}
+            Dic_var_comp={}
+
+            tic = time.perf_counter()
+            for _,current_var in enumerate(AEROSOLS):
+                # Components are: burden, chemical loss, chemical prod, dry deposition,
+                #                 surface emissions, elevated emissions, wet deposition, gas-aerosol exchange
+
+                if current_var=='SULF':
+                    # For SULF we also have AQS and NUCLEATION
+                    components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
+                                current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
+                                current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC',current_var+'_AQS',
+                                current_var+'_NUCL']
+                else:
+                    components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
+                                current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
+                                current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC']
+
+                Dic_comp={}
+                for comp in components:
+                    current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
+                        
+                    Dic_comp[comp]=current_data
+                Dic_var_comp[current_var]=Dic_comp
+            var_dict[scn]= Dic_var_comp
+            toc = time.perf_counter()
+            print(f"SEbudget for all components took {toc - tic:0.4f} seconds")
+
+            #Critical threshholds????
+            current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
+            Dic_crit[scn]=current_crit
+
+            if Tropospheric:
+                trop=np.where(current_crit>150,np.nan,current_crit)
+                strat=np.where(current_crit>150,current_crit,np.nan)
+            else:
+                trop=current_crit
+
+        for current_var in AEROSOLS:
+            for key,ext in aerosols_ext.items():
+                row_values = []
+
+                for i,scn in enumerate(scenarios):
+                    my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
+                                                    area,durations[i],inside)[key]
+                
+                    if ext == "_BURDEN":
+                        if current_var == "SULF":
+                            new_ext = ext+" (TgS)"
+                        else:
+                            new_ext = ext+" (TgC)"
+                    elif ext == "_LIFETIME":
+                        if i == 0:
+                            if 0 < my_val < 1:
+                                my_val = my_val*365
+                                new_ext = ext+" (days)"
+                                
+                            elif my_val > 1:
+                                new_ext = ext+" (yr)"
+                            elif int(my_val) == 0:
+                                new_ext = ext+" (days)"
+                        if i > 0:
+                            if 0 < my_val < 1:
+                                my_val = my_val*365
+                                new_ext = ext+" (days)"
+                    else:
+                        if current_var == "SULF":
+                            new_ext = ext+" (TgS/yr)"
+                        else:
+                            new_ext = ext+" (TgC/yr)"
+
+                    row_values.append(np.round(my_val,3))
+                row_values = [current_var+new_ext]+row_values
+                
+                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                # Add entries to Pandas structure:
+                df = pd.DataFrame(dfentries,columns=cols)
+                if output_csv_file.is_file():
+                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                else:
+                    df.to_csv(output_csv_file, header=False, index=False)
+                #End scenarios
+            #End keys()        
+            
+            # Add aqueous calc for SO4 only
+            if current_var == "SULF":
+
+                for key,ext in {'_AQS':'_AQ_PROD',}.items():
+                    row_values = []
+
+                    for i,scn in enumerate(scenarios):
+                        my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
+                                                    area,durations[i],inside)[key]
+                        row_values.append(np.round(my_val,3))
+                    new_ext = ext+" (TgS/yr)"
+                    row_values = [current_var+new_ext]+row_values
+                
+                    dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                    # Add entries to Pandas structure:
+                    df = pd.DataFrame(dfentries,columns=cols)
+                    if output_csv_file.is_file():
+                        df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                    else:
+                        df.to_csv(output_csv_file, header=False, index=False)   
+            # End if - SULF
+
+        table_df = pd.read_csv(output_csv_file,names=cols)
+
+        table_df = table_df.replace('SULF','SO4', regex=True)
+
+        table_df.to_csv(output_csv_file, index=False)
+        adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
+
+        #Notify user that script has ended:
+        print("  ...AMWG aerosol variable table has been generated successfully.")
+    #End if aerosol table exists
+
 ##################
 # Helper functions
 ##################
@@ -1037,11 +1203,12 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     SF = np.ma.sum(sf*duration*1e-9)
     chem_dict['_SF'] = np.round(SF,5)
 
-    # Elevated Emissions
-    print("This var is the prob'm sheriff. What should we do about 'im?? (lets run heem oot of toown)")
+    '''# Elevated Emissions
+    #print(f"-> {var} This var is the prob'm sheriff. What should we do about 'im?? (lets run heem oot of toown)")
     #spc_clxf=Dic_scn_var_comp[current_scn][current_var][current_var+'_CLXF']
     spc_clxf=var_dict[scn][var][var+'_CLXF']
     tmp_clxf=np.nansum(spc_clxf*area,axis=0)
+    print("tmp_clxf.shape",tmp_clxf.shape)
     #PROBLEM HERE: IndexError: Inconsistent shape between the condition and the input (got (192, 288) and (288,))
     clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
     CLXF = np.ma.sum(clxf*duration*1e-9)
@@ -1056,7 +1223,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
         clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
         CLXF = np.ma.sum(clxf*duration*1e-9)
     """
-    chem_dict['_CLXF'] = np.round(CLXF,5)
+    chem_dict['_CLXF'] = np.round(CLXF,5)'''
 
     # Dry Deposition Flux 
     spc_ddf=var_dict[scn][var][var+'_DDF'] 
@@ -1102,7 +1269,95 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
 #####
 
 
+def calc_aerosol_data(scn, var, var_dict, trop, area, duration, inside):
+    
+    aerosol_dict = {}
+    
+    # Burden      
+    spc_burd=var_dict[scn][var][var+'_BURDEN']       
+    spc_burd=np.where(np.isnan(trop),np.nan,spc_burd)
+    tmp_burden=np.nansum(spc_burd*area,axis=0)
+    burden=np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
+    BURDEN = np.ma.sum(burden*1e-9)
+    aerosol_dict['_BURDEN'] = np.round(BURDEN,5)
 
+    # Chemical Loss
+    spc_chml=var_dict[scn][var][var+'_CHML'] 
+    spc_chml=np.where(np.isnan(trop),np.nan,spc_chml)       
+    tmp_chml=np.nansum(spc_chml*area,axis=0)
+    chml=np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
+    CHML = np.ma.sum(chml*duration*1e-9)
+    aerosol_dict['_CHML'] = np.round(CHML,5)
+    
+    # Chemical Production
+    spc_chmp=var_dict[scn][var][var+'_CHMP'] 
+    spc_chmp=np.where(np.isnan(trop),np.nan,spc_chmp)
+    tmp_chmp=np.nansum(spc_chmp*area,axis=0)
+    chmp=np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
+    CHMP = np.ma.sum(chmp*duration*1e-9)
+    aerosol_dict['_CHMP'] = np.round(CHMP,5)
+        
+    # Surface Emissions
+    spc_sf=var_dict[scn][var][var+'_SF'] 
+    tmp_sf=spc_sf
+    sf=np.ma.masked_where(inside==False,tmp_sf*area)  #convert Kg/m2/s to Tg/yr
+    SF = np.ma.sum(sf*duration*1e-9)
+    aerosol_dict['_SF'] = np.round(SF,5)
+ 
+    # Elevated Emissions
+    spc_clxf=var_dict[scn][var][var+'_CLXF'] 
+    tmp_clxf=np.nansum(spc_clxf*area,axis=0)
+    clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
+    CLXF = np.ma.sum(clxf*duration*1e-9)
+    aerosol_dict['_CLXF'] = np.round(CLXF,5)
+    
+    # Dry Deposition Flux      
+    spc_ddfa=var_dict[scn][var][var+'_DDF'] 
+    spc_ddfc=var_dict[scn][var][var+'_DDFC']
+    spc_ddf=spc_ddfa +spc_ddfc
+    tmp_ddf=spc_ddf
+    ddf=np.ma.masked_where(inside==False,tmp_ddf*area)  #convert Kg/m2/s to Tg/yr
+    DDF = np.ma.sum(ddf*duration*1e-9)
+    aerosol_dict['_DDF'] = np.round(DDF,5)
+            
+    # Wet deposition
+    spc_wdfa=var_dict[scn][var][var+'_WDF'] 
+    spc_wdfc=var_dict[scn][var][var+'_WDFC']
+    spc_wdf=spc_wdfa +spc_wdfc            
+    tmp_wdf=spc_wdf
+    wdf=np.ma.masked_where(inside==False,tmp_wdf*area)  #convert Kg/m2/s to Tg/yr
+    WDF = np.ma.sum(wdf*duration*1e-9)
+    aerosol_dict['_WDF'] = np.round(WDF,5)
+            
+    # gas-aerosol Exchange
+    spc_gaex=var_dict[scn][var][var+'_GAEX'] 
+    tmp_gaex=spc_gaex
+    gaex=np.ma.masked_where(inside==False,tmp_gaex*area)  #convert Kg/m2/s to Tg/yr
+    GAEX = np.ma.sum(gaex*duration*1e-9)
+    aerosol_dict['_GAEX'] = np.round(GAEX,5)      
+            
+    # LifeTime = Burden/(loss+deposition)
+    LT=BURDEN/(CHML+DDF-WDF)* duration/86400 # days   
+    aerosol_dict['_LIFETIME'] = np.round(LT,5)
+            
+    if var=='SULF':     
+        # Aqueous Chemistry
+        spc_aqs=var_dict[scn][var][var+'_AQS'] 
+        tmp_aqs=spc_aqs
+        aqs=np.ma.masked_where(inside==False,tmp_aqs*area)  #convert Kg/m2/s to Tg/yr
+        AQS = np.ma.sum(aqs*duration*1e-9)
+        aerosol_dict['_AQS'] = np.round(AQS,5)    
+        
+        # Nucleation
+        spc_nucl=var_dict[scn][var][var+'_NUCL'] 
+        tmp_nucl=spc_nucl
+        nucl=np.ma.masked_where(inside==False,tmp_nucl*area)  #convert Kg/m2/s to Tg/yr
+        NUCL = np.ma.sum(nucl*duration*1e-9)
+        aerosol_dict['_NUCL'] = np.round(NUCL,5)
+
+    return aerosol_dict
+
+#####
 
 ##############
 #END OF SCRIPT
