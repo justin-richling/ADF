@@ -279,7 +279,7 @@ def amwg_chem_table(adf):
             var_dict[scn]= Dic_var_comp    
             
             print("here comes the fun cooker for SEbudget:")
-            print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1),"\n")
+            #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1),"\n")
 
             #Critical threshholds????
             tic = time.perf_counter()
