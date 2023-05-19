@@ -313,7 +313,7 @@ def amwg_chem_table(adf):
 
         #Create the table
         #----------------
-        
+        print("\n*************\nactually making the tables now\n*************\\n")
         #Use this for multi-case --> down the road a bit, yeah?
         cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
         
