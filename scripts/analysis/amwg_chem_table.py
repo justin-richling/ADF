@@ -236,6 +236,9 @@ def amwg_chem_table(adf):
         
     else:
         for i,scn in enumerate(scenarios):
+
+            print(f'\nCurrent Scenario: {scn}')
+            print(len(f'Current Scenario: {scn}')*'-','\n')
             
             area=areas[scn]
             current_lat=Lats[scn]
@@ -283,8 +286,7 @@ def amwg_chem_table(adf):
             #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1))
             Dic_crit[scn]=current_crit
 
-            print(f'\nCurrent Scenario: {scn}')
-            print(len(f'Current Scenario: {scn}')*'-','\n')
+            
             
             if Tropospheric:
                 trop=np.where(current_crit>150,np.nan,current_crit)
@@ -651,10 +653,10 @@ def list_files(directory,scenario,start_date,end_date):
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
-    if len(all_filenames)==0 : sys.exit(" Directory has no outputs ")
     if len(all_filenames)==0:
+        print(" Directory has no outputs ")
         return
-    #all_filenames.sort()
+    all_filenames.sort()
     
     # this is used to discern what files to extract
     scenario_len=len(scenario)
