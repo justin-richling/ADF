@@ -61,6 +61,9 @@ def amwg_chem_table(adf):
     #Additional information:
     #----------------------
 
+    #Notify user that script has started:
+    print("\n  Calculating AMWG chemistry/areosol tables, have fun and we'll see you when you get out.\nWe can have lunch and take a nap after :) ...")
+
     # DETAIL: we use python's type hinting as much as possible
 
     # in future, provide option to do multiple domains
@@ -642,14 +645,14 @@ def list_files(directory,scenario,start_date,end_date):
     #    print(i)
     print("start_date[0:4]",start_date[0:4],"\n")
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    #print("start_filenames",start_filenames)
+    print("start_filenames",start_filenames)
     all_start_filenames = [i.stem+".nc" for i in start_filenames]
-    #print("all_start_filenames",all_start_filenames)
+    print("all_start_filenames",all_start_filenames)
 
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    #print("end_filenames",end_filenames)
+    print("end_filenames",end_filenames)
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
-    #print("all_end_filenames",all_end_filenames)
+    print("all_end_filenames",all_end_filenames)
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
@@ -657,6 +660,7 @@ def list_files(directory,scenario,start_date,end_date):
         print(" Directory has no outputs ")
         return
     all_filenames.sort()
+
     
     # this is used to discern what files to extract
     scenario_len=len(scenario)
@@ -700,7 +704,7 @@ def list_files(directory,scenario,start_date,end_date):
 
             if '.h0' in scenario:
                 all_fileNames.append(all_filenames[i])
-        
+    print("all_fileNames",all_fileNames,"\n")
     return all_fileNames
 
 #####
