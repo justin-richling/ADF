@@ -841,7 +841,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         #print(dic_SE[var].keys(),"\n")
     
         for i in dic_SE[var].keys():
-            p#rint("dic_SE[var].keys()",i,"\n")
+            #print("dic_SE[var].keys()",i,"\n")
             if i == "O3_Loss":
                 #i = "O3_CHML"
                 data.append(np.array(ds["O3_CHML"].isel(time=0))*dic_SE[var][i])
