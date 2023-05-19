@@ -317,6 +317,7 @@ def amwg_chem_table(adf):
         #Use this for multi-case --> down the road a bit, yeah?
         cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
         
+        tic = time.perf_counter()
         for current_var in CHEMS:
 
             #Run O3 calcs
@@ -326,11 +327,11 @@ def amwg_chem_table(adf):
                     row_values = []
                 
                     for i,scn in enumerate(scenarios):
-                        tic = time.perf_counter()
+                        #tic = time.perf_counter()
                         my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
-                        toc = time.perf_counter()
-                        print(f"calc_chem_data for O3 took {toc - tic:0.4f} seconds")
+                        #toc = time.perf_counter()
+                        #print(f"calc_chem_data for O3 took {toc - tic:0.4f} seconds")
 
                         if ext == "_BURDEN":
                             new_ext = ext+" (Tg)"
@@ -356,15 +357,15 @@ def amwg_chem_table(adf):
             
             #Run most other variables
             #------------------------
-            elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', "O3"]:
+            elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', 'O3']:
                 for key,ext in not_O3_ext.items():
                     row_values = []
                     for i,scn in enumerate(scenarios):
-                        tic = time.perf_counter()
+                        #tic = time.perf_counter()
                         my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
-                        toc = time.perf_counter()
-                        print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
+                        #toc = time.perf_counter()
+                        #print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
                     
                         if ext == "_BURDEN":
                             new_ext = ext+" (Tg)"
@@ -399,11 +400,11 @@ def amwg_chem_table(adf):
                 new_ext = "_EMIS (Tg/yr)"
 
                 for i,scn in enumerate(scenarios):
-                    tic = time.perf_counter()
+                    #tic = time.perf_counter()
                     my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)['_SF']
-                    toc = time.perf_counter()
-                    print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
+                    #toc = time.perf_counter()
+                    #print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
                     row_values.append(np.round(my_val,3))
                 row_values = [current_var+new_ext]+row_values
 
@@ -415,6 +416,8 @@ def amwg_chem_table(adf):
                 else:
                     df.to_csv(output_csv_file, header=False, index=False)
 
+        toc = time.perf_counter()
+        print(f"Creating pandas tables for all cases took {toc - tic:0.4f} seconds")
         #Do some extracurricular work to clean up the tables
         # - mostly to try and match the old AMWG chem tables
         table_df = pd.read_csv(output_csv_file,names=cols)
