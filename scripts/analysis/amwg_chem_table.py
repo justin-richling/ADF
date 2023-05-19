@@ -260,7 +260,8 @@ def amwg_chem_table(adf):
 
             var_dict[scn]={}
             Dic_var_comp={}
-                
+
+            tic = time.perf_counter()    
             for _,var in enumerate(CHEMS):
 
                 # Components are: burden, chemical loss, chemical prod, dry deposition, 
@@ -276,7 +277,9 @@ def amwg_chem_table(adf):
                         
                     Dic_comp[comp]=current_data
                 Dic_var_comp[var]=Dic_comp
-            var_dict[scn]= Dic_var_comp    
+            var_dict[scn]= Dic_var_comp
+            toc = time.perf_counter()
+            print(f"SEbudget for all components took {toc - tic:0.4f} seconds")  
             
             print("here comes the fun cooker for SEbudget:")
             #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1),"\n")
@@ -285,7 +288,7 @@ def amwg_chem_table(adf):
             tic = time.perf_counter()
             current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
             toc = time.perf_counter()
-            print(f"SEbudget took {toc - tic:0.4f} seconds")
+            print(f"SEbudget for only O3 took {toc - tic:0.4f} seconds")
             #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1))
             Dic_crit[scn]=current_crit
 
@@ -835,6 +838,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         #print(list(ds.keys()))
     
         for i in dic_SE[var].keys():
+            print("dic_SE[var].keys()",i,"\n")
             if i == "O3_Loss":
                 #i = "O3_CHML"
                 data.append(np.array(ds["O3_CHML"].isel(time=0))*dic_SE[var][i])
@@ -844,7 +848,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
             #print(i,"\n")
             #Check to see if the product is in the actual dataset, if not, move on and set to 0
             else:
-                print("i thats not O3 loss or prod:",i,"\n")
+                
                 if i in ds:
                     #print(f"Looks like {var} is {i} for {file}, so good to go...\n")
                     data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
