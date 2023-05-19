@@ -671,6 +671,7 @@ def list_files(directory,scenario,start_date,end_date):
     #Right now it is doing a lot (?) of loops to check for files, there probably is a better way
     for i in range(len(all_filenames)):
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
+            print("all_filenames[i][0:scenario_len]",all_filenames[i][0:scenario_len],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
