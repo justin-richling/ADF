@@ -841,6 +841,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
             #print(i,"\n")
             #Check to see if the product is in the actual dataset, if not, move on and set to 0
             else:
+                print("i thats not O3 loss or prod:",i,"\n")
                 if i in ds:
                     #print(f"Looks like {var} is {i} for {file}, so good to go...\n")
                     data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
