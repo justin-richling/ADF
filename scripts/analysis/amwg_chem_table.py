@@ -217,8 +217,9 @@ def amwg_chem_table(adf):
     toc = time.perf_counter()
     print(f"create_dic_SE took {toc - tic:0.4f} seconds")
 
-    print(dic_SE.keys())
-    print(dic_SE["O3_CHML"])
+    print(dic_SE,"\n")
+    print(dic_SE.keys(),"\n")
+    print(dic_SE["O3_CHML"],"\n")
         
     # extract all the data
     var_dict={}
@@ -836,6 +837,8 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         ds=xr.open_dataset(data_dir+file)
         data=[]
         #print(list(ds.keys()))
+
+        print(dic_SE[var].keys(),"\n")
     
         for i in dic_SE[var].keys():
             print("dic_SE[var].keys()",i,"\n")
