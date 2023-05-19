@@ -890,6 +890,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
     # End for - files
     
     #Flush out the nans and take mean
+    #This will calculate the mean for the var
     all_data=np.nanmean(all_data,axis=0)
     
     return all_data 
