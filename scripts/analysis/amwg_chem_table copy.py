@@ -317,7 +317,8 @@ def amwg_chem_table(adf):
 
         #Create the table
         #----------------
-        print("\n*************\nactually making the tables now\n*************\\n")
+        #print("\n*************\nactually making the tables now\n*************\n")
+        print(f"\n{len(f'Current Scenario: {scn}')*'-'}\nactually making the tables now\n{len(f'Current Scenario: {scn}')*'-'}\n")
         #Use this for multi-case --> down the road a bit, yeah?
         cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
         
@@ -459,7 +460,7 @@ def amwg_chem_table(adf):
 
 
 
-    """# Aerosol tables
+    # Aerosol tables
     #-----------------
     #Notify user that script has started:
     print("\n  Calculating AMWG aerosol variable table...")
@@ -614,7 +615,7 @@ def amwg_chem_table(adf):
 
         #Notify user that script has ended:
         print("  ...AMWG aerosol variable table has been generated successfully.")
-    #End if aerosol table exists"""
+    #End if aerosol table exists
 
 ##################
 # Helper functions
