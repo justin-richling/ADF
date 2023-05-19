@@ -557,7 +557,7 @@ def amwg_chem_table(adf):
                             new_ext = ext+" (TgS)"
                         else:
                             new_ext = ext+" (TgC)"
-                    elif ext == "_LIFETIME":
+                    elif ext == "_LIFETIME": #will come out as days!
                         if i == 0:
                             if 0 < my_val < 1:
                                 my_val = my_val*365
@@ -1252,7 +1252,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     chem_dict['_STE'] = np.round(STE,5)
 
     # LifeTime = Burden/(loss+deposition)
-    LT=BURDEN/(CHML+DDF-WDF)*duration/86400/365 # days
+    LT=BURDEN/(CHML+DDF-WDF)*duration/86400/365 # years
     chem_dict['_LIFETIME'] = np.round(LT,5)
 
     # Lightning NOX production
