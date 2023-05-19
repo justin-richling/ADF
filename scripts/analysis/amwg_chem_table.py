@@ -646,14 +646,14 @@ def list_files(directory,scenario,start_date,end_date):
     #    print(i)
     print("start_date[0:4]",start_date[0:4],"\n")
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    print("start_filenames",start_filenames)
+    print("start_filenames",start_filenames,"\n")
     all_start_filenames = [i.stem+".nc" for i in start_filenames]
-    print("all_start_filenames",all_start_filenames)
+    print("all_start_filenames",all_start_filenames,"\n")
 
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    print("end_filenames",end_filenames)
+    print("end_filenames",end_filenames,"\n")
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
-    print("all_end_filenames",all_end_filenames)
+    print("all_end_filenames",all_end_filenames,"\n")
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
@@ -705,7 +705,7 @@ def list_files(directory,scenario,start_date,end_date):
 
             if '.h0' in scenario:
                 all_fileNames.append(all_filenames[i])
-    print("all_fileNames",all_fileNames,"\n")
+    print("Final set: all_fileNames",all_fileNames,"\n")
     return all_fileNames
 
 #####
@@ -742,7 +742,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
     areas={}
     Earth_rad=6.371e6 # Earth Radius in m 
 
-    j_bizzle = 0
+    j_bizzle = 1
     for i,scn in enumerate(scenarios):
 
         current_dir=data_dirs[i]
