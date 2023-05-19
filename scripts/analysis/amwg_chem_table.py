@@ -212,7 +212,6 @@ def amwg_chem_table(adf):
     '''
     #Get dict for critical values and dict for case/variables mean ANN values
     #Dic_crit,var_dict = make_var_dict(CHEMS)
-    print(timeit.timeit(lambda: create_dic_SE(CHEMS, ListVars, ext1_SE), number=1),"\n")
     tic = time.perf_counter()
     dic_SE = create_dic_SE(CHEMS, ListVars, ext1_SE)
     toc = time.perf_counter()
@@ -646,12 +645,12 @@ def list_files(directory,scenario,start_date,end_date):
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
     #print("start_filenames",start_filenames,"\n")
     all_start_filenames = [i.stem+".nc" for i in start_filenames] # Grab just the file names themselves
-    print("all_start_filenames",all_start_filenames,"\n")
+    #print("all_start_filenames",all_start_filenames,"\n")
 
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
     #print("end_filenames",end_filenames,"\n")
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
-    print("all_end_filenames",all_end_filenames,"\n")
+    #print("all_end_filenames",all_end_filenames,"\n")
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
@@ -659,7 +658,7 @@ def list_files(directory,scenario,start_date,end_date):
         print(" Directory has no outputs ")
         return
     all_filenames.sort()
-    print("all_filenames",all_filenames,"\n")
+    #print("all_filenames",all_filenames,"\n")
 
     
     # this is used to discern what files to extract
@@ -671,7 +670,6 @@ def list_files(directory,scenario,start_date,end_date):
     #Right now it is doing a lot (?) of loops to check for files, there probably is a better way
     for i in range(len(all_filenames)):
         if all_filenames[i][0:scenario_len]==scenario: # check if the file is relevant
-            print("all_filenames[i][0:scenario_len]",all_filenames[i][0:scenario_len],"\n")
             tmp_file=xr.open_dataset(directory+all_filenames[i])    
             # the times on filenames may not represent the exact time but time_bnds always does
             dim_time=tmp_file.dims['time']
