@@ -463,7 +463,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     ax2 = plt.subplot(gs[0, 2:], projection=proj)
     ax3 = plt.subplot(gs[1, 1:3], projection=proj)
 
-    print(np.unique(np.array(levelsdiff)))
+    print("AHHHHHH",np.unique(np.array(levelsdiff)))
     levs = np.unique(np.array(levels1))
     print(levs,levelsdiff)
     if len(levs) < 2:
