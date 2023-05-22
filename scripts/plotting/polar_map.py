@@ -255,7 +255,7 @@ def polar_map(adfobj):
                             #oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
 
                             mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True) #mdata.sel(time=seasons[s]).mean(dim='time')
-                            oseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True) #odata.sel(time=seasons[s]).mean(dim='time')
+                            oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True) #odata.sel(time=seasons[s]).mean(dim='time')
 
                             # difference: each entry should be (lat, lon)
                             dseasons[s] = mseasons[s] - oseasons[s]
