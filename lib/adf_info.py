@@ -222,10 +222,14 @@ class AdfInfo(AdfConfig):
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
 
         #Loop over cases:
+        syears2 = []
+        eyears2 = []
         for case_idx, case_name in enumerate(case_names):
 
             syear = f"{str(syears[case_idx]).zfill(4)}"
+            syears2.appendsyear
             eyear = f"{str(eyears[case_idx]).zfill(4)}"
+            eyears2.append(eyear)
 
             #Check if history file path exists:
             if cam_hist_locs:
@@ -239,7 +243,7 @@ class AdfInfo(AdfConfig):
                 if syear is None:
                     print(f"No given start year for {case_name}, using first found year...")
                     syear = int(case_climo_yrs[0])
-                elif str(syears[case_idx]) not in case_climo_yrs:
+                elif str(syear) not in case_climo_yrs:
                     print(f"Given start year '{syear}' is not in current dataset {case_name}, using first found year:",case_climo_yrs[0],"\n")
                     syear = int(case_climo_yrs[0])
                 #End if
@@ -276,8 +280,8 @@ class AdfInfo(AdfConfig):
 
         #End for
 
-        self.__syears = syears
-        self.__eyears = eyears
+        self.__syears = syears2
+        self.__eyears = eyears2
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
