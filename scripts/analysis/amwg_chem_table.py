@@ -238,7 +238,7 @@ def amwg_chem_table(adf):
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
         table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")"""
-    '''
+    
     if 1==0:
         print("this should never run!")
         
@@ -460,7 +460,7 @@ def amwg_chem_table(adf):
         print("  ...AMWG chemistry variable table has been generated successfully.")
     #End if chem table csv exists
     #End chemistry tables
-    #--------------------'''
+    #--------------------
 
 
 
