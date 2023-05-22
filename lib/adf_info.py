@@ -227,7 +227,7 @@ class AdfInfo(AdfConfig):
         for case_idx, case_name in enumerate(case_names):
 
             syear = f"{str(syears[case_idx]).zfill(4)}"
-            syears2.appendsyear
+            syears2.append(syear)
             eyear = f"{str(eyears[case_idx]).zfill(4)}"
             eyears2.append(eyear)
 
