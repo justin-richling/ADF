@@ -143,7 +143,9 @@ class AdfInfo(AdfConfig):
 
             #Attempt to grab baseline start_years (not currently required):
             syear_baseline = self.get_baseline_info('start_year')
+            syear_baseline = f"{str(syear_baseline).zfill(4)}"
             eyear_baseline = self.get_baseline_info('end_year')
+            eyear_baseline = f"{str(eyear_baseline).zfill(4)}"
 
             #Get climo years for verification or assignment if missing
             baseline_hist_locs = self.get_baseline_info('cam_hist_loc')
@@ -221,6 +223,9 @@ class AdfInfo(AdfConfig):
 
         #Loop over cases:
         for case_idx, case_name in enumerate(case_names):
+
+            syears[case_idx] = f"{str(syears[case_idx]).zfill(4)}"
+            eyears[case_idx] = f"{str(eyears[case_idx]).zfill(4)}"
 
             #Check if history file path exists:
             if cam_hist_locs:
