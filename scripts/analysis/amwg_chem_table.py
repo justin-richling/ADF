@@ -317,8 +317,8 @@ def amwg_chem_table(adf):
 
         #Create the table
         #----------------
-        #print("\n*************\nactually making the tables now\n*************\n")
-        print(f"\n{len(f'Current Scenario: {scn}')*'-'}\nactually making the tables now\n{len(f'Current Scenario: {scn}')*'-'}\n")
+        print("\n*************\nactually making the tables now\n*************\n")
+        #print(f"\n{len(f'Current Scenario: {scn}')*'-'}\nactually making the tables now\n{len(f'Current Scenario: {scn}')*'-'}\n")
         #Use this for multi-case --> down the road a bit, yeah?
         cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
         
@@ -432,12 +432,13 @@ def amwg_chem_table(adf):
         #table_df = table_df.replace('CH3OH','Methanol', regex=True)
         #table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
 
-        #Looks like LNO calculated in each variable are the same value, so just use one LNO??
+        #Looks like LNO calculated in each variable are the same value?, so just use one LNO??
         # There's probably a better way to do this 
         drop_vals = ["CH3CCL3_LNO","CO_LNO","O3_LNO"]
         for val in drop_vals:
             table_df = table_df[table_df["variable"].str.contains(val) == False]
             table_df.reset_index(drop=True, inplace = True)
+        #
 
         # Grab one LNO value (from CH4) change to LNO_PROD and add units
         # Also, for no good reason, move to the bottom of table for completeness' sake
@@ -551,6 +552,22 @@ def amwg_chem_table(adf):
                 for i,scn in enumerate(scenarios):
                     my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
                                                     area,durations[i],inside)[key]
+
+                    print("my_val:",my_val)
+                    """
+                    if ext == "_BURDEN":
+                        new_ext = ext+" (Tg)"
+                    elif ext == "_LNO":
+                        new_ext = ext+" (TgN/yr)"
+                    elif ext == "_LIFETIME": # will come out as years!!
+                         if my_val < 1:
+                            my_val = my_val*365
+                            new_ext = ext+" (days)"
+                        else:
+                            new_ext = ext+" (yr)"
+                    else:
+                        new_ext = ext+" (Tg/yr)"
+                    """
                 
                     if ext == "_BURDEN":
                         if current_var == "SULF":
@@ -558,7 +575,7 @@ def amwg_chem_table(adf):
                         else:
                             new_ext = ext+" (TgC)"
                     elif ext == "_LIFETIME": #will come out as days!
-                        if i == 0:
+                        '''if i == 0:
                             if 0 < my_val < 1:
                                 my_val = my_val*365
                                 new_ext = ext+" (days)"
@@ -570,7 +587,15 @@ def amwg_chem_table(adf):
                         if i > 0:
                             if 0 < my_val < 1:
                                 my_val = my_val*365
-                                new_ext = ext+" (days)"
+                                new_ext = ext+" (days)"'''
+
+      
+                        if my_val < 1:
+                            my_val = my_val*365
+                            new_ext = ext+" (days)"
+                        else:
+                            new_ext = ext+" (yr)"
+            
                     else:
                         if current_var == "SULF":
                             new_ext = ext+" (TgS/yr)"
