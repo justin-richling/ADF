@@ -607,7 +607,6 @@ def amwg_chem_table(adf):
 
         
                             if my_val < 365:
-                                
                                 new_ext = ext+" (days)"
                             else:
                                 my_val = my_val/365
