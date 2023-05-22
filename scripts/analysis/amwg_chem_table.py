@@ -561,6 +561,7 @@ def amwg_chem_table(adf):
                 else:
                     trop=current_crit
 
+            tic = time.perf_counter()
             for current_var in AEROSOLS:
                 for key,ext in aerosols_ext.items():
                     row_values = []
@@ -658,6 +659,8 @@ def amwg_chem_table(adf):
             table_df = table_df.replace('SULF','SO4', regex=True)
 
             table_df.to_csv(output_csv_file, index=False)
+            toc = time.perf_counter()
+            print(f"Creating pandas tables for all cases took {toc - tic:0.4f} seconds")
             adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
 
             #Notify user that script has ended:
