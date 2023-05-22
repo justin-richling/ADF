@@ -468,6 +468,8 @@ def amwg_chem_table(adf):
 
     # Aerosol tables
     #-----------------
+
+    
     """if output_csv_file.is_file():
         print(f"'{output_csv_file}' already exists, so skipping partner!\n")
         table_df = pd.read_csv(output_csv_file)
@@ -520,6 +522,8 @@ def amwg_chem_table(adf):
                 var_dict[scn]={}
                 Dic_var_comp={}
 
+                cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
+
                 tic = time.perf_counter()
                 for _,current_var in enumerate(AEROSOLS):
                     # Components are: burden, chemical loss, chemical prod, dry deposition,
@@ -547,6 +551,7 @@ def amwg_chem_table(adf):
                 print(f"SEbudget for all components took {toc - tic:0.4f} seconds")
 
                 #Critical threshholds????
+                #TODO: Make this a config file argument
                 current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
                 Dic_crit[scn]=current_crit
 
