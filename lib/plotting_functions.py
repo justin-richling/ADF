@@ -463,9 +463,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     ax2 = plt.subplot(gs[0, 2:], projection=proj)
     ax3 = plt.subplot(gs[1, 1:3], projection=proj)
 
-    print("AHHHHHH",np.unique(np.array(levelsdiff)))
     levs = np.unique(np.array(levels1))
-    #print(levs,levelsdiff)
+
     if len(levs) < 2:
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
         ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
