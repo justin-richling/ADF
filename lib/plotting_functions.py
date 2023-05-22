@@ -471,7 +471,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
         ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
-    if levelsdiff < 2:
+    if np.unique(np.array(levelsdiff)) < 2:
         img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
