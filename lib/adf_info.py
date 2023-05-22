@@ -224,8 +224,8 @@ class AdfInfo(AdfConfig):
         #Loop over cases:
         for case_idx, case_name in enumerate(case_names):
 
-            syears[case_idx] = f"{str(syears[case_idx]).zfill(4)}"
-            eyears[case_idx] = f"{str(eyears[case_idx]).zfill(4)}"
+            syear = f"{str(syears[case_idx]).zfill(4)}"
+            eyear = f"{str(eyears[case_idx]).zfill(4)}"
 
             #Check if history file path exists:
             if cam_hist_locs:
@@ -236,19 +236,19 @@ class AdfInfo(AdfConfig):
 
                 #Check if start or end year is missing.  If so then just assume it is the
                 #start or end of the entire available model data.
-                if syears[case_idx] is None:
+                if syear is None:
                     print(f"No given start year for {case_name}, using first found year...")
-                    syears[case_idx] = int(case_climo_yrs[0])
+                    syear = int(case_climo_yrs[0])
                 elif str(syears[case_idx]) not in case_climo_yrs:
-                    print(f"Given start year '{syears[case_idx]}' is not in current dataset {case_name}, using first found year:",case_climo_yrs[0],"\n")
-                    syears[case_idx] = int(case_climo_yrs[0])
+                    print(f"Given start year '{syear}' is not in current dataset {case_name}, using first found year:",case_climo_yrs[0],"\n")
+                    syear = int(case_climo_yrs[0])
                 #End if
-                if eyears[case_idx] is None:
+                if eyear is None:
                     print(f"No given end year for {case_name}, using last found year...")
-                    eyears[case_idx] = int(case_climo_yrs[-1])
-                elif str(eyears[case_idx]) not in case_climo_yrs:
-                    print(f"Given end year '{eyears[case_idx]}' is not in current dataset {case_name}, using last found year:",case_climo_yrs[-1],"\n")
-                    eyears[case_idx] = int(case_climo_yrs[-1])
+                    eyear = int(case_climo_yrs[-1])
+                elif str(eyear) not in case_climo_yrs:
+                    print(f"Given end year '{eyear}' is not in current dataset {case_name}, using last found year:",case_climo_yrs[-1],"\n")
+                    eyear = int(case_climo_yrs[-1])
                 #End if
             else:
                 #History file path isn't needed if user is running ADF directly on time series.
@@ -263,7 +263,7 @@ class AdfInfo(AdfConfig):
             #End if
 
             #Update case name with provided/found years:
-            case_name += f"_{syears[case_idx]}_{eyears[case_idx]}"
+            case_name += f"_{syear}_{eyear}"
 
             #Set the final directory name and save it to plot_location:
             direc_name = f"{case_name}_vs_{data_name}"
