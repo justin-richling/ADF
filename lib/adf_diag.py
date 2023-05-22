@@ -384,8 +384,10 @@ class AdfDiag(AdfWeb):
             print(f"\t Processing time series for case '{case_name}' :")
 
             #Extract start and end year values:
-            start_year = start_years[case_idx]
-            end_year   = end_years[case_idx]
+            start_year = int(start_years[case_idx])
+            end_year   = int(end_years[case_idx])
+
+            print(start_year,end_year,"\n")
 
             #Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
