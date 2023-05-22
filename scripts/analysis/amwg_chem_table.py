@@ -266,6 +266,7 @@ def amwg_chem_table(adf):
             var_dict[scn]={}
             Dic_var_comp={}
 
+            print("preppin for SE budget")
             tic = time.perf_counter()    
             for _,var in enumerate(CHEMS):
 
@@ -284,7 +285,7 @@ def amwg_chem_table(adf):
                 Dic_var_comp[var]=Dic_comp
             var_dict[scn]= Dic_var_comp
             toc = time.perf_counter()
-            print(f"SEbudget for all components took {toc - tic:0.4f} seconds")  
+            print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds")  
             
             print("here comes the fun cooker for SEbudget:")
             #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1),"\n")
@@ -548,7 +549,7 @@ def amwg_chem_table(adf):
                     Dic_var_comp[current_var]=Dic_comp
                 var_dict[scn]= Dic_var_comp
                 toc = time.perf_counter()
-                print(f"SEbudget for all components took {toc - tic:0.4f} seconds")
+                print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds") 
 
                 #Critical threshholds????
                 #TODO: Make this a config file argument
