@@ -465,7 +465,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     print("AHHHHHH",np.unique(np.array(levelsdiff)))
     levs = np.unique(np.array(levels1))
-    print(levs,levelsdiff)
+    #print(levs,levelsdiff)
     if len(levs) < 2:
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
         ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
