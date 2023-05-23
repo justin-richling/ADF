@@ -802,13 +802,11 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
     areas={}
     Earth_rad=6.371e6 # Earth Radius in m 
 
-    j_bizzle = 1
     for i,scn in enumerate(scenarios):
 
         current_dir=data_dirs[i]
 
         # find the needed the files
-        print("start_periods[i],end_periods[i]",start_periods[i],end_periods[i],"\n")
         current_files=list_files(current_dir,scn,start_periods[i],end_periods[i])
         # get the Lat and Lons for each scenario
         tmp_file=xr.open_dataset(current_dir+current_files[i])
@@ -839,8 +837,6 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         Lats[scn]=lat
         Lons[scn]=lon
         areas[scn]=area
-
-        j_bizzle += 1
 
     print(f"Got the files, lats, lons, and areas (hopefully)...\nj_bizzle={j_bizzle}")
     return files, Lats, Lons, areas
