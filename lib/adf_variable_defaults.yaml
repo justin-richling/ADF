@@ -49,22 +49,6 @@
 # category  -> The website category the variable will be placed under.
 #
 #
-# TIME SERIES: (ts)
-#
-# rolling  -> Flag rolling average mean 
-#             ** currently only for annually calculated time series **
-# months   -> Number of months to average over
-#
-#
-# DERIVED VARIABLES:
-#
-# operation  -> simple mathematical operation for calculating variable from constituents
-#               ie add or subtract all constituents.
-#                * Nothing that combines operations or complex operations yet
-#
-# constituents  -> list of necessary variables to derive desired variable
-#
-#
 # Final Note:  Please do not modify this file unless you plan to push your changes back to the ADF repo.
 #              If you would like to modify this file for your personal ADF runs then it is recommended
 #              to make a copy of this file, make modifications in that copy, and then point the ADF to
@@ -138,15 +122,20 @@ AODDUST:
   add_offset: 0
   new_unit: ""
 
-AODVIS:
+AODVISdn:
   category: "Aerosols"
-  colormap: "Oranges"
-  contour_levels_range: [0.05, 0.6, 0.05]
+  colormap: "jet"
+  #contour_levels_range: [0.05, 0.6, 0.05]
+  contour_levels_range: [0.01, 1.01, 0.05]
   diff_colormap: "PuOr_r"
-  diff_contour_range: [-0.1, 0.1, 0.01]
+  #diff_contour_range: [-0.1, 0.1, 0.01]
+  diff_contour_range: [-0.4, 0.401, 0.05]
   scale_factor: 1
   add_offset: 0
   new_unit: ""
+  obs_file: "MOD08_M3_192x288_AOD_2001-2020_climo.nc"
+  obs_name: "MODIS"
+  obs_var_name: "AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean"
 
 BURDENBC:
   category: "Aerosols"
@@ -174,6 +163,7 @@ SO2:
 
 SOAG:
   category: "Aerosols"
+
 
 #+++++++++++++++++
 # Category: Budget
@@ -218,6 +208,9 @@ ZMDT:
 
 CAPE:
   category: "Deep Convection"
+  obs_file: "CAPE_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "CAPE"
 
 CMFMC_DP:
   category: "Deep Convection"
@@ -244,6 +237,7 @@ VGTW_TOTAL:
 VTGWORO:
   category: "GW"
 
+
 #+++++++++++++++++
 # Category: Composition
 #+++++++++++++++++
@@ -266,15 +260,22 @@ H2SO4:
 N2O:
   category: "Composition"
 
+
 #+++++++++++++++++
 # Category: Clouds
 #+++++++++++++++++
 
 CLDICE:
   category: "Clouds"
+  obs_file: "CLDICE_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "CLDICE"
 
 CLDLIQ:
   category: "Clouds"
+  obs_file: "CLDLIQ_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "CLDLIQ"
 
 CLDTOT:
   colormap: "Oranges"
@@ -356,6 +357,9 @@ TGCLDLWP:
     colorbar:
       label : "g m$^{-2}$"
   category: "Clouds"
+  obs_file: "TGCLDLWP_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "TGCLDLWP"
 
 TGCLDIWP:
   colormap: "Blues"
@@ -369,6 +373,9 @@ TGCLDIWP:
     colorbar:
       label : "g m$^{-2}$"
   category: "Clouds"
+  obs_file: "TGCLDIWP_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "TGCLDIWP"
 
 CCN3:
   category: "Clouds"
@@ -438,8 +445,12 @@ QFLX:
 # Category: Surface variables
 #+++++++++++++++++
 
+
 PBLH:
   category: "Surface variables"
+  obs_file: "PBLH_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "PBLH"
 
 PSL:
   colormap: "Oranges"
@@ -453,6 +464,9 @@ PSL:
     colorbar:
       label : "hPa"
   category: "Surface variables"
+  obs_file: "PSL_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "PSL"
 
 PS:
   colormap: "Oranges"
@@ -465,13 +479,16 @@ PS:
   mpl:
     colorbar:
       label : "hPa"
-  obs_file: "ERAI_all_climo.nc"
-  obs_name: "ERAI"
-  obs_var_name: "PS"
   category: "Surface variables"
+  obs_file: "PS_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "PS"
 
 TREFHT:
   category: "Surface variables"
+  obs_file: "TREFHT_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "TREFHT"
 
 TS:
   colormap: "Blues"
@@ -535,6 +552,7 @@ OCNFRAC:
 LANDFRAC:
   category: "Surface variables"
 
+
 #+++++++++++++++++
 # Category: State
 #+++++++++++++++++
@@ -579,8 +597,8 @@ U:
   mpl:
     colorbar:
       label : "ms$^{-1}$"
-  obs_file: "ERAI_all_climo.nc"
-  obs_name: "ERAI"
+  obs_file: "U_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
   obs_var_name: "U"
   vector_pair: "V"
   vector_name: "Wind"
@@ -597,8 +615,8 @@ V:
   mpl:
     colorbar:
       label : "ms$^{-1}$"
-  obs_file: "ERAI_all_climo.nc"
-  obs_name: "ERAI"
+  obs_file: "V_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
   obs_var_name: "V"
   vector_pair: "U"
   vector_name: "Wind"
@@ -606,14 +624,21 @@ V:
 
 Q:
   category: "State"
+  obs_file: "Q_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "Q"
 
 T:
   category: "State"
-  obs_file: "ERAI_all_climo.nc"
-  obs_name: "ERAI"
+  obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "T"
 
 OMEGA:
   category: "State"
+  obs_file: "OMEGA_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "OMEGA"
 
 OMEGA500:
   category: "State"
@@ -738,10 +763,6 @@ FLNTC:
   obs_var_name: "toa_lw_clr_t_mon"
   category: "TOA energy flux"
 
-HOT_GARBAGE:
-  operation:
-      "add"
-
 RESTOM:
   #** derived quantity **
   new_unit: "Wm$^{-2}$"
@@ -756,6 +777,7 @@ RESTOM:
     "subtract"
   constituents:
     ["FSNT","FLNT"]
+
 
 #+++++++++++++++++
 # Category: Surface energy flux
