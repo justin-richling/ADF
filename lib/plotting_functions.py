@@ -8,9 +8,9 @@ plotting scripts.
 
 #import statements:
 from typing import Optional
-from pathlib import Path
 import numpy as np
 import xarray as xr
+import pandas as pd
 import matplotlib as mpl
 import cartopy.crs as ccrs
 #nice formatting for tick labels
@@ -32,6 +32,16 @@ import matplotlib.pyplot as plt
 empty_message = "No Valid\nData Points"
 props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
 
+
+#Set seasonal ranges:
+seasons = {"ANN": np.arange(1,13,1),
+            "DJF": [12, 1, 2],
+            "JJA": [6, 7, 8],
+            "MAM": [3, 4, 5],
+            "SON": [9, 10, 11]
+            }
+
+            
 #################
 #HELPER FUNCTIONS
 #################
@@ -173,6 +183,44 @@ def global_average(fld, wgt, verbose=False):
     return np.ma.average(avg1)
 
 
+def spatial_average(indata, weights=None, spatial_dims=None):
+    import warnings
+
+    if weights is None:
+        #Calculate spatial weights:
+        if 'lat' in indata.coords:
+            weights = np.cos(np.deg2rad(indata.lat))
+            weights.name = "weights"
+        elif 'ncol' in indata.dims:
+            if 'area' in indata:
+                warnings.warn("area variable being used to generated normalized weights.")
+                weights = indata['area'] / indata['area'].sum()
+            else:
+                warnings.warn("We need a way to get area variable. Using equal weights.")
+                weights = xr.DataArray(1.)
+            weights.name = "weights"
+        else:
+            weights = xr.DataArray(1.)
+            weights.name = "weights"
+        #End if
+    #End if
+
+    #Apply weights to input data:
+    weighted = indata.weighted(weights)
+
+    # we want to average over all non-time dimensions
+    if spatial_dims is None:
+        if 'ncol' in indata.dims:
+            spatial_dims = ['ncol']
+        else:
+            spatial_dims = [dimname for dimname in indata.dims if (('lat' in dimname.lower()) or ('lon' in dimname.lower()))]
+
+    if not spatial_dims:
+        warnings.warn("No spatial dimensions were identified, so can not perform average.")
+
+    return weighted.mean(dim=spatial_dims)
+
+
 def wgt_rmse(fld1, fld2, wgt):
     """Calculated the area-weighted RMSE.
 
@@ -202,6 +250,83 @@ def wgt_rmse(fld1, fld2, wgt):
         warray = warray / np.sum(warray) # normalize
         wmse = np.sum(warray * (fld1 - fld2)**2)
         return np.sqrt( wmse ).item()
+
+
+####### 
+# Time-weighted averaging
+
+def annual_mean(data, whole_years=None, time_name='time'):
+    """Calculate annual averages from time series data."""
+    assert time_name in data.coords, f"Did not find the expected time coordinate {time_name} in the data"
+    if whole_years:
+        first_january = np.argwhere((data.time.dt.month == 1).values)[0].item()
+        last_december = np.argwhere((data.time.dt.month == 12).values)[-1].item()
+        data_to_avg = data.isel(time=slice(first_january,last_december+1)) # PLUS 1 BECAUSE SLICE DOES NOT INCLUDE END POINT
+    else:
+        data_to_avg = data
+    date_range_string = f"{data_to_avg['time'][0]} -- {data_to_avg['time'][-1]}" 
+
+    # this provides the normalized monthly weights in each year
+    # -- do it for each year to allow for non-standard calendars (360-day)
+    # -- and also to provision for data with leap years
+    days_gb = data_to_avg.time.dt.daysinmonth.groupby('time.year').map(lambda x: x / x.sum())
+    # weighted average with normalized weights: <x> = SUM x_i * w_i  (implied division by SUM w_i)
+    result =  (data_to_avg * days_gb).groupby('time.year').sum(dim='time')
+    result.attrs['averaging_period'] = date_range_string
+    return result
+
+
+def seasonal_mean(data, season=None, is_climo=None):
+    """Calculates the time-weighted seasonal average (or average over all time).
+    
+    If season is `ANN` or None, it will default to averaging over all available time.
+
+    If is_climo is True, expects data to have time or month dimenion of size 12. 
+    If is_climo is False, then time must be a coordinate, 
+    and the time.dt.days_in_month attribute must be available.
+
+    If the data is a climatology, the code will make an attempt to understand the time or month
+    dimension, but basically will assume that it is ordered from January to December.
+    If the data is a climatology and is just a numpy array with one dimension that is size 12,
+    it will assume that dimension is time running from January to December. 
+
+    """
+    if season is not None:
+        assert season in ["ANN", "DJF", "JJA", "MAM", "SON"], f"Unrecognized season string provided: {season}"
+    elif season is None:
+        season = "ANN"
+
+    try:
+        month_length = data.time.dt.days_in_month
+    except:
+        # do our best to determine the temporal dimension and assign weights
+        if not is_climo:
+            raise ValueError("Non-climo file provided, but without a decoded time dimension.")
+        else:
+            # CLIMO file: try to determine which dimension is month
+            has_time = False
+            if isinstance(data, xr.DataArray):
+                has_time = 'time' in data.dims
+            if not has_time:
+                if "month" in data.dims:
+                    data = data.rename({"month":"time"})
+                    has_time = True
+            if not has_time:
+                # this might happen if a pure numpy array gets passed in
+                # --> assumes ordered January to December. 
+                assert ((12 in data.shape) and (data.shape.count(12) == 1)), f"Sorry, {data.shape.count(12)} dimensions have size 12, making determination of which dimension is month ambiguous. Please provide a `time` or `month` dimension."
+                time_dim_num = data.shape.index(12)
+                fakedims = [f"dim{n}" for n in range(len(data.shape))]
+                fakedims[time_dim_num] = "time"
+                data = xr.DataArray(data, dims=fakedims)
+            timefix = pd.date_range(start='1/1/1999', end='12/1/1999', freq='MS') # generic time coordinate from a non-leap-year
+            data = data.assign_coords({"time":timefix})
+        month_length = data.time.dt.days_in_month
+
+    data = data.sel(time=data.time.dt.month.isin(seasons[season])) # directly take the months we want based on season kwarg
+    return data.weighted(data.time.dt.daysinmonth).mean(dim='time')    
+        
+
 
 #######
 
@@ -339,18 +464,22 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     ax3 = plt.subplot(gs[1, 1:3], projection=proj)
 
     levs = np.unique(np.array(levels1))
+    levs_diff = np.unique(np.array(levelsdiff))
+
     if len(levs) < 2:
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
         ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
 
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
         ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
-
-        img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
-        ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+
+    if len(levs_diff) < 2:
+        img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+        ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+    else:
         img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
 
     #Set Main title for subplots:
@@ -1663,154 +1792,6 @@ def square_contour_difference(fld1, fld2, **kwargs):
     cb1 = fig.colorbar(img1, cax=cbax_top)
     cb2 = fig.colorbar(img3, cax=cbax_bot, orientation='horizontal')
     return fig
-
-#####
-
-###############################
-# Multi-Case Multi-Plot Section
-###############################
-
-def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj):
-    """ This is a multi-case comparison of test minus baseline for each test case:
-        wks: path for saved image.
-                Should be assets directory inside of the main_website directory
-
-        ptype: ADF shortname for plot type.
-                For this plot it will be either LatLon or LatLon_Vector
-
-        case_names: list of test case names only
-
-        nicknames: list of test case nicknames
-                First entry of list will be list of test case nicknames
-                Second entry will be string object of baseline nickname
-
-        multi_dict: ordered dictionary of difference data for each var, test case, and season
-                multi_dict[var][case_name][s]
-        
-        web_category:
-                variable category
-
-        adfobj: ADF object
-                Needed to test if redo_plot is called in config yaml file
-    """
-
-    
-    nplots = len(nicknames[0])
-    if nplots > 2:
-        ncols = 3
-    else:
-        ncols = 2
-
-    # Check redo_plot. If set to True: remove old plot, if it already exists:
-    redo_plot = adfobj.get_basic_info('redo_plot')
-
-    #Try and format spacing based on number of cases
-    # NOTE: ** this will have to change if figsize or dpi change **
-    if nplots < 4:
-        hspace = -1.0
-    else:
-        hspace = -0.85    
-
-    nrows = int(np.ceil(nplots/ncols))
-    if nrows == 1:
-        y_title = 0.265
-    else:
-        y_title = 0.315
-
-    if nrows < 2:
-        nrows = 2
-
-    # specify the central longitude for the plot
-    central_longitude = get_central_longitude(adfobj)
-    proj = ccrs.PlateCarree(central_longitude=central_longitude)
-    # formatting for tick labels
-    lon_formatter = LongitudeFormatter(number_format='0.0f',
-                                        degree_symbol='',
-                                        dateline_direction_label=False)
-    lat_formatter = LatitudeFormatter(number_format='0.0f',
-                                        degree_symbol='')
-    for var in multi_dict.keys():
-        if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
-            for case in multi_dict[var].keys():
-                for season in multi_dict[var][case].keys():
-                    file_name = f"{var}_{season}_{ptype}_multi_plot.png"
-                    if (not redo_plot) and Path(wks / file_name).is_file():
-                        #Continue to next iteration:
-                        continue
-                    elif (redo_plot) or (not Path(wks / file_name).is_file()):
-                        fig_width = 15
-                        fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
-                        fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
-                                                sharex=True,
-                                                sharey=True,
-                                                subplot_kw={"projection": proj})
-
-                        #Set figure title
-                        plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
-                        
-                        normfunc,_ = use_this_norm()
-
-                        count = 0
-                        img = []
-                        titles = []
-                        for r in range(0,nrows):
-                            for c in range(0,ncols):
-                                if count < nplots:
-                                    mdlfld = multi_dict[var][case_names[count]][season]["diff_data"]
-                                    lat = mdlfld['lat']
-                                    mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
-
-                                    # mesh for plots:
-                                    lons, lats = np.meshgrid(lon, lat)
-
-                                    levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
-                                    levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
-
-                                    # color normalization for difference
-                                    if (np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff)):
-                                        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
-                                    else:
-                                        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
-                                    cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
-
-                                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
-                                                    cmap=cmap, norm=normdiff, 
-                                                    transform=proj))
-
-                                    #Set individual plot titles (case name/nickname)
-                                    titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
-                                    titles.append(axs[r,c].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
-
-                                    axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-                                    axs[r,c].coastlines()
-                                    axs[r,c].set_xticks(np.linspace(-180, 120, 6), crs=proj)
-                                    axs[r,c].set_yticks(np.linspace(-90, 90, 7), crs=proj)
-                                    axs[r,c].tick_params('both', length=5, width=1.5, which='major')
-                                    axs[r,c].tick_params('both', length=5, width=1.5, which='minor')
-                                    axs[r,c].xaxis.set_major_formatter(lon_formatter)
-                                    axs[r,c].yaxis.set_major_formatter(lat_formatter)
-
-                                else:
-                                    #Clear left over subplots if they don't fill the row x column matrix
-                                    axs[r,c].set_visible(False)
-                                count = count + 1
-
-                        # __COLORBARS__
-                        fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
-                                    aspect=20, shrink=.5, location="bottom",
-                                    anchor=(0.5,-0.3), extend='both')
-                            
-                        #Clean up the spacing a bit
-                        plt.subplots_adjust(wspace=0.3, hspace=hspace)
-        
-                        fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
-                        adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
-                                                            category=web_category, season=season, plot_type="LatLon",multi_case=True)
-
-                        #Close plots:
-                        plt.close()
-
 
 #####################
 #END HELPER FUNCTIONS
