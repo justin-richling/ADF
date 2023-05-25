@@ -234,18 +234,18 @@ def amwg_table(adf):
 
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"
-        mean_case = output_location/f"stats_mean_{case_name}.csv"
+        """mean_case = output_location/f"stats_mean_{case_name}.csv"
 
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
         if Path(mean_case).is_file():
             #Path.unlink(output_csv_file)
             table_df = pd.read_csv(mean_case)
-            adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+            adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")"""
 
 
         #These are created in regridding/regrid_and_vert_interp.py script
-        mean_case = output_location/f"stats_mean_{case_names[case_idx]}.csv"
-        mean_df_case = pd.read_csv(mean_case)
+        #mean_case = output_location/f"stats_mean_{case_names[case_idx]}.csv"
+        #mean_df_case = pd.read_csv(mean_case)
 
         #Save case name as a new key in the RESTOM dictonary:
         derived_dict[case_name] = {}
@@ -333,11 +333,12 @@ def amwg_table(adf):
                 data = _spatial_average(data)  # changes data "in place"
 
             #Grab mean value from csv file
-            data_mean = mean_df_case[mean_df_case["var"]==var]["mean"].values[0]
+            #data_mean = mean_df_case[mean_df_case["var"]==var]["mean"].values[0]
 
             #Add necessary data for derived calcs below
             if var in derived_list:
-                derived_dict[case_name][var] = [data_mean, data, unit_str]
+                #derived_dict[case_name][var] = [data_mean, data, unit_str]
+                derived_dict[case_name][var] = [data, unit_str]
 
             """#Add necessary data for RESTOM calcs below
             if var == "FLNT":
@@ -358,7 +359,8 @@ def amwg_table(adf):
                     'standard error', '95% CI', 'trend', 'trend p-value']
             
             # These get written to our output file: 
-            stats_list = _get_row_vals(data, data_mean)
+            #stats_list = _get_row_vals(data, data_mean)
+            stats_list = _get_row_vals(data)
             row_values = [var, unit_str] + stats_list
 
             # Format entries:
@@ -464,10 +466,11 @@ def _spatial_average(indata):
 
 #####
 
-def _get_row_vals(data,data_mean):    
+#def _get_row_vals(data,data_mean):
+def _get_row_vals(data):    
     # Now that data is (time,), we can do our simple stats:
  
-    #data_mean = data.data.mean()
+    data_mean = data.data.mean()
     #Conditional Formatting depending on type of float
     if np.abs(data_mean) < 1:
         formatter = ".3g"
@@ -605,13 +608,14 @@ def _derive_restom(case_name, derived_dict, output_csv_file, cols):
     
     var = "RESTOM" #RESTOM = FSNT-FLNT
     print(f"\t - Variable '{var}' being added to table")
-    data_mean = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
+    #data_mean = derived_dict[case_name]["FSNT"][0] - derived_dict[case_name]["FLNT"][0]
     data = derived_dict[case_name]["FSNT"][1] - derived_dict[case_name]["FLNT"][1]
      # In order to get correct statistics, average to annual or seasonal
     data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
                                                                 # NOTE: data will now have a 'year' dimension instead of 'time'
     # These get written to our output file:
-    stats_list = _get_row_vals(data, data_mean)
+    #stats_list = _get_row_vals(data, data_mean)
+    stats_list = _get_row_vals(data)
     #Extract units string, if available:
     if hasattr(data, 'units'):
         unit_str = data.units
