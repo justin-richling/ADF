@@ -8,9 +8,9 @@ plotting scripts.
 
 #import statements:
 from typing import Optional
+from pathlib import Path
 import numpy as np
 import xarray as xr
-import pandas as pd
 import matplotlib as mpl
 import cartopy.crs as ccrs
 #nice formatting for tick labels
@@ -31,7 +31,6 @@ import matplotlib.pyplot as plt
 
 empty_message = "No Valid\nData Points"
 props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
-
 
 #Set seasonal ranges:
 seasons = {"ANN": np.arange(1,13,1),
@@ -182,7 +181,6 @@ def global_average(fld, wgt, verbose=False):
 
     return np.ma.average(avg1)
 
-
 def spatial_average(indata, weights=None, spatial_dims=None):
     import warnings
 
@@ -250,7 +248,6 @@ def wgt_rmse(fld1, fld2, wgt):
         warray = warray / np.sum(warray) # normalize
         wmse = np.sum(warray * (fld1 - fld2)**2)
         return np.sqrt( wmse ).item()
-
 
 ####### 
 # Time-weighted averaging
@@ -342,7 +339,7 @@ def domain_stats(data, domain):
 def make_polar_plot(wks, case_nickname, base_nickname,
                     case_climo_yrs, baseline_climo_yrs,
                     d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,
-                    domain:Optional[list]=None, hemisphere:Optional[str]=None, **kwargs):
+                    domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False, **kwargs):
     '''
     Make a stereographic polar plot for the given data and hemisphere.
     - Uses contourf. No contour lines (yet).
@@ -465,21 +462,18 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     levs = np.unique(np.array(levels1))
     levs_diff = np.unique(np.array(levelsdiff))
-
     if len(levs) < 2:
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
         ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
 
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
         ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
-    else:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
-        img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
 
-    if len(levs_diff) < 2:
         img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
+        img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+        img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
         img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
 
     #Set Main title for subplots:
@@ -487,11 +481,28 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
     st.set_y(0.95)
 
+
+
+    #Set plot titles
+    case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+    #base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+    ax1.set_title(case_title, loc='left', fontsize=6) #fontsize=tiFontSize
+
+    if obs:
+        obs_var = kwargs["obs_var_name"]
+        obs_title = kwargs["obs_file"][:-3]
+        base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
+        ax2.set_title(base_title, loc='left', fontsize=6) #fontsize=tiFontSize
+    else:
+        ax2.set_title(base_title, loc='left', fontsize=6)
+
+
+
     ax1.text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=ax1.transAxes)
-    ax1.set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", fontsize=6)
+    #ax1.set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", fontsize=6)
 
     ax2.text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=ax2.transAxes)
-    ax2.set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", fontsize=6)
+    #ax2.set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", fontsize=6)
 
     ax3.text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=ax3.transAxes)
     ax3.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
@@ -550,7 +561,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                            case_climo_yrs, baseline_climo_yrs,
                            plev, umdlfld_nowrap, vmdlfld_nowrap,
                            uobsfld_nowrap, vobsfld_nowrap,
-                           udiffld_nowrap, vdiffld_nowrap, **kwargs):
+                           udiffld_nowrap, vdiffld_nowrap, obs=False, **kwargs):
     """This plots a vector plot. bringing in two variables which respresent a vector pair
 
     kwargs -> optional dictionary of plotting options
@@ -671,9 +682,22 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
     st.set_y(0.85)
 
+    #Set plot titles
+    case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+    #base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+    ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
+
+    if obs:
+        obs_var = kwargs["obs_var_name"]
+        obs_title = kwargs["obs_file"][:-3]
+        base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
+        ax[1].set_title(base_title, loc='left', fontsize=8) #fontsize=tiFontSize
+    else:
+        ax[1].set_title(base_title, loc='left', fontsize=8)
+
     #Set case nickname and climo years:
-    ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    #ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
+    #ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
 
     #Set stats: area_avg
     ax[0].set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
@@ -741,7 +765,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
-                      mdlfld, obsfld, diffld, **kwargs):
+                      mdlfld, obsfld, diffld, obs=False, **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
 
     kwargs -> optional dictionary of plotting options
@@ -865,9 +889,18 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
     st.set_y(0.85)
 
-    #Set case nickname and climo years:
-    ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8) #fontsize=tiFontSize
-    ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+    #Set plot titles
+    case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+    ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
+
+    if obs:
+        obs_var = kwargs["obs_var_name"]
+        obs_title = kwargs["obs_file"][:-3]
+        base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
+        ax[1].set_title(base_title, loc='left', fontsize=8) #fontsize=tiFontSize
+    else:
+        base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+        ax[1].set_title(base_title, loc='left', fontsize=8)
 
     #Set stats: area_avg
     ax[0].set_title(f"Mean: {mdlfld.weighted(wgt).mean().item():5.2f}\nMax: {mdlfld.max():5.2f}\nMin: {mdlfld.min():5.2f}", loc='right',
@@ -1355,7 +1388,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
-                             adata, bdata, has_lev, log_p,**kwargs):
+                             adata, bdata, has_lev, log_p, obs=False, **kwargs):
     """This is the default zonal mean plot:
         adata: data to plot ([lev], lat, [lon]).
                The vertical coordinate (lev) must be pressure levels.
@@ -1399,6 +1432,16 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         tiFontSize = 11
     #End if
 
+    #Set plot titles
+    case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+    if not obs:
+        base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+
+    if obs:
+        obs_var = kwargs["obs_var_name"]
+        obs_title = kwargs["obs_file"][:-3]
+        base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
+
     if has_lev:
 
         # calculate zonal average:
@@ -1430,10 +1473,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
         #End if
 
-        #Set case nickname and climo years:
-        ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8)
-        ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+        ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
+        ax[1].set_title(base_title, loc='left', fontsize=8)
         ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
+        
 
         # style the plot:
         #Set Main title for subplots:
@@ -1448,7 +1491,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
     else:
         line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4") # #1f77b4 -> matplotlib standard blue
-        line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+
+        line2 = Line2D([0], [0], label=base_title,
                         color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
         azm = zonal_mean_xr(adata)
@@ -1489,7 +1533,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
 def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
-                             adata, bdata, has_lev, latbounds=None, **kwargs):
+                             adata, bdata, has_lev, latbounds=None, obs=False, **kwargs):
     """This is the default meridional mean plot:
         adata: data to plot ([lev], [lat], lon).
                The vertical coordinate (lev) must be pressure levels.
@@ -1571,6 +1615,15 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
     xdim = 'lon' # the name used for the x-axis dimension
     pltfunc = meridional_plot  # the plotting function ... maybe we can generalize to get zonal/meridional into one function (?)
 
+    case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+    if not obs:
+        base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+
+    if obs:
+        obs_var = kwargs["obs_var_name"]
+        obs_title = kwargs["obs_file"][:-3]
+        base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
+
     if has_lev:
         # generate dictionary of contour plot settings:
         cp_info = prep_contour_plot(adata, bdata, diff, **kwargs)
@@ -1594,9 +1647,9 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
             cb2 = fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
         #End if
 
-        #Set case nickname and climo years:
-        ax[0].set_title("$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}", loc='left', fontsize=8)
-        ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
+        #Set plot titles
+        ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
+        ax[1].set_title(base_title, loc='left', fontsize=8)
         ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
         # style the plot:
@@ -1611,8 +1664,11 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
     else:
         line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4") # #1f77b4 -> matplotlib standard blue
-        line2 = Line2D([0], [0], label="$\mathbf{Baseline}:$"+f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}",
+
+        line2 = Line2D([0], [0], label=base_title,
                         color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
+
+                        
 
         fig, ax = plt.subplots(nrows=2)
         ax = [ax[0],ax[1]]
@@ -1628,7 +1684,7 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         st.set_y(1.02)
 
         fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
-                   borderaxespad=0.0,fontsize=6,frameon=False)
+                borderaxespad=0.0,fontsize=6,frameon=False)
 
         for a in ax:
             try:
