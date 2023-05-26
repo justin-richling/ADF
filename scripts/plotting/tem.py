@@ -269,7 +269,7 @@ def tem(adf):
         #Set figure title
         yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
 
-        plt.suptitle(f'TEM Diagnostics: {s} - yrs: {yrs}\n', fontsize=24, y=.928)
+        plt.suptitle(f'TEM Diagnostics: {s}\nyrs: {yrs}\n', fontsize=24, y=.928)
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
