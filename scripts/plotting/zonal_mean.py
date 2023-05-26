@@ -297,6 +297,7 @@ def zonal_mean(adfobj):
                         # Check redo_plot. If set to True: remove old plot, if it already exists:
                         if (not redo_plot) and plot_name_log.is_file():
                             #Continue to next iteration:
+                            adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
                             continue
 
                         elif (redo_plot) and plot_name_log.is_file():
