@@ -289,9 +289,9 @@ def zonal_mean(adfobj):
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
 
-                    print("Making log-p plot")
                     #Create new plot with log-p:
                     if has_lev:
+                        print("Making log-p plot")
                         plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
 
                         # Check redo_plot. If set to True: remove old plot, if it already exists:
