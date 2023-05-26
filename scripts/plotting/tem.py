@@ -344,8 +344,8 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            #dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
-            #                        cbar_kwargs={'label': ds[var].units})
+            dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
+                                    cbar_kwargs={'label': ds[var].units})
 
         # epfy
         #------------------------------------------------------------------------------------------
