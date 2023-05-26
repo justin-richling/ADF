@@ -804,8 +804,8 @@ class AdfWeb(AdfObs):
                         #End with
                     #End if (mean_ptype exists)
 
-                    if "log" in web_data.name:
-                        print("web_data.name",web_data.name,"\n")
+                    #if "log" in web_data.name:
+                    #    print("web_data.name",web_data.name,"\n")
                     #Check if the mean plot type and var page exists for this case:
                     plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
                     mean_ptype_plot_page = img_pages_dir / plot_page
