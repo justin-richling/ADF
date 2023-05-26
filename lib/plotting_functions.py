@@ -497,6 +497,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
         ax2.set_title(base_title, loc='left', fontsize=6) #fontsize=tiFontSize
     else:
+        base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
         ax2.set_title(base_title, loc='left', fontsize=6)
 
 
