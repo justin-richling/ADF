@@ -180,7 +180,7 @@ def amwg_table(adf):
         arg = "/glade/scratch/richling/adf-output/"
         non_obs_baseline_name = "b.cesm3_cam058_mom_e.B1850WscMOM.ne30_L58_t061.camdev_cice5.026g"
         comp_base = f"{case_names[0]}_vs_{non_obs_baseline_name}/diag-plot/"
-        comp_yrs = f"{case_names[0]}_1_7_vs_{non_obs_baseline_name}_1_7"
+        comp_yrs = f"{case_names[0]}_1_16_vs_{non_obs_baseline_name}_1_16"
 
         arg = arg+comp_base+comp_yrs
         
