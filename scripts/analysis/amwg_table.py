@@ -178,9 +178,9 @@ def amwg_table(adf):
         #Convert output location string to a Path object:
         #"/glade/scratch/richling/adf-output/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001/diag-plot/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_1995_2006_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001_1995_2006"
         arg = "/glade/scratch/richling/adf-output/"
-        non_obs_baseline_name = "b.cesm3_cam058_mom_e.B1850WscMOM.ne30_L58_t061.camdev_cice5.026g"
+        non_obs_baseline_name = "f.cam6_3_112.FLTHIST_v0c.ne30_L32.non-ogw-ubcT.001"
         comp_base = f"{case_names[0]}_vs_{non_obs_baseline_name}/diag-plot/"
-        comp_yrs = f"{case_names[0]}_1_16_vs_{non_obs_baseline_name}_1_16"
+        comp_yrs = f"{case_names[0]}_1995_2006_vs_{non_obs_baseline_name}_1995_2006"
 
         arg = arg+comp_base+comp_yrs
         
