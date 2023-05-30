@@ -183,15 +183,18 @@ def amwg_table(adf):
         comp_yrs = f"{case_names[0]}_1995_2006_vs_{non_obs_baseline_name}_1995_2006"
 
         arg = arg+comp_base+comp_yrs
-        
         input_location = Path(arg)
-        Path(output_locs[0]).mkdir(parents=True)
+
+        output_location_amwg = Path(output_locs[0])
+        
+        if not output_location_amwg.is_dir():
+            output_location_amwg.mkdir(parents=True)
         
         #csv_locs.append(output_locs[0])
 
         #Create output file name:
         input_csv_file = input_location / f"amwg_table_{case_names[0]}.csv"
-        output_csv_file = Path(output_locs[0]) / f"amwg_table_{case_names[0]}.csv"
+        output_csv_file = output_location_amwg / f"amwg_table_{case_names[0]}.csv"
         
         #mean_case = input_location/f"stats_mean_{case_names[0]}.csv"
 
