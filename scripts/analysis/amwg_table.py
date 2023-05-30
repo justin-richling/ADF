@@ -185,6 +185,7 @@ def amwg_table(adf):
         arg = arg+comp_base+comp_yrs
         
         input_location = Path(arg)
+        Path(output_locs[0]).mkdir(parents=True)
         
         #csv_locs.append(output_locs[0])
 
