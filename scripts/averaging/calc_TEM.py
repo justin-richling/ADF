@@ -11,12 +11,33 @@ from glob import glob
 def calc_TEM(adf):
     overwrite_output = False#True
 
+    #New TEM netCDF file save location
+    output_loc = adf.get_basic_info("tem_loc")
+
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
 
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
     #cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
+
+    #Set output/target data path variables:
+    #------------------------------------
+    target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+    rgclimo_loc = Path(output_loc)
+    if not adf.compare_obs:
+        tclimo_loc  = Path(target_loc)
+    #------------------------------------
+
+    #Check if re-gridded directory exists, and if not, then create it:
+    if not rgclimo_loc.is_dir():
+        print(f"    {rgclimo_loc} not found, making new directory")
+        rgclimo_loc.mkdir(parents=True)
+    #End if
+
+    target_list = [adf.get_baseline_info("cam_case_name", required=True)]
+
+    
 
     #Extract test case years
     start_years   = adf.climo_yrs["syears"]
@@ -48,6 +69,8 @@ def calc_TEM(adf):
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
 
+        cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
+
         case_names.append(base_name)
         start_years.append(syear_baseline)
         end_years.append(eyear_baseline)
@@ -63,8 +86,6 @@ def calc_TEM(adf):
         start_years.append(syear_baseline)
         end_years.append(eyear_baseline)"""
 
-    #New TEM netCDF file save location
-    output_loc = adf.get_basic_info("tem_loc")
     
     #If path not specified, skip TEM calculation?
     if output_loc is None:
@@ -155,12 +176,21 @@ def calc_TEM(adf):
 
         print(f"\t Processing TEM diagnostics for case '{case_name}' :")
 
+        for var in var_list:
+            #loop over regridding targets:
+            for target in target_list:
+                #Determine regridded variable file name:
+                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_tem_regridded.nc'
+
         #Extract start and end year values:
         start_year = start_years[case_idx]
         end_year   = end_years[case_idx]
 
         #Create path object for the CAM history file(s) location:
         starting_location = Path(cam_hist_locs[case_idx])
+
+        
+
 
         #Check that path actually exists:
         if not starting_location.is_dir():
