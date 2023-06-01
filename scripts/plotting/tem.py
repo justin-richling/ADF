@@ -271,7 +271,7 @@ def tem(adf):
 
         #plt.suptitle(f'TEM Diagnostics: {s}\nyrs: {yrs}\n', fontsize=24, y=.928)
         plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.928)
-        plt.text(x=0.5, y=0.92, s= f"yrs: {yrs}", fontsize=16, ha="center", transform=fig.transFigure)
+        plt.text(x=0.5, y=0.9, s= f"yrs: {yrs}", fontsize=16, ha="center", transform=fig.transFigure)
 
 
         #Write the figure to provided workspace/file:
