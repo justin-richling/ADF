@@ -353,7 +353,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             #dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
             #                        cbar_kwargs={'label': ds[var].units})
 
-            axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+            #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
             axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
 
         # epfy
