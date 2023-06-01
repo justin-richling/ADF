@@ -55,8 +55,11 @@ def regrid_and_vert_interp_tem(adf):
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
     
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
-    var_list         = adf.diag_var_list
+    #var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
+    
+
+    var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
     
     #Location for mean csv files to be saved 
     output_locs = adf.plot_location
@@ -64,27 +67,12 @@ def regrid_and_vert_interp_tem(adf):
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
 
-    data_loc = adf.get_basic_info("cam_regrid_loc", required=True)
-    dclimo_loc  = Path(data_loc)
-
-    #var_list = adf.diag_var_list
-
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     #baseline_name = adf.get_baseline_info("cam_case_name")
 
     #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
-
-    """#Check if mid-level pressure exists in the variable list:
-    if "PMID" in var_list:
-        #If so, then move it to front of variable list so that
-        #it can be used to vertically interpolate model variables
-        #if need be:
-        pmid_idx = var_list.index("PMID")
-        var_list.pop(pmid_idx)
-        var_list.insert(0,"PMID")
-    #End if"""
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
@@ -149,20 +137,17 @@ def regrid_and_vert_interp_tem(adf):
         tclimo_loc  = Path(target_loc)
     #------------------------------------
 
-    #Check if re-gridded directory exists, and if not, then create it:
+    """#Check if re-gridded directory exists, and if not, then create it:
     if not rgclimo_loc.is_dir():
         print(f"    {rgclimo_loc} not found, making new directory")
         rgclimo_loc.mkdir(parents=True)
-    #End if
+    #End if"""
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
-
-        #Output location for case specific csv files
-        output_location = Path(output_locs[case_idx])
 
         #Set case climo data path:
         #mclimo_loc  = Path(input_climo_locs[case_idx])
