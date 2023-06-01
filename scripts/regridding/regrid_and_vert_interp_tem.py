@@ -135,6 +135,7 @@ def regrid_and_vert_interp_tem(adf):
     rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
+        print("tclimo_loc",tclimo_loc,"\n")
     #------------------------------------
 
     """#Check if re-gridded directory exists, and if not, then create it:
@@ -212,6 +213,7 @@ def regrid_and_vert_interp_tem(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
+                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
 
