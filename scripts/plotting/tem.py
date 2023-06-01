@@ -269,7 +269,10 @@ def tem(adf):
         #Set figure title
         yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
 
-        plt.suptitle(f'TEM Diagnostics: {s} - yrs: {yrs}\n', fontsize=24, y=.928)
+        #plt.suptitle(f'TEM Diagnostics: {s}\nyrs: {yrs}\n', fontsize=24, y=.928)
+        plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.928)
+        plt.text(x=0.5, y=0.915, s= f"yrs: {yrs}", fontsize=16, ha="center", transform=fig.transFigure)
+
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -281,6 +284,9 @@ def tem(adf):
 
 def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
     print("Season:",s,"\n")
+
+    empty_message = "No Valid\nData Points"
+    props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
 
     for var in var_list:
         vres = res[var]
@@ -329,6 +335,9 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
 
         #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
+        
+        #print(mseasons,"\n\n")
+        #print(oseasons,"\n\n")
         #print(dseasons)
 
         #Run through vars and plot each against the baseline on same row
@@ -347,7 +356,13 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             #dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
             #                        cbar_kwargs={'label': ds[var].units})
 
-        """# epfy
+            if len(dseasons.lev) == 0:
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
+                                    cbar_kwargs={'label': ds[var].units})
+
+        # epfy
         #------------------------------------------------------------------------------------------
         if var == "epfy":
             mseasons.plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
@@ -356,7 +371,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
             
-            dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
+            #dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                axs[1,2].text(0.4, 0.4, empty_message, transform=axs[1,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
         
@@ -369,7 +391,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
+            #dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                axs[2,2].text(0.4, 0.4, empty_message, transform=axs[2,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -390,7 +419,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
-            dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
+            #dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                axs[3,2].text(0.4, 0.4, empty_message, transform=axs[3,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -411,7 +447,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
-            dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
+            #dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                axs[4,2].text(0.4, 0.4, empty_message, transform=axs[4,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -426,7 +469,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
+            #dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
+            #                        ylim=[1e2,2],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                axs[5,2].text(0.4, 0.4, empty_message, transform=axs[5,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -441,7 +491,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
+            #dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
+            #                        ylim=[1e2,2],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                axs[6,2].text(0.4, 0.4, empty_message, transform=axs[6,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -457,6 +514,12 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
+            if len(dseasons.lev) == 0:
+                axs[7,2].text(0.4, 0.4, empty_message, transform=axs[7,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
+                                    cbar_kwargs={'label': ds[var].units})
+
         # utendwtem
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
@@ -466,8 +529,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
-                                    cbar_kwargs={'label': ds[var].units})"""
+            #dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                axs[8,2].text(0.4, 0.4, empty_message, transform=axs[8,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
+                                    cbar_kwargs={'label': ds[var].units})
 
     # Set the ticks and ticklabels for all x-axes
     #NOTE: This has to come after all subplots have been done,
@@ -477,10 +546,10 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
 
 
     #Set titles of subplots
-    #Set case names in first sibplot only
+    #Set case names in first subplot only
     uzm = ds["uzm"].long_name.replace(" ", "\ ")
-    axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
-    axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+    axs[0,0].set_title(f"\n\n"+"$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
+    axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
     #Set variable name on center plot
     for i in range(1,len(var_list)):
