@@ -329,6 +329,9 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
 
         #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
+        
+        print(mseasons,"\n\n")
+        print(oseasons,"\n\n")
         print(dseasons)
 
         #Run through vars and plot each against the baseline on same row
@@ -477,7 +480,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
 
 
     #Set titles of subplots
-    #Set case names in first sibplot only
+    #Set case names in first subplot only
     uzm = ds["uzm"].long_name.replace(" ", "\ ")
     axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
     axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
