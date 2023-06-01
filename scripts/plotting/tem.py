@@ -329,7 +329,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
 
         #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
-        #print(dseasons)
+        print(dseasons)
 
         #Run through vars and plot each against the baseline on same row
         #Each column will be a case, ie (test, base), or (test, test, base) , ...
