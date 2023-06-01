@@ -353,8 +353,12 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             #dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
             #                        cbar_kwargs={'label': ds[var].units})
 
-            #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
-            axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
+                                    cbar_kwargs={'label': ds[var].units})
 
         # epfy
         #------------------------------------------------------------------------------------------
@@ -365,7 +369,15 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
             
-            dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
+            #dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
         
@@ -378,7 +390,15 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
+            #dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -399,7 +419,15 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
-            dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
+            #dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -420,7 +448,15 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
-            dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
+            #dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
+            #                ylim=[1e2,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -435,7 +471,15 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
+            #dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
+            #                        ylim=[1e2,2],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -450,7 +494,15 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
+            #dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
+            #                        ylim=[1e2,2],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -466,6 +518,13 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
+                                    cbar_kwargs={'label': ds[var].units})
+
         # utendwtem
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
@@ -475,7 +534,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
+            #dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
+
+            if len(dseasons.lev) == 0:
+                #axs[0,2].contourf(dseasons.zalat,dseasons.lev,dseasons,colors="w")
+                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+            else:
+                dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
     # Set the ticks and ticklabels for all x-axes
