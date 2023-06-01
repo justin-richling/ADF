@@ -269,7 +269,10 @@ def tem(adf):
         #Set figure title
         yrs = f"{syear_cases[idx]} - {eyear_cases[idx]}"
 
-        plt.suptitle(f'TEM Diagnostics: {s}\nyrs: {yrs}\n', fontsize=24, y=.928)
+        #plt.suptitle(f'TEM Diagnostics: {s}\nyrs: {yrs}\n', fontsize=24, y=.928)
+        plt.suptitle(f'TEM Diagnostics: {s}', fontsize=24, y=.928)
+        plt.text(x=0.5, y=0.9, s= f"yrs: {yrs}\n", fontsize=12, ha="center", transform=fig.transFigure)
+
 
         #Write the figure to provided workspace/file:
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
@@ -546,7 +549,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
     #Set case names in first subplot only
     uzm = ds["uzm"].long_name.replace(" ", "\ ")
     axs[0,0].set_title("$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
-    axs[0,1].set_title("$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+    axs[0,1].set_title(f""+"$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
     #Set variable name on center plot
     for i in range(1,len(var_list)):
