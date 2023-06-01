@@ -1,14 +1,7 @@
 #Import standard modules:
-from email.mime import base
 import xarray as xr
-import plotting_functions as pf
-from pathlib import Path
-import numpy as np
-import pandas as pd
 
-import time
-
-def regrid_and_vert_interp_tem(adf):
+def regrid_and_vert_interp(adf):
 
     """
     This funtion regrids the test cases to the same horizontal
@@ -30,6 +23,7 @@ def regrid_and_vert_interp_tem(adf):
     input_climo_loc  -> Location of CAM climo files provided by "cam_climo_loc"
     output_loc       -> Location to write re-gridded CAM files, specified by "cam_regrid_loc"
     var_list         -> List of CAM output variables provided by "diag_var_list"
+    var_defaults     -> Dict that has keys that are variable names and values that are plotting preferences/defaults.
     target_list      -> List of target data sets CAM could be regridded to
     taget_loc        -> Location of target files that CAM will be regridded to
     overwrite_regrid -> Logical to determine if already existing re-gridded
@@ -37,6 +31,10 @@ def regrid_and_vert_interp_tem(adf):
     """
 
     #Import necessary modules:
+    import numpy as np
+    import plotting_functions as pf
+
+    from pathlib import Path
 
     # regridding
     # Try just using the xarray method
@@ -53,26 +51,17 @@ def regrid_and_vert_interp_tem(adf):
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
-    
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     #var_list         = adf.diag_var_list
-    var_defaults     = adf.variable_defaults
-    
-
     var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-    
-    #Location for mean csv files to be saved 
-    output_locs = adf.plot_location
-    if not adf.get_basic_info("compare_obs"):
-        #Save the baseline to the first case's plots directory:
-        output_locs.append(output_locs[0])
+    var_defaults     = adf.variable_defaults
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    #baseline_name = adf.get_baseline_info("cam_case_name")
 
+    #New TEM netCDF file save location
+    input_climo_locs = adf.get_basic_info("tem_loc")
     #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
-    cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
@@ -108,9 +97,6 @@ def regrid_and_vert_interp_tem(adf):
 
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
-        baseline_name = "Obs"
-
-        
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
@@ -122,10 +108,8 @@ def regrid_and_vert_interp_tem(adf):
     else:
 
         #Extract model baseline variables:
-        target_loc = adf.get_baseline_info("cam_hist_loc", required=True)
+        target_loc = adf.get_baseline_info("tem_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
-
-        baseline_name = adf.get_baseline_info("cam_case_name")
     #End if
 
     #-----------------------------------------
@@ -135,14 +119,13 @@ def regrid_and_vert_interp_tem(adf):
     rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
-        print("tclimo_loc",tclimo_loc,"\n")
     #------------------------------------
 
-    """#Check if re-gridded directory exists, and if not, then create it:
+    #Check if re-gridded directory exists, and if not, then create it:
     if not rgclimo_loc.is_dir():
         print(f"    {rgclimo_loc} not found, making new directory")
         rgclimo_loc.mkdir(parents=True)
-    #End if"""
+    #End if
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
@@ -151,9 +134,7 @@ def regrid_and_vert_interp_tem(adf):
         print(f"\t Regridding case '{case_name}' :")
 
         #Set case climo data path:
-        #mclimo_loc  = Path(input_climo_locs[case_idx])
-        mclimo_loc  = Path(cam_hist_locs[case_idx])
-
+        mclimo_loc  = Path(input_climo_locs[case_idx])
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
@@ -213,7 +194,6 @@ def regrid_and_vert_interp_tem(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
 
@@ -240,11 +220,8 @@ def regrid_and_vert_interp_tem(adf):
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
                         mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
-                    elif len(mclim_fils) == 0:
-                        print(f"\t - regridding {var} failed, no file. Continuing to next variable.")
-                        continue
                     else:
-                        #Open single file as new xsarray dataset:
+                        #Open single file as new xarray dataset:
                         mclim_ds = xr.open_dataset(mclim_fils[0])
                     #End if
 
@@ -264,7 +241,7 @@ def regrid_and_vert_interp_tem(adf):
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
 
-                                        #Extract defaults for variable:
+                    #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
 
                     if 'mask' in var_default_dict:
@@ -305,7 +282,7 @@ def regrid_and_vert_interp_tem(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = rgclimo_loc / f'{target}_{var}_tem_baseline.nc'
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
@@ -365,11 +342,9 @@ def regrid_and_vert_interp_tem(adf):
 
                         #Write interpolated baseline climatology to file:
                         save_to_nc(tgdata_interp, interp_bl_file)
-
                     #End if
                 else:
                     print("\t Regridded file already exists, so skipping...")
-
                 #End if (file check)
             #End do (target list)
         #End do (variable list)
@@ -557,10 +532,8 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
         #Regrid model data to match target grid:
         rgdata = regrid_data(mdata, tgrid, method=1)
-
         if mdat_ofrac:
             rgofrac = regrid_data(mdat_ofrac, tgrd, method=1)
-
         #Regrid surface pressure if need be:
         if has_lev:
             if not regridded_ps:
@@ -687,24 +660,3 @@ def regrid_data(fromthis, tothis, method=1):
     #End if
 
 #####
-
-
-def _load_dataset(fils):
-    if len(fils) == 0:
-        warnings.warn(f"Input file list is empty.")
-        return None
-    elif len(fils) > 1:
-        return xr.open_mfdataset(fils, combine='by_coords')
-    else:
-        sfil = str(fils[0])
-        return xr.open_dataset(sfil)
-    #End if
-#End def
-
-import warnings  # use to warn user about missing files.
-
-#Format warning messages:
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
-warnings.formatwarning = my_formatwarning
