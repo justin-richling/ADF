@@ -65,13 +65,13 @@ def regrid_and_vert_interp_tem(adf):
     
     #Use test case settings, which are already lists:
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
-    start_years   = adf.climo_yrs["syear"]
-    end_years   = adf.climo_yrs["eyear"]
+    start_years   = adf.climo_yrs["syears"]
+    end_years   = adf.climo_yrs["eyears"]
     case_names = adf.get_cam_info("cam_case_name", required=True)
 
     cam_hist_locs += [adf.get_baseline_info("cam_hist_loc", required=True)]
     start_years   += [adf.climo_yrs["syear_baseline"]]
-    end_years   += [adf.climo_yrs["eyear"]]
+    end_years   += [adf.climo_yrs["eyear_baseline"]]
     case_names += [adf.get_baseline_info("cam_case_name", required=True)]
 
 
