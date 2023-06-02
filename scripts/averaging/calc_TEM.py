@@ -176,11 +176,11 @@ def calc_TEM(adf):
 
         print(f"\t Processing TEM diagnostics for case '{case_name}' :")
 
-        for var in var_list:
+        """for var in var_list:
             #loop over regridding targets:
             for target in target_list:
                 #Determine regridded variable file name:
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_tem_regridded.nc'
+                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_tem_regridded.nc'"""
 
         #Extract start and end year values:
         start_year = start_years[case_idx]
