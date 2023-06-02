@@ -57,8 +57,8 @@ def regrid_and_vert_interp_tem(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
-    input_climo_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    #input_climo_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
@@ -105,8 +105,8 @@ def regrid_and_vert_interp_tem(adf):
     else:
 
         #Extract model baseline variables:
-        #target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
-        target_loc = adf.get_baseline_info("cam_hist_loc", required=True)
+        target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        #target_loc = adf.get_baseline_info("cam_hist_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
 
