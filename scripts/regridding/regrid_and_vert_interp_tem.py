@@ -161,6 +161,7 @@ def regrid_and_vert_interp_tem(adf):
 
         #Create path object for the CAM history file(s) location:
         starting_location = Path(cam_hist_locs[case_idx])
+        print("starting_location",starting_location,"\n")
 
         #Check if history files actually exist. If not then kill script:
         if not list(starting_location.glob('*'+hist_str+'.*.nc')):
