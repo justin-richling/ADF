@@ -1,7 +1,7 @@
 #Import standard modules:
 import xarray as xr
 
-def regrid_and_vert_interp(adf):
+def regrid_and_vert_interp_tem(adf):
 
     """
     This funtion regrids the test cases to the same horizontal
@@ -57,7 +57,8 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    input_climo_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
@@ -104,7 +105,8 @@ def regrid_and_vert_interp(adf):
     else:
 
         #Extract model baseline variables:
-        target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        #target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        target_loc = adf.get_baseline_info("cam_hist_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
 
@@ -213,6 +215,7 @@ def regrid_and_vert_interp(adf):
 
                     #Generate CAM climatology (climo) file list:
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    print("mclim_fils",mclim_fils,"\n")
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
