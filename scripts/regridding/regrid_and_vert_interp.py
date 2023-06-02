@@ -115,6 +115,7 @@ def regrid_and_vert_interp(adf):
     rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
+        print("tclimo_loc",tclimo_loc,"\n")
     #------------------------------------
 
     #Check if re-gridded directory exists, and if not, then create it:
@@ -158,7 +159,7 @@ def regrid_and_vert_interp(adf):
 
             #Notify user of variable being regridded:
             print(f"\t - regridding {var} (known targets: {target_list})")
-
+            print("target_list",target_list,"\n")
             #loop over regridding targets:
             for target in target_list:
 
