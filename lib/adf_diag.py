@@ -520,7 +520,7 @@ class AdfDiag(AdfWeb):
                 #$cam_case_name.h0.$variable.YYYYMM-YYYYMM.nc
 
                 ts_outfil_str = ts_dir[case_idx] + os.sep + \
-                ".".join([case_name, hist_num, var, time_string, "nc" ])
+                ".".join([case_name, hist_str, var, time_string, "nc" ])
 
                 #Check if files already exist in time series directory:
                 ts_file_list = glob.glob(ts_outfil_str)
