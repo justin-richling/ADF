@@ -181,7 +181,8 @@ def regrid_and_vert_interp_tem(adf):
         #End for
         tses[case_name] = files_list
 
-    print("files_list",tses,"\n")
+    for i in tses:
+        print("files_list",tses[i],"\n\n")
 
 
 
