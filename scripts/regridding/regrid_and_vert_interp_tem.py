@@ -57,10 +57,28 @@ def regrid_and_vert_interp_tem(adf):
     var_list = ["Uzm","Vzm","Wzm","THzm","UVzm","UWzm","VTHzm"]
     var_defaults     = adf.variable_defaults
 
+    #Read hist_str (component.hist_num) from the yaml file, or set to default
+    hist_str = adf.get_basic_info('hist_str')
+    #If hist_str is not present, then default to 'cam.h0':
+    if not hist_str:
+        hist_str = 'cam.h0'
+    #End if
+
+    
+    syears   = adf.climo_yrs["syears"]
+    eyears     = adf.climo_yrs["eyears"]
+    cam_hist_locs = [adf.get_baseline_info("cam_hist_loc", required=True)]
+
+    syear_baseline   = [adf.climo_yrs["syear_baseline"]]
+    eyear_baseline     = [adf.climo_yrs["eyear_baseline"]]
+    baseline_hist_locs = [adf.get_baseline_info("cam_hist_loc", required=True)]
+
+    
+
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
-    #input_climo_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    input_climo_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
@@ -107,8 +125,8 @@ def regrid_and_vert_interp_tem(adf):
     else:
 
         #Extract model baseline variables:
-        target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
-        #target_loc = adf.get_baseline_info("cam_hist_loc", required=True)
+        #target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        target_loc = adf.get_baseline_info("cam_hist_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
 
@@ -129,13 +147,52 @@ def regrid_and_vert_interp_tem(adf):
     #End if
 
     #Loop over CAM cases:
+    case_names_full = case_names + [adf.get_baseline_info("cam_case_name", required=True)]
+    tses = {}
+    for case_idx, case_name in enumerate(case_names_full):
+
+        
+        #Extract start and end year values:
+        start_year = syears[case_idx]
+        end_year   = eyears[case_idx]
+
+        #Create path object for the CAM history file(s) location:
+        starting_location = Path(cam_hist_locs[case_idx])
+
+        #Check if history files actually exist. If not then kill script:
+        if not list(starting_location.glob('*'+hist_str+'.*.nc')):
+            emsg = f"No history *{hist_str}.*.nc files found in '{starting_location}'."
+            emsg += " Script is ending here."
+            adf.end_diag_fail(emsg)
+        #End if
+
+        #Create empty list:
+        files_list = []
+
+        #Loop over start and end years:
+        for year in range(start_year, end_year+1):
+            #Add files to main file list:
+            for fname in starting_location.glob(f'*{hist_str}.*{str(year).zfill(4)}*.nc'):
+                files_list.append(fname)
+            #End for
+        #End for
+        tses[case_name] = files_list
+
+    print("files_list",tses,"\n")
+
+
+
+
+    #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
+        
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
+        
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
@@ -171,7 +228,7 @@ def regrid_and_vert_interp_tem(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
+                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_tem_regridded.nc'
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
@@ -196,6 +253,7 @@ def regrid_and_vert_interp_tem(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
+                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                         tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
 
@@ -219,6 +277,7 @@ def regrid_and_vert_interp_tem(adf):
                     #    regrid_ofrac = False
 
                     #Generate CAM climatology (climo) file list:
+                    #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
                     print("mclim_fils",mclim_fils,"\n")
 
