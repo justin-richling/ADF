@@ -73,7 +73,10 @@ def regrid_and_vert_interp_tem(adf):
     eyear_baseline     = [adf.climo_yrs["eyear_baseline"]]
     baseline_hist_locs = [adf.get_baseline_info("cam_hist_loc", required=True)]
 
-    
+    syears += syear_baseline
+    eyears += eyear_baseline
+
+    cam_hist_locs += baseline_hist_locs
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
