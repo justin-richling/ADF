@@ -366,9 +366,9 @@ class AdfDiag(AdfWeb):
         #Read history file number from the yaml file
         hist_num = self.get_basic_info('hist_str')
 
-        #If hist_num is not present, then default to 'h0':
-        if not hist_num:
-            hist_num = 'h0'
+        #If hist_str is not present, then default to 'h0':
+        if not hist_str:
+            hist_str = 'cam.h0'
         #End if
 
         #Loop over cases:
@@ -405,9 +405,8 @@ class AdfDiag(AdfWeb):
             #End if
 
             #Check if history files actually exist. If not then kill script:
-            hist_str = '*.cam.'+hist_num
-            if not list(starting_location.glob(hist_str+'.*.nc')):
-                emsg = f"No CAM history {hist_str} files found in '{starting_location}'."
+            if not list(starting_location.glob('*'+hist_str+'.*.nc')):
+                emsg = f"No history *{hist_str}.*.nc files found in '{starting_location}'."
                 emsg += " Script is ending here."
                 self.end_diag_fail(emsg)
             #End if
