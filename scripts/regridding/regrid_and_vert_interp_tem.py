@@ -67,7 +67,7 @@ def regrid_and_vert_interp_tem(adf):
     
     syears   = adf.climo_yrs["syears"]
     eyears     = adf.climo_yrs["eyears"]
-    cam_hist_locs = [adf.get_baseline_info("cam_hist_loc", required=True)]
+    cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
     syear_baseline   = [adf.climo_yrs["syear_baseline"]]
     eyear_baseline     = [adf.climo_yrs["eyear_baseline"]]
