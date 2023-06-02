@@ -187,7 +187,8 @@ def regrid_and_vert_interp_tem(adf):
                 #End if
 
                 #Check again if re-gridded file already exists:
-                if not regridded_file_loc.is_file():
+                #if not regridded_file_loc.is_file():
+                if regridded_file_loc.is_file():
 
                     #Create list of regridding target files (we should explore intake as an alternative to having this kind of repeated code)
                     # NOTE: This breaks if you have files from different cases in same directory!
