@@ -1654,21 +1654,31 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         # generate plot objects:
         fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
         levs = np.unique(np.array(cp_info['levels1']))
+        levs_diff = np.unique(np.array(cp_info['levelsdiff']))
+
+        
         if len(levs) < 2:
             img0, ax[0] = pltfunc(adata[xdim], adata, ax=ax[0])
             ax[0].text(0.4, 0.4, empty_message, transform=ax[0].transAxes, bbox=props)
             img1, ax[1] = pltfunc(bdata[xdim], bdata, ax=ax[1])
             ax[1].text(0.4, 0.4, empty_message, transform=ax[1].transAxes, bbox=props)
-            img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2])
-            ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
+            #img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2])
+            #ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
         else:
             img0, ax[0] = pltfunc(adata[xdim], adata, ax=ax[0], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
             img1, ax[1] = pltfunc(bdata[xdim], bdata, ax=ax[1], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
-            img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
+            #img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
             cb0 = fig.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
             cb1 = fig.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
-            cb2 = fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
+            #cb2 = fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
         #End if
+
+        if len(levs_diff) < 2:
+            img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2])
+            ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
+        else:
+            img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
+            cb2 = fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
 
         #Set plot titles
         ax[0].set_title(case_title, loc='left', fontsize=8) #fontsize=tiFontSize
