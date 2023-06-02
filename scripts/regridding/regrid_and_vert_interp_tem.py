@@ -52,9 +52,9 @@ def regrid_and_vert_interp_tem(adf):
     #-----------------------------------------
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
-    var_list         = adf.diag_var_list
+    #var_list         = adf.diag_var_list
     #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-    #var_list = ["Uzm","Vzm","Wzm","THzm","UVzm","UWzm","VTHzm"]
+    var_list = ["Uzm","Vzm","Wzm","THzm","UVzm","UWzm","VTHzm"]
     var_defaults     = adf.variable_defaults
 
     #CAM simulation variables (these quantities are always lists):
