@@ -364,7 +364,7 @@ class AdfDiag(AdfWeb):
         #End if
 
         #Read history file number from the yaml file
-        hist_num = self.get_basic_info('hist_str')
+        hist_str = self.get_basic_info('hist_str')
 
         #If hist_str is not present, then default to 'h0':
         if not hist_str:
