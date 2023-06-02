@@ -53,6 +53,8 @@ def regrid_and_vert_interp_tem(adf):
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     var_list         = adf.diag_var_list
+    #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+    #var_list = ["Uzm","Vzm","Wzm","THzm","UVzm","UWzm","VTHzm"]
     var_defaults     = adf.variable_defaults
 
     #CAM simulation variables (these quantities are always lists):
@@ -193,8 +195,10 @@ def regrid_and_vert_interp_tem(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
+
+                    print("tclim_fils",tclim_fils,"\n")
 
                     #Write to debug log if enabled:
                     adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
