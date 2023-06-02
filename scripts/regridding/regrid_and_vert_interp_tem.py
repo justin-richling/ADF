@@ -220,9 +220,9 @@ def regrid_and_vert_interp_tem(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
-                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
-                       #Check if history files actually exist. If not then kill script:
+                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                        #Check if history files actually exist. If not then kill script:
                         if not list(starting_location.glob('*'+hist_str+'.*.nc')):
                             emsg = f"No history *{hist_str}.*.nc files found in '{starting_location}'."
                             emsg += " Script is ending here."
@@ -242,7 +242,8 @@ def regrid_and_vert_interp_tem(adf):
 
 
                         #Create ordered list of CAM history files:
-                        hist_files = sorted(files_list)
+                        #hist_files = sorted(files_list)
+                        tclim_fils = sorted(files_list)
                     #End if
 
                     #Write to debug log if enabled:
