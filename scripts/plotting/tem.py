@@ -511,8 +511,8 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             oseasons.plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
-            dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
-                                    cbar_kwargs={'label': ds[var].units})
+            #dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
+            #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
                 axs[7,2].text(0.4, 0.4, empty_message, transform=axs[7,2].transAxes, bbox=props)
