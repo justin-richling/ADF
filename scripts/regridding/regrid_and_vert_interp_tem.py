@@ -152,6 +152,7 @@ def regrid_and_vert_interp_tem(adf):
     #Loop over CAM cases:
     case_names_full = case_names + [adf.get_baseline_info("cam_case_name", required=True)]
     tses = {}
+    print("cam_hist_locs",cam_hist_locs,"\n")
     for case_idx, case_name in enumerate(case_names_full):
 
         
