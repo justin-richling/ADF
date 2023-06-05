@@ -202,7 +202,7 @@ def regrid_and_vert_interp_tem(adf):
                        #print(sorted(tclimo_loc.glob("*")),"\n")
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}_{var}.TEMdiag_*.nc")) #TEM hist files?
                     #End if
-                    print("tclim_fils",tclim_fils,"\n")
+                    #print("tclim_fils",tclim_fils,"\n")
 
                     #Write to debug log if enabled:
                     adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
