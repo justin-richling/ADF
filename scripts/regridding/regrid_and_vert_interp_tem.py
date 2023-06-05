@@ -198,9 +198,9 @@ def regrid_and_vert_interp_tem(adf):
                         tclim_fils = [tclimo_loc]
                     else:
                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
-                       print("target",target,"\n")
-                       print(sorted(tclimo_loc.glob("*")),"\n")
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_*.nc")) #TEM hist files?
+                       #print("target",target,"\n")
+                       #print(sorted(tclimo_loc.glob("*")),"\n")
+                       tclim_fils = sorted(tclimo_loc.glob(f"{target}_{var}.TEMdiag_*.nc")) #TEM hist files?
                     #End if
                     print("tclim_fils",tclim_fils,"\n")
 
