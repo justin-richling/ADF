@@ -181,7 +181,7 @@ def calc_TEM(adf):
 
 
     #Loop over cases:
-    for case_idx, case_name in enumerate(case_names):
+    for case_idx, case_name in enumerate(case_names[0:1]):
 
         print(f"\t Processing TEM diagnostics for case '{case_name}' :")
 
@@ -249,7 +249,7 @@ def calc_TEM(adf):
         dstem0.attrs['created'] = str(date.today())
         dstem0['lev']=ds['lev']
 
-        output_loc_idx = Path(output_loc[0]) / case_name
+        output_loc_idx = Path(output_loc[case_idx]) / case_name
         #output_loc_idx = Path(output_loc[case_idx])
         #Check if re-gridded directory exists, and if not, then create it:
         if not output_loc_idx.is_dir():
