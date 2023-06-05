@@ -173,6 +173,7 @@ def regrid_and_vert_interp_tem(adf):
 
                 #Determine regridded variable file name:
                 regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_tem_regridded.nc'
+                print("regridded_file_loc",regridded_file_loc,"\n")
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
@@ -197,6 +198,7 @@ def regrid_and_vert_interp_tem(adf):
                         tclim_fils = [tclimo_loc]
                     else:
                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       print(sorted(tclimo_loc.glob("*")),"\n")
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_*.nc")) #TEM hist files?
                     #End if
                     print("tclim_fils",tclim_fils,"\n")
