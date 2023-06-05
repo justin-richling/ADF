@@ -231,7 +231,7 @@ def regrid_and_vert_interp_tem(adf):
                         mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
                     else:
                         #Open single file as new xarray dataset:
-                        mclim_ds = xr.open_dataset(mclim_fils)
+                        mclim_ds = xr.open_dataset(mclim_fils[0])
                     #End if
 
                     #Create keyword arguments dictionary for regridding function:
