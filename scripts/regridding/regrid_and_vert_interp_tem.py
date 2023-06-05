@@ -1,7 +1,7 @@
 #Import standard modules:
 import xarray as xr
 
-def regrid_and_vert_interp(adf):
+def regrid_and_vert_interp_tem(adf):
 
     """
     This funtion regrids the test cases to the same horizontal
