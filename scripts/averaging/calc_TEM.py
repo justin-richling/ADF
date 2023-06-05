@@ -101,7 +101,7 @@ def calc_TEM(adf):
 
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
-
+    var_list2 = ["Uzm","Vzm","Wzm","THzm","UVzm","UWzm","VTHzm"]
     var_list = ['uzm','epfy','epfz','vtem','wtem',
                         'psitem','utendepfd','utendvtem','utendwtem']
     if adf._AdfDiag__plotting_scripts:
@@ -177,10 +177,83 @@ def calc_TEM(adf):
 
 
 
+    if 1 == 1:
+        #Loop over cases:
+        for case_idx, case_name in enumerate(case_names):
+
+            print(f"\t Processing TEM diagnostics for case '{case_name}' :")
+
+            """for var in var_list:
+                #loop over regridding targets:
+                for target in target_list:
+                    #Determine regridded variable file name:
+                    regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_tem_regridded.nc'"""
+
+            #Extract start and end year values:
+            start_year = start_years[case_idx]
+            end_year   = end_years[case_idx]
+
+            #Create path object for the CAM history file(s) location:
+            starting_location = Path(cam_hist_locs[case_idx])
+
+            
 
 
+            #Check that path actually exists:
+            if not starting_location.is_dir():
+                emsg = f"Provided 'cam_hist_loc' directory '{starting_location}' not found."
+                emsg += " Script is ending here."
 
-    #Loop over cases:
+                adf.end_diag_fail(emsg)
+            #End if
+
+            #Check if history files actually exist. If not then kill script:
+            hist_str = '*.cam.'+hist_num
+            if not list(starting_location.glob(hist_str+'.*.nc')):
+                emsg = f"No CAM history {hist_str} files found in '{starting_location}'."
+                emsg += " Script is ending here."
+                adf.end_diag_fail(emsg)
+            #End if
+
+            # open input files
+            shist = glob(f"{starting_location}/*{hist_num}.{start_year}*.nc")
+            ehist = glob(f"{starting_location}/*{hist_num}.{end_year}*.nc")
+            hist_files = sorted(shist + ehist)
+
+            #print("TEM hist files:",hist_files,"\n")
+
+            ds = xr.open_mfdataset(hist_files)
+
+            for var in var_list2:
+                #iterate over the times in a dataset
+                for idx,_ in enumerate(ds.time.values):
+                    if idx == 0:
+                        dstem0 = calc_tem(ds.squeeze().isel(time=idx),var)
+                    else:
+                        dstem = calc_tem(ds.squeeze().isel(time=idx),var)
+                        dstem0 = xr.concat([dstem0, dstem],'time')
+                    #End if
+                #End if
+
+                #Update the attributes
+                dstem0.attrs = ds.attrs
+                dstem0.attrs['created'] = str(date.today())
+                dstem0['lev']=ds['lev']
+
+                output_loc_idx = Path(output_loc[case_idx]) / case_name
+                #output_loc_idx = Path(output_loc[case_idx])
+                #Check if re-gridded directory exists, and if not, then create it:
+                if not output_loc_idx.is_dir():
+                    print(f"    {output_loc_idx} not found, making new directory")
+                    output_loc_idx.mkdir(parents=True)
+                #End if
+
+                # write output to a netcdf file
+                dstem0.to_netcdf(output_loc_idx / f'{case_name}_{var}.TEMdiag_{start_year}-{end_year}.nc', 
+                                    unlimited_dims='time', 
+                                    mode = 'w' )
+    
+    '''#Loop over cases:
     for case_idx, case_name in enumerate(case_names):
 
         print(f"\t Processing TEM diagnostics for case '{case_name}' :")
@@ -260,7 +333,7 @@ def calc_TEM(adf):
         # write output to a netcdf file
         dstem0.to_netcdf(output_loc_idx / f'{case_name}.TEMdiag_{start_year}-{end_year}.nc', 
                             unlimited_dims='time', 
-                            mode = 'w' )
+                            mode = 'w' )'''
 
     #Notify user that script has ended:
     print("  ...TEM diagnostics have been calculated successfully.")
@@ -268,7 +341,7 @@ def calc_TEM(adf):
 
 
 
-def calc_tem(ds):
+def calc_tem(ds, var):
     """
     # calc_tem() function to calculate TEM diagnostics on CAM/WACCM output
     # This assumes the data have already been organized into zonal mean fluxes
@@ -307,6 +380,17 @@ def calc_tem(ds):
     # to process more than one timestep interate over time. See calcTEM.ipynb notebook
     # for an example of processed a file or files with more than one timestep.
     """
+
+
+
+
+
+
+    var_list2 = ["Uzm","Vzm","Wzm","THzm","UVzm","UWzm","VTHzm"]
+    ['uzm','epfy','epfz','vtem','wtem',
+                        'psitem','utendepfd','utendvtem','utendwtem']
+
+
 
     # constants for TEM calculations
     p0 = 101325. 
@@ -455,7 +539,7 @@ def calc_tem(ds):
     utendvtem.values = np.float32(utendvtem.values)
     utendwtem.values = np.float32(utendwtem.values)
 
-    dstem = xr.Dataset(data_vars=dict(date = ds.date,
+    """dstem = xr.Dataset(data_vars=dict(date = ds.date,
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
                                       uzm = uzm,
@@ -468,6 +552,83 @@ def calc_tem(ds):
                                       utendepfd = utendepfd,
                                       utendvtem = utendvtem,
                                       utendwtem = utendwtem
-                                      )) 
-    
+                                      )) """
+
+    #--------------------------------------------------------------------
+    ['uzm','epfy','epfz','vtem','wtem',
+                        'psitem','utendepfd','utendvtem','utendwtem']
+    if var == 'uzm':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+                                      uzm = uzm,
+
+                                      ))
+
+    if var == 'epfy':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+
+                                      epfy = epfy,
+
+                                      ))
+    if var == 'epfz':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+
+                                      epfz = epfz,
+
+                                      ))
+
+    if var == 'vtem':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+
+                                      vtem = vtem,
+
+                                      ))
+
+    if var == 'wtem':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+
+                                      wtem = wtem,
+
+                                      ))
+    if var == 'psitem':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+ 
+                                      psitem = psitem,
+  
+                                      ))
+
+    if var == 'utendepfd':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+
+                                      utendepfd = utendepfd,
+
+                                      ))
+
+    if var == 'utendvtem':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+                            
+                                      utendvtem = utendvtem,
+                                      ))
+    if var == 'utendwtem':
+        dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = ds.time_bnds,
+                                      
+                                      utendwtem = utendwtem
+                                      ))
     return dstem
