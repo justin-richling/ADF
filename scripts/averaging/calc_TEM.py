@@ -161,6 +161,7 @@ def calc_TEM(adf):
         ds_base['lev']=ds_base['level']
         ds_base['zalat']=ds_base['lat']
 
+        # THIS NEEDS FIXED FOR OBSERVATIONS!
         output_loc_idx = Path(adf.get_baseline_info("case_tem_loc")) / base_name
         #Check if re-gridded directory exists, and if not, then create it:
         if not output_loc_idx.is_dir():
@@ -181,7 +182,7 @@ def calc_TEM(adf):
 
 
     #Loop over cases:
-    for case_idx, case_name in enumerate(case_names[0:1]):
+    for case_idx, case_name in enumerate(case_names):
 
         print(f"\t Processing TEM diagnostics for case '{case_name}' :")
 
