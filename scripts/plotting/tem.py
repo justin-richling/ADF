@@ -127,7 +127,7 @@ def tem(adf):
 
 
     #Location to saved TEM netCDF files
-    tem_loc = adf.get_basic_info("tem_loc")
+    tem_loc = adf.get_basic_info("case_tem_loc")
     #If path not specified, skip TEM calculation?
     if tem_loc is None:
         print("Wow, I guess it's the end of us. It's the end of us, it's the end of uuuuuussssssss......")
