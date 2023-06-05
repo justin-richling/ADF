@@ -56,6 +56,7 @@ def meridional_mean(adfobj):
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
         base_nickname = "Obs"
+        obs = True
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
@@ -67,6 +68,7 @@ def meridional_mean(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
+        obs = False
 
         #Grab baseline case nickname
         base_nickname = adfobj.get_baseline_info('case_nickname')
@@ -253,7 +255,7 @@ def meridional_mean(adfobj):
                     pf.plot_meridional_mean_and_save(plot_name, case_nickname, base_nickname,
                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
                                                 [syear_baseline,eyear_baseline],
-                                                mseasons[s], oseasons[s], has_lev, latbounds=slice(-5,5), **vres)
+                                                mseasons[s], oseasons[s], has_lev, latbounds=slice(-5,5), obs=obs,**vres)
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s,

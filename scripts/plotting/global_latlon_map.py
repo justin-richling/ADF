@@ -172,9 +172,11 @@ def global_latlon_map(adfobj):
                 data_list = [var_obs_dict[var]["obs_name"]]
                 #Extract target variable name:
                 data_var = var_obs_dict[var]["obs_var"]
+                obs = True
             else:
                 dmsg = f"No obs found for variable `{var}`, lat/lon map plotting skipped."
                 adfobj.debug_log(dmsg)
+                obs = False
                 continue
         else:
             #Set "data_var" for consistent use below:
@@ -379,7 +381,7 @@ def global_latlon_map(adfobj):
                             pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
-                                                 mseasons[s], oseasons[s], dseasons[s], **vres)
+                                                 mseasons[s], oseasons[s], dseasons[s], obs=obs,**vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", 
@@ -490,7 +492,7 @@ def global_latlon_map(adfobj):
                                 pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], obs=obs,**vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",

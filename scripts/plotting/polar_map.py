@@ -60,6 +60,7 @@ def polar_map(adfobj):
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
         base_nickname = "Obs"
+        obs = True
 
         #If dictionary is empty, then  there are no observations to regrid to,
         #so quit here:
@@ -71,6 +72,7 @@ def polar_map(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
+        obs = False
 
         #Grab baseline case nickname
         base_nickname = adfobj.get_baseline_info('case_nickname')
@@ -288,7 +290,7 @@ def polar_map(adfobj):
                                     pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi, **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi,obs=obs, **vres)
 
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -367,7 +369,7 @@ def polar_map(adfobj):
                                         pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi, **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi, obs=obs,**vres)
 
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
