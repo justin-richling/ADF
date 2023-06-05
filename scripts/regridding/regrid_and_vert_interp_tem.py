@@ -625,13 +625,13 @@ def save_to_nc(tosave, outname, attrs=None, proc=None):
     else:
         enc_dv = {}
     #End if
-    enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
-    enc = {**enc_c, **enc_dv}
+    #enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
+    #enc = {**enc_c, **enc_dv}
     if attrs is not None:
         xo.attrs = attrs
     if proc is not None:
         xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
-    xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
+    xo.to_netcdf(outname, format='NETCDF4')#, encoding=enc)
 
 #####
 
