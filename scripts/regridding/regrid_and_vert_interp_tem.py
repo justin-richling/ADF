@@ -223,7 +223,7 @@ def regrid_and_vert_interp_tem(adf):
 
                     #Generate CAM climatology (climo) file list:
                     #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
-                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}.TEMdiag_*.nc"))
                     print("mclim_fils",mclim_fils,"\n")
 
                     if len(mclim_fils) > 1:
@@ -231,7 +231,7 @@ def regrid_and_vert_interp_tem(adf):
                         mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
                     else:
                         #Open single file as new xarray dataset:
-                        mclim_ds = xr.open_dataset(mclim_fils[0])
+                        mclim_ds = xr.open_dataset(mclim_fils)
                     #End if
 
                     #Create keyword arguments dictionary for regridding function:
