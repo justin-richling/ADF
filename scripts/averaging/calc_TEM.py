@@ -13,7 +13,6 @@ def calc_TEM(adf):
 
     #New TEM netCDF file save location
     output_loc = adf.get_cam_info("case_tem_loc")
-    #output_loc.append(adf.get_baseline_info("case_tem_loc"))
 
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
@@ -70,11 +69,11 @@ def calc_TEM(adf):
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
 
-        cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
-
         case_names.append(base_name)
         start_years.append(syear_baseline)
         end_years.append(eyear_baseline)
+
+        output_loc.append(adf.get_baseline_info("case_tem_loc"))
     else:
         base_name = "Obs"
     #End if
