@@ -102,11 +102,13 @@ def calc_TEM(adf):
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
-    if "qbo" in adf._AdfDiag__plotting_scripts:
-        var_list = ['uzm','epfy','epfz','vtem','wtem',
-                    'psitem','utendepfd','utendvtem','utendwtem']
-    else:
-        var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+    var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+    if adf._AdfDiag__plotting_scripts:
+        if "qbo" in adf._AdfDiag__plotting_scripts:
+            var_list = ['uzm','epfy','epfz','vtem','wtem',
+                        'psitem','utendepfd','utendvtem','utendwtem']
+        #else:
+        #    var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     if adf.get_basic_info("compare_obs"):
         obs_loc = adf.get_basic_info("obs_data_loc")
