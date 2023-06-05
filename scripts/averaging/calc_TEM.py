@@ -24,7 +24,7 @@ def calc_TEM(adf):
     #Set output/target data path variables:
     #------------------------------------
     target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
-    rgclimo_loc = Path(output_loc)
+    rgclimo_loc = Path(output_loc[0])
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
