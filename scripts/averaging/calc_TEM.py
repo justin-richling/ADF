@@ -13,6 +13,7 @@ def calc_TEM(adf):
 
     #New TEM netCDF file save location
     output_loc = [adf.get_cam_info("case_tem_loc")]
+    output_loc.append(adf.get_baseline_info("case_tem_loc"))
 
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
