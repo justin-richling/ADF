@@ -108,6 +108,7 @@ def regrid_and_vert_interp_tem(adf):
 
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("case_tem_loc", required=True)
+        print("target_loc",target_loc,"\n")
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
 
