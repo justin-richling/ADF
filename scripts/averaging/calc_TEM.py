@@ -12,8 +12,8 @@ def calc_TEM(adf):
     overwrite_output = False#True
 
     #New TEM netCDF file save location
-    output_loc = [adf.get_cam_info("case_tem_loc")]
-    output_loc.append(adf.get_baseline_info("case_tem_loc"))
+    output_loc = adf.get_cam_info("case_tem_loc")
+    #output_loc.append(adf.get_baseline_info("case_tem_loc"))
 
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
@@ -22,7 +22,7 @@ def calc_TEM(adf):
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
     #cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
 
-    #Set output/target data path variables:
+    """#Set output/target data path variables:
     #------------------------------------
     target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
     rgclimo_loc = Path(output_loc[0])
@@ -36,7 +36,7 @@ def calc_TEM(adf):
         rgclimo_loc.mkdir(parents=True)
     #End if
 
-    target_list = [adf.get_baseline_info("cam_case_name", required=True)]
+    target_list = [adf.get_baseline_info("cam_case_name", required=True)]"""
 
     
 
@@ -161,7 +161,7 @@ def calc_TEM(adf):
         ds_base['lev']=ds_base['level']
         ds_base['zalat']=ds_base['lat']
 
-        output_loc_idx = Path(output_loc) / base_name
+        output_loc_idx = Path(adf.get_baseline_info("case_tem_loc")) / base_name
         #Check if re-gridded directory exists, and if not, then create it:
         if not output_loc_idx.is_dir():
             print(f"    {output_loc_idx} not found, making new directory")
