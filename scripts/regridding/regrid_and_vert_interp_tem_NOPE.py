@@ -46,13 +46,15 @@ def regrid_and_vert_interp_tem(adf):
     # - regrid one to the other (probably should be a choice)
 
     #Notify user that script has started:
-    print("\n  Regridding CAM climatologies...")
+    print("\n  Regridding CAM history files...")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
-    var_list         = adf.diag_var_list
+    #var_list         = adf.diag_var_list
+    #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+    var_list = ["Uzm","Vzm","Wzm","THzm","UVzm","UWzm","VTHzm"]
     var_defaults     = adf.variable_defaults
 
     #Read hist_str (component.hist_num) from the yaml file, or set to default
@@ -63,21 +65,23 @@ def regrid_and_vert_interp_tem(adf):
     #End if
 
     
-    #Use test case settings, which are already lists:
+    syears   = adf.climo_yrs["syears"]
+    eyears     = adf.climo_yrs["eyears"]
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
-    start_years   = adf.climo_yrs["syears"]
-    end_years   = adf.climo_yrs["eyears"]
+
+    syear_baseline   = [adf.climo_yrs["syear_baseline"]]
+    eyear_baseline     = [adf.climo_yrs["eyear_baseline"]]
+    baseline_hist_locs = [adf.get_baseline_info("cam_hist_loc", required=True)]
+
+    syears += syear_baseline
+    eyears += eyear_baseline
+
+    cam_hist_locs += baseline_hist_locs
+
+    #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-
-    cam_hist_locs += [adf.get_baseline_info("cam_hist_loc", required=True)]
-    start_years   += [adf.climo_yrs["syear_baseline"]]
-    end_years   += [adf.climo_yrs["eyear_baseline"]]
-    case_names += [adf.get_baseline_info("cam_case_name", required=True)]
-
-
-
-
-
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    input_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
@@ -136,6 +140,7 @@ def regrid_and_vert_interp_tem(adf):
     rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
+        print("tclimo_loc",tclimo_loc,"\n")
     #------------------------------------
 
     #Check if re-gridded directory exists, and if not, then create it:
@@ -145,22 +150,55 @@ def regrid_and_vert_interp_tem(adf):
     #End if
 
     #Loop over CAM cases:
+    case_names_full = case_names + [adf.get_baseline_info("cam_case_name", required=True)]
+    hists = {}
+    print("cam_hist_locs",cam_hist_locs,"\n")
+    for case_idx, case_name in enumerate(case_names_full):
+
+        
+        #Extract start and end year values:
+        start_year = syears[case_idx]
+        end_year   = eyears[case_idx]
+
+        #Create path object for the CAM history file(s) location:
+        starting_location = Path(cam_hist_locs[case_idx])
+        print("starting_location",starting_location,"\n")
+
+        #Check if history files actually exist. If not then kill script:
+        if not list(starting_location.glob('*'+hist_str+'.*.nc')):
+            emsg = f"No history *{hist_str}.*.nc files found in '{starting_location}'."
+            emsg += " Script is ending here."
+            adf.end_diag_fail(emsg)
+        #End if
+
+        #Create empty list:
+        files_list = []
+
+        #Loop over start and end years:
+        for year in range(start_year, end_year+1):
+            #Add files to main file list:
+            for fname in starting_location.glob(f'*{hist_str}.*{str(year).zfill(4)}*.nc'):
+                files_list.append(fname)
+            #End for
+        #End for
+        hists[case_name] = files_list
+
+
+    
+
+
+
+
+    #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
-
         
 
-        #Create path object for the CAM history file(s) location:
-        starting_location = Path(cam_hist_locs[case_idx])
-
-        #Extract start and end year values:
-        start_year = start_years[case_idx]
-        end_year   = end_years[case_idx]
-
         #Set case climo data path:
-        mclimo_loc  = Path(cam_hist_locs[case_idx])
+        mclimo_loc  = Path(input_hist_locs[case_idx])
+        
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
@@ -188,7 +226,7 @@ def regrid_and_vert_interp_tem(adf):
 
             #Notify user of variable being regridded:
             print(f"\t - regridding {var} (known targets: {target_list})")
-
+            #print("target_list",target_list,"\n")
             #loop over regridding targets:
             for target in target_list:
 
@@ -213,6 +251,7 @@ def regrid_and_vert_interp_tem(adf):
 
                 #Check again if re-gridded file already exists:
                 if not regridded_file_loc.is_file():
+                #if regridded_file_loc.is_file():
 
                     #Create list of regridding target files (we should explore intake as an alternative to having this kind of repeated code)
                     # NOTE: This breaks if you have files from different cases in same directory!
@@ -221,30 +260,10 @@ def regrid_and_vert_interp_tem(adf):
                         tclim_fils = [tclimo_loc]
                     else:
                         #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
-                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
-                        #Check if history files actually exist. If not then kill script:
-                        if not list(starting_location.glob('*'+hist_str+'.*.nc')):
-                            emsg = f"No history *{hist_str}.*.nc files found in '{starting_location}'."
-                            emsg += " Script is ending here."
-                            adf.end_diag_fail(emsg)
-                        #End if
-
-                        #Create empty list:
-                        files_list = []
-
-                        #Loop over start and end years:
-                        for year in range(start_year, end_year+1):
-                            #Add files to main file list:
-                            for fname in starting_location.glob(f'*{hist_str}.*{str(year).zfill(4)}*.nc'):
-                                files_list.append(fname)
-                            #End for
-                        #End for
-
-
-                        #Create ordered list of CAM history files:
-                        #hist_files = sorted(files_list)
-                        tclim_fils = sorted(files_list)
+                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
+
+                    print("tclim_fils",tclim_fils,"\n")
 
                     #Write to debug log if enabled:
                     adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
@@ -264,7 +283,9 @@ def regrid_and_vert_interp_tem(adf):
                     #    regrid_ofrac = False
 
                     #Generate CAM climatology (climo) file list:
+                    #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    print("mclim_fils",mclim_fils,"\n")
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
@@ -331,26 +352,26 @@ def regrid_and_vert_interp_tem(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = rgclimo_loc / f'{target}_{var}_tem_baseline.nc'
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
-                        #Look for a baseline climo file for surface pressure (PS):
+                        """#Look for a baseline climo file for surface pressure (PS):
                         bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
 
                         #Also look for a baseline climo file for mid-level pressure (PMID):
-                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
+                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'"""
 
                         #Create new keyword arguments dictionary for regridding function:
                         regrid_kwargs = {}
 
-                        #Check if PS and PMID files exist:
+                        """#Check if PS and PMID files exist:
                         if bl_ps_fil.is_file():
                             regrid_kwargs.update({'ps_file': bl_ps_fil})
                         #End if
                         if bl_pmid_fil.is_file():
                             regrid_kwargs.update({'pmid_file': bl_pmid_fil})
-                        #End if
+                        #End if"""
 
                         #Generate vertically-interpolated baseline dataset:
                         tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
@@ -400,7 +421,7 @@ def regrid_and_vert_interp_tem(adf):
     #End do (case list)
 
     #Notify user that script has ended:
-    print("  ...CAM climatologies have been regridded successfully.")
+    print("  ...CAM history files have been regridded successfully.")
 
 #################
 #Helper functions
