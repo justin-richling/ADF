@@ -221,6 +221,8 @@ def calc_TEM(adf):
         ehist = glob(f"{starting_location}/*{hist_num}.{end_year}*.nc")
         hist_files = sorted(shist + ehist)
 
+        print("TEM hist files:",hist_files,"\n")
+
         ds = xr.open_mfdataset(hist_files)
 
         #iterate over the times in a dataset
