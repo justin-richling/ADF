@@ -224,7 +224,7 @@ def calc_TEM(adf):
 
             ds = xr.open_mfdataset(hist_files)
 
-            for var in var_list2:
+            for var in var_list:
                 #iterate over the times in a dataset
                 for idx,_ in enumerate(ds.time.values):
                     if idx == 0:
@@ -561,7 +561,7 @@ def calc_tem(ds, var):
         dstem = xr.Dataset(data_vars=dict(date = ds.date,
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
-                                      uzm = uzm,
+                                      uzm = uzm
 
                                       ))
 
@@ -570,7 +570,7 @@ def calc_tem(ds, var):
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
 
-                                      epfy = epfy,
+                                      epfy = epfy
 
                                       ))
     if var == 'epfz':
@@ -578,7 +578,7 @@ def calc_tem(ds, var):
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
 
-                                      epfz = epfz,
+                                      epfz = epfz
 
                                       ))
 
@@ -587,7 +587,7 @@ def calc_tem(ds, var):
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
 
-                                      vtem = vtem,
+                                      vtem = vtem
 
                                       ))
 
@@ -596,7 +596,7 @@ def calc_tem(ds, var):
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
 
-                                      wtem = wtem,
+                                      wtem = wtem
 
                                       ))
     if var == 'psitem':
@@ -604,7 +604,7 @@ def calc_tem(ds, var):
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
  
-                                      psitem = psitem,
+                                      psitem = psitem
   
                                       ))
 
@@ -613,7 +613,7 @@ def calc_tem(ds, var):
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
 
-                                      utendepfd = utendepfd,
+                                      utendepfd = utendepfd
 
                                       ))
 
@@ -622,7 +622,7 @@ def calc_tem(ds, var):
                                       datesec = ds.datesec,
                                       time_bnds = ds.time_bnds,
                             
-                                      utendvtem = utendvtem,
+                                      utendvtem = utendvtem
                                       ))
     if var == 'utendwtem':
         dstem = xr.Dataset(data_vars=dict(date = ds.date,
