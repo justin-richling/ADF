@@ -197,6 +197,7 @@ def regrid_and_vert_interp_tem(adf):
                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_*.nc")) #TEM hist files?
                     #End if
+                    print("tclim_fils",tclim_fils,"\n")
 
                     #Write to debug log if enabled:
                     adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
@@ -218,6 +219,7 @@ def regrid_and_vert_interp_tem(adf):
                     #Generate CAM climatology (climo) file list:
                     #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    print("mclim_fils",mclim_fils,"\n")
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
