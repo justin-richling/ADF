@@ -118,7 +118,8 @@ def regrid_and_vert_interp_tem(adf):
     #------------------------------------
     rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
-        tclimo_loc  = Path(target_loc)
+        #tclimo_loc  = Path(target_loc)
+        tclimo_loc = target_loc
         print("tclimo_loc",tclimo_loc,"\n")
     #------------------------------------
 
