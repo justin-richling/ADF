@@ -217,9 +217,9 @@ def amwg_chem_table(adf):
     toc = time.perf_counter()
     print(f"create_dic_SE took {toc - tic:0.4f} seconds")
 
-    print(dic_SE,"\n")
-    print(dic_SE.keys(),"\n")
-    print(dic_SE["O3_CHML"],"\n")
+    #print(dic_SE,"\n")
+    #print(dic_SE.keys(),"\n")
+    #print(dic_SE["O3_CHML"],"\n")
         
     # extract all the data
     var_dict={}
@@ -239,6 +239,7 @@ def amwg_chem_table(adf):
         table_df = pd.read_csv(output_csv_file)
         adf.add_website_data(table_df, "Chemistry", case_names[0], plot_type="Tables")"""
     
+    #Placeholder for the code above to check for table existence
     if 1==0:
         print("this should never run!")
         
@@ -266,7 +267,7 @@ def amwg_chem_table(adf):
             var_dict[scn]={}
             Dic_var_comp={}
 
-            print("preppin for SE budget")
+            print("prepping for SE budget")
             tic = time.perf_counter()    
             for _,var in enumerate(CHEMS):
 
@@ -285,10 +286,7 @@ def amwg_chem_table(adf):
                 Dic_var_comp[var]=Dic_comp
             var_dict[scn]= Dic_var_comp
             toc = time.perf_counter()
-            print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds")  
-            
-            print("here comes the fun cooker for SEbudget:")
-            #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1),"\n")
+            print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds")
 
             #Critical threshholds????
             tic = time.perf_counter()
@@ -305,6 +303,8 @@ def amwg_chem_table(adf):
                 strat=np.where(current_crit>150,current_crit,np.nan)
             else:
                 trop=current_crit
+
+        #End loop over cases for SE budget dictionary creation
 
         comp_ext_full = {'_BURDEN':'_BURDEN',
                     '_CHML':'_CHEM_LOSS','_CHMP':'_CHEM_PROD','_NET':'_NET',
@@ -323,7 +323,6 @@ def amwg_chem_table(adf):
         #Create the table
         #----------------
         print("\n*************\nactually making the tables now\n*************\n")
-        #print(f"\n{len(f'Current Scenario: {scn}')*'-'}\nactually making the tables now\n{len(f'Current Scenario: {scn}')*'-'}\n")
         #Use this for multi-case --> down the road a bit, yeah?
         cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
         
@@ -367,6 +366,8 @@ def amwg_chem_table(adf):
             
             #Run most other variables
             #------------------------
+            # "CH4","CH3CCL3","CO"
+
             elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', 'O3']:
                 for key,ext in not_O3_ext.items():
                     row_values = []
@@ -404,6 +405,7 @@ def amwg_chem_table(adf):
                         
             #Run ISOP, Monoterpene, Methanol, and Acetone emmission calcs
             #------------------------------------------------------------
+            # "CH4","CH3CCL3","CO"
             elif current_var in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP']:
                 print("current_var",current_var,"\n")
                 row_values = []
@@ -955,7 +957,7 @@ def create_dic_SE(variables, ListVars, ext1_SE):
         'SALT':12.011,
         'SULF':115.11,
         'POM':12.011,
-        'BC':12.011 ,
+        'BC':12.011,
         'DUST':12.011,
         'CH3CCL3':133.4042,
         'C10H16':136.2340,
@@ -1202,11 +1204,6 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     """
     Calcs for chem diagnostics (no aerosols)
     
-    Meant to be a brute force idea of just adding code blocks for each new derived quantity
-    Seems likely there is a better/proper way of doing this, will look into
-    
-        *** Flag for upgrade ^^^^^^ ***
-    
      - Add to list each budget item
      - returns list of final budget values
     """
@@ -1244,8 +1241,8 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     SF = np.ma.sum(sf*duration*1e-9)
     chem_dict['_SF'] = np.round(SF,5)
 
-    '''# Elevated Emissions
-    #print(f"-> {var} This var is the prob'm sheriff. What should we do about 'im?? (lets run heem oot of toown)")
+    # Elevated Emissions
+    print(f"-> {var} Is this var is the prob'm sheriff? What should we do about 'im?? (lets run heem oot of toown)")
     #spc_clxf=Dic_scn_var_comp[current_scn][current_var][current_var+'_CLXF']
     spc_clxf=var_dict[scn][var][var+'_CLXF']
     tmp_clxf=np.nansum(spc_clxf*area,axis=0)
@@ -1254,8 +1251,9 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
     CLXF = np.ma.sum(clxf*duration*1e-9)
     #/PROBLEM
-    """# Elevated Emissions
-    if var == "CO":
+    # Elevated Emissions
+    #if var == "CO":
+    if 1==0:
         print(f"Smoethign is borken with {var}")
         CLXF = np.nan
     else:
@@ -1263,8 +1261,8 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
         tmp_clxf=np.nansum(spc_clxf*area,axis=0)
         clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
         CLXF = np.ma.sum(clxf*duration*1e-9)
-    """
-    chem_dict['_CLXF'] = np.round(CLXF,5)'''
+    
+    chem_dict['_CLXF'] = np.round(CLXF,5)
 
     # Dry Deposition Flux 
     spc_ddf=var_dict[scn][var][var+'_DDF'] 
