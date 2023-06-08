@@ -336,11 +336,11 @@ def amwg_chem_table(adf):
                     row_values = []
                 
                     for i,scn in enumerate(scenarios):
-                        #tic = time.perf_counter()
+                        tic = time.perf_counter()
                         my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
-                        #toc = time.perf_counter()
-                        #print(f"calc_chem_data for O3 took {toc - tic:0.4f} seconds")
+                        toc = time.perf_counter()
+                        print(f"calc_chem_data for O3 took {toc - tic:0.4f} seconds\n")
 
                         if ext == "_BURDEN":
                             new_ext = ext+" (Tg)"
@@ -372,11 +372,11 @@ def amwg_chem_table(adf):
                 for key,ext in not_O3_ext.items():
                     row_values = []
                     for i,scn in enumerate(scenarios):
-                        #tic = time.perf_counter()
+                        tic = time.perf_counter()
                         my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)[key]
-                        #toc = time.perf_counter()
-                        #print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
+                        toc = time.perf_counter()
+                        print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds\n")
                     
                         if ext == "_BURDEN":
                             new_ext = ext+" (Tg)"
@@ -412,11 +412,11 @@ def amwg_chem_table(adf):
                 new_ext = "_EMIS (Tg/yr)"
 
                 for i,scn in enumerate(scenarios):
-                    #tic = time.perf_counter()
+                    tic = time.perf_counter()
                     my_val = calc_chem_data(scn,current_var,var_dict,trop,
                                                 area,durations[i],inside)['_SF']
-                    #toc = time.perf_counter()
-                    #print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds")
+                    toc = time.perf_counter()
+                    print(f"calc_chem_data for {current_var} took {toc - tic:0.4f} seconds\n")
                     row_values.append(np.round(my_val,3))
                 row_values = [current_var+new_ext]+row_values
 
