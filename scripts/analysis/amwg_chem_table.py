@@ -840,7 +840,7 @@ def Get_files(data_dirs, scenarios, start_periods, end_periods, **kwargs):
         Lons[scn]=lon
         areas[scn]=area
 
-    print(f"Got the files, lats, lons, and areas (hopefully)...\nj_bizzle={j_bizzle}")
+    print(f"Got the files, lats, lons, and areas (hopefully)...\n")
     return files, Lats, Lons, areas
 
 #####
