@@ -1252,8 +1252,8 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     CLXF = np.ma.sum(clxf*duration*1e-9)
     #/PROBLEM
     # Elevated Emissions
-    #if var == "CO":
-    if 1==0:
+    if var == "CO":
+    #if 1==0:
         print(f"Smoethign is borken with {var}")
         CLXF = np.nan
     else:
