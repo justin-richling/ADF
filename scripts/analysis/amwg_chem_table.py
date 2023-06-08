@@ -1242,7 +1242,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     chem_dict['_SF'] = np.round(SF,5)
 
     # Elevated Emissions
-    print(f"-> {var} Is this var is the prob'm sheriff? What should we do about 'im?? (lets run heem oot of toown)")
+    """print(f"-> {var} Is this var is the prob'm sheriff? What should we do about 'im?? (lets run heem oot of toown)")
     #spc_clxf=Dic_scn_var_comp[current_scn][current_var][current_var+'_CLXF']
     spc_clxf=var_dict[scn][var][var+'_CLXF']
     tmp_clxf=np.nansum(spc_clxf*area,axis=0)
@@ -1250,7 +1250,7 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     #PROBLEM HERE: IndexError: Inconsistent shape between the condition and the input (got (192, 288) and (288,))
     clxf=np.ma.masked_where(inside==False,tmp_clxf)  #convert Kg/m2/s to Tg/yr
     CLXF = np.ma.sum(clxf*duration*1e-9)
-    #/PROBLEM
+    #/PROBLEM"""
     # Elevated Emissions
     if var == "CO":
     #if 1==0:
