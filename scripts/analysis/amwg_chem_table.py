@@ -491,10 +491,13 @@ def amwg_chem_table(adf):
         #Create output file name:
         output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
 
-        if output_csv_file.is_file():
+        """if output_csv_file.is_file():
             print(f"'{output_csv_file}' already exists, so skipping partner!\n")
             table_df = pd.read_csv(output_csv_file)
-            adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")
+            adf.add_website_data(table_df, "Aerosols", case_names[0], plot_type="Tables")"""
+
+        if 1 == 0:
+            print()
             
         else:
             dic_SE = create_dic_SE(AEROSOLS,ListVars,ext1_SE)
@@ -626,6 +629,7 @@ def amwg_chem_table(adf):
                     row_values = [current_var+new_ext]+row_values
                     
                     dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                    print("dfentries",dfentries,"\n")
                     # Add entries to Pandas structure:
                     df = pd.DataFrame(dfentries,columns=cols)
                     if output_csv_file.is_file():
