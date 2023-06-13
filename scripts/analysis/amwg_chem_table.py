@@ -15,21 +15,15 @@ from datetime import datetime, timedelta
 import time
 import timeit
 import numpy as np
-#import pandas as pd
 import xarray as xr
 from pathlib import Path
 import sys
 import warnings  # use to warn user about missing files.
 
 # list of the variables to be caculated. 
-CHEMS =["CH4",
-        "CH3CCL3",
-        "CO",
-        "O3", #Currently missing some components 
-        "ISOP",
-        "C10H16",
-        "CH3OH",
-        "CH3COCH3"]
+CHEMS =["CH4", "CH3CCL3", "CO",
+        "O3", #Currently missing some components?
+        "ISOP", "C10H16", "CH3OH", "CH3COCH3"]
 
 AEROSOLS = ['SOA', 'SALT', 'DUST', 'POM', 'BC', 'SULF']
 
@@ -95,6 +89,7 @@ def amwg_chem_table(adf):
 
         if "CMIP" in baseline_name:
             print("CMIP files detected, skipping AMWG table (for now)...")
+            return
 
         else:
             #Append to case list:
@@ -104,7 +99,7 @@ def amwg_chem_table(adf):
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
     
-    #CHANGE THIS TO READ FROM YAML!!!!
+    #CHANGE THIS TO READ FROM YAML
     h_case = "h0"
 
     #Convert output location string to a Path object:
@@ -117,6 +112,7 @@ def amwg_chem_table(adf):
     if not input_location.is_dir():
         errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
         raise AdfError(errmsg)
+
     #Write to debug log if enabled:
     adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
     #Check if analysis directory exists, and if not, then create it:
@@ -135,7 +131,6 @@ def amwg_chem_table(adf):
 
     #End gathering case, path, and data info
     #-----------------------------------------
-
 
     # Look for specific h-case    
     scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
@@ -185,7 +180,6 @@ def amwg_chem_table(adf):
         
         durations.append((end_period-start_period).days*86400)
 
-    #print(timeit.timeit(lambda: Get_files(data_dirs,scenarios,start_dates,end_dates,area=True), number=1),"\n")
     tic = time.perf_counter()
     #Get the files for each case and set of start and end years
     Files,Lats,Lons,areas= Get_files(data_dirs,scenarios,start_dates,end_dates,area=True)
@@ -217,10 +211,6 @@ def amwg_chem_table(adf):
     toc = time.perf_counter()
     print(f"create_dic_SE took {toc - tic:0.4f} seconds")
 
-    #print(dic_SE,"\n")
-    #print(dic_SE.keys(),"\n")
-    #print(dic_SE["O3_CHML"],"\n")
-        
     # extract all the data
     var_dict={}
 
@@ -288,16 +278,13 @@ def amwg_chem_table(adf):
             toc = time.perf_counter()
             print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds")
 
-            #Critical threshholds????
+            #Critical threshholds
             tic = time.perf_counter()
             current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
             toc = time.perf_counter()
             print(f"SEbudget for only O3 took {toc - tic:0.4f} seconds")
-            #print(timeit.timeit(lambda: SEbudget(dic_SE,current_dir,current_files,'O3',level=50), number=1))
             Dic_crit[scn]=current_crit
 
-            
-            
             if Tropospheric:
                 trop=np.where(current_crit>150,np.nan,current_crit)
                 strat=np.where(current_crit>150,current_crit,np.nan)
@@ -323,7 +310,6 @@ def amwg_chem_table(adf):
         #Create the table
         #----------------
         print("\n*************\nactually making the tables now\n*************\n")
-        #Use this for multi-case --> down the road a bit, yeah?
         cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
         
         tic = time.perf_counter()
@@ -367,7 +353,6 @@ def amwg_chem_table(adf):
             #Run most other variables
             #------------------------
             # "CH4","CH3CCL3","CO"
-
             elif current_var not in ['C10H16', 'CH3OH', 'CH3COCH3', 'ISOP', 'O3']:
                 for key,ext in not_O3_ext.items():
                     row_values = []
@@ -445,7 +430,7 @@ def amwg_chem_table(adf):
         for val in drop_vals:
             table_df = table_df[table_df["variable"].str.contains(val) == False]
             table_df.reset_index(drop=True, inplace = True)
-        #
+        #End for
 
         # Grab one LNO value (from CH4) change to LNO_PROD and add units
         # Also, for no good reason, move to the bottom of table for completeness' sake
@@ -557,7 +542,7 @@ def amwg_chem_table(adf):
                 print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds") 
 
                 #Critical threshholds????
-                #TODO: Make this a config file argument
+                #QUESTION: Make this a config file argument?
                 current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',level=50)
                 Dic_crit[scn]=current_crit
 
@@ -575,44 +560,12 @@ def amwg_chem_table(adf):
                     for i,scn in enumerate(scenarios):
                         my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
                                                         area,durations[i],inside)[key]
-
-                        #print("my_val:",my_val, f"for ")
-                        """
-                        if ext == "_BURDEN":
-                            new_ext = ext+" (Tg)"
-                        elif ext == "_LNO":
-                            new_ext = ext+" (TgN/yr)"
-                        elif ext == "_LIFETIME": # will come out as years!!
-                            if my_val < 1:
-                                my_val = my_val*365
-                                new_ext = ext+" (days)"
-                            else:
-                                new_ext = ext+" (yr)"
-                        else:
-                            new_ext = ext+" (Tg/yr)"
-                        """
-                    
                         if ext == "_BURDEN":
                             if current_var == "SULF":
                                 new_ext = ext+" (TgS)"
                             else:
                                 new_ext = ext+" (TgC)"
                         elif ext == "_LIFETIME": #will come out as days!
-                            '''if i == 0:
-                                if 0 < my_val < 1:
-                                    my_val = my_val*365
-                                    new_ext = ext+" (days)"
-                                    
-                                elif my_val > 1:
-                                    new_ext = ext+" (yr)"
-                                elif int(my_val) == 0:
-                                    new_ext = ext+" (days)"
-                            if i > 0:
-                                if 0 < my_val < 1:
-                                    my_val = my_val*365
-                                    new_ext = ext+" (days)"'''
-
-        
                             if my_val < 365:
                                 new_ext = ext+" (days)"
                             else:
@@ -708,14 +661,10 @@ def list_files(directory,scenario,start_date,end_date):
     #
 
     start_filenames = sorted(Path(directory).glob(f'*.{start_date[0:4]}-*'))
-    #print("start_filenames",start_filenames,"\n")
     all_start_filenames = [i.stem+".nc" for i in start_filenames] # Grab just the file names themselves
-    #print("all_start_filenames",all_start_filenames,"\n")
 
     end_filenames = sorted(Path(directory).glob(f'*.{end_date[0:4]}-*'))
-    #print("end_filenames",end_filenames,"\n")
     all_end_filenames = [i.stem+".nc" for i in end_filenames]
-    #print("all_end_filenames",all_end_filenames,"\n")
     
     all_filenames = sorted(all_start_filenames+all_end_filenames)
 
@@ -723,13 +672,10 @@ def list_files(directory,scenario,start_date,end_date):
         print(" Directory has no outputs ")
         return
     all_filenames.sort()
-    #print("all_filenames",all_filenames,"\n")
 
-    
     # this is used to discern what files to extract
     scenario_len=len(scenario)
     all_fileNames=[]
-
 
     #TODO: This section can be cleaned up and made more efficient
     #Right now it is doing a lot (?) of loops to check for files, there probably is a better way
@@ -882,32 +828,24 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
 
     # gas constanct
     Rgas=287.04 #[J/K/Kg]=8.314/0.028965
-    #print("var",var,"\n")
-    
         
     all_data=[]
     for file in files:
-        #print("Uhhh",data_dir+file,"\n")
         ds=xr.open_dataset(data_dir+file)
         data=[]
-        #print(list(ds.keys()))
-
-        #print(dic_SE[var].keys(),"\n")
     
         for i in dic_SE[var].keys():
-            #print("dic_SE[var].keys()",i,"\n")
             if i == "O3_Loss":
                 #i = "O3_CHML"
                 data.append(np.array(ds["O3_CHML"].isel(time=0))*dic_SE[var][i])
             elif i == "O3_Prod":
                 #i = "O3_CHMP"
                 data.append(np.array(ds["O3_CHMP"].isel(time=0))*dic_SE[var][i])
-            #print(i,"\n")
-            #Check to see if the product is in the actual dataset, if not, move on and set to 0
+ 
+             #Check to see if the product is in the actual dataset, if not, move on and set to 0
             else:
                 
                 if i in ds:
-                    #print(f"Looks like {var} is {i} for {file}, so good to go...\n")
                     data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
                 else:
                     print(f"Looks like {var} is missing {i} for {file}, so skipping...\n")
