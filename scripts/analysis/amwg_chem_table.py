@@ -256,7 +256,7 @@ def amwg_chem_table(adf):
 
             var_dict[scn]={}
             Dic_var_comp={}
-            if Path(output_location / f'{scn}_chem_SE.csv').is_dir():
+            if Path(output_location / f'{scn}_chem_SE.csv').is_file():
                 print("SE budget file exists, skipping to table creation")
             else:
                 print("prepping for SE budget")
