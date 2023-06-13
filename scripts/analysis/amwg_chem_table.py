@@ -566,8 +566,8 @@ def amwg_chem_table(adf):
                     strat=np.where(current_crit>150,current_crit,np.nan)
                 else:
                     trop=current_crit
-
             tic = time.perf_counter()
+
             for current_var in AEROSOLS:
                 for key,ext in aerosols_ext.items():
                     row_values = []
@@ -576,7 +576,7 @@ def amwg_chem_table(adf):
                         my_val = calc_aerosol_data(scn,current_var,var_dict,trop,
                                                         area,durations[i],inside)[key]
 
-                        print("my_val:",my_val)
+                        #print("my_val:",my_val, f"for ")
                         """
                         if ext == "_BURDEN":
                             new_ext = ext+" (Tg)"
@@ -1089,7 +1089,7 @@ def create_dic_SE(variables, ListVars, ext1_SE):
             if key+'_CLXF' in ListVars:            
                 dic_SE[var+'_CLXF'][key+'_CLXF'+ext1_SE]=MW[var]*10/avo  # convert [molec/cm2/s] to [kg/m2/s]        
             else:
-                dic_SE[var+'_CLXF']['O3'+ext1_SE]=0. 
+                dic_SE[var+'_CLXF']['CO_CLXF'+ext1_SE]=0. 
 
             if var in AEROSOLS:
                 # for each species:
@@ -1256,8 +1256,8 @@ def calc_chem_data(scn, var, var_dict, trop, area, duration, inside):
     CLXF = np.ma.sum(clxf*duration*1e-9)
     #/PROBLEM"""
     # Elevated Emissions
-    if var == "CO":
-    #if 1==0:
+    #if var == "CO":
+    if 1==0:
         print(f"Smoethign is borken with {var}")
         CLXF = np.nan
     else:
