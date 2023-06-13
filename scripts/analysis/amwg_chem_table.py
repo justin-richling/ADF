@@ -277,7 +277,7 @@ def amwg_chem_table(adf):
                         Dic_comp[comp]=current_data
                     Dic_var_comp[var]=Dic_comp
                 var_dict[scn]= Dic_var_comp
-                with open(output_location / 'chem_SE.csv', 'w') as f:
+                with open(output_location / f'{scn}_chem_SE.csv', 'w') as f:
                     for key in var_dict.keys():
                         f.write("%s,%s\n"%(key,var_dict[key]))
                 toc = time.perf_counter()
@@ -546,7 +546,7 @@ def amwg_chem_table(adf):
                             Dic_comp[comp]=current_data
                         Dic_var_comp[current_var]=Dic_comp
                     var_dict[scn]= Dic_var_comp
-                    with open(output_location / 'aerosol_SE.csv', 'w') as f:
+                    with open(output_location / f'{scn}_aerosol_SE.csv', 'w') as f:
                         for key in var_dict.keys():
                             f.write("%s,%s\n"%(key,var_dict[key]))
                     toc = time.perf_counter()
