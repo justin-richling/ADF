@@ -275,6 +275,9 @@ def amwg_chem_table(adf):
                     Dic_comp[comp]=current_data
                 Dic_var_comp[var]=Dic_comp
             var_dict[scn]= Dic_var_comp
+            with open(output_location / 'chem_SE.csv', 'w') as f:
+                for key in var_dict.keys():
+                    f.write("%s,%s\n"%(key,var_dict[key]))
             toc = time.perf_counter()
             print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds")
 
@@ -538,6 +541,9 @@ def amwg_chem_table(adf):
                         Dic_comp[comp]=current_data
                     Dic_var_comp[current_var]=Dic_comp
                 var_dict[scn]= Dic_var_comp
+                with open(output_location / 'aerosol_SE.csv', 'w') as f:
+                    for key in var_dict.keys():
+                        f.write("%s,%s\n"%(key,var_dict[key]))
                 toc = time.perf_counter()
                 print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds") 
 
@@ -997,7 +1003,6 @@ def create_dic_SE(variables, ListVars, ext1_SE):
             # rho and delP will be applied when reading the files in SEbudget function.   
 
             if key=='O3'+ext1_SE: 
-                print("Is this actually happening?\n")
                 # for O3, we should not include fast cycling reactions
                 # As a result, we use below diagnostics in the model
                 dic_SE[var+'_CHML'][key+'_Loss'+ext1_SE]=MW[var]*1e3/avo/gr
