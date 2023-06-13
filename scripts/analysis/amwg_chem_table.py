@@ -522,6 +522,10 @@ def amwg_chem_table(adf):
 
                 if Path(output_location / f'{scn}_aerosol_SE.csv').is_dir():
                     print("SE budget file exists, skipping to table creation")
+                    #var_dict[scn] = pd.read_csv(output_location / f'{scn}_aerosol_SE.csv')
+                    df = pd.read_csv(output_location / f'{scn}_aerosol_SE.csv')
+                    var_dict[scn] = df.to_dict(orient='records')
+                    print("AHHH",var_dict[scn])
                 else:
                     tic = time.perf_counter()
                     for _,current_var in enumerate(AEROSOLS):
