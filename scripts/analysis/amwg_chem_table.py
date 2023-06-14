@@ -739,6 +739,8 @@ def amwg_chem_table(adf):
                 spc_lno=Dic_scn_var_comp[current_scn][current_var][current_var+'_LNO']
                 tmp_lno=np.ma.masked_where(inside==False,spc_lno)  
                 LNO = np.ma.sum(tmp_lno)              
+            
+            df = pd.DataFrame()
             row_values = []
             if current_var in AEROSOLS:
                 
@@ -746,30 +748,54 @@ def amwg_chem_table(adf):
                 print('Current Variable: '+current_var)
                 print('Global Burden (Tg): '+str(np.round(BURDEN,3)))
                 row_values.append(np.round(BURDEN,3))
+                df2 = {'Variable': current_var+'Global Burden (Tg)', 'Value': np.round(BURDEN,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
                 row_values.append(np.round(CHML,3))
+                df2 = {'Variable': current_var+'Global Chemical Loss (Tg/yr)', 'Value': np.round(CHML,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
                 row_values.append(np.round(CHMP,3))
+                df2 = {'Variable': current_var+'Global Chemical Prod (Tg/yr)', 'Value': np.round(CHMP,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
-                row_values.append(np.round(CHMP-CHML,3))        
+                row_values.append(np.round(CHMP-CHML,3))
+                df2 = {'Variable': current_var+'Global Chemical NET (Tg/yr)', 'Value': np.round(CHMP-CHML,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
                 row_values.append(np.round(DDF,3))
+                df2 = {'Variable': current_var+'Global Dry Deposition (Tg/yr)', 'Value': np.round(DDF,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
                 row_values.append(np.round(WDF,3))
+                df2 = {'Variable': current_var+'Global Wet Deposition (Tg/yr)', 'Value': np.round(WDF,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
                 row_values.append(np.round(SF,3))
+                df2 = {'Variable': current_var+'Global Surface Emis (Tg/yr)', 'Value': np.round(SF,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
                 row_values.append(np.round(CLXF,3))
+                df2 = {'Variable': current_var+'Global Elevated Emis (Tg/yr)', 'Value': np.round(CLXF,3)}
+                df.append(df2, ignore_index = True)
                 print('Global Gas-Aerosol Exch (Tg/yr): '+str(np.round(GAEX,2)))
                 row_values.append(np.round(GAEX,3))
+                df2 = {'Variable': current_var+'Global Gas-Aerosol Exch (Tg/yr)', 'Value': np.round(GAEX,3)}
+                df.append(df2, ignore_index = True)
                 print('LifeTime (day): '+str(np.round(LT,0)))
                 row_values.append(np.round(LT,0))
+                df2 = {'Variable': current_var+'LifeTime (day)', 'Value': np.round(LT,3)}
+                df.append(df2, ignore_index = True)
 
                 if current_var=='SULF':
                     print('Global AQUEOUS Chem (Tg/yr): '+str(np.round(AQS,2)))
                     row_values.append(np.round(AQS,0))
+                    df2 = {'Variable': current_var+'Global AQUEOUS Chem (Tg/yr)', 'Value': np.round(AQS,3)}
+                    df.append(df2, ignore_index = True)
                     print('Global Nucleation (Tg/yr): '+str(np.round(NUCL,2)))
                     row_values.append(np.round(NUCL,0))
+                    df2 = {'Variable': current_var+'Global Nucleation (Tg/yr)', 'Value': np.round(NUCL,3)}
+                    df.append(df2, ignore_index = True)
                     
                 
                 print('****   *****')
@@ -780,13 +806,18 @@ def amwg_chem_table(adf):
                 cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
                 #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
                 #row_values.append(np.round(my_val,3))
+                #dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-                df = pd.DataFrame(dfentries,columns=cols)
+                #df = pd.DataFrame(dfentries,columns=cols)
+                """df2 = {'Variable': 'Amy', 'Value': 89}
+                df.append(df2, ignore_index = True)"""
                 #df.to_csv(output_csv_file, header=False, index=False)
                 if output_csv_file.is_file():
                     df.to_csv(output_csv_file, mode='a', header=False, index=False)
                 else:
                     df.to_csv(output_csv_file, header=False, index=False)
+
+            
                 
             else:
                 print('Current Variable: '+current_var)
