@@ -8,10 +8,46 @@ import numpy as np
 from cftime import DatetimeNoLeap
 from netCDF4 import Dataset
 import pandas as pd
+from pathlib import Path
 
 
 
 def amwg_chem_table(adf):
+    #Special ADF variable which contains the output paths for
+    #all generated plots and tables for each case:
+    output_locs = adf.plot_location
+
+    #CAM simulation variables (these quantities are always lists):
+    case_names    = adf.get_cam_info("cam_case_name", required=True)
+    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+
+    start_year = adf.climo_yrs["syears"]
+    end_year = adf.climo_yrs["eyears"]
+
+    #Check if a baseline simulation is also being used:
+    if not adf.get_basic_info("compare_obs"):
+        #Extract CAM baseline variaables:
+        baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+
+        if "CMIP" in baseline_name:
+            print("CMIP files detected, skipping AMWG table (for now)...")
+            return
+
+        else:
+            #Append to case list:
+            case_names.append(baseline_name)
+            input_ts_locs.append(input_ts_baseline)
+
+        #Save the baseline to the first case's plots directory:
+        output_locs.append(output_locs[0])
+    
+  
+
+    #Convert output location string to a Path object:
+    output_location = Path(output_locs[0])
+
+
     # List of directories (each item must end with "/")
 
     # data_dirs=['/glade/campaign/acom/acom-weather/behroozr/f.e22.FCnudged.ne0np4.India07.ne30x8_ne30x8_mt12_new/atm/hist/',
@@ -705,25 +741,46 @@ def amwg_chem_table(adf):
                 LNO = np.ma.sum(tmp_lno)              
 
             if current_var in AEROSOLS:
+                row_values = []
                 
                 print('Current Variable: '+current_var)
                 print('Global Burden (Tg): '+str(np.round(BURDEN,3)))
+                row_values.append(np.round(BURDEN,3))
                 print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
+                row_values.append(np.round(CHML,3))
                 print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
-                print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))            
+                row_values.append(np.round(CHMP,3))
+                print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
+                row_values.append(np.round(CHMP-CHML,3))        
                 print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
+                row_values.append(np.round(DDF,3))
                 print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
+                row_values.append(np.round(WDF,3))
                 print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
+                row_values.append(np.round(SF,3))
                 print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
+                row_values.append(np.round(CLXF,3))
                 print('Global Gas-Aerosol Exch (Tg/yr): '+str(np.round(GAEX,2)))
+                row_values.append(np.round(GAEX,3))
                 print('LifeTime (day): '+str(np.round(LT,0)))
+                row_values.append(np.round(LT,0))
 
                 if current_var=='SULF':
                     print('Global AQUEOUS Chem (Tg/yr): '+str(np.round(AQS,2)))
+                    row_values.append(np.round(AQS,0))
                     print('Global Nucleation (Tg/yr): '+str(np.round(NUCL,2)))
+                    row_values.append(np.round(NUCL,0))
                     
                 
                 print('****   *****')
+                #Create output file name:
+                output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
+                cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
+                #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
+                #row_values.append(np.round(my_val,3))
+                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                df = pd.DataFrame(dfentries,columns=cols)
+                df.to_csv(output_csv_file, header=False, index=False)
                 
             else:
                 print('Current Variable: '+current_var)
