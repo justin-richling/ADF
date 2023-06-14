@@ -256,35 +256,27 @@ def amwg_chem_table(adf):
 
             var_dict[scn]={}
             Dic_var_comp={}
-            if Path(output_location / f'{scn}_chem_SE.csv').is_file():
-                print("SE budget file exists, skipping to table creation")
-                df = pd.read_csv(output_location / f'{scn}_chem_SE.csv')
-                var_dict[scn] = df.to_dict(orient='records')
-                print("AHHH",var_dict[scn])
-            else:
-                print("prepping for SE budget")
-                tic = time.perf_counter()    
-                for _,var in enumerate(CHEMS):
 
-                    # Components are: burden, chemical loss, chemical prod, dry deposition, 
-                    #                 surface emissions, elevated emissions, chemical tendency
-                    # I always add Lightning NOx production for gaseous species.
-                    components=[var+'_BURDEN',var+'_CHML',var+'_CHMP',
-                                var+'_DDF',var+'_WDF', var+'_SF', var+'_CLXF',
-                                var+'_TEND',var+'_LNO']         
+            print("prepping for SE budget")
+            tic = time.perf_counter()    
+            for _,var in enumerate(CHEMS):
 
-                    Dic_comp={}
-                    for comp in components:
-                        current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
-                            
-                        Dic_comp[comp]=current_data
-                    Dic_var_comp[var]=Dic_comp
-                var_dict[scn]= Dic_var_comp
-                with open(output_location / f'{scn}_chem_SE.csv', 'w') as f:
-                    for key in var_dict.keys():
-                        f.write("%s,%s\n"%(key,var_dict[key]))
-                toc = time.perf_counter()
-                print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds")
+                # Components are: burden, chemical loss, chemical prod, dry deposition, 
+                #                 surface emissions, elevated emissions, chemical tendency
+                # I always add Lightning NOx production for gaseous species.
+                components=[var+'_BURDEN',var+'_CHML',var+'_CHMP',
+                            var+'_DDF',var+'_WDF', var+'_SF', var+'_CLXF',
+                            var+'_TEND',var+'_LNO']         
+
+                Dic_comp={}
+                for comp in components:
+                    current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
+                        
+                    Dic_comp[comp]=current_data
+                Dic_var_comp[var]=Dic_comp
+            var_dict[scn]= Dic_var_comp
+            toc = time.perf_counter()
+            print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds")
 
             #Critical threshholds
             tic = time.perf_counter()
@@ -523,41 +515,31 @@ def amwg_chem_table(adf):
 
                 cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
 
-                if Path(output_location / f'{scn}_aerosol_SE.csv').is_file():
-                    print("SE budget file exists, skipping to table creation")
-                    #var_dict[scn] = pd.read_csv(output_location / f'{scn}_aerosol_SE.csv')
-                    df = pd.read_csv(output_location / f'{scn}_aerosol_SE.csv')
-                    var_dict[scn] = df.to_dict(orient='records')
-                    print("AHHH",var_dict[scn])
-                else:
-                    tic = time.perf_counter()
-                    for _,current_var in enumerate(AEROSOLS):
-                        # Components are: burden, chemical loss, chemical prod, dry deposition,
-                        #                 surface emissions, elevated emissions, wet deposition, gas-aerosol exchange
+                tic = time.perf_counter()
+                for _,current_var in enumerate(AEROSOLS):
+                    # Components are: burden, chemical loss, chemical prod, dry deposition,
+                    #                 surface emissions, elevated emissions, wet deposition, gas-aerosol exchange
 
-                        if current_var=='SULF':
-                            # For SULF we also have AQS and NUCLEATION
-                            components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
-                                        current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
-                                        current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC',current_var+'_AQS',
-                                        current_var+'_NUCL']
-                        else:
-                            components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
-                                        current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
-                                        current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC']
+                    if current_var=='SULF':
+                        # For SULF we also have AQS and NUCLEATION
+                        components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
+                                    current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
+                                    current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC',current_var+'_AQS',
+                                    current_var+'_NUCL']
+                    else:
+                        components=[current_var+'_BURDEN',current_var+'_CHML',current_var+'_CHMP',
+                                    current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
+                                    current_var+'_GAEX',current_var+'_DDFC',current_var+'_WDFC']
 
-                        Dic_comp={}
-                        for comp in components:
-                            current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
-                                
-                            Dic_comp[comp]=current_data
-                        Dic_var_comp[current_var]=Dic_comp
-                    var_dict[scn]= Dic_var_comp
-                    with open(output_location / f'{scn}_aerosol_SE.csv', 'w') as f:
-                        for key in var_dict.keys():
-                            f.write("%s,%s\n"%(key,var_dict[key]))
-                    toc = time.perf_counter()
-                    print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds") 
+                    Dic_comp={}
+                    for comp in components:
+                        current_data=SEbudget(dic_SE,current_dir,current_files,comp,level=50)
+                            
+                        Dic_comp[comp]=current_data
+                    Dic_var_comp[current_var]=Dic_comp
+                var_dict[scn]= Dic_var_comp
+                toc = time.perf_counter()
+                print(f"SEbudget for all components for {scn} took {toc - tic:0.4f} seconds") 
 
                 #Critical threshholds????
                 #QUESTION: Make this a config file argument?
