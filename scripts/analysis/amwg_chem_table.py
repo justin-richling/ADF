@@ -774,7 +774,7 @@ def amwg_chem_table(adf):
                 
                 print('****   *****')
 
-                row_values = [current_var]+row_values
+                #row_values = [current_var]+row_values
                 #Create output file name:
                 output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
                 cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
@@ -782,7 +782,11 @@ def amwg_chem_table(adf):
                 #row_values.append(np.round(my_val,3))
                 dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 df = pd.DataFrame(dfentries,columns=cols)
-                df.to_csv(output_csv_file, header=False, index=False)
+                #df.to_csv(output_csv_file, header=False, index=False)
+                if output_csv_file.is_file():
+                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                else:
+                    df.to_csv(output_csv_file, header=False, index=False)
                 
             else:
                 print('Current Variable: '+current_var)
