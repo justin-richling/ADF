@@ -739,9 +739,9 @@ def amwg_chem_table(adf):
                 spc_lno=Dic_scn_var_comp[current_scn][current_var][current_var+'_LNO']
                 tmp_lno=np.ma.masked_where(inside==False,spc_lno)  
                 LNO = np.ma.sum(tmp_lno)              
-
+            row_values = []
             if current_var in AEROSOLS:
-                row_values = []
+                
                 
                 print('Current Variable: '+current_var)
                 print('Global Burden (Tg): '+str(np.round(BURDEN,3)))
