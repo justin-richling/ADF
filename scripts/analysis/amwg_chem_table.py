@@ -740,7 +740,7 @@ def amwg_chem_table(adf):
                 tmp_lno=np.ma.masked_where(inside==False,spc_lno)  
                 LNO = np.ma.sum(tmp_lno)              
             
-            df = pd.DataFrame()
+            df = pd.DataFrame(columns=['Variable', 'Value'])
             row_values = []
             if current_var in AEROSOLS:
                 
@@ -803,11 +803,11 @@ def amwg_chem_table(adf):
                 #row_values = [current_var]+row_values
                 #Create output file name:
                 output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
-                cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
+                #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
                 #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
                 #row_values.append(np.round(my_val,3))
                 #dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
-                dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
+                #dfentries = {c:[row_values[idx]] for idx,c in enumerate(cols)}
                 #df = pd.DataFrame(dfentries,columns=cols)
                 """df2 = {'Variable': 'Amy', 'Value': 89}
                 df.append(df2, ignore_index = True)"""
