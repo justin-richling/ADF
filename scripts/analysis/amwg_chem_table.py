@@ -1165,7 +1165,22 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
         
     
         for i in dic_SE[var].keys():
-            data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
+            #data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
+
+            if i == "O3_Loss":
+                #i = "O3_CHML"
+                data.append(np.array(ds["O3_CHML"].isel(time=0))*dic_SE[var][i])
+            elif i == "O3_Prod":
+                #i = "O3_CHMP"
+                data.append(np.array(ds["O3_CHMP"].isel(time=0))*dic_SE[var][i])
+ 
+             #Check to see if the product is in the actual dataset, if not, move on and set to 0
+            else:
+                
+                if i in ds:
+                    data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
+                else:
+                    print(f"Looks like {var} is missing {i} for {file}, so skipping...\n")
   
         data=np.sum(data,axis=0)
   
