@@ -58,6 +58,17 @@ def amwg_chem_table(adf):
     #data_dirs=['/glade/scratch/tilmes/archive/f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001/atm/hist/']
 
     data_dirs=['/glade/scratch/tilmes/archive/FCnudged_MAM4_f09.carma_trop_strat.aqchem.2001_2020.atom/atm/hist/']
+    data_dirs=['/glade/scratch/tilmes/archive/FCnudged_MAM4_f09.carma_trop_strat.aqchem.2001_2020.atom/atm/hist/',
+                '/glade/scratch/tilmes/archive/FCnudged_MAM4_f09.carma_trop_strat.aqchem.2001_2020.atom/atm/hist/']
+
+    #Grab history file locations from config yaml file
+    cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    cam_hist_locs = cam_hist_locs + [adf.get_baseline_info("cam_hist_loc", required=True)]
+
+    #Create path object for the CAM history file(s) location:
+    data_dirs = []
+    for case_idx,case in enumerate(case_names):
+        data_dirs.append(cam_hist_locs[case_idx])
 
 
 
@@ -79,7 +90,7 @@ def amwg_chem_table(adf):
     #scenarios=['f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001.cam.h0']
     scenarios=['FCnudged_MAM4_f09.carma_trop_strat.aqchem.2001_2020.atom.cam.h0']
 
-    scenarios = [f'{i}.cam.h0' for i in case_names]
+    #scenarios = [f'{i}.cam.h0' for i in case_names]
 
     #scenarios=['f.e22.FCnudged.ne0np4.India07.ne30x8_ne30x8_mt12_new.cam.h0']
     #scenarios=['f.e21.FWscHIST.ne30_L58_BL10_cam6_3_019_plus_CESM2.2.003_zm2_chemistry.006.hf.cam.h1']
@@ -166,6 +177,12 @@ def amwg_chem_table(adf):
     # choose the period of interest. Plots will be averaged within this period
     start_date = "2016-1-1"
     end_date = "2018-1-1"
+
+    # Periods of Interest
+    # -------------------
+    # choose the period of interest. Plots will be averaged within this period
+    start_date = [f"{start_year[0]}-1-1", f"{start_year[0]}-1-1"]
+    end_date = [f"{end_year[0]}-1-1", f"{end_year[0]}-1-1"]
 
 
 
