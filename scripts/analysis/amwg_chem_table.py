@@ -209,10 +209,10 @@ def amwg_chem_table(adf):
     dic_SE['CO']={'CO'+ext1_SE:1}
 
     dic_SE['ISOP']={'ISOP'+ext1_SE:1}
-    # dic_SE['C10H16']={'MTERP'+ext1_SE:1}
-    # dic_SE['CH3OH']={'CH3OH'+ext1_SE:1}
-    # dic_SE['CH3COCH3']={'CH3COCH3'+ext1_SE:1}
-    # dic_SE['CH3OH']={'CH3OH'+ext1_SE:1}
+    dic_SE['C10H16']={'MTERP'+ext1_SE:1}
+    dic_SE['CH3OH']={'CH3OH'+ext1_SE:1}
+    dic_SE['CH3COCH3']={'CH3COCH3'+ext1_SE:1}
+    dic_SE['CH3OH']={'CH3OH'+ext1_SE:1}
 
 
     dic_SE['SOA']={'soa1_a1'+ext1_SE:1,
