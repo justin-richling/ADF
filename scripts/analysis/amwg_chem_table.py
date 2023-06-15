@@ -1163,10 +1163,10 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
 
         data=[]
         
-    
+        #Change this back when O3_CHML and O3_CHMP are included in data sets...
         for i in dic_SE[var].keys():
             #data.append(np.array(ds[i].isel(time=0))*dic_SE[var][i])
-
+            
             if i == "O3_Loss":
                 #i = "O3_CHML"
                 data.append(np.array(ds["O3_CHML"].isel(time=0))*dic_SE[var][i])
