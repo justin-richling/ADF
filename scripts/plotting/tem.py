@@ -80,6 +80,8 @@ def tem(adf):
     # we will do a simple check and switch options as needed:
     if adf.get_basic_info("compare_obs"):
 
+        obs = True
+
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
         base_name = "Obs"
@@ -95,6 +97,7 @@ def tem(adf):
             #tem_base = input_loc_idx / f'{base_name}.TEMdiag.nc'
             #ds_base = xr.open_dataset(tem_base)
     else:
+        obs = False
         base_name = adf.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
     #End if
 
@@ -260,7 +263,7 @@ def tem(adf):
             #Setup and plot the sub-plots
             #if len(case_names) > 1:
             #    print("making more than one set of TEM diags")
-            tem_plot(adf, ds, ds_base, case_nicknames, axs, s, var_list, res)
+            tem_plot(adf, ds, ds_base, case_nicknames, axs, s, var_list, res, obs)
 
         #ds = xr.open_mfdataset()
 
@@ -280,7 +283,7 @@ def tem(adf):
 
 
 
-def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
+def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
     print("Season:",s,"\n")
 
     empty_message = "No Valid\nData Points"
@@ -317,7 +320,8 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             mseasons = mseasons / (md_ones*weights_ann).sum(dim='time')
 
             #Calculate monthly weights based on number of days:
-            if adf.get_basic_info("compare_obs"):
+            #if adf.get_basic_info("compare_obs"):
+            if obs:
                 month_length2 = odata.time.dt.days_in_month
                 weights_ann2 = month_length2 / month_length2.sum()
                 oseasons = (odata * weights_ann2).sum(dim='time')
@@ -332,7 +336,8 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
             mseasons = mseasons / wgt_denom
 
-            if adf.get_basic_info("compare_obs"):
+            #if adf.get_basic_info("compare_obs"):
+            if obs:
                 #odata = odata.sel(time=slice('1999-01-01', '2000-01-01'))
                 month_length2 = odata.time.dt.days_in_month
                 weights2 = (month_length2.groupby("time.season") / month_length2.groupby("time.season").sum())
@@ -567,8 +572,23 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
     #Set case names in first subplot only
     uzm = ds["uzm"].long_name.replace(" ", "\ ")
     axs[0,0].set_title(f"\n\n"+"$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
-    axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+
+
+    
+    if obs:
+        #obs_var = res["obs_var_name"]
+        obs_title = res["obs_file"][:-3]
+        base_title = "$\mathbf{Baseline}:$"+obs_title#+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+
+    else:
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+    
+    
+    
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
+    
+    
     #Set variable name on center plot
     for i in range(1,len(var_list)):
         var_name = ds[var_list[i]].long_name.replace(" ", "\ ")
