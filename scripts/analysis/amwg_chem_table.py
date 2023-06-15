@@ -851,16 +851,38 @@ def amwg_chem_table(adf):
                 df_chem.loc[len(df_chem.index)] = [f'{current_var}_BURDEN', np.round(BURDEN,3)]
 
                 print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
-                print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2))) 
-                print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))            
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CHML', np.round(CHML,3)]
+
+                print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CHMP', np.round(CHMP,3)]
+                
+                print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_NET', np.round(CHMP-CHML,3)]
+                       
                 print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_DRYDEP', np.round(DDF,3)]
+                
                 print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_WETDEP', np.round(WDF,3)]
+                
                 print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_SF', np.round(SF,3)]
+                
                 print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CLXF', np.round(CLXF,3)]
+                
                 print('Global TND (Tg/yr): '+str(np.round(TND,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_TND', np.round(TND,3)]
+                
                 print('Global STE (Tg/yr): '+str(np.round(STE,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_STE', np.round(STE,3)]
+                
                 print('LifeTime (day): '+str(np.round(LT,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_LIFETIME', np.round(LT,3)]
+                
                 print('Global Lightning NO (Tg N/yr): '+str(np.round(LNO,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_LNO', np.round(LNO,3)]
+                
 
                 print('****   *****')
 
@@ -892,20 +914,6 @@ MODIFICATION HISTORY:
     - Initial version
    
 '''
-
-# import matplotlib as mpl
-
-# from matplotlib.collections import PolyCollection
-# from scipy.interpolate import griddata
-# import cartopy.crs as ccrs
-# import cartopy
-# from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
-# import matplotlib.colors as colors
-# from mpl_toolkits.basemap import Basemap
-# from shapely.geometry import Polygon,Point
-
-# from cartopy.io.shapereader import Reader
-# from cartopy.feature import ShapelyFeature
 
 def list_files(directory,scenario,start_period,end_period):
 
