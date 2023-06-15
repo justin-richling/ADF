@@ -74,8 +74,6 @@ def tem(adf):
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
-    print("ITS MAKING IT HERE RIGHT???!?!?!?!?!?!?!\n")
-
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -106,7 +104,6 @@ def tem(adf):
 
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adf.climo_yrs["syear_baseline"]
-    print("Obs syear_baseline",syear_baseline,"\n")
     eyear_baseline = adf.climo_yrs["eyear_baseline"]
 
     #Grab all case nickname(s)
