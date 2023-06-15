@@ -286,7 +286,8 @@ def tem(adf):
 def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
     print("Season:",s,"\n")
 
-    empty_message = "No Valid\nData Points"
+    #empty_message = "No Valid\nData Points"
+    empty_message = "Can't compare cases/nThese have different vertical levels\nStay tuned!"
     props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
 
     for var in var_list:
@@ -351,10 +352,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
 
         #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
-        
-        #print(mseasons,"\n\n")
-        #print(oseasons,"\n\n")
-        #print(dseasons)
+
 
         #Run through vars and plot each against the baseline on same row
         #Each column will be a case, ie (test, base), or (test, test, base) , ...
@@ -366,13 +364,6 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            """if adf.get_basic_info("compare_obs"):
-                oseasons.plot(ax=axs[0,1], y='lev', yscale='log',
-                                    cbar_kwargs={'label': ds[var].units})
-            else:
-                oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
-                                    cbar_kwargs={'label': ds[var].units})"""
-
             oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -380,7 +371,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[0,2].text(0.4, 0.4, empty_message, transform=axs[0,2].transAxes, bbox=props)
+                axs[0,2].text(0.4, 0.5, empty_message, transform=axs[0,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
@@ -399,7 +390,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[1,2].text(0.4, 0.4, empty_message, transform=axs[1,2].transAxes, bbox=props)
+                axs[1,2].text(0.4, 0.5, empty_message, transform=axs[1,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
@@ -419,7 +410,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[2,2].text(0.4, 0.4, empty_message, transform=axs[2,2].transAxes, bbox=props)
+                axs[2,2].text(0.4, 0.5, empty_message, transform=axs[2,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
@@ -447,7 +438,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[3,2].text(0.4, 0.4, empty_message, transform=axs[3,2].transAxes, bbox=props)
+                axs[3,2].text(0.4, 0.5, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
@@ -475,7 +466,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[4,2].text(0.4, 0.4, empty_message, transform=axs[4,2].transAxes, bbox=props)
+                axs[4,2].text(0.4, 0.5, empty_message, transform=axs[4,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
@@ -497,7 +488,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[5,2].text(0.4, 0.4, empty_message, transform=axs[5,2].transAxes, bbox=props)
+                axs[5,2].text(0.4, 0.5, empty_message, transform=axs[5,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
@@ -519,7 +510,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[6,2].text(0.4, 0.4, empty_message, transform=axs[6,2].transAxes, bbox=props)
+                axs[6,2].text(0.4, 0.5, empty_message, transform=axs[6,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
@@ -538,7 +529,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[7,2].text(0.4, 0.4, empty_message, transform=axs[7,2].transAxes, bbox=props)
+                axs[7,2].text(0.4, 0.5, empty_message, transform=axs[7,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
@@ -556,7 +547,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[8,2].text(0.4, 0.4, empty_message, transform=axs[8,2].transAxes, bbox=props)
+                axs[8,2].text(0.4, 0.5, empty_message, transform=axs[8,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
