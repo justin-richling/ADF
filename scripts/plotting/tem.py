@@ -327,11 +327,18 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
             mseasons = mseasons / wgt_denom
 
-            #if adf.get_basic_info("compare_obs"):
-            #    odata = odata.sel(time=slice('1999-01-01', '2000-01-01'))
-            oseasons = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
-            wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
-            oseasons = oseasons / wgt_denom
+            if adf.get_basic_info("compare_obs"):
+                odata = odata.sel(time=slice('1999-01-01', '2000-01-01'))
+                month_length2 = odata.time.dt.days_in_month
+                print("obs month_length", month_length2)
+                weights2 = (month_length2.groupby("time.season") / month_length2.groupby("time.season").sum())
+                oseasons[s] = (odata * weights2).groupby("time.season").sum(dim="time").sel(season=s)
+                wgt_denom = (od_ones*weights2).groupby("time.season").sum(dim="time").sel(season=s)
+                oseasons[s] = oseasons[s] / wgt_denom
+            else:
+                oseasons = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
+                wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
+                oseasons = oseasons / wgt_denom
 
         #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
