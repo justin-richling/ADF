@@ -578,7 +578,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
     if obs:
         #obs_var = res["obs_var_name"]
         obs_title = res["obs_file"][:-3]
-        base_title = "$\mathbf{Baseline}:$"+obs_title#+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
+        #base_title = "$\mathbf{Baseline}:$"+obs_title#+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
         axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
 
     else:
