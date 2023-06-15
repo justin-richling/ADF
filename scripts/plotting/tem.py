@@ -289,8 +289,8 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
     #empty_message = "No Valid\nData Points"
     empty_message = "Can't compare cases\nThese have different vertical levels\nStay tuned!"
     props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
-    prop_x = 0.25
-    prop_y = 0.6
+    prop_x = 0.12
+    prop_y = 0.4
 
     for var in var_list:
         vres = res[var]
