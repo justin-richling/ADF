@@ -305,10 +305,6 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
         md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
         od_ones = xr.where(odata.isnull(), 0.0, 1.0)
 
-        #Calculate monthly weights based on number of days:
-        if adf.get_basic_info("compare_obs"):
-            month_length2 = odata.time.dt.days_in_month
-            weights2 = (month_length2.groupby("time.season") / month_length2.groupby("time.season").sum())
         
         month_length = mdata.time.dt.days_in_month
         weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
@@ -323,9 +319,15 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             mseasons = (mdata * weights_ann).sum(dim='time')
             mseasons = mseasons / (md_ones*weights_ann).sum(dim='time')
 
-  
-            oseasons = (odata * weights_ann).sum(dim='time')
-            oseasons = oseasons / (od_ones*weights_ann).sum(dim='time')
+            #Calculate monthly weights based on number of days:
+            if adf.get_basic_info("compare_obs"):
+                month_length2 = odata.time.dt.days_in_month
+                weights_ann2 = month_length2 / month_length2.sum()
+                oseasons = (odata * weights_ann2).sum(dim='time')
+                oseasons = oseasons[s] / (od_ones*weights_ann2).sum(dim='time')
+            else:
+                oseasons = (odata * weights_ann).sum(dim='time')
+                oseasons = oseasons / (od_ones*weights_ann).sum(dim='time')
 
         else:
             #this is inefficient because we do same calc over and over
