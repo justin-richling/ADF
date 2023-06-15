@@ -958,7 +958,7 @@ uzm:
   ylim: [1e3,1]
   units: m s-1
   long_name: Zonal-Mean zonal wind
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "uzm"
 
@@ -967,7 +967,7 @@ vzm:
   ylim: [1e3,1]
   units: m s-1
   long_name: Zonal-Mean meridional wind
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "vzm"
 
@@ -977,7 +977,7 @@ epfy:
   ylim: [1e2,1]
   units: m3 s−2
   long_name: northward component of the Eliassen–Palm flux
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "epfy"
 
@@ -987,7 +987,7 @@ epfz:
   ylim: [1e2,1]
   units: m3 s−2
   long_name: upward component of the Eliassen–Palm flux
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "epfz"
 
@@ -999,7 +999,7 @@ vtem:
   vmin: -3
   units: m/s
   long_name: Transformed Eulerian mean northward wind
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "vtem"
 
@@ -1011,7 +1011,7 @@ wtem:
   vmin: -0.005
   units: m/s
   long_name: Transformed Eulerian mean upward wind
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "wtem"
 
@@ -1021,7 +1021,7 @@ psitem:
   ylim: [1e2,1]
   units: m3 s−2
   long_name: Transformed Eulerian mean mass stream function
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: ""
 
@@ -1031,7 +1031,7 @@ utendepfd:
   ylim: [1e2,1]
   units: m3 s−2
   long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "psitem"
 
@@ -1041,7 +1041,7 @@ utendvtem:
   ylim: [1e2,1]
   units: m3 s−2
   long_name: tendency of eastward wind due to TEM northward wind advection and the coriolis term
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendvtem"
 
@@ -1051,7 +1051,7 @@ utendwtem:
   ylim: [1e2,1]
   units: m3 s−2
   long_name: tendency of eastward wind due to TEM upward wind advection
-  obs_file: "ERA5.nc"
+  obs_file: "/glade/work/richling/ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendwtem"
 
