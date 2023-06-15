@@ -212,7 +212,6 @@ def amwg_chem_table(adf):
     dic_SE['C10H16']={'MTERP'+ext1_SE:1}
     dic_SE['CH3OH']={'CH3OH'+ext1_SE:1}
     dic_SE['CH3COCH3']={'CH3COCH3'+ext1_SE:1}
-    dic_SE['CH3OH']={'CH3OH'+ext1_SE:1}
 
 
     dic_SE['SOA']={'soa1_a1'+ext1_SE:1,
@@ -250,7 +249,7 @@ def amwg_chem_table(adf):
 
 
     #Dictionary for Molecular weights. Keys must be consistent with variable name
-    MW={'O3':48,
+    """MW={'O3':48,
         'CH4':16,
         'CO':28,
         'ISOP':68,
@@ -261,7 +260,7 @@ def amwg_chem_table(adf):
         'SULF':115.11,
         'POM':12.011,
         'BC':12.011 ,
-        'DUST':12.011}
+        'DUST':12.011}"""
 
     # MW={'O3':48,
     #     'CH4':16,
@@ -275,6 +274,23 @@ def amwg_chem_table(adf):
     #     'POM':12.011,
     #     'BC':12.011 ,
     #     'DUST':12.011}
+
+    MW={'O3':48,
+        'CH4':16,
+        'CO':28,
+        'ISOP':68,
+        'C10H16':136,
+        'SOA':144.132,
+        'SALT':12.011,
+        'SULF':115.11,
+        'POM':12.011,
+        'BC':12.011,
+        'DUST':12.011,
+        'CH3CCL3':133.4042,
+        'C10H16':136.2340,
+        'CH3OH':32.0419,
+        'CH3COCH3':58.0791,
+        'AIR':28.97}
 
 
 
