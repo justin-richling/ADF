@@ -181,9 +181,11 @@ def amwg_chem_table(adf):
     # Periods of Interest
     # -------------------
     # choose the period of interest. Plots will be averaged within this period
-    start_date = [f"{start_year[0]}-1-1", f"{start_year[0]}-1-1"]
-    end_date = [f"{end_year[0]}-1-1", f"{end_year[0]}-1-1"]
+    start_dates = [f"{start_year[0]}-1-1", f"{start_year[0]}-1-1"]
+    end_dates = [f"{end_year[0]}-1-1", f"{end_year[0]}-1-1"]
 
+    start_date = start_dates[0]
+    end_date = end_dates[0]
 
 
 
