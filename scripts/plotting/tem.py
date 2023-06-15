@@ -1,5 +1,6 @@
 #Import standard modules:
 from pathlib import Path
+from signal import SIG_DFL
 import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
@@ -305,6 +306,10 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
         od_ones = xr.where(odata.isnull(), 0.0, 1.0)
 
         #Calculate monthly weights based on number of days:
+        if adf.get_basic_info("compare_obs"):
+            month_length2 = odata.time.dt.days_in_month
+            weights2 = (month_length2.groupby("time.season") / month_length2.groupby("time.season").sum())
+        
         month_length = mdata.time.dt.days_in_month
         weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
         
@@ -318,6 +323,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             mseasons = (mdata * weights_ann).sum(dim='time')
             mseasons = mseasons / (md_ones*weights_ann).sum(dim='time')
 
+  
             oseasons = (odata * weights_ann).sum(dim='time')
             oseasons = oseasons / (od_ones*weights_ann).sum(dim='time')
 
@@ -357,11 +363,14 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            if adf.get_basic_info("compare_obs"):
+            """if adf.get_basic_info("compare_obs"):
                 oseasons.plot(ax=axs[0,1], y='lev', yscale='log',
                                     cbar_kwargs={'label': ds[var].units})
             else:
                 oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
+                                    cbar_kwargs={'label': ds[var].units})"""
+
+            oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
             #dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
