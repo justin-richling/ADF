@@ -332,9 +332,9 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                 month_length2 = odata.time.dt.days_in_month
                 print("obs month_length", month_length2)
                 weights2 = (month_length2.groupby("time.season") / month_length2.groupby("time.season").sum())
-                oseasons[s] = (odata * weights2).groupby("time.season").sum(dim="time").sel(season=s)
+                oseasons = (odata * weights2).groupby("time.season").sum(dim="time").sel(season=s)
                 wgt_denom = (od_ones*weights2).groupby("time.season").sum(dim="time").sel(season=s)
-                oseasons[s] = oseasons[s] / wgt_denom
+                oseasons = oseasons / wgt_denom
             else:
                 oseasons = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
                 wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
