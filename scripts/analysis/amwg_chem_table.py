@@ -79,6 +79,8 @@ def amwg_chem_table(adf):
     #scenarios=['f.cesm3_cam058_mom_e.FCHIST.ne30_L58.26c_non-orogw_off.001.cam.h0']
     scenarios=['FCnudged_MAM4_f09.carma_trop_strat.aqchem.2001_2020.atom.cam.h0']
 
+    scenarios = [f'{i}.cam.h0' for i in case_names]
+
     #scenarios=['f.e22.FCnudged.ne0np4.India07.ne30x8_ne30x8_mt12_new.cam.h0']
     #scenarios=['f.e21.FWscHIST.ne30_L58_BL10_cam6_3_019_plus_CESM2.2.003_zm2_chemistry.006.hf.cam.h1']
 
@@ -135,8 +137,15 @@ def amwg_chem_table(adf):
     #variables=["O3","CH4","ISOP"]
     #variables=["SOA",'O3','CH4']
     #variables=["SOA",'CH4','SALT','DUST','POM','BC','SULF','CH3CCL3','CO','ISOP']
-    variables=["SALT",'CO']
+    #variables=["SALT",'CO']
     #variables=["O3",'CH4','ISOP']
+    # list of the variables to be caculated. 
+    variables =["CH4", "CH3CCL3", "CO",
+                "O3", #Currently missing some components?
+                "ISOP", "C10H16", "CH3OH", "CH3COCH3",
+                'SOA', 'SALT', 'DUST', 'POM', 'BC', 'SULF']
+
+    #AEROSOLS = ['SOA', 'SALT', 'DUST', 'POM', 'BC', 'SULF']
 
 
     # if True, calculate only Tropospheric values
@@ -746,78 +755,78 @@ def amwg_chem_table(adf):
             if current_var in AEROSOLS:
                 print('Current Variable: '+current_var)
 
-                print('Global Burden (Tg): '+str(np.round(BURDEN,3)))
+                #print('Global Burden (Tg): '+str(np.round(BURDEN,3)))
                 #row_values.append(np.round(BURDEN,3))
                 #df2 = {'Variable': current_var+'Global Burden (Tg)', 'Value': np.round(BURDEN,3)}
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_BURDEN', np.round(BURDEN,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_BURDEN (Tg)', np.round(BURDEN,3)]
                 #df.append(df2, ignore_index = True)
                 
-                print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
+                #print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
                 #row_values.append(np.round(CHML,3))
                 #df2 = {'Variable': current_var+'Global Chemical Loss (Tg/yr)', 'Value': np.round(CHML,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CHML', np.round(CHML,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CHML (Tg/yr)', np.round(CHML,3)]
                 
-                print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
+                #print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
                 #row_values.append(np.round(CHMP,3))
                 #df2 = {'Variable': current_var+'Global Chemical Prod (Tg/yr)', 'Value': np.round(CHMP,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CHMP', np.round(CHMP,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CHMP (Tg/yr)', np.round(CHMP,3)]
                 
-                print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
+                #print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
                 #row_values.append(np.round(CHMP-CHML,3))
                 #df2 = {'Variable': current_var+'Global Chemical NET (Tg/yr)', 'Value': np.round(CHMP-CHML,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_NET', np.round(CHMP-CHML,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_NET (Tg/yr)', np.round(CHMP-CHML,3)]
                 
-                print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
+                #print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
                 #row_values.append(np.round(DDF,3))
                 #df2 = {'Variable': current_var+'Global Dry Deposition (Tg/yr)', 'Value': np.round(DDF,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_DRYDEP', np.round(DDF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_DRYDEP (Tg/yr)', np.round(DDF,3)]
                 
-                print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
+                #print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
                 #row_values.append(np.round(WDF,3))
                 #df2 = {'Variable': current_var+'Global Wet Deposition (Tg/yr)', 'Value': np.round(WDF,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_WETDEP', np.round(WDF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_WETDEP (Tg/yr)', np.round(WDF,3)]
                 
-                print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
+                #print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
                 #row_values.append(np.round(SF,3))
                 #df2 = {'Variable': current_var+'Global Surface Emis (Tg/yr)', 'Value': np.round(SF,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_SF', np.round(SF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_SF (Tg/yr)', np.round(SF,3)]
                 
-                print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
+                #print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
                 #row_values.append(np.round(CLXF,3))
                 #df2 = {'Variable': current_var+'Global Elevated Emis (Tg/yr)', 'Value': np.round(CLXF,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CLXF', np.round(CLXF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CLXF (Tg/yr)', np.round(CLXF,3)]
                 
-                print('Global Gas-Aerosol Exch (Tg/yr): '+str(np.round(GAEX,2)))
+                #print('Global Gas-Aerosol Exch (Tg/yr): '+str(np.round(GAEX,2)))
                 #row_values.append(np.round(GAEX,3))
                 #df2 = {'Variable': current_var+'Global Gas-Aerosol Exch (Tg/yr)', 'Value': np.round(GAEX,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_GAEX', np.round(GAEX,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_GAEX (Tg/yr)', np.round(GAEX,3)]
                 
                 print('LifeTime (day): '+str(np.round(LT,0)))
                 #row_values.append(np.round(LT,0))
                 #df2 = {'Variable': current_var+'LifeTime (day)', 'Value': np.round(LT,3)}
                 #df.append(df2, ignore_index = True)
-                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_LT', np.round(LT,0)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_LT (days)', np.round(LT,0)]
 
                 if current_var=='SULF':
-                    print('Global AQUEOUS Chem (Tg/yr): '+str(np.round(AQS,2)))
+                    #print('Global AQUEOUS Chem (Tg/yr): '+str(np.round(AQS,2)))
                     #row_values.append(np.round(AQS,0))
                     #df2 = {'Variable': current_var+'Global AQUEOUS Chem (Tg/yr)', 'Value': np.round(AQS,3)}
                     #df.append(df2, ignore_index = True)
-                    df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_AQS', np.round(AQS,3)]
+                    df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_AQS (Tg/yr)', np.round(AQS,3)]
                     
-                    print('Global Nucleation (Tg/yr): '+str(np.round(NUCL,2)))
+                    #print('Global Nucleation (Tg/yr): '+str(np.round(NUCL,2)))
                     #row_values.append(np.round(NUCL,0))
                     #df2 = {'Variable': current_var+'Global Nucleation (Tg/yr)', 'Value': np.round(NUCL,3)}
                     #df.append(df2, ignore_index = True)
-                    df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_NUCL', np.round(NUCL,3)]
+                    df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_NUCL (Tg/yr)', np.round(NUCL,3)]
                     
                 
                 print('****   *****')
@@ -847,41 +856,42 @@ def amwg_chem_table(adf):
             else:
                 print('Current Variable: '+current_var)
 
-                print('Global Burden (Tg): '+str(np.round(BURDEN,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_BURDEN', np.round(BURDEN,3)]
+                #print('Global Burden (Tg): '+str(np.round(BURDEN,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_BURDEN (Tg)', np.round(BURDEN,3)]
 
-                print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CHML', np.round(CHML,3)]
+                #print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CHML (Tg/yr)', np.round(CHML,3)]
 
-                print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CHMP', np.round(CHMP,3)]
+                #print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CHMP (Tg/yr)', np.round(CHMP,3)]
                 
-                print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_NET', np.round(CHMP-CHML,3)]
+                #print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_NET (Tg/yr)', np.round(CHMP-CHML,3)]
                        
-                print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_DRYDEP', np.round(DDF,3)]
+                #print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_DRYDEP (Tg/yr)', np.round(DDF,3)]
                 
-                print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_WETDEP', np.round(WDF,3)]
+                #print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_WETDEP (Tg/yr)', np.round(WDF,3)]
                 
-                print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_SF', np.round(SF,3)]
+                #print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_SF (Tg/yr)', np.round(SF,3)]
                 
-                print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CLXF', np.round(CLXF,3)]
+                #print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_CLXF (Tg/yr)', np.round(CLXF,3)]
                 
-                print('Global TND (Tg/yr): '+str(np.round(TND,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_TND', np.round(TND,3)]
+                #print('Global TND (Tg/yr): '+str(np.round(TND,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_TND (Tg/yr)', np.round(TND,3)]
                 
-                print('Global STE (Tg/yr): '+str(np.round(STE,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_STE', np.round(STE,3)]
+                #print('Global STE (Tg/yr): '+str(np.round(STE,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_STE (Tg/yr)', np.round(STE,3)]
                 
                 print('LifeTime (day): '+str(np.round(LT,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_LIFETIME', np.round(LT,3)]
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_LIFETIME (days)', np.round(LT,3)]
                 
-                print('Global Lightning NO (Tg N/yr): '+str(np.round(LNO,2)))
-                df_chem.loc[len(df_chem.index)] = [f'{current_var}_LNO', np.round(LNO,3)]
+                if (current_var == "CO") or (current_var == "O3"):
+                    #print('Global Lightning NO (Tg N/yr): '+str(np.round(LNO,2)))
+                    df_chem.loc[len(df_chem.index)] = [f'{current_var}_LNO (Tg N/yr)', np.round(LNO,3)]
                 
 
                 print('****   *****')
