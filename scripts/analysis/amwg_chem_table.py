@@ -740,83 +740,84 @@ def amwg_chem_table(adf):
                 tmp_lno=np.ma.masked_where(inside==False,spc_lno)  
                 LNO = np.ma.sum(tmp_lno)              
             
-            df = pd.DataFrame(columns=['Variable', 'Exp'])
-            row_values = []
+            df_aeros = pd.DataFrame(columns=['Variable', 'Exp'])
+            df_chem = pd.DataFrame(columns=['Variable', 'Exp'])
+
             if current_var in AEROSOLS:
                 print('Current Variable: '+current_var)
 
                 print('Global Burden (Tg): '+str(np.round(BURDEN,3)))
                 #row_values.append(np.round(BURDEN,3))
                 #df2 = {'Variable': current_var+'Global Burden (Tg)', 'Value': np.round(BURDEN,3)}
-                df.loc[len(df.index)] = [f'{current_var}_BURDEN', np.round(BURDEN,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_BURDEN', np.round(BURDEN,3)]
                 #df.append(df2, ignore_index = True)
                 
                 print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
                 #row_values.append(np.round(CHML,3))
                 #df2 = {'Variable': current_var+'Global Chemical Loss (Tg/yr)', 'Value': np.round(CHML,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_CHML', np.round(CHML,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CHML', np.round(CHML,3)]
                 
                 print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2)))
                 #row_values.append(np.round(CHMP,3))
                 #df2 = {'Variable': current_var+'Global Chemical Prod (Tg/yr)', 'Value': np.round(CHMP,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_CHMP', np.round(CHMP,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CHMP', np.round(CHMP,3)]
                 
                 print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))
                 #row_values.append(np.round(CHMP-CHML,3))
                 #df2 = {'Variable': current_var+'Global Chemical NET (Tg/yr)', 'Value': np.round(CHMP-CHML,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_NET', np.round(CHMP-CHML,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_NET', np.round(CHMP-CHML,3)]
                 
                 print('Global Dry Deposition (Tg/yr): '+str(np.round(DDF,2)))
                 #row_values.append(np.round(DDF,3))
                 #df2 = {'Variable': current_var+'Global Dry Deposition (Tg/yr)', 'Value': np.round(DDF,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_DRYDEP', np.round(DDF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_DRYDEP', np.round(DDF,3)]
                 
                 print('Global Wet Deposition (Tg/yr): '+str(np.round(WDF,2)))
                 #row_values.append(np.round(WDF,3))
                 #df2 = {'Variable': current_var+'Global Wet Deposition (Tg/yr)', 'Value': np.round(WDF,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_WETDEP', np.round(WDF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_WETDEP', np.round(WDF,3)]
                 
                 print('Global Surface Emis (Tg/yr): '+str(np.round(SF,2)))
                 #row_values.append(np.round(SF,3))
                 #df2 = {'Variable': current_var+'Global Surface Emis (Tg/yr)', 'Value': np.round(SF,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_SF', np.round(SF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_SF', np.round(SF,3)]
                 
                 print('Global Elevated Emis (Tg/yr): '+str(np.round(CLXF,2)))
                 #row_values.append(np.round(CLXF,3))
                 #df2 = {'Variable': current_var+'Global Elevated Emis (Tg/yr)', 'Value': np.round(CLXF,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_CLXF', np.round(CLXF,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_CLXF', np.round(CLXF,3)]
                 
                 print('Global Gas-Aerosol Exch (Tg/yr): '+str(np.round(GAEX,2)))
                 #row_values.append(np.round(GAEX,3))
                 #df2 = {'Variable': current_var+'Global Gas-Aerosol Exch (Tg/yr)', 'Value': np.round(GAEX,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_GAEX', np.round(GAEX,3)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_GAEX', np.round(GAEX,3)]
                 
                 print('LifeTime (day): '+str(np.round(LT,0)))
                 #row_values.append(np.round(LT,0))
                 #df2 = {'Variable': current_var+'LifeTime (day)', 'Value': np.round(LT,3)}
                 #df.append(df2, ignore_index = True)
-                df.loc[len(df.index)] = [f'{current_var}_LT', np.round(LT,0)]
+                df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_LT', np.round(LT,0)]
 
                 if current_var=='SULF':
                     print('Global AQUEOUS Chem (Tg/yr): '+str(np.round(AQS,2)))
                     #row_values.append(np.round(AQS,0))
                     #df2 = {'Variable': current_var+'Global AQUEOUS Chem (Tg/yr)', 'Value': np.round(AQS,3)}
                     #df.append(df2, ignore_index = True)
-                    df.loc[len(df.index)] = [f'{current_var}_AQS', np.round(AQS,3)]
+                    df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_AQS', np.round(AQS,3)]
                     
                     print('Global Nucleation (Tg/yr): '+str(np.round(NUCL,2)))
                     #row_values.append(np.round(NUCL,0))
                     #df2 = {'Variable': current_var+'Global Nucleation (Tg/yr)', 'Value': np.round(NUCL,3)}
                     #df.append(df2, ignore_index = True)
-                    df.loc[len(df.index)] = [f'{current_var}_NUCL', np.round(NUCL,3)]
+                    df_aeros.loc[len(df_aeros.index)] = [f'{current_var}_NUCL', np.round(NUCL,3)]
                     
                 
                 print('****   *****')
@@ -834,15 +835,21 @@ def amwg_chem_table(adf):
                 #df.append(df2, ignore_index = True)"""
                 #df.to_csv(output_csv_file, header=False, index=False)
                 if output_csv_file.is_file():
-                    df.to_csv(output_csv_file, mode='a', header=False, index=False)
+                    df_aeros.to_csv(output_csv_file, mode='a', header=False, index=False)
                 else:
-                    df.to_csv(output_csv_file, header=False, index=False)
+                    df_aeros.to_csv(output_csv_file, header=False, index=False)
+
+                # last step is to add table dataframe to website (if enabled):
+                adf.add_website_data(df_aeros, "Aerosols", case_names[0], plot_type="Tables")
 
             
                 
             else:
                 print('Current Variable: '+current_var)
+
                 print('Global Burden (Tg): '+str(np.round(BURDEN,2)))
+                df_chem.loc[len(df_chem.index)] = [f'{current_var}_BURDEN', np.round(BURDEN,3)]
+
                 print('Global Chemical Loss (Tg/yr): '+str(np.round(CHML,2)))
                 print('Global Chemical Prod (Tg/yr): '+str(np.round(CHMP,2))) 
                 print('Global Chemical NET (Tg/yr): '+str(np.round(CHMP-CHML,2)))            
@@ -855,7 +862,17 @@ def amwg_chem_table(adf):
                 print('LifeTime (day): '+str(np.round(LT,2)))
                 print('Global Lightning NO (Tg N/yr): '+str(np.round(LNO,2)))
 
-                print('****   *****')        
+                print('****   *****')
+
+                output_csv_file = output_location / f"amwg_chem_table_{case_names[0]}.csv"
+
+                if output_csv_file.is_file():
+                    df_chem.to_csv(output_csv_file, mode='a', header=False, index=False)
+                else:
+                    df_chem.to_csv(output_csv_file, header=False, index=False)
+
+                # last step is to add table dataframe to website (if enabled):
+                adf.add_website_data(df_chem, "Chemistry", case_names[0], plot_type="Tables")
         
         
         
