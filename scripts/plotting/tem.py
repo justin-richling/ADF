@@ -324,7 +324,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res):
                 month_length2 = odata.time.dt.days_in_month
                 weights_ann2 = month_length2 / month_length2.sum()
                 oseasons = (odata * weights_ann2).sum(dim='time')
-                oseasons = oseasons[s] / (od_ones*weights_ann2).sum(dim='time')
+                oseasons = oseasons / (od_ones*weights_ann2).sum(dim='time')
             else:
                 oseasons = (odata * weights_ann).sum(dim='time')
                 oseasons = oseasons / (od_ones*weights_ann).sum(dim='time')
