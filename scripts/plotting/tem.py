@@ -564,7 +564,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
     #Set titles of subplots
     #Set case names in first subplot only
     uzm = ds["uzm"].long_name.replace(" ", "\ ")
-    axs[0,0].set_title(f"\n\n\n"+"$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
+    axs[0,0].set_title(f"\n\n"+"$\mathbf{Test}$\n"+f"{case_names[0]}\n\n\n",fontsize=14)
 
 
     
@@ -572,10 +572,10 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
         #obs_var = res["obs_var_name"]
         obs_title = Path(vres["obs_file"]).stem #Path(vres["obs_file"])[:-3] 
         #base_title = "$\mathbf{Baseline}:$"+obs_title#+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
-        axs[0,1].set_title(f"\n\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
 
     else:
-        axs[0,1].set_title(f"\n\n\n"+"$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
     
     
     
