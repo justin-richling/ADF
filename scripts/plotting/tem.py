@@ -287,10 +287,10 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
     print("Season:",s,"\n")
 
     #empty_message = "No Valid\nData Points"
-    empty_message = "Can't compare cases\nThese have different vertical levels\nStay tuned!"
+    empty_message = "These have different vertical levels\nCan't compare cases currently"
     props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
     prop_x = 0.18
-    prop_y = 0.45
+    prop_y = 0.42
 
     for var in var_list:
         vres = res[var]
