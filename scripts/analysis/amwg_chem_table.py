@@ -657,8 +657,9 @@ def amwg_chem_table(adf):
         else:
             trop=current_crit
         
-
-
+        df_aeros = pd.DataFrame(columns=['Variable', 'Exp'])
+        df_chem = pd.DataFrame(columns=['Variable', 'Exp'])
+        output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
         for v in range(len(variables)):
             current_var=variables[v]
             print(current_var)
@@ -784,8 +785,7 @@ def amwg_chem_table(adf):
                 tmp_lno=np.ma.masked_where(inside==False,spc_lno)  
                 LNO = np.ma.sum(tmp_lno)              
             
-            df_aeros = pd.DataFrame(columns=['Variable', 'Exp'])
-            df_chem = pd.DataFrame(columns=['Variable', 'Exp'])
+            
 
             if current_var in AEROSOLS:
                 print('Current Variable: '+current_var)
@@ -868,7 +868,7 @@ def amwg_chem_table(adf):
 
                 #row_values = [current_var]+row_values
                 #Create output file name:
-                output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
+                #output_csv_file = output_location / f"amwg_aerosol_table_{case_names[0]}.csv"
                 #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]
                 #cols = ['variable']+[f"Test {i+1}" for i,_ in enumerate(case_names[0:-1])]+["Baseline"]
                 ##row_values.append(np.round(my_val,3))
