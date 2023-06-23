@@ -1806,6 +1806,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     #End if
                                     print("cmapdiff",cmapdiff,"\n")
 
+                                    cmapdiff = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
+                                    print("cmapdiff",cmapdiff,"\n")
+
                                     img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
                                                     cmap=cmapdiff, norm=normdiff,
                                                     transform=proj))
