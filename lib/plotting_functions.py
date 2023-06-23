@@ -75,6 +75,30 @@ def get_difference_colors(values):
     return dnorm, cmap
 
 
+def mask_land_or_ocean(arr,msk, use_nan=False):
+    """
+    Apply a land or ocean mask to provided variable.
+
+    Inputs:
+    arr -> the xarray variable to apply the mask to.
+    msk -> the xarray variable that contains the land or ocean mask,
+           assumed to be the same shape as "arr".
+
+    use_nan -> Optional argument for whether to set the missing values
+               to np.nan values instead of the defaul "-999." values.
+    """
+
+    if use_nan:
+        missing_value = np.nan
+    else:
+        missing_value = -999.
+    #End if
+
+    arr = xr.where(msk>=0.9,arr,missing_value)
+    arr.attrs["missing_value"] = missing_value
+    return(arr)
+
+
 def get_central_longitude(*args):
     """Determine central longitude for maps.
        Can provide multiple arguments.
@@ -523,11 +547,11 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
 
     #Set stats: area_avg
-    ax[0].set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.values.max():5.2f}\nMin: {mdl_mag.values.min():5.2f}", loc='right',
+    ax[0].set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=8)
-    ax[1].set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.values.max():5.2f}\nMin: {mdl_mag.values.min():5.2f}", loc='right',
+    ax[1].set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=8)
-    ax[-1].set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.values.max():5.2f}\nMin: {mdl_mag.values.min():5.2f}", loc='right',
+    ax[-1].set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=8)
 
     # set rmse title:
@@ -717,11 +741,11 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     ax[1].set_title("$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}", loc='left', fontsize=8)
 
     #Set stats: area_avg
-    ax[0].set_title(f"Mean: {mdlfld.weighted(wgt).mean().item():5.2f}\nMax: {mdlfld.values.max():5.2f}\nMin: {mdlfld.values.min():5.2f}", loc='right',
+    ax[0].set_title(f"Mean: {mdlfld.weighted(wgt).mean().item():5.2f}\nMax: {mdlfld.max():5.2f}\nMin: {mdlfld.min():5.2f}", loc='right',
                        fontsize=8)
-    ax[1].set_title(f"Mean: {obsfld.weighted(wgt).mean().item():5.2f}\nMax: {obsfld.values.max():5.2f}\nMin: {obsfld.values.min():5.2f}", loc='right',
+    ax[1].set_title(f"Mean: {obsfld.weighted(wgt).mean().item():5.2f}\nMax: {obsfld.max():5.2f}\nMin: {obsfld.min():5.2f}", loc='right',
                        fontsize=8)
-    ax[-1].set_title(f"Mean: {diffld.weighted(wgt).mean().item():5.2f}\nMax: {diffld.values.max():5.2f}\nMin: {diffld.values.min():5.2f}", loc='right',
+    ax[-1].set_title(f"Mean: {diffld.weighted(wgt).mean().item():5.2f}\nMax: {diffld.max():5.2f}\nMin: {diffld.min():5.2f}", loc='right',
                        fontsize=8)
 
     # set rmse title:
@@ -1658,7 +1682,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
         multi_dict: ordered dictionary of difference data for each var, test case, and season
                 multi_dict[var][case_name][s]
-        
+
         web_category:
                 variable category
 
@@ -1666,31 +1690,38 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                 Needed to test if redo_plot is called in config yaml file
     """
 
-    
+
     nplots = len(nicknames[0])
     if nplots > 2:
         ncols = 3
     else:
         ncols = 2
+    #End if
 
-    # Check redo_plot. If set to True: remove old plot, if it already exists:
+    #Check redo_plot. If set to True: remove old plot, if it already exists:
     redo_plot = adfobj.get_basic_info('redo_plot')
+
+    #Determine needed matplotlib normalization function:
+    normfunc,_ = use_this_norm()
 
     #Try and format spacing based on number of cases
     # NOTE: ** this will have to change if figsize or dpi change **
     if nplots < 4:
         hspace = -1.0
     else:
-        hspace = -0.85    
+        hspace = -0.85
+    #End if
 
     nrows = int(np.ceil(nplots/ncols))
     if nrows == 1:
         y_title = 0.265
     else:
         y_title = 0.315
+    #End if
 
     if nrows < 2:
         nrows = 2
+    #End if
 
     # specify the central longitude for the plot
     central_longitude = get_central_longitude(adfobj)
@@ -1702,6 +1733,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
     for var in multi_dict.keys():
+        #Notify user of variable being plotted:
+        print("\t - multi-case lat/lon maps for {}".format(var))
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
             for case in multi_dict[var].keys():
                 for season in multi_dict[var][case].keys():
@@ -1719,8 +1752,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                         #Set figure title
                         plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
-                        
-                        normfunc,_ = use_this_norm()
 
                         count = 0
                         img = []
@@ -1735,7 +1766,32 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     # mesh for plots:
                                     lons, lats = np.meshgrid(lon, lat)
 
-                                    levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
+                                    kwargs = multi_dict[var][case_names[count]][season]["vres"]
+                                    #levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
+                                    if "diff_contour_levels" in kwargs:
+                                        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+                                    elif "diff_contour_range" in kwargs:
+                                        assert len(kwargs['diff_contour_range']) == 3, \
+                                        "diff_contour_range must have exactly three entries: min, max, step"
+
+                                        levelsdiff = np.arange(*kwargs['diff_contour_range'])
+                                    else:
+                                        # set a symmetric color bar for diff:
+                                        absmaxdif = np.max(np.abs(mdlfld))
+                                        # set levels for difference plot:
+                                        levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
+                                    #End if
+                                    
+                                    
+                                    """if "diff_contour_levels" in kwargs:
+                                        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+                                    elif "diff_contour_range" in kwargs:
+                                        assert len(kwargs['diff_contour_range']) == 3, \
+                                        "diff_contour_range must have exactly three entries: min, max, step"
+
+                                        levelsdiff = np.arange(*kwargs['diff_contour_range'])"""
+
+
                                     levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
 
                                     # color normalization for difference
@@ -1744,10 +1800,17 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     else:
                                         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                                    cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
+                                    #cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
 
-                                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff, 
-                                                    cmap=cmap, norm=normdiff, 
+                                    # Difference options -- Check in kwargs for colormap and levels
+                                    if "diff_colormap" in kwargs:
+                                        cmapdiff = kwargs["diff_colormap"]
+                                    else:
+                                        cmapdiff = 'coolwarm'
+                                    #End if
+
+                                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
+                                                    cmap=cmapdiff, norm=normdiff,
                                                     transform=proj))
 
                                     #Set individual plot titles (case name/nickname)
@@ -1772,11 +1835,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
                                     aspect=20, shrink=.5, location="bottom",
                                     anchor=(0.5,-0.3), extend='both')
-                            
+
                         #Clean up the spacing a bit
                         plt.subplots_adjust(wspace=0.3, hspace=hspace)
-        
+
                         fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
+
                         adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
                                                             category=web_category, season=season, plot_type="LatLon",multi_case=True)
 
