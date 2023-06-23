@@ -178,9 +178,17 @@ def amwg_table(adf):
         #Convert output location string to a Path object:
         #"/glade/scratch/richling/adf-output/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001/diag-plot/f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001_1995_2006_vs_f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw.001_1995_2006"
         arg = "/glade/scratch/richling/adf-output/"
-        non_obs_baseline_name = "f.cam6_3_112.FLTHIST_v0c.ne30.non-ogw-ubcT.001"
+        non_obs_baseline_name     = adf.get_baseline_info("cam_case_name")
+        #non_obs_baseline_name = "f.cam6_3_112.FLTHIST_v0c.ne30.non-ogw-ubcT.001"
+        
+        #if not non_obs_baseline_name:
+        #    print("\n\nThat's it, there is no directory or file, please hang up and try again...\nEXITTING THE GAME: NO REFUNDS\n\n")
+        #    return
+        #else:
+        syear = adf.get_baseline_info("start_year")
+        eyear = adf.get_baseline_info("end_year")
         comp_base = f"{case_names[0]}_vs_{non_obs_baseline_name}/diag-plot/"
-        comp_yrs = f"{case_names[0]}_1995_2006_vs_{non_obs_baseline_name}_1995_2006"
+        comp_yrs = f"{case_names[0]}_{syear}_{eyear}_vs_{non_obs_baseline_name}_{syear}_{eyear}"
 
         arg = arg+comp_base+comp_yrs
         input_location = Path(arg)
