@@ -1788,7 +1788,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     #End if
 
 
-                                    levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
+                                    #levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
                                     print("levelsdiff",levelsdiff,"\n")
                                     levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
 
