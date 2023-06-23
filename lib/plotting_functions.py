@@ -1767,31 +1767,25 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     lons, lats = np.meshgrid(lon, lat)
 
                                     kwargs = multi_dict[var][case_names[count]][season]["vres"]
-                                    #levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
+                                    
                                     if "diff_contour_levels" in kwargs:
+                                        print('"diff_contour_levels" in kwargs',"diff_contour_levels" in kwargs,"\n")
                                         levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
                                     elif "diff_contour_range" in kwargs:
+                                        print('"diff_contour_range" in kwargs',"diff_contour_range" in kwargs,"\n")
                                         assert len(kwargs['diff_contour_range']) == 3, \
                                         "diff_contour_range must have exactly three entries: min, max, step"
 
                                         levelsdiff = np.arange(*kwargs['diff_contour_range'])
                                     else:
+                                        print("levelsdiff will be calculated form data buddy\n")
                                         # set a symmetric color bar for diff:
                                         absmaxdif = np.max(np.abs(mdlfld))
                                         # set levels for difference plot:
                                         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
                                     #End if
-                                    
-                                    
-                                    """if "diff_contour_levels" in kwargs:
-                                        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-                                    elif "diff_contour_range" in kwargs:
-                                        assert len(kwargs['diff_contour_range']) == 3, \
-                                        "diff_contour_range must have exactly three entries: min, max, step"
 
-                                        levelsdiff = np.arange(*kwargs['diff_contour_range'])"""
-
-
+                                    #levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
                                     levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
 
                                     # color normalization for difference
