@@ -1815,9 +1815,11 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                                     transform=proj))
 
                                     #Set individual plot titles (case name/nickname)
-                                    titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
-                                    titles.append(axs[r,c].set_title("\n$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='left',fontsize=8))
-                                    #titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}"+"\n$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
+                                    case_title = "$\mathbf{Test}:$"+f" {nicknames[0][count]}"
+                                    base_title = "$\mathbf{Baseline}:$"+f" {nicknames[1]}"
+                                    #titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
+                                    #titles.append(axs[r,c].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='left',fontsize=8))
+                                    titles.append(axs[r,c].set_title(f"{case_title}\n{base_title}",loc='left',fontsize=8))
 
                                     axs[r,c].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
                                     axs[r,c].coastlines()
