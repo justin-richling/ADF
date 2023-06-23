@@ -1777,6 +1777,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                         "diff_contour_range must have exactly three entries: min, max, step"
 
                                         levelsdiff = np.arange(*kwargs['diff_contour_range'])
+                                        pritn("levelsdiff",levelsdiff,"\n")
                                     else:
                                         print("levelsdiff will be calculated form data buddy\n")
                                         # set a symmetric color bar for diff:
