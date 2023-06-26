@@ -1757,9 +1757,14 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         for r in range(0,nrows):
                             for c in range(0,ncols):
                                 if count < nplots:
+                                    print("\n",case_names[count],"\n")
                                     mdlfld = multi_dict[var][case_names[count]][season]["diff_data"]
                                     lat = mdlfld['lat']
                                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
+                                    
+                                    diffld = multi_dict[var][case_names[count]][season]["diff_data"]
+                                    lat = diffld['lat']
+                                    dwrap, lon = add_cyclic_point(diffld, coord=diffld['lon'])
 
                                     # mesh for plots:
                                     lons, lats = np.meshgrid(lon, lat)
@@ -1778,7 +1783,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                                         #levelsdiff = np.arange(*kwargs['diff_contour_range'])
                                         levelsdiff = kwargs['diff_contour_range']
-                                        print("levelsdiff",levelsdiff,"\n")
                                     else:
                                         print("levelsdiff will be calculated form data buddy\n")
                                         # set a symmetric color bar for diff:
@@ -1810,7 +1814,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     #cmapdiff = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
                                     #print("cmapdiff",cmapdiff,"\n")
 
-                                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
+                                    img.append(axs[r,c].contourf(lons, lats, dwrap, levels=levelsdiff,
                                                     cmap=cmapdiff, norm=normdiff,
                                                     transform=proj))
 
