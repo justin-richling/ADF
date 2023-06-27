@@ -289,7 +289,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
     #empty_message = "No Valid\nData Points"
     empty_message = "These have different vertical levels\nCan't compare cases currently"
     props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
-    prop_x = 0.18
+    prop_x = 0.12
     prop_y = 0.42
 
     for var in var_list:
@@ -549,7 +549,7 @@ def tem_plot(adf, ds, ds_base, case_names, axs, s, var_list, res, obs):
             #                        cbar_kwargs={'label': ds[var].units})
 
             if len(dseasons.lev) == 0:
-                axs[8,2].text(0.4, 0.5, empty_message, transform=axs[8,2].transAxes, bbox=props)
+                axs[8,2].text(prop_x, prop_y, empty_message, transform=axs[8,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
