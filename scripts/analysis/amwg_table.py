@@ -185,12 +185,15 @@ def amwg_table(adf):
         #    print("\n\nThat's it, there is no directory or file, please hang up and try again...\nEXITTING THE GAME: NO REFUNDS\n\n")
         #    return
         #else:
-        syear = 1995
-        #adf.get_baseline_info("start_year")
-        eyear = 2006
-        #adf.get_baseline_info("end_year")
+        syear = adf.climo_yrs["syears"][0]
+        eyear = adf.climo_yrs["eyears"][0]
+
+
+        #Extract baseline years (which may be empty strings if using Obs):
+        syear_baseline = adf.climo_yrs["syear_baseline"]
+        eyear_baseline = adf.climo_yrs["eyear_baseline"]
         comp_base = f"{case_names[0]}_vs_{non_obs_baseline_name}/diag-plot/"
-        comp_yrs = f"{case_names[0]}_{syear}_{eyear}_vs_{non_obs_baseline_name}_{syear}_{eyear}"
+        comp_yrs = f"{case_names[0]}_{syear}_{eyear}_vs_{non_obs_baseline_name}_{syear_baseline}_{eyear_baseline}"
 
         arg = arg+comp_base+comp_yrs
         input_location = Path(arg)
