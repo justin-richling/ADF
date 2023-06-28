@@ -193,7 +193,7 @@ def amwg_table(adf):
         syear_baseline = adf.climo_yrs["syear_baseline"]
         eyear_baseline = adf.climo_yrs["eyear_baseline"]
         comp_base = f"{case_names[0]}_vs_{non_obs_baseline_name}/diag-plot/"
-        comp_yrs = f"{case_names[0]}_{syear}_{eyear}_vs_{non_obs_baseline_name}_{syear_baseline}_{eyear_baseline}"
+        comp_yrs = f"{case_names[0]}_{syear}_{eyear}_vs_{non_obs_baseline_name}_{syear}_{eyear}"
 
         arg = arg+comp_base+comp_yrs
         input_location = Path(arg)
