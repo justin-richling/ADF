@@ -286,15 +286,17 @@ def polar_map(adfobj):
                                     else:
                                         hemi = "SH"
                                     #End if
+                                    if var == "TS":
+                                        print()
+                                    else:
+                                        pf.make_polar_plot(plot_name, case_nickname, base_nickname,
+                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [syear_baseline,eyear_baseline],
+                                                        mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi,obs=obs, **vres)
 
-                                    pf.make_polar_plot(plot_name, case_nickname, base_nickname,
-                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                     [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi,obs=obs, **vres)
-
-                                    #Add plot to website (if enabled):
-                                    adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                                            season=s, plot_type=hemi_type)
+                                        #Add plot to website (if enabled):
+                                        adfobj.add_website_data(plot_name, var, case_name, category=web_category,
+                                                                season=s, plot_type=hemi_type)
 
                     else: #mdata dimensions check
                         print(f"\t - skipping polar map for {var} as it doesn't have only lat/lon dims.")
