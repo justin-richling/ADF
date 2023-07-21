@@ -56,6 +56,31 @@ def global_latlon_vect_map(adfobj):
     var_list = adfobj.diag_var_list
     model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
 
+    #Set data path variables:
+    #-----------------------
+    #mclimo_rg_loc = Path(model_rgrid_loc)
+    if not adfobj.compare_obs:
+        dclimo_loc  = Path(data_loc)
+    #-----------------------
+
+    #Set output/target data path variables:
+    #------------------------------------
+    if type(model_rgrid_loc) == list:
+        rgclimo_loc = []
+        for regrid_path in model_rgrid_loc:
+            rgclimo_loc.append(Path(regrid_path))
+            #Check if re-gridded directory exists, and if not, then create it:
+            if not Path(regrid_path).is_dir():
+                print(f"    {Path(regrid_path)} not found, making new directory")
+                Path(regrid_path).mkdir(parents=True)
+    else:
+        rgclimo_loc = Path(model_rgrid_loc)
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not rgclimo_loc.is_dir():
+            print(f"    {rgclimo_loc} not found, making new directory")
+            rgclimo_loc.mkdir(parents=True)
+    #End if
+
     #Special ADF variable which contains the output path for
     #all generated plots and tables:
     plot_locations = adfobj.plot_location
