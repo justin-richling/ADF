@@ -64,8 +64,8 @@ def regrid_and_vert_interp(adf):
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
 
-    data_loc = adf.get_basic_info("cam_regrid_loc", required=True)
-    dclimo_loc  = Path(data_loc)
+    #data_loc = adf.get_basic_info("cam_regrid_loc", required=True)
+    #dclimo_loc  = Path(data_loc)
 
     #var_list = adf.diag_var_list
 
