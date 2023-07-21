@@ -132,8 +132,8 @@ def global_latlon_map(adfobj):
     #Set data path variables:
     #-----------------------
     #mclimo_rg_loc = Path(model_rgrid_loc)
-    if not adfobj.compare_obs:
-        dclimo_loc  = Path(data_loc)
+    #if not adfobj.compare_obs:
+    #    dclimo_loc  = Path(data_loc)
     #-----------------------
 
     #Set output/target data path variables:
