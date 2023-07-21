@@ -293,7 +293,7 @@ def global_latlon_map(adfobj):
 
                 #Load re-gridded model files:
                 if type(model_rgrid_loc) == list:
-                    mclim_fils = sorted(mclimo_rg_loc[case_idx].glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                    mclim_fils = sorted(Path(mclimo_rg_loc[case_idx]).glob(f"{data_src}_{case_name}_{var}_*.nc"))
                 else:
                     mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
                 mclim_ds = _load_dataset(mclim_fils)
