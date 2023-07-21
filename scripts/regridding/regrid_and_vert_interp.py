@@ -54,7 +54,7 @@ def regrid_and_vert_interp(adf):
     #-----------------------------------------
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
     
-    output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
+    regrid_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
     
@@ -143,16 +143,19 @@ def regrid_and_vert_interp(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgclimo_loc = Path(output_loc)
+    rgclimo_loc = []
+    for regrid_path in regrid_loc:
+        rgclimo_loc.append(Path(regrid_path))
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not rgclimo_loc.is_dir():
+            print(f"    {rgclimo_loc} not found, making new directory")
+            rgclimo_loc.mkdir(parents=True)
+    #End if
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
 
-    #Check if re-gridded directory exists, and if not, then create it:
-    if not rgclimo_loc.is_dir():
-        print(f"    {rgclimo_loc} not found, making new directory")
-        rgclimo_loc.mkdir(parents=True)
-    #End if
+    
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
@@ -200,7 +203,7 @@ def regrid_and_vert_interp(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
+                regridded_file_loc = rgclimo_loc[case_idx] / f'{target}_{case_name}_{var}_regridded.nc'
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
