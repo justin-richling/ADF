@@ -218,6 +218,8 @@ def regrid_and_vert_interp(adf):
                 else:
                     regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
 
+                print("WHHHAAATATTARATATAT DUMB BLUEJAY",regridded_file_loc,"\n")
+
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
                     ps_loc_dict[target] = regridded_file_loc
