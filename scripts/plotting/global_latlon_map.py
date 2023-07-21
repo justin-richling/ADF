@@ -136,6 +136,7 @@ def global_latlon_map(adfobj):
     #    dclimo_loc  = Path(data_loc)
     #-----------------------
 
+    
     #Set output/target data path variables:
     #------------------------------------
     if type(model_rgrid_loc) == list:
@@ -149,7 +150,7 @@ def global_latlon_map(adfobj):
                 print(f"    {Path(regrid_path)} not found, making new directory")
                 Path(regrid_path).mkdir(parents=True)
             if not adfobj.compare_obs:
-                dclimo_loc  = dclimo_loc.append(Path(data_loc))
+                dclimo_loc.append(Path(data_loc))
     else:
         if not adfobj.compare_obs:
             dclimo_loc  = Path(data_loc)
@@ -159,7 +160,7 @@ def global_latlon_map(adfobj):
             print(f"    {rgclimo_loc} not found, making new directory")
             rgclimo_loc.mkdir(parents=True)
     #End if
-
+    mclimo_rg_loc = model_rgrid_loc
 
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
@@ -272,7 +273,10 @@ def global_latlon_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 #Load re-gridded model files:
-                mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                if type(model_rgrid_loc) == list:
+                    mclim_fils = sorted(mclimo_rg_loc[case_idx].glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                else:
+                    mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
                 mclim_ds = _load_dataset(mclim_fils)
 
                 #Extract variable of interest
