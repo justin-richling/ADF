@@ -140,13 +140,19 @@ def global_latlon_map(adfobj):
     #------------------------------------
     if type(model_rgrid_loc) == list:
         rgclimo_loc = []
+        dclimo_loc = []
         for regrid_path in model_rgrid_loc:
             rgclimo_loc.append(Path(regrid_path))
+            
             #Check if re-gridded directory exists, and if not, then create it:
             if not Path(regrid_path).is_dir():
                 print(f"    {Path(regrid_path)} not found, making new directory")
                 Path(regrid_path).mkdir(parents=True)
+            if not adfobj.compare_obs:
+                dclimo_loc  = dclimo_loc.append(Path(data_loc))
     else:
+        if not adfobj.compare_obs:
+            dclimo_loc  = Path(data_loc)
         rgclimo_loc = Path(model_rgrid_loc)
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
