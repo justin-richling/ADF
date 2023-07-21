@@ -211,7 +211,10 @@ def regrid_and_vert_interp(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
-                regridded_file_loc = rgclimo_loc[case_idx] / f'{target}_{case_name}_{var}_regridded.nc'
+                if type(regrid_loc) == list:
+                    regridded_file_loc = rgclimo_loc[case_idx] / f'{target}_{case_name}_{var}_regridded.nc'
+                else:
+                    regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
