@@ -152,6 +152,7 @@ def regrid_and_vert_interp(adf):
                 print(f"    {rgclimo_loc} not found, making new directory")
                 rgclimo_loc.mkdir(parents=True)
     else:
+        rgclimo_loc = Path(regrid_loc)
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
             print(f"    {rgclimo_loc} not found, making new directory")
