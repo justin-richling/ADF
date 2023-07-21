@@ -142,7 +142,7 @@ def global_latlon_map(adfobj):
     if type(model_rgrid_loc) == list:
         rgclimo_loc = []
         dclimo_loc = []
-        for regrid_path in model_rgrid_loc:
+        for i,regrid_path in enumerate(model_rgrid_loc):
             rgclimo_loc.append(Path(regrid_path))
             
             #Check if re-gridded directory exists, and if not, then create it:
@@ -150,7 +150,7 @@ def global_latlon_map(adfobj):
                 print(f"    {Path(regrid_path)} not found, making new directory")
                 Path(regrid_path).mkdir(parents=True)
             if not adfobj.compare_obs:
-                dclimo_loc.append(Path(data_loc))
+                dclimo_loc.append(Path(data_loc[i]))
     else:
         if not adfobj.compare_obs:
             dclimo_loc  = Path(data_loc)
@@ -236,23 +236,42 @@ def global_latlon_map(adfobj):
         #loop over different data sets to plot model against:
         for data_src in data_list:
 
-            # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
-            if adfobj.compare_obs:
-                #For now, only grab one file (but convert to list for use below)
-                oclim_fils = [dclimo_loc]
-            else:
-                oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
+            #Load re-gridded model files:
+            if type(model_rgrid_loc) != list:
+                # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                if adfobj.compare_obs:
+                    #For now, only grab one file (but convert to list for use below)
+                    oclim_fils = [dclimo_loc]
+                else:
+                    oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
 
-            oclim_ds = _load_dataset(oclim_fils)
+                oclim_ds = _load_dataset(oclim_fils)
 
-            if oclim_ds is None:
-                print("WARNING: Did not find any oclim_fils. Will try to skip.")
-                print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
-                print(f"INFO: The glob is: {data_src}_{var}_*.nc")
-                continue
+                if oclim_ds is None:
+                    print("WARNING: Did not find any oclim_fils. Will try to skip.")
+                    print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
+                    print(f"INFO: The glob is: {data_src}_{var}_*.nc")
+                    continue
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+
+                #Load re-gridded model files:
+                if type(model_rgrid_loc) == list:
+                    # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                    if adfobj.compare_obs:
+                        #For now, only grab one file (but convert to list for use below)
+                        oclim_fils = [dclimo_loc]
+                    else:
+                        oclim_fils = sorted(dclimo_loc[case_idx].glob(f"{data_src}_{var}_baseline.nc"))
+
+                    oclim_ds = _load_dataset(oclim_fils)
+
+                    if oclim_ds is None:
+                        print("WARNING: Did not find any oclim_fils. Will try to skip.")
+                        print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
+                        print(f"INFO: The glob is: {data_src}_{var}_*.nc")
+                        continue
 
                 #Grab data for desired multi-plots (from yaml file)
                 if multi_plots:
