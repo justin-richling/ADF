@@ -143,13 +143,20 @@ def regrid_and_vert_interp(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgclimo_loc = []
-    for regrid_path in regrid_loc:
-        rgclimo_loc.append(Path(regrid_path))
+    if type(regrid_loc) == list:
+        rgclimo_loc = []
+        for regrid_path in regrid_loc:
+            rgclimo_loc.append(Path(regrid_path))
+            #Check if re-gridded directory exists, and if not, then create it:
+            if not rgclimo_loc.is_dir():
+                print(f"    {rgclimo_loc} not found, making new directory")
+                rgclimo_loc.mkdir(parents=True)
+    else:
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
             print(f"    {rgclimo_loc} not found, making new directory")
             rgclimo_loc.mkdir(parents=True)
+    #End if
     #End if
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
