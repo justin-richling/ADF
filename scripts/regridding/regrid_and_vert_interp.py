@@ -329,7 +329,11 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
+                    #Determine regridded variable file name:
+                    if type(regrid_loc) == list:
+                        interp_bl_file = rgclimo_loc[case_idx] / f'{target}_{var}_baseline.nc'
+                    else:
+                        interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
