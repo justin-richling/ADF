@@ -185,9 +185,12 @@ def polar_map(adfobj):
                     if (not redo_plot) and plot_name_log_h.is_file():
                         logp_zonal_skip.append(plot_name_log_h)
                         #Continue to next iteration:
-                        adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
+                        adfobj.add_website_data(plot_name_log_h, f"{var}_{pres}hpa",
                                                                 case_name, category=web_category,
-                                                                season=s, plot_type=hemi_type)
+                                                                season=s, plot_type="NHPolar")
+                        adfobj.add_website_data(plot_name_log_s, f"{var}_{pres}hpa",
+                                                                case_name, category=web_category,
+                                                                season=s, plot_type="SHPolar")
                         pass
 
                     elif (redo_plot) and plot_name_log_h.is_file():
@@ -196,9 +199,6 @@ def polar_map(adfobj):
                     # Check redo_plot. If set to True: remove old plot, if it already exists:
                     if (not redo_plot) and plot_name_log_s.is_file():
                         logp_zonal_skip.append(plot_name_log_s)
-                        #Continue to next iteration:
-                        adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                                                season=s, plot_type=hemi_type)
                         pass
 
                     elif (redo_plot) and plot_name_log_s.is_file():
@@ -214,8 +214,11 @@ def polar_map(adfobj):
                 if (not redo_plot) and plot_name_h.is_file():
                     zonal_skip.append(plot_name_h)
                     #Add already-existing plot to website (if enabled):
-                    adfobj.add_website_data(plot_name_h, var, case_name, season=s,
-                                                        plot_type="Zonal")
+                    #Continue to next iteration:
+                    adfobj.add_website_data(plot_name_h, var, case_name, category=web_category,
+                                                                season=s, plot_type="NHPolar")
+                    adfobj.add_website_data(plot_name_s, var, case_name, category=web_category,
+                                                                season=s, plot_type="SHPolar")
 
                     continue
                 elif (redo_plot) and plot_name_h.is_file():
@@ -224,9 +227,6 @@ def polar_map(adfobj):
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 if (not redo_plot) and plot_name_s.is_file():
                     zonal_skip.append(plot_name_s)
-                    #Add already-existing plot to website (if enabled):
-                    adfobj.add_website_data(plot_name_s, var, case_name, season=s,
-                                                        plot_type="Zonal")
 
                     continue
                 elif (redo_plot) and plot_name_s.is_file():
