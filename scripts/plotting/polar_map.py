@@ -376,7 +376,7 @@ def polar_map(adfobj):
                         for s in seasons:
                             plot_name_h = plot_loc / f"{var}_{s}_NHPolar_Mean.{plot_type}"
                             plot_name_s = plot_loc / f"{var}_{s}_SHPolar_Mean.{plot_type}"
-                            if (plot_name_h not in logp_zonal_skip) or (plot_name_s not in logp_zonal_skip):
+                            if (plot_name_h not in zonal_skip) or (plot_name_s not in zonal_skip):
 
                                 mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
                                 oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
