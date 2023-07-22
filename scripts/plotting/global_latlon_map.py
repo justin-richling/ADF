@@ -212,20 +212,22 @@ def global_latlon_map(adfobj):
                     plot_name.unlink()
 
                 #Check zonal log-p:
-                #plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
-                plot_name_log = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
+                #Loop over pressure levels:
+                for pres in pres_levs:
+                    #plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                    plot_name_log = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
 
-                # Check redo_plot. If set to True: remove old plot, if it already exists:
-                if (not redo_plot) and plot_name_log.is_file():
-                    logp_zonal_skip.append(plot_name_log)
-                    #Continue to next iteration:
-                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
-                                            plot_type="Zonal", category="Log-P")
-                    continue
+                    # Check redo_plot. If set to True: remove old plot, if it already exists:
+                    if (not redo_plot) and plot_name_log.is_file():
+                        logp_zonal_skip.append(plot_name_log)
+                        #Continue to next iteration:
+                        adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
+                                                plot_type="Zonal", category="Log-P")
+                        continue
 
-                elif (redo_plot) and plot_name_log.is_file():
-                    plot_name_log.unlink()
-                #End if
+                    elif (redo_plot) and plot_name_log.is_file():
+                        plot_name_log.unlink()
+                    #End if
 
                 #End if
             #End for (seasons)
