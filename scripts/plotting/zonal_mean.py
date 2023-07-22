@@ -330,10 +330,10 @@ def zonal_mean(adfobj):
                 #Set output plot location:
                 plot_loc = Path(plot_locations[case_idx])
 
-                #Check if plot output directory exists, and if not, then create it:
+                """#Check if plot output directory exists, and if not, then create it:
                 if not plot_loc.is_dir():
                     print(f"    {plot_loc} not found, making new directory")
-                    plot_loc.mkdir(parents=True)
+                    plot_loc.mkdir(parents=True)"""
 
                 """# load re-gridded model files:
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
