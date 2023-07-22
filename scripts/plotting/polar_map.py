@@ -376,7 +376,7 @@ def polar_map(adfobj):
                         for s in seasons:
                             plot_name_h = plot_loc / f"{var}_{s}_NHPolar_Mean.{plot_type}"
                             plot_name_s = plot_loc / f"{var}_{s}_SHPolar_Mean.{plot_type}"
-                            if (plot_name_h or plot_name_s) not in zonal_skip:
+                            if (plot_name_h not in logp_zonal_skip) or (plot_name_s not in logp_zonal_skip):
 
                                 mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
                                 oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
@@ -464,7 +464,7 @@ def polar_map(adfobj):
                                 
                                 #Rough check. If one hemi is missing, just make the plots for both rgardless. 
                                 #TODO?: Fix to make more flxible
-                                if (plot_name_log_h or plot_name_log_s) not in logp_zonal_skip:
+                                if (plot_name_log_h not in logp_zonal_skip) or (plot_name_log_s not in logp_zonal_skip):
                                     mseasons[s] = mdata.sel(time=seasons[s], lev=pres).mean(dim='time')
                                     oseasons[s] = odata.sel(time=seasons[s], lev=pres).mean(dim='time')
                                     # difference: each entry should be (lat, lon)
