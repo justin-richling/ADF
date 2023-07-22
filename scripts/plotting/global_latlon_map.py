@@ -182,7 +182,7 @@ def global_latlon_map(adfobj):
     #If redo_plot is false and file exists, keep track and attempt to skip calcs to
     #speed up preformance a bit if re-running the ADF
     zonal_skip = []
-
+    logp_zonal_skip = []
     #Loop over model cases:
     for case_idx, case_name in enumerate(case_names):
         #Set output plot location:
@@ -209,6 +209,22 @@ def global_latlon_map(adfobj):
                     continue
                 elif (redo_plot) and plot_name.is_file():
                     plot_name.unlink()
+
+                #Check zonal log-p:
+                plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name_log.is_file():
+                    logp_zonal_skip.append(plot_name_log)
+                    #Continue to next iteration:
+                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
+                                            plot_type="Zonal", category="Log-P")
+                    pass
+
+                elif (redo_plot) and plot_name_log.is_file():
+                    plot_name_log.unlink()
+                #End if
+
                 #End if
             #End for (seasons)
         #End for (variables)
