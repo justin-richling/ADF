@@ -170,37 +170,39 @@ def polar_map(adfobj):
         #Loop over the variables for each season
         for var in var_list:
             for s in seasons:
-                #Check zonal log-p:
-                #plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
-                plot_name_log_h = plot_loc / f"{var}_{pres}hpa_{s}_NHPolar_Mean.{plot_type}"
-                plot_name_log_s = plot_loc / f"{var}_{pres}hpa_{s}_SHPolar_Mean.{plot_type}"
-                                
-                                #Rough check. If one hemi is missing, just make the plots for both rgardless. 
-                                #TODO?: Fix to make more flxible
-                #if (plot_name_log_h not in logp_zonal_skip) or (plot_name_log_s not in logp_zonal_skip):
+                #Loop over pressure levels:
+                for pres in pres_levs:
+                    #Check zonal log-p:
+                    #plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                    plot_name_log_h = plot_loc / f"{var}_{pres}hpa_{s}_NHPolar_Mean.{plot_type}"
+                    plot_name_log_s = plot_loc / f"{var}_{pres}hpa_{s}_SHPolar_Mean.{plot_type}"
+                                    
+                                    #Rough check. If one hemi is missing, just make the plots for both rgardless. 
+                                    #TODO?: Fix to make more flxible
+                    #if (plot_name_log_h not in logp_zonal_skip) or (plot_name_log_s not in logp_zonal_skip):
 
-                # Check redo_plot. If set to True: remove old plot, if it already exists:
-                if (not redo_plot) and plot_name_log_h.is_file():
-                    logp_zonal_skip.append(plot_name_log_h)
-                    #Continue to next iteration:
-                    adfobj.add_website_data(plot_name_log_h, f"{var}_logp", case_name, season=s,
-                                            plot_type="Zonal", category="Log-P")
-                    pass
+                    # Check redo_plot. If set to True: remove old plot, if it already exists:
+                    if (not redo_plot) and plot_name_log_h.is_file():
+                        logp_zonal_skip.append(plot_name_log_h)
+                        #Continue to next iteration:
+                        adfobj.add_website_data(plot_name_log_h, f"{var}_logp", case_name, season=s,
+                                                plot_type="Zonal", category="Log-P")
+                        pass
 
-                elif (redo_plot) and plot_name_log_h.is_file():
-                    plot_name_log_h.unlink()
-                #End if
-                # Check redo_plot. If set to True: remove old plot, if it already exists:
-                if (not redo_plot) and plot_name_log_s.is_file():
-                    logp_zonal_skip.append(plot_name_log_s)
-                    #Continue to next iteration:
-                    adfobj.add_website_data(plot_name_log_s, f"{var}_logp", case_name, season=s,
-                                            plot_type="Zonal", category="Log-P")
-                    pass
+                    elif (redo_plot) and plot_name_log_h.is_file():
+                        plot_name_log_h.unlink()
+                    #End if
+                    # Check redo_plot. If set to True: remove old plot, if it already exists:
+                    if (not redo_plot) and plot_name_log_s.is_file():
+                        logp_zonal_skip.append(plot_name_log_s)
+                        #Continue to next iteration:
+                        adfobj.add_website_data(plot_name_log_s, f"{var}_logp", case_name, season=s,
+                                                plot_type="Zonal", category="Log-P")
+                        pass
 
-                elif (redo_plot) and plot_name_log_s.is_file():
-                    plot_name_log_s.unlink()
-                #End if
+                    elif (redo_plot) and plot_name_log_s.is_file():
+                        plot_name_log_s.unlink()
+                    #End if
                 
                 #Check regular zonal
                 #plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
