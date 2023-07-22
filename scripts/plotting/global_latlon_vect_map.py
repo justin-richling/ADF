@@ -56,30 +56,30 @@ def global_latlon_vect_map(adfobj):
     var_list = adfobj.diag_var_list
     model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
 
-    #Set data path variables:
-    #-----------------------
-    #mclimo_rg_loc = Path(model_rgrid_loc)
-    if not adfobj.compare_obs:
-        dclimo_loc  = Path(data_loc)
-    #-----------------------
-
     #Set output/target data path variables:
     #------------------------------------
     if type(model_rgrid_loc) == list:
         rgclimo_loc = []
-        for regrid_path in model_rgrid_loc:
+        dclimo_loc = []
+        for i,regrid_path in enumerate(model_rgrid_loc):
             rgclimo_loc.append(Path(regrid_path))
+            
             #Check if re-gridded directory exists, and if not, then create it:
             if not Path(regrid_path).is_dir():
                 print(f"    {Path(regrid_path)} not found, making new directory")
                 Path(regrid_path).mkdir(parents=True)
+            if not adfobj.compare_obs:
+                dclimo_loc.append(Path(data_loc[i]))
     else:
+        if not adfobj.compare_obs:
+            dclimo_loc  = Path(data_loc)
         rgclimo_loc = Path(model_rgrid_loc)
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
             print(f"    {rgclimo_loc} not found, making new directory")
             rgclimo_loc.mkdir(parents=True)
     #End if
+    mclimo_rg_loc = model_rgrid_loc
 
     #Special ADF variable which contains the output path for
     #all generated plots and tables:
@@ -164,6 +164,65 @@ def global_latlon_vect_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
+
+    #Check if plots already exist and redo_plot boolean
+    #If redo_plot is false and file exists, keep track and attempt to skip calcs to
+    #speed up preformance a bit if re-running the ADF
+    zonal_skip = []
+    logp_zonal_skip = []
+    #Loop over model cases:
+    for case_idx, case_name in enumerate(case_names):
+        #Set output plot location:
+        plot_loc = Path(plot_locations[case_idx])
+
+        #Check if plot output directory exists, and if not, then create it:
+        if not plot_loc.is_dir():
+            print(f"    {plot_loc} not found, making new directory")
+            plot_loc.mkdir(parents=True)
+        #End if
+
+        #Loop over the variables for each season
+        for var in var_list:
+            for s in seasons:
+                #Check regular zonal
+                #plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name.is_file():
+                    zonal_skip.append(plot_name)
+                    #Add already-existing plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, var, case_name, season=s,
+                                                        plot_type="Zonal")
+
+                    pass
+                elif (redo_plot) and plot_name.is_file():
+                    plot_name.unlink()
+
+                #Check zonal log-p:
+                #Loop over pressure levels:
+                for pres in pres_levs:
+                    #plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                    plot_name_log = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
+
+                    # Check redo_plot. If set to True: remove old plot, if it already exists:
+                    if (not redo_plot) and plot_name_log.is_file():
+                        logp_zonal_skip.append(plot_name_log)
+                        #Continue to next iteration:
+                        adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
+                                                plot_type="Zonal", category="Log-P")
+                        continue
+
+                    elif (redo_plot) and plot_name_log.is_file():
+                        plot_name_log.unlink()
+                    #End if
+
+                #End if
+            #End for (seasons)
+        #End for (variables)
+    #End for (cases)
+    #
+    # End redo plots check
+    #
 
     #Initialize skipped variables set:
     skip_vars = set()
@@ -292,6 +351,24 @@ def global_latlon_vect_map(adfobj):
             uodata = uodata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
             vodata = vodata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
+            #Load re-gridded model files:
+            if type(model_rgrid_loc) != list:
+                # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                if adfobj.compare_obs:
+                    #For now, only grab one file (but convert to list for use below)
+                    oclim_fils = [dclimo_loc]
+                else:
+                    oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
+
+                oclim_ds = _load_dataset(oclim_fils)
+
+                if oclim_ds is None:
+                    print("WARNING: Did not find any oclim_fils. Will try to skip.")
+                    print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
+                    print(f"INFO: The glob is: {data_src}_{var}_*.nc")
+                    continue
+
+
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
 
@@ -301,15 +378,26 @@ def global_latlon_vect_map(adfobj):
                 #Set plot location:
                 plot_loc = Path(plot_locations[case_idx])
 
-                #Check if plot output directory exists, and if not, then create it:
+                """#Check if plot output directory exists, and if not, then create it:
                 if not plot_loc.is_dir():
                     print("\t    {} not found, making new directory".format(plot_loc))
                     plot_loc.mkdir(parents=True)
-                #End if
+                #End if"""
+
+                #Load re-gridded model files:
+                if type(model_rgrid_loc) == list:
+                    #mclim_fils = sorted(Path(mclimo_rg_loc[case_idx]).glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                    umclim_fils = sorted(Path(mclimo_rg_loc[case_idx]).glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                    vmclim_fils = sorted(Path(mclimo_rg_loc[case_idx]).glob(f"{data_src}_{case_name}_{var_pair}_*.nc"))
+                else:
+                    #mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                    umclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                    vmclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var_pair}_*.nc"))
+                #mclim_ds = _load_dataset(mclim_fils)
 
                 # load re-gridded model files:
-                umclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
-                vmclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var_pair}_*.nc"))
+                #umclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                #vmclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var_pair}_*.nc"))
 
                 if len(umclim_fils) > 1:
                     umclim_ds = xr.open_mfdataset(umclim_fils, combine='by_coords')
@@ -399,29 +487,86 @@ def global_latlon_vect_map(adfobj):
 
                             #Loop over season dictionary:
                             for s in seasons:
-                                umseasons[s] = umdata.sel(time=seasons[s],lev=lv).mean(dim='time')
-                                vmseasons[s] = vmdata.sel(time=seasons[s],lev=lv).mean(dim='time')
-                                uoseasons[s] = uodata.sel(time=seasons[s],lev=lv).mean(dim='time')
-                                voseasons[s] = vodata.sel(time=seasons[s],lev=lv).mean(dim='time')
+                                # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+                                plot_name = plot_loc / f"{var_name}_{lv}hpa_{s}_LatLon_Vector_Mean.{plot_type}"
+                                if plot_name not in zonal_skip:
+                                    umseasons[s] = umdata.sel(time=seasons[s],lev=lv).mean(dim='time')
+                                    vmseasons[s] = vmdata.sel(time=seasons[s],lev=lv).mean(dim='time')
+                                    uoseasons[s] = uodata.sel(time=seasons[s],lev=lv).mean(dim='time')
+                                    voseasons[s] = vodata.sel(time=seasons[s],lev=lv).mean(dim='time')
+                                    # difference: each entry should be (lat, lon)
+                                    udseasons[s] = umseasons[s] - uoseasons[s]
+                                    vdseasons[s] = vmseasons[s] - voseasons[s]
+
+                                    # time to make plot; here we'd probably loop over whatever plots we want for this variable
+                                    
+
+
+                                    """# Check redo_plot. If set to True: remove old plot, if it already exists:
+                                    if (not redo_plot) and plot_name.is_file():
+                                        #Add already-existing plot to website (if enabled):
+                                        adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
+                                                                season=s, plot_type="LatLon_Vector")
+
+                                        #Continue to next iteration:
+                                        continue
+                                    elif (redo_plot) and plot_name.is_file():
+                                        plot_name.unlink()"""
+
+                                    # pass in casenames
+                                    vres["case_name"] = case_name
+                                    vres["baseline"] = data_src
+                                    vres["var_name"] = var_name
+
+                                    #Create new plot:
+                                    # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
+                                    # This relies on `plot_map_and_save` knowing how to deal with the options
+                                    # currently knows how to handle:
+                                    #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
+                                    #   *Any other entries will be ignored.
+                                    # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
+                                    pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
+                                                            [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                            [syear_baseline,eyear_baseline],lv,
+                                                            umseasons[s], vmseasons[s],
+                                                            uoseasons[s], voseasons[s],
+                                                            udseasons[s], vdseasons[s], obs=obs,**vres)
+
+                                    #Add plot to website (if enabled):
+                                    adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
+                                                            season=s, plot_type="LatLon_Vector")
+
+                            #End for (seasons)
+                        #End for (pressure levels)
+                    else:
+
+                        #Loop over season dictionary:
+                        for s in seasons:
+                            # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+                            plot_name = plot_loc / f"{var_name}_{s}_LatLon_Vector_Mean.{plot_type}"
+                            if plot_name not in logp_zonal_skip:
+                                umseasons[s] = umdata.sel(time=seasons[s]).mean(dim='time')
+                                vmseasons[s] = vmdata.sel(time=seasons[s]).mean(dim='time')
+                                uoseasons[s] = uodata.sel(time=seasons[s]).mean(dim='time')
+                                voseasons[s] = vodata.sel(time=seasons[s]).mean(dim='time')
                                 # difference: each entry should be (lat, lon)
                                 udseasons[s] = umseasons[s] - uoseasons[s]
                                 vdseasons[s] = vmseasons[s] - voseasons[s]
 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
-                                # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
-                                plot_name = plot_loc / f"{var_name}_{lv}hpa_{s}_LatLon_Vector_Mean.{plot_type}"
+                                
 
-
-                                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                                """# Check redo_plot. If set to True: remove old plot, if it already exists:
+                                redo_plot = adfobj.get_basic_info('redo_plot')
                                 if (not redo_plot) and plot_name.is_file():
                                     #Add already-existing plot to website (if enabled):
-                                    adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
+                                    adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,
                                                             season=s, plot_type="LatLon_Vector")
 
                                     #Continue to next iteration:
                                     continue
                                 elif (redo_plot) and plot_name.is_file():
-                                    plot_name.unlink()
+                                    plot_name.unlink()"""
 
                                 # pass in casenames
                                 vres["case_name"] = case_name
@@ -437,67 +582,14 @@ def global_latlon_vect_map(adfobj):
                                 # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
                                 pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                        [syear_baseline,eyear_baseline],lv,
+                                                        [syear_baseline,eyear_baseline], None,
                                                         umseasons[s], vmseasons[s],
                                                         uoseasons[s], voseasons[s],
                                                         udseasons[s], vdseasons[s], obs=obs,**vres)
 
                                 #Add plot to website (if enabled):
-                                adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
-                                                        season=s, plot_type="LatLon_Vector")
-
-                            #End for (seasons)
-                        #End for (pressure levels)
-                    else:
-
-                        #Loop over season dictionary:
-                        for s in seasons:
-                            umseasons[s] = umdata.sel(time=seasons[s]).mean(dim='time')
-                            vmseasons[s] = vmdata.sel(time=seasons[s]).mean(dim='time')
-                            uoseasons[s] = uodata.sel(time=seasons[s]).mean(dim='time')
-                            voseasons[s] = vodata.sel(time=seasons[s]).mean(dim='time')
-                            # difference: each entry should be (lat, lon)
-                            udseasons[s] = umseasons[s] - uoseasons[s]
-                            vdseasons[s] = vmseasons[s] - voseasons[s]
-
-                            # time to make plot; here we'd probably loop over whatever plots we want for this variable
-                            # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
-                            plot_name = plot_loc / f"{var_name}_{s}_LatLon_Vector_Mean.{plot_type}"
-
-                            # Check redo_plot. If set to True: remove old plot, if it already exists:
-                            redo_plot = adfobj.get_basic_info('redo_plot')
-                            if (not redo_plot) and plot_name.is_file():
-                                #Add already-existing plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,
                                                         season=s, plot_type="LatLon_Vector")
-
-                                #Continue to next iteration:
-                                continue
-                            elif (redo_plot) and plot_name.is_file():
-                                plot_name.unlink()
-
-                            # pass in casenames
-                            vres["case_name"] = case_name
-                            vres["baseline"] = data_src
-                            vres["var_name"] = var_name
-
-                            #Create new plot:
-                            # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
-                            # This relies on `plot_map_and_save` knowing how to deal with the options
-                            # currently knows how to handle:
-                            #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
-                            #   *Any other entries will be ignored.
-                            # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
-                            pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
-                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                      [syear_baseline,eyear_baseline], None,
-                                                      umseasons[s], vmseasons[s],
-                                                      uoseasons[s], voseasons[s],
-                                                      udseasons[s], vdseasons[s], obs=obs,**vres)
-
-                            #Add plot to website (if enabled):
-                            adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,
-                                                    season=s, plot_type="LatLon_Vector")
 
                         #End for
                     #End if (has_lev)
