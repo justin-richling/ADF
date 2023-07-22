@@ -394,7 +394,7 @@ def zonal_mean(adfobj):
                     plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
                     if plot_name not in zonal_skip:
 
-
+                        print(s)
                         mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
                         oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
 
