@@ -134,7 +134,7 @@ def zonal_mean(adfobj):
         dclimo_loc  = Path(data_loc)
     #-----------------------"""
 
-    #Set data path variables:
+    """#Set data path variables:
     #-----------------------
     #mclimo_rg_loc = Path(model_rgrid_loc)
     if not adfobj.compare_obs:
@@ -157,7 +157,32 @@ def zonal_mean(adfobj):
         if not mclimo_rg_loc.is_dir():
             print(f"    {mclimo_rg_loc} not found, making new directory")
             mclimo_rg_loc.mkdir(parents=True)
+    #End if"""
+
+    #Set output/target data path variables:
+    #------------------------------------
+    if type(model_rgrid_loc) == list:
+        rgclimo_loc = []
+        dclimo_loc = []
+        for i,regrid_path in enumerate(model_rgrid_loc):
+            rgclimo_loc.append(Path(regrid_path))
+            
+            #Check if re-gridded directory exists, and if not, then create it:
+            if not Path(regrid_path).is_dir():
+                print(f"    {Path(regrid_path)} not found, making new directory")
+                Path(regrid_path).mkdir(parents=True)
+            if not adfobj.compare_obs:
+                dclimo_loc.append(Path(data_loc[i]))
+    else:
+        if not adfobj.compare_obs:
+            dclimo_loc  = Path(data_loc)
+        rgclimo_loc = Path(model_rgrid_loc)
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not rgclimo_loc.is_dir():
+            print(f"    {rgclimo_loc} not found, making new directory")
+            rgclimo_loc.mkdir(parents=True)
     #End if
+    mclimo_rg_loc = model_rgrid_loc
 
 
     #Check if plots already exist and redo_plot boolean
