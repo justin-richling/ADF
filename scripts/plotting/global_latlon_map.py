@@ -177,6 +177,47 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
+
+    #Check if plots already exist and redo_plot boolean
+    #If redo_plot is false and file exists, keep track and attempt to skip calcs to
+    #speed up preformance a bit if re-running the ADF
+    zonal_skip = []
+
+    #Loop over model cases:
+    for case_idx, case_name in enumerate(case_names):
+        #Set output plot location:
+        plot_loc = Path(plot_locations[case_idx])
+
+        #Check if plot output directory exists, and if not, then create it:
+        if not plot_loc.is_dir():
+            print(f"    {plot_loc} not found, making new directory")
+            plot_loc.mkdir(parents=True)
+        #End if
+
+        #Loop over the variables for each season
+        for var in var_list:
+            for s in seasons:
+                #Check regular zonal
+                plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name.is_file():
+                    zonal_skip.append(plot_name)
+                    #Add already-existing plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, var, case_name, season=s,
+                                                        plot_type="Zonal")
+
+                    continue
+                elif (redo_plot) and plot_name.is_file():
+                    plot_name.unlink()
+                #End if
+            #End for (seasons)
+        #End for (variables)
+    #End for (cases)
+    #
+    # End redo plots check
+    #
+
+
     #print("OBS VAR LIST: ",var_obs_dict,"\n")
     # probably want to do this one variable at a time:
     for var in var_list:
@@ -344,99 +385,102 @@ def global_latlon_map(adfobj):
 
                         #Loop over season dictionary:
                         for s in seasons:
+                            # time to make plot; here we'd probably loop over whatever plots we want for this variable
+                            # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+                            plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+                            if plot_name not in zonal_skip:
+                                if weight_season:
+                                    #Add date-stamp to time dimension:
+                                    #Note: For now using made-up dates, but in the future
+                                    #it might be good to extract this info from the files
+                                    #themselves.
+                                    timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
+                                    mdata['time']=timefix
+                                    odata['time']=timefix
 
-                            if weight_season:
-                                #Add date-stamp to time dimension:
-                                #Note: For now using made-up dates, but in the future
-                                #it might be good to extract this info from the files
-                                #themselves.
-                                timefix = pd.date_range(start='1/1/1980', end='12/1/1980', freq='MS')
-                                mdata['time']=timefix
-                                odata['time']=timefix
+                                    #Create array to avoid weighting missing values:
+                                    md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
+                                    od_ones = xr.where(odata.isnull(), 0.0, 1.0)
 
-                                #Create array to avoid weighting missing values:
-                                md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
-                                od_ones = xr.where(odata.isnull(), 0.0, 1.0)
+                                    #Calculate monthly weights based on number of days:
+                                    month_length = mdata.time.dt.days_in_month
+                                    weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
 
-                                #Calculate monthly weights based on number of days:
-                                month_length = mdata.time.dt.days_in_month
-                                weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+                                    #Calculate monthly-weighted seasonal averages:
+                                    if s == 'ANN':
 
-                                #Calculate monthly-weighted seasonal averages:
-                                if s == 'ANN':
+                                        #Calculate annual weights (i.e. don't group by season):
+                                        weights_ann = month_length / month_length.sum()
 
-                                    #Calculate annual weights (i.e. don't group by season):
-                                    weights_ann = month_length / month_length.sum()
+                                        mseasons[s] = (mdata * weights_ann).sum(dim='time')
+                                        mseasons[s] = mseasons[s] / (md_ones*weights_ann).sum(dim='time')
 
-                                    mseasons[s] = (mdata * weights_ann).sum(dim='time')
-                                    mseasons[s] = mseasons[s] / (md_ones*weights_ann).sum(dim='time')
+                                        oseasons[s] = (odata * weights_ann).sum(dim='time')
+                                        oseasons[s] = oseasons[s] / (od_ones*weights_ann).sum(dim='time')
+                                        # difference: each entry should be (lat, lon)
+                                        dseasons[s] = mseasons[s] - oseasons[s]
+                                    else:
+                                        #this is inefficient because we do same calc over and over
+                                        mseasons[s] = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
+                                        wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
+                                        mseasons[s] = mseasons[s] / wgt_denom
 
-                                    oseasons[s] = (odata * weights_ann).sum(dim='time')
-                                    oseasons[s] = oseasons[s] / (od_ones*weights_ann).sum(dim='time')
-                                    # difference: each entry should be (lat, lon)
-                                    dseasons[s] = mseasons[s] - oseasons[s]
+                                        oseasons[s] = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
+                                        wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
+                                        oseasons[s] = oseasons[s] / wgt_denom
+
+                                        # difference: each entry should be (lat, lon)
+                                        dseasons[s] = mseasons[s] - oseasons[s]
+                                    #End if
+
                                 else:
-                                    #this is inefficient because we do same calc over and over
-                                    mseasons[s] = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
-                                    wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
-                                    mseasons[s] = mseasons[s] / wgt_denom
-
-                                    oseasons[s] = (odata * weights).groupby("time.season").sum(dim="time").sel(season=s)
-                                    wgt_denom = (od_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
-                                    oseasons[s] = oseasons[s] / wgt_denom
-
+                                    #Just average months as-is:
+                                    mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
+                                    oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
                                     # difference: each entry should be (lat, lon)
                                     dseasons[s] = mseasons[s] - oseasons[s]
                                 #End if
 
-                            else:
-                                #Just average months as-is:
-                                mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
-                                oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
-                                # difference: each entry should be (lat, lon)
-                                dseasons[s] = mseasons[s] - oseasons[s]
-                            #End if
+                                #Grab data for desired multi-plots (from yaml file)
+                                if multi_plots:
+                                    if var in adfobj.get_multi_case_info("global_latlon_map"):
+                                        if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
+                                            #print("MULTI-CASE VAR: ",var,"\n")
+                                            multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
-                            #Grab data for desired multi-plots (from yaml file)
-                            if multi_plots:
-                                if var in adfobj.get_multi_case_info("global_latlon_map"):
-                                    if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
-                                        #print("MULTI-CASE VAR: ",var,"\n")
-                                        multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+                                """# time to make plot; here we'd probably loop over whatever plots we want for this variable
+                                # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+                                plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"""
 
-                            # time to make plot; here we'd probably loop over whatever plots we want for this variable
-                            # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
-                            plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+                                """# Check redo_plot. If set to True: remove old plot, if it already exists:
+                                if (not redo_plot) and plot_name.is_file():
+                                    #Add already-existing plot to website (if enabled):
+                                    adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map",
+                                                            category=web_category,
+                                                            season=s, plot_type="LatLon")
 
-                            # Check redo_plot. If set to True: remove old plot, if it already exists:
-                            if (not redo_plot) and plot_name.is_file():
-                                #Add already-existing plot to website (if enabled):
-                                adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map",
+                                    #Continue to next iteration:
+                                    continue
+                                elif (redo_plot) and plot_name.is_file():
+                                    plot_name.unlink()"""
+
+                                #Create new plot:
+                                # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
+                                # This relies on `plot_map_and_save` knowing how to deal with the options
+                                # currently knows how to handle:
+                                #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
+                                #   *Any other entries will be ignored.
+                                # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
+
+                                pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
+                                                    [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                    [syear_baseline,eyear_baseline],
+                                                    mseasons[s], oseasons[s], dseasons[s], obs=obs,**vres)
+
+                                #Add plot to website (if enabled):
+                                adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", 
                                                         category=web_category,
                                                         season=s, plot_type="LatLon")
-
-                                #Continue to next iteration:
-                                continue
-                            elif (redo_plot) and plot_name.is_file():
-                                plot_name.unlink()
-
-                            #Create new plot:
-                            # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
-                            # This relies on `plot_map_and_save` knowing how to deal with the options
-                            # currently knows how to handle:
-                            #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
-                            #   *Any other entries will be ignored.
-                            # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
-
-                            pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
-                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                 [syear_baseline,eyear_baseline],
-                                                 mseasons[s], oseasons[s], dseasons[s], obs=obs,**vres)
-
-                            #Add plot to website (if enabled):
-                            adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", 
-                                                    category=web_category,
-                                                    season=s, plot_type="LatLon")
 
                     else: #mdata dimensions check
                         print(f"\t - skipping lat/lon map for {var} as it doesn't have only lat/lon dims.")
@@ -484,69 +528,72 @@ def global_latlon_map(adfobj):
 
                             #Loop over seasons:
                             for s in seasons:
-
-                                #If requested, then calculate the monthly-weighted seasonal averages:
-                                if weight_season:
-                                    if s == 'ANN':
-                                        #Calculate annual weights (i.e. don't group by season):
-                                        weights_ann = month_length / month_length.sum()
-
-                                        mseasons[s] = (mdata * weights_ann).sum(dim='time').sel(lev=pres)
-                                        oseasons[s] = (odata * weights_ann).sum(dim='time').sel(lev=pres)
-                                        # difference: each entry should be (lat, lon)
-                                        dseasons[s] = mseasons[s] - oseasons[s]
-                                    else:
-                                        #this is inefficient because we do same calc over and over
-                                        mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s,lev=pres)
-                                        oseasons[s] =(odata * weights).groupby("time.season").sum(dim="time").sel(season=s,lev=pres)
-                                        # difference: each entry should be (lat, lon)
-                                        dseasons[s] = mseasons[s] - oseasons[s]
-                                    #End if
-                                else:
-                                    #Just average months as-is:
-                                    mseasons[s] = mdata.sel(time=seasons[s], lev=pres).mean(dim='time')
-                                    oseasons[s] = odata.sel(time=seasons[s], lev=pres).mean(dim='time')
-                                    # difference: each entry should be (lat, lon)
-                                    dseasons[s] = mseasons[s] - oseasons[s]
-                                #End if
-
-                                if multi_plots:
-                                    if var in adfobj.get_multi_case_info("global_latlon_map"):
-                                        if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
-                                            #print("MULTI-CASE VAR: ",var,"\n")
-                                            multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
-
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                                 plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
+                                if plot_name not in zonal_skip:
+                                    #If requested, then calculate the monthly-weighted seasonal averages:
+                                    if weight_season:
+                                        if s == 'ANN':
+                                            #Calculate annual weights (i.e. don't group by season):
+                                            weights_ann = month_length / month_length.sum()
 
-                                # Check redo_plot. If set to True: remove old plot, if it already exists:
-                                redo_plot = adfobj.get_basic_info('redo_plot')
-                                if (not redo_plot) and plot_name.is_file():
-                                    #Add already-existing plot to website (if enabled):
+                                            mseasons[s] = (mdata * weights_ann).sum(dim='time').sel(lev=pres)
+                                            oseasons[s] = (odata * weights_ann).sum(dim='time').sel(lev=pres)
+                                            # difference: each entry should be (lat, lon)
+                                            dseasons[s] = mseasons[s] - oseasons[s]
+                                        else:
+                                            #this is inefficient because we do same calc over and over
+                                            mseasons[s] =(mdata * weights).groupby("time.season").sum(dim="time").sel(season=s,lev=pres)
+                                            oseasons[s] =(odata * weights).groupby("time.season").sum(dim="time").sel(season=s,lev=pres)
+                                            # difference: each entry should be (lat, lon)
+                                            dseasons[s] = mseasons[s] - oseasons[s]
+                                        #End if
+                                    else:
+                                        #Just average months as-is:
+                                        mseasons[s] = mdata.sel(time=seasons[s], lev=pres).mean(dim='time')
+                                        oseasons[s] = odata.sel(time=seasons[s], lev=pres).mean(dim='time')
+                                        # difference: each entry should be (lat, lon)
+                                        dseasons[s] = mseasons[s] - oseasons[s]
+                                    #End if
+
+                                    if multi_plots:
+                                        if var in adfobj.get_multi_case_info("global_latlon_map"):
+                                            if (adfobj.compare_obs) and (var in var_obs_dict) or (not adfobj.compare_obs):
+                                                #print("MULTI-CASE VAR: ",var,"\n")
+                                                multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+
+                                    """# time to make plot; here we'd probably loop over whatever plots we want for this variable
+                                    # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+                                    plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
+
+                                    # Check redo_plot. If set to True: remove old plot, if it already exists:
+                                    redo_plot = adfobj.get_basic_info('redo_plot')
+                                    if (not redo_plot) and plot_name.is_file():
+                                        #Add already-existing plot to website (if enabled):
+                                        adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
+                                                                category=web_category, season=s, plot_type="LatLon")
+
+                                        #Continue to next iteration:
+                                        continue
+                                    elif (redo_plot) and plot_name.is_file():
+                                        plot_name.unlink()"""
+
+                                    #Create new plot:
+                                    # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
+                                    # This relies on `plot_map_and_save` knowing how to deal with the options
+                                    # currently knows how to handle:
+                                    #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
+                                    #   *Any other entries will be ignored.
+                                    # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
+                                    pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
+                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [syear_baseline,eyear_baseline],
+                                                        mseasons[s], oseasons[s], dseasons[s], obs=obs,**vres)
+
+                                    #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
                                                             category=web_category, season=s, plot_type="LatLon")
-
-                                    #Continue to next iteration:
-                                    continue
-                                elif (redo_plot) and plot_name.is_file():
-                                    plot_name.unlink()
-
-                                #Create new plot:
-                                # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
-                                # This relies on `plot_map_and_save` knowing how to deal with the options
-                                # currently knows how to handle:
-                                #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
-                                #   *Any other entries will be ignored.
-                                # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
-                                pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
-                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                     [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], obs=obs,**vres)
-
-                                #Add plot to website (if enabled):
-                                adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
-                                                        category=web_category, season=s, plot_type="LatLon")
 
                             #End for (seasons)
                         #End for (pressure levels)
