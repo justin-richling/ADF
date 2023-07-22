@@ -18,6 +18,13 @@ from cartopy.util import add_cyclic_point
 # ADF library
 import plotting_functions as pf
 
+def my_formatwarning(msg, *args, **kwargs):
+    # ignore everything except the message
+    return str(msg) + '\n'
+
+import warnings  # use to warn user about missing files.
+warnings.formatwarning = my_formatwarning
+
 def polar_map(adfobj):
     """
     This script/function generates polar maps of model fields with continental overlays.
@@ -106,30 +113,30 @@ def polar_map(adfobj):
         dclimo_loc  = Path(data_loc)
     #-----------------------"""
 
-    #Set data path variables:
-    #-----------------------
-    #mclimo_rg_loc = Path(model_rgrid_loc)
-    if not adfobj.compare_obs:
-        dclimo_loc  = Path(data_loc)
-    #-----------------------
-
     #Set output/target data path variables:
     #------------------------------------
     if type(model_rgrid_loc) == list:
         rgclimo_loc = []
-        for regrid_path in model_rgrid_loc:
+        dclimo_loc = []
+        for i,regrid_path in enumerate(model_rgrid_loc):
             rgclimo_loc.append(Path(regrid_path))
+            
             #Check if re-gridded directory exists, and if not, then create it:
             if not Path(regrid_path).is_dir():
                 print(f"    {Path(regrid_path)} not found, making new directory")
                 Path(regrid_path).mkdir(parents=True)
+            if not adfobj.compare_obs:
+                dclimo_loc.append(Path(data_loc[i]))
     else:
+        if not adfobj.compare_obs:
+            dclimo_loc  = Path(data_loc)
         rgclimo_loc = Path(model_rgrid_loc)
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
             print(f"    {rgclimo_loc} not found, making new directory")
             rgclimo_loc.mkdir(parents=True)
     #End if
+    mclimo_rg_loc = model_rgrid_loc
 
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
@@ -142,6 +149,61 @@ def polar_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
+
+    #Check if plots already exist and redo_plot boolean
+    #If redo_plot is false and file exists, keep track and attempt to skip calcs to
+    #speed up preformance a bit if re-running the ADF
+    zonal_skip = []
+    logp_zonal_skip = []
+
+    #Loop over model cases:
+    for case_idx, case_name in enumerate(case_names):
+        #Set output plot location:
+        plot_loc = Path(plot_locations[case_idx])
+
+        #Check if plot output directory exists, and if not, then create it:
+        if not plot_loc.is_dir():
+            print(f"    {plot_loc} not found, making new directory")
+            plot_loc.mkdir(parents=True)
+        #End if
+
+        #Loop over the variables for each season
+        for var in var_list:
+            for s in seasons:
+                #Check zonal log-p:
+                plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name_log.is_file():
+                    logp_zonal_skip.append(plot_name_log)
+                    #Continue to next iteration:
+                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
+                                            plot_type="Zonal", category="Log-P")
+                    pass
+
+                elif (redo_plot) and plot_name_log.is_file():
+                    plot_name_log.unlink()
+                #End if
+                
+                #Check regular zonal
+                plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name.is_file():
+                    zonal_skip.append(plot_name)
+                    #Add already-existing plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, var, case_name, season=s,
+                                                        plot_type="Zonal")
+
+                    continue
+                elif (redo_plot) and plot_name.is_file():
+                    plot_name.unlink()
+                #End if
+            #End for (seasons)
+        #End for (variables)
+    #End for (cases)
+    #
+    # End redo plots check
+    #
 
     # probably want to do this one variable at a time:
     for var in var_list:
@@ -186,7 +248,7 @@ def polar_map(adfobj):
         #loop over different data sets to plot model against:
         for data_src in data_list:
 
-            # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+            """# load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
             if adfobj.compare_obs:
                 #For now, only grab one file (but convert to list for use below)
                 oclim_fils = [dclimo_loc]
@@ -204,7 +266,38 @@ def polar_map(adfobj):
                 print("WARNING: Did not find any oclim_fils. Will try to skip.")
                 print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"INFO: The glob is: {data_src}_{var}_*.nc")
-                continue
+                continue"""
+
+
+
+
+            #Load re-gridded model files:
+            if type(model_rgrid_loc) == list:
+                # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                if adfobj.compare_obs:
+                    #For now, only grab one file (but convert to list for use below)
+                    oclim_fils = [dclimo_loc]
+                else:
+                    oclim_fils = sorted(dclimo_loc[case_idx].glob(f"{data_src}_{var}_baseline.nc"))
+
+                oclim_ds = _load_dataset(oclim_fils)
+
+                if oclim_ds is None:
+                    print("WARNING: Did not find any oclim_fils. Will try to skip.")
+                    print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
+                    print(f"INFO: The glob is: {data_src}_{var}_*.nc")
+                    continue
+            else:
+                # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                if adfobj.compare_obs:
+                    #For now, only grab one file (but convert to list for use below)
+                    oclim_fils = [dclimo_loc]
+                else:
+                    oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
+                oclim_ds = _load_dataset(oclim_fils)
+
+
+
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
@@ -215,7 +308,7 @@ def polar_map(adfobj):
                 #Set output plot location:
                 plot_loc = Path(plot_locations[case_idx])
 
-                #Check if plot output directory exists, and if not, then create it:
+                """#Check if plot output directory exists, and if not, then create it:
                 if not plot_loc.is_dir():
                     print(f"    {plot_loc} not found, making new directory")
                     plot_loc.mkdir(parents=True)
@@ -226,7 +319,14 @@ def polar_map(adfobj):
                 if len(mclim_fils) > 1:
                     mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
                 else:
-                    mclim_ds = xr.open_dataset(mclim_fils[0])
+                    mclim_ds = xr.open_dataset(mclim_fils[0])"""
+
+                #Load re-gridded model files:
+                if type(model_rgrid_loc) == list:
+                    mclim_fils = sorted(Path(mclimo_rg_loc[case_idx]).glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                else:
+                    mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                mclim_ds = _load_dataset(mclim_fils)
 
                 #Extract variable of interest
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
@@ -274,28 +374,32 @@ def polar_map(adfobj):
 
                         #Loop over season dictionary:
                         for s in seasons:
-                            mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
-                            oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
-                            # difference: each entry should be (lat, lon)
-                            dseasons[s] = mseasons[s] - oseasons[s]
+                            plot_name_h = plot_loc / f"{var}_{s}_NHPolar_Mean.{plot_type}"
+                            plot_name_s = plot_loc / f"{var}_{s}_SHPolar_Mean.{plot_type}"
+                            if (plot_name_h or plot_name_s) not in zonal_skip:
 
-                            # make plots: northern and southern hemisphere separately:
-                            for hemi_type in ["NHPolar", "SHPolar"]:
+                                mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
+                                oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
+                                # difference: each entry should be (lat, lon)
+                                dseasons[s] = mseasons[s] - oseasons[s]
 
-                                #Create plot name and path:
-                                plot_name = plot_loc / f"{var}_{s}_{hemi_type}_Mean.{plot_type}"
+                                # make plots: northern and southern hemisphere separately:
+                                for hemi_type in ["NHPolar", "SHPolar"]:
 
-                                # If redo_plot set to True: remove old plot, if it already exists:
-                                if (not redo_plot) and plot_name.is_file():
-                                    #Add already-existing plot to website (if enabled):
-                                    adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                                            season=s, plot_type=hemi_type)
+                                    #Create plot name and path:
+                                    plot_name = plot_loc / f"{var}_{s}_{hemi_type}_Mean.{plot_type}"
 
-                                    #Continue to next iteration:
-                                    continue
-                                else:
-                                    if plot_name.is_file():
-                                        plot_name.unlink()
+                                    """# If redo_plot set to True: remove old plot, if it already exists:
+                                    if (not redo_plot) and plot_name.is_file():
+                                        #Add already-existing plot to website (if enabled):
+                                        adfobj.add_website_data(plot_name, var, case_name, category=web_category,
+                                                                season=s, plot_type=hemi_type)
+
+                                        #Continue to next iteration:
+                                        continue
+                                    else:
+                                        if plot_name.is_file():
+                                            plot_name.unlink()"""
 
                                     #Create new plot:
                                     # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
@@ -354,37 +458,23 @@ def polar_map(adfobj):
 
                             #Loop over season dictionary:
                             for s in seasons:
-                                mseasons[s] = mdata.sel(time=seasons[s], lev=pres).mean(dim='time')
-                                oseasons[s] = odata.sel(time=seasons[s], lev=pres).mean(dim='time')
-                                # difference: each entry should be (lat, lon)
-                                dseasons[s] = mseasons[s] - oseasons[s]
+                                #plot_name_log = plot_loc / f"{var}_{pres}hpa_{s}_Zonal_logp_Mean.{plot_type}"
+                                plot_name_log_h = plot_loc / f"{var}_{pres}hpa_{s}_NHPolar_Mean.{plot_type}"
+                                plot_name_log_s = plot_loc / f"{var}_{pres}hpa_{s}_SHPolar_Mean.{plot_type}"
+                                
+                                #Rough check. If one hemi is missing, just make the plots for both rgardless. 
+                                #TODO?: Fix to make more flxible
+                                if (plot_name_log_h or plot_name_log_s) not in logp_zonal_skip:
+                                    mseasons[s] = mdata.sel(time=seasons[s], lev=pres).mean(dim='time')
+                                    oseasons[s] = odata.sel(time=seasons[s], lev=pres).mean(dim='time')
+                                    # difference: each entry should be (lat, lon)
+                                    dseasons[s] = mseasons[s] - oseasons[s]
 
-                                # make plots: northern and southern hemisphere separately:
-                                for hemi_type in ["NHPolar", "SHPolar"]:
+                                    # make plots: northern and southern hemisphere separately:
+                                    for hemi_type in ["NHPolar", "SHPolar"]:
 
-                                    #Create plot name and path:
-                                    plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
-
-                                    # If redo_plot set to True: remove old plot, if it already exists:
-                                    if (not redo_plot) and plot_name.is_file():
-                                        #Add already-existing plot to website (if enabled):
-                                        adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
-                                                                case_name, category=web_category,
-                                                                season=s, plot_type=hemi_type)
-
-                                        #Continue to next iteration:
-                                        continue
-                                    else:
-                                        if plot_name.is_file():
-                                            plot_name.unlink()
-
-                                        #Create new plot:
-                                        # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
-                                        # This relies on `plot_map_and_save` knowing how to deal with the options
-                                        # currently knows how to handle:
-                                        #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
-                                        #   *Any other entries will be ignored.
-                                        # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
+                                        #Create plot name and path:
+                                        plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
 
                                         #Determine hemisphere to plot based on plot file name:
                                         if hemi_type == "NHPolar":
@@ -422,5 +512,22 @@ def polar_map(adfobj):
 ##############
 #END OF `polar_map` function
 
+#########
+# Helpers
+#########
+
+def _load_dataset(fils):
+    if len(fils) == 0:
+        warnings.warn(f"Input file list is empty.")
+        return None
+    elif len(fils) > 1:
+        return xr.open_mfdataset(fils, combine='by_coords')
+    else:
+        sfil = str(fils[0])
+        return xr.open_dataset(sfil)
+    #End if
+#End def
+
 ##############
-# END OF FILE
+#END OF SCRIPT
+
