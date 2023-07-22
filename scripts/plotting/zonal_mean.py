@@ -159,6 +159,13 @@ def zonal_mean(adfobj):
             mclimo_rg_loc.mkdir(parents=True)
     #End if"""
 
+    #Set seasonal ranges:
+    seasons = {"ANN": np.arange(1,13,1),
+               "DJF": [12, 1, 2],
+               "JJA": [6, 7, 8],
+               "MAM": [3, 4, 5],
+               "SON": [9, 10, 11]}
+
     #Set output/target data path variables:
     #------------------------------------
     if type(model_rgrid_loc) == list:
@@ -239,13 +246,6 @@ def zonal_mean(adfobj):
     #
     # End redo plots check
     #
-
-    #Set seasonal ranges:
-    seasons = {"ANN": np.arange(1,13,1),
-               "DJF": [12, 1, 2],
-               "JJA": [6, 7, 8],
-               "MAM": [3, 4, 5],
-               "SON": [9, 10, 11]}
 
     #Loop over variables:
     for var in var_list:
