@@ -198,7 +198,8 @@ def global_latlon_map(adfobj):
         for var in var_list:
             for s in seasons:
                 #Check regular zonal
-                plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                #plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 if (not redo_plot) and plot_name.is_file():
                     zonal_skip.append(plot_name)
@@ -206,12 +207,13 @@ def global_latlon_map(adfobj):
                     adfobj.add_website_data(plot_name, var, case_name, season=s,
                                                         plot_type="Zonal")
 
-                    continue
+                    pass
                 elif (redo_plot) and plot_name.is_file():
                     plot_name.unlink()
 
                 #Check zonal log-p:
-                plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                #plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                plot_name_log = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
 
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 if (not redo_plot) and plot_name_log.is_file():
@@ -219,7 +221,7 @@ def global_latlon_map(adfobj):
                     #Continue to next iteration:
                     adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
                                             plot_type="Zonal", category="Log-P")
-                    pass
+                    continue
 
                 elif (redo_plot) and plot_name_log.is_file():
                     plot_name_log.unlink()
@@ -547,7 +549,7 @@ def global_latlon_map(adfobj):
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                                 plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
-                                if plot_name not in zonal_skip:
+                                if plot_name not in logp_zonal_skip:
                                     #If requested, then calculate the monthly-weighted seasonal averages:
                                     if weight_season:
                                         if s == 'ANN':
