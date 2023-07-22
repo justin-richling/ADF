@@ -437,7 +437,7 @@ def zonal_mean(adfobj):
                     if has_lev:
                         print("Making log-p plot")
                         plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
-                        if plot_name not in logp_zonal_skip:
+                        if plot_name_log not in logp_zonal_skip:
 
                             """# Check redo_plot. If set to True: remove old plot, if it already exists:
                             if (not redo_plot) and plot_name_log.is_file():
