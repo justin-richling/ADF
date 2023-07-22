@@ -296,14 +296,30 @@ def zonal_mean(adfobj):
             #End if"""
 
             #Load re-gridded model files:
-            if type(model_rgrid_loc) != list:
+            #Load re-gridded model files:
+            if type(model_rgrid_loc) == list:
+                # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
+                if adfobj.compare_obs:
+                    #For now, only grab one file (but convert to list for use below)
+                    oclim_fils = [dclimo_loc]
+                else:
+                    oclim_fils = sorted(dclimo_loc[case_idx].glob(f"{data_src}_{var}_baseline.nc"))
+
+                oclim_ds = _load_dataset(oclim_fils)
+
+                if oclim_ds is None:
+                    print("WARNING: Did not find any oclim_fils. Will try to skip.")
+                    print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
+                    print(f"INFO: The glob is: {data_src}_{var}_*.nc")
+                    continue
+            else:
                 # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
                 if adfobj.compare_obs:
                     #For now, only grab one file (but convert to list for use below)
                     oclim_fils = [dclimo_loc]
                 else:
                     oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
-            oclim_ds = _load_dataset(oclim_fils)
+                oclim_ds = _load_dataset(oclim_fils)
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
