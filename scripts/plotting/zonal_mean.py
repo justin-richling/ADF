@@ -134,7 +134,7 @@ def zonal_mean(adfobj):
         dclimo_loc  = Path(data_loc)
     #-----------------------"""
 
-    """#Set data path variables:
+    #Set data path variables:
     #-----------------------
     #mclimo_rg_loc = Path(model_rgrid_loc)
     if not adfobj.compare_obs:
@@ -144,46 +144,76 @@ def zonal_mean(adfobj):
     #Set output/target data path variables:
     #------------------------------------
     if type(model_rgrid_loc) == list:
-        rgclimo_loc = []
+        mclimo_rg_loc = []
         for regrid_path in model_rgrid_loc:
-            rgclimo_loc.append(Path(regrid_path))
+            mclimo_rg_loc.append(Path(regrid_path))
             #Check if re-gridded directory exists, and if not, then create it:
             if not Path(regrid_path).is_dir():
                 print(f"    {Path(regrid_path)} not found, making new directory")
                 Path(regrid_path).mkdir(parents=True)
     else:
-        rgclimo_loc = Path(model_rgrid_loc)
+        mclimo_rg_loc = Path(model_rgrid_loc)
         #Check if re-gridded directory exists, and if not, then create it:
-        if not rgclimo_loc.is_dir():
-            print(f"    {rgclimo_loc} not found, making new directory")
-            rgclimo_loc.mkdir(parents=True)
-    #End if"""
-
-
-    #Set output/target data path variables:
-    #------------------------------------
-    if type(model_rgrid_loc) == list:
-        rgclimo_loc = []
-        dclimo_loc = []
-        for i,regrid_path in enumerate(model_rgrid_loc):
-            rgclimo_loc.append(Path(regrid_path))
-            
-            #Check if re-gridded directory exists, and if not, then create it:
-            if not Path(regrid_path).is_dir():
-                print(f"    {Path(regrid_path)} not found, making new directory")
-                Path(regrid_path).mkdir(parents=True)
-            if not adfobj.compare_obs:
-                dclimo_loc.append(Path(data_loc[i]))
-    else:
-        if not adfobj.compare_obs:
-            dclimo_loc  = Path(data_loc)
-        rgclimo_loc = Path(model_rgrid_loc)
-        #Check if re-gridded directory exists, and if not, then create it:
-        if not rgclimo_loc.is_dir():
-            print(f"    {rgclimo_loc} not found, making new directory")
-            rgclimo_loc.mkdir(parents=True)
+        if not mclimo_rg_loc.is_dir():
+            print(f"    {mclimo_rg_loc} not found, making new directory")
+            mclimo_rg_loc.mkdir(parents=True)
     #End if
-    mclimo_rg_loc = model_rgrid_loc
+
+
+    #Check if plots already exist and redo_plot boolean
+    #If redo_plot is false and file exists, keep track and attempt to skip calcs to
+    #speed up preformance a bit if re-running the ADF
+    zonal_skip = []
+    logp_zonal_skip = []
+
+    #Loop over model cases:
+    for case_idx, case_name in enumerate(case_names):
+        #Set output plot location:
+        plot_loc = Path(plot_locations[case_idx])
+
+        #Check if plot output directory exists, and if not, then create it:
+        if not plot_loc.is_dir():
+            print(f"    {plot_loc} not found, making new directory")
+            plot_loc.mkdir(parents=True)
+        #End if
+
+        #Loop over the variables for each season
+        for var in var_list:
+            for s in seasons:
+                #Check zonal log-p:
+                plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name_log.is_file():
+                    logp_zonal_skip.append(plot_name_log)
+                    #Continue to next iteration:
+                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
+                                            plot_type="Zonal", category="Log-P")
+                    pass
+
+                elif (redo_plot) and plot_name_log.is_file():
+                    plot_name_log.unlink()
+                #End if
+                
+                #Check regular zonal
+                plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name.is_file():
+                    zonal_skip.append(plot_name)
+                    #Add already-existing plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, var, case_name, season=s,
+                                                        plot_type="Zonal")
+
+                    continue
+                elif (redo_plot) and plot_name.is_file():
+                    plot_name.unlink()
+                #End if
+            #End for (seasons)
+        #End for (variables)
+    #End for (cases)
+    #
+    # End redo plots check
+    #
 
     #Set seasonal ranges:
     seasons = {"ANN": np.arange(1,13,1),
