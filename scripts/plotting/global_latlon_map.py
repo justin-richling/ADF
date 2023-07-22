@@ -347,10 +347,10 @@ def global_latlon_map(adfobj):
                 #Set output plot location:
                 plot_loc = Path(plot_locations[case_idx])
 
-                #Check if plot output directory exists, and if not, then create it:
+                """#Check if plot output directory exists, and if not, then create it:
                 if not plot_loc.is_dir():
                     print("    {} not found, making new directory".format(plot_loc))
-                    plot_loc.mkdir(parents=True)
+                    plot_loc.mkdir(parents=True)"""
 
                 #Load re-gridded model files:
                 if type(model_rgrid_loc) == list:
