@@ -185,8 +185,9 @@ def polar_map(adfobj):
                     if (not redo_plot) and plot_name_log_h.is_file():
                         logp_zonal_skip.append(plot_name_log_h)
                         #Continue to next iteration:
-                        adfobj.add_website_data(plot_name_log_h, f"{var}_logp", case_name, season=s,
-                                                plot_type="Zonal", category="Log-P")
+                        adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
+                                                                case_name, category=web_category,
+                                                                season=s, plot_type=hemi_type)
                         pass
 
                     elif (redo_plot) and plot_name_log_h.is_file():
@@ -196,8 +197,8 @@ def polar_map(adfobj):
                     if (not redo_plot) and plot_name_log_s.is_file():
                         logp_zonal_skip.append(plot_name_log_s)
                         #Continue to next iteration:
-                        adfobj.add_website_data(plot_name_log_s, f"{var}_logp", case_name, season=s,
-                                                plot_type="Zonal", category="Log-P")
+                        adfobj.add_website_data(plot_name, var, case_name, category=web_category,
+                                                                season=s, plot_type=hemi_type)
                         pass
 
                     elif (redo_plot) and plot_name_log_s.is_file():
