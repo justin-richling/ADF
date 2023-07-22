@@ -193,8 +193,8 @@ def global_latlon_vect_map(adfobj):
                 if (not redo_plot) and plot_name.is_file():
                     zonal_skip.append(plot_name)
                     #Add already-existing plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, var, case_name, season=s,
-                                                        plot_type="Zonal")
+                    adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,
+                                                        season=s, plot_type="LatLon_Vector")
 
                     pass
                 elif (redo_plot) and plot_name.is_file():
@@ -210,8 +210,8 @@ def global_latlon_vect_map(adfobj):
                     if (not redo_plot) and plot_name_log.is_file():
                         logp_zonal_skip.append(plot_name_log)
                         #Continue to next iteration:
-                        adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
-                                                plot_type="Zonal", category="Log-P")
+                        adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
+                                                            season=s, plot_type="LatLon_Vector")
                         continue
 
                     elif (redo_plot) and plot_name_log.is_file():
