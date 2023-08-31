@@ -119,14 +119,17 @@ class AdfInfo(AdfConfig):
 
 
         #Grab test case nickname(s)
-        test_nicknames = self.get_cam_info('case_nickname')
-        print(test_nicknames)
+        test_nickname_list = self.get_cam_info('case_nickname')
+        print(test_nickname_list)
 
-        if test_nicknames is None:
-            test_nicknames = [] #Re-set to be an empty list
-            for case_name in case_names:
-                test_nicknames.append(case_name)
-            #End for
+        test_nicknames = [] #Re-set to be an empty list
+        for i,nickname in enumerate(test_nickname_list):
+            if nickname is None:
+                #test_nicknames = [] #Re-set to be an empty list
+                #for case_name in case_names:
+                test_nicknames.append(case_names[i])
+                #End for
+            #End if
         #End if
 
         print(test_nicknames)
