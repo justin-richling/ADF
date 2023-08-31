@@ -117,7 +117,6 @@ class AdfInfo(AdfConfig):
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
-        print(case_names)
 
         #Grab test case nickname(s)
         test_nicknames = self.get_cam_info('case_nickname')
@@ -127,6 +126,9 @@ class AdfInfo(AdfConfig):
                 test_nicknames.append(case_name)
             #End for
         #End if
+
+        print(test_nicknames)
+
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
