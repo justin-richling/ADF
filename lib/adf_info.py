@@ -120,6 +120,8 @@ class AdfInfo(AdfConfig):
 
         #Grab test case nickname(s)
         test_nicknames = self.get_cam_info('case_nickname')
+        print(test_nicknames)
+
         if test_nicknames is None:
             test_nicknames = [] #Re-set to be an empty list
             for case_name in case_names:
