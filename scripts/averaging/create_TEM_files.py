@@ -107,7 +107,7 @@ def create_TEM_files(adf):
         #If files exist, then check if over-writing is allowed:
         if (tem_fil.is_file()) and (not overwrite_tem):
             #If not (overwrite_tem is False), then simply skip this file:
-            print(f"\t    INFO: Found '{tem_fil}' file and clobber is False, so moving to next case.")
+            print(f"\t    INFO: Found TEM file and clobber is False, so moving to next case.")
             pass
         else:
             if tem_fil.is_file():
@@ -205,7 +205,7 @@ def create_TEM_files(adf):
         if (tem_fil.is_file()) and (not overwrite_tem):
             #If not (overwrite_tem is False), then simply skip this file:
             #print(f"'{tem_fil}' already exists and wont be over-written, moving on")
-            print(f"\t    INFO: Found '{tem_fil}' file and clobber is False, so moving to next case.")
+            print(f"\t    INFO: Found TEM file and clobber is False, so moving to next case.")
             pass
         else:
             if tem_fil.is_file():
