@@ -110,6 +110,7 @@ def create_TEM_files(adf):
             print(f"'{tem_fil}' already exists and wont be over-written, moving on")
             pass
         else:
+            print("I take it this we never made it here, eh?")
             #Group all TEM observation files together
             tem_obs_fils = []
             for var in var_list:
