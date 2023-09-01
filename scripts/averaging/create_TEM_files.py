@@ -107,13 +107,12 @@ def create_TEM_files(adf):
         #If files exist, then check if over-writing is allowed:
         if (tem_fil.is_file()) and (not overwrite_tem):
             #If not (overwrite_tem is False), then simply skip this file:
-            print(f"'{tem_fil}' already exists and wont be over-written, moving on")
+            print(f"\t    INFO: Found '{tem_fil}' file and clobber is False, so moving to next case.")
             pass
         else:
             if tem_fil.is_file():
                 print(f"'{tem_fil}' already exists but will be over-written")
-            else:
-                print(f"\t    INFO: Found TEM file and clobber is False, so moving to next case.")
+
             #Group all TEM observation files together
             tem_obs_fils = []
             for var in var_list:
@@ -205,13 +204,13 @@ def create_TEM_files(adf):
         #If files exist, then check if over-writing is allowed:
         if (tem_fil.is_file()) and (not overwrite_tem):
             #If not (overwrite_tem is False), then simply skip this file:
-            print(f"'{tem_fil}' already exists and wont be over-written, moving on")
+            #print(f"'{tem_fil}' already exists and wont be over-written, moving on")
+            print(f"\t    INFO: Found '{tem_fil}' file and clobber is False, so moving to next case.")
             pass
         else:
             if tem_fil.is_file():
                 print(f"'{tem_fil}' already exists but will be over-written")
-            else:
-                print(f"\t    INFO: Found TEM file and clobber is False, so moving to next case.")
+
             #Glob each set of years
             #NOTE: This will make a nested list
             hist_files = []
