@@ -105,7 +105,7 @@ def create_TEM_files(adf):
         overwrite_tem = tem_opts.get("overwrite_tem_base")
 
         #If files exist, then check if over-writing is allowed:
-        if (tem_fil) and (not overwrite_tem):
+        if (tem_fil.is_file()) and (not overwrite_tem):
             #If not (overwrite_tem is False), then simply skip this file:
             print(f"'{tem_fil}' already exists and wont be over-written, moving on")
             pass
@@ -199,7 +199,7 @@ def create_TEM_files(adf):
         overwrite_tem = overwrite_tem_cases[case_idx]
 
         #If files exist, then check if over-writing is allowed:
-        if (tem_fil) and (not overwrite_tem):
+        if (tem_fil.is_file()) and (not overwrite_tem):
             #If not (overwrite_tem is False), then simply skip this file:
             print(f"'{tem_fil}' already exists and wont be over-written, moving on")
             pass
