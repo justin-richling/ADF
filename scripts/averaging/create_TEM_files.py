@@ -89,7 +89,7 @@ def create_TEM_files(adf):
 
     #Check if comparing against observations
     if adf.get_basic_info("compare_obs"):
-        print(f"\t Processing TEM diagnostics for observations :")
+        print(f"\t Processing TEM for observations :")
 
         output_loc_idx = output_loc / base_name
         #Check if re-gridded directory exists, and if not, then create it:
@@ -161,7 +161,7 @@ def create_TEM_files(adf):
     #Loop over cases:
     for case_idx, case_name in enumerate(case_names):
 
-        print(f"\t Processing TEM diagnostics for case '{case_name}' :")
+        print(f"\t Processing TEM for case '{case_name}' :")
 
         #Extract start and end year values:
         start_year = start_years[case_idx]
