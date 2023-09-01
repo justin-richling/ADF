@@ -106,7 +106,6 @@ def create_TEM_files(adf):
 
         #If files exist, then check if over-writing is allowed:
         if (tem_fil.is_file()) and (not overwrite_tem):
-            #If not (overwrite_tem is False), then simply skip this file:
             print(f"\t    INFO: Found TEM file and clobber is False, so moving to next case.")
             pass
         else:
@@ -156,7 +155,7 @@ def create_TEM_files(adf):
             # write output to a netcdf file
             ds_base.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
-        #End if over-write file
+        #End if (file creation or over-write file)
     #End if baseline case
 
     #Loop over cases:
@@ -203,13 +202,10 @@ def create_TEM_files(adf):
 
         #If files exist, then check if over-writing is allowed:
         if (tem_fil.is_file()) and (not overwrite_tem):
-            #If not (overwrite_tem is False), then simply skip this file:
-            #print(f"'{tem_fil}' already exists and wont be over-written, moving on")
             print(f"\t    INFO: Found TEM file and clobber is False, so moving to next case.")
             pass
         else:
             if tem_fil.is_file():
-                #print(f"\t    '{tem_fil}' already exists but will be over-written")
                 print(f"\t    INFO: Found TEM file but clobber is True, so over-writing file.")
 
             #Glob each set of years
@@ -244,7 +240,7 @@ def create_TEM_files(adf):
             # write output to a netcdf file
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
-        #End if over-write file
+        #End if (file creation or over-write file)
     #Notify user that script has ended:
     print("  ...TEM diagnostics have been calculated successfully.")
 
