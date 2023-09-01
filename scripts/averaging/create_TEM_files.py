@@ -110,7 +110,8 @@ def create_TEM_files(adf):
             print(f"'{tem_fil}' already exists and wont be over-written, moving on")
             pass
         else:
-            print("I take it this we never made it here, eh?")
+            if tem_fil.is_file():
+                print(f"'{tem_fil}' already exists but will be over-written")
             #Group all TEM observation files together
             tem_obs_fils = []
             for var in var_list:
@@ -205,6 +206,8 @@ def create_TEM_files(adf):
             print(f"'{tem_fil}' already exists and wont be over-written, moving on")
             pass
         else:
+            if tem_fil.is_file():
+                print(f"'{tem_fil}' already exists but will be over-written")
             #Glob each set of years
             #NOTE: This will make a nested list
             hist_files = []
