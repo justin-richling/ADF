@@ -242,7 +242,7 @@ def create_TEM_files(adf):
 
         #End if (file creation or over-write file)
     #Notify user that script has ended:
-    print("  ...TEM diagnostics have been calculated successfully.")
+    print("  ...TEM variables have been calculated successfully.")
 
 
 
