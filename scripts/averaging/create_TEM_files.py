@@ -29,7 +29,7 @@ def create_TEM_files(adf):
     tem_opts = adf.read_config_var("tem_info")
 
     if not tem_opts:
-        print("\n  No TEM options provided, skipping TEM diagnostics." \
+        print("\n  No TEM options provided, skipping TEM file creation." \
         "\nSee documentation or config_cam_baseline_example.yaml for options to add to configuration file.")
         return
 
