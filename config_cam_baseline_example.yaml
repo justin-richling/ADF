@@ -405,7 +405,6 @@ diag_var_list:
 #tem_info:
     #Location where TEM files are stored:
     #If path not specified or commented out, TEM calculation will be skipped
-    #If no path, TEM diagnostics wont run even if declared in averaging/plotting scripts
 #    tem_loc: /glade/scratch/richling/adf-output/ADF-data/TEM/
 
     #TEM history file number
