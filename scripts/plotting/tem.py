@@ -76,7 +76,7 @@ def tem(adf):
     tem_opts = adf.read_config_var("tem_info")
 
     #Location of saved TEM netCDF files
-    tem_loc = tem_opts["tem_loc"]
+    tem_loc = tem_opts.get("tem_loc")
 
     #If path not specified, skip TEM calculation
     if tem_loc is None:

@@ -117,8 +117,6 @@ class AdfInfo(AdfConfig):
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
-        print(case_names)
-
         #Grab test case nickname(s)
         test_nicknames = self.get_cam_info('case_nickname')
         if test_nicknames is None:
