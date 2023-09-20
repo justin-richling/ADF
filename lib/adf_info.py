@@ -168,6 +168,7 @@ class AdfInfo(AdfConfig):
 
                 starting_location = Path(baseline_hist_locs)
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
+                print(files_list)
                 base_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
                 base_climo_yrs = []
                 for year in base_climo_yrs_str:
