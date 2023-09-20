@@ -173,6 +173,7 @@ class AdfInfo(AdfConfig):
                 for year in base_climo_yrs_str:
                    base_climo_yrs.append(int(year))
                 
+                print(base_climo_yrs)
                 #Check if start or end year is missing.  If so then just assume it is the
                 #start or end of the entire available model data.
                 if syear_baseline is None:
