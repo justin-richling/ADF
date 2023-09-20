@@ -165,6 +165,7 @@ class AdfInfo(AdfConfig):
 
             #Check if history file path exists:
             if baseline_hist_locs:
+                print(baseline_hist_locs)
 
                 starting_location = Path(baseline_hist_locs)
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
