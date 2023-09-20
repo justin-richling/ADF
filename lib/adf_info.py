@@ -165,17 +165,14 @@ class AdfInfo(AdfConfig):
 
             #Check if history file path exists:
             if baseline_hist_locs:
-                print(baseline_hist_locs)
 
                 starting_location = Path(baseline_hist_locs)
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                print(files_list)
                 base_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
                 base_climo_yrs = []
                 for year in base_climo_yrs_str:
                    base_climo_yrs.append(int(year))
                 
-                print(base_climo_yrs)
                 #Check if start or end year is missing.  If so then just assume it is the
                 #start or end of the entire available model data.
                 if syear_baseline is None:
