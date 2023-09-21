@@ -123,7 +123,7 @@ def tem(adf):
             ds_base = xr.open_dataset(tem_base)
         else:
             
-            print(f"\t'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist.\nMake sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
+            print(f"\t'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist.\n\tMake sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
             print("\tTEM plots will be skipped.")
             return
 
@@ -168,7 +168,7 @@ def tem(adf):
             if tem.is_file():
                 ds = xr.open_dataset(tem)
             else:
-                print(f"\t'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist.\nMake sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
+                print(f"\t'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist.\n\tMake sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
                 print("\tTEM plots will be skipped.")
                 return
 
