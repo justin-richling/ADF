@@ -119,7 +119,12 @@ def tem(adf):
         #Open the baseline TEM file, if it exists
         input_loc_idx = Path(tem_loc) / base_name
         tem_base = input_loc_idx / f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
-        ds_base = xr.open_dataset(tem_base)
+        if tem_base.is_file():
+            ds_base = xr.open_dataset(tem_base)
+        else:
+            print(f"'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist."\ 
+                  "Make sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
+            return
 
     #Setup TEM plots
     nrows = len(var_list)
@@ -159,7 +164,12 @@ def tem(adf):
             tem = output_loc_idx / f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
 
             #Grab the data for the TEM netCDF files
-            ds = xr.open_dataset(tem)
+            if tem.is_file():
+                ds = xr.open_dataset(tem)
+            else:
+                print(f"'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist."\ 
+                    "Make sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
+                return
 
             climo_yrs = {"test":[syear_cases[idx], eyear_cases[idx]],
                          "base":[syear_baseline, eyear_baseline]}
