@@ -122,8 +122,8 @@ def tem(adf):
         if tem_base.is_file():
             ds_base = xr.open_dataset(tem_base)
         else:
-            print(f"'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist." \ 
-                  "Make sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
+            
+            print(f"'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist.\nMake sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
             return
 
     #Setup TEM plots
@@ -167,8 +167,7 @@ def tem(adf):
             if tem.is_file():
                 ds = xr.open_dataset(tem)
             else:
-                print(f"'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist." \ 
-                    "Make sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
+                print(f"'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc' does not exist.\nMake sure 'create_TEM_files' under 'time_averaging_scripts' in the config yaml file is declared")
                 return
 
             climo_yrs = {"test":[syear_cases[idx], eyear_cases[idx]],
