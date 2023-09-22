@@ -379,6 +379,8 @@ class AdfDiag(AdfWeb):
             hist_str = 'cam.h0'
         #End if
 
+        res = self.variable_defaults # will be dict of variable-specific plot preferences
+
         #Loop over cases:
         for case_idx, case_name in enumerate(case_names):
 
@@ -517,6 +519,10 @@ class AdfDiag(AdfWeb):
                     print(msg)
                     continue
 
+                if (var == "PRECT") and (var not in hist_file_var_list):
+                    vres = res[var]
+                    print(vres["derivable_from"])
+                
                 #Check if variable has a "lev" dimension according to first file:
                 has_lev = bool('lev' in hist_file_ds[var].dims)
 

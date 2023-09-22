@@ -445,6 +445,7 @@ PRECT:
   obs_name: "ERAI"
   obs_var_name: "PRECT"
   category: "Hydrologic cycle"
+  derivable_from: ['PRECL','PRECC']
 
 QFLX:
   category: "Hydrologic cycle"
