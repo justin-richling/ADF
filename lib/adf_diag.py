@@ -519,7 +519,7 @@ class AdfDiag(AdfWeb):
                     print(msg)
                     continue
 
-                if (var == "PRECT") and (var not in hist_file_var_list):
+                if (var == "PRECT"):# and (var not in hist_file_var_list):
                     vres = res[var]
                     print(vres["derivable_from"])
                 
