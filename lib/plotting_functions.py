@@ -1495,7 +1495,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
         if log_p:
             [a.set_yscale("log") for a in ax]
-            [a.set_ylim([0.01, 1000]) for a in ax]
+            [a.set_ylim([1000,0.01]) for a in ax]
 
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
     else:
