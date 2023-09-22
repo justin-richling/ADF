@@ -1072,7 +1072,7 @@ def pmid_to_plev(data, pmid, new_levels=None, convert_to_mb=False):
     if new_levels is None:
         pnew = 100.0 * np.array([1000, 925, 850, 700, 500, 400,
                                  300, 250, 200, 150, 100, 70, 50,
-                                 30, 20, 10, 7, 5, 3, 2, 1])  # mandatory levels, converted to Pa
+                                 30, 20, 10, 7, 5, 3, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01])  # mandatory levels, converted to Pa
     else:
         pnew = new_levels
     #End if
