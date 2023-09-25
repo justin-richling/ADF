@@ -379,6 +379,8 @@ class AdfDiag(AdfWeb):
             hist_str = 'cam.h0'
         #End if
 
+        print("\n******** hist_str ***********",hist_str,"\n")
+
         res = self.variable_defaults # will be dict of variable-specific plot preferences
 
         #Loop over cases:
@@ -519,7 +521,7 @@ class AdfDiag(AdfWeb):
                     print(msg)
                     continue
 
-                if (var == "PRECT"):# and (var not in hist_file_var_list):
+                if (var == "PRECT") and (var not in hist_file_var_list):
                     vres = res[var]
                     print(vres["derivable_from"])
                 
