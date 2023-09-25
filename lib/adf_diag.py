@@ -394,7 +394,7 @@ class AdfDiag(AdfWeb):
                 continue
             #End if
 
-            print(f"\t Processing time series for case '{case_name}' :")
+            print(f"\t Processing time series for case '{case_name}' : ahahahahahahahahahahg")
 
             #Extract start and end year values:
             start_year = start_years[case_idx]
