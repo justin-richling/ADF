@@ -183,14 +183,10 @@ class AdfInfo(AdfConfig):
 
                 starting_location = Path(baseline_hist_locs)
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                #base_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
 
-                #climo_yr = substring_after(i, f"{hist_str}.")[0:4]
-                #limo_yr = climo_yr[0:4]
-                base_climo_yrs = np.unique([str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list])
-                base_climo_yrs_str = sorted(base_climo_yrs)
-                #base_climo_yrs_str = sorted(np.unique([substring_after(i, f"{hist_str}.")[0:4] for i in files_list]))
-                print("\n",base_climo_yrs_str,"\n")
+                base_climo_yrs = [str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]
+                base_climo_yrs_str = sorted(np.unique(base_climo_yrs))
+
                 base_climo_yrs = []
                 for year in base_climo_yrs_str:
                    base_climo_yrs.append(int(year))
@@ -289,12 +285,9 @@ class AdfInfo(AdfConfig):
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                #case_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
 
-                case_climo_yrs = np.unique([str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list])
-                case_climo_yrs_str = sorted(case_climo_yrs)
-                #case_climo_yrs_str = sorted(np.unique([substring_after(i, f"{hist_str}.")[0:4] for i in files_list]))
-                print("\n",case_climo_yrs_str,"\n")
+                case_climo_yrs = [str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]
+                case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
                 
                 case_climo_yrs = []
                 for year in case_climo_yrs_str:
