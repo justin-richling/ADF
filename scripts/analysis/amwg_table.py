@@ -338,6 +338,7 @@ def amwg_table(adf):
 
         # last step is to add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
+        print("case_name:",case_name)
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
 
     #End of model case loop
