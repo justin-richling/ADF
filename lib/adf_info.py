@@ -178,7 +178,13 @@ class AdfInfo(AdfConfig):
 
                 starting_location = Path(baseline_hist_locs)
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                base_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
+                #base_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
+
+                #climo_yr = substring_after(i, f"{hist_str}.")[0:4]
+                #limo_yr = climo_yr[0:4]
+
+                base_climo_yrs_str = sorted(np.unique([substring_after(i, f"{hist_str}.")[0:4] for i in files_list]))
+                print("\n",base_climo_yrs_str,"\n")
                 base_climo_yrs = []
                 for year in base_climo_yrs_str:
                    base_climo_yrs.append(int(year))
@@ -545,6 +551,9 @@ class AdfInfo(AdfConfig):
         if var_str not in self.__diag_var_list:
             self.__diag_var_list.append(var_str)
         #End if
+
+    def substring_after(s, delim):
+        return s.partition(delim)[2]
 
 #++++++++++++++++++++
 #End Class definition
