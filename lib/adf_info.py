@@ -104,6 +104,9 @@ class AdfInfo(AdfConfig):
         #End for
         #-------------------------------------------
 
+        def substring_after(s, delim):
+            return s.partition(delim)[2]
+
         #Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info('hist_str')
         #If hist_str is not present, then default to 'cam.h0':
@@ -551,9 +554,6 @@ class AdfInfo(AdfConfig):
         if var_str not in self.__diag_var_list:
             self.__diag_var_list.append(var_str)
         #End if
-
-    def substring_after(s, delim):
-        return s.partition(delim)[2]
 
 #++++++++++++++++++++
 #End Class definition
