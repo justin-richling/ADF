@@ -589,7 +589,7 @@ class AdfWeb(AdfObs):
                 #Check if the mean plot type page exists for this case (or for multi-case):
                 mean_table_file = table_pages_dir / "mean_tables.html"
                 if not mean_table_file.exists():
-
+                    print("\ndata_name",data_name,"\n")
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                     mean_table_rndr = mean_table_tmpl.render(title=main_title,
