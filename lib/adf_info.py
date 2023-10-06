@@ -187,7 +187,7 @@ class AdfInfo(AdfConfig):
 
                 #climo_yr = substring_after(i, f"{hist_str}.")[0:4]
                 #limo_yr = climo_yr[0:4]
-                base_climo_yrs = np.unique([str(i).partition(hist_str)[2][0:4] for i in files_list])
+                base_climo_yrs = np.unique([str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list])
                 base_climo_yrs_str = sorted(base_climo_yrs)
                 #base_climo_yrs_str = sorted(np.unique([substring_after(i, f"{hist_str}.")[0:4] for i in files_list]))
                 print("\n",base_climo_yrs_str,"\n")
