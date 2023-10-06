@@ -104,6 +104,8 @@ class AdfInfo(AdfConfig):
         #End for
         #-------------------------------------------
 
+        #Helper function to grab climo years from CAM history files
+        #Assumes that CAM hist files will be in the form $CASE.cam.h#.YYYY<other date info>.nc
         def substring_after(s, delim):
             return str(s).partition(delim)[2]
 
@@ -185,8 +187,9 @@ class AdfInfo(AdfConfig):
 
                 #climo_yr = substring_after(i, f"{hist_str}.")[0:4]
                 #limo_yr = climo_yr[0:4]
-
-                base_climo_yrs_str = sorted(np.unique([substring_after(i, f"{hist_str}.")[0:4] for i in files_list]))
+                base_climo_yrs = np.unique([str(i).partition(hist_str)[2][0:4] for i in files_list])
+                base_climo_yrs_str = sorted(base_climo_yrs)
+                #base_climo_yrs_str = sorted(np.unique([substring_after(i, f"{hist_str}.")[0:4] for i in files_list]))
                 print("\n",base_climo_yrs_str,"\n")
                 base_climo_yrs = []
                 for year in base_climo_yrs_str:
@@ -286,7 +289,8 @@ class AdfInfo(AdfConfig):
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                case_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
+                #case_climo_yrs_str = sorted(np.unique([i.stem[-7:-3] for i in files_list]))
+                case_climo_yrs_str = sorted(np.unique([substring_after(i, f"{hist_str}.")[0:4] for i in files_list]))
                 case_climo_yrs = []
                 for year in case_climo_yrs_str:
                    case_climo_yrs.append(int(year))
