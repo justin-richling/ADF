@@ -374,6 +374,7 @@ class AdfWeb(AdfObs):
             baseline_yrs = ""
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
+            print("data_name",data_name,"\n")
 
             #Attempt to grab baseline start_years (not currently required):
             syear_baseline = self.get_baseline_info('start_year')
@@ -559,6 +560,7 @@ class AdfWeb(AdfObs):
                     case1 = "Listed in tables"
                 else:
                     case1 = web_data.case
+                    case1 = case_names[0]
                 #End if
 
                 #Write table dataframe HTML as a string:
@@ -567,7 +569,7 @@ class AdfWeb(AdfObs):
                 #formatting features.
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
-
+                print("data_name",data_name,"\n")
                 #Construct amwg_table.html
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
