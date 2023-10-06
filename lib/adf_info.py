@@ -105,7 +105,7 @@ class AdfInfo(AdfConfig):
         #-------------------------------------------
 
         def substring_after(s, delim):
-            return s.partition(delim)[2]
+            return str(s).partition(delim)[2]
 
         #Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info('hist_str')
