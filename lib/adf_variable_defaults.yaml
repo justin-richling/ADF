@@ -731,7 +731,7 @@ RESTOM:
     colorbar:
       label : "Wm$^{-2}$"
   category: "TOA energy flux"
-  ts:
+  timeseries:
     rolling: True
   constits:
     ["FSNT","FLNT"]
