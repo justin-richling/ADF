@@ -495,7 +495,9 @@ SST:
   category: "Surface variables"
   mask: "ocean"
   timeseries:
-    rolling: True
+    rolling:
+      months: 5
+      years: 5
 
 U10:
   category: "Surface variables"
