@@ -736,7 +736,9 @@ RESTOM:
       label : "Wm$^{-2}$"
   category: "TOA energy flux"
   timeseries:
-    rolling: True
+    rolling:
+      #months: 1
+      years: 5
   constits:
     ["FSNT","FLNT"]
 
