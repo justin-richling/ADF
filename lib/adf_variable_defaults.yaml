@@ -141,6 +141,20 @@ AODVIS:
       #months: 1
       years: 5
 
+AODVISdn:
+  category: "Aerosols"
+  colormap: "Oranges"
+  contour_levels_range: [0.05, 0.6, 0.05]
+  diff_colormap: "PuOr_r"
+  diff_contour_range: [-0.1, 0.1, 0.01]
+  scale_factor: 1
+  add_offset: 0
+  new_unit: ""
+  timeseries:
+    rolling:
+      #months: 1
+      years: 5
+
 BURDENBC:
   category: "Aerosols"
 
