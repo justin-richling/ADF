@@ -85,10 +85,6 @@ AODVIS:
   scale_factor: 1
   add_offset: 0
   new_unit: ""
-  timeseries:
-    rolling:
-      #months: 1
-      years: 5
 
 AODVISdn:
   category: "Aerosols"
@@ -101,7 +97,6 @@ AODVISdn:
   new_unit: ""
   timeseries:
     rolling:
-      #months: 1
       years: 5
 
 #+++++++++++++++++
@@ -446,7 +441,6 @@ RESTOM:
   category: "TOA energy flux"
   timeseries:
     rolling:
-      #months: 1
       years: 5
   constits:
     ["FSNT","FLNT"]
