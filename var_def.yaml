@@ -85,6 +85,9 @@ AODVIS:
   scale_factor: 1
   add_offset: 0
   new_unit: ""
+  timeseries:
+    rolling:
+      years: 5
 
 AODVISdn:
   category: "Aerosols"
@@ -98,6 +101,7 @@ AODVISdn:
   timeseries:
     rolling:
       years: 5
+    #skip_plot: True
 
 #+++++++++++++++++
 # Category: Clouds
@@ -271,6 +275,9 @@ SST:
   obs_var_name: "TS"
   category: "Surface variables"
   mask: "ocean"
+  timeseries:
+    rolling:
+      years: 5
 
 U10:
   category: "Surface variables"
@@ -297,9 +304,13 @@ ICEFRAC:
 
 OCNFRAC:
   category: "Surface variables"
+  timeseries:
+    skip_plot: True
 
 LANDFRAC:
   category: "Surface variables"
+  timeseries:
+    skip_plot: True
 
 #+++++++++++++++++
 # Category: State
