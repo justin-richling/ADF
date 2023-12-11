@@ -136,10 +136,6 @@ AODVIS:
   scale_factor: 1
   add_offset: 0
   new_unit: ""
-  timeseries:
-    rolling:
-      #months: 1
-      years: 5
 
 AODVISdn:
   category: "Aerosols"
@@ -150,10 +146,6 @@ AODVISdn:
   scale_factor: 1
   add_offset: 0
   new_unit: ""
-  timeseries:
-    rolling:
-      #months: 1
-      years: 5
 
 BURDENBC:
   category: "Aerosols"
