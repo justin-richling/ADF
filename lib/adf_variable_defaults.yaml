@@ -745,12 +745,6 @@ RESTOM:
     colorbar:
       label : "Wm$^{-2}$"
   category: "TOA energy flux"
-  timeseries:
-    rolling:
-      #months: 1
-      years: 5
-  constits:
-    ["FSNT","FLNT"]
 
 #+++++++++++++++++
 # Category: Surface energy flux
