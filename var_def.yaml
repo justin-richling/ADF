@@ -271,10 +271,6 @@ SST:
   obs_var_name: "TS"
   category: "Surface variables"
   mask: "ocean"
-  timeseries:
-    rolling:
-      months: 5
-      years: 5
 
 U10:
   category: "Surface variables"
