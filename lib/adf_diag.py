@@ -960,22 +960,23 @@ class AdfDiag(AdfWeb):
                 os.system(f"ncap2 -s 'PRECT=(PRECC+PRECL)' {constit_files[1]} {prect_file}")
 
             if var == "RESTOM":
-                constit_files = []
-                # RESTOM can be found by simply subtracting FLNT from FSNT
-                # grab file names for the FSNT and FLNT files from the case ts directory
-                if glob.glob(os.path.join(ts_dir,"*FSNT*")) and glob.glob(os.path.join(ts_dir,"*FLNT*")):
-                    #constit_files=sorted(glob.glob(os.path.join(ts_dir,"*PREC*")))
-                    constit_files.append(sorted(glob.glob(os.path.join(ts_dir,"*FSNT*")))[0])
-                    constit_files.append(sorted(glob.glob(os.path.join(ts_dir,"*FLNT*")))[0])
-                else:
-                    ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
-                    ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
-                    raise FileNotFoundError(ermsg)
-                # create new file name for RESTOM
-                prect_file = constit_files[0].replace('FSNT','RESTOM')
-                # append FLNT to the file containing FSNT
-                os.system(f"ncks -A -v FSNT {constit_files[0]} {constit_files[1]}")
-                # create new file with the difference of FSNT and FLNT
-                os.system(f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {prect_file}")
+                if not glob.glob(os.path.join(ts_dir,"*RESTOM*")):
+                    constit_files = []
+                    # RESTOM can be found by simply subtracting FLNT from FSNT
+                    # grab file names for the FSNT and FLNT files from the case ts directory
+                    if glob.glob(os.path.join(ts_dir,"*FSNT*")) and glob.glob(os.path.join(ts_dir,"*FLNT*")):
+                        #constit_files=sorted(glob.glob(os.path.join(ts_dir,"*PREC*")))
+                        constit_files.append(sorted(glob.glob(os.path.join(ts_dir,"*FSNT*")))[0])
+                        constit_files.append(sorted(glob.glob(os.path.join(ts_dir,"*FLNT*")))[0])
+                    else:
+                        ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
+                        ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
+                        raise FileNotFoundError(ermsg)
+                    # create new file name for RESTOM
+                    prect_file = constit_files[0].replace('FSNT','RESTOM')
+                    # append FLNT to the file containing FSNT
+                    os.system(f"ncks -A -v FSNT {constit_files[0]} {constit_files[1]}")
+                    # create new file with the difference of FSNT and FLNT
+                    os.system(f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {prect_file}")
 
 ###############
