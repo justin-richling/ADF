@@ -944,20 +944,21 @@ class AdfDiag(AdfWeb):
 
         for var in vars_to_derive:
             if var == "PRECT":
-                # PRECT can be found by simply adding PRECL and PRECC
-                # grab file names for the PRECL and PRECC files from the case ts directory
-                if glob.glob(os.path.join(ts_dir,"*PRECC*")) and glob.glob(os.path.join(ts_dir,"*PRECL*")):
-                    constit_files=sorted(glob.glob(os.path.join(ts_dir,"*PREC*")))
-                else:
-                    ermsg = "PRECC and PRECL were not both present; PRECT cannot be calculated."
-                    ermsg += " Please remove PRECT from diag_var_list or find the relevant CAM files."
-                    raise FileNotFoundError(ermsg)
-                # create new file name for PRECT
-                prect_file = constit_files[0].replace('PRECC','PRECT')
-                # append PRECC to the file containing PRECL
-                os.system(f"ncks -A -v PRECC {constit_files[0]} {constit_files[1]}")
-                # create new file with the sum of PRECC and PRECL
-                os.system(f"ncap2 -s 'PRECT=(PRECC+PRECL)' {constit_files[1]} {prect_file}")
+                if not glob.glob(os.path.join(ts_dir,"*PRECT*")):
+                    # PRECT can be found by simply adding PRECL and PRECC
+                    # grab file names for the PRECL and PRECC files from the case ts directory
+                    if glob.glob(os.path.join(ts_dir,"*PRECC*")) and glob.glob(os.path.join(ts_dir,"*PRECL*")):
+                        constit_files=sorted(glob.glob(os.path.join(ts_dir,"*PREC*")))
+                    else:
+                        ermsg = "PRECC and PRECL were not both present; PRECT cannot be calculated."
+                        ermsg += " Please remove PRECT from diag_var_list or find the relevant CAM files."
+                        raise FileNotFoundError(ermsg)
+                    # create new file name for PRECT
+                    prect_file = constit_files[0].replace('PRECC','PRECT')
+                    # append PRECC to the file containing PRECL
+                    os.system(f"ncks -A -v PRECC {constit_files[0]} {constit_files[1]}")
+                    # create new file with the sum of PRECC and PRECL
+                    os.system(f"ncap2 -s 'PRECT=(PRECC+PRECL)' {constit_files[1]} {prect_file}")
 
             if var == "RESTOM":
                 if not glob.glob(os.path.join(ts_dir,"*RESTOM*")):
