@@ -8,6 +8,13 @@ from matplotlib.ticker import MultipleLocator
 from matplotlib.lines import Line2D
 import matplotlib.ticker as ticker
 
+from datetime import timedelta
+import geocat.comp as gcomp
+
+from collections import OrderedDict
+
+from geocat.comp import month_to_season
+
 import warnings  # use to warn user about missing files.
 
 #Format warning messages:
@@ -46,22 +53,18 @@ def time_series(adfobj):
             - multi-case comparison is in the works. 02/2023 - JR
     """
 
-     #Import necessary modules:
-    #------------------------
-    #CAM diagnostic plotting functions:
-    import plotting_functions as pf
-
-    #ADF warning format
-    from adf_base import AdfError
-    #-------------------------
-
     #Notify user that script has started:
     print("\n  Generating time series plots...")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    var_list = adfobj.diag_var_list
+    
+    #DUMMY wont need eventually:
+    main_site_assets_path = "./"
 
+    #List of desired (if available) CAM variables from config file
+    var_list = adfobj.diag_var_list
+    
     #Check if ocean or land fraction exist
     #in the variable list:
     for var in ["OCNFRAC", "LANDFRAC"]:
@@ -72,9 +75,14 @@ def time_series(adfobj):
             var_idx = var_list.index(var)
             var_list.pop(var_idx)
             var_list.insert(0,var)
+        else:
+            #Since the masking is important, add these just in case the user 
+            #forgot to specifiy in the config file
+            #NOTE: this may still break if these aren't in the CAM output history files!!
+            var_list = [var] + var_list
         #End if
     #End if
-    
+
     #pressure levels:
     pres_levs = adfobj.get_basic_info("plot_press_levels")
 
@@ -97,18 +105,32 @@ def time_series(adfobj):
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    if not test_nicknames:
+        test_nicknames = case_names
     base_nickname = adfobj.case_nicknames["base_nickname"]
 
     #CAUTION:
     #"data" here refers to either obs or a baseline simulation,
     #Until those are both treated the same (via intake-esm or similar)
     #we will do a simple check and switch options as needed:
-    if adfobj.get_basic_info("compare_obs"):
+    if adfobj.compare_obs:
+        print("NOTE: the ADF currently can't plot observational time series, so only test case will plot!")
 
+        base_nickname = "Obs"
+        data_name = "Obs"
+        all_case_names = case_names
+        all_nicknames = test_nicknames
+        case_ts_locs = case_ts_loc
+        
+        #Currently we don't have time series files for obs, so just skip
+        # the plotting of obs data.
+        #NOTE: the ts plots will still be created, just the test case will plot
+        
+        #Code commented out below: for obs if we get time series files
+        '''
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
-        base_nickname = "Obs"
-
+        
         #If dictionary is empty, then there are no observations to compare against,
         #so quit here:
         if not var_obs_dict:
@@ -119,14 +141,15 @@ def time_series(adfobj):
             all_nicknames = test_nicknames
             case_ts_locs = case_ts_loc
             all_nicknames = test_nicknames
-        
         else:
             #Bundle all case names
-            all_case_names = case_names + [data_name]
+            all_case_names = case_names + [base_nickname]
             #Gather all nicknames
             all_nicknames = test_nicknames + [base_nickname]
             case_ts_locs = case_ts_loc + [data_ts_loc]
+        #End if var_obs_dict
         
+        '''
     else:
         data_name = adfobj.get_baseline_info("cam_case_name")
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
@@ -175,6 +198,15 @@ def time_series(adfobj):
     #Set seasons:
     seasons = ["ANN","DJF","MAM","JJA","SON"]
     #seasons = ["ANN"]
+    
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
+    #Extract baseline years (which may be empty strings if using Obs):
+    syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    
+    syears = syear_cases + [syear_baseline]
+    eyears = eyear_cases + [eyear_baseline]
 
     #Set up the plots
     #################
@@ -185,15 +217,35 @@ def time_series(adfobj):
     colors = ["k", "aqua", "r", "b", "magenta",
               "orange", "slategrey", "rosybrown"]
     
+    #Make a list for vars to skip plotting if desired
+    #Check the variable defaults yaml file to add
+    # example
+    #VAR:
+    #  timeseries: 
+    #    skip_plot: True
+    skip_list = []
+
     #Create/reset new variable that potentially stores the re-gridded
     #ocean fraction xarray data-array:
     ocn_frc_da = None
+    ocn_frc_da = {case_names[0]:None,data_name:None}
+    
+    #Dictionary for vars with vertical levels specified by user
+    var_lev_dict = {}
+    var_levs = []
     
     #Loop over variables:
-    for var in var_list[2:5]:
+    #--------------------
+    for var in var_list:
+        
+        #Initialize nested dictionary for each variable
+        var_lev_dict[var] = {}
+        
+        #TODO: Add regional subset so thsi can change when implemented - JR
+        title_var = "Global"
         
         #Extract defaults for variable:
-        var_default_dict = var_defaults.get(var, {}) #pull this put and put above!
+        var_default_dict = var_defaults.get(var, {})
         
         #Check res for any variable specific options that need to be used BEFORE going to the plot:
         if var in res:
@@ -204,32 +256,57 @@ def time_series(adfobj):
             vres = {}
         #End if
 
-        title_var = "Global"
-        print(f"\t - time series for {var}")
+        #Add variables that user doesn't want to plot
+        if vres.get('timeseries'):
+            if vres["timeseries"].get('skip_plot'):
+                skip_list.append(var)
+        #End if
 
-        #Set plotting parameters based off whether the user wants
-        #5-yr rolling average
+        if var not in skip_list:
+            print(f"\t - time series plots for {var}")
+
+        #Set plotting parameters based off whether the user wants rolling average
         #Currently RESTOM is defaulted to 5-yr rolling avg
-        rolling = False
-        if 'timeseries' in vres:
-            if "rolling" in vres['timeseries']:
-                rolling = True
-                rolling_yrs = vres['timeseries']["rolling"]["years"]
-                print("rolling_months",rolling_yrs,"\n")
-
-        #Loop over test cases:
-        #----------------------
+        #Check the variable defaults yaml file
+        #Example to add
+        #VAR:
+        #  timeseries: 
+        #    rolling:
+        #      years: 5
+        rolling,roll = check_rolling(vres)
+        
+        #Loop over seasons:
+        #------------------
         for season in seasons:
+            
+            #Initialize nested dictionary for each season
+            var_lev_dict[var][season] = {}
+            
             fig = plt.figure(figsize=(12,8))
             ax = fig.add_subplot(111)
+
+            #Set up list to gather whether the var exists for each case (or if var has vertical levs for now)
+            #This will close the fig if neither case has a variable to plot
+            #TODO: there might be a better way of doing this but becasue of the nested for-loops it's a work around for now - JR
             bad = []
+            
+            #Initialize dictionary to keep track of climo years for all cases
+            yrs = {}
+
+            #Loop over test cases:
+            #----------------------
             for case_idx, case_name in enumerate(all_case_names):
+                
+                #Initialize nested dictionary for each case
+                var_lev_dict[var][season][case_name] = {}                
+                
+                #Locate the time series files
                 input_location = Path(case_ts_locs[case_idx])
                 ts_filenames = f'{case_name}.*.{var}.*nc'
                 ts_files = sorted(input_location.glob(ts_filenames))
                 
-                
-                # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+                # If no files exist, try to move to next variable. 
+                # --> Means we can not proceed with this variable, and it'll be problematic later.
                 if not ts_files:
                     if season == seasons[0]:
                         errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
@@ -246,47 +323,194 @@ def time_series(adfobj):
                 #End if
 
                 # Load the data
-                data = _load_data(ts_files[0], var)                    
+                data = _load_data(ts_files[0], var)
 
                 #Extract units string, if available:
                 if hasattr(data, 'units'):
                     unit_str = data.units
                 else:
                     unit_str = '--'
-
+                #End if
+                
+                #Vertical Coordinates
+                ################################################
                 #Check if variable has a vertical coordinate:
-                if 'lev' in data.coords or 'ilev' in data.coords:
-                    #TODO: calc for the desired level in config file if var has vertical levels - JR
-                    #
-                    #
-                    #
-                    #
-                    
-                    # this warning will appear for each case that the variable is missing...
-                    if season == seasons[0]:
-                        print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                              "which is currently not supported for the time series plot. Skipping...")
-                    #Skip this variable and move to the next variable in var_list:
+                if 'lev' in data.coords or 'ilev' in data.coords:                    
+                    if var not in skip_list:
+                        var_levs.append(var)
+                        
+                        # this warning will appear for each case that the variable is missing...
+                        if season == seasons[0]:
+                            print(f"\t   Variable '{var}' has a vertical dimension, ")#+\
+                                  #"which is currently not supported for the time series plot. Skipping...")
+                        
+                        #For testing and maybe for ever?
+                        #Just calculate annual, not other seasons to keep calculations/time down????
+                        if season == "ANN":
+                            interp_out_location = Path(case_ts_locs[case_idx]) / "interp"
+                            #interp_out_location = Path(new_path)
+                            if not interp_out_location.is_dir():
+                                print(f"\t    {interp_out_location} not found, making new directory")
+                                interp_out_location.mkdir(parents=True)
+                            
+                            checkz = []
+                            for pres in pres_levs:
+                                checks = sorted(interp_out_location.glob(f"*.cam.h0.{var}.{pres}*.nc"))
+                                if checks:
+                                    checkz.append(checks[0])
+                                
+                            if len(checkz) == len(pres_levs):
+                                print("Were assuming that these files already exist boi")
+                                print("So were gonna skip this ugly computation of stuff and things, vertical things")
+                                
+                                #Let the ADF know if it needs to read an existing netcdf file
+                                read_interp_ts = True
+                            
+                            else:
+                                print("Whelp, it looks like these need to be calculated boi, sorry. Go grab a snack :(")
+                                interp_data = ts_vert_interp(ts_files[0], data, var)
+
+                                #var_levs.append(var)
+                                for pres in pres_levs:
+                                    #calc for the desired level in config file if var has vertical levels
+
+                                    # we should check if we need to do area averaging:
+                                    if len(interp_data.dims) > 1:
+                                        # flags that we have spatial dimensions
+                                        # Note: that could be 'lev' which should trigger different behavior
+                                        # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
+                                        data_sp_avg = spatial_average(interp_data)  # changes data "in place"
+                                    #End if
+
+                                    interp_ds = annual_mean(data_sp_avg, whole_years=True, time_name='time')
+
+                                    """
+                                    if season == "ANN":
+                                        interp_ds = annual_mean(data_sp_avg, whole_years=True, time_name='time')
+                                    else:
+                                        interp_ds = seasonal_mean(data_sp_avg, season=season, is_climo=False)
+                                        interp_ds = interp_ds.groupby('time.year').mean(dim='time')
+                                    #End if
+                                    """
+
+                                    if rolling:                    
+                                        interp_ds = interp_ds.rolling(year=roll,center=True).mean().dropna("year")
+
+                                    #Fill in nested dictionary for each pressure level data
+                                    var_lev_dict[var][season][case_name][pres] = interp_ds.sel(lev=pres)
+                                    
+                                    #Take time series file name and copy and add pressure lev
+                                    #to form new file name for each pressure level desired
+                                    old_ext = f".cam.h0.{var}"
+                                    new_name = str(ts_files[0].parts[-1]).replace(old_ext,f"{old_ext}.{pres}")
+                                    new_file = Path(new_name)
+
+                                    #Save interpolated file at specified vert level
+                                    #NOTE: this is supposed to be helpful in saving calc time if
+                                    # files exist - JR
+                                    save_to_nc(interp_ds.sel(lev=pres),
+                                               interp_out_location / new_file)
+
+                                    #Close the dataset
+                                    interp_ds.close()
+                                    
+                                    #Let the ADF know if it needs to read from cached array
+                                    read_interp_ts = False
+                        
+                        #Uncomment below if you want to try and calc all seasons for
+                        # vars with vertical levels
+                        """            
+                        interp_out_location = Path(case_ts_locs[case_idx]) / "interp"
+                        #interp_out_location = Path(new_path)
+                        if not interp_out_location.is_dir():
+                            print(f"\t    {interp_out_location} not found, making new directory")
+                            interp_out_location.mkdir(parents=True)
+                            
+                        checkz = []
+                        for pres in pres_levs:
+                            checks = sorted(interp_out_location.glob(f"*.cam.h0.{var}.{pres}*.nc"))
+                            if checks:
+                                checkz.append(checks[0])
+                                
+                        if len(checkz) == len(pres_levs):
+                            print("Were assuming that these files already exist boi")
+                            print("So were gonna skip this ugly computation of stuff and things, vertical things")
+                                
+                            #Let the ADF know if it needs to read an existing netcdf file
+                            read_interp_ts = True
+                            
+                        else:
+                            print("Whelp, it looks like these need to be calculated boi, sorry. Go grab a snack :(")
+                            interp_data = ts_vert_interp(ts_files[0], data, var)
+
+                            #var_levs.append(var)
+                            for pres in pres_levs:
+                                #calc for the desired level in config file if var has vertical levels
+
+                                # we should check if we need to do area averaging:
+                                if len(interp_data.dims) > 1:
+                                    # flags that we have spatial dimensions
+                                    # Note: that could be 'lev' which should trigger different behavior
+                                    # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
+                                    data_sp_avg = spatial_average(interp_data)  # changes data "in place"
+                                #End if
+
+                                interp_ds = annual_mean(data_sp_avg, whole_years=True, time_name='time')
+
+                                if season == "ANN":
+                                    interp_ds = annual_mean(data_sp_avg, whole_years=True, time_name='time')
+                                else:
+                                    interp_ds = seasonal_mean(data_sp_avg, season=season, is_climo=False)
+                                    interp_ds = interp_ds.groupby('time.year').mean(dim='time')
+                                #End if
+
+                                if rolling:                    
+                                    interp_ds = interp_ds.rolling(year=roll,center=True).mean().dropna("year")
+
+                                #Fill in nested dictionary for each pressure level data
+                                var_lev_dict[var][season][case_name][pres] = interp_ds.sel(lev=pres)
+                                    
+                                #Take time series file name and copy and add pressure lev
+                                #to form new file name for each pressure level desired
+                                old_ext = f".cam.h0.{var}"
+                                new_name = str(ts_files[0].parts[-1]).replace(old_ext,f"{old_ext}.{pres}")
+                                new_file = Path(new_name)
+
+                                #Save interpolated file at specified vert level
+                                #NOTE: this is supposed to be helpful in saving calc time if
+                                # files exist - JR
+                                save_to_nc(interp_ds.sel(lev=pres),
+                                            interp_out_location / new_file)
+
+                                #Close the dataset
+                                interp_ds.close()
+                                    
+                                #Let the ADF know if it needs to read from cached array
+                                read_interp_ts = False
+                        """
+                        
+                    #Skip this variable and move to the next variable in var_list
+                    # during 2-d plotting. Vertical level plotting are at end of script
                     plt.close()
                     bad.append(True)
                     continue
                 #End if
-
-                #Extract defaults for variable:
-                var_default_dict = var_defaults.get(var, {}) #pull this put and put above!
+                #End Vertical Coordinates
+                ################################################
 
                 #Check if variable should be masked:
                 if 'mask' in var_default_dict:
                     if var_default_dict['mask'].lower() == 'ocean':
                         #Check if the ocean fraction has already been regridded
                         #and saved:
-                        if ocn_frc_da is not None:
-                            ofrac = ocn_frc_da
+                        if ocn_frc_da[case_name] is not None:
+                            ofrac = ocn_frc_da[case_name]
                             # set the bounds of regridded ocnfrac to 0 to 1
                             ofrac = xr.where(ofrac>1,1,ofrac)
                             ofrac = xr.where(ofrac<0,0,ofrac)
 
                             # apply ocean fraction mask to variable
+                            #print(data.time,ofrac.time)
                             data = mask_land_or_ocean(data, ofrac, use_nan=True)
                         else:
                             print(f"OCNFRAC not found, unable to apply mask to '{var}'")
@@ -301,7 +525,7 @@ def time_series(adfobj):
 
                 #If the variable is ocean fraction, then save the dataset for use later:
                 if var == 'OCNFRAC':
-                    ocn_frc_da = data
+                    ocn_frc_da[case_name] = data
                 #End if
 
                 # we should check if we need to do area averaging:
@@ -310,11 +534,19 @@ def time_series(adfobj):
                     # Note: that could be 'lev' which should trigger different behavior
                     # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                     data_sp_avg = spatial_average(data)  # changes data "in place"
+                #End if
 
+                #Nicknames for plot legend
+                name = all_nicknames[case_idx]
+
+                #Set the baseline plot line as green dashed
+                #TODO: change for color deficiency - JR
                 if case_name == data_name:
-                    color_dict = {"color":'g',"marker":"--"}
+                    color_dict = {"color":'g',"marker":"--*",
+                                  "label":f"{name} (baseline)"}
                 else:
-                    color_dict = {"color":colors[case_idx],"marker":"-"}
+                    color_dict = {"color":colors[case_idx],"marker":"-*",
+                                  "label":f"{name}"}
                 #End if
 
                 if season == "ANN":
@@ -322,72 +554,382 @@ def time_series(adfobj):
                 else:
                     ds = seasonal_mean(data_sp_avg, season=season, is_climo=False)
                     ds = ds.groupby('time.year').mean(dim='time')
-                    
-                if rolling:
-                    print("ROLLING IS WORKING:",rolling_months,"months")
-                    #avg_case = avg_case.rolling(time=rolling_months,center=True).mean()
-                    ds = ds.rolling(time=rolling_months,center=True).mean()
+                #End if
 
-                name = all_nicknames[case_idx]
-                if case_idx == (case_num-1):
-                    name = f"{name} (baseline)"
-                
+                if rolling:                    
+                    ds = ds.rolling(year=roll,center=True).mean().dropna("year")
+
                 #Gather years to plot
-                yrs = ds.year
-                
+                #yrs = ds.year
+                yrs[case_name] = ds.year
+
                 #Add case to plot (ax)
-                ax.plot(yrs, ds, color_dict["marker"], c=color_dict["color"],label=name)
+                ax.plot(yrs[case_name], ds, color_dict["marker"], c=color_dict["color"],label=color_dict["label"])
 
                 #For the minor ticks, use no labels; default NullFormatter.
                 ax.tick_params(which='major', length=7)
                 ax.tick_params(which='minor', length=5)
                 ds.close()
             #End for (case names)
-            
 
-            #print(var,bad)
-            if len(bad) < 2:
-                #Set Main title for subplots:
-                ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
+            #Set up plots
+            plot_name = f"./{var}_{season}_TimeSeries_Mean.{plot_type}"
 
-                if rolling:
-                    ax.set_title(f"5-yr rolling average",loc="right")
-                unit = unit_str
+            if rolling:
+                #Add rolling to file name for extra info?
+                ax.set_title(f"{roll}-yr rolling average",loc="right")
+                #plot_name = plot_name.replace("Mean","Mean_rolling")                
+            if multi_case:
+                #Add multi_plot to file name for ADF multi-case web generation
+                plot_name = plot_name.replace(f".{plot_type}",f"_multi_plot.{plot_type}")
 
-                ax = _format_yaxis(ax, case_num, unit, **vres)
-                ax = _format_xaxis(ax, yrs)
+            #Check if any cases were flagged
+            #If there is at least one case that has the var to plot, add it
+            #Check if against obs (case_num = 1)
+            if (case_num == 1 and len(bad) < case_num) or (case_num > 1 and len(bad) < case_num):
+                if var not in skip_list:
+                    #Set Main title for subplots:
+                    ax.set_title(f"Time Series {title_var}: {var} - {season}",loc="left")
+                    
+                    #Grab first and last years from each case to determine range
+                    #of x-axis -> want to encompass all possible years
+                    first_yrs = []
+                    last_yrs = []
+                    for case,years in yrs.items():
+                        first_yrs.append(min(years.values))
+                        last_yrs.append(max(years.values))
+                    
+                    #Set range based off earliest and latest years of all cases involved
+                    yrs_cleaned = np.arange(min(first_yrs),max(last_yrs)+1,1)
+                    
+                    #Format axes
+                    ax = _format_yaxis(ax, case_num, unit_str, **vres)
+                    ax = _format_xaxis(ax, yrs_cleaned)
 
-                #Set up legend
-                fig = _make_fig_legend(case_num, fig)
+                    #Set up legend
+                    fig = _make_fig_legend(case_num, fig)
+                    plt.savefig(plot_name, facecolor='w')
+            #End if (plotting for good vars - vs obs)
 
-                #Save plot
-                #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-
-                #Save plot
-                #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                #if multi_case:
-                if 0==1:
-                    plot_name = plot_loc / f"{var}_{season}_TimeSeries_multi_plot.{plot_type}"
-                else:
-                    #plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
-                    plot_name = f"./{var}_{season}_TimeSeries_Mean.{plot_type}"
-
-                plt.savefig(plot_name, facecolor='w')
-            #    plt.close()
-            """
-            else:
-                # if no case has a plotted variable then close the figure so 
-                #plt.close()
-                if season == seasons[0]: 
-                    print(f"Time series plot for {var} not created, sorry :(")
-            """
+            #Close the figure
             plt.close()
+
         #End for (seasons)
     #End for (variables)
+    
+
+    # Vertical Level Plots
+    # (if applicable)
+    ##########################
+    #Loop over any variables with vertical levels that were saved in calculation section
+    if var_levs:
+        #Drop any duplicate variable names from vert level list (just want unique vars)
+        var_levs = list(OrderedDict.fromkeys(var_levs))
+
+        #Loop over keys in vertical level nested dictionary
+        for lev_var in var_levs:
+            #Check if any cases were flagged
+            if lev_var not in skip_list:
+                for press in pres_levs:
+                    for lev_seas in ["ANN"]:#seasons:
+                        
+                        yrs = {}
+                        fig = plt.figure(figsize=(12,8))
+                        ax = fig.add_subplot(111)
+
+                        for case_idx,case_name in enumerate(all_case_names):
+
+                            #Nicknames for plot legend
+                            name = all_nicknames[case_idx]
+
+                            #Set the baseline plot line as green dashed
+                            #TODO: change for color deficiency - JR
+                            if case_name == data_name:
+                                color_dict = {"color":'g',"marker":"--*",
+                                              "label":f"{name} (baseline)"}
+                            else:
+                                color_dict = {"color":colors[case_idx],"marker":"-*",
+                                              "label":f"{name}"}
+                            #End if
+                            
+                            if read_interp_ts:
+                                print("This files exists, so lets load it up boi")
+                                #TODO: Fix this path so not to have to rename file??
+                                
+                                interp_in_location = Path(case_ts_locs[case_idx]) / "interp"
+                                
+                                new_file = sorted(interp_in_location.glob(f"*.cam.h0.{lev_var}.{pres}*.nc"))
+                                #print(new_file)
+
+                                ds = xr.open_dataset(new_file[0])
+                                ds = ds.__xarray_dataarray_variable__ #TODO: Fix this!
+                                
+                            else:    
+                                #Get data from saved dictionary
+                                print("This file didn't already exist, so we are reading from cached data boi")
+                                ds = var_lev_dict[lev_var][lev_seas][case_name][press]
+
+                            #Gather years to plot
+                            yrs[case_name] = ds.year
+
+                            #Add case to plot (ax)
+                            ax.plot(yrs[case_name], ds, color_dict["marker"], c=color_dict["color"],label=color_dict["label"])
+
+                            #For the minor ticks, use no labels; default NullFormatter.
+                            ax.tick_params(which='major', length=7)
+                            ax.tick_params(which='minor', length=5)
+                            ds.close()
+
+                        #Set up plots
+                        plot_name = f"./{lev_var}_{press}hpa_{lev_seas}_TimeSeries_Mean.{plot_type}"
+                        
+                        #if read_interp_ts:
+                        #    plot_name = plot_name.replace(f".{plot_type}",f"_read_from_file.{plot_type}")
+
+                        if rolling:
+                            #Add rolling interval to title for extra info
+                            ax.set_title(f"{roll}-yr rolling average",loc="right")               
+                        if multi_case:
+                            #Add multi_plot to file name for ADF multi-case web generation
+                            plot_name = plot_name.replace(f".{plot_type}",f"_multi_plot.{plot_type}")
+
+                        #Set Main title for subplots:
+                        ax.set_title(f"Time Series {title_var}: {lev_var} @ {press}hpa - {lev_seas}",loc="left")
+                        
+                        #Grab first and last years from each case to determine range
+                        #of x-axis -> want to encompass all possible years
+                        first_yrs = []
+                        last_yrs = []
+                        for case,years in yrs.items():
+                            first_yrs.append(min(years.values))
+                            last_yrs.append(max(years.values))
+
+                        #Set range based off earliest and latest years of all cases involved
+                        yrs_cleaned = np.arange(min(first_yrs),max(last_yrs)+1,1)
+                        
+                        #Format axes
+                        ax = _format_yaxis(ax, case_num, unit_str, **vres)
+                        ax = _format_xaxis(ax, yrs_cleaned)
+
+                        #Set up legend
+                        fig = _make_fig_legend(case_num, fig)
+                        plt.savefig(plot_name, facecolor='w')
+
+                        #Close the figure
+                        plt.close()
+
+    # End Vertical Level Plots 
+    ##########################
+    
+    #Notify user the plots are finished
+    print("  ...time series plots have been generated successfully.")
 
 
-# Helper functions
-##################
+
+#Helper functions
+#----------------
+
+def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
+                convert_to_mb=False):
+    """
+    Interpolate model hybrid levels to specified pressure levels.
+
+    new_levels-> 1-D numpy array (ndarray) containing list of pressure levels
+                 in Pascals (Pa).
+
+    If "new_levels" is not specified, then the levels will be set
+    to the GeoCAT defaults, which are (in hPa):
+
+    1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
+    30, 20, 10, 7, 5, 3, 2, 1
+
+    If "convert_to_mb" is True, then vertical (lev) dimension will have
+    values of mb/hPa, otherwise the units are Pa.
+
+    The function "interp_hybrid_to_pressure" used here is dask-enabled,
+    and so can potentially be sped-up via the use of a DASK cluster.
+    """
+
+    #Temporary print statement to notify users to ignore warning messages.
+    #This should be replaced by a debug-log stdout filter at some point:
+    print("Please ignore the interpolation warnings that follow!")
+    
+    
+
+    #Apply GeoCAT hybrid->pressure interpolation:
+    if new_levels is not None:
+        data_interp = gcomp.interpolation.interp_hybrid_to_pressure(data, ps,
+                                                                    hyam,
+                                                                    hybm,
+                                                                    p0=P0,
+                                                                    new_levels=new_levels
+                                                                   )
+    else:
+        data_interp = gcomp.interpolation.interp_hybrid_to_pressure(data, ps,
+                                                                    hyam,
+                                                                    hybm,
+                                                                    p0=P0
+                                                                   )
+
+    # data_interp may contain a dask array, which can cause
+    # trouble downstream with numpy functions, so call compute() here.
+    if hasattr(data_interp, "compute"):
+        data_interp = data_interp.compute()
+
+    #Rename vertical dimension back to "lev" in order to work with
+    #the ADF plotting functions:
+    data_interp_rename = data_interp.rename({"plev": "lev"})
+
+    #Convert vertical dimension to mb/hPa, if requested:
+    if convert_to_mb:
+        data_interp_rename["lev"] = data_interp_rename["lev"] / 100.0
+
+    return data_interp_rename
+
+#####
+
+
+def ts_vert_interp(ts_file, data, var):
+    model_dataset = xr.open_dataset(ts_file)
+    
+    if 'PS' in model_dataset:
+        
+        mps = model_dataset['PS']
+    else:
+        #Check if target has an associated surface pressure field:
+        if ps_file:
+            mps_ds = xr.open_dataset(ps_file)
+            mps = mps_ds['PS']
+
+        else:
+            print(f"!! PROBLEM -- NO PS for 3-D variable {var}, so it will not be re-gridded.")
+            #return None
+        #End if
+    #End if
+
+    mdata = data#model_dataset[var].squeeze()
+
+
+    #Check if variable has a vertical component:
+    if 'lev' in mdata.dims:
+        print("has 'lev'")
+        has_lev = True
+
+        #If lev exists, then determine what kind of vertical coordinate
+        #is being used:
+        lev_attrs = model_dataset['lev'].attrs
+
+        #First check if there is a "vert_coord" attribute:
+        if 'vert_coord' in lev_attrs:
+            vert_coord_type = lev_attrs['vert_coord']
+        else:
+            #Next check that the "long_name" attribute exists:
+            if 'long_name' in lev_attrs:
+                #Extract long name:
+                lev_long_name = lev_attrs['long_name']
+
+                #Check for "keywords" in the long name:
+                if 'hybrid level' in lev_long_name:
+                    #Set model to hybrid vertical levels:
+                    vert_coord_type = "hybrid"
+                elif 'zeta level' in lev_long_name:
+                    #Set model to height (z) vertical levels:
+                    vert_coord_type = "height"
+                else:
+                    #Print a warning, and skip variable re-gridding/interpolation:
+                    wmsg = "WARNING! Unable to determine the vertical coordinate"
+                    wmsg +=f" type from the 'lev' long name, which is:\n'{lev_long_name}'"
+                    print(wmsg)
+                    #return None
+                #End if
+
+            else:
+                #Print a warning, and assume hybrid levels (for now):
+                wmsg = "WARNING!  No long name found for the 'lev' dimension,"
+                wmsg += f" so no re-gridding/interpolation will be done."
+                print(wmsg)
+                #return None
+            #End if
+        #End if
+        
+    if has_lev:
+        if vert_coord_type == "hybrid":
+            # Need hyam, hybm, and P0 for vertical interpolation of hybrid levels:
+            if ('hyam' not in model_dataset) or ('hybm' not in model_dataset):
+                print(f"!! PROBLEM -- NO hyam or hybm for 3-D variable {var}, so vertical level time series can't be plotted.")
+                #return None #Return None to skip to next variable.
+            #End if
+            mhya = model_dataset['hyam']
+            mhyb = model_dataset['hybm']
+            if 'time' in mhya.dims:
+                mhya = mhya.isel(time=0).squeeze()
+            if 'time' in mhyb.dims:
+                mhyb = mhyb.isel(time=0).squeeze()
+            if 'P0' in model_dataset:
+                P0_tmp = model_dataset['P0']
+                if isinstance(P0_tmp, xr.DataArray):
+                    #All of these value should be the same,
+                    #so just grab the first one:
+                    P0 = P0_tmp[0]
+                else:
+                    #Just rename variable:
+                    P0 = P0_tmp
+                #End if
+            else:
+                P0 = 100000.0  # Pa
+            #End if
+
+        elif vert_coord_type == "height":
+            #Initialize already-regridded PMID logical:
+            regridded_pmid = False
+
+            #Need mid-level pressure for vertical interpolation of height levels:
+            if 'PMID' in model_dataset:
+                mpmid = model_dataset['PMID']
+            else:
+                #Check if target has an associated surface pressure field:
+                if pmid_file:
+                    mpmid_ds = xr.open_dataset(pmid_file)
+                    mpmid = mpmid_ds['PMID']
+                else:
+                    print(f"!! PROBLEM -- NO PMID for 3-D variable {var}, so vertical level time series can't be plotted.")
+                    #return None
+                #End if
+            #End if
+        #End if (vert_coord_type)
+    
+    #Interpolate to common vertical pressure coordinates
+    if vert_coord_type == "hybrid":
+        ts_interp = lev_to_plev(mdata, mps, mhya, mhyb, P0=P0, \
+                              #new_levels=np.ndarray([lev]), 
+                            convert_to_mb=True)
+
+    if vert_coord_type == "height":
+        ts_interp = lev_to_plev(mdata, mpmid, convert_to_mb=True)
+        
+    return ts_interp
+
+#####
+
+def save_to_nc(tosave, outname, attrs=None, proc=None):
+    """Saves xarray variable to new netCDF file"""
+
+    xo = tosave  # used to have more stuff here.
+    # deal with getting non-nan fill values.
+    if isinstance(xo, xr.Dataset):
+        enc_dv = {xname: {'_FillValue': None} for xname in xo.data_vars}
+    else:
+        enc_dv = {}
+    #End if
+    enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
+    enc = {**enc_c, **enc_dv}
+    if attrs is not None:
+        xo.attrs = attrs
+    if proc is not None:
+        xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+    xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
+
+#####
 
 def _set_ymargin(ax, top, bottom):
     """
@@ -444,20 +986,18 @@ def _format_xaxis(ax, yrs):
     """
 
     #Grab all unique years and find min/max years
-    #uniq_yrs = sorted({x for v in yrs.values() for x in v})
-    #uniq_yrs = sorted(x for v in yrs.values() for x in v)
-    uniq_yrs = yrs #sorted(x for v in yrs for x in v)
-    max_year = int(max(uniq_yrs))
-    min_year = int(min(uniq_yrs))
+    uniq_yrs = sorted(yrs)
+    first_year = int(uniq_yrs[0])
+    last_year = int(uniq_yrs[-1])
     
     # Pad the last year by one -> just to add space on the plot?
-    last_year = max_year# + 1
+    #last_year = max_year# + 1
     #last_year = max_year - max_year % 5
     #if (max_year > 5) and (last_year < max_year):
     #    last_year += 5
     
     # Pad the first year by one -> just to add space on the plot?
-    first_year = min_year# - 1
+    #first_year = min_year# - 1
     #first_year = min_year - min_year % 5
     #if min_year < 5:
     #    first_year = 0
@@ -465,20 +1005,21 @@ def _format_xaxis(ax, yrs):
     #print(first_year, last_year)
     ax.set_xlim(first_year, last_year)
     ax.set_xlabel("Years",fontsize=15,labelpad=20)
-    ax.xaxis.set_major_locator(MultipleLocator(1))
-    
-    """
+
     #x-axis ticks and numbers
-    if max_year > 120:
+    if len(uniq_yrs) > 120:
         ax.xaxis.set_major_locator(MultipleLocator(20))
         ax.xaxis.set_minor_locator(MultipleLocator(10))
-    if 10 <= max_year <= 120:
+    if 50 <= len(uniq_yrs) <= 120:
+        ax.xaxis.set_major_locator(MultipleLocator(10))
+        ax.xaxis.set_minor_locator(MultipleLocator(5))
+    if 10 <= len(uniq_yrs) < 50:
         ax.xaxis.set_major_locator(MultipleLocator(5))
         ax.xaxis.set_minor_locator(MultipleLocator(1))
-    if 0 < max_year < 10:
+    if 0 < len(uniq_yrs) < 10:
         ax.xaxis.set_major_locator(MultipleLocator(1))
         ax.xaxis.set_minor_locator(MultipleLocator(1))
-    """
+    
     return ax
 
 ########
@@ -494,11 +1035,14 @@ def _make_fig_legend(case_num, fig):
     #Gather labels based on case names and plotted line format (color, style, etc)
     lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-
+        
+    #Make height based on number of cases
+    #NOTE: I think this works for multi-case, just need to test - JR
+    h = 0.05*(case_num-1)
+    
     fig.legend(lines[:case_num+1], labels[:case_num+1],loc="upper left",
-                bbox_to_anchor=(0.12, 1.025,.042,.05*(case_num-1))
-                #bbox_to_anchor=(0.12, 0.835,.042,.05)
-                ) #bbox_to_anchor(x0, y0, width, height)
+                bbox_to_anchor=(0.12, 0.885-h, 0.042, h) #bbox_to_anchor(x0, y0, width, height)
+                ) 
 
     return fig
 
@@ -571,7 +1115,7 @@ def seasonal_mean(data, season=None, is_climo=None):
 
     data = data.sel(time=data.time.dt.month.isin(seasons[season])) # directly take the months we want based on season kwarg
     
-    if not is_climo:
+    if not is_climo: #ie time series
         return data
     else:
         return data.weighted(data.time.dt.daysinmonth).mean(dim='time')
@@ -766,3 +1310,27 @@ def global_average(fld, wgt, verbose=False):
     avg1, sofw = np.ma.average(fld2, axis=a, weights=wgt, returned=True) # sofw is sum of weights
 
     return np.ma.average(avg1)
+
+########
+
+def check_rolling(vres):
+    """
+    Search variable defaults file for any rolling mean desired for variable
+    """
+
+    rolling = False
+    roll = None
+
+    if vres.get('timeseries'):
+        if 'rolling' in vres["timeseries"]:
+            # roll_interval -> years, months, etc
+            #NOTE: start with years only for time series for now
+            if 'years' in vres["timeseries"]['rolling']:
+                rolling = True
+                roll = vres['timeseries']["rolling"]["years"]
+                print(f"\t   rolling interval: {roll} years\n")
+            #End if
+        #End if
+    #End if
+    
+    return rolling,roll
