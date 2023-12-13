@@ -252,8 +252,12 @@ def time_series(adfobj):
             vres = res[var]
             #If found then notify user, assuming debug log is enabled:
             adfobj.debug_log(f"time_series: Found variable defaults for {var}")
+
+            #Extract category (if available):
+            web_category = vres.get("category", None)
         else:
             vres = {}
+            web_category = None
         #End if
 
         #Add variables that user doesn't want to plot
@@ -573,12 +577,11 @@ def time_series(adfobj):
             #End for (case names)
 
             #Set up plots
-            plot_name = f"./{var}_{season}_TimeSeries_Mean.{plot_type}"
+            plot_name = plot_loc / f"{var}_{season}_TimeSeries_Mean.{plot_type}"
 
             if rolling:
                 #Add rolling to file name for extra info?
                 ax.set_title(f"{roll}-yr rolling average",loc="right")
-                #plot_name = plot_name.replace("Mean","Mean_rolling")                
             if multi_case:
                 #Add multi_plot to file name for ADF multi-case web generation
                 plot_name = plot_name.replace(f".{plot_type}",f"_multi_plot.{plot_type}")
@@ -609,6 +612,10 @@ def time_series(adfobj):
                     #Set up legend
                     fig = _make_fig_legend(case_num, fig)
                     plt.savefig(plot_name, facecolor='w')
+
+                    #Add plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, f"{var}", case_name, category=web_category,
+                                            season=season, plot_type="LatLon")
             #End if (plotting for good vars - vs obs)
 
             #Close the figure
@@ -681,10 +688,7 @@ def time_series(adfobj):
                             ds.close()
 
                         #Set up plots
-                        plot_name = f"./{lev_var}_{press}hpa_{lev_seas}_TimeSeries_Mean.{plot_type}"
-                        
-                        #if read_interp_ts:
-                        #    plot_name = plot_name.replace(f".{plot_type}",f"_read_from_file.{plot_type}")
+                        plot_name = plot_loc / f"{lev_var}_{press}hpa_{lev_seas}_TimeSeries_Mean.{plot_type}"
 
                         if rolling:
                             #Add rolling interval to title for extra info
@@ -714,6 +718,10 @@ def time_series(adfobj):
                         #Set up legend
                         fig = _make_fig_legend(case_num, fig)
                         plt.savefig(plot_name, facecolor='w')
+
+                        #Add plot to website (if enabled):
+                        adfobj.add_website_data(plot_name, f"{lev_var}_{press}hpa", case_name, category=web_category,
+                                            season=season, plot_type="LatLon")
 
                         #Close the figure
                         plt.close()
