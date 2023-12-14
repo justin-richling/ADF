@@ -615,7 +615,7 @@ def time_series(adfobj):
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, f"{var}", case_name, category=web_category,
-                                            season=season, plot_type="Special")
+                                            season=season, plot_type="TimeSeries")
             #End if (plotting for good vars - vs obs)
 
             #Close the figure
@@ -721,7 +721,7 @@ def time_series(adfobj):
 
                         #Add plot to website (if enabled):
                         adfobj.add_website_data(plot_name, f"{lev_var}_{press}hpa", case_name, category=web_category,
-                                            season=season, plot_type="Special")
+                                            season=season, plot_type="TimeSeries")
 
                         #Close the figure
                         plt.close()
