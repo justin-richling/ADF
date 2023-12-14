@@ -614,7 +614,7 @@ def time_series(adfobj):
                     plt.savefig(plot_name, facecolor='w')
 
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, f"{var}", case_name, category=web_category,
+                    adfobj.add_website_data(plot_name, f"{var}", all_case_names[0], category=web_category,
                                             season=season, plot_type="TimeSeries")
             #End if (plotting for good vars - vs obs)
 
@@ -720,7 +720,7 @@ def time_series(adfobj):
                         plt.savefig(plot_name, facecolor='w')
 
                         #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, f"{lev_var}_{press}hpa", case_name, category=web_category,
+                        adfobj.add_website_data(plot_name, f"{lev_var}_{press}hpa", all_case_names[0], category=web_category,
                                             season=lev_seas, plot_type="TimeSeries")
 
                         #Close the figure
