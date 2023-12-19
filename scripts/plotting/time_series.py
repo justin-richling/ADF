@@ -199,6 +199,7 @@ def time_series(adfobj):
     seasons = ["ANN","DJF","MAM","JJA","SON"]
     #seasons = ["ANN"]
     
+    """
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
     #Extract baseline years (which may be empty strings if using Obs):
@@ -207,6 +208,7 @@ def time_series(adfobj):
     
     syears = syear_cases + [syear_baseline]
     eyears = eyear_cases + [eyear_baseline]
+    """
 
     #Set up the plots
     #################
@@ -341,13 +343,18 @@ def time_series(adfobj):
                 #Check if variable has a vertical coordinate:
                 if 'lev' in data.coords or 'ilev' in data.coords:                    
                     if var not in skip_list:
+                        #Flag the variable to skip plotting
+                        #TODO: finish vertical lev plotting! - JR
                         var_levs.append(var)
                         
-                        # this warning will appear for each case that the variable is missing...
+                        # this warning will appear for each case that the variable has vert levs...
+                        #Just print it once per case, not for every season
                         if season == seasons[0]:
-                            print(f"\t   Variable '{var}' has a vertical dimension, ")#+\
-                                  #"which is currently not supported for the time series plot. Skipping...")
+                            print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                                  "which is currently not supported for the time series plot. Skipping...")
                         
+                        
+                        '''
                         #For testing and maybe for ever?
                         #Just calculate annual, not other seasons to keep calculations/time down????
                         if season == "ANN":
@@ -492,7 +499,7 @@ def time_series(adfobj):
                                 #Let the ADF know if it needs to read from cached array
                                 read_interp_ts = False
                         """
-                        
+                        '''
                     #Skip this variable and move to the next variable in var_list
                     # during 2-d plotting. Vertical level plotting are at end of script
                     plt.close()
@@ -501,6 +508,7 @@ def time_series(adfobj):
                 #End if
                 #End Vertical Coordinates
                 ################################################
+                
 
                 #Check if variable should be masked:
                 if 'mask' in var_default_dict:
@@ -624,7 +632,7 @@ def time_series(adfobj):
         #End for (seasons)
     #End for (variables)
     
-
+    '''
     # Vertical Level Plots
     # (if applicable)
     ##########################
@@ -728,6 +736,7 @@ def time_series(adfobj):
 
     # End Vertical Level Plots 
     ##########################
+    '''
     
     #Notify user the plots are finished
     print("  ...time series plots have been generated successfully.")
