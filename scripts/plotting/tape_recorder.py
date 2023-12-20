@@ -128,7 +128,6 @@ def tape_recorder(adfobj):
     # f"{var}_{season}_{ptype}_multi_plot.png"
 
     if multi_case:
-        #plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
         plot_name_multi = main_site_assets_path / f"tape_recorder_ANN_Special_multi_plot.{plot_type}"
 
         """
@@ -169,10 +168,29 @@ def tape_recorder(adfobj):
     # ERA5 data
     era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
     era5 = era5.groupby('time.month').mean('time')
-
+    
+    
+    runs_LT2={}
+    for i,val in enumerate(test_nicknames):
+        runs_LT2[val] = case_ts_locs[i]
+    
     alldat=[]
     runname_LT=[]
-    for key in runs_LT2:
+    
+    #alldat_multi=[]
+    #runname_LT_multi=[]
+    if  multi_case and not adfobj.compare_obs:
+        dat_base = xr.open_dataset(glob.glob(runs_LT2[base_nickname]+'/*h0.Q.*.nc')[0])
+        dat_base = fixcesmtime(dat_base)
+        datzm_base = dat_base.mean('lon')
+        dat_tropics_base = cosweightlat(datzm_base.Q, -10, 10)
+        dat_mon_base = dat_tropics_base.groupby('time.month').mean('time').load()
+        #alldat_multi.append(dat_mon_base)
+        #runname_LT_multi.append(base_nickname)
+        dat_mon_base
+        base_nickname
+    
+    for idx,key in enumerate(runs_LT2):
         dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0.Q.*.nc')[0])
         dat = fixcesmtime(dat)
         datzm = dat.mean('lon')
@@ -180,6 +198,76 @@ def tape_recorder(adfobj):
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         alldat.append(dat_mon)
         runname_LT.append(key)
+
+        
+        if multi_case and key != base_nickname:
+            alldat_multi=[dat_mon]
+            runname_LT_multi=[key]
+            alldat_multi.append(dat_mon_base)
+            runname_LT_multi.append(base_nickname)
+        
+            runname_LT_multi=xr.DataArray(runname_LT_multi, dims='run', coords=[np.arange(0,len(runname_LT_multi),1)], name='run')
+            alldat_concat_LT_multi = xr.concat(alldat_multi, dim=runname_LT_multi)
+
+            fig = plt.figure(figsize=(16,16))
+            x1, x2, y1, y2 = get5by5coords_zmplots()
+
+            plot_step = 0.5e-7
+            plot_min = 1.5e-6
+            plot_max = 3e-6
+
+            ax = plot_pre_mon(fig, mls, mls.lev, plot_step,plot_min,plot_max,'MLS',
+                              x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
+                              taxis='month',climo_yrs="2004-2021")
+
+            ax = plot_pre_mon(fig, era5.Q, era5.pre, plot_step,plot_min,plot_max,
+                              'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
+                              taxis='month',climo_yrs="1980-2020")
+
+            #Start count at 2 to account for MLS and ERA5 plots above
+            count=2
+            for irun in np.arange(0,alldat_concat_LT_multi.run.size,1):
+                title = f"{alldat_concat_LT_multi.run.isel(run=irun).values}"
+                ax = plot_pre_mon(fig, alldat_concat_LT_multi.isel(run=irun), 
+                                  alldat_concat_LT_multi.isel(run=irun).lev,
+                                  plot_step, plot_min, plot_max, title,
+                                  x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
+                                  taxis='month',climo_yrs=f"{start_years[irun]}-{end_years[irun]}")
+                count=count+1
+
+            #Shift colorbar if there are less than 5 subplots
+            # There will always be at least 2 (MLS and ERA5)
+            #if len(case_ts_locs) == 0:
+            #    print("Seems like there are no simulations to plot, exiting script.")
+            #    return
+            #if len(case_ts_locs) == 1:
+            #    x1_loc = (x1[1]-x1[0])/2
+            #    x2_loc = ((x2[2]-x2[1])/2)+x2[1]
+            #elif len(case_ts_locs) == 2:
+            #    x1_loc = (x1[1]-x1[0])/2
+            #    x2_loc = ((x2[3]-x2[2])/2)+x2[2]
+            #else:
+            #    x1_loc = x1[1]
+            #    x2_loc = x2[3]
+            
+            x1_loc = (x1[1]-x1[0])/2
+            x2_loc = ((x2[2]-x2[1])/2)+x2[1]
+
+            y1_loc = y1[count]-0.03
+            y2_loc = y1[count]-0.02
+
+            ax = plotcolorbar(fig, plot_step, plot_min, plot_max, 'Q (kg/kg)',
+                              x1_loc, x2_loc, y1_loc, y2_loc,
+                              cmap=cmap)
+            
+            #Save image
+            plot_name = f"./tape_recorder_ANN_Special_{key}.{plot_type}"
+            plot_name = Path(plot_location[idx]) / f"tape_recorder_ANN_Special.{plot_type}"
+            fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
+
+            #Add plot to website (if enabled):
+            adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+        
 
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
