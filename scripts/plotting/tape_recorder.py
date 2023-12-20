@@ -266,7 +266,7 @@ def tape_recorder(adfobj):
             fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
             #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, "tape_recorder", case_names[idx], season="ANN", multi_case=True, plot_type="Special")
+            adfobj.add_website_data(plot_name, "tape_recorder", case_names[idx], category=None, season="ANN", multi_case=True, plot_type="Special")
             #adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
         
 
