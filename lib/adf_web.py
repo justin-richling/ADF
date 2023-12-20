@@ -225,7 +225,7 @@ class AdfWeb(AdfObs):
         #or a pandas dataframe:
         try:
             web_data = Path(web_data)
-            print("\n","web_data",web_data,"\n")
+            #print("\n","web_data",web_data,"\n")
 
             #Make sure the path is to an actual file:
             if not web_data.is_file():
@@ -795,6 +795,8 @@ class AdfWeb(AdfObs):
 
                     #Check if the mean plot type and var page exists for this case:
                     plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
+                    print("plot_page_{web_data.name}_{web_data.plot_type}.html",plot_page)
+                    print("img_pages_dir",img_pages_dir,"\n")
                     mean_ptype_plot_page = img_pages_dir / plot_page
                     if not mean_ptype_plot_page.exists():
 
