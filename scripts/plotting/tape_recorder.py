@@ -70,6 +70,9 @@ def tape_recorder(adfobj):
         main_site_path = adfobj.main_site_paths["main_site_path"]
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
 
+        print("main_site_path",main_site_path)
+        print("main_site_assets_path",main_site_assets_path)
+
     else:
         multi_case = False
     #End if (check for multiple cases)
