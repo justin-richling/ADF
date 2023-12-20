@@ -42,6 +42,7 @@ def tape_recorder(adfobj):
     #Notify user that script has started:
     print("\n  Generating tape recorder plots...")
 
+    """
     #Special ADF variable which contains the output paths for
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
@@ -61,6 +62,9 @@ def tape_recorder(adfobj):
             plot_loc = Path(plot_location[0])
     else:
         plot_loc = Path(plot_location)
+    """
+
+    plot_location = adfobj.plot_location
 
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
     data_name = adfobj.get_baseline_info('cam_case_name', required=False)
