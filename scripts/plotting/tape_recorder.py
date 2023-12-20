@@ -247,14 +247,13 @@ def tape_recorder(adfobj):
 
     if multi_case:#Notify user that script has started:
         print("\n  Generating tape recorder multi-case plots...")
-        
+
+        #Save image
+        fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
 
         #plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
         adfobj.add_website_data(plot_name_multi, "tape_recorder", None, category=None, season="ANN",
                                 multi_case=True,plot_type="Special")
-
-        #Save image
-        fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
 
     else:
         #Save image
