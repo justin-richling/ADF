@@ -139,7 +139,7 @@ def tape_recorder(adfobj):
             plot_name.unlink()
         """
     else:
-        plot_name = plot_loc / f"tape_recorder_ANN_Special_multi_plot.{plot_type}"
+        plot_name = plot_loc / f"tape_recorder_ANN_Special.{plot_type}"
 
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         if (not redo_plot) and plot_name.is_file():
@@ -248,7 +248,7 @@ def tape_recorder(adfobj):
 
         #plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
         adfobj.add_website_data(plot_name_multi, "tape_recorder", None, category=None, season="ANN",
-                                multi_case=True)#,plot_type="Special")
+                                multi_case=True,plot_type="Special")
 
         #Save image
         fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
