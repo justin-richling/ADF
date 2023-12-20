@@ -66,13 +66,7 @@ def tape_recorder(adfobj):
     data_name = adfobj.get_baseline_info('cam_case_name', required=False)
     if len(case_names) > 1:
         multi_case = True
-
-        main_site_path = adfobj.main_site_paths["main_site_path"]
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
-
-        print("main_site_path",main_site_path)
-        print("main_site_assets_path",main_site_assets_path)
-
     else:
         multi_case = False
     #End if (check for multiple cases)
