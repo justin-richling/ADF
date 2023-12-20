@@ -34,7 +34,7 @@ def tape_recorder(adfobj):
     ERA5 Q data is for 01/1980-12/2020
 
     NOTE: If the baseline case are observations, it will be ignored
-        since a defualt set of obs are already being compared against in the tape recorder.
+        since a default set of obs are already being compared in the tape recorder plot.
     
     
     
@@ -127,17 +127,28 @@ def tape_recorder(adfobj):
     if multi_case:
         #plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
         plot_name_multi = main_site_assets_path / f"tape_recorder_ANN_Special_multi_plot.{plot_type}"
+
+        """
+        # Check redo_plot. If set to True: remove old plot, if it already exists:
+        if (not redo_plot) and plot_name.is_file():
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+            return
+
+        elif (redo_plot) and plot_name.is_file():
+            plot_name.unlink()
+        """
     else:
         plot_name = plot_loc / f"tape_recorder_ANN_Special_multi_plot.{plot_type}"
 
-    # Check redo_plot. If set to True: remove old plot, if it already exists:
-    if (not redo_plot) and plot_name.is_file():
-        #Add already-existing plot to website (if enabled):
-        adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
-        return
+        # Check redo_plot. If set to True: remove old plot, if it already exists:
+        if (not redo_plot) and plot_name.is_file():
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+            return
 
-    elif (redo_plot) and plot_name.is_file():
-        plot_name.unlink()
+        elif (redo_plot) and plot_name.is_file():
+            plot_name.unlink()
     
     runs_LT2={}
     for i,val in enumerate(test_nicknames):
@@ -218,7 +229,7 @@ def tape_recorder(adfobj):
                       x1_loc, x2_loc, y1_loc, y2_loc,
                       cmap=cmap)
 
-    #plot_name = plot_loc / f"Q_ANN_TapeRecorder_Mean.{plot_type}"
+
     print(f"\t - Plotting annual tape recorder for Q")
 
     """
@@ -232,7 +243,7 @@ def tape_recorder(adfobj):
     """
 
     if multi_case:#Notify user that script has started:
-        print("\n  Generating qbo multi-case plots...")
+        print("\n  Generating tape recorder multi-case plots...")
         
 
         #plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
