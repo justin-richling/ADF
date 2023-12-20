@@ -207,7 +207,7 @@ def qbo(adfobj):
                     fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
 
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_loc_ts, "QBO", case_names[icase], category=None, season="QBOts",
+                    adfobj.add_website_data(plot_loc_ts, "QBO", case_names[icase], category=None, season="QBOts",non_season=True,
                                             multi_case=True,plot_type="Special")
             #End if (multi-case)
 
@@ -233,7 +233,7 @@ def qbo(adfobj):
 
         plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
         fig.savefig(plot_loc_ts_multi, bbox_inches='tight', facecolor='white')
-        adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="QBOts",
+        adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="QBOts",non_season=True,
                                 multi_case=True,plot_type="Special")
     
     else:
@@ -242,7 +242,7 @@ def qbo(adfobj):
 
         #Add plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-        adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
+        adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",non_season=True,
                                 multi_case=True,plot_type="Special")
     #-----------------
 
@@ -279,7 +279,8 @@ def qbo(adfobj):
                 fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
                 plt.close()
                 #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_loc_amp, "QBO", case_names[icase], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
+                adfobj.add_website_data(plot_loc_amp, "QBO", case_names[icase], category = None, season="QBOamp", non_season=True,
+                                        multi_case=True,plot_type = "Special")
             #End if (not baseline)
         #End for (cases)
     #End if (multi-case)
@@ -306,13 +307,14 @@ def qbo(adfobj):
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp",
+        adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="QBOamp", non_season=True,
                                 multi_case=True,plot_type = "Special")
     else:
         fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
         
         #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
+        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", non_season=True,
+                                multi_case=True,plot_type = "Special")
     
     #Close main fig
     plt.close()

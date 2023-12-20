@@ -59,6 +59,7 @@ class _WebData:
                  plot_ext = None,
                  category = None,
                  season = None,
+                 non_season = False,
                  plot_type = "Special",
                  data_frame = False,
                  html_file  = None,
@@ -71,6 +72,7 @@ class _WebData:
         self.case       = case_name
         self.category   = category
         self.season     = season
+        self.non_season = non_season
         self.plot_type  = plot_type
         self.plot_ext   = plot_ext
         self.data_frame = data_frame
@@ -185,6 +187,7 @@ class AdfWeb(AdfObs):
                          plot_ext = None,
                          category = None,
                          season = None,
+                         non_season = False,
                          plot_type = "Special",
                          multi_case=False):
 
@@ -205,6 +208,10 @@ class AdfWeb(AdfObs):
                       then it will default to "No category yet".
         season     -> What the season is for the plot.  If not provided it will assume the
                       plot does not need any seasonal seperation.
+
+        non_season -> Are the plots NOT divided up by seaons, ANN, DJF, MAM, JJA, or SON?
+                      - QBO is displayed as QBOts and QBOamp in the season argument above
+
         plot_type  -> Type of plot.  If not provided then plot type will be "Special".
 
         multi_case -> Logical which indicates whether the image or dataframe can contain
@@ -296,6 +303,7 @@ class AdfWeb(AdfObs):
         web_data = _WebData(web_data, web_name, case_name, plot_ext,
                             category = category,
                             season = season,
+                            non_season = non_season,
                             plot_type = plot_type,
                             data_frame = data_frame,
                             html_file = html_file,
@@ -767,6 +775,7 @@ class AdfWeb(AdfObs):
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
                                        "seasons": seasons,
+                                       "non_season": web_data.non_season,
                                        "multi": multi_layout}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
@@ -841,7 +850,6 @@ class AdfWeb(AdfObs):
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
                                             plot_types=plot_types,
-                                            seasons=seasons,
                                             multi=multi_layout)
 
             #Write Mean diagnostics index HTML file:
@@ -1039,6 +1047,8 @@ class AdfWeb(AdfObs):
                                                     "mydata": multi_plot_html_info[ptype],
                                                     "plot_types": multi_plot_type_html,
                                                     "multi": multi_layout,
+                                                    "seasons": seasons,
+                                                    "non_season": web_data.non_season,
                                                     "case_sites": case_sites}
 
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
@@ -1108,7 +1118,7 @@ class AdfWeb(AdfObs):
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                             start=main_site_img_path),
                                                             multi_plot_page]
-
+                        print("\n","web_data.non_season",web_data.non_season,"\n")
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
                                             "season_title": season,
@@ -1120,6 +1130,8 @@ class AdfWeb(AdfObs):
                                             "mydata": multi_mean_html_info[ptype],
                                             "plot_types": multi_plot_type_html,
                                             "multi": multi_layout,
+                                            "seasons": seasons,
+                                            "non_season": web_data.non_season,
                                             "case_sites": case_sites}
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
