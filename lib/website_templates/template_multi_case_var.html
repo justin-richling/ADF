@@ -59,19 +59,31 @@
         {% for category, var_seas in mydata.items() %}
         {% for var_name, seas_files in var_seas.items() %}
         {% if var_name == var_title %}
-        {% for season in seasons %}
+        
+        
+        {% if non_season == False %}
+          {% for season in seasons %}
+          {% if season in seas_files.keys() %}
+          <div class="grid-item">
+            <a href="../html_img/{{ seas_files[season] }}">{{ season }}</a>
+          </div><!--grid-item-->
+          {% else %}
+          <div class="grid-item-blocked">
+            <a-blocked>{{ season }}</a-blocked>
+          </div><!--grid-item-blocked-->
+          {% endif %}
+          {% endfor %}<!--seasons-->
 
-        {% if season in seas_files.keys() %}
-        <div class="grid-item">
-          <a href="../html_img/{{ seas_files[season] }}">{{ season }}</a>
-        </div><!--grid-item-->
-        {% else %}
-        <div class="grid-item-blocked ">
-          <a-blocked>{{ season }}</a-blocked>
-        </div><!--grid-item-blocked-->
-        {% endif %}
+        
+          {% else %}
+          {% for season in seasons %}
+            <div class="grid-item">
+              <a href="../html_img/{{ seas_files[season] }}">{{ season }}</a>
+            </div><!--grid-item-->
+          {% endfor %}<!--seasons-->
 
-        {% endfor %}<!--seasons-->
+        {% endif %}<!--if non_season == False-->
+
         {% endif %}
         {% endfor %}
         {% endfor %}

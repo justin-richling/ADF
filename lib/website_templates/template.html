@@ -73,9 +73,11 @@
 
         
         {% else %}
+        {% for season in seasons %}
           <div class="grid-item">
             <a href="../html_img/{{ seas_files[season] }}">{{ season }}</a>
           </div><!--grid-item-->
+        {% endfor %}<!--seasons-->
 
         {% endif %}<!--if non_season == False-->
 
