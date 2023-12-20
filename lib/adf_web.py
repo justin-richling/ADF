@@ -1070,7 +1070,6 @@ class AdfWeb(AdfObs):
                                 #End if (mean_ptype_plot_page exists)
 
                                 multi_mean = f"multi_case_mean_diag_{ptype}.html"
-                                print("\n","multi_case_mean_diag_{ptype}.html",multi_mean,"\n")
                                 mean_ptype_file = main_site_img_path / multi_mean
                                 if not mean_ptype_file.exists():
 
@@ -1151,7 +1150,6 @@ class AdfWeb(AdfObs):
                         #End if (mean_ptype_plot_page exists)
 
                         multi_mean = f"multi_case_mean_diag_{ptype}.html"
-                        print("\n","multi_case_mean_diag_{ptype}.html",multi_mean,"\n")
                         mean_ptype_file = main_site_img_path / multi_mean
                         if not mean_ptype_file.exists():
 
