@@ -470,7 +470,7 @@ def global_latlon_map(adfobj):
                                 elif (redo_plot) and plot_name.is_file():
                                     plot_name.unlink()
 
-                                print(mseasons[s])
+                                print(mdata.units)
                                 #Create new plot:
                                 # NOTE: send vres as kwarg dictionary.  --> ONLY vres, not the full res
                                 # This relies on `plot_map_and_save` knowing how to deal with the options
