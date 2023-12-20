@@ -439,6 +439,9 @@ class AdfWeb(AdfObs):
         #Set main title for website:
         main_title = "CAM Diagnostics"
 
+        #List of seasons
+        seasons = ["ANN","DJF","MAM","JJA","SON"]
+
         #Determine local directory:
         adf_lib_dir = Path(__file__).parent
 
@@ -763,6 +766,7 @@ class AdfWeb(AdfObs):
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
+                                       "seasons": seasons,
                                        "multi": multi_layout}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
@@ -837,6 +841,7 @@ class AdfWeb(AdfObs):
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
                                             plot_types=plot_types,
+                                            seasons=seasons,
                                             multi=multi_layout)
 
             #Write Mean diagnostics index HTML file:
