@@ -124,9 +124,9 @@ def tape_recorder(adfobj):
     #for var in ["Q"]:
     # f"{var}_{season}_{ptype}_multi_plot.png"
 
-    if 0==1: #multi_case:
+    if multi_case:
         #plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
-        plot_name = main_site_assets_path / f"tape_recorder_ANN_Special_multi_plot.{plot_type}"
+        plot_name_multi = main_site_assets_path / f"tape_recorder_ANN_Special_multi_plot.{plot_type}"
     else:
         plot_name = plot_loc / f"tape_recorder_ANN_Special_multi_plot.{plot_type}"
 
@@ -230,11 +230,24 @@ def tape_recorder(adfobj):
     elif (redo_plot) and plot_name.is_file():
         plot_name.unlink()
     """
-    #Save image
-    fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
-    #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+    if multi_case:#Notify user that script has started:
+        print("\n  Generating qbo multi-case plots...")
+        
+
+        #plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
+        adfobj.add_website_data(plot_name_multi, "tape_recorder", None, category=None, season="ANN",
+                                multi_case=True)#,plot_type="Special")
+
+        #Save image
+        fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
+
+    else:
+        #Save image
+        fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
+
+        #Add plot to website (if enabled):
+        adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
