@@ -1804,7 +1804,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                         #Clean up the spacing a bit
                         plt.subplots_adjust(wspace=0.3, hspace=hspace)
-
+                        print(wks / file_name)
                         fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
 
                         adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
