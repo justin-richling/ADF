@@ -144,7 +144,7 @@ def tape_recorder(adfobj):
             # Check redo_plot. If set to True: remove old plot, if it already exists:
             if (not redo_plot) and plot_name.is_file():
                 #Add already-existing plot to website (if enabled):
-                adfobj.add_website_data(plot_name, "tape_recorder", None, season=var, multi_case=True)
+                adfobj.add_website_data(plot_name, "tape_recorder", None, season=var,non_season=True, multi_case=True)
                 return
 
             elif (redo_plot) and plot_name.is_file():
@@ -263,7 +263,7 @@ def tape_recorder(adfobj):
                 fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
                 #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_name, "tape_recorder", case_names[idx], category=None, season=var, multi_case=True, plot_type="Special")
+                adfobj.add_website_data(plot_name, "tape_recorder", case_names[idx], category=None, season=var, non_season=True,multi_case=True, plot_type="Special")
                 #adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
             
 
@@ -338,7 +338,7 @@ def tape_recorder(adfobj):
             fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
 
             #plot_loc_ts_multi = main_site_assets_path / f'QBO_QBOts_Special_multi_plot.{plot_type}'
-            adfobj.add_website_data(plot_name_multi, "tape_recorder", None, category=None, season=var,
+            adfobj.add_website_data(plot_name_multi, "tape_recorder", None, category=None, season=var,non_season=True,
                                     multi_case=True,plot_type="Special")
 
         else:
@@ -346,7 +346,7 @@ def tape_recorder(adfobj):
             fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
             #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, "tape_recorder", None, season=var, multi_case=True)
+            adfobj.add_website_data(plot_name, "tape_recorder", None, season=var, non_season=True,multi_case=True)
         #End for vars
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
