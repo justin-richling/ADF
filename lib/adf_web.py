@@ -762,7 +762,7 @@ class AdfWeb(AdfObs):
 
                     img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
-
+                    print("\n","web_data.non_season",web_data.non_season,"\n")
                     rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
