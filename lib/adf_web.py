@@ -728,7 +728,8 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case (or for multi-case):
                 mean_table_file = table_pages_dir / "mean_tables.html"
-                if not mean_table_file.exists():
+                #if not mean_table_file.exists():
+                if 1==1:
 
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
@@ -789,7 +790,8 @@ class AdfWeb(AdfObs):
 
                     #Check if the mean plot type page exists for this case:
                     mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                    if not mean_ptype_file.exists():
+                    #if not mean_ptype_file.exists():
+                    if 1==1:
 
                         #Construct individual plot type mean_diag html files, if they don't
                         #already exist:
@@ -811,7 +813,8 @@ class AdfWeb(AdfObs):
                     print("plot_page_{web_data.name}_{web_data.plot_type}.html",plot_page)
                     print("img_pages_dir",img_pages_dir,"\n")
                     mean_ptype_plot_page = img_pages_dir / plot_page
-                    if not mean_ptype_plot_page.exists():
+                    #if not mean_ptype_plot_page.exists():
+                    if 1==1:
 
                         #Construct individual plot type mean_diag html files, if they don't
                         #already exist:
@@ -923,7 +926,8 @@ class AdfWeb(AdfObs):
                                         "multi": False,
                                         "case_sites": case_sites}
 
-                    if not mean_table_file.exists():
+                    #if not mean_table_file.exists():
+                    if 1==1:
                         #Construct mean_table.html
                         mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
 
@@ -1052,7 +1056,8 @@ class AdfWeb(AdfObs):
                                                     "case_sites": case_sites}
 
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                                if not (img_pages_dir / multimean).exists():
+                                #if not (img_pages_dir / multimean).exists():
+                                if 1==1:
 
                                     tmpl = jinenv.get_template('template_multi_case.html')
 
@@ -1069,7 +1074,8 @@ class AdfWeb(AdfObs):
                                 plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
                                 mean_ptype_plot_page = img_pages_dir / plot_page
 
-                                if not mean_ptype_plot_page.exists():
+                                #if not mean_ptype_plot_page.exists():
+                                if 1==1:
 
                                     #Remove key from main dictionary for this html page
                                     templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
@@ -1088,7 +1094,8 @@ class AdfWeb(AdfObs):
 
                                 multi_mean = f"multi_case_mean_diag_{ptype}.html"
                                 mean_ptype_file = main_site_img_path / multi_mean
-                                if not mean_ptype_file.exists():
+                                #if not mean_ptype_file.exists():
+                                if 1==1:
 
                                     #Remove keys from main dictionary for this html page
                                     templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
@@ -1135,7 +1142,8 @@ class AdfWeb(AdfObs):
                                             "case_sites": case_sites}
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                        if not (img_pages_dir / multimean).exists():
+                        #if not (img_pages_dir / multimean).exists():
+                        if 1==1:
                             tmpl = jinenv.get_template('template_multi_case.html')
 
                             rndr = tmpl.render(rend_kwarg_dict)
@@ -1151,7 +1159,8 @@ class AdfWeb(AdfObs):
                         plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
                         mean_ptype_plot_page = img_pages_dir / plot_page
 
-                        if not mean_ptype_plot_page.exists():
+                        #if not mean_ptype_plot_page.exists():
+                        if 1==1:
 
                             #Remove key from main dictionary for this html page
                             templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
@@ -1170,7 +1179,8 @@ class AdfWeb(AdfObs):
 
                         multi_mean = f"multi_case_mean_diag_{ptype}.html"
                         mean_ptype_file = main_site_img_path / multi_mean
-                        if not mean_ptype_file.exists():
+                        #if not mean_ptype_file.exists():
+                        if 1==1:
 
                             #Remove keys from main dictionary for this html page
                             templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
