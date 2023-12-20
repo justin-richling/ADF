@@ -225,6 +225,7 @@ class AdfWeb(AdfObs):
         #or a pandas dataframe:
         try:
             web_data = Path(web_data)
+            print("\n","web_data",web_data,"\n")
 
             #Make sure the path is to an actual file:
             if not web_data.is_file():
