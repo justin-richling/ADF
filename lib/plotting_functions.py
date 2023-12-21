@@ -1775,6 +1775,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             for c in range(0,ncols):
                                 if count < nplots:
                                     print(var, case_names[count], season)
+                                    print(multi_dict[var][case_names[count]][season],"\n")
                                     mdlfld = multi_dict[var][case_names[count]][season]["diff_data"]
                                     lat = mdlfld['lat']
                                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
