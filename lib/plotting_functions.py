@@ -1801,7 +1801,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     else:
                                         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                                    cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
+                                    if 'diff_colormap' in multi_dict[var][case_names[count]][season]["vres"]:
+                                        cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
+                                    else:
+                                        cmap = "BrBG"
 
                                     img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
                                                     cmap=cmap, norm=normdiff,
