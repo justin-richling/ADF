@@ -1724,10 +1724,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     #End if
 
     # specify the central longitude for the plot
-    central_longitude = get_central_longitude(adfobj)
+    #central_longitude = get_central_longitude(adfobj)
     
     # specify the central longitude for the plot
-    #central_longitude = kwargs.get('central_longitude', 180)
+    #vres = multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+    #vres = ["vres"]
+    #central_longitude = vres.get('central_longitude', 180)
 
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
     # formatting for tick labels
@@ -1740,6 +1742,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
             for case in multi_dict[var].keys():
                 for season in multi_dict[var][case].keys():
+
+                    vres = multi_dict[var][case][season]["vres"]
+                    central_longitude = vres.get('central_longitude', 180)
+                    
                     file_name = f"{var}_{season}_{ptype}_multi_plot.png"
                     if (not redo_plot) and Path(wks / file_name).is_file():
                         #Continue to next iteration:
@@ -1764,7 +1770,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     mdlfld = multi_dict[var][case_names[count]][season]["diff_data"]
                                     lat = mdlfld['lat']
                                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
-                                    lon = mdlfld['lon']
+                                    #lon = mdlfld['lon']
                                     # mesh for plots:
                                     lons, lats = np.meshgrid(lon, lat)
 
@@ -1779,7 +1785,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                                     cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
 
-                                    img.append(axs[r,c].contourf(lons, lats, mdlfld, levels=levelsdiff,
+                                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
                                                     cmap=cmap, norm=normdiff,
                                                     transform=proj))
 
