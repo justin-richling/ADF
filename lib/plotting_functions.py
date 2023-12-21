@@ -1776,8 +1776,24 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     lon = lon-180 #Why is this necessary???
                                     lons, lats = np.meshgrid(lon, lat)
 
-                                    levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
-                                    levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+
+                                    if "diff_contour_levels" in multi_dict[var][case_names[count]][season]["vres"]:
+                                        levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_levels"]  # a list of explicit contour levels
+                                    elif "diff_contour_range" in multi_dict[var][case_names[count]][season]["vres"]:
+                                        assert len(multi_dict[var][case_names[count]][season]["vres"]['diff_contour_range']) == 3, \
+                                        "diff_contour_range must have exactly three entries: min, max, step"
+
+                                        levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
+                                        levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+                                    else:
+                                        # set a symmetric color bar for diff:
+                                        absmaxdif = np.max(np.abs(mdlfld))
+                                        # set levels for difference plot:
+                                        levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
+                                    #End if
+
+                                    #levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
+                                    #levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
 
                                     # color normalization for difference
                                     if (np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff)):
