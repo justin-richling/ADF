@@ -685,7 +685,7 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
-                rend_kwarg_dict_table = {"title": main_title,
+                rend_kwarg_dict = {"title": main_title,
                                   "case_name": case1,
                                   "case_yrs": case_yrs,
                                   "base_name": data_name,
@@ -704,10 +704,10 @@ class AdfWeb(AdfObs):
                     #There might be a better way, but for now it works - JR
                     if web_data.name != "case_comparison":
                         print("\n\nDOES THIS HAPPEN?\n\n")
-                        rend_kwarg_dict_table["plot_types"] = multi_plot_type_html
-                        rend_kwarg_dict_table["multi_head"] = "Table"
+                        rend_kwarg_dict["plot_types"] = multi_plot_type_html
+                        rend_kwarg_dict["multi_head"] = "Table"
 
-                        table_rndr = table_tmpl.render(rend_kwarg_dict_table)
+                        table_rndr = table_tmpl.render(rend_kwarg_dict)
 
                         #Write mean diagnostic tables HTML file:
                         html_file = web_data.html_file[0]
@@ -715,11 +715,11 @@ class AdfWeb(AdfObs):
                             ofil.write(table_rndr)
 
                 else:
-                    rend_kwarg_dict_table["plot_types"] = plot_type_html
+                    rend_kwarg_dict["plot_types"] = plot_type_html
                     if web_data.case == data_name:
-                        rend_kwarg_dict_table["case_name"] = case_names[0]
+                        rend_kwarg_dict["case_name"] = case_names[0]
 
-                    table_rndr = table_tmpl.render(rend_kwarg_dict_table)
+                    table_rndr = table_tmpl.render(rend_kwarg_dict)
 
                     #Write mean diagnostic tables HTML file:
                     html_file = web_data.html_file
@@ -735,11 +735,11 @@ class AdfWeb(AdfObs):
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
 
-                    print("web_data.name",web_data.name,rend_kwarg_dict_table["plot_types"])
+                    print("web_data.name",web_data.name,rend_kwarg_dict["plot_types"])
 
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
-                    new_dict = {k: rend_kwarg_dict_table[k] for k in rend_kwarg_dict_table.keys() - {'table_name', 'table_html'}}
+                    new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
 
                     if main_site_path:
                         plot_types = multi_plot_type_html
