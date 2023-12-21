@@ -409,11 +409,12 @@ def global_latlon_map(adfobj):
                         for pres in pres_levs:
                             
                             if multi_plots:
-                                if f"{var}_{pres}" not in multi_dict:
-                                    multi_dict[f"{var}_{pres}"] = OrderedDict()
-                                #if not multi_dict[f"{var}_{pres}"][case_name]:
-                                if case_name not in multi_dict[f"{var}_{pres}"]:
-                                    multi_dict[f"{var}_{pres}"][case_name] = OrderedDict()
+                                if var in adfobj.get_multi_case_info("global_latlon_map"):
+                                    if f"{var}_{pres}" not in multi_dict:
+                                        multi_dict[f"{var}_{pres}"] = OrderedDict()
+                                    #if not multi_dict[f"{var}_{pres}"][case_name]:
+                                    if case_name not in multi_dict[f"{var}_{pres}"]:
+                                        multi_dict[f"{var}_{pres}"][case_name] = OrderedDict()
                               
  
 
@@ -462,13 +463,13 @@ def global_latlon_map(adfobj):
 
                                 
                                 if multi_plots:
-                                    #multi_dict[f"{var}_{pres}"] = {}
-                                    #multi_dict[f"{var}_{pres}"][case_name] = {}
-                                    if s not in multi_dict[f"{var}_{pres}"][case_name]:
-                                        multi_dict[f"{var}_{pres}"][case_name][s] = OrderedDict()
-
-                                    print(multi_dict[f"{var}_{pres}"][case_name][s],"\n")
                                     if var in adfobj.get_multi_case_info("global_latlon_map"):
+                                        #multi_dict[f"{var}_{pres}"] = {}
+                                        #multi_dict[f"{var}_{pres}"][case_name] = {}
+                                        if s not in multi_dict[f"{var}_{pres}"][case_name]:
+                                            multi_dict[f"{var}_{pres}"][case_name][s] = OrderedDict()
+
+                                        print(multi_dict[f"{var}_{pres}"][case_name][s],"\n")
                                         multi_dict[f"{var}_{pres}"][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
                                 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
