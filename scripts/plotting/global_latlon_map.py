@@ -466,6 +466,8 @@ def global_latlon_map(adfobj):
                                     #multi_dict[f"{var}_{pres}"][case_name] = {}
                                     if s not in multi_dict[f"{var}_{pres}"][case_name]:
                                         multi_dict[f"{var}_{pres}"][case_name][s] = OrderedDict()
+
+                                    print(multi_dict[f"{var}_{pres}"][case_name][s],"\n")
                                     if var in adfobj.get_multi_case_info("global_latlon_map"):
                                         multi_dict[f"{var}_{pres}"][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
                                 
