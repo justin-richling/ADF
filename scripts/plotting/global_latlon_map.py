@@ -407,6 +407,11 @@ def global_latlon_map(adfobj):
 
                         #Loop over pressure levels:
                         for pres in pres_levs:
+                            if multi_plots:
+                                multi_dict[f"{var}_{pres}"] = {}
+                                multi_dict[f"{var}_{pres}"][case_name] = OrderedDict()
+                                
+ 
 
                             #Check that the user-requested pressure level
                             #exists in the model data, which should already
@@ -452,6 +457,9 @@ def global_latlon_map(adfobj):
                                 #End if
 
                                 if multi_plots:
+                                    #multi_dict[f"{var}_{pres}"] = {}
+                                    #multi_dict[f"{var}_{pres}"][case_name] = {}
+                                    multi_dict[f"{var}_{pres}"][case_name][s] = {}
                                     if var in adfobj.get_multi_case_info("global_latlon_map"):
                                         multi_dict[f"{var}_{pres}"][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
