@@ -1764,7 +1764,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     mdlfld = multi_dict[var][case_names[count]][season]["diff_data"]
                                     lat = mdlfld['lat']
                                     mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
-
+                                    lon = mdlfld['lon']
                                     # mesh for plots:
                                     lons, lats = np.meshgrid(lon, lat)
 
