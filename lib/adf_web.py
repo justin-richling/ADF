@@ -735,7 +735,7 @@ class AdfWeb(AdfObs):
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
 
-                    print(rend_kwarg_dict_table["plot_types"])
+                    print("web_data.name",web_data.name,rend_kwarg_dict_table["plot_types"])
 
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
