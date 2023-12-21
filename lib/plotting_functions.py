@@ -644,6 +644,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     #nice formatting for tick labels
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
+    print("plotting func:",mdlfld.attrs)
+
     # preprocess
     # - assume all three fields have same lat/lon
     lat = obsfld['lat']
