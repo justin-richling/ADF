@@ -703,6 +703,7 @@ class AdfWeb(AdfObs):
                     #Avoid single case comparison getting called here
                     #There might be a better way, but for now it works - JR
                     if web_data.name != "case_comparison":
+                        print("\n\nDOES THIS HAPPEN?\n\n")
                         rend_kwarg_dict_table["plot_types"] = multi_plot_type_html
                         rend_kwarg_dict_table["multi_head"] = "Table"
 
@@ -765,7 +766,7 @@ class AdfWeb(AdfObs):
 
                     img_data = [os.path.relpath(web_data.asset_path, start=img_pages_dir),
                             web_data.asset_path.stem]
-                    print("\n","web_data.non_season",web_data.non_season,"\n")
+
                     rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
