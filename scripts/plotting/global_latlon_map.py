@@ -243,7 +243,7 @@ def global_latlon_map(adfobj):
                 #Extract variable of interest
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
                 mdata = mclim_ds[var].squeeze()
-                print(mdata)
+                #print(mdata)
 
                 #APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 #NOTE: looks like our climo files don't have all their metadata
