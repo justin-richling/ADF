@@ -240,10 +240,13 @@ def global_latlon_map(adfobj):
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
                 mclim_ds = _load_dataset(mclim_fils)
 
+                print("full",mclim_ds.attrs)
+
                 #Extract variable of interest
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
                 mdata = mclim_ds[var].squeeze()
                 #print(mdata)
+                print("var",mdata.attrs)
 
                 #APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 #NOTE: looks like our climo files don't have all their metadata
@@ -469,7 +472,7 @@ def global_latlon_map(adfobj):
                                         if s not in multi_dict[f"{var}_{pres}"][case_name]:
                                             multi_dict[f"{var}_{pres}"][case_name][s] = OrderedDict()
 
-                                        print(multi_dict[f"{var}_{pres}"][case_name][s],"\n")
+                                        #print(multi_dict[f"{var}_{pres}"][case_name][s],"\n")
                                         multi_dict[f"{var}_{pres}"][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
                                 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
