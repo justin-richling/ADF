@@ -197,10 +197,14 @@ def tape_recorder(adfobj):
             alldat.append(dat_mon)
             runname_LT.append(key)
 
-            
+            #Run this for each test case vs baseline
             if multi_case and key != base_nickname:
                 alldat_multi=[dat_mon]
                 runname_LT_multi=[key]
+
+                start_years_ind = [start_years[idx], start_years[-1]]
+                end_years_ind = [end_years[idx], end_years[-1]]
+
                 alldat_multi.append(dat_mon_base)
                 runname_LT_multi.append(base_nickname)
             
@@ -230,7 +234,8 @@ def tape_recorder(adfobj):
                                     alldat_concat_LT_multi.isel(run=irun).lev,
                                     plot_step, plot_min, plot_max, title,
                                     x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                                    taxis='month',climo_yrs=f"{start_years[irun]}-{end_years[irun]}")
+                                    taxis='month',
+                                    climo_yrs=f"{start_years_ind[irun]}-{end_years_ind[irun]}")
                     count=count+1
 
                 #Shift colorbar if there are less than 5 subplots
