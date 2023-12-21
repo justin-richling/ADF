@@ -1738,6 +1738,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                         dateline_direction_label=False)
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
+    
+    print(multi_dict.keys())
     for var in multi_dict.keys():
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
             for case in multi_dict[var].keys():
