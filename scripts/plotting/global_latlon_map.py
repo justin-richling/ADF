@@ -240,13 +240,13 @@ def global_latlon_map(adfobj):
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
                 mclim_ds = _load_dataset(mclim_fils)
 
-                print("full",mclim_ds.attrs)
+                #print("full",mclim_ds.attrs)
 
                 #Extract variable of interest
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
                 mdata = mclim_ds[var].squeeze()
                 #print(mdata)
-                print("var",mdata.attrs)
+                #print("var",mdata.attrs)
 
                 #APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 #NOTE: looks like our climo files don't have all their metadata
@@ -372,7 +372,7 @@ def global_latlon_map(adfobj):
                             #   *Any other entries will be ignored.
                             # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
 
-                            print("lat_lon script:",mseasons[s].attrs)
+                            #print("lat_lon script:",mseasons[s].attrs)
 
                             pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
