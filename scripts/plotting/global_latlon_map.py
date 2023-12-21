@@ -453,7 +453,7 @@ def global_latlon_map(adfobj):
 
                                 if multi_plots:
                                     if var in adfobj.get_multi_case_info("global_latlon_map"):
-                                        multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+                                        multi_dict[f"{var}_{pres}"][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
