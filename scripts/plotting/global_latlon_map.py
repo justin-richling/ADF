@@ -408,7 +408,8 @@ def global_latlon_map(adfobj):
                         #Loop over pressure levels:
                         for pres in pres_levs:
                             if multi_plots:
-                                multi_dict[f"{var}_{pres}"] = {}
+                                if f"{var}_{pres}" not in multi_dict:
+                                    multi_dict[f"{var}_{pres}"] = {}
                                 #if not multi_dict[f"{var}_{pres}"][case_name]:
                                 if case_name not in multi_dict[f"{var}_{pres}"]:
                                     multi_dict[f"{var}_{pres}"][case_name] = OrderedDict()
