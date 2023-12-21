@@ -734,16 +734,18 @@ class AdfWeb(AdfObs):
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
 
+                    print(rend_kwarg_dict_table["plot_types"])
+
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
-                    new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
+                    new_dict = {k: rend_kwarg_dict_table[k] for k in rend_kwarg_dict_table.keys() - {'table_name', 'table_html'}}
 
                     if main_site_path:
                         plot_types = multi_plot_type_html
                         new_dict["multi_head"] = "Table"
                     else:
                         plot_types = plot_type_html
-
+                    
                     mean_table_rndr = mean_table_tmpl.render(new_dict)
 
                     #Write mean diagnostic tables HTML file:
