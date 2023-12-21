@@ -1743,8 +1743,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
             for case in multi_dict[var].keys():
                 for season in multi_dict[var][case].keys():
 
-                    vres = multi_dict[var][case][season]["vres"]
+                    if "vres" in multi_dict[var][case][season]:
+                        vres = multi_dict[var][case][season]["vres"]
+                    else:
+                        vres = {}
                     central_longitude = vres.get('central_longitude', 180)
+                    
                     proj = ccrs.PlateCarree(central_longitude=central_longitude)
                     
                     file_name = f"{var}_{season}_{ptype}_multi_plot.png"
@@ -1776,21 +1780,27 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     lon = lon-180 #Why is this necessary???
                                     lons, lats = np.meshgrid(lon, lat)
 
+                                    if "vres" in multi_dict[var][case][season]:
+                                        if "diff_contour_levels" in multi_dict[var][case_names[count]][season]["vres"]:
+                                            levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_levels"]  # a list of explicit contour levels
+                                        elif "diff_contour_range" in multi_dict[var][case_names[count]][season]["vres"]:
+                                            assert len(multi_dict[var][case_names[count]][season]["vres"]['diff_contour_range']) == 3, \
+                                            "diff_contour_range must have exactly three entries: min, max, step"
 
-                                    if "diff_contour_levels" in multi_dict[var][case_names[count]][season]["vres"]:
-                                        levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_levels"]  # a list of explicit contour levels
-                                    elif "diff_contour_range" in multi_dict[var][case_names[count]][season]["vres"]:
-                                        assert len(multi_dict[var][case_names[count]][season]["vres"]['diff_contour_range']) == 3, \
-                                        "diff_contour_range must have exactly three entries: min, max, step"
-
-                                        levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
-                                        levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+                                            levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
+                                            levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
+                                        else:
+                                            # set a symmetric color bar for diff:
+                                            absmaxdif = np.max(np.abs(mdlfld))
+                                            # set levels for difference plot:
+                                            levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
+                                        #End if
                                     else:
                                         # set a symmetric color bar for diff:
                                         absmaxdif = np.max(np.abs(mdlfld))
                                         # set levels for difference plot:
                                         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
-                                    #End if
+                                    #End if vres
 
                                     #levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
                                     #levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
@@ -1801,8 +1811,11 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     else:
                                         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                                    if 'diff_colormap' in multi_dict[var][case_names[count]][season]["vres"]:
-                                        cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
+                                    if "vres" in multi_dict[var][case][season]:
+                                        if 'diff_colormap' in multi_dict[var][case_names[count]][season]["vres"]:
+                                            cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
+                                        else:
+                                            cmap = "BrBG"
                                     else:
                                         cmap = "BrBG"
 
