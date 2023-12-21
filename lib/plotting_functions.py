@@ -1731,7 +1731,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     #vres = ["vres"]
     #central_longitude = vres.get('central_longitude', 180)
 
-    proj = ccrs.PlateCarree(central_longitude=central_longitude)
+    #proj = ccrs.PlateCarree(central_longitude=central_longitude)
     # formatting for tick labels
     lon_formatter = LongitudeFormatter(number_format='0.0f',
                                         degree_symbol='',
@@ -1745,6 +1745,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     vres = multi_dict[var][case][season]["vres"]
                     central_longitude = vres.get('central_longitude', 180)
+                    proj = ccrs.PlateCarree(central_longitude=central_longitude)
                     
                     file_name = f"{var}_{season}_{ptype}_multi_plot.png"
                     if (not redo_plot) and Path(wks / file_name).is_file():
