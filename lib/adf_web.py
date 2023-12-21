@@ -440,6 +440,7 @@ class AdfWeb(AdfObs):
                     multi_plot_type_html[plot_type] = os.path.join("html_table",
                                                                    "mean_tables.html")
                 else:
+                    print("web plot type!",plot_type)
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
                                                         f"multi_case_mean_diag_{plot_type}.html")
                 #End if
