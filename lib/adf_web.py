@@ -413,13 +413,14 @@ class AdfWeb(AdfObs):
         #This can probably be populated in the for-loops during html creation...
         #Or it should be declared somewhere higher up, like adf_info or something
         multi_case_dict = {"global_latlon_map":"LatLon",
-                               "zonal_mean":"Zonal",
-                               "meridional":"Meridional",
-                               "global_latlon_vect_map":"LatLon_Vector"}
+                            "zonal_mean":"Zonal",
+                            "meridional":"Meridional",
+                            "global_latlon_vect_map":"LatLon_Vector"}
 
         #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
-                       "Special":"html_img/multi_case_mean_diag_Special.html"}
+                       "Special":"html_img/multi_case_mean_diag_Special.html",
+                       "LatLon":"html_img/multi_case_mean_diag_LatLon.html"}
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -703,7 +704,6 @@ class AdfWeb(AdfObs):
                     #Avoid single case comparison getting called here
                     #There might be a better way, but for now it works - JR
                     if web_data.name != "case_comparison":
-                        print("\n\nDOES THIS HAPPEN?\n\n")
                         rend_kwarg_dict["plot_types"] = multi_plot_type_html
                         rend_kwarg_dict["multi_head"] = "Table"
 
@@ -734,8 +734,6 @@ class AdfWeb(AdfObs):
 
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
-
-                    print("web_data.name",web_data.name,rend_kwarg_dict["plot_types"])
 
                     #Reuse the rend_kwarg_dict, but ignore certain keys
                     #since all others are the same
@@ -813,8 +811,10 @@ class AdfWeb(AdfObs):
 
                     #Check if the mean plot type and var page exists for this case:
                     plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
-                    print("plot_page_{web_data.name}_{web_data.plot_type}.html",plot_page)
-                    print("img_pages_dir",img_pages_dir,"\n")
+                    
+                    #print("plot_page_{web_data.name}_{web_data.plot_type}.html",plot_page)
+                    #print("img_pages_dir",img_pages_dir,"\n")
+                    
                     mean_ptype_plot_page = img_pages_dir / plot_page
                     if not mean_ptype_plot_page.exists():
                     #if 1==1:

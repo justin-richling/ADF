@@ -78,7 +78,7 @@ def qbo(adfobj):
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:
-    print(f"\t QBO plots will be saved here: {plot_locations[0]}")
+    #print(f"\t QBO plots will be saved here: {plot_locations[0]}")
 
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
@@ -150,38 +150,14 @@ def qbo(adfobj):
                     fig_m = plt.figure(figsize=(16,16))
                     fig_m.suptitle('QBO Time Series', fontsize=14)
 
-                    """#Plot ERA5 data
-                    ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')"""
-                    
-                    """#Plot individual case
-                    ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
-                                            x1[1],x2[1],y1[1],y2[1], 
-                                            case_nicknames[icase])"""
-
                     #Check if compared vs baseline obs, alter x-positions
                     if adfobj.compare_obs:
-                        """#Plot ERA5 data
-                        ax_m = plotqbotimeseries(fig_m, obs, minny, 0.18, 0.45, y1[0], y2[0],'ERA5')
-
-                        #Plot individual case
-                        ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
-                                                0.55, 0.82, y1[2], y2[2], 
-                                                case_nicknames[icase])"""
-
                         xo1 = 0.18
                         xo2 = 0.45
                         xm1 = 0.55
                         xm2 = 0.82
                     #No observation baseline
                     else:
-                        """#Plot ERA5 data
-                        ax_m = plotqbotimeseries(fig_m, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
-
-                        #Plot individual case
-                        ax_m = plotqbotimeseries(fig_m, casedat_5S_5N[icase],minny,
-                                                x1[1],x2[1],y1[1],y2[1], 
-                                                case_nicknames[icase])"""
-
                         xo1 = x1[0]
                         xo2 = x2[0]
                         xm1 = x1[1]
