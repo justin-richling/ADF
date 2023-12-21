@@ -1725,6 +1725,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
     # specify the central longitude for the plot
     central_longitude = get_central_longitude(adfobj)
+    
+    # specify the central longitude for the plot
+    central_longitude = kwargs.get('central_longitude', 180)
+
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
     # formatting for tick labels
     lon_formatter = LongitudeFormatter(number_format='0.0f',
@@ -1775,7 +1779,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                                     cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
 
-                                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
+                                    img.append(axs[r,c].contourf(lons, lats, mdlfld, levels=levelsdiff,
                                                     cmap=cmap, norm=normdiff,
                                                     transform=proj))
 
