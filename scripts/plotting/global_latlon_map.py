@@ -409,7 +409,9 @@ def global_latlon_map(adfobj):
                         for pres in pres_levs:
                             if multi_plots:
                                 multi_dict[f"{var}_{pres}"] = {}
-                                multi_dict[f"{var}_{pres}"][case_name] = OrderedDict()
+                                #if not multi_dict[f"{var}_{pres}"][case_name]:
+                                if case_name not in multi_dict[f"{var}_{pres}"]:
+                                    multi_dict[f"{var}_{pres}"][case_name] = OrderedDict()
                                 
  
 
