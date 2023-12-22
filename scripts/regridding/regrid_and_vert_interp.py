@@ -145,6 +145,9 @@ def regrid_and_vert_interp(adf):
         ps_loc_dict = {}
         pmid_loc_dict = {}
 
+        syear = syear_cases[case_idx]
+        eyear = eyear_cases[case_idx]
+
         # probably want to do this one variable at a time:
         for var in var_list:
 
@@ -174,7 +177,7 @@ def regrid_and_vert_interp(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
+                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.{syear}01-{eyear}12.nc'
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
@@ -282,7 +285,8 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Finally, write re-gridded data to output file:
-                    climo_yrs = {"syear":syear_cases[case_idx], "eyear":eyear_cases[case_idx]}
+                    climo_yrs = {"syear":syear, "eyear":eyear}
+                    rgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
                     save_to_nc(rgdata_interp, regridded_file_loc, climo_yrs=climo_yrs)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
@@ -290,7 +294,7 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.{syear}01-{eyear}12.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
@@ -350,6 +354,7 @@ def regrid_and_vert_interp(adf):
 
                         #Write interpolated baseline climatology to file:
                         climo_yrs = {"syear":syear_baseline, "eyear":eyear_baseline}
+                        tgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
                         save_to_nc(tgdata_interp, interp_bl_file, climo_yrs=climo_yrs)
                     #End if
                 else:
