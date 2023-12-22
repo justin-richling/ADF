@@ -297,8 +297,7 @@ class AdfInfo(AdfConfig):
                 case_climo_yrs = [str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]
 
                 for i in files_list:
-                    print(i)
-                    print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}."))
+                    print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}."),"\n")
 
                 case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
                 print("case_climo_yrs_str ",case_climo_yrs_str)
