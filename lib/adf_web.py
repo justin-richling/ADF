@@ -544,7 +544,6 @@ class AdfWeb(AdfObs):
         for web_data in self.__website_data:
 
             if web_data.data_frame:
-
                 #Create output HTML file path:
                 if self.num_cases > 1:
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
@@ -569,7 +568,7 @@ class AdfWeb(AdfObs):
                 #formatting features.
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
-                print("data_name",data_name,"\n")
+
                 #Construct amwg_table.html
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(title=main_title,
@@ -591,7 +590,6 @@ class AdfWeb(AdfObs):
                 #Check if the mean plot type page exists for this case (or for multi-case):
                 mean_table_file = table_pages_dir / "mean_tables.html"
                 if not mean_table_file.exists():
-                    print("\ndata_name",data_name,"\n")
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
                     mean_table_rndr = mean_table_tmpl.render(title=main_title,
