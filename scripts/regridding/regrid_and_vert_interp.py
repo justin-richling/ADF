@@ -286,7 +286,7 @@ def regrid_and_vert_interp(adf):
 
                     #Finally, write re-gridded data to output file:
                     climo_yrs = {"syear":syear, "eyear":eyear}
-                    rgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
+                    rgdata_interp = rgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
                     save_to_nc(rgdata_interp, regridded_file_loc, climo_yrs=climo_yrs)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
@@ -354,7 +354,7 @@ def regrid_and_vert_interp(adf):
 
                         #Write interpolated baseline climatology to file:
                         climo_yrs = {"syear":syear_baseline, "eyear":eyear_baseline}
-                        tgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
+                        tgdata_interp = tgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
                         save_to_nc(tgdata_interp, interp_bl_file, climo_yrs=climo_yrs)
                     #End if
                 else:
