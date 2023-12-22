@@ -68,8 +68,10 @@ def regrid_and_vert_interp(adf):
     eyear_baseline = adf.climo_yrs["eyear_baseline"]
 
     #Set attributes dictionary for climo years                    
-    attr_dict = {"test_climo_yrs": "",
-                 "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
+    #attr_dict = {"test_climo_yrs": "",
+    #             "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
+
+    
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
@@ -155,9 +157,13 @@ def regrid_and_vert_interp(adf):
         #Set attributes dictionary for climo years                    
         #attr_dict = {"test_climo_yrs": f"{syear}-{eyear}",
         #             "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
+        attr_dict = {"climo_yrs": {
+                        f"{case_name}": f"{syear}-{eyear}",
+                        f"{target_list[0]}": f"{syear_baseline}-{eyear_baseline}"}
+                    }
 
         #Update attrs dict for current test case climo years
-        attr_dict["test_climo_yrs"] = f"{syear}-{eyear}"
+        #attr_dict["test_climo_yrs"] = f"{syear}-{eyear}"
 
         # probably want to do this one variable at a time:
         for var in var_list:
