@@ -299,13 +299,12 @@ class AdfInfo(AdfConfig):
                 for i in files_list:
                     print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}."),"\n")
 
+                #Drop all duplicates from list
                 case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
-                print("case_climo_yrs_str ",case_climo_yrs_str)
                 
-                #case_climo_yrs = []
-                for year in case_climo_yrs_str:
-                   case_climo_yrs.append(int(year))
-                print("case_climo_yrs ",case_climo_yrs)
+
+                #for year in case_climo_yrs_str:
+                #   case_climo_yrs.append(int(year))
 
                 #Check if start or end year is missing.  If so then just assume it is the
                 #start or end of the entire available model data.
