@@ -491,69 +491,8 @@ class AdfDiag(AdfWeb):
             #End if (lev existence)
             #------------------------
 
-
-
-            """
-            syear = int(f"{str(syears[case_idx]).zfill(4)}")
-            syears_fixed.append(syear)
-            eyear = int(f"{str(eyears[case_idx]).zfill(4)}")
-            eyears_fixed.append(eyear)
-
-
-
-            #Check if history file path exists:
-            if cam_hist_locs:
-                #Get climo years for verification or assignment if missing
-                starting_location = Path(cam_hist_locs[case_idx])
-                files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-
-                #Partition string to find exactly where h-number is
-                #NOTE: this is based off the current CAM file name structure
-                #QUESTION: is this good? what if the filename structure changes for CAM?
-                #??: Would it be better to I/O EACH file to get time data instead??
-                case_climo_yrs = [str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]
-
-                for i in files_list:
-                    print(i)
-                    print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}.")[2][0:4])
-
-                case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
-                print("case_climo_yrs_str ",case_climo_yrs_str)
-                
-                #case_climo_yrs = []
-                for year in case_climo_yrs_str:
-                   case_climo_yrs.append(int(year))
-                print("case_climo_yrs ",case_climo_yrs)
-
-                #Check if start or end year is missing.  If so then just assume it is the
-                #start or end of the entire available model data.
-                if syear is None:
-                    print(f"No given start year for {case_name}, using first found year...")
-                    syear = int(case_climo_yrs_str[0])
-                elif (syear) not in case_climo_yrs:
-                    print(f"Given start year '{syear}' is not in current dataset {case_name}, using first found year:",case_climo_yrs[0],"\n")
-                    syear = int(case_climo_yrs_str[0])
-                #End if
-                if eyear is None:
-                    print(f"No given end year for {case_name}, using last found year...")
-                    eyear = int(case_climo_yrs[-1])
-                elif (eyear) not in case_climo_yrs_str:
-                    print(f"Given end year '{eyear}' is not in current dataset {case_name}, using last found year:",case_climo_yrs[-1],"\n")
-                    eyear = int(case_climo_yrs_str[-1])
-                #End if
-
-                print("syear",syear,"eyear",eyear)
-            """
-
-
-
-
-
-
-
             #Check if time series directory exists, and if not, then create it:
             #Use pathlib to create parent directories, if necessary.
-            print("ts_dir[case_idx]",ts_dir[case_idx],"!!!!!!!!!!!!!")
             Path(ts_dir[case_idx]).mkdir(parents=True, exist_ok=True)
 
             #INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
@@ -568,7 +507,7 @@ class AdfDiag(AdfWeb):
             else:
                 time_string_finish = last_file_split[-1].replace("-","")
             time_string = "-".join([time_string_start, time_string_finish])
-            print("time_string",time_string,"\n",time_string[0:4]+time_string[7:11])
+
             #Loop over CAM history variables:
             list_of_commands = []
             for var in self.diag_var_list:
