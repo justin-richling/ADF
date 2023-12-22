@@ -296,6 +296,7 @@ class AdfInfo(AdfConfig):
                 #NOTE: this is based off the current CAM file name structure
                 #QUESTION: is this good? what if the filename structure changes for CAM?
                 case_climo_yrs = sorted(np.unique([str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]))
+                print(case_climo_yrs)
 
                 #Drop all duplicates from list
                 #case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
