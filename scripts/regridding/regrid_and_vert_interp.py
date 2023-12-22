@@ -201,7 +201,7 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear}01-{eyear}12.nc"))
                     #End if
 
                     #Write to debug log if enabled:
@@ -299,10 +299,10 @@ def regrid_and_vert_interp(adf):
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
                         #Look for a baseline climo file for surface pressure (PS):
-                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
+                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo.{syear}01-{eyear}12.nc'
 
                         #Also look for a baseline climo file for mid-level pressure (PMID):
-                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
+                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.{syear}01-{eyear}12.nc'
 
                         #Create new keyword arguments dictionary for regridding function:
                         regrid_kwargs = {}
