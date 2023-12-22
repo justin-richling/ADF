@@ -289,9 +289,11 @@ class AdfInfo(AdfConfig):
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
 
                 #Partition string to find exactly where h-number is
+                #This cuts the string to before and after the `{hist_str}.` sub-string
+                # so there will always be three parts: before sub-string, sub-string, and after sub-string
+                #Since the lat part always(?) includes the time range, grab that with index 2
                 #NOTE: this is based off the current CAM file name structure
                 #QUESTION: is this good? what if the filename structure changes for CAM?
-                #??: Would it be better to I/O first and last file to get time data instead??
                 case_climo_yrs = [str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]
 
                 for i in files_list:
