@@ -157,9 +157,16 @@ def regrid_and_vert_interp(adf):
         #Set attributes dictionary for climo years                    
         #attr_dict = {"test_climo_yrs": f"{syear}-{eyear}",
         #             "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
-        attr_dict = {"climo_yrs": {
-                        f"{case_name}": f"{syear}-{eyear}",
-                        f"{target_list[0]}": f"{syear_baseline}-{eyear_baseline}"}
+        
+        #attr_dict = {"climo_yrs": {
+        #                f"{case_name}": f"{syear}-{eyear}",
+        #                f"{target_list[0]}": f"{syear_baseline}-{eyear_baseline}"}
+        #            }
+
+        #attr_dict = {f"{case_name}": f"{syear}-{eyear}",
+        #             f"{target_list[0]}": f"{syear_baseline}-{eyear_baseline}"}
+
+        attr_dict = {"climo_yrs": [f"{case_name}: {syear}-{eyear}", f"\n{target_list[0]}: {syear_baseline}-{eyear_baseline}"]
                     }
 
         #Update attrs dict for current test case climo years
