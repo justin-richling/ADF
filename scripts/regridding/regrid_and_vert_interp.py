@@ -59,6 +59,14 @@ def regrid_and_vert_interp(adf):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
+    #Grab case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
+    
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adf.climo_yrs["syear_baseline"]
+    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
     for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
@@ -274,7 +282,8 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Finally, write re-gridded data to output file:
-                    save_to_nc(rgdata_interp, regridded_file_loc)
+                    climo_yrs = {"syear":syear_cases[case_idx], "eyear":eyear_cases[case_idx]}
+                    save_to_nc(rgdata_interp, regridded_file_loc, climo_yrs=climo_yrs)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
                     #Now vertically interpolate baseline (target) climatology,
@@ -340,7 +349,8 @@ def regrid_and_vert_interp(adf):
                         #End if
 
                         #Write interpolated baseline climatology to file:
-                        save_to_nc(tgdata_interp, interp_bl_file)
+                        climo_yrs = {"syear":syear_baseline, "eyear":eyear_baseline}
+                        save_to_nc(tgdata_interp, interp_bl_file, climo_yrs=climo_yrs)
                     #End if
                 else:
                     print("\t Regridded file already exists, so skipping...")
@@ -605,7 +615,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
 #####
 
-def save_to_nc(tosave, outname, attrs=None, proc=None):
+def save_to_nc(tosave, outname, climo_yrs, attrs=None, proc=None):
     """Saves xarray variable to new netCDF file"""
 
     xo = tosave  # used to have more stuff here.
@@ -621,6 +631,8 @@ def save_to_nc(tosave, outname, attrs=None, proc=None):
         xo.attrs = attrs
     if proc is not None:
         xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+
+    xo.assign_attrs(climo_yrs=f"{climo_yrs['syear']}-{climo_yrs['eyear']}")
     xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
 
 #####
