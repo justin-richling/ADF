@@ -71,11 +71,6 @@ def regrid_and_vert_interp(adf):
     #attr_dict = {"test_climo_yrs": "",
     #             "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
 
-    attr_dict = {"test_climo_yrs": "",
-                 "baseline_climo_yrs": f"{target_list[0]}: {syear_baseline}-{eyear_baseline}"}
-
-    
-
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
     for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
@@ -124,6 +119,10 @@ def regrid_and_vert_interp(adf):
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
+
+    #Set attributes dictionary for climo years to save in the file attributes
+    attr_dict = {"test_climo_yrs": "",
+                 "baseline_climo_yrs": f"{target_list[0]}: {syear_baseline}-{eyear_baseline}"}
 
     #-----------------------------------------
 
