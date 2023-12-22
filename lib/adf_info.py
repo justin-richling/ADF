@@ -323,6 +323,8 @@ class AdfInfo(AdfConfig):
                     eyear = int(case_climo_yrs_str[-1])
                 #End if
 
+                print("syear",syear,"eyear",eyear)
+
             else:
                 #History file path isn't needed if user is running ADF directly on time series.
                 #So make sure start and end year are specified:
