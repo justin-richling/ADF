@@ -141,6 +141,10 @@ class AdfInfo(AdfConfig):
             #End for
         #End if
 
+        #Initialize case nicknames:
+        self.__test_nicknames = test_nicknames
+        self.__base_nickname = base_nickname
+
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
 
@@ -236,10 +240,6 @@ class AdfInfo(AdfConfig):
             #Update baseline case name:
             data_name += f"_{syear_baseline}_{eyear_baseline}"
         #End if (compare_obs)
-
-        #Initialize case nicknames:
-        self.__test_nicknames = test_nicknames
-        self.__base_nickname = base_nickname
 
         #Save starting and ending years as object variables:
         self.__syear_baseline = syear_baseline
@@ -345,7 +345,7 @@ class AdfInfo(AdfConfig):
 
         #End for
 
-        #Finalize the climo years
+        #Save starting and ending year lists as object variables:
         self.__syears = syears_fixed
         self.__eyears = eyears_fixed
 
