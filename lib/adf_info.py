@@ -291,12 +291,12 @@ class AdfInfo(AdfConfig):
                 #Partition string to find exactly where h-number is
                 #NOTE: this is based off the current CAM file name structure
                 #QUESTION: is this good? what if the filename structure changes for CAM?
-                #??: Would it be better to I/O EACH file to get time data instead??
+                #??: Would it be better to I/O first and last file to get time data instead??
                 case_climo_yrs = [str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]
 
                 for i in files_list:
                     print(i)
-                    print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}.")[2][0:4])
+                    print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}."))
 
                 case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
                 print("case_climo_yrs_str ",case_climo_yrs_str)
@@ -322,8 +322,6 @@ class AdfInfo(AdfConfig):
                     print(f"Given end year '{eyear}' is not in current dataset {case_name}, using last found year:",case_climo_yrs[-1],"\n")
                     eyear = int(case_climo_yrs_str[-1])
                 #End if
-
-                print("syear",syear,"eyear",eyear)
 
             else:
                 #History file path isn't needed if user is running ADF directly on time series.
