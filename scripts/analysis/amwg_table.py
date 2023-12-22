@@ -339,7 +339,11 @@ def amwg_table(adf):
         #last step is to read back final csv and add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
         
-        print("table_df['variable']:",table_df['variable'])
+        print("table_df['variable']:",table_df,"\n")
+        
+        for i in table_df['variable']:
+            print(case_name, " - ",i,"\n")
+
         #Reorder RESTOM to top of tables (if applicabale)
         if "RESTOM" in table_df['variable']:
             print("!!!!!!!!!!!!!!!!!!!!!! doin it !!!!!!!!!!!!!!!!!!!!!!")
