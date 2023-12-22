@@ -67,6 +67,10 @@ def regrid_and_vert_interp(adf):
     syear_baseline = adf.climo_yrs["syear_baseline"]
     eyear_baseline = adf.climo_yrs["eyear_baseline"]
 
+    #Set attributes dictionary for climo years                    
+    attr_dict = {"test_climo_yrs": "",
+                 "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
+
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
     for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
@@ -148,6 +152,13 @@ def regrid_and_vert_interp(adf):
         syear = syear_cases[case_idx]
         eyear = eyear_cases[case_idx]
 
+        #Set attributes dictionary for climo years                    
+        #attr_dict = {"test_climo_yrs": f"{syear}-{eyear}",
+        #             "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
+
+        #Update attrs dict for current test case climo years
+        attr_dict["test_climo_yrs"] = f"{syear}-{eyear}"
+
         # probably want to do this one variable at a time:
         for var in var_list:
 
@@ -202,7 +213,6 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                        #{"syear":syear_baseline, "eyear":eyear_baseline}
                         tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear_baseline}01-{eyear_baseline}12.nc"))
                         #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
@@ -287,12 +297,10 @@ def regrid_and_vert_interp(adf):
                         ocn_frc_ds = rgdata_interp
                     #End if
 
-                    #Finally, write re-gridded data to output file:
-                    attr_dict = {"test_climo_yrs": f"{syear}-{eyear}",
-                                 "baseline_climo_yrs": f"{syear_baseline}-{eyear_baseline}"}
+                    #ADD climo years for both test and baseline case to global attributes
                     rgdata_interp = rgdata_interp.assign_attrs(attr_dict)
-                    #rgdata_interp = rgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
-                    #rgdata_interp = rgdata_interp.assign_attrs(baseline_climo_yrs=f"{syear_baseline}-{eyear_baseline}")
+
+                    #Finally, write re-gridded data to output file:
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
@@ -358,10 +366,10 @@ def regrid_and_vert_interp(adf):
                             #End if
                         #End if
 
-                        #Write interpolated baseline climatology to file:
+                        #ADD climo years for both test and baseline case to global attributes
                         tgdata_interp = tgdata_interp.assign_attrs(attr_dict)
-                        #tgdata_interp = tgdata_interp.assign_attrs(baseline_climo_yrs=f"{syear_baseline}-{eyear_baseline}")
-                        #tgdata_interp = tgdata_interp.assign_attrs(test_climo_yrs=f"{syear}-{eyear}")
+
+                        #Write interpolated baseline climatology to file:
                         save_to_nc(tgdata_interp, interp_bl_file)
                     #End if
                 else:
