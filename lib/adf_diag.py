@@ -568,7 +568,7 @@ class AdfDiag(AdfWeb):
             else:
                 time_string_finish = last_file_split[-1].replace("-","")
             time_string = "-".join([time_string_start, time_string_finish])
-            print("time_string",time_string)
+            print("time_string",time_string,"\n",time_string[0:4]+time_string[7:11])
             #Loop over CAM history variables:
             list_of_commands = []
             for var in self.diag_var_list:
