@@ -143,7 +143,6 @@ class AdfInfo(AdfConfig):
 
         #Initialize case nicknames:
         self.__test_nicknames = test_nicknames
-        self.__base_nickname = base_nickname
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
@@ -241,6 +240,9 @@ class AdfInfo(AdfConfig):
             data_name += f"_{syear_baseline}_{eyear_baseline}"
         #End if (compare_obs)
 
+        #Initialize case nicknames:
+        self.__base_nickname = base_nickname
+        
         #Save starting and ending years as object variables:
         self.__syear_baseline = syear_baseline
         self.__eyear_baseline = eyear_baseline
