@@ -177,7 +177,7 @@ def regrid_and_vert_interp(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.{syear}01-{eyear}12.nc'
+                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
@@ -201,6 +201,7 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
+                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear}01-{eyear}12.nc"))
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear}01-{eyear}12.nc"))
                     #End if
 
@@ -294,15 +295,15 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.{syear_baseline}01-{eyear_baseline}12.nc'
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
                         #Look for a baseline climo file for surface pressure (PS):
-                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo.{syear_baseline}01-{eyear_baseline}12.nc'
+                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
 
                         #Also look for a baseline climo file for mid-level pressure (PMID):
-                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.{syear_baseline}01-{eyear_baseline}12.nc'
+                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
 
                         #Create new keyword arguments dictionary for regridding function:
                         regrid_kwargs = {}
@@ -354,7 +355,6 @@ def regrid_and_vert_interp(adf):
 
                         #Write interpolated baseline climatology to file:
                         climo_yrs = {"syear":syear_baseline, "eyear":eyear_baseline}
-                        tgdata_interp = tgdata_interp.assign_attrs(climo_yrs=f"{syear_baseline}-{eyear_baseline}")
                         save_to_nc(tgdata_interp, interp_bl_file, climo_yrs=climo_yrs)
                     #End if
                 else:
