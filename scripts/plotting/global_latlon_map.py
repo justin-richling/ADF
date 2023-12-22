@@ -240,7 +240,7 @@ def global_latlon_map(adfobj):
                 #For now, only grab one file (but convert to list for use below)
                 oclim_fils = [dclimo_loc]
             else:
-                oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
+                oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline*.nc"))
 
             oclim_ds = _load_dataset(oclim_fils)
             if oclim_ds is None:
