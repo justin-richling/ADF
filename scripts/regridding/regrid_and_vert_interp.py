@@ -172,6 +172,7 @@ def regrid_and_vert_interp(adf):
 
             #loop over regridding targets:
             for target in target_list:
+                print("target",target)
 
                 #Write to debug log if enabled:
                 adf.debug_log(f"regrid_example: regrid target = {target}")
@@ -201,8 +202,8 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear}01-{eyear}12.nc"))
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear}01-{eyear}12.nc"))
+                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
 
                     #Write to debug log if enabled:
@@ -287,7 +288,6 @@ def regrid_and_vert_interp(adf):
 
                     #Finally, write re-gridded data to output file:
                     climo_yrs = {"syear":syear, "eyear":eyear}
-                    rgdata_interp = rgdata_interp.assign_attrs(climo_yrs=f"{syear}-{eyear}")
                     save_to_nc(rgdata_interp, regridded_file_loc, climo_yrs=climo_yrs)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
