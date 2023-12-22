@@ -148,7 +148,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
             # Create name of climatology output file (which includes the full path)
             # and check whether it is there (don't do computation if we don't want to overwrite):
-            output_file = output_location / f"{case_name}_{var}_climo.nc"
+            output_file = output_location / f"{case_name}_{var}_climo.{syr}01-{eyr}12.nc"
             if (not clobber) and (output_file.is_file()):
                 print(f"\t    INFO: Found climo file and clobber is False, so skipping {var} and moving to next variable.")
                 continue
