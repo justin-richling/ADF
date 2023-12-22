@@ -37,7 +37,6 @@ def create_TEM_files(adf):
     #Extract TEM file save locations
     tem_base_loc = adf.get_baseline_info("cam_tem_loc")
     tem_case_locs = adf.get_cam_info("cam_tem_loc", required=True)
-    print("tem_case_locs",tem_case_locs,"\n")
 
     #If path not specified, skip TEM calculation?
     if tem_case_locs is None:
