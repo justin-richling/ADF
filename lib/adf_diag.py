@@ -493,6 +493,7 @@ class AdfDiag(AdfWeb):
 
             #Check if time series directory exists, and if not, then create it:
             #Use pathlib to create parent directories, if necessary.
+            print("ts_dir[case_idx]",ts_dir[case_idx],"!!!!!!!!!!!!!")
             Path(ts_dir[case_idx]).mkdir(parents=True, exist_ok=True)
 
             #INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
