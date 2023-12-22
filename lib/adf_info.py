@@ -259,7 +259,7 @@ class AdfInfo(AdfConfig):
         #End year (not currently rquired):
         eyears = self.get_cam_info('end_year')
 
-        #Make lists of None to be iterated over for case_names
+        #Make lists of None to be iterated over for case_names if climo years are left blank or missing
         if syears is None:
             syears = [None]*len(case_names)
         #End if
@@ -286,10 +286,19 @@ class AdfInfo(AdfConfig):
                 starting_location = Path(cam_hist_locs[case_idx])
                 files_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
 
+                #Partition string to find exactly where h-number is
+                #NOTE: this is based off the current CAM file name structure
+                #QUESTION: is this good? what if the filename structure changes for CAM?
+                #??: Would it be better to I/O EACH file to get time data instead??
                 case_climo_yrs = [str(i).partition(f"{hist_str}.")[2][0:4] for i in files_list]
+
+                for i in files_list:
+                    print(i)
+                    print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}.")[2][0:4])
+
                 case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
                 
-                case_climo_yrs = []
+                #case_climo_yrs = []
                 for year in case_climo_yrs_str:
                    case_climo_yrs.append(int(year))
 
