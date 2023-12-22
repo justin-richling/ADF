@@ -297,11 +297,12 @@ class AdfInfo(AdfConfig):
                     print("hist string from string partitioned into parts:",str(i).partition(f"{hist_str}.")[2][0:4])
 
                 case_climo_yrs_str = sorted(np.unique(case_climo_yrs))
+                print("case_climo_yrs_str ",case_climo_yrs_str)
                 
                 #case_climo_yrs = []
                 for year in case_climo_yrs_str:
                    case_climo_yrs.append(int(year))
-
+                print("case_climo_yrs ",case_climo_yrs)
                 #Check if start or end year is missing.  If so then just assume it is the
                 #start or end of the entire available model data.
                 if syear is None:
