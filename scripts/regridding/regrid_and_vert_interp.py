@@ -360,7 +360,7 @@ def regrid_and_vert_interp(adf):
 
                         #Write interpolated baseline climatology to file:
                         tgdata_interp = tgdata_interp.assign_attrs(baseline_climo_yrs=f"{syear_baseline}-{eyear_baseline}")
-                        tgdata_interp = tgdata_interp.assign_attrs(test_climo_yrs=f"{syear}-{syear}")
+                        tgdata_interp = tgdata_interp.assign_attrs(test_climo_yrs=f"{syear}-{eyear}")
                         save_to_nc(tgdata_interp, interp_bl_file)
                     #End if
                 else:
