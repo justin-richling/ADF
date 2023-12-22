@@ -345,7 +345,8 @@ def amwg_table(adf):
             print(case_name, " - ",i,"\n")
 
         #Reorder RESTOM to top of tables (if applicabale)
-        if "RESTOM" in table_df['variable']:
+        #if "RESTOM" in table_df['variable']:
+        if 1==1:
             print("!!!!!!!!!!!!!!!!!!!!!! doin it !!!!!!!!!!!!!!!!!!!!!!")
             idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
             table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
