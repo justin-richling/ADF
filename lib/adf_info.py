@@ -280,6 +280,8 @@ class AdfInfo(AdfConfig):
             eyear = int(f"{str(eyears[case_idx]).zfill(4)}")
             eyears_fixed.append(eyear)
 
+
+
             #Check if history file path exists:
             if cam_hist_locs:
                 #Get climo years for verification or assignment if missing
@@ -303,21 +305,22 @@ class AdfInfo(AdfConfig):
                 for year in case_climo_yrs_str:
                    case_climo_yrs.append(int(year))
                 print("case_climo_yrs ",case_climo_yrs)
+
                 #Check if start or end year is missing.  If so then just assume it is the
                 #start or end of the entire available model data.
                 if syear is None:
                     print(f"No given start year for {case_name}, using first found year...")
-                    syear = int(case_climo_yrs[0])
+                    syear = int(case_climo_yrs_str[0])
                 elif (syear) not in case_climo_yrs:
                     print(f"Given start year '{syear}' is not in current dataset {case_name}, using first found year:",case_climo_yrs[0],"\n")
-                    syear = int(case_climo_yrs[0])
+                    syear = int(case_climo_yrs_str[0])
                 #End if
                 if eyear is None:
                     print(f"No given end year for {case_name}, using last found year...")
                     eyear = int(case_climo_yrs[-1])
-                elif (eyear) not in case_climo_yrs:
+                elif (eyear) not in case_climo_yrs_str:
                     print(f"Given end year '{eyear}' is not in current dataset {case_name}, using last found year:",case_climo_yrs[-1],"\n")
-                    eyear = int(case_climo_yrs[-1])
+                    eyear = int(case_climo_yrs_str[-1])
                 #End if
 
             else:
