@@ -336,8 +336,17 @@ def amwg_table(adf):
             adf.debug_log("RESTOM not calculated because FSNT and/or FLNT variables not in dataset")
         #End if
 
-        # last step is to add table dataframe to website (if enabled):
+        #last step is to read back final csv and add table dataframe to website (if enabled):
         table_df = pd.read_csv(output_csv_file)
+        
+        #Reorder RESTOM to top of tables (if applicabale)
+        if "RESTOM" in table_df['variable']:
+            print("!!!!!!!!!!!!!!!!!!!!!! doin it !!!!!!!!!!!!!!!!!!!!!!")
+            idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
+            table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+            table_df = table_df.drop([idx+1]).reset_index(drop=True)
+            table_df = table_df.drop_duplicates()
+    
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
 
     #End of model case loop
