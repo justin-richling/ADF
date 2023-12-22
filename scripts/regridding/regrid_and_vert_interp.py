@@ -289,7 +289,9 @@ def regrid_and_vert_interp(adf):
 
                     #Finally, write re-gridded data to output file:
                     climo_yrs = {"syear":syear, "eyear":eyear}
-                    save_to_nc(rgdata_interp, regridded_file_loc, climo_yrs=climo_yrs)
+                    rgdata_interp = rgdata_interp.assign_attrs(climo_yrs=f"{climo_yrs['syear']}-{climo_yrs['eyear']}")
+                    #rgdata_interp = rgdata_interp.assign_attrs(climo_yrs=f"{syear_baseline}-{eyear_baseline}")
+                    save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
                     #Now vertically interpolate baseline (target) climatology,
@@ -356,7 +358,9 @@ def regrid_and_vert_interp(adf):
 
                         #Write interpolated baseline climatology to file:
                         climo_yrs = {"syear":syear_baseline, "eyear":eyear_baseline}
-                        save_to_nc(tgdata_interp, interp_bl_file, climo_yrs=climo_yrs)
+                        tgdata_interp = tgdata_interp.assign_attrs(climo_yrs=f"{climo_yrs['syear']}-{climo_yrs['eyear']}")
+                        #tgdata_interp = tgdata_interp.assign_attrs(climo_yrs=f"{syear_baseline}-{eyear_baseline}")
+                        save_to_nc(tgdata_interp, interp_bl_file)
                     #End if
                 else:
                     print("\t Regridded file already exists, so skipping...")
@@ -621,7 +625,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
 #####
 
-def save_to_nc(tosave, outname, climo_yrs, attrs=None, proc=None):
+def save_to_nc(tosave, outname, attrs=None, proc=None):
     """Saves xarray variable to new netCDF file"""
 
     xo = tosave  # used to have more stuff here.
@@ -638,7 +642,6 @@ def save_to_nc(tosave, outname, climo_yrs, attrs=None, proc=None):
     if proc is not None:
         xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
 
-    xo.assign_attrs(climo_yrs=f"{climo_yrs['syear']}-{climo_yrs['eyear']}")
     xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
 
 #####
