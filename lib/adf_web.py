@@ -350,6 +350,8 @@ class AdfWeb(AdfObs):
         ###########################################################
         # This is for the header in the html files for climo yrs
         #NOTE this may break when going to multi case...
+        
+        """
         syear_cases = self.get_cam_info('start_year')
         eyear_cases = self.get_cam_info('end_year')
 
@@ -367,6 +369,12 @@ class AdfWeb(AdfObs):
                 #Better way to do this?
                 syear_cases[case_idx] = int(files_list[0].stem[-13:-9])
                 eyear_cases[case_idx] = int(files_list[0].stem[-6:-2])
+        """
+
+        #Grab case years
+        syear_cases = self.climo_yrs["syears"]
+        eyear_cases = self.climo_yrs["eyears"]
+        
 
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
@@ -377,6 +385,11 @@ class AdfWeb(AdfObs):
             print("data_name",data_name,"\n")
 
             #Attempt to grab baseline start_years (not currently required):
+            #Grab baseline years (which may be empty strings if using Obs):
+            syear_baseline = self.climo_yrs["syear_baseline"]
+            eyear_baseline = self.climo_yrs["eyear_baseline"]
+
+            """
             syear_baseline = self.get_baseline_info('start_year')
             eyear_baseline = self.get_baseline_info('end_year')
 
@@ -384,6 +397,7 @@ class AdfWeb(AdfObs):
                 syear_baseline = self.climo_yrs["syear_baseline"]
                 eyear_baseline = self.climo_yrs["eyear_baseline"]
             #End if
+            """
             baseline_yrs=f"{syear_baseline} - {eyear_baseline}"
         #End if
 
