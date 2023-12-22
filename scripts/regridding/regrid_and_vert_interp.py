@@ -202,8 +202,9 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear}01-{eyear}12.nc"))
-                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                        #{"syear":syear_baseline, "eyear":eyear_baseline}
+                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.{syear_baseline}01-{eyear_baseline}12.nc"))
+                        #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
 
                     #Write to debug log if enabled:
