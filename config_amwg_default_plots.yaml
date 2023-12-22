@@ -1,8 +1,9 @@
 #==============================
-# config_amwg_default_plots.yaml
+#config_cam_baseline_example.yaml
 
-# This config file contains the standard set of variables and plots used for
-# evaluating CAM simulations in the AMWG working group.
+#This is the main CAM diagnostics config file
+#for doing comparisons of a CAM run against
+#another CAM run, or a CAM baseline simulation.
 
 #Currently, if one is on NCAR's Casper or
 #Cheyenne machine, then only the diagnostic output
@@ -69,9 +70,16 @@ diag_basic_info:
     #Default: cam.h0
     hist_str: cam.h0
 
+    #TEM history file number
+    #If missing or blank, ADF will default to h4
+    tem_hist_str: cam.h4
+
     #Is this a model vs observations comparison?
     #If "false" or missing, then a model-model comparison is assumed:
     compare_obs: false
+
+    #If using TEM vs obs
+    #obs_tem_loc: /glade/scratch/${user}/ADF/tem/obs
 
     #Generate HTML website (assumed false if missing):
     #Note:  The website files themselves will be located in the path
@@ -182,6 +190,16 @@ diag_cam_climo:
     #Location where time series files are (or will be) stored:
     cam_ts_loc: /glade/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/ts
 
+    #TEM diagnostics
+    #---------------
+    #Location where TEM files are stored:
+    #NOTE: If path not specified or commented out, TEM calculation/plots will be skipped!
+    cam_tem_loc: /glade/scratch/${user}/${diag_cam_climo.cam_case_name}/tem/
+
+    #Overwrite TEM files, if found?
+    #If set to false, then TEM creation will be skipped if files are found:
+    overwrite_tem: false
+
     #----------------------
 
 #This third set of variables provide info for the CAM baseline climatologies.
@@ -238,6 +256,18 @@ diag_cam_baseline_climo:
 
     #Location where time series files are (or will be) stored:
     cam_ts_loc: /glade/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/ts
+
+    #TEM diagnostics
+    #---------------
+    #Location where TEM files are stored:
+    #NOTE: If path not specified or commented out, TEM calculation/plots will be skipped!
+    cam_tem_loc: /glade/scratch/${user}/${diag_cam_baseline_climo.cam_case_name}/tem/
+
+    #Overwrite TEM files, if found?
+    #If set to false, then TEM creation will be skipped if files are found:
+    overwrite_tem: false
+
+
 
 #This fourth set of variables provides settings for calling the Climate Variability
 # Diagnostics Package (CVDP). If cvdp_run is set to true the CVDP will be set up and
@@ -297,7 +327,8 @@ plotting_scripts:
     - zonal_mean
     - polar_map
     - cam_taylor_diagram
-    #- tem #To plot TEM, please un-comment
+    - qbo
+    #- tem
     #- regional_map_multicase #To use this please un-comment and fill-out
                               #the "region_multicase" section below
 
