@@ -192,6 +192,10 @@ diag_cam_climo:
 
     #TEM diagnostics
     #---------------
+    #TEM history file number
+    #If missing or blank, ADF will default to h4
+    tem_hist_str: cam.h4
+
     #Location where TEM files are stored:
     #NOTE: If path not specified or commented out, TEM calculation/plots will be skipped!
     cam_tem_loc: /glade/scratch/${user}/${diag_cam_climo.cam_case_name}/tem/
@@ -259,6 +263,10 @@ diag_cam_baseline_climo:
 
     #TEM diagnostics
     #---------------
+    #TEM history file number
+    #If missing or blank, ADF will default to h4
+    tem_hist_str: cam.h4
+
     #Location where TEM files are stored:
     #NOTE: If path not specified or commented out, TEM calculation/plots will be skipped!
     cam_tem_loc: /glade/scratch/${user}/${diag_cam_baseline_climo.cam_case_name}/tem/
