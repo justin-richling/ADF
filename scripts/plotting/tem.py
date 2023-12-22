@@ -19,8 +19,8 @@ def tem(adf):
     Steps:
      - loop through TEM variables
      - calculate all-time fields (from individual months)
-     - Take difference, calculate statistics
-     - make plot
+     - take difference, calculate statistics
+     - make plots
 
     Notes:
      - If any of the TEM cases are missing, the ADF skips this plotting script and moves on.
@@ -76,6 +76,11 @@ def tem(adf):
     tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
     tem_base_loc = adf.get_baseline_info("cam_tem_loc")
 
+    #THSI IS IF IT IS MISSING!
+    #if tem_case_locs is not None:
+    #    if (len(tem_case_locs) == 1) and (any(tem_case_locs) is None):
+    #        tem_case_locs = None
+
     #If path not specified, skip TEM calculation?
     if tem_case_locs is None:
         print("\t 'cam_tem_loc' not found for test case(s) in config file, so no TEM plots will be generated.")
@@ -118,7 +123,7 @@ def tem(adf):
         
         #If path not specified, skip TEM calculation?
         if tem_base_loc is None:
-            print(f"\t 'cam_tem_loc' not found for '{base_name}' in config file, so no TEM files will be generated.")
+            print(f"\t 'cam_tem_loc' not found for '{base_name}' in config file, so no TEM plots will be generated.")
             return
         else:
             input_loc_idx = Path(tem_base_loc)
@@ -169,7 +174,7 @@ def tem(adf):
             end_year   = eyear_cases[idx]
 
             #Open the TEM file
-            output_loc_idx = tem_locs[idx] #Path(tem_locs[cas]) / case_name
+            output_loc_idx = tem_locs[idx]
             case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
             tem = output_loc_idx / case_file_name
 
