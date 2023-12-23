@@ -448,6 +448,12 @@ def _df_comp_table(adf, output_location, case_names):
     #Reorder RESTOM to top of tables (if applicabale)
     df_comp = pd.read_csv(output_csv_file_comp)
     #if "RESTOM" in table_df['variable']:
+    if df_comp.index[df_comp['variable'] == 'WAKAWAKA'].tolist()[0]:
+        print("ahhhh")
+
+    print("WOOO",df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0])
+    if df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]:
+        print("should be ahhhh")
     if 1==1:
         print("!!!!!!!!!!!!!!!!!!!!!! doin it !!!!!!!!!!!!!!!!!!!!!!")
         idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
