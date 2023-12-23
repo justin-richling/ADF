@@ -445,6 +445,16 @@ def _df_comp_table(adf, output_location, case_names):
     cols_comp = ['variable', 'unit', 'test', 'control', 'diff']
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
+    #Reorder RESTOM to top of tables (if applicabale)
+    df_comp = pd.read_csv(output_csv_file_comp)
+    #if "RESTOM" in table_df['variable']:
+    if 1==1:
+        print("!!!!!!!!!!!!!!!!!!!!!! doin it !!!!!!!!!!!!!!!!!!!!!!")
+        idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
+        df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
+        df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
+        df_comp = df_comp.drop_duplicates()
+
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
 
