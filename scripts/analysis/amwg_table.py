@@ -346,8 +346,8 @@ def amwg_table(adf):
 
         #Reorder RESTOM to top of tables (if applicabale)
         #if "RESTOM" in table_df['variable']:
-        if 1==1:
-            print("!!!!!!!!!!!!!!!!!!!!!! doin it !!!!!!!!!!!!!!!!!!!!!!")
+        if table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]:
+            print("moving RESTOM to top boi!")
             idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
             table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
             table_df = table_df.drop([idx+1]).reset_index(drop=True)
@@ -447,15 +447,9 @@ def _df_comp_table(adf, output_location, case_names):
 
     #Reorder RESTOM to top of tables (if applicabale)
     df_comp = pd.read_csv(output_csv_file_comp)
-    #if "RESTOM" in table_df['variable']:
-    #if df_comp.index[df_comp['variable'] == 'WAKAWAKA'].tolist()[0]:
-    #    print("ahhhh")
 
-    print("WOOO",df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0])
     if df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]:
-        print("should be ahhhh")
-    if 1==1:
-        print("!!!!!!!!!!!!!!!!!!!!!! doin it !!!!!!!!!!!!!!!!!!!!!!")
+        print("moving RESTOM to top of case comparison boi!")
         idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
         df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
         df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
