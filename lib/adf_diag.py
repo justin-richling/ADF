@@ -1162,6 +1162,7 @@ class AdfDiag(AdfWeb):
 
         #if var == "RESTOM":
         for var in vars_to_derive:
+            print(f"\n*** Derived time series for {var} ***\n")
             # RESTOM = FSNT-FLNT
             # PRECT = PRECC+PRECL
             # ...
