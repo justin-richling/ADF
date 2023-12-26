@@ -696,6 +696,7 @@ RESTOM:
       label : "W m$^{-2}$"
   category: "TOA energy flux"
   derivable_from: ['FLNT','FSNT']
+  derived_eq: "FSNT-FLNT"
 
 SWCF:
   colormap: "Blues"
