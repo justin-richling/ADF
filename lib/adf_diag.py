@@ -516,14 +516,19 @@ class AdfDiag(AdfWeb):
             vars_to_derive = []
             #create copy of var list that can be modified for derivable variables
             diag_var_list = self.diag_var_list
+            der_vars = []
+            wowsa = {}
             for var in diag_var_list:
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
+                        wowsa[var] = {}
                         constit_list = vres['derivable_from']
                         for constit in constit_list:
                             if constit not in diag_var_list:
                                 diag_var_list.append(constit)
+                                der_vars.append(constit)
+                        wowsa[var] = constit_list
                         vars_to_derive.append(var)
                         continue
                     else:
@@ -611,7 +616,8 @@ class AdfDiag(AdfWeb):
             if vars_to_derive:
                 
                 #self.derive_variables(vars_to_derive=vres['derivable_from'],ts_dir=ts_dir[case_idx])
-                self.derive_variables(vars_to_derive=vars_to_derive,ts_dir=ts_dir[case_idx])
+                #self.derive_variables(vars_to_derive=vars_to_derive,ts_dir=ts_dir[case_idx])
+                self.derive_variables(res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx])
             #End with
 
         #End cases loop
@@ -937,7 +943,7 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables(self, vars_to_derive=None, ts_dir=None, overwrite=None):
+    def derive_variables2(self, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1015,7 +1021,7 @@ class AdfDiag(AdfWeb):
                 )
 
 
-    def derive_variables(self, vars_to_derive=None, ts_dir=None, overwrite=None):
+    def derive_variables2(self, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1122,7 +1128,7 @@ class AdfDiag(AdfWeb):
 
 
 
-    def derive_variables(self, vars_to_derive=None, ts_dir=None, overwrite=None):
+    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1149,91 +1155,86 @@ class AdfDiag(AdfWeb):
             elif '^' in equation:
                 y = equation.split('^')
                 x = int(y[0])**int(y[1])
-            return x
+            return x,y
 
-        #vres['derivable_from']
-        vars_to_derive
-        
-        # derived_eq
+        #vres["derived_eq"]
+        #constit_list = vres['derivable_from']
 
-        input_files = [
-                        sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
-                        for v in vars_to_derive
-                    ]
-        ds = xr.open_mfdataset(input_files)
-
-
+        #if var == "RESTOM":
         for var in vars_to_derive:
-            
+            # RESTOM = FSNT-FLNT
+            # PRECT = PRECC+PRECL
+            # ...
+            #vres = res[var]
+            #constit_list = vres['derivable_from']
+            #der_eq = vres["derived_eq"]
 
 
 
-            # change missing values to NaNs
-            uzm = ds['Uzm']
-            vzm = ds['Vzm']
-            
-            #
-            # add long name and unit attributes to TEM diagnostics
-            uzm.attrs['long_name'] = 'Zonal-Mean zonal wind'
-            uzm.attrs['units'] = 'm/s'
+            vres = res.get(var, {})
+            if "derivable_from" in vres:
+                constit_list = vres['derivable_from']
+            if "derived_eq" in vres:
+                der_eq = vres['derived_eq']
 
-            vzm.attrs['long_name'] = 'Zonal-Mean meridional wind'
-            vzm.attrs['units'] = 'm/s'
-
-            
-
-            dstem = xr.Dataset(data_vars=dict(date = ds.date,
-                                            datesec = ds.datesec,
-                                            time_bnds = ds.time_bnds,
-                                            uzm = uzm,
-                                            vzm = vzm,
-
-                                            ))
+            #    continue
+            #else:
+            #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+            #    msg += " No time series will be generated."
+            #    print(msg)
+            #    continue
 
 
-            
-            if var == "RESTOM":
-                # RESTOM = FSNT-FLNT
-                # Have to be more precise than with PRECT because FSNTOA, FSTNC, etc are valid variables
-                if glob.glob(os.path.join(ts_dir, "*.FSNT.*")) and glob.glob(
-                    os.path.join(ts_dir, "*.FLNT.*")
-                ):
-                    input_files = [
-                        sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
-                        for v in ["FLNT", "FSNT"]
-                    ]
-                    constit_files = []
-                    for elem in input_files:
-                        constit_files += elem
+
+
+            # Have to be more precise than with PRECT because FSNTOA, FSTNC, etc are valid variables
+            #if glob.glob(os.path.join(ts_dir, "*.FSNT.*")) and glob.glob(
+            #        os.path.join(ts_dir, "*.FLNT.*")
+            #):
+
+            #newlist = [f'*{x}_.pkl' for x in listing]
+            #['*DBMP_.pkl', '*CIFP_.pkl']
+
+            truesies = []
+            for constit in constit_list:
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    truesies.append(True)
+
+            #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
+            if len(truesies) == len(constit_list):
+                input_files = [
+                    sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
+                    for v in constit_list
+                ]
+                constit_files = []
+                for elem in input_files:
+                    constit_files += elem
+            else:
+                ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
+                ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
+                raise FileNotFoundError(ermsg)
+            # create new file name for RESTOM
+            derived_file = constit_files[0].replace(constit_list[0], var)
+            if Path(derived_file).is_file():
+                if overwrite:
+                    Path(derived_file).unlink()
                 else:
-                    ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
-                    ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
-                    raise FileNotFoundError(ermsg)
-                # create new file name for RESTOM
-                derived_file = constit_files[0].replace("FLNT", "RESTOM")
-                if Path(derived_file).is_file():
-                    if overwrite:
-                        Path(derived_file).unlink()
-                    else:
-                        print(
-                            f"[{__name__}] Warning: RESTOM file was found and overwrite is False. Will use existing file."
-                        )
-                        return None
-                # append FSNT to the file containing FLNT
-                os.system(f"ncks -A -v FLNT {constit_files[0]} {constit_files[1]}")
+                    print(
+                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                    )
+                    return None
+            # append FSNT to the file containing FLNT
+            os.system(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}")
                 
-                # create new file with the sum of FLNT and FSNT
-                #os.system(
-                #    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
-                #)
-                #derived_eq
-                os.system(
-                    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
-                )
+            # create new file with the sum of FLNT and FSNT
+            #os.system(
+            #    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
+            #)
+            #derived_eq
+            os.system(
+                f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
+            )
 
-
-
-
-                ds_base.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
+        
 
 ###############
