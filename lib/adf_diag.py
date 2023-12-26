@@ -1119,4 +1119,121 @@ class AdfDiag(AdfWeb):
                     f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
                 )
 
+
+
+
+    def derive_variables(self, vars_to_derive=None, ts_dir=None, overwrite=None):
+        """
+        Derive variables acccording to steps given here.  Since derivations will depend on the
+        variable, each variable to derive will need its own set of steps below.
+
+        Caution: this method assumes that there will be one time series file per variable
+
+        If the file for the derived variable exists, the kwarg `overwrite` determines
+        whether to overwrite the file (true) or exit with a warning message.
+        """
+
+        def numeric(equation):
+            if '+' in equation:
+                y = equation.split('+')
+                x = int(y[0])+int(y[1])
+            elif '-' in equation:
+                y = equation.split('-')
+                x = int(y[0])-int(y[1])
+            elif '/' in equation:
+                y = equation.split('/')
+                x = int(y[0])/int(y[1])
+            elif '*' in equation:
+                y = equation.split('*')
+                x = int(y[0])*int(y[1])
+            elif '^' in equation:
+                y = equation.split('^')
+                x = int(y[0])**int(y[1])
+            return x
+
+        #vres['derivable_from']
+        vars_to_derive
+        
+        # derived_eq
+
+        input_files = [
+                        sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
+                        for v in vars_to_derive
+                    ]
+        ds = xr.open_mfdataset(input_files)
+
+
+        for var in vars_to_derive:
+            
+
+
+
+            # change missing values to NaNs
+            uzm = ds['Uzm']
+            vzm = ds['Vzm']
+            
+            #
+            # add long name and unit attributes to TEM diagnostics
+            uzm.attrs['long_name'] = 'Zonal-Mean zonal wind'
+            uzm.attrs['units'] = 'm/s'
+
+            vzm.attrs['long_name'] = 'Zonal-Mean meridional wind'
+            vzm.attrs['units'] = 'm/s'
+
+            
+
+            dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                            datesec = ds.datesec,
+                                            time_bnds = ds.time_bnds,
+                                            uzm = uzm,
+                                            vzm = vzm,
+
+                                            ))
+
+
+            
+            if var == "RESTOM":
+                # RESTOM = FSNT-FLNT
+                # Have to be more precise than with PRECT because FSNTOA, FSTNC, etc are valid variables
+                if glob.glob(os.path.join(ts_dir, "*.FSNT.*")) and glob.glob(
+                    os.path.join(ts_dir, "*.FLNT.*")
+                ):
+                    input_files = [
+                        sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
+                        for v in ["FLNT", "FSNT"]
+                    ]
+                    constit_files = []
+                    for elem in input_files:
+                        constit_files += elem
+                else:
+                    ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
+                    ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
+                    raise FileNotFoundError(ermsg)
+                # create new file name for RESTOM
+                derived_file = constit_files[0].replace("FLNT", "RESTOM")
+                if Path(derived_file).is_file():
+                    if overwrite:
+                        Path(derived_file).unlink()
+                    else:
+                        print(
+                            f"[{__name__}] Warning: RESTOM file was found and overwrite is False. Will use existing file."
+                        )
+                        return None
+                # append FSNT to the file containing FLNT
+                os.system(f"ncks -A -v FLNT {constit_files[0]} {constit_files[1]}")
+                
+                # create new file with the sum of FLNT and FSNT
+                #os.system(
+                #    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
+                #)
+                #derived_eq
+                os.system(
+                    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
+                )
+
+
+
+
+                ds_base.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
+
 ###############
