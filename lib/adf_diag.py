@@ -1232,7 +1232,7 @@ class AdfDiag(AdfWeb):
             #os.system(
             #    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
             #)
-            #derived_eq
+            print("f{var} {der_eq}\n")
             os.system(
                 f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
             )
