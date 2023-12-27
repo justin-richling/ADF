@@ -965,8 +965,8 @@ class AdfDiag(AdfWeb):
             vres = res.get(var, {})
             if "derivable_from" in vres:
                 constit_list = vres['derivable_from']
-                print("WARNING: No constituents listed in defualts config file, moving on")
             else:
+                print("WARNING: No constituents listed in defualts config file, moving on")
                 pass
             if "derived_eq" in vres:
                 der_eq = vres['derived_eq']
