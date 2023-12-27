@@ -1013,7 +1013,7 @@ class AdfDiag(AdfWeb):
                     )
                     return None
 
-            # append FSNT to the file containing FLNT
+            # append one constituent to the file containing the other
             #QUESTION: Will this need to change if there are a different number if constituents other than 2???
             os.system(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}")
 
