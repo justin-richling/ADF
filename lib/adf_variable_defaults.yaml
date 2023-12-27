@@ -452,6 +452,7 @@ PRECT:
   obs_var_name: "PRECT"
   category: "Hydrologic cycle"
   derivable_from: ['PRECL','PRECC']
+  derived_eq: "PRECL+PRECC"
 
 QFLX:
   category: "Hydrologic cycle"
