@@ -944,191 +944,6 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables2(self, vars_to_derive=None, ts_dir=None, overwrite=None):
-        """
-        Derive variables acccording to steps given here.  Since derivations will depend on the
-        variable, each variable to derive will need its own set of steps below.
-
-        Caution: this method assumes that there will be one time series file per variable
-
-        If the file for the derived variable exists, the kwarg `overwrite` determines
-        whether to overwrite the file (true) or exit with a warning message.
-        """
-
-        for var in vars_to_derive:
-            if var == "PRECT":
-                # PRECT can be found by simply adding PRECL and PRECC
-                # grab file names for the PRECL and PRECC files from the case ts directory
-                if glob.glob(os.path.join(ts_dir, "*PRECC*")) and glob.glob(
-                    os.path.join(ts_dir, "*PRECL*")
-                ):
-                    constit_files = sorted(glob.glob(os.path.join(ts_dir, "*PREC*")))
-                else:
-                    ermsg = "PRECC and PRECL were not both present; PRECT cannot be calculated."
-                    ermsg += " Please remove PRECT from diag_var_list or find the relevant CAM files."
-                    raise FileNotFoundError(ermsg)
-                # create new file name for PRECT
-                prect_file = constit_files[0].replace("PRECC", "PRECT")
-                if Path(prect_file).is_file():
-                    if overwrite:
-                        Path(prect_file).unlink()
-                    else:
-                        print(
-                            f"[{__name__}] Warning: PRECT file was found and overwrite is False. Will use existing file."
-                        )
-                        return None
-                # append PRECC to the file containing PRECL
-                os.system(f"ncks -A -v PRECC {constit_files[0]} {constit_files[1]}")
-                # create new file with the sum of PRECC and PRECL
-                os.system(
-                    f"ncap2 -s 'PRECT=(PRECC+PRECL)' {constit_files[1]} {prect_file}"
-                )
-            if var == "RESTOM":
-                # RESTOM = FSNT-FLNT
-                # Have to be more precise than with PRECT because FSNTOA, FSTNC, etc are valid variables
-                if glob.glob(os.path.join(ts_dir, "*.FSNT.*")) and glob.glob(
-                    os.path.join(ts_dir, "*.FLNT.*")
-                ):
-                    input_files = [
-                        sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
-                        for v in ["FLNT", "FSNT"]
-                    ]
-                    constit_files = []
-                    for elem in input_files:
-                        constit_files += elem
-                else:
-                    ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
-                    ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
-                    raise FileNotFoundError(ermsg)
-                # create new file name for RESTOM
-                derived_file = constit_files[0].replace("FLNT", "RESTOM")
-                if Path(derived_file).is_file():
-                    if overwrite:
-                        Path(derived_file).unlink()
-                    else:
-                        print(
-                            f"[{__name__}] Warning: RESTOM file was found and overwrite is False. Will use existing file."
-                        )
-                        return None
-                # append FSNT to the file containing FLNT
-                os.system(f"ncks -A -v FLNT {constit_files[0]} {constit_files[1]}")
-                # create new file with the sum of FLNT and FSNT
-                #os.system(
-                #    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
-                #)
-                
-                os.system(
-                    f"ncap2 -s 'RESTOM={FSNT-FLNT}' {constit_files[1]} {derived_file}"
-                )
-
-
-    def derive_variables2(self, vars_to_derive=None, ts_dir=None, overwrite=None):
-        """
-        Derive variables acccording to steps given here.  Since derivations will depend on the
-        variable, each variable to derive will need its own set of steps below.
-
-        Caution: this method assumes that there will be one time series file per variable
-
-        If the file for the derived variable exists, the kwarg `overwrite` determines
-        whether to overwrite the file (true) or exit with a warning message.
-        """
-
-        def numeric(equation):
-            if '+' in equation:
-                y = equation.split('+')
-                x = int(y[0])+int(y[1])
-            elif '-' in equation:
-                y = equation.split('-')
-                x = int(y[0])-int(y[1])
-            elif '/' in equation:
-                y = equation.split('/')
-                x = int(y[0])/int(y[1])
-            elif '*' in equation:
-                y = equation.split('*')
-                x = int(y[0])*int(y[1])
-            elif '^' in equation:
-                y = equation.split('^')
-                x = int(y[0])**int(y[1])
-            return x
-
-        #vres['derivable_from']
-        vars_to_derive
-
-        for var in vars_to_derive:
-            if var == "PRECT":
-                # PRECT can be found by simply adding PRECL and PRECC
-                # grab file names for the PRECL and PRECC files from the case ts directory
-                if glob.glob(os.path.join(ts_dir, "*PRECC*")) and glob.glob(
-                    os.path.join(ts_dir, "*PRECL*")
-                ):
-                    constit_files = sorted(glob.glob(os.path.join(ts_dir, "*PREC*")))
-                else:
-                    ermsg = "PRECC and PRECL were not both present; PRECT cannot be calculated."
-                    ermsg += " Please remove PRECT from diag_var_list or find the relevant CAM files."
-                    raise FileNotFoundError(ermsg)
-                # create new file name for PRECT
-                prect_file = constit_files[0].replace("PRECC", "PRECT")
-                if Path(prect_file).is_file():
-                    if overwrite:
-                        Path(prect_file).unlink()
-                    else:
-                        print(
-                            f"[{__name__}] Warning: PRECT file was found and overwrite is False. Will use existing file."
-                        )
-                        return None
-
-                #numeric()
-
-                # append PRECC to the file containing PRECL
-                os.system(f"ncks -A -v PRECC {constit_files[0]} {constit_files[1]}")
-                # create new file with the sum of PRECC and PRECL
-                os.system(
-                    f"ncap2 -s 'PRECT=(PRECC+PRECL)' {constit_files[1]} {prect_file}"
-                )
-
-            
-            if var == "RESTOM":
-                # RESTOM = FSNT-FLNT
-                # Have to be more precise than with PRECT because FSNTOA, FSTNC, etc are valid variables
-                if glob.glob(os.path.join(ts_dir, "*.FSNT.*")) and glob.glob(
-                    os.path.join(ts_dir, "*.FLNT.*")
-                ):
-                    input_files = [
-                        sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
-                        for v in ["FLNT", "FSNT"]
-                    ]
-                    constit_files = []
-                    for elem in input_files:
-                        constit_files += elem
-                else:
-                    ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
-                    ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
-                    raise FileNotFoundError(ermsg)
-                # create new file name for RESTOM
-                derived_file = constit_files[0].replace("FLNT", "RESTOM")
-                if Path(derived_file).is_file():
-                    if overwrite:
-                        Path(derived_file).unlink()
-                    else:
-                        print(
-                            f"[{__name__}] Warning: RESTOM file was found and overwrite is False. Will use existing file."
-                        )
-                        return None
-                # append FSNT to the file containing FLNT
-                os.system(f"ncks -A -v FLNT {constit_files[0]} {constit_files[1]}")
-                
-                # create new file with the sum of FLNT and FSNT
-                #os.system(
-                #    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
-                #)
-                #derived_eq
-                os.system(
-                    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
-                )
-
-
-
-
     def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
@@ -1140,28 +955,6 @@ class AdfDiag(AdfWeb):
         whether to overwrite the file (true) or exit with a warning message.
         """
 
-        def numeric(equation):
-            if '+' in equation:
-                y = equation.split('+')
-                x = int(y[0])+int(y[1])
-            elif '-' in equation:
-                y = equation.split('-')
-                x = int(y[0])-int(y[1])
-            elif '/' in equation:
-                y = equation.split('/')
-                x = int(y[0])/int(y[1])
-            elif '*' in equation:
-                y = equation.split('*')
-                x = int(y[0])*int(y[1])
-            elif '^' in equation:
-                y = equation.split('^')
-                x = int(y[0])**int(y[1])
-            return x,y
-
-        #vres["derived_eq"]
-        #constit_list = vres['derivable_from']
-
-        #if var == "RESTOM":
         for var in vars_to_derive:
             print(f"\n*** Derived time series for {var} ***\n")
             # RESTOM = FSNT-FLNT
@@ -1208,7 +1001,8 @@ class AdfDiag(AdfWeb):
                 ermsg = f"Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                 raise FileNotFoundError(ermsg)
-            # create new file name for RESTOM
+
+            # create new file name for derived variable
             derived_file = constit_files[0].replace(constit_list[0], var)
             if Path(derived_file).is_file():
                 if overwrite:
@@ -1218,14 +1012,13 @@ class AdfDiag(AdfWeb):
                         f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
                     )
                     return None
+
             # append FSNT to the file containing FLNT
+            #QUESTION: Will this need to change if there are a different number if constituents other than 2???
             os.system(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}")
-                
-            # create new file with the sum of FLNT and FSNT
-            #os.system(
-            #    f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
-            #)
+
             print(f"{var} {der_eq}\n")
+            # create new file with the derived equation of constituents
             os.system(
                 f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
             )
