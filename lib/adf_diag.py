@@ -1038,9 +1038,9 @@ class AdfDiag(AdfWeb):
                 cmd2
             )
             
-            os.system(
-                f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
-            )
+            #os.system(
+            #    f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
+            #)
 
         
 
