@@ -1167,17 +1167,19 @@ class AdfDiag(AdfWeb):
             # RESTOM = FSNT-FLNT
             # PRECT = PRECC+PRECL
             # ...
-            #vres = res[var]
-            #constit_list = vres['derivable_from']
-            #der_eq = vres["derived_eq"]
-
 
 
             vres = res.get(var, {})
             if "derivable_from" in vres:
                 constit_list = vres['derivable_from']
+                print("WARNING: No constituents listed in defualts config file, moving on")
+            else:
+                pass
             if "derived_eq" in vres:
                 der_eq = vres['derived_eq']
+            else:
+                print("WARNING: No derived equation in defualts config file, moving on")
+                pass
 
             #    continue
             #else:
@@ -1187,22 +1189,13 @@ class AdfDiag(AdfWeb):
             #    continue
 
 
-
-
-            # Have to be more precise than with PRECT because FSNTOA, FSTNC, etc are valid variables
-            #if glob.glob(os.path.join(ts_dir, "*.FSNT.*")) and glob.glob(
-            #        os.path.join(ts_dir, "*.FLNT.*")
-            #):
-
-            #newlist = [f'*{x}_.pkl' for x in listing]
-            #['*DBMP_.pkl', '*CIFP_.pkl']
-
             truesies = []
             for constit in constit_list:
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                     truesies.append(True)
 
             #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
+            #Check if all the constituent files were found
             if len(truesies) == len(constit_list):
                 input_files = [
                     sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
@@ -1212,8 +1205,8 @@ class AdfDiag(AdfWeb):
                 for elem in input_files:
                     constit_files += elem
             else:
-                ermsg = "FSNT and FLNT were not both present; RESTOM cannot be calculated."
-                ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                 raise FileNotFoundError(ermsg)
             # create new file name for RESTOM
             derived_file = constit_files[0].replace(constit_list[0], var)
