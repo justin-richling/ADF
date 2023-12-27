@@ -1038,7 +1038,7 @@ class AdfDiag(AdfWeb):
                 cmd_p2 = cmd_p2 + i2
             cmd_p2 = cmd_p2 + f"{derived_file}"
             os.system(
-                cmd2
+                cmd_p2
             )
             
             #os.system(
