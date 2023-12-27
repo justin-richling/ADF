@@ -1049,3 +1049,19 @@ utendwtem:
 
 #-----------
 #End of File
+
+MADEUPVAR:
+  colormap: "Blues"
+  
+  diff_colormap: "seismic"
+
+
+
+  new_unit: "unit"
+  mpl:
+    colorbar:
+      label : "unit"
+
+  category: "Super Duper"
+  derivable_from: ['PRECL','PRECC',"PRECSC"]
+  derived_eq: "PRECL+PRECC-PRECSC"
