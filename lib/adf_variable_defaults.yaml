@@ -1065,4 +1065,4 @@ MADEUPVAR:
   category: "Super Duper"
   derivable_from: ['PRECL','PRECC',"PRECSC"]
   #derivable_from: ['PRECC',"PRECSC"]
-  derived_eq: "(PRECC-PRECSC+PRECL"
+  derived_eq: "PRECC-PRECSC+PRECL"
