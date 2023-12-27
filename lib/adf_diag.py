@@ -1037,6 +1037,11 @@ class AdfDiag(AdfWeb):
             for i2 in constit_files[1:]:
                 cmd_p2 = f" {cmd_p2} {i2}"
             cmd_p2 = cmd_p2 + f" {derived_file}"
+
+            print(cmd_p2)
+            print(f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}\n")
+
+
             os.system(
                 cmd_p2
             )
