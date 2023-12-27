@@ -1032,11 +1032,11 @@ class AdfDiag(AdfWeb):
             print(f"{var} {der_eq}\n")
             # create new file with the derived equation of constituents
             #cmd2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
-            cmd2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} "
+            cmd2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]}"
             cmd_p2 = cmd2
             for i2 in constit_files[1:]:
-                cmd_p2 = cmd_p2 + i2
-            cmd_p2 = cmd_p2 + f"{derived_file}"
+                cmd_p2 = f" {cmd_p2} {i2}"
+            cmd_p2 = cmd_p2 + f" {derived_file}"
             os.system(
                 cmd_p2
             )
