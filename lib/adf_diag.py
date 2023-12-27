@@ -1022,6 +1022,8 @@ class AdfDiag(AdfWeb):
             cmd_p = cmd
             for i in constit_files:
                 cmd_p = f"{cmd_p} {i}"
+
+            cmd_p = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
             
             print(f"{var}: {cmd_p}\n\n")
             os.system(cmd_p)
