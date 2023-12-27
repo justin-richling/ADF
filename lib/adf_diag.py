@@ -1017,6 +1017,7 @@ class AdfDiag(AdfWeb):
             #QUESTION: Will this need to change if there are a different number if constituents other than 2???
 
             #cmd = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
+            print(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}\n")
             cmd = f"ncks -A -v {constit_list[0]} "
             for i in constit_files:
                 cmd_p = cmd + i
