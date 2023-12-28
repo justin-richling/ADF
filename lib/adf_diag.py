@@ -954,238 +954,7 @@ class AdfDiag(AdfWeb):
     #########
 
 
-
-
-
-
-    def derive_variables_NO(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
-        """
-        Derive variables acccording to steps given here.  Since derivations will depend on the
-        variable, each variable to derive will need its own set of steps below.
-
-        Caution: this method assumes that there will be one time series file per variable
-
-        If the file for the derived variable exists, the kwarg `overwrite` determines
-        whether to overwrite the file (true) or exit with a warning message.
-        """
-
-        for var in vars_to_derive:
-            print(f"\n*** Derived time series for {var} ***\n")
-            # RESTOM = FSNT-FLNT
-            # PRECT = PRECC+PRECL
-            # ...
-
-
-            vres = res.get(var, {})
-            if "derivable_from" in vres:
-                constit_list = vres['derivable_from']
-            else:
-                print("WARNING: No constituents listed in defualts config file, moving on")
-                pass
-            if "derived_eq" in vres:
-                der_eq = vres['derived_eq']
-            else:
-                print("WARNING: No derived equation in defualts config file, moving on")
-                pass
-
-            #    continue
-            #else:
-            #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-            #    msg += " No time series will be generated."
-            #    print(msg)
-            #    continue
-
-
-            truesies = []
-            for constit in constit_list:
-                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
-                    truesies.append(True)
-
-            #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
-            #Check if all the constituent files were found
-            if len(truesies) == len(constit_list):
-                input_files = [
-                    sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
-                    for v in constit_list
-                ]
-                constit_files = []
-                for elem in input_files:
-                    constit_files += elem
-            else:
-                ermsg = f"Not all constituent files present; {var} cannot be calculated."
-                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                raise FileNotFoundError(ermsg)
-
-            # create new file name for derived variable
-            derived_file = constit_files[0].replace(constit_list[0], var)
-            if Path(derived_file).is_file():
-                if overwrite:
-                    Path(derived_file).unlink()
-                else:
-                    print(
-                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
-                    )
-                    return None
-
-            # append one constituent to the file containing the other
-            #QUESTION: Will this need to change if there are a different number if constituents other than 2???
-
-            #cmd = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
-            #print(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}\n")
-            cmd = f"ncks -A -v {constit_list[0]} "
-            cmd_p = cmd
-            for i in constit_files:
-                cmd_p = f"{cmd_p} {i}"
-
-            cmd_p = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
-            
-            print(f"{var}: {cmd_p}\n\n")
-            os.system(cmd_p)
-            #os.system(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}")
-
-            print(f"{var} {der_eq}\n")
-            # create new file with the derived equation of constituents
-            cmd_p2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
-            """
-            cmd2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]}"
-            cmd_p2 = cmd2
-
-            print(var,constit_files,"\n")
-
-            for i2 in constit_files[1:]:
-                cmd_p2 = f"{cmd_p2} {i2} "
-            cmd_p2 = cmd_p2 + f"{derived_file}"
-
-            print(cmd_p2)
-            print(f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}\n")
-            """
-
-            os.system(
-                cmd_p2
-            )
-            
-            #os.system(
-            #    f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
-            #)
-
-
-
-
-
-    def derive_variables_NO(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
-        """
-        Derive variables acccording to steps given here.  Since derivations will depend on the
-        variable, each variable to derive will need its own set of steps below.
-
-        Caution: this method assumes that there will be one time series file per variable
-
-        If the file for the derived variable exists, the kwarg `overwrite` determines
-        whether to overwrite the file (true) or exit with a warning message.
-        """
-
-        for var in vars_to_derive:
-            print(f"\n*** Derived time series for {var} ***\n")
-            # RESTOM = FSNT-FLNT
-            # PRECT = PRECC+PRECL
-            # ...
-
-
-            vres = res.get(var, {})
-            if "derivable_from" in vres:
-                constit_list = vres['derivable_from']
-            else:
-                print("WARNING: No constituents listed in defualts config file, moving on")
-                pass
-            if "derived_eq" in vres:
-                der_eq = vres['derived_eq']
-            else:
-                print("WARNING: No derived equation in defualts config file, moving on")
-                pass
-
-            #    continue
-            #else:
-            #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-            #    msg += " No time series will be generated."
-            #    print(msg)
-            #    continue
-
-
-            truesies = []
-            for constit in constit_list:
-                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
-                    truesies.append(True)
-
-            #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
-            #Check if all the constituent files were found
-            if len(truesies) == len(constit_list):
-                input_files = [
-                    sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
-                    for v in constit_list
-                ]
-                constit_files = []
-                for elem in input_files:
-                    constit_files += elem
-            else:
-                ermsg = f"Not all constituent files present; {var} cannot be calculated."
-                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                raise FileNotFoundError(ermsg)
-
-            # create new file name for derived variable
-            derived_file = constit_files[0].replace(constit_list[0], var)
-            if Path(derived_file).is_file():
-                if overwrite:
-                    Path(derived_file).unlink()
-                else:
-                    print(
-                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
-                    )
-                    return None
-
-            # append one constituent to the file containing the other
-            #QUESTION: Will this need to change if there are a different number if constituents other than 2???
-
-            #cmd = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
-            #print(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}\n")
-            cmd = f"ncks -A -v {constit_list[0]} "
-            cmd_p = cmd
-            for i in constit_files:
-                cmd_p = f"{cmd_p} {i}"
-
-            cmd_p = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
-            
-            print(f"{var}: {cmd_p}\n\n")
-            os.system(cmd_p)
-            #os.system(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}")
-
-            print(f"{var} {der_eq}\n")
-            # create new file with the derived equation of constituents
-            cmd_p2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
-            """
-            cmd2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]}"
-            cmd_p2 = cmd2
-
-            print(var,constit_files,"\n")
-
-            for i2 in constit_files[1:]:
-                cmd_p2 = f"{cmd_p2} {i2} "
-            cmd_p2 = cmd_p2 + f"{derived_file}"
-
-            print(cmd_p2)
-            print(f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}\n")
-            """
-
-            os.system(
-                cmd_p2
-            )
-            
-            #os.system(
-            #    f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
-            #)
-
-
-
-
-
+    
     def derive_variables_xarray(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
@@ -1197,20 +966,7 @@ class AdfDiag(AdfWeb):
         whether to overwrite the file (true) or exit with a warning message.
         """
 
-        def create_math_function(equation_str):
-            from sympy.parsing.sympy_parser import parse_expr
-            from sympy import symbols, sympify, Eq
-            # Parse the equation string into a SymPy expression
-            equation_expr = parse_expr(equation_str)
-            
-            # Define symbols used in the expression
-            symbols_list = list(equation_expr.free_symbols)
-            
-            # Create a lambda function using the symbols and the expression
-            math_function = lambda **kwargs: equation_expr.subs(kwargs)
-            
-            return math_function
-
+        import sympy as sp
         for var in vars_to_derive:
             print(f"\n*** Derived time series for {var} ***\n")
             # RESTOM = FSNT-FLNT
@@ -1288,65 +1044,62 @@ class AdfDiag(AdfWeb):
 
             print(ds,"\n\n")
 
-            """
-            # Create the math function
-            math_function = create_math_function(equation_str)
-            ds["RESTOM"] = ds["FSNT"] - ds["FLNT"]
-
-            # Test the function
-            # get these from vres
-            #values = {'x': 5, 'y': 3, 'z': 1}
-
-
-
-
-            result = math_function(**values)
-
-            print(f"The result of {equation_str} with values {values} is {result}")
-            """
-
-            # Example usage
-            #equation_str = "(5*x)**2 + 3*x - (4*y)+2*z"
-
-            # Create the math function
-            math_function = create_math_function(equation_str)
-
-            # Test the function
-            # get these from vres
-            #values = {'x': 5, 'y': 3, 'z': 1}
-            values = {}
+            dimmis = {}
             for i in constit_list:
-                print("ds[i]: ",ds[i],"\n",ds[i].values,"\n\n")
-                values[i] = ds[i].values
-            print("values:",values,"\n")
-            result = math_function(**values)
-            print("result",result,"\n")
-            ds[var] = result
-            der_var = ds[var]
-            #der_var.attrs['long_name'] = 'tendency of eastward wind due to TEM upward wind advection'
-            #der_var.attrs['units'] = 'm/s2'
+                dimmis[i] = ds[constit_list[0]].dims
 
-            print(der_var.values)# = np.float32(der_var.values)
-            
-            dstem = xr.Dataset(data_vars=dict(date = ds.date,
-                                            datesec = ds.datesec,
-                                            time_bnds = ds.time_bnds,
-                                            var = der_var,
-                                            
-                                            ))
+            coords={'lat': ds[constit_list[0]].lat.values, 'lon': ds[constit_list[0]].lon.values, 
+                                      "time": ds[constit_list[0]].time.values}
+
+            #der_var = "RESTOM"
+
+            # Define the string equation involving the variables
+            #equation_str = "(FSNT-FLNT)"#*PRECSC"
+
+            # Create xarray Datasets with multidimensional variables
+            #variables = {'l': ('lat', 'lon', 'time'), 's': ('lat', 'lon', 'time'), 't': ('lat', 'lon', 'time')}
+            variables = dimmis
+            data_arrays = []
+
+            for var, dims in variables.items():
+                #print(dims)
+                values = ds[var].values  # Example data with dimensions time x space
+                #da = xr.DataArray(values, coords={'lat': dataset.lat.values, 'lon': dataset.lon.values, 
+                #                                  "time": dataset.time.values}, 
+                #                  dims=dims)
+                
+                da = xr.DataArray(values, coords=coords, 
+                                dims=dims)
+
+                data_arrays.append(da)
+
+            #dataset_1 = dataset.to_array(dim="l")
+            #dataset_2 = dataset2.to_array(dim="s")
+            #dataset_3 = dataset3.to_array(dim="t")
+            #data_arrays = [dataset_1,dataset_2,dataset_3]
 
 
-            #Update the attributes
-            #ds.attrs = ds.attrs
-            #ds.attrs['created'] = str(date.today())
-            print(dstem[var])
+            # Convert the string equation to a SymPy expression
+            symbolic_expression = sp.sympify(equation_str)
 
-            # write output to a netcdf file
-            dstem.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+            # Create a list of SymPy symbols based on the variable names
+            symbolic_vars = [sp.symbols(var) for var in variables]
 
-            print(f"The result of {equation_str} with values {values} is {result}")
-    
-        
+            # Use lambdify to create a function that can handle symbolic and numeric evaluations
+            numeric_function = sp.lambdify(symbolic_vars, symbolic_expression, 'numpy')
+
+            # Define a function to convert SymPy expressions to NumPy functions
+            def sympy_function(*args):
+                return numeric_function(*args)
+
+            # Apply the symbolic function to the xarray Dataset
+            result_da = xr.apply_ufunc(sympy_function, *data_arrays, dask='parallelized', output_dtypes=[float])
+
+            #print(result_da)
+            ds[var] = result_da
+            ds[var].mean(dim="time").plot.contourf()
+
+            ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
 
 ###############
