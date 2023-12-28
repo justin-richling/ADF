@@ -1174,6 +1174,8 @@ class AdfDiag(AdfWeb):
             # Example usage
             equation_str = der_eq
 
+            print(ds)
+
             """
             # Create the math function
             math_function = create_math_function(equation_str)
