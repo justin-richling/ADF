@@ -1114,8 +1114,8 @@ class AdfDiag(AdfWeb):
             #values = {}
             constits_files = []
             for i in constit_list:
-                print(glob(f"*{i}*.nc"))
-                constits_files.append(glob(f"*{i}*.nc")[0])
+                print(glob.glob(f"*{i}*.nc"))
+                constits_files.append(glob.glob(f"*{i}*.nc")[0])
             ds = xr.open_mfdataset(constits_files)
 
             truesies = []
