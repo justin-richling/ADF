@@ -1097,7 +1097,7 @@ class AdfDiag(AdfWeb):
 
             #print(result_da)
             ds[var] = result_da
-            ds[var].mean(dim="time").plot.contourf()
+            #ds[var].mean(dim="time").plot.contourf()
 
             ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
