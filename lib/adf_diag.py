@@ -1112,17 +1112,20 @@ class AdfDiag(AdfWeb):
             #    continue
 
             #values = {}
-            constits_files = []
-            for i in constit_list:
-                print(glob.glob(f"*{i}*.nc"))
-                constits_files.append(glob.glob(f"*{i}*.nc")[0])
-            ds = xr.open_mfdataset(constits_files)
+            #constits_files = []
+            #for i in constit_list:
+            #    print(glob.glob(os.path.join(ts_dir, f"*.{i}.*.nc")))
+            #    constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{i}.*.nc")[0]))
+            #ds = xr.open_mfdataset(constits_files)
 
             truesies = []
+            constits_files = []
             for constit in constit_list:
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                     truesies.append(True)
                     #values[constit] = ds[constit]
+                    constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")[0]))
+            ds = xr.open_mfdataset(constits_files)
 
             #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
             #Check if all the constituent files were found
