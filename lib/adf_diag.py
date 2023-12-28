@@ -627,7 +627,7 @@ class AdfDiag(AdfWeb):
                 
                 #self.derive_variables(vars_to_derive=vres['derivable_from'],ts_dir=ts_dir[case_idx])
                 #self.derive_variables(vars_to_derive=vars_to_derive,ts_dir=ts_dir[case_idx])
-                self.derive_variables(res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx])
+                self.derive_variables_xarray(res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx])
             #End with
 
         #End cases loop
