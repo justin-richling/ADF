@@ -1122,6 +1122,7 @@ class AdfDiag(AdfWeb):
             constits_files = []
             for constit in constit_list:
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    print(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))
                     truesies.append(True)
                     #values[constit] = ds[constit]
                     constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")[0]))
