@@ -1209,9 +1209,6 @@ class AdfDiag(AdfWeb):
             #Update the attributes
             #ds.attrs = ds.attrs
             #ds.attrs['created'] = str(date.today())
-            ds['lev']=ds['lev']
-
-
 
             # write output to a netcdf file
             ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
