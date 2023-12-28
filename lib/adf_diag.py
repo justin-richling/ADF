@@ -1206,13 +1206,27 @@ class AdfDiag(AdfWeb):
 
             result = math_function(**values)
             ds[var] = result
+            der_var = ds[var]
+            #der_var.attrs['long_name'] = 'tendency of eastward wind due to TEM upward wind advection'
+            #der_var.attrs['units'] = 'm/s2'
+
+            der_var.values = np.float32(der_var.values)
+            
+            dstem = xr.Dataset(data_vars=dict(date = ds.date,
+                                            datesec = ds.datesec,
+                                            time_bnds = ds.time_bnds,
+                                            var = der_var,
+                                            
+                                            ))
+
+
             #Update the attributes
             #ds.attrs = ds.attrs
             #ds.attrs['created'] = str(date.today())
-            print(ds[var])
+            print(dstem[var])
 
             # write output to a netcdf file
-            ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+            dstem.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
             print(f"The result of {equation_str} with values {values} is {result}")
     
