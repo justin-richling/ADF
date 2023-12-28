@@ -1125,7 +1125,7 @@ class AdfDiag(AdfWeb):
                     truesies.append(True)
                     #values[constit] = ds[constit]
                     constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")[0]))
-            ds = xr.open_mfdataset(constits_files)
+            ds = xr.open_mfdataset(constits_files, engine='netcdf4')
 
             #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
             #Check if all the constituent files were found
