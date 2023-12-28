@@ -621,12 +621,8 @@ class AdfDiag(AdfWeb):
             #Now run the "ncrcat" subprocesses in parallel:
             with mp.Pool(processes=self.num_procs) as mpool:
                 _ = mpool.map(call_ncrcat, list_of_commands)
-            
-            print("\n\n vars_to_derive:",vars_to_derive,"\n\n")
-            if vars_to_derive:
-                
-                #self.derive_variables(vars_to_derive=vres['derivable_from'],ts_dir=ts_dir[case_idx])
-                #self.derive_variables(vars_to_derive=vars_to_derive,ts_dir=ts_dir[case_idx])
+
+            if vars_to_derive:                
                 self.derive_variables_xarray(res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx])
             #End with
 
@@ -1058,9 +1054,9 @@ class AdfDiag(AdfWeb):
             variables = dimmis
             data_arrays = []
 
-            for var, dims in variables.items():
+            for var_const, dims in variables.items():
                 #print(dims)
-                values = ds[var].values  # Example data with dimensions time x space
+                values = ds[var_const].values  # Example data with dimensions time x space
                 #da = xr.DataArray(values, coords={'lat': dataset.lat.values, 'lon': dataset.lon.values, 
                 #                                  "time": dataset.time.values}, 
                 #                  dims=dims)
@@ -1080,7 +1076,7 @@ class AdfDiag(AdfWeb):
             symbolic_expression = sp.sympify(equation_str)
 
             # Create a list of SymPy symbols based on the variable names
-            symbolic_vars = [sp.symbols(var) for var in variables]
+            symbolic_vars = [sp.symbols(var_const) for var_const in variables]
 
             # Use lambdify to create a function that can handle symbolic and numeric evaluations
             numeric_function = sp.lambdify(symbolic_vars, symbolic_expression, 'numpy')
