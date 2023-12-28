@@ -1210,7 +1210,7 @@ class AdfDiag(AdfWeb):
             #der_var.attrs['long_name'] = 'tendency of eastward wind due to TEM upward wind advection'
             #der_var.attrs['units'] = 'm/s2'
 
-            der_var.values = np.float32(der_var.values)
+            print(der_var.values)# = np.float32(der_var.values)
             
             dstem = xr.Dataset(data_vars=dict(date = ds.date,
                                             datesec = ds.datesec,
