@@ -1085,6 +1085,20 @@ class AdfDiag(AdfWeb):
         whether to overwrite the file (true) or exit with a warning message.
         """
 
+        def create_math_function(equation_str):
+            from sympy.parsing.sympy_parser import parse_expr
+            from sympy import symbols, sympify, Eq
+            # Parse the equation string into a SymPy expression
+            equation_expr = parse_expr(equation_str)
+            
+            # Define symbols used in the expression
+            symbols_list = list(equation_expr.free_symbols)
+            
+            # Create a lambda function using the symbols and the expression
+            math_function = lambda **kwargs: equation_expr.subs(kwargs)
+            
+            return math_function
+
         for var in vars_to_derive:
             print(f"\n*** Derived time series for {var} ***\n")
             # RESTOM = FSNT-FLNT
@@ -1194,17 +1208,7 @@ class AdfDiag(AdfWeb):
 
             print(f"The result of {equation_str} with values {values} is {result}")
     
-        def create_math_function(equation_str):
-            # Parse the equation string into a SymPy expression
-            equation_expr = parse_expr(equation_str)
-            
-            # Define symbols used in the expression
-            symbols_list = list(equation_expr.free_symbols)
-            
-            # Create a lambda function using the symbols and the expression
-            math_function = lambda **kwargs: equation_expr.subs(kwargs)
-            
-            return math_function
+        
 
 
 ###############
