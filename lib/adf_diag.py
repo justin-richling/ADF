@@ -24,6 +24,15 @@ import importlib
 from pathlib import Path
 from typing import Optional
 
+#from sympy import symbols, parse_expr
+from sympy import *
+
+from sympy.parsing.sympy_parser import parse_expr
+from sympy import symbols, sympify, Eq
+
+import numpy as np
+
+
 #Check if "PyYAML" is present in python path:
 # pylint: disable=unused-import
 try:
@@ -944,7 +953,12 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+
+
+
+
+
+    def derive_variables_xarray(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1013,6 +1027,13 @@ class AdfDiag(AdfWeb):
                     )
                     return None
 
+
+            ds = xr.open_mfdataset(input_files)
+
+            for i in constit_list:
+                const = ds[i]
+
+
             # append one constituent to the file containing the other
             #QUESTION: Will this need to change if there are a different number if constituents other than 2???
 
@@ -1054,6 +1075,136 @@ class AdfDiag(AdfWeb):
             #    f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
             #)
 
-        
+
+
+
+
+
+
+    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+        """
+        Derive variables acccording to steps given here.  Since derivations will depend on the
+        variable, each variable to derive will need its own set of steps below.
+
+        Caution: this method assumes that there will be one time series file per variable
+
+        If the file for the derived variable exists, the kwarg `overwrite` determines
+        whether to overwrite the file (true) or exit with a warning message.
+        """
+
+        for var in vars_to_derive:
+            print(f"\n*** Derived time series for {var} ***\n")
+            # RESTOM = FSNT-FLNT
+            # PRECT = PRECC+PRECL
+            # ...
+
+
+            vres = res.get(var, {})
+            if "derivable_from" in vres:
+                constit_list = vres['derivable_from']
+            else:
+                print("WARNING: No constituents listed in defualts config file, moving on")
+                pass
+            if "derived_eq" in vres:
+                der_eq = vres['derived_eq']
+            else:
+                print("WARNING: No derived equation in defualts config file, moving on")
+                pass
+
+            #    continue
+            #else:
+            #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+            #    msg += " No time series will be generated."
+            #    print(msg)
+            #    continue
+
+            #values = {}
+            constits_files = []
+            for i in constit_list:
+                print(glob(f"{base_path}/{case}/*{i}*.nc"))
+                constits_files.append(glob(f"{base_path}/{case}/*{i}*.nc")[0])
+            ds = xr.open_mfdataset(constits_files)
+
+            truesies = []
+            for constit in constit_list:
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    truesies.append(True)
+                    #values[constit] = ds[constit]
+
+            #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
+            #Check if all the constituent files were found
+            if len(truesies) == len(constit_list):
+                input_files = [
+                    sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
+                    for v in constit_list
+                ]
+                constit_files = []
+                for elem in input_files:
+                    constit_files += elem
+            else:
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                raise FileNotFoundError(ermsg)
+
+            # create new file name for derived variable
+            derived_file = constit_files[0].replace(constit_list[0], var)
+            if Path(derived_file).is_file():
+                if overwrite:
+                    Path(derived_file).unlink()
+                else:
+                    print(
+                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                    )
+                    return None
+
+            # Example usage
+            equation_str = der_eq
+
+            """
+            # Create the math function
+            math_function = create_math_function(equation_str)
+            ds["RESTOM"] = ds["FSNT"] - ds["FLNT"]
+
+            # Test the function
+            # get these from vres
+            #values = {'x': 5, 'y': 3, 'z': 1}
+
+
+
+
+            result = math_function(**values)
+
+            print(f"The result of {equation_str} with values {values} is {result}")
+            """
+
+            # Example usage
+            #equation_str = "(5*x)**2 + 3*x - (4*y)+2*z"
+
+            # Create the math function
+            math_function = create_math_function(equation_str)
+
+            # Test the function
+            # get these from vres
+            #values = {'x': 5, 'y': 3, 'z': 1}
+            values = {}
+            for i in constit_list:
+                values[i] = ds[i]
+
+            result = math_function(**values)
+
+            print(f"The result of {equation_str} with values {values} is {result}")
+    
+        def create_math_function(equation_str):
+            # Parse the equation string into a SymPy expression
+            equation_expr = parse_expr(equation_str)
+            
+            # Define symbols used in the expression
+            symbols_list = list(equation_expr.free_symbols)
+            
+            # Create a lambda function using the symbols and the expression
+            math_function = lambda **kwargs: equation_expr.subs(kwargs)
+            
+            return math_function
+
 
 ###############
