@@ -958,7 +958,7 @@ class AdfDiag(AdfWeb):
 
 
 
-    def derive_variables_xarray(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+    def derive_variables_NO(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1026,13 +1026,6 @@ class AdfDiag(AdfWeb):
                         f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
                     )
                     return None
-
-
-            ds = xr.open_mfdataset(input_files)
-
-            for i in constit_list:
-                const = ds[i]
-
 
             # append one constituent to the file containing the other
             #QUESTION: Will this need to change if there are a different number if constituents other than 2???
