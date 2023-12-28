@@ -968,7 +968,8 @@ class AdfDiag(AdfWeb):
 
         import sympy as sp
         for var in vars_to_derive:
-            print(f"\n*** Derived time series for {var} ***\n")
+            #print(f"\n*** Derived time series for {var} ***\n")
+            print(f"\t - derived time series for {var}")
             # RESTOM = FSNT-FLNT
             # PRECT = PRECC+PRECL
             # ...
@@ -1003,14 +1004,12 @@ class AdfDiag(AdfWeb):
             truesies = []
             constits_files = []
             for constit in constit_list:
-                print(os.path.join(ts_dir, f"*.{constit}.*.nc"))
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                     #print(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))
                     truesies.append(True)
                     #values[constit] = ds[constit]
                     constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))[0])
             
-            print("\n",constits_files,"\n")
             ds = xr.open_mfdataset(constits_files)
 
             #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
@@ -1041,8 +1040,6 @@ class AdfDiag(AdfWeb):
 
             # Example usage
             equation_str = der_eq
-
-            print(ds,"\n\n")
 
             dimmis = {}
             for i in constit_list:
@@ -1095,9 +1092,7 @@ class AdfDiag(AdfWeb):
             # Apply the symbolic function to the xarray Dataset
             result_da = xr.apply_ufunc(sympy_function, *data_arrays, dask='parallelized', output_dtypes=[float])
 
-            #print(result_da)
             ds[var] = result_da
-            #ds[var].mean(dim="time").plot.contourf()
 
             ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
