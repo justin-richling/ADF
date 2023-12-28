@@ -977,6 +977,7 @@ class AdfDiag(AdfWeb):
             else:
                 print("WARNING: No constituents listed in defualts config file, moving on")
                 pass
+            #Define the string equation involving the constituent variables
             if "derived_eq" in vres:
                 der_eq = vres['derived_eq']
             else:
@@ -990,25 +991,17 @@ class AdfDiag(AdfWeb):
             #    print(msg)
             #    continue
 
-            #values = {}
-            #constits_files = []
-            #for i in constit_list:
-            #    print(glob.glob(os.path.join(ts_dir, f"*.{i}.*.nc")))
-            #    constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{i}.*.nc")[0]))
-            #ds = xr.open_mfdataset(constits_files)
 
             truesies = []
             constits_files = []
             for constit in constit_list:
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
-                    #print(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))
                     truesies.append(True)
-                    #values[constit] = ds[constit]
                     constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))[0])
             
+            #Open a new dataset with all the constituent files/variables
             ds = xr.open_mfdataset(constits_files)
 
-            #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
             #Check if all the constituent files were found
             if len(truesies) == len(constit_list):
                 input_files = [
@@ -1034,9 +1027,6 @@ class AdfDiag(AdfWeb):
                     )
                     return None
 
-            # Example usage
-            equation_str = der_eq
-
             dimmis = {}
             for i in constit_list:
                 dimmis[i] = ds[constit_list[0]].dims
@@ -1044,36 +1034,17 @@ class AdfDiag(AdfWeb):
             coords={'lat': ds[constit_list[0]].lat.values, 'lon': ds[constit_list[0]].lon.values, 
                                       "time": ds[constit_list[0]].time.values}
 
-            #der_var = "RESTOM"
-
-            # Define the string equation involving the variables
-            #equation_str = "(FSNT-FLNT)"#*PRECSC"
-
-            # Create xarray Datasets with multidimensional variables
-            #variables = {'l': ('lat', 'lon', 'time'), 's': ('lat', 'lon', 'time'), 't': ('lat', 'lon', 'time')}
+            # Create xarray data arrays with multidimensional variables
             variables = dimmis
             data_arrays = []
 
             for var_const, dims in variables.items():
-                #print(dims)
-                values = ds[var_const].values  # Example data with dimensions time x space
-                #da = xr.DataArray(values, coords={'lat': dataset.lat.values, 'lon': dataset.lon.values, 
-                #                                  "time": dataset.time.values}, 
-                #                  dims=dims)
-                
-                da = xr.DataArray(values, coords=coords, 
-                                dims=dims)
-
+                values = ds[var_const].values            
+                da = xr.DataArray(values, coords=coords, dims=dims)
                 data_arrays.append(da)
 
-            #dataset_1 = dataset.to_array(dim="l")
-            #dataset_2 = dataset2.to_array(dim="s")
-            #dataset_3 = dataset3.to_array(dim="t")
-            #data_arrays = [dataset_1,dataset_2,dataset_3]
-
-
             # Convert the string equation to a SymPy expression
-            symbolic_expression = sp.sympify(equation_str)
+            symbolic_expression = sp.sympify(der_eq)
 
             # Create a list of SymPy symbols based on the variable names
             symbolic_vars = [sp.symbols(var_const) for var_const in variables]
