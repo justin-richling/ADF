@@ -1125,6 +1125,8 @@ class AdfDiag(AdfWeb):
                     truesies.append(True)
                     #values[constit] = ds[constit]
                     constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")[0]))
+            
+            print("\n",constits_files,"\n")
             ds = xr.open_mfdataset(constits_files)
 
             #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
