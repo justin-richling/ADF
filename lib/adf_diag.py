@@ -1174,7 +1174,7 @@ class AdfDiag(AdfWeb):
             # Example usage
             equation_str = der_eq
 
-            print(ds)
+            print(ds,"\n\n")
 
             """
             # Create the math function
@@ -1208,6 +1208,7 @@ class AdfDiag(AdfWeb):
                 values[i] = ds[i].values
 
             result = math_function(**values)
+            print("result",result,"\n")
             ds[var] = result
             der_var = ds[var]
             #der_var.attrs['long_name'] = 'tendency of eastward wind due to TEM upward wind advection'
