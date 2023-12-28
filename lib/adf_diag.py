@@ -1204,6 +1204,7 @@ class AdfDiag(AdfWeb):
             #values = {'x': 5, 'y': 3, 'z': 1}
             values = {}
             for i in constit_list:
+                print("ds[i]: ",ds[i])
                 values[i] = ds[i].values
 
             result = math_function(**values)
