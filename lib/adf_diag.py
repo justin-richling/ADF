@@ -989,6 +989,37 @@ class AdfDiag(AdfWeb):
             #    print(msg)
             #    continue
 
+            """
+            truesies = []
+            constits_files = []
+            for constit in constit_list:
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    truesies.append(True)
+                    constits_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))[0])
+            
+            #Open a new dataset with all the constituent files/variables
+            ds = xr.open_mfdataset(constits_files)
+
+            #Check if all the constituent files were found
+            if len(truesies) == len(constit_list):
+                input_files = [
+                    sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
+                    for v in constit_list
+                ]
+                constit_files = []
+                for elem in input_files:
+                    constit_files += elem
+            else:
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                raise FileNotFoundError(ermsg)
+            """
+
+
+
+
+            
+
 
             truesies = []
             constits_files = []
@@ -1014,6 +1045,22 @@ class AdfDiag(AdfWeb):
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                 raise FileNotFoundError(ermsg)
 
+
+            
+
+            print("constits_files:", constits_files)
+            print("constit_files:", constit_files)
+
+
+
+
+
+
+
+
+
+
+
             # create new file name for derived variable
             derived_file = constit_files[0].replace(constit_list[0], var)
             if Path(derived_file).is_file():
@@ -1036,6 +1083,8 @@ class AdfDiag(AdfWeb):
             #Create data arrays from each constituent
             #These variables will all be added to one file that will eventually contain the
             #derived variable as well
+            #NOTE: This has to be done via xarray dataArrays
+            #      - There might be a way with xarray dataSets but none that have worked thus far
             data_arrays = []
             for var_const, dims in variables.items():
                 values = ds[var_const].values            
@@ -1056,7 +1105,8 @@ class AdfDiag(AdfWeb):
                 return numeric_function(*args)
 
             # Apply the symbolic function to the list of xarray arrays
-            result_da = xr.apply_ufunc(sympy_function, *data_arrays, dask='parallelized', output_dtypes=[float])
+            result_da = xr.apply_ufunc(sympy_function, *data_arrays,
+                                       dask='parallelized', output_dtypes=[float])
 
             # Add new derived vairable to the dataset and save file
             ds[var] = result_da
