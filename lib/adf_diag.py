@@ -1025,21 +1025,18 @@ class AdfDiag(AdfWeb):
                     )
                     return None
 
-            dimmis = {}
+            variables = {}
             for i in constit_list:
-                dimmis[i] = ds[constit_list[0]].dims
+                variables[i] = ds[constit_list[0]].dims
 
             #Get coordinate values from the first constituent file
             coords={'lat': ds[constit_list[0]].lat.values, 'lon': ds[constit_list[0]].lon.values, 
                                       "time": ds[constit_list[0]].time.values}
 
-            # Create xarray data arrays with multidimensional variables
-            variables = dimmis
-            data_arrays = []
-
             #Create data arrays from each constituent
             #These variables will all be added to one file that will eventually contain the
-            #derived variable
+            #derived variable as well
+            data_arrays = []
             for var_const, dims in variables.items():
                 values = ds[var_const].values            
                 da = xr.DataArray(values, coords=coords, dims=dims)
@@ -1064,6 +1061,119 @@ class AdfDiag(AdfWeb):
             # Add new derived vairable to the dataset and save file
             ds[var] = result_da
             ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+
+
+    def derive_variables_NO(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+        """
+        Derive variables acccording to steps given here.  Since derivations will depend on the
+        variable, each variable to derive will need its own set of steps below.
+
+        Caution: this method assumes that there will be one time series file per variable
+
+        If the file for the derived variable exists, the kwarg `overwrite` determines
+        whether to overwrite the file (true) or exit with a warning message.
+        """
+
+        for var in vars_to_derive:
+            print(f"\n*** Derived time series for {var} ***\n")
+            # RESTOM = FSNT-FLNT
+            # PRECT = PRECC+PRECL
+            # ...
+
+
+            vres = res.get(var, {})
+            if "derivable_from" in vres:
+                constit_list = vres['derivable_from']
+            else:
+                print("WARNING: No constituents listed in defualts config file, moving on")
+                pass
+            if "derived_eq" in vres:
+                der_eq = vres['derived_eq']
+            else:
+                print("WARNING: No derived equation in defualts config file, moving on")
+                pass
+
+            #    continue
+            #else:
+            #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+            #    msg += " No time series will be generated."
+            #    print(msg)
+            #    continue
+
+
+            truesies = []
+            for constit in constit_list:
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    truesies.append(True)
+
+            #if constit_list in glob.glob(os.path.join(ts_dir, "*.nc")):
+            #Check if all the constituent files were found
+            if len(truesies) == len(constit_list):
+                input_files = [
+                    sorted(glob.glob(os.path.join(ts_dir, f"*.{v}.*")))
+                    for v in constit_list
+                ]
+                constit_files = []
+                for elem in input_files:
+                    constit_files += elem
+            else:
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                raise FileNotFoundError(ermsg)
+
+            # create new file name for derived variable
+            derived_file = constit_files[0].replace(constit_list[0], var)
+            if Path(derived_file).is_file():
+                if overwrite:
+                    Path(derived_file).unlink()
+                else:
+                    print(
+                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                    )
+                    return None
+
+            # append one constituent to the file containing the other
+            #QUESTION: Will this need to change if there are a different number if constituents other than 2???
+
+            #cmd = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
+            #print(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}\n")
+            cmd = f"ncks -A -v {constit_list[0]} "
+            cmd_p = cmd
+            for i in constit_files:
+                cmd_p = f"{cmd_p} {i}"
+
+            cmd_p = f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}"
+            
+            print(f"{var}: {cmd_p}\n\n")
+            os.system(cmd_p)
+            #os.system(f"ncks -A -v {constit_list[0]} {constit_files[0]} {constit_files[1]}")
+
+            print(f"{var} {der_eq}\n")
+            # create new file with the derived equation of constituents
+            cmd_p2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
+            """
+            cmd2 = f"ncap2 -s '{var}=({der_eq})' {constit_files[1]}"
+            cmd_p2 = cmd2
+
+            print(var,constit_files,"\n")
+
+            for i2 in constit_files[1:]:
+                cmd_p2 = f"{cmd_p2} {i2} "
+            cmd_p2 = cmd_p2 + f"{derived_file}"
+
+            print(cmd_p2)
+            print(f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}\n")
+            """
+
+            os.system(
+                cmd_p2
+            )
+            
+            #os.system(
+            #    f"ncap2 -s '{var}=({der_eq})' {constit_files[1]} {derived_file}"
+            #)
+
 
 
 ###############
