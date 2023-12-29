@@ -1059,23 +1059,4 @@ MADEUPVAR:
       label : "unit"
   category: "Super Duper"
   derivable_from: ['PRECL','PRECC',"PRECSC"]
-  #derivable_from: ['PRECC',"PRECSC"]
-  #derived_eq: "PRECC-PRECSC"
   derived_eq: "PRECC-(0.5*PRECL)+PRECSC"
-
-  
-  #RESTOM:
-  #colormap: "RdBu_r"
-  #contour_levels_range: [-10, 10, 0.5]
-  #diff_colormap: "seismic"
-  #diff_contour_range: [-10, 10, 0.5]
-  #scale_factor: 1
-  #add_offset: 0
-  #new_unit: "W m$^{-2}$"
-  #mpl:
-  #  colorbar:
-  #    label : "W m$^{-2}$"
-  #category: "TOA energy flux"
-  #derivable_from: ['FLNT','FSNT']
-  #derived_eq: "FSNT-FLNT"
-  
