@@ -1018,21 +1018,16 @@ class AdfDiag(AdfWeb):
 
 
 
-            
-
-
-            truesies = []
             constit_files = []
             for constit in constit_list:
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
-                    truesies.append(True)
                     constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*")))
 
 
             #Check if all the constituent files were found
             #if len(constit_files) == len(constit_list):
 
-                
+            print("constit_files:",constit_files)
             #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
                 ermsg = f"Not all constituent files present; {var} cannot be calculated."
