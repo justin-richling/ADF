@@ -448,7 +448,7 @@ def _df_comp_table(adf, output_location, case_names):
         idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
         df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
         df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-        df_comp = df_comp.drop_duplicates()
+        #df_comp = df_comp.drop_duplicates()
 
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
