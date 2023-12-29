@@ -960,28 +960,26 @@ class AdfDiag(AdfWeb):
 
         If the file for the derived variable exists, the kwarg `overwrite` determines
         whether to overwrite the file (true) or exit with a warning message.
+
+        NOTE: This is not usable for variables with vertical levels yet - JR
         """
 
         import sympy as sp
         for var in vars_to_derive:
-            #print(f"\n*** Derived time series for {var} ***\n")
             print(f"\t - derived time series for {var}")
-            # RESTOM = FSNT-FLNT
-            # PRECT = PRECC+PRECL
-            # ...
 
-
+            #Check whether there are parts to derive from and if there is an associated equation
             vres = res.get(var, {})
             if "derivable_from" in vres:
                 constit_list = vres['derivable_from']
             else:
-                print("WARNING: No constituents listed in defualts config file, moving on")
+                print("WARNING: No constituents listed in defaults config file, moving on")
                 pass
             #Define the string equation involving the constituent variables
             if "derived_eq" in vres:
                 der_eq = vres['derived_eq']
             else:
-                print("WARNING: No derived equation in defualts config file, moving on")
+                print("WARNING: No derived equation in defaults config file, moving on")
                 pass
 
             #    continue
@@ -1031,6 +1029,7 @@ class AdfDiag(AdfWeb):
             for i in constit_list:
                 dimmis[i] = ds[constit_list[0]].dims
 
+            #Get coordinate values from the first constituent file
             coords={'lat': ds[constit_list[0]].lat.values, 'lon': ds[constit_list[0]].lon.values, 
                                       "time": ds[constit_list[0]].time.values}
 
@@ -1038,6 +1037,9 @@ class AdfDiag(AdfWeb):
             variables = dimmis
             data_arrays = []
 
+            #Create data arrays from each constituent
+            #These variables will all be added to one file that will eventually contain the
+            #derived variable
             for var_const, dims in variables.items():
                 values = ds[var_const].values            
                 da = xr.DataArray(values, coords=coords, dims=dims)
@@ -1056,11 +1058,11 @@ class AdfDiag(AdfWeb):
             def sympy_function(*args):
                 return numeric_function(*args)
 
-            # Apply the symbolic function to the xarray Dataset
+            # Apply the symbolic function to the list of xarray arrays
             result_da = xr.apply_ufunc(sympy_function, *data_arrays, dask='parallelized', output_dtypes=[float])
 
+            # Add new derived vairable to the dataset and save file
             ds[var] = result_da
-
             ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
 
