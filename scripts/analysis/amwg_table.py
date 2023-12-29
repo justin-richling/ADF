@@ -345,8 +345,8 @@ def amwg_table(adf):
             print("moving RESTOM to top boi!")
             idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
             table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-            table_df = table_df.drop([idx+1]).reset_index(drop=True)
-            #table_df = table_df.drop_duplicates()
+            #table_df = table_df.drop([idx+1]).reset_index(drop=True)
+            table_df = table_df.drop_duplicates()
     
         adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
 
@@ -447,8 +447,8 @@ def _df_comp_table(adf, output_location, case_names):
         print("moving RESTOM to top of case comparison boi!")
         idx = df_comp.index[df_comp['variable'] == 'RESTOM'].tolist()[0]
         df_comp = pd.concat([df_comp[df_comp['variable'] == 'RESTOM'], df_comp]).reset_index(drop = True)
-        df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
-        #df_comp = df_comp.drop_duplicates()
+        #df_comp = df_comp.drop([idx+1]).reset_index(drop=True)
+        df_comp = df_comp.drop_duplicates()
 
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
