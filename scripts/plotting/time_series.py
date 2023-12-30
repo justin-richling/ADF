@@ -354,7 +354,7 @@ def time_series(adfobj):
                                   "which is currently not supported for the time series plot. Skipping...")
                         
                         
-                        '''
+                        
                         #For testing and maybe for ever?
                         #Just calculate annual, not other seasons to keep calculations/time down????
                         if season == "ANN":
@@ -499,7 +499,7 @@ def time_series(adfobj):
                                 #Let the ADF know if it needs to read from cached array
                                 read_interp_ts = False
                         """
-                        '''
+                        
                     #Skip this variable and move to the next variable in var_list
                     # during 2-d plotting. Vertical level plotting are at end of script
                     plt.close()
