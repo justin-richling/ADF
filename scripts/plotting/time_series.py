@@ -632,7 +632,7 @@ def time_series(adfobj):
         #End for (seasons)
     #End for (variables)
     
-    '''
+    
     # Vertical Level Plots
     # (if applicable)
     ##########################
@@ -736,7 +736,7 @@ def time_series(adfobj):
 
     # End Vertical Level Plots 
     ##########################
-    '''
+    
     
     #Notify user the plots are finished
     print("  ...time series plots have been generated successfully.")
