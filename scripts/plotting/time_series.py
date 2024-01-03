@@ -225,7 +225,7 @@ def time_series(adfobj):
     
     #Loop over variables:
     #--------------------
-    for var in var_list:
+    for var in var_list+["RESTOM"]:
         
         #Initialize nested dictionary for each variable
         var_lev_dict[var] = {}
@@ -317,6 +317,13 @@ def time_series(adfobj):
 
                 # Load the data
                 data = _load_data(ts_files[0], var)
+                if var == "FSNT":
+                    data_fsnt = data
+                if var == "FLNT":
+                    data_flnt = data
+
+                if var == "RESTOM":
+                    data = data_fsnt-data_flnt
 
                 #Extract units string, if available:
                 if hasattr(data, 'units'):
