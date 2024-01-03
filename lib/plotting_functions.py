@@ -458,7 +458,7 @@ def annual_mean(data, whole_years=False, time_name='time'):
     result.attrs['averaging_period'] = date_range_string
     return result
 
-
+'''
 def seasonal_mean(data, season=None, is_climo=None):
     """Calculates the time-weighted seasonal average (or average over all time).
 
@@ -521,11 +521,83 @@ def seasonal_mean(data, season=None, is_climo=None):
 
     data = data.sel(time=data.time.dt.month.isin(seasons[season])) # directly take the months we want based on season kwarg
     return data.weighted(data.time.dt.daysinmonth).mean(dim='time')
+'''
 
+def seasonal_mean(data, season=None, is_climo=None):
+    """Calculates the time-weighted seasonal average (or average over all time).
+
+    Parameters
+    ----------
+    data : xarray.DataArray or xarray.Dataset
+        data to be averaged
+    season : str, optional
+        the season to extract from `data`
+        If season is `ANN` or None, average all available time.
+    is_climo : bool, optional
+        If True, expects data to have time or month dimenion of size 12.
+        If False, then 'time' must be a coordinate,
+        and the `time.dt.days_in_month` attribute must be available.
+
+    Returns
+    -------
+    xarray.DataArray or xarray.Dataset
+        the average of `data` in season `season`
+
+    Notes
+    -----
+    If the data is a climatology, the code will make an attempt to understand the time or month
+    dimension, but will assume that it is ordered from January to December.
+    If the data is a climatology and is just a numpy array with one dimension that is size 12,
+    it will assume that dimension is time running from January to December.
+    """
+    seasons = {
+            "DJF": [12, 1, 2],
+            "JJA": [6, 7, 8],
+            "MAM": [3, 4, 5],
+            "SON": [9, 10, 11]}
+    if season is not None:
+        assert season in ["ANN", "DJF", "JJA", "MAM", "SON"], f"Unrecognized season string provided: '{season}'"
+    elif season is None:
+        season = "ANN"
+
+    try:
+        month_length = data.time.dt.days_in_month
+    except (AttributeError, TypeError):
+        # do our best to determine the temporal dimension and assign weights
+        if not is_climo:
+            raise ValueError("Non-climo file provided, but without a decoded time dimension.")
+        else:
+            # CLIMO file: try to determine which dimension is month
+            has_time = False
+            if isinstance(data, xr.DataArray):
+                has_time = 'time' in data.dims
+                if not has_time:
+                    if "month" in data.dims:
+                        data = data.rename({"month":"time"})
+                        has_time = True
+            if not has_time:
+                # this might happen if a pure numpy array gets passed in
+                # --> assumes ordered January to December.
+                assert ((12 in data.shape) and (data.shape.count(12) == 1)), f"Sorry, {data.shape.count(12)} dimensions have size 12, making determination of which dimension is month ambiguous. Please provide a `time` or `month` dimension."
+                time_dim_num = data.shape.index(12)
+                fakedims = [f"dim{n}" for n in range(len(data.shape))]
+                fakedims[time_dim_num] = "time"
+                data = xr.DataArray(data, dims=fakedims)
+            timefix = pd.date_range(start='1/1/1999', end='12/1/1999', freq='MS') # generic time coordinate from a non-leap-year
+            data = data.assign_coords({"time":timefix})
+        month_length = data.time.dt.days_in_month
+    #End try/except
+
+    data = data.sel(time=data.time.dt.month.isin(seasons[season])) # directly take the months we want based on season kwarg
+    
+    if not is_climo: #ie time series
+        #For time series this will keep the time coordinates for calculation later
+        return data
+    else:
+        return data.weighted(data.time.dt.daysinmonth).mean(dim='time')
 
 
 #######
-
 #Polar Plot functions
 
 def domain_stats(data, domain):
