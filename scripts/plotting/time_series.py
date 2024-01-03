@@ -377,10 +377,10 @@ def time_series(adfobj):
                 #Set the baseline plot line as green dashed
                 #TODO: change for color deficiency - JR
                 if case_name == data_name:
-                    color_dict = {"color":'g',"marker":"--*",
+                    color_dict = {"color":'g',"marker":"--.",
                                   "label":f"{name} (baseline)"}
                 else:
-                    color_dict = {"color":colors[case_idx],"marker":"-*",
+                    color_dict = {"color":colors[case_idx],"marker":"-.",
                                   "label":f"{name}"}
                 #End if
 
