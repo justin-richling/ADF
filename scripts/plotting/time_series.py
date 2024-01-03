@@ -225,7 +225,7 @@ def time_series(adfobj):
     
     #Loop over variables:
     #--------------------
-    for var in var_list+["RESTOM"]:
+    for var in var_list:
         
         #Initialize nested dictionary for each variable
         var_lev_dict[var] = {}
