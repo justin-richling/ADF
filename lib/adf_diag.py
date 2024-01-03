@@ -961,6 +961,7 @@ class AdfDiag(AdfWeb):
                     os.system(f"ncap2 -s 'PRECT=(PRECC+PRECL)' {constit_files[1]} {prect_file}")
 
             if var == "RESTOM":
+                print("IS IT HAPPENING HERE????")
                 if not glob.glob(os.path.join(ts_dir,"*RESTOM*")):
                     constit_files = []
                     # RESTOM can be found by simply subtracting FLNT from FSNT
@@ -974,10 +975,10 @@ class AdfDiag(AdfWeb):
                         ermsg += " Please remove RESTOM from diag_var_list or find the relevant CAM files."
                         raise FileNotFoundError(ermsg)
                     # create new file name for RESTOM
-                    prect_file = constit_files[0].replace('FSNT','RESTOM')
+                    restom_file = constit_files[0].replace('FSNT','RESTOM')
                     # append FLNT to the file containing FSNT
                     os.system(f"ncks -A -v FSNT {constit_files[0]} {constit_files[1]}")
                     # create new file with the difference of FSNT and FLNT
-                    os.system(f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {prect_file}")
+                    os.system(f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {restom_file}")
 
 ###############
