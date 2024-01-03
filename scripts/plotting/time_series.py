@@ -71,8 +71,7 @@ def time_series(adfobj):
     
     #Check if ocean or land fraction exist
     #in the variable list:
-    #for var in ["OCNFRAC", "LANDFRAC"]:
-    for var in ["OCNFRAC"]:
+    for var in ["OCNFRAC", "LANDFRAC"]:
         if var in var_list:
             #If so, then move them to the front of variable list so
             #that they can be used to mask or vertically interpolate
@@ -306,26 +305,18 @@ def time_series(adfobj):
                         errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                         warnings.warn(errmsg)
                     bad.append(True)
-                    #continue
+                    continue
                 #End if
-                """"
+
                 #TEMPORARY:  For now, make sure only one file exists:
                 if len(ts_files) != 1:
                     errmsg =  "Currently the time series plotting script can only handle one time series file per variable."
                     errmsg += f" Multiple files were found for the variable '{var}'"
                     raise AdfError(errmsg)
                 #End if
-                """
+
                 # Load the data
                 data = _load_data(ts_files[0], var)
-                if var == "FSNT":
-                    data_fsnt = data
-                if var == "FLNT":
-                    data_flnt = data
-
-                if var == "RESTOM":
-                    print("yeah, ok bro")
-                    data = data_fsnt-data_flnt
 
                 #Extract units string, if available:
                 if hasattr(data, 'units'):
