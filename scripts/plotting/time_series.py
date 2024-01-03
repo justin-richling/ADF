@@ -308,14 +308,14 @@ def time_series(adfobj):
                     bad.append(True)
                     #continue
                 #End if
-
+                """"
                 #TEMPORARY:  For now, make sure only one file exists:
                 if len(ts_files) != 1:
                     errmsg =  "Currently the time series plotting script can only handle one time series file per variable."
                     errmsg += f" Multiple files were found for the variable '{var}'"
                     raise AdfError(errmsg)
                 #End if
-
+                """
                 # Load the data
                 data = _load_data(ts_files[0], var)
                 if var == "FSNT":
