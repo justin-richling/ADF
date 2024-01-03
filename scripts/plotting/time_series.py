@@ -391,8 +391,14 @@ def time_series(adfobj):
                     ds = ds.groupby('time.year').mean(dim='time')
                 #End if
 
-                if rolling:                    
-                    ds = ds.rolling(year=roll,center=True).mean().dropna("year")
+                if rolling:
+                    if ds.year > roll:
+                        ds = ds.rolling(year=roll,center=True).mean().dropna("year")
+                    else:
+                        msg = f"'{var}' doesn't have enough years for the chosen rolling average."
+                        msg += " No rolling average applied."
+                        adfobj.debug_log(msg)
+                        rolling = False
 
                 #Gather years to plot
                 #yrs = ds.year
