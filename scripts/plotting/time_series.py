@@ -71,7 +71,8 @@ def time_series(adfobj):
     
     #Check if ocean or land fraction exist
     #in the variable list:
-    for var in ["OCNFRAC", "LANDFRAC"]:
+    #for var in ["OCNFRAC", "LANDFRAC"]:
+    for var in ["OCNFRAC"]:
         if var in var_list:
             #If so, then move them to the front of variable list so
             #that they can be used to mask or vertically interpolate
