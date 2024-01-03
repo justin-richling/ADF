@@ -53,6 +53,10 @@ def time_series(adfobj):
             - multi-case comparison is in the works. 02/2023 - JR
     """
 
+    #CAM diagnostic plotting functions:
+    import plotting_functions as pf
+    #-------------------------
+
     #Notify user that script has started:
     print("\n  Generating time series plots...")
 
@@ -162,24 +166,9 @@ def time_series(adfobj):
     #Get number of cases
     case_num = len(all_case_names)
 
-    #ADF variable which contains the output path for plots and tables:
+    #Special ADF variable which contains the output paths for plots:
     plot_location = adfobj.plot_location
-    if not plot_location:
-        plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
-    if isinstance(plot_location, list):
-        for pl in plot_location:
-            plpth = Path(pl)
-            #Check if plot output directory exists, and if not, then create it:
-            if not plpth.is_dir():
-                print(f"\t    '{pl}' not found, making new directory")
-                plpth.mkdir(parents=True)
-        if len(plot_location) == 2:
-            plot_loc = Path(plot_location[0])
-        else:
-            print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {main_site_assets_path}")
-            plot_loc = main_site_assets_path
-    else:
-        plot_loc = Path(plot_location)    
+    plot_loc = Path(plot_location[0])   
 
     res = adfobj.variable_defaults #dict of variable-specific plot preferences
     #or an empty dictionary if use_defaults was not specified in config (YAML) file.
@@ -197,7 +186,6 @@ def time_series(adfobj):
 
     #Set seasons:
     seasons = ["ANN","DJF","MAM","JJA","SON"]
-    #seasons = ["ANN"]
     
     """
     syear_cases = adfobj.climo_yrs["syears"]
@@ -234,7 +222,6 @@ def time_series(adfobj):
     
     #Dictionary for vars with vertical levels specified by user
     var_lev_dict = {}
-    var_levs = []
     
     #Loop over variables:
     #--------------------
@@ -337,9 +324,7 @@ def time_series(adfobj):
                 else:
                     unit_str = '--'
                 #End if
-                
-                #Vertical Coordinates
-                ################################################
+
                 #Check if variable has a vertical coordinate:
                 if 'lev' in data.coords or 'ilev' in data.coords:                                            
                     #Skip this variable and move to the next variable in var_list
@@ -361,7 +346,7 @@ def time_series(adfobj):
 
                             # apply ocean fraction mask to variable
                             #print(data.time,ofrac.time)
-                            data = mask_land_or_ocean(data, ofrac, use_nan=True)
+                            data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
                         else:
                             print(f"OCNFRAC not found, unable to apply mask to '{var}'")
                         #End if
@@ -383,7 +368,7 @@ def time_series(adfobj):
                     # flags that we have spatial dimensions
                     # Note: that could be 'lev' which should trigger different behavior
                     # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
-                    data_sp_avg = spatial_average(data)  # changes data "in place"
+                    data_sp_avg = pf.spatial_average(data)  # changes data "in place"
                 #End if
 
                 #Nicknames for plot legend
@@ -400,9 +385,9 @@ def time_series(adfobj):
                 #End if
 
                 if season == "ANN":
-                    ds = annual_mean(data_sp_avg, whole_years=True, time_name='time')
+                    ds = pf.annual_mean(data_sp_avg, whole_years=True, time_name='time')
                 else:
-                    ds = seasonal_mean(data_sp_avg, season=season, is_climo=False)
+                    ds = pf.seasonal_mean(data_sp_avg, season=season, is_climo=False)
                     ds = ds.groupby('time.year').mean(dim='time')
                 #End if
 
