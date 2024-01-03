@@ -504,10 +504,6 @@ SST:
   obs_var_name: "TS"
   category: "Surface variables"
   mask: "ocean"
-  timeseries:
-    rolling:
-      months: 5
-      years: 5
 
 U10:
   category: "Surface variables"
@@ -746,6 +742,9 @@ RESTOM:
       label : "Wm$^{-2}$"
   category: "TOA energy flux"
   derivable_from: ["FSNT","FLNT"]
+  timeseries:
+    rolling:
+      years: 5
 
 #+++++++++++++++++
 # Category: Surface energy flux
