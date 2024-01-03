@@ -305,7 +305,7 @@ def time_series(adfobj):
                         errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                         warnings.warn(errmsg)
                     bad.append(True)
-                    continue
+                    #continue
                 #End if
 
                 #TEMPORARY:  For now, make sure only one file exists:
@@ -323,6 +323,7 @@ def time_series(adfobj):
                     data_flnt = data
 
                 if var == "RESTOM":
+                    print("yeah, ok bro")
                     data = data_fsnt-data_flnt
 
                 #Extract units string, if available:
