@@ -371,10 +371,10 @@ def time_series(adfobj):
                 #Set the baseline plot line as green dashed
                 #TODO: change for color deficiency - JR
                 if case_name == data_name:
-                    color_dict = {"color":'k',"marker":"--.",
+                    color_dict = {"color":'k',"marker":"--",
                                   "label":f"{name} (baseline)"}
                 else:
-                    color_dict = {"color":colors[case_idx],"marker":"-.",
+                    color_dict = {"color":colors[case_idx],"marker":"-",
                                   "label":f"{name}"}
                 #End if
 
@@ -400,6 +400,7 @@ def time_series(adfobj):
 
                 #Add case to plot (ax)
                 ax.plot(yrs[case_name], ds, color_dict["marker"], c=color_dict["color"],label=color_dict["label"])
+                ax.scatter(yrs[case_name], ds, ".", c=color_dict["color"])
 
                 #For the minor ticks, use no labels; default NullFormatter.
                 ax.tick_params(which='major', length=7)
