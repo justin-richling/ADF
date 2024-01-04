@@ -386,7 +386,7 @@ def time_series(adfobj):
                 #End if
 
                 if rolling:
-                    if ds.year > roll:
+                    if len(ds.year) > roll:
                         ds = ds.rolling(year=roll,center=True).mean().dropna("year")
                     else:
                         msg = f"'{var}' doesn't have enough years for the chosen rolling average."
