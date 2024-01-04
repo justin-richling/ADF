@@ -400,7 +400,7 @@ def time_series(adfobj):
 
                 #Add case to plot (ax)
                 ax.plot(yrs[case_name], ds, color_dict["marker"], c=color_dict["color"],label=color_dict["label"])
-                ax.scatter(yrs[case_name], ds, ".", c=color_dict["color"])
+                ax.plot(yrs[case_name], ds, ".", c=color_dict["color"])
 
                 #For the minor ticks, use no labels; default NullFormatter.
                 ax.tick_params(which='major', length=7)
