@@ -18,6 +18,8 @@ import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
 
+import geocat.comp as gc
+
 #Format warning messages:
 def my_formatwarning(msg, *args, **kwargs):
     """Issue `msg` as warning."""
@@ -340,8 +342,10 @@ def global_latlon_map(adfobj):
 
 
                             if weight_season:
-                                mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                                oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                                mseasons[s] = gc.climatologies.month_to_season(mdata, season=s).mean(dim='time')
+                                oseasons[s] = gc.climatologies.month_to_season(odata, season=s).mean(dim='time')
+                                #mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
+                                #oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
                             else:
                                 #Just average months as-is:
                                 mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
