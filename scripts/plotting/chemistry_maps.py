@@ -84,6 +84,8 @@ def make_chem_maps(adfobj, diag, data_dict, case_deets):
     if diag == "aerosol":
 
         for var,constits in aerosol_dict.items():
+            for elem in constits:
+                print(elem)
             if all(elem in var for elem in constits):
                 print(f"\t - zonal mean aerosol plots for {var}")
                         
