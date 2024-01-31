@@ -66,14 +66,16 @@ def make_chem_maps(adfobj, diag, data_dict, case_deets):
         * Initially start with Aerosol Zonal maps
             - This probably can be expanded to LatLon if given single pressure levels?
 
-        
+        data_dict: data_dict[case_name][s][f"m{var}"]
     """
 
     # Notify user that script has started:
     print("\n  Generating zonal aerosol plots ...")
 
     for i in data_dict:
-        print(data_dict[i])
+        for j in data_dict[i]:
+            for k in data_dict[i][j]:
+                print(k)
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
