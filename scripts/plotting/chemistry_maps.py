@@ -75,7 +75,7 @@ def make_chem_maps(adfobj, diag, data_dict, case_deets):
     for i in data_dict:
         for j in data_dict[i]:
             for k in data_dict[i][j]:
-                print(k)
+                print(k,"\n\n")
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
