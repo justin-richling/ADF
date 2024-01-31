@@ -338,8 +338,8 @@ def zonal_mean(adfobj):
                     if s not in data_dict[data_name]:
                         data_dict[data_name][s] = OrderedDict()
 
-                    data_dict[case_name][s][f"m{var}"] = {"mdata":mseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
-                    data_dict[data_name][s][f"o{var}"] = {"odata":oseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
+                    data_dict[case_name][s][f"{var}"] = {"mdata":mseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
+                    data_dict[data_name][s][f"{var}"] = {"odata":oseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
 
                     
                     if var not in aero_consts:

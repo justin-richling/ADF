@@ -88,18 +88,16 @@ def make_chem_maps(adfobj, diag, data_dict, case_deets):
     #Aerosol Calculations
     if diag == "aerosol":
 
-        for var,constits in aerosol_dict.items():
-            for elem in constits:
-                print(elem)
-            if all(elem in var for elem in constits):
-                print(f"\t - zonal mean aerosol plots for {var}")
+        for var in aerosol_dict:
+            #if all(elem in var for elem in constits):
+            #    print(f"\t - zonal mean aerosol plots for {var}")
                         
-                #If found then notify user, assuming debug log is enabled:
-                adfobj.debug_log(f"zonal_mean: Found variable defaults for {var}")
-                aerosol_plot(adfobj, var, data_dict, case_deets)
+            #If found then notify user, assuming debug log is enabled:
+            adfobj.debug_log(f"zonal_mean: Found variable defaults for {var}")
+            aerosol_plot(adfobj, var, data_dict, case_deets)
 
-            else:
-                print(f"No constituents for {var}, moving on ...")
+            #else:
+            #    print(f"No constituents for {var}, moving on ...")
 
     
 # Specific Plot Functions
@@ -130,8 +128,11 @@ def aerosol_plot(adfobj, var, data_dict, case_deets):
             maerosol = 0
             oaerosol = 0
             for j in aerosol_dict[var]:
-                maerosol += data_dict[case_name][s][f"m{j}"]["mdata"]
-                oaerosol += data_dict[case_deets["case_names"]["baseline"]][s][f"o{j}"]["odata"]
+                if j not in (data_dict[case_name][s]) or (data_dict[case_deets["case_names"]["baseline"]][s]):
+                    print(f"missing constituent for {var}, moving on to the next aerosol variable")
+                    continue
+                maerosol += data_dict[case_name][s][f"{j}"]["mdata"]
+                oaerosol += data_dict[case_deets["case_names"]["baseline"]][s][f"{j}"]["odata"]
 
             #Gather info from data and case details
             case_nickname = case_deets["nicknames"]["cases"][case_idx]
