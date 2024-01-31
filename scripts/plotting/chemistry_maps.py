@@ -72,6 +72,9 @@ def make_chem_maps(adfobj, diag, data_dict, case_deets):
     # Notify user that script has started:
     print("\n  Generating zonal aerosol plots ...")
 
+    for i in data_dict:
+        print(i)
+
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
     # -- So check for it, and default to png
