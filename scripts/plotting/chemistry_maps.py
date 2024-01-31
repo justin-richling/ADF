@@ -128,7 +128,7 @@ def aerosol_plot(adfobj, var, data_dict, case_deets):
             maerosol = 0
             oaerosol = 0
             for j in aerosol_dict[var]:
-                if j not in (data_dict[case_name][s]) or (data_dict[case_deets["case_names"]["baseline"]][s]):
+                if (j not in data_dict[case_name][s]) or (j not in data_dict[case_deets["case_names"]["baseline"]][s]):
                     print(f"missing constituent for {var}, moving on to the next aerosol variable")
                     continue
                 maerosol += data_dict[case_name][s][f"{j}"]["mdata"]
