@@ -72,10 +72,10 @@ def make_chem_maps(adfobj, diag, data_dict, case_deets):
     # Notify user that script has started:
     print("\n  Generating zonal aerosol plots ...")
 
-    for i in data_dict:
-        for j in data_dict[i]:
-            for k in data_dict[i][j]:
-                print(k,"\n\n")
+    #for i in data_dict:
+    #    for j in data_dict[i]:
+    #        for k in data_dict[i][j]:
+    #            print(k,"\n\n")
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
@@ -128,6 +128,7 @@ def aerosol_plot(adfobj, var, data_dict, case_deets):
             maerosol = 0
             oaerosol = 0
             for j in aerosol_dict[var]:
+                print("blah",j)
                 if (j not in data_dict[case_name][s]) or (j not in data_dict[case_deets["case_names"]["baseline"]][s]):
                     print(f"missing constituent for {var}, moving on to the next aerosol variable")
                     continue
