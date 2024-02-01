@@ -926,7 +926,6 @@ class AdfDiag(AdfWeb):
         NOTE: This is not usable for variables with vertical levels yet - JR
         """
 
-        import sympy as sp
         for var in vars_to_derive:
             print(f"\t - derived time series for {var}")
 
@@ -938,11 +937,11 @@ class AdfDiag(AdfWeb):
                 print("WARNING: No constituents listed in defaults config file, moving on")
                 pass
             #Define the string equation involving the constituent variables
-            if "derived_eq" in vres:
-                der_eq = vres['derived_eq']
-            else:
-                print("WARNING: No derived equation in defaults config file, moving on")
-                pass
+            #if "derived_eq" in vres:
+            #    der_eq = vres['derived_eq']
+            #else:
+            #    print("WARNING: No derived equation in defaults config file, moving on")
+            #    pass
 
             #    continue
             #else:
@@ -1000,19 +999,7 @@ class AdfDiag(AdfWeb):
                 da = xr.DataArray(values, coords=coords, dims=dims)
                 data_arrays.append(da)
 
-            # Convert the string equation to a SymPy expression
-            symbolic_expression = sp.sympify(der_eq)
-
-            # Create a list of SymPy symbols based on the variable names
-            symbolic_vars = [sp.symbols(var_const) for var_const in variables]
-
-            # Use lambdify to create a function that can handle symbolic and numeric evaluations
-            numeric_function = sp.lambdify(symbolic_vars, symbolic_expression, 'numpy')
-
-            # Define a function to convert SymPy expressions to NumPy functions
-            def sympy_function(*args):
-                return numeric_function(*args)
-
+           
             # Apply the symbolic function to the list of xarray arrays
             result_da = xr.apply_ufunc(sympy_function, *data_arrays,
                                        dask='parallelized', output_dtypes=[float])
