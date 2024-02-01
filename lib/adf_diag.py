@@ -913,7 +913,7 @@ class AdfDiag(AdfWeb):
         print('   ')
 
 
-    def derive_variables_xarray(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -936,19 +936,6 @@ class AdfDiag(AdfWeb):
             else:
                 print("WARNING: No constituents listed in defaults config file, moving on")
                 pass
-            #Define the string equation involving the constituent variables
-            #if "derived_eq" in vres:
-            #    der_eq = vres['derived_eq']
-            #else:
-            #    print("WARNING: No derived equation in defaults config file, moving on")
-            #    pass
-
-            #    continue
-            #else:
-            #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-            #    msg += " No time series will be generated."
-            #    print(msg)
-            #    continue
 
             constit_files = []
             for constit in constit_list:
@@ -964,47 +951,42 @@ class AdfDiag(AdfWeb):
             if len(constit_files) != len(constit_list):
                 ermsg = f"Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                raise FileNotFoundError(ermsg)
-
-            #Open a new dataset with all the constituent files/variables
-            ds = xr.open_mfdataset(constit_files)
-
-            # create new file name for derived variable
-            derived_file = constit_files[0].replace(constit_list[0], var)
-            if Path(derived_file).is_file():
-                if overwrite:
-                    Path(derived_file).unlink()
-                else:
-                    print(
-                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
-                    )
-                    return None
-
-            variables = {}
-            for i in constit_list:
-                variables[i] = ds[constit_list[0]].dims
-
-            #Get coordinate values from the first constituent file
-            coords={'lat': ds[constit_list[0]].lat.values, 'lon': ds[constit_list[0]].lon.values, 
-                                      "time": ds[constit_list[0]].time.values}
-
-            #Create data arrays from each constituent
-            #These variables will all be added to one file that will eventually contain the
-            #derived variable as well
-            #NOTE: This has to be done via xarray dataArrays
-            #      - There might be a way with xarray dataSets but none that have worked thus far
-            data_arrays = []
-            for var_const, dims in variables.items():
-                values = ds[var_const].values            
-                da = xr.DataArray(values, coords=coords, dims=dims)
-                data_arrays.append(da)
-
-            data_arrays
-            # Apply the symbolic function to the list of xarray arrays
-            result_da = xr.apply_ufunc(sympy_function, *data_arrays,
-                                       dask='parallelized', output_dtypes=[float])
-
-            # Add new derived vairable to the dataset and save file
-            ds[var] = result_da
-            ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                print(ermsg)
+            else:
+                #Open a new dataset with all the constituent files/variables
+                ds = xr.open_mfdataset(constit_files)
+    
+                # create new file name for derived variable
+                derived_file = constit_files[0].replace(constit_list[0], var)
+                if Path(derived_file).is_file():
+                    if overwrite:
+                        Path(derived_file).unlink()
+                    else:
+                        print(
+                            f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                        )
+                        return None
+    
+                variables = {}
+                for i in constit_list:
+                    variables[i] = ds[constit_list[0]].dims
+    
+                #Get coordinate values from the first constituent file
+                coords={'lat': ds[constit_list[0]].lat.values, 'lon': ds[constit_list[0]].lon.values, 
+                                          "time": ds[constit_list[0]].time.values}
+    
+                #Create data arrays from each constituent
+                #These variables will all be added to one file that will eventually contain the
+                #derived variable as well
+                #NOTE: This has to be done via xarray dataArrays
+                #      - There might be a way with xarray dataSets but none that have worked thus far
+                data_arrays = []
+                for var_const, dims in variables.items():
+                    print(var_const)
+                    values = ds[var_const].values
+                    da = xr.DataArray(values, coords=coords, dims=dims)
+                    data_arrays.append(da)
+                
+                ds[var] = sum(data_arrays)
+                ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 ###############
