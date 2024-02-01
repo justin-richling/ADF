@@ -912,4 +912,112 @@ class AdfDiag(AdfWeb):
         print('For CVDP information visit: https://www.cesm.ucar.edu/working_groups/CVC/cvdp/')
         print('   ')
 
+
+    def derive_variables_xarray(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+        """
+        Derive variables acccording to steps given here.  Since derivations will depend on the
+        variable, each variable to derive will need its own set of steps below.
+
+        Caution: this method assumes that there will be one time series file per variable
+
+        If the file for the derived variable exists, the kwarg `overwrite` determines
+        whether to overwrite the file (true) or exit with a warning message.
+
+        NOTE: This is not usable for variables with vertical levels yet - JR
+        """
+
+        import sympy as sp
+        for var in vars_to_derive:
+            print(f"\t - derived time series for {var}")
+
+            #Check whether there are parts to derive from and if there is an associated equation
+            vres = res.get(var, {})
+            if "derivable_from" in vres:
+                constit_list = vres['derivable_from']
+            else:
+                print("WARNING: No constituents listed in defaults config file, moving on")
+                pass
+            #Define the string equation involving the constituent variables
+            if "derived_eq" in vres:
+                der_eq = vres['derived_eq']
+            else:
+                print("WARNING: No derived equation in defaults config file, moving on")
+                pass
+
+            #    continue
+            #else:
+            #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+            #    msg += " No time series will be generated."
+            #    print(msg)
+            #    continue
+
+            constit_files = []
+            for constit in constit_list:
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
+
+
+            #Check if all the constituent files were found
+            #if len(constit_files) == len(constit_list):
+
+            print("constit_files:",constit_files)
+            #Check if all the constituent files were found
+            if len(constit_files) != len(constit_list):
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                raise FileNotFoundError(ermsg)
+
+            #Open a new dataset with all the constituent files/variables
+            ds = xr.open_mfdataset(constit_files)
+
+            # create new file name for derived variable
+            derived_file = constit_files[0].replace(constit_list[0], var)
+            if Path(derived_file).is_file():
+                if overwrite:
+                    Path(derived_file).unlink()
+                else:
+                    print(
+                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                    )
+                    return None
+
+            variables = {}
+            for i in constit_list:
+                variables[i] = ds[constit_list[0]].dims
+
+            #Get coordinate values from the first constituent file
+            coords={'lat': ds[constit_list[0]].lat.values, 'lon': ds[constit_list[0]].lon.values, 
+                                      "time": ds[constit_list[0]].time.values}
+
+            #Create data arrays from each constituent
+            #These variables will all be added to one file that will eventually contain the
+            #derived variable as well
+            #NOTE: This has to be done via xarray dataArrays
+            #      - There might be a way with xarray dataSets but none that have worked thus far
+            data_arrays = []
+            for var_const, dims in variables.items():
+                values = ds[var_const].values            
+                da = xr.DataArray(values, coords=coords, dims=dims)
+                data_arrays.append(da)
+
+            # Convert the string equation to a SymPy expression
+            symbolic_expression = sp.sympify(der_eq)
+
+            # Create a list of SymPy symbols based on the variable names
+            symbolic_vars = [sp.symbols(var_const) for var_const in variables]
+
+            # Use lambdify to create a function that can handle symbolic and numeric evaluations
+            numeric_function = sp.lambdify(symbolic_vars, symbolic_expression, 'numpy')
+
+            # Define a function to convert SymPy expressions to NumPy functions
+            def sympy_function(*args):
+                return numeric_function(*args)
+
+            # Apply the symbolic function to the list of xarray arrays
+            result_da = xr.apply_ufunc(sympy_function, *data_arrays,
+                                       dask='parallelized', output_dtypes=[float])
+
+            # Add new derived vairable to the dataset and save file
+            ds[var] = result_da
+            ds.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 ###############
