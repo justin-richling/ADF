@@ -999,7 +999,7 @@ class AdfDiag(AdfWeb):
                 da = xr.DataArray(values, coords=coords, dims=dims)
                 data_arrays.append(da)
 
-           
+            data_arrays
             # Apply the symbolic function to the list of xarray arrays
             result_da = xr.apply_ufunc(sympy_function, *data_arrays,
                                        dask='parallelized', output_dtypes=[float])
