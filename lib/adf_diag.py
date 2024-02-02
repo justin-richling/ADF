@@ -529,7 +529,6 @@ class AdfDiag(AdfWeb):
             wowsa = {}
             for var in diag_var_list:
                 if var not in hist_file_var_list:
-                    print(f"{var} not in hist file boi")
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
                         wowsa[var] = {}
@@ -961,11 +960,10 @@ class AdfDiag(AdfWeb):
         If the file for the derived variable exists, the kwarg `overwrite` determines
         whether to overwrite the file (true) or exit with a warning message.
 
-        NOTE: This is not usable for variables with vertical levels yet - JR
         """
 
         for var in vars_to_derive:
-            print(f"\t - derived time series for {var}")
+            print(f"\t - deriving time series for {var}")
 
             #Check whether there are parts to derive from and if there is an associated equation
             vres = res.get(var, {})
@@ -1015,7 +1013,6 @@ class AdfDiag(AdfWeb):
                 #      - There might be a way with xarray dataSets but none that have worked thus far
                 data_arrays = []
                 for var_const, dims in variables.items():
-                    print(var_const)
                     values = ds[var_const].values
                     da = xr.DataArray(values, coords=coords, dims=dims)
                     data_arrays.append(da)
