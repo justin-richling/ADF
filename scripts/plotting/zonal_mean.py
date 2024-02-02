@@ -416,9 +416,9 @@ def zonal_mean(adfobj):
     # Aerosols
     #print("aerosol",aerosol,"\n")
     #if aerosol:
-    import chemistry_maps as chem
-    print(data_dict[case_name][s][f"{var}"])
-    chem.make_chem_maps(adfobj, "aerosol", data_dict, case_deets)        
+    #import chemistry_maps as chem
+    #print(data_dict[case_name][s][f"{var}"])
+    #chem.make_chem_maps(adfobj, "aerosol", data_dict, case_deets)        
     ####
 
     #End user added scripts
