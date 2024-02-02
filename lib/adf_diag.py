@@ -529,6 +529,7 @@ class AdfDiag(AdfWeb):
             wowsa = {}
             for var in diag_var_list:
                 if var not in hist_file_var_list:
+                    print(f"{var} not in hist file boi")
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
                         wowsa[var] = {}
