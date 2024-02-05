@@ -495,6 +495,11 @@ class AdfWeb(AdfObs):
                 #Create a directory that will hold copies of the actual images:
                 self.__case_web_paths[web_data.case]['assets_dir'].mkdir(exist_ok=True)
 
+                #Copy CSS files over to output directory:
+                for css_file in jinja_template_dir.glob('*.css'):
+                    shutil.copyfile(css_file, css_files_dir / css_file.name)
+                #End for
+
                 #Move file to assets directory:
                 shutil.copy(web_data.data, web_data.asset_path)
 
