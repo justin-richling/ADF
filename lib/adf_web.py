@@ -710,7 +710,7 @@ class AdfWeb(AdfObs):
 
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
-            main_templates_path.mkdir(parents=True)
+            #main_templates_path.mkdir(parents=True)
 
             #loop over cases:
             for case_name in case_names:
