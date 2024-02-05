@@ -711,7 +711,8 @@ class AdfWeb(AdfObs):
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
             if not main_templates_path.is_dir():
-                main_templates_path.mkdir(parents=True)
+                css_files_dir = self.__case_web_paths[case_names[0]]['css_files_dir']
+                shutil.copytree(css_files_dir, main_templates_path)
 
             #Also make sure CSS template files have been copied over:
             #if not main_templates_path.is_dir():
@@ -744,8 +745,7 @@ class AdfWeb(AdfObs):
                 #End if
             #End for (model case loop)
 
-            css_files_dir = self.__case_web_paths[case_names[0]]['css_files_dir']
-            shutil.copytree(css_files_dir, main_templates_path)
+            
 
             #Create multi-case site:
             main_title = "ADF Diagnostics"
