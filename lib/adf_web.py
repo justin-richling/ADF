@@ -712,6 +712,13 @@ class AdfWeb(AdfObs):
             main_templates_path = main_site_path / "templates"
             #main_templates_path.mkdir(parents=True)
 
+            #Also make sure CSS template files have been copied over:
+            #if not main_templates_path.is_dir():
+            #    #If not, just grab the files from the first test case directory
+            css_files_dir = self.__case_web_paths[case_names[0]]['css_files_dir']
+            shutil.copytree(css_files_dir, main_templates_path)
+            #End if
+
             #loop over cases:
             for case_name in case_names:
 
