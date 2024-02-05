@@ -710,7 +710,8 @@ class AdfWeb(AdfObs):
 
             #Create CSS templates file path:
             main_templates_path = main_site_path / "templates"
-            #main_templates_path.mkdir(parents=True)
+            if not main_templates_path.is_dir():
+                main_templates_path.mkdir(parents=True)
 
             #Also make sure CSS template files have been copied over:
             #if not main_templates_path.is_dir():
