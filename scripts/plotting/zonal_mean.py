@@ -336,6 +336,21 @@ def zonal_mean(adfobj):
         #End for (obs/baseline loop)
     #End for (variables loop)
 
+    #User added script calls here?
+    #-----------------------------
+
+    #These will be for scripts that just piggy-back off data/info specific to zonal plotting
+    #
+    
+    # Chemistry
+    #----------
+    import vert_seasonal_cycle as scycle
+
+    scycle.make_chem_maps(adfobj, "aerosol", data_dict, case_deets)        
+    ####
+
+    #End user added scripts
+
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
 
