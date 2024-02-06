@@ -1,4 +1,86 @@
-def zonal_wind():
+
+import numpy as np
+import matplotlib.pyplot as plt
+import netCDF4 as nc
+import scipy
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import os
+
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+import pandas as pd
+
+
+#Set seasonal ranges:
+seasons = {"DJF": [12, 1, 2],
+            "JJA": [6, 7, 8],
+            "MAM": [3, 4, 5],
+            "SON": [9, 10, 11]}
+
+import xarray as xr
+from pathlib import Path
+import glob
+from itertools import chain
+
+
+
+
+
+merra2 = {}
+merra2_seasonal = {}
+merra2_monthly = {}
+merra2_vars = ['U','T','V','lat','lev']
+#ncfile = nc.Dataset("MERRA2_met.nc", 'r')
+merra_ncfile = xr.open_dataset("MERRA2_met.nc", decode_times=True, use_cftime=True)
+
+            
+
+for index, var in enumerate(merra2_vars):
+    
+    merra2[var] = merra_ncfile[var]
+    if index < len(merra2_vars)-2:
+
+
+        #start_date = datetime(merra_ncfile.time) #datetime(1980, 1, 1)
+        time0 = merra_ncfile.time.dt.strftime("%Y-%m-%d")
+        start_time = time0.values[0]
+        start_date = datetime.strptime(str(start_time), '%Y-%m-%d')
+
+        # Number of months to generate
+        # Number of months to generate
+        num_months = len(merra_ncfile[var].record)#record
+                    
+        # List to store datetime objects
+        datetime_list = []
+                    
+        # Generate datetime objects incrementally by month
+        for i in range(num_months):
+            new_date = start_date + relativedelta(months=i)
+            datetime_list.append(new_date.replace(day=1))  # Set the day to the first day of the month
+    
+        merra_ncfile[var] = merra_ncfile[var].assign_coords({"record": datetime_list})
+        merra2[var] = merra_ncfile[var]
+
+        
+        #for season in seasons:
+            #merra2_seasonal[var] = averaging_functions.calc_seasonal_average(merra2[var])
+        merra2_seasonal[var] = obs_seasonal_mean(merra2[var], season="DJF", is_climo=None)
+        #merra2_monthly[var] = averaging_functions.calc_monthly_average(merra2[var])
+        #merra2_monthly[var] = averaging_functions.calc_monthly_average(merra2[var])
+        #merra2_monthly[var] = monthly_mean(merra2[var], month=11, is_climo=None)
+
+
+
+
+
+
+
+
+
+
+
+
+def zonal_wind(obs="MERRA2"):
     # CAM vars needed
     # - U
 
