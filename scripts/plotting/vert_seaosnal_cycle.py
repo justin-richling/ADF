@@ -23,6 +23,37 @@ import glob
 from itertools import chain
 
 
+#
+# --- Main Function Shares Name with Module: regional_map_multicase ---
+#
+def make_scycle_maps(adfobj, diag, data_dict, case_deets):
+    """
+    Chemistry Map main function
+        * Initially start with Aerosol Zonal maps
+            - This probably can be expanded to LatLon if given single pressure levels?
+
+        
+    """
+
+    # Notify user that script has started:
+    print("\n  Generating zonal aerosol plots ...")
+
+    var_list = adfobj.diag_var_list
+
+    #Aerosol Calculations
+    if diag == "aerosol":
+
+        for var,constits in aerosol_dict.items():
+            if all(elem in var_list  for elem in constits):
+                print(f"\t - zonal mean aerosol plots for {var}")
+                        
+                #If found then notify user, assuming debug log is enabled:
+                adfobj.debug_log(f"zonal_mean: Found variable defaults for {var}")
+                aerosol_plot(adfobj, var, data_dict, case_deets)
+
+            else:
+                print(f"No constituents for {var}, moving on ...")
+
 
 
 
@@ -80,7 +111,7 @@ for index, var in enumerate(merra2_vars):
 
 
 
-def zonal_wind(obs="MERRA2"):
+def zonal_wind(data_dict, obs="MERRA2"):
     # CAM vars needed
     # - U
 
