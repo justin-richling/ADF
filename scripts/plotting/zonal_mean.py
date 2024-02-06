@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections import OrderedDict
 import numpy as np
 import xarray as xr
 import plotting_functions as pf
@@ -52,6 +53,9 @@ def zonal_mean(adfobj):
     #-----------------------------------------
     var_list = adfobj.diag_var_list
     model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
+
+    #Chemistry seasonal cycle vars:
+    calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables:
@@ -124,6 +128,19 @@ def zonal_mean(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
 
+
+    #Set up case detail dictionary
+    #This is meant to be portable to other scripts
+    #Placeholder until intakeESM??? - JR
+    case_deets = {"years":{"syears":syear_cases,"eyears":eyear_cases,
+                                  "syear_baseline":syear_baseline,"eyear_baseline":eyear_baseline},
+                 "nicknames":{"cases":test_nicknames,
+                             "baseline":base_nickname},
+                 "case_names":{"cases":case_names,
+                               "baseline":data_name},
+                 "ptype":plot_type
+                }
+
     #Check if plots already exist and redo_plot boolean
     #If redo_plot is false and file exists, keep track and attempt to skip calcs to
     #speed up preformance a bit if re-running the ADF
@@ -180,6 +197,12 @@ def zonal_mean(adfobj):
     # End redo plots check
     #
 
+    data_dict = OrderedDict()
+
+    #Initialize Ordered Dictionary for baseline case:
+    if data_name not in data_dict:
+        data_dict[data_name] = OrderedDict()
+
     #
     # Setup Plotting
     #
@@ -220,6 +243,8 @@ def zonal_mean(adfobj):
             vres = {}
         #End if
 
+        case_deets["vres"] = vres
+
         #loop over different data sets to plot model against:
         for data_src in data_list:
             # load data (observational) comparison files
@@ -234,6 +259,10 @@ def zonal_mean(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+
+                #Initialize Ordered Dictionary for test case:
+                if case_name not in data_dict:
+                    data_dict[case_name] = OrderedDict()
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
@@ -302,7 +331,17 @@ def zonal_mean(adfobj):
                         #Seasonal Averages
                         mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
                         oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
-                        
+
+                        #Initialize Ordered Dictionary for season and variable:
+                        if s not in data_dict[case_name]:
+                            data_dict[case_name][s] = OrderedDict()
+                        if s not in data_dict[data_name]:
+                            data_dict[data_name][s] = OrderedDict()
+
+                        if var in calc_var_list:
+                            data_dict[case_name][s][f"{var}"] = {"mdata":mseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
+                            data_dict[data_name][s][f"{var}"] = {"odata":oseasons[s],"has_lev":has_lev,"plot_loc":plot_loc}
+
                         # difference: each entry should be (lat, lon) or (plev, lat, lon)
                         # dseasons[s] = mseasons[s] - oseasons[s]
                         # difference will be calculated in plot_zonal_mean_and_save;
