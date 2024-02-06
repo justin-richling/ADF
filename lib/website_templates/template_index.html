@@ -1,10 +1,62 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
     <title>ADF Diagnostics</title>
-    <link rel="stylesheet" href="templates/adf_diag.css">
+    <!--<link rel="stylesheet" href="templates/adf_diag.css">-->
+    <meta name="description" content="" />
   </head>
-  <body >
+  <body class="ncar">
+    <!-- navbar include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3"></main>
+      <div class="d-grid d-print-flex">
+        <nav aria-label="breadcrumb" class="breadcrumb-wrapper mb-2 d-print-none">
+          <ol class="breadcrumb">
+              <!-- breadcrumb links start -->
+              <li class="breadcrumb-item"><a href="https://www.cgd.ucar.edu">Home</a></li>
+              <li class="breadcrumb-item"><a href="https://www2.cgd.ucar.edu/systems/templates">Unity Templates</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Template - 1 column with table</li>
+              <!-- breadcrumb links end -->
+          </ol>
+        </nav>
+
+        <article class="main-content-wrapper">
+          <!-- update the page title -->
+          <h1>CESM Unified Diagnostics CUPiD</h1>
+          <div class="main-content clearfix">
+            <!-- main content area start -->
+            <p></p>
+
+            <p></p>
+            <table class="table">
+              <thead class="">
+                <tr>
+                    <th>Brief Description</th>
+                    <th>Atmos</th>
+                    <th>Land</th>
+                    <th>Ice</th>
+                    <th>Ocean</th>
+                    <th>CVDP</th>
+                    <th>Length of Run Diagnostics</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>
+                      <strong>Baseline Name</strong>:<br>{{ base_name }}<br>
+                      <strong>Case Names</strong>:<br>{{ case_name }}<br>
+				  
+                                   
+                    </td>
+
+
+            </table>
+          </div>
+        </article>
+
+
     <div class="header">
       <div id="screenFiller" style="background:url(templates/NCAR.gif) top right no-repeat; border:5px solid #555;">
         <div class="center"><h1> {{ title }}</h1></div><!--center-->
