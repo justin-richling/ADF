@@ -385,7 +385,7 @@ def zonal_mean(adfobj):
     #----------
     import vert_seasonal_cycle as scycle
 
-    scycle.make_chem_maps(adfobj, "aerosol", data_dict, case_deets)        
+    scycle.make_scycle_maps(adfobj, data_dict, case_deets)        
     ####
 
     #End user added scripts
