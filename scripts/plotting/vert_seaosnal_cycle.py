@@ -36,23 +36,13 @@ def make_scycle_maps(adfobj, diag, data_dict, case_deets):
     """
 
     # Notify user that script has started:
-    print("\n  Generating zonal aerosol plots ...")
+    print("\n  Generating zonal vertical seasonal cycle plots plots ...")
 
     var_list = adfobj.diag_var_list
 
-    #Aerosol Calculations
-    if diag == "aerosol":
+    case_names = case_deets["case_names"]["cases"] + case_deets["case_names"]["baseline"]
 
-        for var,constits in aerosol_dict.items():
-            if all(elem in var_list  for elem in constits):
-                print(f"\t - zonal mean aerosol plots for {var}")
-                        
-                #If found then notify user, assuming debug log is enabled:
-                adfobj.debug_log(f"zonal_mean: Found variable defaults for {var}")
-                aerosol_plot(adfobj, var, data_dict, case_deets)
-
-            else:
-                print(f"No constituents for {var}, moving on ...")
+    zonal_wind(data_dict, case_names, obs="MERRA2")
 
 
 
@@ -103,6 +93,17 @@ for index, var in enumerate(merra2_vars):
 
 
 
+"""
+
+case_deets = {"years":{"syears":syear_cases,"eyears":eyear_cases,
+                                  "syear_baseline":syear_baseline,"eyear_baseline":eyear_baseline},
+                 "nicknames":{"cases":test_nicknames,
+                             "baseline":base_nickname},
+                 "case_names":{"cases":case_names,
+                               "baseline":data_name},
+                 "ptype":plot_type
+                }
+"""
 
 
 
@@ -110,8 +111,7 @@ for index, var in enumerate(merra2_vars):
 
 
 
-
-def zonal_wind(data_dict, obs="MERRA2"):
+def zonal_wind(data_dict, case_names, obs="MERRA2"):
     # CAM vars needed
     # - U
 
@@ -125,7 +125,8 @@ def zonal_wind(data_dict, obs="MERRA2"):
 
     #Plot zonal wind data
     fig = plt.figure(figsize=(len(runs)*4,10)) 
-    for run in range(len(runs)):
+    #for run in range(len(runs)):
+    for case_name in case_names:
         [lat_grid, lev_grid] = np.meshgrid(data_runs[runs[run]]['lev'],
                                         data_runs[runs[run]]['lat'])
         
@@ -206,7 +207,7 @@ def zonal_wind(data_dict, obs="MERRA2"):
 
 
 
-
+"""
 def zonal_temp():
     # CAM vars needed
     # - T
@@ -570,3 +571,4 @@ def polar_cap_temp():
             fig.colorbar(cf, cax=axins, orientation="vertical", label='K')
 
     plt.savefig('output/temp_spcap_mine.png',dpi=300)
+"""
