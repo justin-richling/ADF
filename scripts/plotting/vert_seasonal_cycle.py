@@ -481,7 +481,9 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
     """
     """
 
-    levs = cont_ranges["T"]["levs"]
+    temp_levs = cont_ranges["T"]["levs"]
+    #diff_levs = cont_ranges["T"]["diff_levs"]
+    print(cont_ranges["T"]["diff_levs"])
 
     font_size = 8
     if hemi == "s":
@@ -535,7 +537,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
         ax = fig.add_subplot(nrows, ncols, idx+1)
 
         cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
-                        levels=levs,cmap='RdBu_r'
+                        levels=np.arange(-10,11,1),cmap='RdBu_r'
                        ) #np.arange(-10,11,1)
 
         c=plt.contour(lev_grid, time_grid, merra2_pcap, colors='black',
