@@ -502,7 +502,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
     ncols = 4
     nrows = int(np.ceil(nplots/ncols))
 
-    fig = plt.figure(figsize=(2*7,nrows*3))
+    fig = plt.figure(figsize=(2*7,nrows*4))
 
     for idx,case_name in enumerate(case_names):
         #ds = case_runs[case_name]
