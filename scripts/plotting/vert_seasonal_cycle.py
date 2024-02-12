@@ -680,7 +680,7 @@ def merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags
             start_date = datetime(1980, 1, 1)
 
             # Number of months to generate
-            num_months = len(merra_ncfile[var].time)#record
+            num_months = len(merra_ncfile[var].time)
 
             # List to store datetime objects
             datetime_list = []
