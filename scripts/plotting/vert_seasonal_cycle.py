@@ -218,7 +218,7 @@ def vert_seasonal_cycle(adfobj):
             #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
 
     for hemi in ["s","n"]:
-        polar_car_temp(adfobj, hemi, case_names, case_ds_dict, cases_monthly, merra2_monthly)
+        polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
 
 
 
@@ -477,7 +477,7 @@ def comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, tim
 
 
 
-def polar_car_temp(adfobj, hemi, case_names, case_runs, cases_monthly, merra2_monthly):
+def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly):
     """
     """
 
@@ -501,7 +501,8 @@ def polar_car_temp(adfobj, hemi, case_names, case_runs, cases_monthly, merra2_mo
     fig = plt.figure(figsize=(2*7,nrows*5))
 
     for idx,case_name in enumerate(case_names):
-        ds = case_runs[case_name]
+        #ds = case_runs[case_name]
+        ds = cases_coords[case_name]
         ds_month = cases_monthly[case_name]
 
         rfield_seas = np.zeros((12,len(ds['lev']),len(ds['lat'])))
