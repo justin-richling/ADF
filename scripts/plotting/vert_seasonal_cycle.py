@@ -599,17 +599,20 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
     ------
        - case specific file name with case data, saved to where???????
     """
-    h0_lists = []
+    if not Path(f"{save_path}/waccm_135_{case_name}.nc"):
+        h0_lists = []
 
-    for yr in np.arange(int(syr),int(eyr)+1):
-        h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
+        for yr in np.arange(int(syr),int(eyr)+1):
+            h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
 
-    h0_list = list(chain(*h0_lists))
+        h0_list = list(chain(*h0_lists))
 
-    waccm_135 = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
-    waccm_135 = waccm_135[calc_var_list].mean(dim='lon')
-    save_path = adfobj.get_basic_info('diag_loc', required=True)
-    waccm_135.to_netcdf(f"{save_path}/waccm_135_{case_name}.nc")
+        waccm_135 = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
+        waccm_135 = waccm_135[calc_var_list].mean(dim='lon')
+        save_path = adfobj.get_basic_info('diag_loc', required=True)
+        waccm_135.to_netcdf(f"{save_path}/waccm_135_{case_name}.nc")
+    else:
+        waccm_135 = xr.open_mfdataset(f"{save_path}/waccm_135_{case_name}.nc")
     if return_ds:
         return waccm_135
 ########
