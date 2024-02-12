@@ -147,7 +147,8 @@ def vert_seasonal_cycle(adfobj):
         syr = syear_cases[idx]
         eyr = eyear_cases[idx]
 
-        ncfile = make_zm_files(hist_loc,case_name,syr,eyr,return_ds=True)
+        #make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
+        ncfile = make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True)
 
 
         #zmdir = run
