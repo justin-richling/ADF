@@ -148,7 +148,8 @@ def vert_seasonal_cycle(adfobj):
         eyr = eyear_cases[idx]
 
         #make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
-        ncfile = make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True)
+        #ncfile = make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True)
+        ncfile = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/new_tests/waccm_135_acom_ne16pg3_ne16pg3_mg17_1536_long2.nc"
 
 
         #zmdir = run
