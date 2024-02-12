@@ -117,14 +117,14 @@ def vert_seasonal_cycle(adfobj):
     #case_names = case_deets["case_names"]["cases"] + case_deets["case_names"]["baseline"]
     #runs = [adfobj.get_cam_info("cam_case_name")[0],adfobj.get_cam_baseline_info("cam_case_name")[0]+"_fake",
 
-    runs = [adfobj.get_cam_info("cam_case_name")[0],adfobj.get_cam_baseline_info("cam_case_name"),
+    #runs = [adfobj.get_cam_info("cam_case_name")[0],adfobj.get_cam_baseline_info("cam_case_name"),
        #adfobj.get_cam_info("cam_case_name")[0]+"_fake2",
        #adfobj.get_cam_info("cam_case_name")[0]+"_fake3",
        #adfobj.get_cam_info("cam_case_name")[0]+"_fake4",
        #adfobj.get_cam_info("cam_case_name")[0]+"_fake5",
        #adfobj.get_cam_info("cam_case_name")[0]+"_fake6",
        #adfobj.get_cam_info("cam_case_name")[0]+"_fake7",
-       ]
+     #  ]
     
 
 
