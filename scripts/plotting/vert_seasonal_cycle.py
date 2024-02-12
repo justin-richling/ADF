@@ -764,10 +764,19 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
     it will assume that dimension is time running from January to December.
     """
     if time_avg == "season":
+        #seasons = ["ANN", "DJF", "JJA", "MAM", "SON"]
         if interval is not None:
-            assert interval in seasons, f"Unrecognized season string provided: '{interval}'"
+            assert interval in seasons, f"Unrecognized season string provided: '{season}'"
         elif interval is None:
             interval = "ANN"
+
+    #data = data.drop("time")
+    #data = data.rename({"record":"times"})
+    #data.assign_coords(timez=datetime_list)
+
+    # Can't remove the 'time' dimension, so I will build
+    # a `times' dimension to replace the `record` dimension and 
+    # update those values to date time objects for month/year
 
     try:
         month_length = data.time.dt.days_in_month
@@ -802,14 +811,29 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
         month_length = data.time.dt.days_in_month
     #End try/except
     
-    #Check if it's CESM and (for now) correct the time
     if not obs:
         syr = ncfile.time.dt.year.values[0]
         eyr = ncfile.time.dt.year.values[-2]
-
+        #if season == "DJF":
+        #    print(ncfile.time.values)
+        #    print(np.unique(ncfile.time.dt.year.values))
+    
+        #    print(syr,eyr)
         data.attrs["year_range"] = f"{syr}-{eyr}"
         timefix = pd.date_range(start=f'1/1/{syr}', end=f'12/1/{eyr}', freq='MS')
         data['time']=timefix
+    data.attrs[time_avg] = interval
+    if time_avg == "season":
+        #data.attrs[time_avg] = interval
+        data = data.sel(time=data.time.dt.month.isin(seasons[interval])) # directly take the months we want based on season kwarg
+    if time_avg == "month":
+        #data.attrs[time_avg] = season
+        data = data.sel(time=data.time.dt.month.isin(interval)) # directly take the months we want based on season kwarg
+
+        #try:
+        #    del data.attrs['season']
+        #except KeyError:
+        #   pass
 
     return data.weighted(data.time.dt.daysinmonth).mean(dim='time', keep_attrs=True)
 ########
