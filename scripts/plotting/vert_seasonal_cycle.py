@@ -533,7 +533,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
         ax = fig.add_subplot(nrows, ncols, idx+1)
 
         cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
-                        levels=temp_diff_levs,cmap='RdBu_r'
+                        levels=np.arange(-10,11,1),cmap='RdBu_r'
                        )
 
         c=plt.contour(lev_grid, time_grid, merra2_pcap, colors='black',
@@ -578,7 +578,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
                                 loc='center right',
                                 borderpad=-2.5
                                )
-                fig.colorbar(cf, cax=axins, orientation="vertical", label='K')
+                fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-10,11,3))
 
     
     #plt.savefig(f'temp_{hemi}pcap_merra2.png',dpi=300)
