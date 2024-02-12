@@ -482,8 +482,6 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
     """
 
     temp_levs = cont_ranges["T"]["levs"]
-    #diff_levs = cont_ranges["T"]["diff_levs"]
-    print(cont_ranges["T"]["diff_levs"])
 
     font_size = 8
     if hemi == "s":
