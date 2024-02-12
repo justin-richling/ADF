@@ -148,7 +148,7 @@ def vert_seasonal_cycle(adfobj):
         eyr = eyear_cases[idx]
 
         #make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
-        ncfile = make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True)
+        ncfile = make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True)
 
 
         #zmdir = run
@@ -211,9 +211,10 @@ def vert_seasonal_cycle(adfobj):
     
     for cam_var in calc_var_list:
         for month in [6,12]:
-            comparison_plots(cam_var, case_ds_dict, obs_ds_dict, "month", month)
+            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
         for season in ["DJF", "JJA"]:
-            comparison_plots(cam_var, case_ds_dict, obs_ds_dict, "season", season)
+            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
+            #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
 
 
 
@@ -574,7 +575,7 @@ def polar_car_temp(hemi, case_names, case_runs, cases_monthly, merra2_monthly):
 
 # Helper functions
 ##################
-def make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
+def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
     """
     Make zonal mean files from history monthly files
 
@@ -604,7 +605,8 @@ def make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
 
     waccm_135 = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
     waccm_135 = waccm_135[calc_var_list].mean(dim='lon')
-    waccm_135.to_netcdf(f"waccm_135_{case_name}.nc")
+    save_path = adfobj.get_basic_info('diag_loc', required=True)
+    waccm_135.to_netcdf(f"{save_path}/waccm_135_{case_name}.nc")
     if return_ds:
         return waccm_135
 ########
