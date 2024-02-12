@@ -485,7 +485,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
     #diff_levs = cont_ranges["T"]["diff_levs"]
     print(cont_ranges["T"]["diff_levs"])
 
-    font_size = 8
+    font_size = 6
     if hemi == "s":
         slat = -90
         nlat = -60
@@ -502,7 +502,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
     ncols = 4
     nrows = int(np.ceil(nplots/ncols))
 
-    fig = plt.figure(figsize=(2*5,nrows*3))
+    fig = plt.figure(figsize=(2*7,nrows*3))
 
     for idx,case_name in enumerate(case_names):
         #ds = case_runs[case_name]
@@ -556,7 +556,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
             plt.ylabel('hPa')
 
         #Set title
-        local_title=case_names[idx]+"\n minus MERRA2"
+        local_title=f"{case_names[idx]}\n {delta_symbol} from MERRA2"
         plt.title(local_title, fontsize=font_size)
 
         # Calculate the required wspace based on the length of titles
