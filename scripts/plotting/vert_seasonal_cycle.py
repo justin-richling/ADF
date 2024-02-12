@@ -92,7 +92,7 @@ def vert_seasonal_cycle(adfobj):
 
         #Grab baseline years (which may be empty strings if using Obs):
         syear_baseline = adfobj.climo_yrs["syear_baseline"]
-        syear_cases = syear_cases + syear_baseline
+        syear_cases = syear_cases + [syear_baseline]
         eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
         eyear_cases = eyear_cases + [eyear_baseline]
 
