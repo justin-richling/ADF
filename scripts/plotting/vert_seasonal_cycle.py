@@ -454,9 +454,11 @@ def comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, tim
     #Add plot to website (if enabled):
     #Special ADF variable which contains the output paths for
     #all generated plots and tables:
-    plot_locations = adfobj.get_basic_info('cam_diag_plot_loc', required=True)
+    #plot_locations = adfobj.get_basic_info('cam_diag_plot_loc', required=True)
+    #plot_loc = Path(plot_locations) / case_names[0]
+    plot_locations = adfobj.plot_location
     #print("plot_locations",plot_locations)
-    plot_loc = Path(plot_locations[0])
+    plot_loc = Path(plot_locations)
     plot_type = "png"
     plot_name = plot_loc / f"{cam_var}_{interval}_Zonal_Mean_scycle.{plot_type}"
 
