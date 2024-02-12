@@ -601,7 +601,7 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
     """
 
     save_path = adfobj.get_basic_info('diag_loc', required=True)
-    if not Path(f"{save_path}/waccm_135_{case_name}.nc"):
+    if not Path(f"{save_path}/waccm_135_{case_name}.nc").exits():
         h0_lists = []
 
         for yr in np.arange(int(syr),int(eyr)+1):
