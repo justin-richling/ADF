@@ -287,8 +287,6 @@ class AdfWeb(AdfObs):
             #End if
             asset_path = None
         else:
-            print(web_data)
-            print(web_data.stem)
             html_name = f'plot_page_{web_data.stem}.html'
             html_name = f'plot_page_{web_data.stem}.html'
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
@@ -540,7 +538,6 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 mean_html_info[ptype][category][var][season] = web_data.html_file.name
-                print("\n",web_data.html_file.name,"\n")
 
                 #Initialize Ordered Dictionary for non season kwarg:
                 if ptype not in non_seasons:
@@ -635,7 +632,6 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
-                print(web_data.plot_type)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "ext": web_data.ext,
