@@ -598,7 +598,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
         ptype = "NHPolar"
     plot_name = plot_loc / f"T_ANN_{ptype}_Cap_Mean.{plot_type}"
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type=ptype, category="PolarCap")
+    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type=ptype, category="PolarCap",ext="Cap_Mean")
 
 ########
 
