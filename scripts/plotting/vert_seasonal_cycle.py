@@ -585,18 +585,20 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
     plot_locations = adfobj.plot_location
     plot_loc = Path(plot_locations[0])
     plot_type = "png"
-    plot_name = plot_loc / f"T_{hemi}cap_Mean.{plot_type}"
-    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
+    plot_name = plot_loc / f"T_ANN_{hemi}cap_Mean.{plot_type}"
+    #plot_name = plot_loc / f"{var}_{s}_{ptype}_Cap_Mean.{plot_type}"
+    #fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     #if time_avg == "month":
     #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleMonth",non_season=True)
     #else:
     #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleSeason",non_season=True)
     if hemi == "s":
-        plot_type = "SHPolar"
+        ptype = "SHPolar"
     if hemi == "n":
-        plot_type = "NHPolar"
-
-    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type=plot_type, category="PolarCap")
+        ptype = "NHPolar"
+    plot_name = plot_loc / f"T_ANN_{ptype}_Cap_Mean.{plot_type}"
+    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
+    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type=ptype, category="PolarCap")
 
 ########
 
