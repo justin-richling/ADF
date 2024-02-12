@@ -462,8 +462,10 @@ def comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, tim
     plot_loc = Path(plot_locations[0])
     plot_type = "png"
     plot_name = plot_loc / f"{cam_var}_{str_interval}_Zonal_Mean_scycle.{plot_type}"
-
-    #adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal", category="SeasonalCycle")
+    if time_avg == "month":
+        adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal", category="SeasonalCycle",non_season=True)
+    else:
+        adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal", category="SeasonalCycle")
     #Write the figure to provided workspace/file:
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     #plt.savefig(plot_name,dpi=300)
