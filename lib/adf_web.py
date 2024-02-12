@@ -631,7 +631,7 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
-
+                print(web_data.name)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
