@@ -582,7 +582,7 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
                                 loc='center right',
                                 borderpad=-2.5
                                )
-                fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-10,11,3))
+                fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
 
     
     #plt.savefig(f'temp_{hemi}pcap_merra2.png',dpi=300)
