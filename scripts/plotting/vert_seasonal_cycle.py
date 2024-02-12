@@ -217,6 +217,8 @@ def vert_seasonal_cycle(adfobj):
             comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
             #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
 
+    for hemi in ["s","n"]:
+        polar_car_temp(hemi, case_names, case_ds_dict, cases_monthly, merra2_monthly)
 
 
 
@@ -475,10 +477,11 @@ def comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, tim
 
 
 
-def polar_car_temp(hemi, case_names, case_runs, cases_monthly, merra2_monthly):
+def polar_car_temp(adfobj, hemi, case_names, case_runs, cases_monthly, merra2_monthly):
     """
     """
 
+    font_size = 8
     if hemi == "s":
         slat = -90
         nlat = -60
@@ -529,7 +532,7 @@ def polar_car_temp(hemi, case_names, case_runs, cases_monthly, merra2_monthly):
         #Set up plot
         ax = fig.add_subplot(nrows, ncols, idx+1)
 
-        cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),#.transpose(transpose_coords=True),
+        cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
                         levels=temp_diff_levs,cmap='RdBu_r'
                        )
 
@@ -577,7 +580,23 @@ def polar_car_temp(hemi, case_names, case_runs, cases_monthly, merra2_monthly):
                                )
                 fig.colorbar(cf, cax=axins, orientation="vertical", label='K')
 
-    plt.savefig(f'temp_{hemi}pcap_merra2.png',dpi=300)
+    
+    #plt.savefig(f'temp_{hemi}pcap_merra2.png',dpi=300)
+    plot_locations = adfobj.plot_location
+    plot_loc = Path(plot_locations[0])
+    plot_type = "png"
+    plot_name = plot_loc / f"T_{hemi}cap_Mean.{plot_type}"
+    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
+    #if time_avg == "month":
+    #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleMonth",non_season=True)
+    #else:
+    #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleSeason",non_season=True)
+    if hemi == "s":
+        plot_type = "SHPolar"
+    if hemi == "n":
+        plot_type = "NHPolar"
+
+    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type=plot_type, category="PolarCap")
 
 ########
 
