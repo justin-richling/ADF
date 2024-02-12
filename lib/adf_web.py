@@ -536,7 +536,7 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 mean_html_info[ptype][category][var][season] = web_data.html_file.name
-
+                print("\n",web_data.html_file.name,"\n")
 
                 #Initialize Ordered Dictionary for non season kwarg:
                 if ptype not in non_seasons:
