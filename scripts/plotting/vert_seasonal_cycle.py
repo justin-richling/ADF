@@ -793,7 +793,7 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
     if time_avg == "season":
         #seasons = ["ANN", "DJF", "JJA", "MAM", "SON"]
         if interval is not None:
-            assert interval in seasons, f"Unrecognized season string provided: '{season}'"
+            assert interval in seasons, f"Unrecognized season string provided: '{interval}'"
         elif interval is None:
             interval = "ANN"
 
