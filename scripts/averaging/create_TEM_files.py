@@ -341,7 +341,7 @@ def calc_tem(ds):
     uwzm = ds['UWzm']
     uwzm.values = ma.masked_greater_equal(uwzm, 1e33)
     vthzm = ds['VTHzm']
-    print(ds['VTHzm'])
+    print(ds['THzm'])
     vthzm.values = ma.masked_greater_equal(vthzm, 1e33)
 
     # convert w terms from m/s to Pa/s
