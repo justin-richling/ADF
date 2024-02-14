@@ -233,6 +233,7 @@ def create_TEM_files(adf):
 
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
+            print(hist_files[0])
 
             if hist_files:
                 ds = xr.open_mfdataset(hist_files)
