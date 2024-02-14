@@ -1064,7 +1064,7 @@ wtem:
 psitem:
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: TEM mass stream function $\bar{\chi}^{*}$
+  long_name: TEM mass stream function ($\bar{\chi}^{*}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "psitem"
