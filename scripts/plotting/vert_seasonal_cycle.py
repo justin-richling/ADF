@@ -220,6 +220,8 @@ def vert_seasonal_cycle(adfobj):
     for hemi in ["s","n"]:
         polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
 
+    cold_point_temp(adfobj, case_names, cases_coords, cases_monthly)
+
 
 
 
@@ -601,6 +603,120 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
     plot_name = plot_loc / f"T_ANN_{ptype}_Cap_Mean.{plot_type}"
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type=ptype, category="PolarCap",ext="Cap_Mean")
+
+########
+
+def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
+    """
+    """
+
+    ahh = []
+    for i in list(month_dict.keys())[::3]:
+        ahh.append(month_dict[i].lower().capitalize())
+
+    slat = -45
+    nlat = 45
+
+    nplots = len(case_names)
+    if nplots > 4:
+        ncols = 4
+    else:
+        ncols = nplots
+    #End if
+    ncols = 2
+    nrows = int(np.ceil(nplots/ncols))
+
+    fig = plt.figure(figsize=(2*8,nrows*5))
+
+    #for run in range(len(runs)):
+    for idx,case_name in enumerate(case_names):
+        ds = case_runs[case_name]
+        ds_month = cases_monthly[case_name]
+
+
+        case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
+        case_seas = xr.DataArray(case_seas, dims=['month','lev', 'lat'],
+                                 coords={'month': np.arange(1,26,1),
+                                         'lev': ds['lev'],
+                                         'lat': ds['lat']})
+        #Make array of monthly temp data
+        for m in range(0,25):
+            month = m
+            if m > 11:
+                month = m-12
+            if month == 12:
+                month = 0
+
+            case_seas[m] = ds_month['T'][month_dict[month+1]]
+
+        #Average over set of latitudes
+        #merra2_pcap = coslat_average(rfield_seas,slat,nlat)
+        case_pcap = coslat_average(case_seas,slat,nlat)
+        #print(case_seas.shape)
+        case_pcap = case_seas.sel(lev=90,method="nearest").sel(lat=slice(-45, 45))
+
+        #
+        [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(-45, 45)),
+                                            np.arange(0,25))
+        #Set up plot
+        ax = fig.add_subplot(nrows, ncols, idx+1)
+
+        cf=plt.contourf(lat_grid, time_grid, (case_pcap),
+                        levels=np.arange(190,221,1),
+                        cmap='RdBu_r',zorder=100
+                      )
+        c=plt.contour(lat_grid, time_grid, (case_pcap),
+                        levels=np.arange(190,221,1),
+                        colors='k',linewidths=0.5
+                      )
+
+        #Add a horizontal line at 0 degrees latitude
+        plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
+
+        #Format the x-axis
+        ax.set_xticks(np.arange(0,25,3),rotation=40)
+        ax.set_xticklabels(ahh+ahh+["Jan"],rotation=40)
+
+        #Set title
+        local_title=case_names[idx]
+        plt.title(local_title, fontsize=8)
+
+        #Check for start of new row
+        if idx % 2 == 0:
+            row = idx // 2 + 1
+
+        #Add latitude label to first column of each row
+        if idx==2*(row-1):
+            plt.ylabel('Latitude')
+
+        #Format the y-axis
+        ax.set_yticks(np.arange(-45,46,15))
+        ax.set_yticklabels(("45S","30S","15S","EQ","15N","30N","45N"))
+
+        #Check to see where the colorbar will go
+        if ((idx==2*(row-1)) and (idx == nplots-1)) or ((idx+1) % 2 == 0):
+                axins = inset_axes(ax,
+                                width="3%",
+                                height="80%",
+                                loc='center right',
+                                borderpad=-2.5
+                               )
+                cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K',
+                                    ticks=np.arange(190,221,5)
+                                   )
+                cbar.add_lines(c)
+    fig.suptitle(f"Cold Point Tropopause (CPT) - 90hPa",fontsize=16,y=0.93,horizontalalignment="center")
+    plot_locations = adfobj.plot_location
+    plot_loc = Path(plot_locations[0])
+    plot_type = "png"
+    ptype = "Special"
+    #Q_ANN_TapeRecorder_Mean
+    plot_name = plot_loc / f"T_ANN_CPT_Mean.{plot_type}"
+    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
+    adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                            #plot_type=ptype, category="CPT",
+                            #ext="Cap_Mean"
+                            )
 
 ########
 
