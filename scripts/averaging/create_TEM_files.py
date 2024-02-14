@@ -233,7 +233,6 @@ def create_TEM_files(adf):
 
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
-            print(hist_files[0])
 
             if hist_files:
                 ds = xr.open_mfdataset(hist_files)
@@ -337,6 +336,8 @@ def calc_tem(ds):
     uvzm.values = ma.masked_greater_equal(uvzm, 1e33)
     uwzm = ds['UWzm']
     uwzm.values = ma.masked_greater_equal(uwzm, 1e33)
+    vthzm = ds['VTHzm']
+    vthzm.values = ma.masked_greater_equal(vthzm, 1e33)
 
     # convert w terms from m/s to Pa/s
     wzm  = -1.*wzm*pre/H
