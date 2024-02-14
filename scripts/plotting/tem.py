@@ -210,10 +210,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #Grab variable defaults for this variable
         vres = res[var]
 
-        #Variable plot title name
-        longname = vres["long_name"]
-        print(longname)
-
         #Gather data for both cases
         mdata = ds[var].squeeze()
         odata = ds_base[var].squeeze()
@@ -462,15 +458,20 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
     else:
         base_yrs = f"{climo_yrs['base'][0]}-{climo_yrs['base'][1]}"
-        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+longname+"}$"+"\n",fontsize=14)
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{case_names[1]}\n\n"+longname+"\n",fontsize=14)
     
     #Set main title for difference plots column
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
     
     #Set variable name on center plot (except first plot, see above)
     for i in range(1,len(var_list)):
+        vres = res[var]
+
+        #Variable plot title name
+        longname = vres["long_name"]
         var_name = ds[var_list[i]].long_name.replace(" ", "\ ")
-        axs[i,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
+        #axs[i,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
+        axs[i,1].set_title(longname+"\n",fontsize=14)
     
     #Adjust subplots
     #May need to adjust hspace and wspace depending on if multi-case diagnostics ever happen for TEM diags
