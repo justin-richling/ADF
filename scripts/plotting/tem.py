@@ -465,7 +465,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     
     #Set variable name on center plot (except first plot, see above)
     for i in range(1,len(var_list)):
-        vres = res[var]
+        vres = res[var_list[i]]
 
         #Variable plot title name
         longname = vres["long_name"]
