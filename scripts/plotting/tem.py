@@ -454,7 +454,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
     if obs:
         obs_title = Path(vres["obs_name"]).stem
-        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+"$\mathbf{"+longname+"}$"+"\n",fontsize=14)
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+longname+"\n",fontsize=14)
 
     else:
         base_yrs = f"{climo_yrs['base'][0]}-{climo_yrs['base'][1]}"
