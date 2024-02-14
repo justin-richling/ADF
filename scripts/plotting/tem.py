@@ -286,67 +286,67 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # Zonal mean temperature
         #------------------------------------------------------------------------------------------
         if var == "thzm":
-            mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
+            mseasons.plot(ax=axs[1,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
+            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
             #Check if difference plot has contour levels, if not print notification
             if len(dseasons.lev) == 0:
                 axs[0,2].text(prop_x, prop_y, empty_message, transform=axs[0,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
+                dseasons.plot(ax=axs[1,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP Flux - meridional component
         #------------------------------------------------------------------------------------------
         if var == "epfy":
-            mseasons.plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
+            mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
+            oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
             #Check if difference plot has contour levels, if not print notification
             if len(dseasons.lev) == 0:
                 axs[1,2].text(prop_x, prop_y, empty_message, transform=axs[1,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[1,2], y='lev', yscale='log', vmax=1e6,
+                dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e6,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
         
         # EP Flux - vertical component
         #------------------------------------------------------------------------------------------
         if var == "epfz":
-            mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
+            mseasons.plot(ax=axs[3,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
+            oseasons.plot(ax=axs[3,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units})
 
             #Check if difference plot has contour levels, if not print notification
             if len(dseasons.lev) == 0:
                 axs[2,2].text(prop_x, prop_y, empty_message, transform=axs[2,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[2,2], y='lev', yscale='log', vmax=1e5,
+                dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=1e5,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM meridional wind 
         #------------------------------------------------------------------------------------------
         if var == "vtem":
-            mseasons.plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[4,0], levels = 21, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            mseasons.plot.contour(ax=axs[3,0], levels = 11, y='lev', yscale='log',
+            mseasons.plot.contour(ax=axs[4,0], levels = 11, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[3,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[4,1], levels = 21, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            oseasons.plot.contour(ax=axs[3,1], levels = 11, y='lev', yscale='log',
+            oseasons.plot.contour(ax=axs[4,1], levels = 11, y='lev', yscale='log',
                                                 vmax=3,vmin=-3,ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
@@ -354,24 +354,24 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[3,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[3,2], y='lev', yscale='log', vmax=3,vmin=-3,
+                dseasons.plot(ax=axs[4,2], y='lev', yscale='log', vmax=3,vmin=-3,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM vertical wind
         #------------------------------------------------------------------------------------------
         if var == "wtem":
-            mseasons.plot.contourf(ax=axs[4,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            mseasons.plot.contour(ax=axs[4,0], levels = 7, y='lev', yscale='log',
+            mseasons.plot.contour(ax=axs[5,0], levels = 7, y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[4,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1], cmap='RdBu_r',
                                                 cbar_kwargs={'label': ds[var].units})
-            oseasons.plot.contour(ax=axs[4,1], levels = 7, y='lev', yscale='log',
+            oseasons.plot.contour(ax=axs[5,1], levels = 7, y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
@@ -379,18 +379,18 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[4,2].text(prop_x, prop_y, empty_message, transform=axs[4,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[4,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
+                dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=0.005, vmin=-0.005,
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM mass stream function
         #------------------------------------------------------------------------------------------
         if var == "psitem":
-            mseasons.plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[6,0], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[6,1], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units})
 
@@ -398,18 +398,18 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[5,2].text(prop_x, prop_y, empty_message, transform=axs[5,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[5,2], y='lev', yscale='log',vmax=5e9,
+                dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=5e9,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence
         #------------------------------------------------------------------------------------------
         if var == "utendepfd":
-            mseasons.plot(ax=axs[6,0], y='lev', yscale='log',
+            mseasons.plot(ax=axs[7,0], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[6,1], y='lev', yscale='log',
+            oseasons.plot(ax=axs[7,1], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units})
 
@@ -417,40 +417,40 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[6,2].text(prop_x, prop_y, empty_message, transform=axs[6,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[6,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
+                dseasons.plot(ax=axs[7,2], y='lev', yscale='log',vmax=0.0001, vmin=-0.0001,
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence - meridional component
         #------------------------------------------------------------------------------------------
         if var == "utendvtem":
-            mseasons.plot(ax=axs[7,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
+            mseasons.plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[7,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
+            oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
             #Check if difference plot has contour levels, if not print notification
             if len(dseasons.lev) == 0:
                 axs[7,2].text(prop_x, prop_y, empty_message, transform=axs[7,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
+                dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence - meridionverticalal component
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
-            mseasons.plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
+            mseasons.plot(ax=axs[9,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[8,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
+            oseasons.plot(ax=axs[9,1], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
 
             #Check if difference plot has contour levels, if not print notification
             if len(dseasons.lev) == 0:
                 axs[8,2].text(prop_x, prop_y, empty_message, transform=axs[8,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
+                dseasons.plot(ax=axs[9,2], y='lev', yscale='log', vmax=0.0001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
     # Set the ticks and ticklabels for all x-axes
