@@ -445,18 +445,19 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
     #Set titles of subplots
     #Set case names in first subplot only
-    uzm = ds["uzm"].long_name.replace(" ", "\ ")
+    #uzm = ds["uzm"].long_name.replace(" ", "\ ")
+    longname = vres["long_name"]
 
     test_yrs = f"{climo_yrs['test'][0]}-{climo_yrs['test'][1]}"
     axs[0,0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{case_names[0]}\n\n\n",fontsize=14)
 
     if obs:
         obs_title = Path(vres["obs_name"]).stem
-        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+"$\mathbf{"+longname+"}$"+"\n",fontsize=14)
 
     else:
         base_yrs = f"{climo_yrs['base'][0]}-{climo_yrs['base'][1]}"
-        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+uzm+"}$"+"\n",fontsize=14)
+        axs[0,1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{case_names[1]}\n\n"+"$\mathbf{"+longname+"}$"+"\n",fontsize=14)
     
     #Set main title for difference plots column
     axs[0,2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
