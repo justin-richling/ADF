@@ -93,10 +93,10 @@ def create_TEM_files(adf):
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
 
     if "qbo" in adf.plotting_scripts:
-        var_list = ['uzm','epfy','epfz','vtem','wtem',
+        var_list = ['uzm','uzt','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
     else:
-        var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ['uzm','uzt','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     #Check if comparing against observations
     if adf.get_basic_info("compare_obs"):
@@ -150,6 +150,7 @@ def create_TEM_files(adf):
             #Make a copy of obs data so we don't do anything bad
             ds_obs = ds.copy()
             ds_base = xr.Dataset({'uzm': xr.Variable(('time', 'lev', 'zalat'), ds_obs.uzm.data),
+                                'uzt': xr.Variable(('time', 'lev', 'zalat'), ds_obs.uzt.data),
                                 'epfy': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfy.data),
                                 'epfz': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfz.data),
                                 'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.vtem.data),
@@ -329,6 +330,7 @@ def calc_tem(ds):
     wzm = ds['Wzm']
     wzm.values = ma.masked_greater_equal(wzm, 1e33)
     thzm = ds['THzm']
+    print(thzm)
     thzm.values = ma.masked_greater_equal(thzm, 1e33)
 
     uvzm = ds['UVzm']
@@ -418,6 +420,9 @@ def calc_tem(ds):
     vzm.attrs['long_name'] = 'Zonal-Mean meridional wind'
     vzm.attrs['units'] = 'm/s'
 
+    uzt.attrs['long_name'] = 'Zonal-Mean temperature'
+    uzt.attrs['units'] = 'K'
+
     epfy.attrs['long_name'] = 'northward component of E-P flux'
     epfy.attrs['units'] = 'm3/s2'
 
@@ -455,6 +460,7 @@ def calc_tem(ds):
                                       time_bnds = ds.time_bnds,
                                       uzm = uzm,
                                       vzm = vzm,
+                                      uzt = uzt,
                                       epfy = epfy,
                                       epfz = epfz,
                                       vtem = vtem,
