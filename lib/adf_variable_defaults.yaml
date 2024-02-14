@@ -1072,7 +1072,7 @@ psitem:
 utendepfd:
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: EP flux divergence ($\\nabla \\cdot F$)
+  long_name: EP flux divergence #($\\nabla \\cdot F$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendepfd"
