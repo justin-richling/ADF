@@ -714,8 +714,8 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
     plot_name = plot_loc / f"T_ANN_CPT_Mean.{plot_type}"
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(plot_name, "T", case_name, season="ANN",
-                            category="CPT",
-                            #ext="Cap_Mean"
+                            #category="CPT",
+                            ext="CPT_Mean"
                             )
 
 ########
