@@ -239,7 +239,7 @@ def create_TEM_files(adf):
             else:
                 print("No files to open, the ADF will move on. Thanks for playing")
                 return
-
+            print(ds.variable)
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
                 if idx == 0:
