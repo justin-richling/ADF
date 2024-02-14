@@ -212,6 +212,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
         #Variable plot title name
         longname = vres["long_name"]
+        print(longname)
 
         #Gather data for both cases
         mdata = ds[var].squeeze()
