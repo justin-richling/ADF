@@ -447,6 +447,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     #Set case names in first subplot only
     #uzm = ds["uzm"].long_name.replace(" ", "\ ")
     longname = vres["long_name"]
+    print("$\mathbf{"+longname+"}$")
 
     test_yrs = f"{climo_yrs['test'][0]}-{climo_yrs['test'][1]}"
     axs[0,0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{case_names[0]}\n\n\n",fontsize=14)
