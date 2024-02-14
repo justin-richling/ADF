@@ -185,6 +185,7 @@ def create_TEM_files(adf):
         if not starting_location.is_dir():
             emsg = f"Provided 'cam_hist_loc' directory '{starting_location}' not found."
             emsg += " Script is ending here."
+            print(emsg)
             return
         #End if
 
@@ -193,7 +194,8 @@ def create_TEM_files(adf):
         if not list(starting_location.glob(hist_str+'.*.nc')):
             emsg = f"No CAM history {hist_str} files found in '{starting_location}'."
             emsg += " Script is ending here."
-            adf.end_diag_fail(emsg)
+            #adf.end_diag_fail(emsg)
+            print(emsg)
         #End if
 
         #Get full path and file for file name
