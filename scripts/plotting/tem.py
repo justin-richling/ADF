@@ -101,11 +101,11 @@ def tem(adf):
 
     #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
     if "qbo" in adf.plotting_scripts:
-        var_list = ['uzm','tzm','epfy','epfz','vtem','wtem',
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
     #Otherwise keep it simple
     else:
-        var_list = ['uzm','tzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     #Baseline TEM location
     input_loc_idx = Path(tem_loc) / base_name
@@ -285,16 +285,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
         # Zonal mean temperature
         #------------------------------------------------------------------------------------------
-        if var == "tzm":
+        if var == "thzm":
             #mseasons = np.log(mseasons)
             #oseasons = np.log(oseasons)
 
             # Plot the logarithmic data
             #log_temperature.plot()
-            mseasons.plot(ax=axs[1,0], y='lev', yscale='log',ylim=[1e3,1],#levels=np.arange(260,500,10),
+            mseasons.plot(ax=axs[1,0], y='lev', yscale='log',ylim=[1e3,1],levels=np.arange(260,500,10),
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',ylim=[1e3,1],#levels=np.arange(260,500,10),
+            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',ylim=[1e3,1],levels=np.arange(260,500,10),
                                     cbar_kwargs={'label': ds[var].units})
 
             #Check if difference plot has contour levels, if not print notification

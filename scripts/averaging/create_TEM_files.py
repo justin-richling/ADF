@@ -333,14 +333,15 @@ def calc_tem(ds):
     thzm = ds['THzm']
     thzm.values = ma.masked_greater_equal(thzm, 1e33)
 
-    tzm = ds['UTzm']
-    tzm.values = ma.masked_greater_equal(tzm, 1e33)
+    #tzm = ds['UTzm']
+    #tzm.values = ma.masked_greater_equal(tzm, 1e33)
 
     uvzm = ds['UVzm']
     uvzm.values = ma.masked_greater_equal(uvzm, 1e33)
     uwzm = ds['UWzm']
     uwzm.values = ma.masked_greater_equal(uwzm, 1e33)
     vthzm = ds['VTHzm']
+    print(ds['VTHzm']["long_name"])
     vthzm.values = ma.masked_greater_equal(vthzm, 1e33)
 
     # convert w terms from m/s to Pa/s
@@ -426,8 +427,8 @@ def calc_tem(ds):
     thzm.attrs['long_name'] = 'Zonal-Mean potential temperature'
     thzm.attrs['units'] = 'K'
 
-    tzm.attrs['long_name'] = 'Zonal-Mean temperature'
-    tzm.attrs['units'] = 'K'
+    #tzm.attrs['long_name'] = 'Zonal-Mean temperature'
+    #tzm.attrs['units'] = 'K'
 
     epfy.attrs['long_name'] = 'northward component of E-P flux'
     epfy.attrs['units'] = 'm3/s2'
@@ -466,7 +467,7 @@ def calc_tem(ds):
                                       time_bnds = ds.time_bnds,
                                       uzm = uzm,
                                       vzm = vzm,
-                                      tzm = tzm,
+                                      thzm = thzm,
                                       epfy = epfy,
                                       epfz = epfz,
                                       vtem = vtem,
