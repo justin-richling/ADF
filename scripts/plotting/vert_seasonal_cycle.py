@@ -629,7 +629,7 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
     """
 
     save_path = adfobj.get_basic_info('diag_loc', required=True)
-    if not Path(f"{save_path}/waccm_135_{case_name}.nc").exists():
+    if not Path(f"{save_path}/waccm_zm_{case_name}.nc").exists():
         h0_lists = []
 
         for yr in np.arange(int(syr),int(eyr)+1):
@@ -637,14 +637,14 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
 
         h0_list = list(chain(*h0_lists))
 
-        waccm_135 = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
-        waccm_135 = waccm_135[calc_var_list].mean(dim='lon')
+        waccm_zm = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
+        waccm_zm = waccm_zm[calc_var_list].mean(dim='lon')
         
-        waccm_135.to_netcdf(f"{save_path}/waccm_135_{case_name}.nc")
+        waccm_zm.to_netcdf(f"{save_path}/waccm_zm_{case_name}.nc")
     else:
-        waccm_135 = xr.open_mfdataset(f"{save_path}/waccm_135_{case_name}.nc")
+        waccm_zm = xr.open_mfdataset(f"{save_path}/waccm_zm_{case_name}.nc")
     if return_ds:
-        return waccm_135
+        return waccm_zm
 ########
 
 def saber_data(filename = "../SABER_monthly_2002-2014.nc"):
