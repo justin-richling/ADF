@@ -286,10 +286,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # Zonal mean temperature
         #------------------------------------------------------------------------------------------
         if var == "thzm":
-            mseasons.plot(ax=axs[1,0], y='lev', yscale='log',ylim=[1e3,1],xlim=[200,400],
+            mseasons.plot(ax=axs[1,0], y='lev', yscale='log',ylim=[1e3,1],levels=np.arange(200,400,10),
                                     cbar_kwargs={'label': ds[var].units})
 
-            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',ylim=[1e3,1],xlim=[200,400],
+            oseasons.plot(ax=axs[1,1], y='lev', yscale='log',ylim=[1e3,1],levels=np.arange(200,400,10),
                                     cbar_kwargs={'label': ds[var].units})
 
             #Check if difference plot has contour levels, if not print notification
