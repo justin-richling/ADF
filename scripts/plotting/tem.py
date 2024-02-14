@@ -267,7 +267,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #Run through variables and plot each against the baseline on each row
         #Each column will be a case, ie (test, base, difference)
 
-        # uzm
+        # Zonal mean zonal wind
         #------------------------------------------------------------------------------------------
         if var == "uzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
@@ -283,7 +283,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # epfy
+        # EP Flux - meridional component
         #------------------------------------------------------------------------------------------
         if var == "epfy":
             mseasons.plot(ax=axs[1,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
@@ -300,7 +300,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
         
-        # epfz
+        # EP Flux - vertical component
         #------------------------------------------------------------------------------------------
         if var == "epfz":
             mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],
@@ -317,7 +317,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # vtem
+        # TEM meridional wind 
         #------------------------------------------------------------------------------------------
         if var == "vtem":
             mseasons.plot.contourf(ax=axs[3,0], levels = 21, y='lev', yscale='log',
@@ -342,7 +342,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # wtem
+        # TEM vertical wind
         #------------------------------------------------------------------------------------------
         if var == "wtem":
             mseasons.plot.contourf(ax=axs[4,0], levels = 21, y='lev', yscale='log',
@@ -367,7 +367,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                             ylim=[1e2,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # psitem
+        # TEM mass stream function
         #------------------------------------------------------------------------------------------
         if var == "psitem":
             mseasons.plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
@@ -386,7 +386,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # utendepfd
+        # EP flux divergence
         #------------------------------------------------------------------------------------------
         if var == "utendepfd":
             mseasons.plot(ax=axs[6,0], y='lev', yscale='log',
@@ -405,7 +405,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                                     ylim=[1e2,2],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # utendvtem
+        # EP flux divergence - meridional component
         #------------------------------------------------------------------------------------------
         if var == "utendvtem":
             mseasons.plot(ax=axs[7,0], y='lev', yscale='log',vmax=0.001, ylim=[1e3,1],
@@ -421,7 +421,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 dseasons.plot(ax=axs[7,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # utendwtem
+        # EP flux divergence - meridionverticalal component
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
             mseasons.plot(ax=axs[8,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
@@ -444,9 +444,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     plt.setp(axs, xticks=np.arange(-80,81,20), xlabel='latitude', title="")
 
     #Set titles of subplots
-    #Set case names in first subplot only
-    uzm = ds["uzm"].long_name.replace(" ", "\ ")
-    
+    #Set case names in first subplot only (zonal mean zonal wind)    
     longname = res["uzm"]["long_name"]
 
     test_yrs = f"{climo_yrs['test'][0]}-{climo_yrs['test'][1]}"
@@ -469,8 +467,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
         #Variable plot title name
         longname = vres["long_name"]
-        var_name = ds[var_list[i]].long_name.replace(" ", "\ ")
-        #axs[i,1].set_title("$\mathbf{"+var_name+"}$"+"\n",fontsize=14)
         axs[i,1].set_title(longname+"\n",fontsize=14)
     
     #Adjust subplots
