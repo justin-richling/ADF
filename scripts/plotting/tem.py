@@ -210,6 +210,9 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #Grab variable defaults for this variable
         vres = res[var]
 
+        #Variable plot title name
+        longname = vres["long_name"]
+
         #Gather data for both cases
         mdata = ds[var].squeeze()
         odata = ds_base[var].squeeze()
@@ -446,7 +449,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     #Set titles of subplots
     #Set case names in first subplot only
     #uzm = ds["uzm"].long_name.replace(" ", "\ ")
-    longname = vres["long_name"]
+    
     print(longname)
 
     test_yrs = f"{climo_yrs['test'][0]}-{climo_yrs['test'][1]}"
