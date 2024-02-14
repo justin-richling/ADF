@@ -101,11 +101,11 @@ def tem(adf):
 
     #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
     if "qbo" in adf.plotting_scripts:
-        var_list = ['uzm','tzm','epfy','epfz','vtem','wtem',
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
     #Otherwise keep it simple
     else:
-        var_list = ['uzm','tzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     #Baseline TEM location
     input_loc_idx = Path(tem_loc) / base_name
@@ -285,7 +285,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
         # Zonal mean temperature
         #------------------------------------------------------------------------------------------
-        if var == "tzm":
+        if var == "thzm":
             mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
                                     cbar_kwargs={'label': ds[var].units})
 
