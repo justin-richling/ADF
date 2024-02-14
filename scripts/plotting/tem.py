@@ -139,7 +139,7 @@ def tem(adf):
     #Loop over season dictionary:
     for s in seasons:
         #Location to save plots
-        plot_name = plot_location / f"{s}_TEM_Mean.png"
+        plot_name = plot_location / f"TEM_{s}_Mean.png"
         
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
                                 facecolor='w', edgecolor='k')
@@ -187,7 +187,7 @@ def tem(adf):
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
         #Add plot to website (if enabled):
-        adf.add_website_data(plot_name, "TEM", case_name, season=s)
+        adf.add_website_data(plot_name, "TEM", case_name, season=s, ext="")
 
     print("  ...TEM plots have been generated successfully.")
 
