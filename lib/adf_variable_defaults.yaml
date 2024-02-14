@@ -1016,15 +1016,23 @@ uzm:
 vzm:
   ylim: [1e3,1]
   units: m s-1
-  long_name: Zonal-Mean meridional wind
+  long_name: Zonal mean meridional wind ($\bar{v}$) 
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "vzm"
 
+uzt:
+  ylim: [1e3,1]
+  units: m s-1
+  long_name: Zonal mean temperature ($\bar{T}$)
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "uzm"
+
 epfy:
   ylim: [1e2,1]
-  units: m3 s−2
-  long_name: northward component of the Eliassen–Palm flux
+  units: K
+  long_name: EP Flux - meridional component ($F_{y}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "epfy"
@@ -1032,7 +1040,7 @@ epfy:
 epfz:
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: upward component of the Eliassen–Palm flux
+  long_name: EP Flux - vertical component ($F_{z}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "epfz"
@@ -1040,7 +1048,7 @@ epfz:
 vtem:
   ylim: [1e2,1]
   units: m/s
-  long_name: Transformed Eulerian mean northward wind
+  long_name: TEM meridional wind ($\bar{v}^{*}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "vtem"
@@ -1048,7 +1056,7 @@ vtem:
 wtem:
   ylim: [1e2,1]
   units: m/s
-  long_name: Transformed Eulerian mean upward wind
+  long_name: TEM vertical wind ($\bar{w}^{*}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "wtem"
@@ -1056,7 +1064,7 @@ wtem:
 psitem:
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: Transformed Eulerian mean mass stream function
+  long_name: TEM mass stream function $\bar{\chi}^{*}$
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "psitem"
@@ -1064,7 +1072,7 @@ psitem:
 utendepfd:
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
+  long_name: EP flux divergence ($\nabla \cdot F$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendepfd"
@@ -1072,7 +1080,7 @@ utendepfd:
 utendvtem:
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: tendency of eastward wind due to TEM northward wind advection and the coriolis term
+  long_name: EP flux divergence - meridional component ($F_{yy}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendvtem"
@@ -1080,7 +1088,7 @@ utendvtem:
 utendwtem:
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: tendency of eastward wind due to TEM upward wind advection
+  long_name: EP flux divergence - meridionverticalal component ($F_{zz})
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendwtem"
