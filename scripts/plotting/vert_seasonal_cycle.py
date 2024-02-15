@@ -230,7 +230,8 @@ def vert_seasonal_cycle(adfobj):
         plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_SeasonalCycle_Mean.{plot_type}"
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         redo_plot = adfobj.get_basic_info('redo_plot')
-        if (not redo_plot) and plot_name.is_file():
+        #if (not redo_plot) and plot_name.is_file():
+        if 1==0:
             #Add already-existing plot to website (if enabled):
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
