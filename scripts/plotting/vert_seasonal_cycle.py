@@ -600,9 +600,9 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
         ptype = "SHPolar"
     if hemi == "n":
         ptype = "NHPolar"
-    plot_name = plot_loc / f"PolarCapT_ANN_{ptype}_Zonal_Mean.{plot_type}"
+    plot_name = plot_loc / f"T_ANN_{ptype}_WACCM_Mean.{plot_type}"
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(plot_name, "PolarCapT", case_name, season="ANN", plot_type="WACCM", category="PolarCap",ext="Zonal_Mean")
+    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type="WACCM", category="PolarCap",ext="Mean",non_season=True)
     #adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="WACCM", category="Zonal",non_season=True,ext="Zonal_Mean")
 ########
 
@@ -711,13 +711,14 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
     plot_type = "png"
     ptype = "Special"
     #Q_ANN_TapeRecorder_Mean
-    plot_name = plot_loc / f"CPT_ANN_WACCM_Zonal_Mean.{plot_type}"
+    plot_name = plot_loc / f"CPT_ANN_WACCM_Tropo_Mean.{plot_type}"
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                             plot_type="WACCM",
-                            ext="Zonal_Mean",
-                            category="Zonal"
+                            ext="Tropo_Mean",
+                            category="Tropo",
+                            non_season=True
                             )
 
 ########
