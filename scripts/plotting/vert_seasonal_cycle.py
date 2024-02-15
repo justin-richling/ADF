@@ -212,14 +212,21 @@ def vert_seasonal_cycle(adfobj):
     obs_ds_dict = {"monthly":obs_month_dict,
                    "seasonal":obs_seas_dict}
     
-    """
+    plot_locations = adfobj.plot_location
+    #print("plot_locations",plot_locations)
+    plot_loc = Path(plot_locations[0])
+    plot_type = "png"
     for cam_var in calc_var_list:
         for month in [6,12]:
-            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
+            
+            plot_name = plot_loc / f"{cam_var}_{month}_WACCM_SeasonalCycle_Mean.{plot_type}"
+            pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
+            adfobj.add_website_data(plot_name, cam_var, case_name, season=month, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
         for season in ["DJF", "JJA"]:
-            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
-            #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
-    """
+            plot_name = plot_loc / f"{cam_var}_{season}_WACCM_SeasonalCycle_Mean.{plot_type}"
+            pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
+            adfobj.add_website_data(plot_name, cam_var, case_name, season=season, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
+    
 
     #Polar Cap Temps
     for hemi in ["s","n"]:
@@ -285,8 +292,8 @@ def vert_seasonal_cycle(adfobj):
     pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
     adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                                 plot_type="WACCM",
-                                ext="Tropo_Mean",
-                                category="Tropo",
+                                ext="SeasonalCycle_Mean",
+                                category="Seasonal Cycle",
                                 )
     
 

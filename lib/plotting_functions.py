@@ -2607,20 +2607,10 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
     else:
         str_interval = interval
     fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=16,y=0.93)
-
-    #Add plot to website (if enabled):
-    #Special ADF variable which contains the output paths for
-    #all generated plots and tables:
-    #plot_locations = adfobj.get_basic_info('cam_diag_plot_loc', required=True)
-    #plot_loc = Path(plot_locations) / case_names[0]
-    plot_locations = adfobj.plot_location
-    #print("plot_locations",plot_locations)
-    plot_loc = Path(plot_locations[0])
-    plot_type = "png"
-    plot_name = plot_loc / f"{cam_var}_{str_interval}_WACCM_Zonal_Mean.{plot_type}"
+    
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
-    #plt.savefig(plot_name,dpi=300)
+    plt.close()
 
 
 
