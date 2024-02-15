@@ -226,7 +226,7 @@ def seasonal_cycle(adfobj):
             
             
             print(interval)
-            if interval is int:
+            if isinstance(interval, int):
                 interval = month_dict[interval]
                 season = "month"
                 plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
