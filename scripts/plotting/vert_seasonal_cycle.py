@@ -227,7 +227,7 @@ def vert_seasonal_cycle(adfobj):
         plot_locations = adfobj.plot_location
         plot_loc = Path(plot_locations[0])
         plot_type = "png"
-        plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_SeasonalCycle_Mean.{plot_type}"
+        plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         redo_plot = adfobj.get_basic_info('redo_plot')
         #if (not redo_plot) and plot_name.is_file():
