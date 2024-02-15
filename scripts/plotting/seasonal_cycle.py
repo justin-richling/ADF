@@ -225,7 +225,7 @@ def seasonal_cycle(adfobj):
         for interval in [6,12,"DJF", "JJA"]:
             
             
-            
+            print(interval)
             if interval is int:
                 interval = month_dict[interval]
                 season = "month"
@@ -234,6 +234,7 @@ def seasonal_cycle(adfobj):
             else:
                 season = "season"
                 plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
+            print(interval)
             pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
         
         adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
