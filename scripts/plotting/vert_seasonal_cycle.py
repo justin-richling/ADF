@@ -600,10 +600,10 @@ def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2
         ptype = "SHPolar"
     if hemi == "n":
         ptype = "NHPolar"
-    plot_name = plot_loc / f"T_ANN_{ptype}_Cap_Mean.{plot_type}"
+    plot_name = plot_loc / f"PolarCapT_ANN_{ptype}_Zonal_Mean.{plot_type}"
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type=ptype, category="PolarCap",ext="Cap_Mean")
-
+    adfobj.add_website_data(plot_name, "PolarCapT", case_name, season="ANN", plot_type=ptype, category="PolarCap",ext="Zonal_Mean")
+    #adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="WACCM", category="Zonal",non_season=True,ext="Zonal_Mean")
 ########
 
 def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
