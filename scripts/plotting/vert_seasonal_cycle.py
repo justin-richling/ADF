@@ -711,14 +711,14 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
     plot_type = "png"
     ptype = "Special"
     #Q_ANN_TapeRecorder_Mean
-    plot_name = plot_loc / f"CPT_ANN_WACCM_Mean.{plot_type}" #plot_page_T_ANN_CPT_Mean.html  
+    plot_name = plot_loc / f"CPT_ANN_WACCM_Tropo_Mean.{plot_type}" #plot_page_T_ANN_CPT_Mean.html  
     #plot_name = plot_loc / f"{cam_var}_{str_interval}_WACCM_Zonal_Mean.{plot_type}"
     #adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="WACCM", category="Zonal",non_season=True,ext="Zonal_Mean")
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                             plot_type="WACCM",
-                           #ext="CPT_Mean",
-                            category=None
+                            ext="Tropo_Mean",
+                            category="Tropo"
                             )
 
 ########
