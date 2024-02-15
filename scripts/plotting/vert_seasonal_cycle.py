@@ -282,7 +282,7 @@ def vert_seasonal_cycle(adfobj):
                                 category="Tropo",
                                 )
     """
-    pf.cold_point_temp(adfobj, case_names, cases_coords, cases_monthly)
+    pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
     adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                                 plot_type="WACCM",
                                 ext="Tropo_Mean",

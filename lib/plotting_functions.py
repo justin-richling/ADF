@@ -2744,7 +2744,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
 
 
 
-def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
+def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
     """
     """
 
@@ -2844,19 +2844,9 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
                                    )
                 cbar.add_lines(c)
     fig.suptitle(f"Cold Point Tropopause (CPT) - 90hPa",fontsize=16,y=0.97,horizontalalignment="center")
-    plot_locations = adfobj.plot_location
-    plot_loc = Path(plot_locations[0])
-    plot_type = "png"
-    ptype = "Special"
-    #Q_ANN_TapeRecorder_Mean
-    plot_name = plot_loc / f"CPT_ANN_WACCM_Tropo_Mean.{plot_type}"
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                            plot_type="WACCM",
-                            ext="Tropo_Mean",
-                            category="Tropo",
-                            )
+
 
 ########
 
