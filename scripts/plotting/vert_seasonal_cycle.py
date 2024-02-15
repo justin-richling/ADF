@@ -240,7 +240,8 @@ def vert_seasonal_cycle(adfobj):
         elif (redo_plot) and plot_name.is_file():
             plot_name.unlink()
 
-            pf.polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
+            #pf.polar_cap_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
+            pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
     
 
