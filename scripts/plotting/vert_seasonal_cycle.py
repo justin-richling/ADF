@@ -718,7 +718,7 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
     adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                             plot_type="WACCM",
                            #ext="CPT_Mean",
-                            
+                            category=None
                             )
 
 ########
