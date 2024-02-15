@@ -81,7 +81,19 @@ def seasonal_cycle(adfobj):
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables:
-    #plot_locations = adfobj.cam_diag_plot_loc
+    plot_locations = adfobj.plot_location
+    plot_loc = Path(plot_locations[0])
+
+    #Set plot file type:
+    # -- this should be set in basic_info_dict, but is not required
+    # -- So check for it, and default to png
+    basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    plot_type = basic_info_dict.get('plot_type', 'png')
+    print(f"\t NOTE: Plot type is set to {plot_type}")
+
+    # check if existing plots need to be redone
+    redo_plot = adfobj.get_basic_info('redo_plot')
+    print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
@@ -116,23 +128,6 @@ def seasonal_cycle(adfobj):
 
     #var_list = adfobj.diag_var_list
     var_list = calc_var_list + ['lat','lev','time']
-
-    #case_names = case_deets["case_names"]["cases"] + case_deets["case_names"]["baseline"]
-    #runs = [adfobj.get_cam_info("cam_case_name")[0],adfobj.get_cam_baseline_info("cam_case_name")[0]+"_fake",
-
-    #runs = [adfobj.get_cam_info("cam_case_name")[0],adfobj.get_cam_baseline_info("cam_case_name"),
-       #adfobj.get_cam_info("cam_case_name")[0]+"_fake2",
-       #adfobj.get_cam_info("cam_case_name")[0]+"_fake3",
-       #adfobj.get_cam_info("cam_case_name")[0]+"_fake4",
-       #adfobj.get_cam_info("cam_case_name")[0]+"_fake5",
-       #adfobj.get_cam_info("cam_case_name")[0]+"_fake6",
-       #adfobj.get_cam_info("cam_case_name")[0]+"_fake7",
-     #  ]
-    
-
-
-    
-
 
     #Get MERRA2 data and seasonal and monthly averages
     
@@ -212,10 +207,8 @@ def seasonal_cycle(adfobj):
     obs_ds_dict = {"monthly":obs_month_dict,
                    "seasonal":obs_seas_dict}
     
-    plot_locations = adfobj.plot_location
-    #print("plot_locations",plot_locations)
-    plot_loc = Path(plot_locations[0])
-    plot_type = "png"
+    #Zoanl Mean Wind and Temp vs MERRA2 and SABER
+    """
     for cam_var in calc_var_list:
         for month in [6,12]:
             
@@ -226,6 +219,24 @@ def seasonal_cycle(adfobj):
             plot_name = plot_loc / f"{cam_var}_{season}_WACCM_SeasonalCycle_Mean.{plot_type}"
             pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
             adfobj.add_website_data(plot_name, cam_var, case_name, season=season, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
+    """
+    
+    for cam_var in calc_var_list:
+        for interval in [6,12,"DJF", "JJA"]:
+            
+            
+            
+            if interval is int:
+                season_str = month_dict[interval]
+                season = "month"
+                plot_name = plot_loc / f"{cam_var}_{season_str}_WACCM_SeasonalCycle_Mean.{plot_type}"
+                #pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", interval)
+            else:
+                season = "season"
+                plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
+            pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
+        
+        adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
     
 
     #Polar Cap Temps
