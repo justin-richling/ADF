@@ -227,9 +227,9 @@ def seasonal_cycle(adfobj):
             
             
             if interval is int:
-                season_str = month_dict[interval]
+                interval = month_dict[interval]
                 season = "month"
-                plot_name = plot_loc / f"{cam_var}_{season_str}_WACCM_SeasonalCycle_Mean.{plot_type}"
+                plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
                 #pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", interval)
             else:
                 season = "season"
