@@ -250,15 +250,15 @@ def vert_seasonal_cycle(adfobj):
         adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
     
 
-    """
+    
     #Cold Point Temp/Tropopause @ 90hPa
     plot_locations = adfobj.plot_location
     plot_loc = Path(plot_locations[0])
     plot_type = "png"
     ptype = "Special"
-    plot_name = plot_loc / f"CPT_ANN_WACCM_Tropo_Mean.{plot_type}"
+    plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
-
+    """
     # Check redo_plot. If set to True: remove old plot, if it already exists:
     redo_plot = adfobj.get_basic_info('redo_plot')
     if (not redo_plot) and plot_name.is_file():
@@ -266,8 +266,8 @@ def vert_seasonal_cycle(adfobj):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                             plot_type="WACCM",
-                            ext="Tropo_Mean",
-                            category="Tropo",
+                            ext="SeasonalCycle_Mean",
+                            category="Seasonal Cycle",
                             )
 
         #Continue to next iteration:
@@ -282,6 +282,13 @@ def vert_seasonal_cycle(adfobj):
                                 category="Tropo",
                                 )
     """
+    pf.cold_point_temp(adfobj, case_names, cases_coords, cases_monthly)
+    adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                                plot_type="WACCM",
+                                ext="Tropo_Mean",
+                                category="Tropo",
+                                )
+    
 
 
 
