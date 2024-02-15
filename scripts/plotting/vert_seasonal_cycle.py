@@ -711,11 +711,12 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
     plot_type = "png"
     ptype = "Special"
     #Q_ANN_TapeRecorder_Mean
-    plot_name = plot_loc / f"T_ANN_CPT_Mean.{plot_type}"
+    plot_name = plot_loc / f"T_ANN_CPT_Mean.{plot_type}" #plot_page_T_ANN_CPT_Mean.html  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(plot_name, "T", case_name, season="ANN",
                             category="CPT",
-                            ext="CPT_Mean"
+                            ext="CPT_Mean",
+                            plot_type=""
                             )
 
 ########
