@@ -2624,7 +2624,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
 
 
 
-def polar_car_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly):
+def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly):
     """
     """
 
