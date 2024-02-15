@@ -210,12 +210,12 @@ def vert_seasonal_cycle(adfobj):
                    "seasonal":obs_seas_dict}
     
     
-    for cam_var in calc_var_list:
-        for month in [6,12]:
-            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
-        for season in ["DJF", "JJA"]:
-            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
-            #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
+   #for cam_var in calc_var_list:
+   #     for month in [6,12]:
+   #         comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
+   #     for season in ["DJF", "JJA"]:
+   #         comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
+   #         #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
 
     for hemi in ["s","n"]:
         polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
