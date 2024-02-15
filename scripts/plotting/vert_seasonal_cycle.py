@@ -217,8 +217,8 @@ def vert_seasonal_cycle(adfobj):
    #         comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
    #         #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
 
-    for hemi in ["s","n"]:
-        polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
+    #for hemi in ["s","n"]:
+    #    polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
 
     cold_point_temp(adfobj, case_names, cases_coords, cases_monthly)
 
@@ -718,7 +718,6 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
                             plot_type="WACCM",
                             ext="Tropo_Mean",
                             category="Tropo",
-                            non_season=True
                             )
 
 ########
