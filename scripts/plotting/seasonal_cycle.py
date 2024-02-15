@@ -62,7 +62,7 @@ obs_cam_vars={"saber":{"U":"u", "T":"temp"},
 #
 # --- Main Function Shares Name with Module: regional_map_multicase ---
 #
-def vert_seasonal_cycle(adfobj):
+def seasonal_cycle(adfobj):
     """
     Chemistry Map main function
         * Initially start with  Zonal maps
@@ -230,10 +230,7 @@ def vert_seasonal_cycle(adfobj):
 
     #Polar Cap Temps
     for hemi in ["s","n"]:
-        
-        plot_locations = adfobj.plot_location
-        plot_loc = Path(plot_locations[0])
-        plot_type = "png"
+
         plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         redo_plot = adfobj.get_basic_info('redo_plot')
@@ -247,9 +244,7 @@ def vert_seasonal_cycle(adfobj):
             #pass
         elif (redo_plot) and plot_name.is_file():
             plot_name.unlink()
-            print("here?")
 
-            #pf.polar_cap_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
             pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
         print("making plots, eh?")
@@ -259,10 +254,6 @@ def vert_seasonal_cycle(adfobj):
 
     
     #Cold Point Temp/Tropopause @ 90hPa
-    plot_locations = adfobj.plot_location
-    plot_loc = Path(plot_locations[0])
-    plot_type = "png"
-    ptype = "Special"
     plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
     """
