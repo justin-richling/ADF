@@ -229,12 +229,13 @@ def seasonal_cycle(adfobj):
             if isinstance(interval, int):
                 interval = month_dict[interval]
                 season = "month"
-                plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
+                #plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
                 #pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", interval)
             else:
                 season = "season"
-                plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
+                
             print(interval)
+            plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
             pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
         
         adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)

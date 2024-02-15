@@ -2452,7 +2452,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
 
         if time_avg == "month":
             case_ds_dict["monthly"]
-            str_month = month_dict[interval]
+            str_month = interval #month_dict[interval]
             data_array = case_ds_dict["monthly"][case_name][cam_var][str_month]
             #data_array = case_runs_monthly[case_name][cam_var][month_dict[interval]]
 
@@ -2603,7 +2603,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
 
     #Set up main plot title
     if time_avg == "month":
-        str_interval = month_dict[interval].lower().capitalize()
+        str_interval = interval.lower().capitalize() #month_dict[interval].lower().capitalize()
     else:
         str_interval = interval
     fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=16,y=0.93)
