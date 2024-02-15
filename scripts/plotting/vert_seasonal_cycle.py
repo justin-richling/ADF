@@ -705,7 +705,7 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
                                     ticks=np.arange(190,221,5)
                                    )
                 cbar.add_lines(c)
-    fig.suptitle(f"Cold Point Tropopause (CPT) - 90hPa",fontsize=16,y=0.93,horizontalalignment="center")
+    fig.suptitle(f"Cold Point Tropopause (CPT) - 90hPa",fontsize=16,y=0.97,horizontalalignment="center")
     plot_locations = adfobj.plot_location
     plot_loc = Path(plot_locations[0])
     plot_type = "png"
