@@ -71,6 +71,9 @@ def vert_seasonal_cycle(adfobj):
         
     """
 
+    #CAM diagnostic plotting functions:
+    import plotting_functions as pf
+
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
     #Extract cam history files location:
@@ -209,18 +212,70 @@ def vert_seasonal_cycle(adfobj):
     obs_ds_dict = {"monthly":obs_month_dict,
                    "seasonal":obs_seas_dict}
     
+    """
+    for cam_var in calc_var_list:
+        for month in [6,12]:
+            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
+        for season in ["DJF", "JJA"]:
+            comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
+            #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
+    """
+
+    #Polar Cap Temps
+    for hemi in ["s","n"]:
+        
+        plot_locations = adfobj.plot_location
+        plot_loc = Path(plot_locations[0])
+        plot_type = "png"
+        plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_SeasonalCycle_Mean.{plot_type}"
+        # Check redo_plot. If set to True: remove old plot, if it already exists:
+        redo_plot = adfobj.get_basic_info('redo_plot')
+        if (not redo_plot) and plot_name.is_file():
+            #Add already-existing plot to website (if enabled):
+            adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+            adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
+
+            #Continue to next iteration:
+            #pass
+        elif (redo_plot) and plot_name.is_file():
+            plot_name.unlink()
+
+            pf.polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
+            adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
     
-   #for cam_var in calc_var_list:
-   #     for month in [6,12]:
-   #         comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
-   #     for season in ["DJF", "JJA"]:
-   #         comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
-   #         #comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
 
-    #for hemi in ["s","n"]:
-    #    polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
+    """
+    #Cold Point Temp/Tropopause @ 90hPa
+    plot_locations = adfobj.plot_location
+    plot_loc = Path(plot_locations[0])
+    plot_type = "png"
+    ptype = "Special"
+    plot_name = plot_loc / f"CPT_ANN_WACCM_Tropo_Mean.{plot_type}"
 
-    cold_point_temp(adfobj, case_names, cases_coords, cases_monthly)
+
+    # Check redo_plot. If set to True: remove old plot, if it already exists:
+    redo_plot = adfobj.get_basic_info('redo_plot')
+    if (not redo_plot) and plot_name.is_file():
+        #Add already-existing plot to website (if enabled):
+        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                            plot_type="WACCM",
+                            ext="Tropo_Mean",
+                            category="Tropo",
+                            )
+
+        #Continue to next iteration:
+        #pass
+    elif (redo_plot) and plot_name.is_file():
+        plot_name.unlink()
+
+        pf.cold_point_temp(adfobj, case_names, cases_coords, cases_monthly)
+        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                                plot_type="WACCM",
+                                ext="Tropo_Mean",
+                                category="Tropo",
+                                )
+    """
 
 
 
