@@ -465,13 +465,13 @@ def comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, tim
     #print("plot_locations",plot_locations)
     plot_loc = Path(plot_locations[0])
     plot_type = "png"
-    plot_name = plot_loc / f"{cam_var}_{str_interval}_Zonal_SeasCycle_Mean.{plot_type}"
+    plot_name = plot_loc / f"{cam_var}_{str_interval}_WACCM_Zonal_Mean.{plot_type}"
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     #if time_avg == "month":
     #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleMonth",non_season=True)
     #else:
     #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleSeason",non_season=True)
-    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal", category="SeasonalCycle",non_season=True,ext="SeasCycle_Mean")
+    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="WACCM", category="Zonal",non_season=True,ext="Zonal_Mean")
     #Write the figure to provided workspace/file:
     
     #plt.savefig(plot_name,dpi=300)
@@ -711,10 +711,12 @@ def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
     plot_type = "png"
     ptype = "Special"
     #Q_ANN_TapeRecorder_Mean
-    plot_name = plot_loc / f"CPT_ANN_Special_Mean.{plot_type}" #plot_page_T_ANN_CPT_Mean.html  
+    plot_name = plot_loc / f"CPT_ANN_WACCM_Mean.{plot_type}" #plot_page_T_ANN_CPT_Mean.html  
+    #plot_name = plot_loc / f"{cam_var}_{str_interval}_WACCM_Zonal_Mean.{plot_type}"
+    #adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="WACCM", category="Zonal",non_season=True,ext="Zonal_Mean")
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                            #category="CPT",
+                            plot_type="WACCM",
                            #ext="CPT_Mean",
                             
                             )
