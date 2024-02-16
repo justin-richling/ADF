@@ -139,7 +139,7 @@ def tem(adf):
     #Loop over season dictionary:
     for s in seasons:
         #Location to save plots
-        plot_name = plot_location / f"TEM_{s}_Special_Mean.png"
+        plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
         #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
         
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
@@ -152,7 +152,7 @@ def tem(adf):
             if (not redo_plot) and plot_name.is_file():
                 #Add already-existing plot to website (if enabled):
                 adf.debug_log(f"'{plot_name}' exists and clobber is false.")
-                adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM")
+                adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="WACCM_Mean")
 
                 #Continue to next iteration:
                 continue
@@ -188,7 +188,7 @@ def tem(adf):
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
         #Add plot to website (if enabled):
-        adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM")
+        adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="WACCM_Mean")
 
     print("  ...TEM plots have been generated successfully.")
 
