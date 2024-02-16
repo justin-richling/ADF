@@ -223,7 +223,7 @@ def seasonal_cycle(adfobj):
             pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
             adfobj.add_website_data(plot_name, cam_var, case_name, season=season, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
     """
-    
+    '''
     for cam_var in calc_var_list:
         for interval in [6,12,"DJF", "JJA"]:
             if isinstance(interval, int):
@@ -296,6 +296,7 @@ def seasonal_cycle(adfobj):
                                 ext="SeasonalCycle_Mean",
                                 category="Seasonal Cycle",
                                 )
+    '''
 
 
     #WACCM QBO

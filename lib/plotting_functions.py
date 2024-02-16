@@ -3011,7 +3011,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #TODO: this will need to be adjusted??
         #Curently this is finding (start_idx)th month and then going out 9 years
         #QUESTION: what if the data doesn't have 9 years? - we will need to clip this...
-        start_idx = 119-24
+        start_idx = 0 #119-24
         #print(plotdata[start_idx:start_idx+(12*9),:].shape)
         axes[main_key[idx]].contourf(lev_grid[start_idx:start_idx+(12*9)+1,:], time_grid[start_idx:start_idx+(12*9)+1,:], plotdata[start_idx:start_idx+(12*9)+1,:],
                                     levels=contour_levels, cmap='RdBu_r')
