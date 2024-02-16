@@ -152,7 +152,7 @@ def tem(adf):
             if (not redo_plot) and plot_name.is_file():
                 #Add already-existing plot to website (if enabled):
                 adf.debug_log(f"'{plot_name}' exists and clobber is false.")
-                adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="WACCM_Mean")
+                adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
 
                 #Continue to next iteration:
                 continue
@@ -188,7 +188,7 @@ def tem(adf):
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
         #Add plot to website (if enabled):
-        adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="WACCM_Mean")
+        adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
 
     print("  ...TEM plots have been generated successfully.")
 
