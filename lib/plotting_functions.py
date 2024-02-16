@@ -3054,7 +3054,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             axes[side2_key[idx]].set_title('Period',y=y)
 
     # Adjust the vertical spacing (hspace)
-    plt.subplots_adjust(hspace=0.3)
+    plt.subplots_adjust(hspace=0.5)
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
 #####################
