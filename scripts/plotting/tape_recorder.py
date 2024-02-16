@@ -98,7 +98,7 @@ def tape_recorder(adfobj):
     if (not redo_plot) and plot_name.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "Tape Recorder", None, season="ANN", ext="TapeRecorder_Mean")
+        adfobj.add_website_data(plot_name, "Tape Recorder", None, season="ANN", plot_type="WACCM", ext="TapeRecorder_Mean")
         #adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
         return
 
@@ -189,7 +189,7 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, "Tape Recorder", None, season="ANN", ext="TapeRecorder_Mean")
+    adfobj.add_website_data(plot_name, "Tape Recorder", None, season="ANN", plot_type="WACCM", ext="TapeRecorder_Mean")
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
