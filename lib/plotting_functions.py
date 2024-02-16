@@ -3013,7 +3013,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #QUESTION: what if the data doesn't have 9 years? - we will need to clip this...
         start_idx = 119-24
         #print(plotdata[start_idx:start_idx+(12*9),:].shape)
-        axes[main_key[idx]].contourf(lev_grid, time_grid, plotdata[start_idx:start_idx+(12*9)+1,:],
+        axes[main_key[idx]].contourf(lev_grid[start_idx:start_idx+(12*9)+1,:], time_grid[start_idx:start_idx+(12*9)+1,:], plotdata[start_idx:start_idx+(12*9)+1,:],
                                     levels=contour_levels, cmap='RdBu_r')
 
         axes[main_key[idx]].set_ylim(y_lims[0],y_lims[1])
@@ -3034,8 +3034,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             axes[main_key[idx]].set_xticklabels(np.arange(int(yrs[0]+int(nt_sub/12)),int(yrs[0]+int(nt_sub/12))+int(nt_sub/12)+1,1))
         """
         
-        #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
-        #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
+        axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
+        axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
 
         #Case QBO Amplitude side axis
         amp = qbo_amplitude(plotdata)
