@@ -100,7 +100,7 @@ def tape_recorder(adfobj):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         
         #adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
-        adfobj.add_website_data(plot_name, "Q_tape_recorder", None, season="ANN", multi_case=True)
+        adfobj.add_website_data(plot_name, "TapeRecorder", None, season="ANN", multi_case=True)
         #adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True, plot_type="WACCM",category="Seasonal Cycle",ext="WACCM_TapeRecorder_Mean") 
         return
 
