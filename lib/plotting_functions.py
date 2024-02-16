@@ -2992,7 +2992,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         yrs = syear_cases[idx]
         
         #Get number of time steps
-        nt = len(case_data['date'])
+        nt = len(case_data['time'])
         #If the number is greater than 10 years, clip it to 10 years?
         if nt > 120:
             nt_sub = 120
