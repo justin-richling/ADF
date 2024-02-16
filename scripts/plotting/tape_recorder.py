@@ -99,7 +99,8 @@ def tape_recorder(adfobj):
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         
-        adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+        #adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+        adfobj.add_website_data(plot_name, "Q", None, season="ANN", multi_case=True)
         #adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True, plot_type="WACCM",category="Seasonal Cycle",ext="WACCM_TapeRecorder_Mean") 
         return
 
@@ -190,7 +191,7 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+    adfobj.add_website_data(plot_name, "Q", None, season="ANN", multi_case=True)
     #adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True, plot_type="WACCM",category="Seasonal Cycle",ext="WACCM_TapeRecorder_Mean")   
 
     #Notify user that script has ended:
