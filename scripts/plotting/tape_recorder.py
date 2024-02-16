@@ -187,7 +187,7 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+    adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True, plot_type="WACCM",category="Seasonal Cycle")    
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")

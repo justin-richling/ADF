@@ -99,6 +99,8 @@ def seasonal_cycle(adfobj):
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
+    nicknames = adfobj.case_nicknames["test_nicknames"]
+
     if not adfobj.get_basic_info("compare_obs"):
         obs = False
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
@@ -112,8 +114,9 @@ def seasonal_cycle(adfobj):
         eyear_cases = eyear_cases + [eyear_baseline]
 
         #Grab all case nickname(s)
-        test_nicknames = adfobj.case_nicknames["test_nicknames"]
+        #test_nicknames = adfobj.case_nicknames["test_nicknames"]
         base_nickname = adfobj.case_nicknames["base_nickname"]
+        nicknames = nicknames + [base_nickname]
 
         case_names = case_names + data_list
 
@@ -199,8 +202,8 @@ def seasonal_cycle(adfobj):
 
 
     #Get Obs and seasonal and monthly averages
-    saber_monthly, saber_seasonal = saber_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc")
-    merra2_monthly, merra2_seasonal = merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
+    saber, saber_monthly, saber_seasonal = saber_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc")
+    merra2, merra2_monthly, merra2_seasonal = merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
 
     obs_seas_dict = {"saber":saber_seasonal, "merra":merra2_seasonal}
     obs_month_dict = {"saber":saber_monthly, "merra":merra2_monthly}
@@ -223,18 +226,12 @@ def seasonal_cycle(adfobj):
     
     for cam_var in calc_var_list:
         for interval in [6,12,"DJF", "JJA"]:
-            
-            
-            print(interval)
             if isinstance(interval, int):
                 interval = month_dict[interval]
                 season = "month"
-                #plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
-                #pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", interval)
             else:
                 season = "season"
-                
-            print(interval)
+
             plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
             pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
         
@@ -299,507 +296,22 @@ def seasonal_cycle(adfobj):
                                 ext="SeasonalCycle_Mean",
                                 category="Seasonal Cycle",
                                 )
+
+
+    #WACCM QBO
+    #---------
+    plot_name = plot_loc / f"QBO_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+    pf.waccm_qbo(plot_name, case_names, nicknames, cases_coords, merra2, syear_cases, eyear_cases)
+    adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
+                                plot_type="WACCM",
+                                ext="SeasonalCycle_Mean",
+                                category="Seasonal Cycle",
+                                )
     
 
 
 
 
-
-"""
-
-case_deets = {"years":{"syears":syear_cases,"eyears":eyear_cases,
-                                  "syear_baseline":syear_baseline,"eyear_baseline":eyear_baseline},
-                 "nicknames":{"cases":test_nicknames,
-                             "baseline":base_nickname},
-                 "case_names":{"cases":case_names,
-                               "baseline":data_name},
-                 "ptype":plot_type
-                }
-"""
-
-def comparison_plots(adfobj, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
-    """
-
-    """
-
-    #Get plotting details for variable
-    levs = cont_ranges[cam_var]["levs"]
-    diff_levs = cont_ranges[cam_var]["diff_levs"]
-    units = cont_ranges[cam_var]["units"]
-
-    #Grab obs variable corresponding to CAM variable
-    saber_var = obs_cam_vars['saber'][cam_var]
-    merra_var = obs_cam_vars['merra'][cam_var]
-
-    font_size = 8
-
-    #Get number of test cases (number of columns)
-    casenum = len(case_names)
-
-    #Number of obs to compare
-    #Currently, just compared to MERRA2 and SABER
-    obsnum = 2
-    nrows = obsnum+1
-
-    #Set up plot
-    fig = plt.figure(figsize=(casenum*4,nrows*5))
-
-    for idx,case_name in enumerate(case_names):
-        """
-        cases_coords[run] = case_coords
-        cases_monthly[run] = case_monthly
-        cases_seasonal[run] = case_seasonal
-    
-    #Make nested dictionary of all case data
-    case_ds_dict = {"coords":cases_coords,
-                    "monthly":cases_monthly,
-                    "seasonal":cases_seasonal}
-        """
-        data_coords = case_ds_dict["coords"][case_name]
-        #data_coords = case_runs[case_name]
-        data_lev = data_coords['lev']
-        data_lat = data_coords['lat']
-
-        #Set lat/lev grid for plotting
-        [lat_grid, lev_grid] = np.meshgrid(data_lev,data_lat)
-
-        if time_avg == "season":
-            #case_ds_dict["seasonal"]
-            data_array = case_ds_dict["seasonal"][case_name][cam_var][interval]
-            #data_array = case_runs_seasonal[case_name][cam_var][interval]
-
-            #Make Obs interpolated field from case
-            #merra_ds = merra2_seasonal[merra_var][interval]
-            merra_ds = obs_ds_dict["seasonal"]["merra"][merra_var][interval]
-            merra_rfield = merra_ds.interp(lat=data_lat, lev=data_lev, method='linear')
-
-            #saber_ds = saber_seasonal[saber_var][interval]
-            saber_ds = obs_ds_dict["seasonal"]["saber"][saber_var][interval]
-            saber_rfield = saber_ds.interp(lat=data_lat, lev=data_lev, method='linear')
-
-        if time_avg == "month":
-            case_ds_dict["monthly"]
-            str_month = month_dict[interval]
-            data_array = case_ds_dict["monthly"][case_name][cam_var][str_month]
-            #data_array = case_runs_monthly[case_name][cam_var][month_dict[interval]]
-
-            #Make Obs interpolated fields from case
-            #merra_ds = merra2_monthly[merra_var][str_month]
-            merra_ds = obs_ds_dict["monthly"]["merra"][merra_var][str_month]
-            merra_rfield = merra_ds.interp(lat=data_lat, lev=data_lev, method='linear')
-
-            #saber_ds = saber_monthly[saber_var][str_month]
-            saber_ds = obs_ds_dict["monthly"]["saber"][saber_var][str_month]
-            saber_rfield = saber_ds.interp(lat=data_lat, lev=data_lev, method='linear')
-
-        #Case plots (contours and contour fill)
-        #######################################
-
-        #Set up set of axes for first row
-        ax = fig.add_subplot(nrows, casenum, idx+1)
-
-        #Plot case contour fill
-        cf=plt.contourf(lev_grid, lat_grid,
-                        data_array.transpose(transpose_coords=True),
-                        levels=levs, cmap='RdBu_r')
-
-        #Plot case contours (for highlighting)
-        plt.contour(lev_grid, lat_grid,
-                        data_array.transpose(transpose_coords=True),
-                    colors="black",linewidths=0.5,levels=levs,zorder=100)
-
-        #Format axes
-        plt.yscale("log")
-        ax.set_ylim(1000,0.0001)
-        plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
-        plt.xticks(np.arange(-90,91,45),rotation=40)
-        ax.set_xticklabels([])
-        if idx > 0:
-            plt.yticks([])
-        else:
-            plt.ylabel('hPa')
-
-        #Set individual plot title
-        plt.title(case_name, fontsize=font_size)
-
-        #Make colorbar on last plot only
-        if idx == casenum-1:
-            axins = inset_axes(ax,
-                        width="5%",
-                        height="80%",
-                        loc='center right',
-                        borderpad=-1.5
-                       )
-            fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
-
-        #Difference with MERRA2 and MERRA2 contours
-        ###########################################
-
-        #Set up new set of axes for second row
-        ax = fig.add_subplot(nrows, casenum, casenum+idx+1)
-
-        #Plot interpolated contour
-        contour = plt.contour(lev_grid, lat_grid, merra_rfield.transpose(transpose_coords=True),
-                    colors='black', levels=levs,
-                    negative_linestyles='dashed', linewidths=.5, alpha=0.5)
-        if idx == 0:
-            #Add a legend for the contour lines for first plot only
-            legend_elements = [Line2D([0], [0],
-                               color=contour.collections[0].get_edgecolor(),
-                               label='MERRA2 interp')]
-
-            ax.legend(handles=legend_elements, loc='upper right' )
-        #End if
-
-        #Plot difference contour fill
-        cf=plt.contourf(lev_grid, lat_grid,
-                        (data_array-merra_rfield).transpose(transpose_coords=True),
-                        levels=diff_levs, cmap='RdBu_r')
-        #Format axes
-        plt.yscale("log")
-        ax.set_ylim(1000,0.1)
-        plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
-        plt.xticks(np.arange(-90,91,45),rotation=40)
-        ax.set_xticklabels([])
-        if idx > 0:
-            plt.yticks([])
-        else:
-            plt.ylabel('hPa')
-
-        #Set individual plot title
-        local_title = f'{case_name}\n {delta_symbol} from MERRA2'
-        plt.title(local_title, fontsize=font_size)
-
-        #Make colorbar on last plot only
-        if idx == casenum-1:
-            axins = inset_axes(ax,
-                        width="5%",
-                        height="80%",
-                        loc='center right',
-                        borderpad=-1.5
-                       )
-            fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
-
-        #Difference with SABER and SABER contours
-        #########################################
-
-        #Set up new set of axes for third row
-        ax = fig.add_subplot(nrows, casenum, (casenum*2)+idx+1)
-
-        #Plot interpolated contour
-        contour = plt.contour(lev_grid, lat_grid, saber_rfield.transpose(transpose_coords=True),
-                    colors='black', levels=levs,
-                    negative_linestyles='dashed', linewidths=.5, alpha=0.5)
-        if idx == 0:
-            #Add a legend for the contour lines for first plot only
-            legend_elements = [Line2D([0], [0],
-                               color=contour.collections[0].get_edgecolor(),
-                               label='SABER interp')]
-
-            ax.legend(handles=legend_elements, loc='upper right')
-        #End if
-
-        #Plot difference contour fill
-        cf=plt.contourf(lev_grid, lat_grid,
-                        (data_array-saber_rfield).transpose(transpose_coords=True),
-                        levels=diff_levs, cmap='RdBu_r')
-
-        #Format axes
-        plt.yscale("log")
-        ax.set_ylim(1000,0.1)
-        plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
-        plt.xticks(np.arange(-90,91,45),rotation=40)
-        if idx > 0:
-            plt.yticks([])
-        else:
-            plt.ylabel('hPa')
-
-        #Set individual plot title
-        local_title = f'{case_name}\n {delta_symbol} from SABER'
-        plt.title(local_title, fontsize=font_size)
-
-        #Make colorbar on last plot only
-        if idx == casenum-1:
-            axins = inset_axes(ax,
-                        width="5%",
-                        height="80%",
-                        loc='center right',
-                        borderpad=-1.5
-                       )
-            fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
-
-    #Set up main plot title
-    if time_avg == "month":
-        str_interval = month_dict[interval].lower().capitalize()
-    else:
-        str_interval = interval
-    fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=16,y=0.93)
-
-    #Add plot to website (if enabled):
-    #Special ADF variable which contains the output paths for
-    #all generated plots and tables:
-    #plot_locations = adfobj.get_basic_info('cam_diag_plot_loc', required=True)
-    #plot_loc = Path(plot_locations) / case_names[0]
-    plot_locations = adfobj.plot_location
-    #print("plot_locations",plot_locations)
-    plot_loc = Path(plot_locations[0])
-    plot_type = "png"
-    plot_name = plot_loc / f"{cam_var}_{str_interval}_WACCM_Zonal_Mean.{plot_type}"
-    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    #if time_avg == "month":
-    #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleMonth",non_season=True)
-    #else:
-    #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleSeason",non_season=True)
-    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="WACCM", category="Zonal",non_season=True,ext="Zonal_Mean")
-    #Write the figure to provided workspace/file:
-    
-    #plt.savefig(plot_name,dpi=300)
-    
-
-
-
-def polar_car_temp(adfobj, hemi, case_names, cases_coords, cases_monthly, merra2_monthly):
-    """
-    """
-
-    temp_levs = cont_ranges["T"]["levs"]
-
-    font_size = 8
-    if hemi == "s":
-        slat = -90
-        nlat = -60
-    if hemi == "n":
-        slat = 60
-        nlat = 90
-
-    nplots = len(case_names)
-    if nplots > 4:
-        ncols = 4
-    else:
-        ncols = nplots
-    #End if
-    ncols = 4
-    nrows = int(np.ceil(nplots/ncols))
-
-    fig = plt.figure(figsize=(2*7,nrows*4))
-
-    for idx,case_name in enumerate(case_names):
-        #ds = case_runs[case_name]
-        ds = cases_coords[case_name]
-        ds_month = cases_monthly[case_name]
-
-        rfield_seas = np.zeros((12,len(ds['lev']),len(ds['lat'])))
-        rfield_seas = xr.DataArray(rfield_seas, dims=['month','lev', 'lat'],
-                                            coords={'month': np.arange(1,13,1),
-                                                    'lev': ds['lev'],
-                                                    'lat': ds['lat']})
-
-        case_seas = np.zeros((12,len(ds['lev']),len(ds['lat'])))
-        case_seas = xr.DataArray(case_seas, dims=['month','lev', 'lat'],
-                                 coords={'month': np.arange(1,13,1),
-                                         'lev': ds['lev'],
-                                         'lat': ds['lat']})
-        #Make array of monthly temp data
-        for m in range(0,12):
-            rfield_seas[m] = merra2_monthly['T'][month_dict[m+1]].interp(lat=ds['lat'], lev=ds['lev'],
-                                                                method='linear')
-            case_seas[m] = ds_month['T'][month_dict[m+1]]
-
-        #Average over set of latitudes
-        merra2_pcap = coslat_average(rfield_seas,slat,nlat)
-        case_pcap = coslat_average(case_seas,slat,nlat)
-
-        #
-        [time_grid, lev_grid] = np.meshgrid(ds['lev'],np.arange(0,12))
-
-        #Set up plot
-        ax = fig.add_subplot(nrows, ncols, idx+1)
-
-        cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
-                        levels=np.arange(-10,11,1),cmap='RdBu_r'
-                       ) #np.arange(-10,11,1)
-
-        c=plt.contour(lev_grid, time_grid, merra2_pcap, colors='black',
-                           levels=temp_levs,
-                           negative_linestyles='dashed',
-                           linewidths=.5, alpha=0.5)
-        #Format the axes
-        plt.yscale("log")
-        ax.set_ylim(300,1)
-        ax.set_yticks([300,100,30,10])
-        ax.set_xticks(np.arange(0,12,2),rotation=40)
-        ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40)
-        if idx > 0:
-            plt.yticks([])
-        else:
-            plt.ylabel('hPa')
-
-        #Set title
-        local_title=f"{case_names[idx]}\n {delta_symbol} from MERRA2"
-        plt.title(local_title, fontsize=font_size)
-
-        # Calculate the required wspace based on the length of titles
-        #title_lengths = [len(ax.get_title()) for ax in axs]
-        #max_title_length = max(title_lengths)
-        #required_wspace = .003 * max_title_length  # Adjust the multiplier as needed
-        #required_wspace = 0.
-        # Adjust the wspace dynamically
-        #plt.subplots_adjust(wspace=required_wspace)
-
-        #Check for start of new row
-        if idx % 4 == 0:
-            row = idx // 4 + 1
-
-        #Check to see where the colorbar will go
-        #The idea is to if the plots fill up each row, put the colorbar on last plot of row
-        #If the row isn't filled up, put the color bar on last possible plot of row
-        if ((4*(row-1) < idx < 4*(row+1)) and (idx == nplots-1)) or ((idx+1) % 4 == 0):
-                #if idx == nplots-1:
-                axins = inset_axes(ax,
-                                width="5%",
-                                height="80%",
-                                loc='center right',
-                                borderpad=-2.5
-                               )
-                fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
-
-    
-    #plt.savefig(f'temp_{hemi}pcap_merra2.png',dpi=300)
-    plot_locations = adfobj.plot_location
-    plot_loc = Path(plot_locations[0])
-    plot_type = "png"
-    plot_name = plot_loc / f"T_ANN_{hemi}cap_Mean.{plot_type}"
-    #plot_name = plot_loc / f"{var}_{s}_{ptype}_Cap_Mean.{plot_type}"
-    #fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    #if time_avg == "month":
-    #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleMonth",non_season=True)
-    #else:
-    #    adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="Zonal_scycle", category="SeasonalCycleSeason",non_season=True)
-    if hemi == "s":
-        ptype = "SHPolar"
-    if hemi == "n":
-        ptype = "NHPolar"
-    plot_name = plot_loc / f"T_ANN_{ptype}_WACCM_Mean.{plot_type}"
-    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(plot_name, "T", case_name, season="ANN", plot_type="WACCM", category="PolarCap",ext="Mean",non_season=True)
-    #adfobj.add_website_data(plot_name, cam_var, case_name, season=str_interval, plot_type="WACCM", category="Zonal",non_season=True,ext="Zonal_Mean")
-########
-
-def cold_point_temp(adfobj, case_names, case_runs, cases_monthly):
-    """
-    """
-
-    ahh = []
-    for i in list(month_dict.keys())[::3]:
-        ahh.append(month_dict[i].lower().capitalize())
-
-    slat = -45
-    nlat = 45
-
-    nplots = len(case_names)
-    if nplots > 4:
-        ncols = 4
-    else:
-        ncols = nplots
-    #End if
-    ncols = 2
-    nrows = int(np.ceil(nplots/ncols))
-
-    fig = plt.figure(figsize=(2*8,nrows*5))
-
-    #for run in range(len(runs)):
-    for idx,case_name in enumerate(case_names):
-        ds = case_runs[case_name]
-        ds_month = cases_monthly[case_name]
-
-
-        case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
-        case_seas = xr.DataArray(case_seas, dims=['month','lev', 'lat'],
-                                 coords={'month': np.arange(1,26,1),
-                                         'lev': ds['lev'],
-                                         'lat': ds['lat']})
-        #Make array of monthly temp data
-        for m in range(0,25):
-            month = m
-            if m > 11:
-                month = m-12
-            if month == 12:
-                month = 0
-
-            case_seas[m] = ds_month['T'][month_dict[month+1]]
-
-        #Average over set of latitudes
-        #merra2_pcap = coslat_average(rfield_seas,slat,nlat)
-        case_pcap = coslat_average(case_seas,slat,nlat)
-        #print(case_seas.shape)
-        case_pcap = case_seas.sel(lev=90,method="nearest").sel(lat=slice(-45, 45))
-
-        #
-        [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(-45, 45)),
-                                            np.arange(0,25))
-        #Set up plot
-        ax = fig.add_subplot(nrows, ncols, idx+1)
-
-        cf=plt.contourf(lat_grid, time_grid, (case_pcap),
-                        levels=np.arange(190,221,1),
-                        cmap='RdBu_r',zorder=100
-                      )
-        c=plt.contour(lat_grid, time_grid, (case_pcap),
-                        levels=np.arange(190,221,1),
-                        colors='k',linewidths=0.5
-                      )
-
-        #Add a horizontal line at 0 degrees latitude
-        plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
-
-        #Format the x-axis
-        ax.set_xticks(np.arange(0,25,3),rotation=40)
-        ax.set_xticklabels(ahh+ahh+["Jan"],rotation=40)
-
-        #Set title
-        local_title=case_names[idx]
-        plt.title(local_title, fontsize=8)
-
-        #Check for start of new row
-        if idx % 2 == 0:
-            row = idx // 2 + 1
-
-        #Add latitude label to first column of each row
-        if idx==2*(row-1):
-            plt.ylabel('Latitude')
-
-        #Format the y-axis
-        ax.set_yticks(np.arange(-45,46,15))
-        ax.set_yticklabels(("45S","30S","15S","EQ","15N","30N","45N"))
-
-        #Check to see where the colorbar will go
-        if ((idx==2*(row-1)) and (idx == nplots-1)) or ((idx+1) % 2 == 0):
-                axins = inset_axes(ax,
-                                width="3%",
-                                height="80%",
-                                loc='center right',
-                                borderpad=-2.5
-                               )
-                cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K',
-                                    ticks=np.arange(190,221,5)
-                                   )
-                cbar.add_lines(c)
-    fig.suptitle(f"Cold Point Tropopause (CPT) - 90hPa",fontsize=16,y=0.97,horizontalalignment="center")
-    plot_locations = adfobj.plot_location
-    plot_loc = Path(plot_locations[0])
-    plot_type = "png"
-    ptype = "Special"
-    #Q_ANN_TapeRecorder_Mean
-    plot_name = plot_loc / f"CPT_ANN_WACCM_Tropo_Mean.{plot_type}"
-
-    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                            plot_type="WACCM",
-                            ext="Tropo_Mean",
-                            category="Tropo",
-                            )
-
-########
 
 # Helper functions
 ##################
@@ -891,7 +403,7 @@ def saber_data(filename = "../SABER_monthly_2002-2014.nc"):
                 saber_monthly[var][month_dict[month]] = time_mean(saber_ncfile, saber_ncfile[var],
                                                                   time_avg="month", interval=month,
                                                                   is_climo=None, obs=True)
-    return saber_monthly, saber_seasonal
+    return saber, saber_monthly, saber_seasonal
 ########
 
 def merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"):
@@ -938,26 +450,7 @@ def merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags
             for month in np.arange(1,13,1):
                 merra2_monthly[var][month_dict[month]] = time_mean(merra_ncfile, merra2[var], time_avg="month", interval=month, is_climo=None, obs=True)
 
-    return merra2_monthly, merra2_seasonal
-########
-
-def coslat_average(darray, lat1, lat2):
-    """
-    Calculate the weighted average for an [:,lat] array over the region
-    lat1 to lat2
-    """
-
-    # flip latitudes if they are decreasing
-    if (darray.lat[0] > darray.lat[darray.lat.size -1]):
-        print("flipping latitudes")
-        darray = darray.sortby('lat')
-
-    region = darray.sel(lat=slice(lat1, lat2))
-    weights=np.cos(np.deg2rad(region.lat))
-    regionw = region.weighted(weights)
-    regionm = regionw.mean("lat")
-
-    return regionm
+    return merra2, merra2_monthly, merra2_seasonal
 ########
 
 def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
@@ -988,19 +481,10 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
     it will assume that dimension is time running from January to December.
     """
     if time_avg == "season":
-        #seasons = ["ANN", "DJF", "JJA", "MAM", "SON"]
         if interval is not None:
             assert interval in seasons, f"Unrecognized season string provided: '{interval}'"
         elif interval is None:
             interval = "ANN"
-
-    #data = data.drop("time")
-    #data = data.rename({"record":"times"})
-    #data.assign_coords(timez=datetime_list)
-
-    # Can't remove the 'time' dimension, so I will build
-    # a `times' dimension to replace the `record` dimension and 
-    # update those values to date time objects for month/year
 
     try:
         month_length = data.time.dt.days_in_month
@@ -1038,11 +522,7 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
     if not obs:
         syr = ncfile.time.dt.year.values[0]
         eyr = ncfile.time.dt.year.values[-2]
-        #if season == "DJF":
-        #    print(ncfile.time.values)
-        #    print(np.unique(ncfile.time.dt.year.values))
-    
-        #    print(syr,eyr)
+
         data.attrs["year_range"] = f"{syr}-{eyr}"
         timefix = pd.date_range(start=f'1/1/{syr}', end=f'12/1/{eyr}', freq='MS')
         data['time']=timefix
@@ -1051,13 +531,9 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
         #data.attrs[time_avg] = interval
         data = data.sel(time=data.time.dt.month.isin(seasons[interval])) # directly take the months we want based on season kwarg
     if time_avg == "month":
-        #data.attrs[time_avg] = season
-        data = data.sel(time=data.time.dt.month.isin(interval)) # directly take the months we want based on season kwarg
 
-        #try:
-        #    del data.attrs['season']
-        #except KeyError:
-        #   pass
+        data = data.sel(time=data.time.dt.month.isin(interval)) # directly take the months we want
+
 
     return data.weighted(data.time.dt.daysinmonth).mean(dim='time', keep_attrs=True)
 ########

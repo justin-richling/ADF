@@ -187,7 +187,7 @@ def tem(adf):
         fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
         #Add plot to website (if enabled):
-        adf.add_website_data(plot_name, "TEM", case_name, season=s)
+        adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM")
 
     print("  ...TEM plots have been generated successfully.")
 

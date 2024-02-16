@@ -268,6 +268,25 @@ def get_central_longitude(*args):
 
 #######
 
+def coslat_average(darray, lat1, lat2):
+    """
+    Calculate the weighted average for an [:,lat] array over the region
+    lat1 to lat2
+    """
+
+    # flip latitudes if they are decreasing
+    if (darray.lat[0] > darray.lat[darray.lat.size -1]):
+        print("flipping latitudes")
+        darray = darray.sortby('lat')
+
+    region = darray.sel(lat=slice(lat1, lat2))
+    weights=np.cos(np.deg2rad(region.lat))
+    regionw = region.weighted(weights)
+    regionm = regionw.mean("lat")
+
+    return regionm
+#######
+
 def global_average(fld, wgt, verbose=False):
     """A simple, pure numpy global average.
 
@@ -2839,6 +2858,201 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
 
 
 ########
+
+#WACCM QBO
+import numpy as np
+
+def qbo_amplitude(data):
+    
+    from scipy.signal import convolve
+    
+    boxcar = np.ones((5, 1)) / 5
+    [dt,dx] = data.shape
+    filtered_data = convolve(data, boxcar, mode='valid')
+    amplitude=np.std(filtered_data, axis=0)
+    
+    return amplitude
+
+
+def qbo_frequency(data):
+    
+    [dt,dx]=data.shape
+    dt2=int(dt/2)
+    f=1*np.arange(0,dt2+1,1)/dt
+    f=f[1:]
+    f = np.tile(f, (dx, 1)).swapaxes(0,1)
+    
+    fft_data = np.fft.fft(data, axis=0)
+    fft_data = fft_data[1:dt2+1,:]
+    
+    power_spectrum = np.abs(fft_data)**4
+    
+    period=np.sum(power_spectrum*(1/f),axis=0)/np.sum(power_spectrum,axis=0)
+    
+    return period
+  
+
+def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, eyear_cases):
+    """
+    
+    """
+
+    def format_side_axes(axes, side_axis, x, merra_data, data=None, case_lev=None,merra=False):
+        """
+        Format the period and amplitiude side axes
+        """
+        if merra==False:
+            axes[side_axis].plot(data,case_lev,linewidth=1)
+        axes[side_axis].plot(merra_data,merra2['lev'],color='k',linewidth=1)
+        axes[side_axis].set_ylim(y_lims[0],y_lims[1])
+        axes[side_axis].set_yscale("log")
+        if x == "period":
+            axes[side_axis].set_xlim(0,40)
+            axes[side_axis].set_xticks(np.arange(0,41,10))
+            axes[side_axis].set_xlabel('months')
+        if x == "amplitude":
+            axes[side_axis].set_xlim(0,20)
+            axes[side_axis].set_xticks(np.arange(0,20,5))
+            axes[side_axis].set_xlabel('m/s')
+        axes[side_axis].set_yticks([])
+        return axes
+
+    def advance_string(input_string):
+        advanced_chars = [chr(ord(char) + 3) if char.isalpha() else char for char in input_string]
+        advanced_string = ''.join(advanced_chars)
+        return advanced_string
+
+
+    #Build subplot mosiac based off number of CAM cases
+    input_string0 = 'AAAABC'
+    ahh = []
+    ahh.append(input_string0)
+    for i in range(len(case_names)):
+        if i ==0:
+            input_string = advance_string(input_string0)
+        else:
+            input_string = advance_string(input_string)
+            input_string = f"{input_string}"
+        ahh.append(input_string)
+
+    main_key = []
+    side1_key = []
+    side2_key = []
+    mos_str = input_string0
+    for idx,i in enumerate(ahh):
+        if idx != 0:
+            mos_str += f";{i}"
+        main_key.append(i[0])
+        side1_key.append(i[-2])
+        side2_key.append(i[-1])
+
+    fig, axes = plt.subplot_mosaic(mos_str,figsize=(15,4*len(case_names)))
+
+    y = 1.00
+    y_lims = [100,0.1]
+
+    contour_levels = np.arange(-35, 35, 2.5)
+
+    #MERRA2 plot asix number based off number of CAM cases
+    plot_num = len(case_names)
+    merra_plot = plot_num
+
+    nt = 108
+    plotdata = coslat_average(merra2['U'],-10,10)
+
+    plotdata_clip = np.clip(np.abs(plotdata), None, 35)
+    plotdata=np.sign(plotdata)*plotdata_clip
+    [time_grid, lev_grid] = np.meshgrid(merra2['lev'],np.arange(1,nt+1,1))
+    start_ind=252-12
+    end_ind=start_ind+nt
+    axes[main_key[merra_plot]].contourf(lev_grid, time_grid, plotdata[start_ind:end_ind,:],
+                                        levels=contour_levels, cmap='RdBu_r')
+
+    axes[main_key[merra_plot]].set_ylim(y_lims[0],y_lims[1])
+    axes[main_key[merra_plot]].set_yscale("log")
+    axes[main_key[merra_plot]].set_ylabel('hPa')
+    axes[main_key[merra_plot]].set_title("MERRA2",y=y)
+    axes[main_key[plot_num]].set_xticks(np.arange(1,nt+1,12),rotation=40)
+
+    start_year = int(str(plotdata[start_ind].time.values)[0:4])
+    axes[main_key[plot_num]].set_xticklabels(np.arange(start_year,start_year+(nt/12),1).astype(int))
+
+    #MERRA QBO Amplitude side axis
+    amp_m = qbo_amplitude(plotdata)
+    axes = format_side_axes(axes,side1_key[merra_plot],"amplitude",amp_m,merra=True)
+
+    #MERRA QBO Period side axis
+    period_m = qbo_frequency(plotdata)
+    axes = format_side_axes(axes,side2_key[merra_plot],"period",period_m,merra=True)
+
+    #Loop over CAM case data
+    for idx,case_name in enumerate(case_names):
+        case_data = case_runs[case_name]
+        nickname = nicknames[idx]
+        yrs = syear_cases[idx]
+        
+        #Get number of time steps
+        nt = len(case_data['date'])
+        #If the number is greater than 10 years, clip it to 10 years?
+        if nt > 120:
+            nt_sub = 120
+            nt_sub = 108
+        else:
+            nt_sub = nt
+
+        [time_grid, lev_grid] = np.meshgrid(case_data['lev'],np.arange(0,nt_sub+1,1))
+
+        contour_levels = np.arange(-35, 35, 2.5)
+
+        plotdata = coslat_average(case_data['U'],-10,10)
+        plotdata_clip = np.clip(np.abs(plotdata), None, 35)
+        plotdata=np.sign(plotdata)*plotdata_clip
+
+        #TODO: this will need to be adjusted??
+        #Curently this is finding (start_idx)th month and then going out 9 years
+        #QUESTION: what if the data doesn't have 9 years? - we will need to clip this...
+        start_idx = 119-24
+        #print(plotdata[start_idx:start_idx+(12*9),:].shape)
+        axes[main_key[idx]].contourf(lev_grid, time_grid, plotdata[start_idx:start_idx+(12*9)+1,:],
+                                    levels=contour_levels, cmap='RdBu_r')
+
+        axes[main_key[idx]].set_ylim(y_lims[0],y_lims[1])
+        axes[main_key[idx]].set_yscale("log")
+        axes[main_key[idx]].set_ylabel('hPa')
+        axes[main_key[idx]].set_title(nickname,y=y)
+        #print((nt_sub/12)+1)
+        
+        """
+        if idx == 0:
+            axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
+        else:
+            axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
+        
+        if idx == 0:
+            axes[main_key[idx]].set_xticklabels(np.arange(int(yrs[0]+int(nt_sub/12)),int(yrs[0]+int(nt_sub/12))+int(nt_sub/12)+1,1))
+        else:
+            axes[main_key[idx]].set_xticklabels(np.arange(int(yrs[0]+int(nt_sub/12)),int(yrs[0]+int(nt_sub/12))+int(nt_sub/12)+1,1))
+        """
+        
+        #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
+        #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
+
+        #Case QBO Amplitude side axis
+        amp = qbo_amplitude(plotdata)
+        axes = format_side_axes(axes, side1_key[idx], "amplitude",amp_m,amp,case_data['lev'])
+
+        #Case QBO Period side axis
+        period = qbo_frequency(plotdata)
+        axes = format_side_axes(axes, side2_key[idx], "period",period_m,period,case_data['lev'])
+
+        #Label first row of side axes only
+        if idx==0:
+            axes[side1_key[idx]].set_title('Amplitude',y=y)
+            axes[side2_key[idx]].set_title('Period',y=y)
+
+    # Adjust the vertical spacing (hspace)
+    plt.subplots_adjust(hspace=0.3)
+    fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
 #####################
 #END HELPER FUNCTIONS
