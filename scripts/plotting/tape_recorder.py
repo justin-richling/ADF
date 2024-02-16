@@ -90,14 +90,16 @@ def tape_recorder(adfobj):
     #-----------------------------------------
 
     #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"Q_ANN_TapeRecorder_Mean.{plot_type}"
+    plot_name = plot_loc / f"Q_ANN_WACCM_TapeRecorder_Mean.{plot_type}"
+    #plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
     print(f"\t - Plotting annual tape recorder for Q")
 
     # Check redo_plot. If set to True: remove old plot, if it already exists:
     if (not redo_plot) and plot_name.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+        adfobj.add_website_data(plot_name, "Tape Recorder", None, season="ANN", ext="TapeRecorder_Mean")
+        #adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
         return
 
     elif (redo_plot) and plot_name.is_file():
@@ -187,7 +189,7 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
+    adfobj.add_website_data(plot_name, "Tape Recorder", None, season="ANN", ext="TapeRecorder_Mean")
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
