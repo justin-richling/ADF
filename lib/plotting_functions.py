@@ -2946,7 +2946,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         side1_key.append(i[-2])
         side2_key.append(i[-1])
 
-    fig, axes = plt.subplot_mosaic(mos_str,figsize=(15,4*len(case_names)))
+    fig, axes = plt.subplot_mosaic(mos_str,figsize=(12,5*len(case_names)))
 
     y = 1.00
     y_lims = [100,0.1]
@@ -3054,7 +3054,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             axes[side2_key[idx]].set_title('Period',y=y)
 
     # Adjust the vertical spacing (hspace)
-    plt.subplots_adjust(hspace=0.5)
+    plt.subplots_adjust(hspace=0.4)
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
 #####################

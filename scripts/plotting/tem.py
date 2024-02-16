@@ -151,7 +151,7 @@ def tem(adf):
             if (not redo_plot) and plot_name.is_file():
                 #Add already-existing plot to website (if enabled):
                 adf.debug_log(f"'{plot_name}' exists and clobber is false.")
-                adf.add_website_data(plot_name, "TEM", case_name, season=s)
+                adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM")
 
                 #Continue to next iteration:
                 continue
