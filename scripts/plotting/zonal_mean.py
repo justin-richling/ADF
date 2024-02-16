@@ -383,12 +383,6 @@ def zonal_mean(adfobj):
     
     # Chemistry
     #----------
-    import vert_seasonal_cycle as scycle
-
-    scycle.make_scycle_maps(adfobj, data_dict, case_deets)        
-    ####
-
-    #End user added scripts
 
     #Notify user that script has ended:
     print("  ...Zonal mean plots have been generated successfully.")
