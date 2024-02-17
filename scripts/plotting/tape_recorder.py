@@ -90,7 +90,7 @@ def tape_recorder(adfobj):
     #-----------------------------------------
 
     #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"Q_TapeRecorde_ANN_WACCM_Mean.{plot_type}"
+    plot_name = plot_loc / f"Q_TapeRecorder_ANN_WACCM_Mean.{plot_type}"
     #plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
     print(f"\t - Plotting annual tape recorder for Q")
 
