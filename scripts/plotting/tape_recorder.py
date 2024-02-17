@@ -98,7 +98,7 @@ def tape_recorder(adfobj):
     if (not redo_plot) and plot_name.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM", ext="Mean",multi_case=True,category="Seasonal Cycle")
+        adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM", ext="SeasonalCycle_Mean",multi_case=True,category="Seasonal Cycle")
         #adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
         return
 
