@@ -90,7 +90,7 @@ def tape_recorder(adfobj):
     #-----------------------------------------
 
     #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"Q_ANN_WACCM_TapeRecorder_Mean.{plot_type}"
+    plot_name = plot_loc / f"Q_TapeRecorde_ANN_WACCM_Mean.{plot_type}"
     #plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
     print(f"\t - Plotting annual tape recorder for Q")
 
@@ -98,7 +98,7 @@ def tape_recorder(adfobj):
     if (not redo_plot) and plot_name.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "Q", None, season="ANN", plot_type="WACCM", ext="TapeRecorder_Mean",multi_case=True)
+        adfobj.add_website_data(plot_name, "Q_TapeRecorde", None, season="ANN", plot_type="WACCM", ext="Mean",multi_case=True,category="Seasonal Cycle")
         #adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
         return
 
@@ -189,7 +189,7 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, "Q", None, season="ANN", plot_type="WACCM", ext="TapeRecorder_Mean",multi_case=True)
+    adfobj.add_website_data(plot_name, "Q_TapeRecorde", None, season="ANN", plot_type="WACCM", ext="Mean",multi_case=True,category="Seasonal Cycle")
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")

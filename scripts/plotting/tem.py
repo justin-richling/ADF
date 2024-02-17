@@ -139,7 +139,7 @@ def tem(adf):
     #Loop over season dictionary:
     for s in seasons:
         #Location to save plots
-        plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
+        plot_name = plot_location / f"TEM_{s}_WACCM_SeasonalCycle_Mean.png"
         #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
         
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
