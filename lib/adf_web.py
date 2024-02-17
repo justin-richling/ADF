@@ -668,6 +668,7 @@ class AdfWeb(AdfObs):
                     #Remove keys from main dictionary for this html page
                     templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                     templ_rend_kwarg_dict["list"] = jinja_list
+                    print("AHHOIDHSKLFNLKSNFLK",templ_rend_kwarg_dict["ext"])
                     mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
 
                     #Write mean diagnostic plots HTML file:
