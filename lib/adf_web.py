@@ -660,6 +660,7 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
+                """
                 if not mean_ptype_file.exists():
                     #Construct individual plot type mean_diag html files, if they don't
                     #already exist:
@@ -677,6 +678,24 @@ class AdfWeb(AdfObs):
                         ofil.write(mean_rndr)
                     #End with
                 #End if (mean_ptype exists)
+                """
+
+
+
+                #Construct individual plot type mean_diag html files, if they don't
+                #already exist:
+                mean_tmpl = jinenv.get_template('template_mean_diag.html')
+
+                #Remove keys from main dictionary for this html page
+                templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
+                templ_rend_kwarg_dict["list"] = jinja_list
+                print("AHHOIDHSKLFNLKSNFLK",templ_rend_kwarg_dict["ext"])
+                mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
+
+                #Write mean diagnostic plots HTML file:
+                with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
+                    ofil.write(mean_rndr)
+                #End with
             #End if (data frame)
 
             #Also check if index page exists for this case:
