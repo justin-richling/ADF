@@ -305,6 +305,7 @@ class AdfWeb(AdfObs):
                             html_file = html_file,
                             asset_path = asset_path,
                             multi_case = multi_case)
+        print("WTF????",web_data.ext)
 
         #Add web data object to list:
         self.__website_data.append(web_data)
