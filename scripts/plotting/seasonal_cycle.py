@@ -224,18 +224,24 @@ def seasonal_cycle(adfobj):
             adfobj.add_website_data(plot_name, cam_var, case_name, season=season, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
     """
 
-    for cam_var in calc_var_list:
-        for interval in [6,12,"DJF", "JJA"]:
-            if isinstance(interval, int):
-                interval = month_dict[interval]
-                season = "month"
-            else:
-                season = "season"
 
-            plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
-            pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
-        
-            adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+    plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
+    if (not redo_plot) and plot_name.is_file():
+        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+        adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+    
+    else:
+        print("making plots, eh?")
+        for cam_var in calc_var_list:
+            for interval in [6,12,"DJF", "JJA"]:
+                if isinstance(interval, int):
+                    interval = month_dict[interval]
+                    season = "month"
+                else:
+                    season = "season"
+
+                pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
+                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
     
 
     #Polar Cap Temps
@@ -244,8 +250,8 @@ def seasonal_cycle(adfobj):
         plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         redo_plot = adfobj.get_basic_info('redo_plot')
-        #if (not redo_plot) and plot_name.is_file():
-        if 1==0:
+        if (not redo_plot) and plot_name.is_file():
+        #if 1==0:
             #Add already-existing plot to website (if enabled):
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
@@ -253,13 +259,16 @@ def seasonal_cycle(adfobj):
             #Continue to next iteration:
             #pass
         elif (redo_plot) and plot_name.is_file():
+            print("making plots, eh?")
             plot_name.unlink()
 
             pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
-        print("making plots, eh?")
-        pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
-        adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
+
+
+        #print("making plots, eh?")
+        #pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
+        #adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
     
 
     
@@ -290,25 +299,47 @@ def seasonal_cycle(adfobj):
                                 category="Tropo",
                                 )
     """
-    pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
-    adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                                plot_type="WACCM",
-                                ext="SeasonalCycle_Mean",
-                                category="Seasonal Cycle",
-                                )
+    if (not redo_plot) and plot_name.is_file():
+        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                                    plot_type="WACCM",
+                                    ext="SeasonalCycle_Mean",
+                                    category="Seasonal Cycle",
+                                    )
+    
+    else:
+        print("making plots, eh?")
+        plot_name.unlink()
+        pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
+        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                                    plot_type="WACCM",
+                                    ext="SeasonalCycle_Mean",
+                                    category="Seasonal Cycle",
+                                    )
 
 
 
     #WACCM QBO
     #---------
     plot_name = plot_loc / f"QBO_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
-    pf.waccm_qbo(plot_name, case_names, nicknames, cases_coords, merra2, syear_cases, eyear_cases)
-    adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
-                                plot_type="WACCM",
-                                ext="SeasonalCycle_Mean",
-                                category="Seasonal Cycle",
-                                )
+    if (not redo_plot) and plot_name.is_file():
+        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+        adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
+                                    plot_type="WACCM",
+                                    ext="SeasonalCycle_Mean",
+                                    category="Seasonal Cycle",
+                                    )
     
+    else:
+        plot_name.unlink()
+        print("making plots, eh?")
+        pf.waccm_qbo(plot_name, case_names, nicknames, cases_coords, merra2, syear_cases, eyear_cases)
+        adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
+                                    plot_type="WACCM",
+                                    ext="SeasonalCycle_Mean",
+                                    category="Seasonal Cycle",
+                                    )
+        
 
 
 
