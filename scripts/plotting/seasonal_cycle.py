@@ -225,6 +225,8 @@ def seasonal_cycle(adfobj):
     """
 
 
+    """
+    for cam_var in calc_var_list:
     plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
     if (not redo_plot) and plot_name.is_file():
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
@@ -242,7 +244,28 @@ def seasonal_cycle(adfobj):
 
                 pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
                 adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
-    
+    """
+
+
+    for cam_var in calc_var_list:
+        plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
+        if (not redo_plot) and plot_name.is_file():
+            adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+            adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+        
+        else:
+            print("making plots, eh?")
+            #for cam_var in calc_var_list:
+            for interval in [6,12,"DJF", "JJA"]:
+                if isinstance(interval, int):
+                    interval = month_dict[interval]
+                    season = "month"
+                else:
+                    season = "season"
+
+                pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
+                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+        
 
     #Polar Cap Temps
     for hemi in ["s","n"]:
