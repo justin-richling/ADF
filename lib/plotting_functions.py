@@ -2353,31 +2353,11 @@ def square_contour_difference(fld1, fld2, **kwargs):
     cb2 = fig.colorbar(img3, cax=cbax_bot, orientation='horizontal')
     return fig
 
+########
 
 
-
-
-
-def coslat_average(darray, lat1, lat2):
-    """
-    Calculate the weighted average for an [:,lat] array over the region
-    lat1 to lat2
-    """
-
-    # flip latitudes if they are decreasing
-    if (darray.lat[0] > darray.lat[darray.lat.size -1]):
-        print("flipping latitudes")
-        darray = darray.sortby('lat')
-
-    region = darray.sel(lat=slice(lat1, lat2))
-    weights=np.cos(np.deg2rad(region.lat))
-    regionw = region.weighted(weights)
-    regionm = regionw.mean("lat")
-
-    return regionm
-
-
-
+# WACCM Plots
+#############
 
 #Set monthly codes:
 month_dict = {1:'JAN',
@@ -2398,8 +2378,6 @@ delta_symbol = r'$\Delta$'
 temp_levs = np.arange(140, 300, 10)
 temp_diff_levs = np.arange(-40, 41, 4)
 
-#contour_levels = np.arange(-30, 31, 3)
-#orig_contour_levels = np.arange(-120, 121, 10)
 wind_levs = np.arange(-120, 121, 10)
 wind_diff_levs = np.arange(-30, 31, 3)
 cont_ranges = {"U":{"levs":wind_levs,"diff_levs":wind_diff_levs,"units":"m/s"},
@@ -2437,18 +2415,9 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
     fig = plt.figure(figsize=(casenum*4,nrows*5))
 
     for idx,case_name in enumerate(case_names):
-        """
-        cases_coords[run] = case_coords
-        cases_monthly[run] = case_monthly
-        cases_seasonal[run] = case_seasonal
-    
-    #Make nested dictionary of all case data
-    case_ds_dict = {"coords":cases_coords,
-                    "monthly":cases_monthly,
-                    "seasonal":cases_seasonal}
-        """
+
         data_coords = case_ds_dict["coords"][case_name]
-        #data_coords = case_runs[case_name]
+
         data_lev = data_coords['lev']
         data_lat = data_coords['lat']
 
@@ -2456,16 +2425,13 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         [lat_grid, lev_grid] = np.meshgrid(data_lev,data_lat)
 
         if time_avg == "season":
-            #case_ds_dict["seasonal"]
+
             data_array = case_ds_dict["seasonal"][case_name][cam_var][interval]
-            #data_array = case_runs_seasonal[case_name][cam_var][interval]
 
             #Make Obs interpolated field from case
-            #merra_ds = merra2_seasonal[merra_var][interval]
             merra_ds = obs_ds_dict["seasonal"]["merra"][merra_var][interval]
             merra_rfield = merra_ds.interp(lat=data_lat, lev=data_lev, method='linear')
 
-            #saber_ds = saber_seasonal[saber_var][interval]
             saber_ds = obs_ds_dict["seasonal"]["saber"][saber_var][interval]
             saber_rfield = saber_ds.interp(lat=data_lat, lev=data_lev, method='linear')
 
@@ -2473,14 +2439,11 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
             case_ds_dict["monthly"]
             str_month = interval #month_dict[interval]
             data_array = case_ds_dict["monthly"][case_name][cam_var][str_month]
-            #data_array = case_runs_monthly[case_name][cam_var][month_dict[interval]]
 
             #Make Obs interpolated fields from case
-            #merra_ds = merra2_monthly[merra_var][str_month]
             merra_ds = obs_ds_dict["monthly"]["merra"][merra_var][str_month]
             merra_rfield = merra_ds.interp(lat=data_lat, lev=data_lev, method='linear')
 
-            #saber_ds = saber_monthly[saber_var][str_month]
             saber_ds = obs_ds_dict["monthly"]["saber"][saber_var][str_month]
             saber_rfield = saber_ds.interp(lat=data_lat, lev=data_lev, method='linear')
 
@@ -2861,6 +2824,9 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
 import numpy as np
 
 def qbo_amplitude(data):
+    """
+    Calculate the QBO amplitude
+    """
     
     from scipy.signal import convolve
     
@@ -2873,6 +2839,9 @@ def qbo_amplitude(data):
 
 
 def qbo_frequency(data):
+    """
+    Calculate the QBO frequency
+    """
     
     [dt,dx]=data.shape
     dt2=int(dt/2)
@@ -2895,7 +2864,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     
     """
 
-    def format_side_axes(axes, side_axis, x, merra_data, data=None, case_lev=None,merra=False):
+    def format_side_axes(axes, side_axis, x, merra_data, data=None, case_lev=None, merra=False):
         """
         Format the period and amplitiude side axes
         """
@@ -3054,12 +3023,12 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #Label first row of side axes only
         if idx==0:
             axes[side1_key[idx]].set_title('Amplitude',y=y,fontsize=12)
-            axes[side2_key[idx]].set_title('Period',y=y)
+            axes[side2_key[idx]].set_title('Period',y=y,fontsize=12)
 
     # Adjust the vertical spacing (hspace)
-    plt.subplots_adjust(hspace=0.38)
+    plt.subplots_adjust(hspace=0.35)
 
-    fig.suptitle(f"QBO Diagnostics",fontsize=16,y=0.95,horizontalalignment="center")
+    fig.suptitle(f"QBO Diagnostics",fontsize=16,y=0.93,horizontalalignment="center")
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
