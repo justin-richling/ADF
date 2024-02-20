@@ -120,7 +120,7 @@ def tape_recorder(adfobj):
     mls = mls.rename(x='lat', y='lev', t='time')
     time = pd.date_range("2004-09","2021-11",freq='M')
     mls['time'] = time
-    mls = pf.cosweightlat(mls.H2O,-10,10)
+    mls = pf.coslat_average(mls.H2O,-10,10)
     mls = mls.groupby('time.month').mean('time')
     # Convert mixing ratio values from ppmv to kg/kg
     mls = mls*18.015280/(1e6*28.964)
@@ -135,7 +135,7 @@ def tape_recorder(adfobj):
         dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0.Q.*.nc')[0])
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
-        dat_tropics = pf.cosweightlat(datzm.Q, -10, 10)
+        dat_tropics = pf.coslat_average(datzm.Q, -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         alldat.append(dat_mon)
         runname_LT.append(key)
