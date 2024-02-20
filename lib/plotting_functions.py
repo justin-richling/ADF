@@ -2971,9 +2971,9 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 
     axes[main_key[merra_plot]].set_ylim(y_lims[0],y_lims[1])
     axes[main_key[merra_plot]].set_yscale("log")
-    axes[main_key[merra_plot]].set_ylabel('hPa')
-    axes[main_key[merra_plot]].tick_params(axis='y', labelsize=10)
-    axes[main_key[merra_plot]].set_title("MERRA2",y=y,fontsize=12)
+    axes[main_key[merra_plot]].set_ylabel('hPa',fontsize=10)
+    axes[main_key[merra_plot]].tick_params(axis='y', labelsize=8)
+    axes[main_key[merra_plot]].set_title("MERRA2",y=y,fontsize=10)
     axes[main_key[plot_num]].set_xticks(np.arange(1,nt+1,12),rotation=40)
 
     start_year = int(str(plotdata[start_ind].time.values)[0:4])
@@ -3020,8 +3020,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 
         axes[main_key[idx]].set_ylim(y_lims[0],y_lims[1])
         axes[main_key[idx]].set_yscale("log")
-        axes[main_key[idx]].set_ylabel('hPa')
-        axes[main_key[idx]].tick_params(axis='y', labelsize=10)
+        axes[main_key[idx]].set_ylabel('hPa',fontsize=10)
+        axes[main_key[idx]].tick_params(axis='y', labelsize=8)
         axes[main_key[idx]].set_title(nickname,y=y,fontsize=10)
         #print((nt_sub/12)+1)
         
@@ -3057,7 +3057,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             axes[side2_key[idx]].set_title('Period',y=y)
 
     # Adjust the vertical spacing (hspace)
-    plt.subplots_adjust(hspace=0.4)
+    plt.subplots_adjust(hspace=0.38)
 
     fig.suptitle(f"QBO Diagnostics",fontsize=16,y=0.95,horizontalalignment="center")
 
