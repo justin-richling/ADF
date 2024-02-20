@@ -106,21 +106,20 @@ def seasonal_cycle(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
     
-
-        #Grab baseline years (which may be empty strings if using Obs):
+        #Grab baseline years and add to years lists
         syear_baseline = adfobj.climo_yrs["syear_baseline"]
         syear_cases = syear_cases + [syear_baseline]
         eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
         eyear_cases = eyear_cases + [eyear_baseline]
 
-        #Grab all case nickname(s)
-        #test_nicknames = adfobj.case_nicknames["test_nicknames"]
+        #Grab all case nickname(s) and add to nicknames lists
         base_nickname = adfobj.case_nicknames["base_nickname"]
         nicknames = nicknames + [base_nickname]
 
+        #Grab baaseline cae name and add to case names list
         case_names = case_names + data_list
 
-        #Get climo years for verification or assignment if missing
+        #Get baeline case history location and add to hist loc list
         baseline_hist_locs = adfobj.get_baseline_info('cam_hist_loc')
         cam_hist_locs = cam_hist_locs + [baseline_hist_locs]
     #End if
@@ -132,38 +131,21 @@ def seasonal_cycle(adfobj):
     #var_list = adfobj.diag_var_list
     var_list = calc_var_list + ['lat','lev','time']
 
-    #Get MERRA2 data and seasonal and monthly averages
-    
+    #Set up creation of all CAM data dictionaries
     cases_coords = {}
     cases_seasonal = {}
     cases_monthly = {}
     for idx,case_name in enumerate(case_names):
-        #run = run[0]
-        print(case_name)
-        #zmdir = adfobj.basic_info_dict['diag_loc'] + f"zm/{run}/" #+ "/atm/hist/"
-        #file = rundir + "waccm_135.nc"
-        #if idx == 0:
+
         hist_loc = cam_hist_locs[idx]
-        #case_name = case[idx]
+
         syr = syear_cases[idx]
         eyr = eyear_cases[idx]
 
-        #make_zm_files(hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
+        #Make or access the WACCM zonal mean file
         ncfile = make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True)
-        #file = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/new_tests/waccm_135_acom_ne16pg3_ne16pg3_mg17_1536_long2.nc"
-        #ncfile = xr.open_dataset(file, decode_times=True, use_cftime=True)
 
-        #zmdir = run
-        #file = f"waccm_135_{zmdir}.nc"
-        #print(file)
-        #ncfile = nc.Dataset(file, 'r')
-        #ncfile = xr.open_dataset(file, decode_times=True, use_cftime=True)
-
-        #Check if plot output directory exists, and if not, then create it:
-        #if not plot_loc.is_dir():
-        #    print("    {} not found, making new directory".format(plot_loc))
-        #    plot_loc.mkdir(parents=True)
-
+        #Set up creation of individual CAM data dictionaries
         case_coords = {}
         case_seasonal = {}
         case_monthly = {}
@@ -204,49 +186,20 @@ def seasonal_cycle(adfobj):
     #Get Obs and seasonal and monthly averages
     saber, saber_monthly, saber_seasonal = saber_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc")
     merra2, merra2_monthly, merra2_seasonal = merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
+    #swoosh, swoosh_monthly, swoosh_seasonal = swoosh_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
 
     obs_seas_dict = {"saber":saber_seasonal, "merra":merra2_seasonal}
     obs_month_dict = {"saber":saber_monthly, "merra":merra2_monthly}
     obs_ds_dict = {"monthly":obs_month_dict,
                    "seasonal":obs_seas_dict}
     
-    #Zoanl Mean Wind and Temp vs MERRA2 and SABER
-    """
-    for cam_var in calc_var_list:
-        for month in [6,12]:
-            
-            plot_name = plot_loc / f"{cam_var}_{month}_WACCM_SeasonalCycle_Mean.{plot_type}"
-            pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "month", month)
-            adfobj.add_website_data(plot_name, cam_var, case_name, season=month, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
-        for season in ["DJF", "JJA"]:
-            plot_name = plot_loc / f"{cam_var}_{season}_WACCM_SeasonalCycle_Mean.{plot_type}"
-            pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, "season", season)
-            adfobj.add_website_data(plot_name, cam_var, case_name, season=season, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
-    """
-
-
-    """
-    for cam_var in calc_var_list:
-    plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
-    if (not redo_plot) and plot_name.is_file():
-        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+    #End gather data
     
-    else:
-        print("making plots, eh?")
-        for cam_var in calc_var_list:
-            for interval in [6,12,"DJF", "JJA"]:
-                if isinstance(interval, int):
-                    interval = month_dict[interval]
-                    season = "month"
-                else:
-                    season = "season"
+    #Seasonal Cycle Plotting
+    ########################
 
-                pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
-                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
-    """
-
-
+    #Zoanl Mean Wind and Temp vs MERRA2 and SABER
+    #--------------------------------------------
     for cam_var in calc_var_list:
         for interval in [6,12,"DJF", "JJA"]:
             if isinstance(interval, int):
@@ -254,83 +207,53 @@ def seasonal_cycle(adfobj):
                 season = "month"
             else:
                 season = "season"
+            #End if
+
             plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
             if (not redo_plot) and plot_name.is_file():
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                 adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
             
             elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+                #If redo plot, delete the file
                 if plot_name.is_file():
                     plot_name.unlink()
-                print("making plots, eh?")
-                #for cam_var in calc_var_list:
-                #for interval in [6,12,"DJF", "JJA"]:
-                #    if isinstance(interval, int):
-                #        interval = month_dict[interval]
-                #        season = "month"
-                #    else:
-                #        season = "season"
-
+            
                 pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
                 adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+            #End if
+        #End for
+    #End for
         
 
     #Polar Cap Temps
+    #---------------
     for hemi in ["s","n"]:
 
         plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         redo_plot = adfobj.get_basic_info('redo_plot')
+
         if (not redo_plot) and plot_name.is_file():
-        #if 1==0:
             #Add already-existing plot to website (if enabled):
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
-
-            #Continue to next iteration:
-            #pass
         elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
-            print("making plots, eh?")
+            #If redo plot, delete the file
             if plot_name.is_file():
                 plot_name.unlink()
 
             pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
-
-
-        #print("making plots, eh?")
-        #pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
-        #adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
-    
+        #End if
+    #End for
 
     
     #Cold Point Temp/Tropopause @ 90hPa
+    #----------------------------------
     plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
-    """
-    # Check redo_plot. If set to True: remove old plot, if it already exists:
-    redo_plot = adfobj.get_basic_info('redo_plot')
-    if (not redo_plot) and plot_name.is_file():
-        #Add already-existing plot to website (if enabled):
-        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                            plot_type="WACCM",
-                            ext="SeasonalCycle_Mean",
-                            category="Seasonal Cycle",
-                            )
-
-        #Continue to next iteration:
-        #pass
-    elif (redo_plot) and plot_name.is_file():
-        plot_name.unlink()
-
-        pf.cold_point_temp(adfobj, case_names, cases_coords, cases_monthly)
-        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                                plot_type="WACCM",
-                                ext="Tropo_Mean",
-                                category="Tropo",
-                                )
-    """
     if (not redo_plot) and plot_name.is_file():
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
@@ -340,15 +263,17 @@ def seasonal_cycle(adfobj):
                                     )
     
     elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
-        print("making plots, eh?")
+        #If redo plot, delete the file
         if plot_name.is_file():
             plot_name.unlink()
+
         pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
         adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                                     plot_type="WACCM",
                                     ext="SeasonalCycle_Mean",
                                     category="Seasonal Cycle",
                                     )
+    #End if
 
 
 
@@ -364,17 +289,19 @@ def seasonal_cycle(adfobj):
                                     )
     
     elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+        #If redo plot, delete the file
         if plot_name.is_file():
             plot_name.unlink()
-        print("making plots, eh?")
+
         pf.waccm_qbo(plot_name, case_names, nicknames, cases_coords, merra2, syear_cases, eyear_cases)
         adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
                                     plot_type="WACCM",
                                     ext="SeasonalCycle_Mean",
                                     category="Seasonal Cycle",
                                     )
-        
+    #End if
 
+    #End plotting scripts
 
 
 
@@ -404,7 +331,12 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
     """
 
     save_path = adfobj.get_basic_info('diag_loc', required=True)
-    if not Path(f"{save_path}/waccm_zm_{case_name}.nc").exists():
+
+    #Check if file exists. If so, open the file or make it if not
+    if Path(f"{save_path}/waccm_zm_{case_name}.nc").exists():
+        waccm_zm = xr.open_mfdataset(f"{save_path}/waccm_zm_{case_name}.nc")
+        
+    else:
         h0_lists = []
 
         for yr in np.arange(int(syr),int(eyr)+1):
@@ -416,8 +348,7 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         waccm_zm = waccm_zm[calc_var_list].mean(dim='lon')
         
         waccm_zm.to_netcdf(f"{save_path}/waccm_zm_{case_name}.nc")
-    else:
-        waccm_zm = xr.open_mfdataset(f"{save_path}/waccm_zm_{case_name}.nc")
+
     if return_ds:
         return waccm_zm
 ########
