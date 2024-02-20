@@ -3019,7 +3019,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         axes[main_key[idx]].set_ylim(y_lims[0],y_lims[1])
         axes[main_key[idx]].set_yscale("log")
         axes[main_key[idx]].set_ylabel('hPa')
-        axes[main_key[idx]].set_title(nickname,y=y)
+        axes[main_key[idx]].set_title(nickname,y=y,fontsize=8)
         #print((nt_sub/12)+1)
         
         """
@@ -3055,6 +3055,9 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 
     # Adjust the vertical spacing (hspace)
     plt.subplots_adjust(hspace=0.4)
+
+    fig.suptitle(f"QBO Diagnostics",fontsize=16,y=0.97,horizontalalignment="center")
+
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
 #####################
