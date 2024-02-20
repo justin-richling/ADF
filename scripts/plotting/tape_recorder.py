@@ -28,6 +28,10 @@ def tape_recorder(adfobj):
     NOTE: If the baseline case is observations, it will be ignored
         since a defualt set of obs are already being compared against in the tape recorder.
     """
+
+    #CAM diagnostic plotting functions:
+    import plotting_functions as pf
+
     #Notify user that script has started:
     print("\n  Generating tape recorder plots...")
 
@@ -116,7 +120,7 @@ def tape_recorder(adfobj):
     mls = mls.rename(x='lat', y='lev', t='time')
     time = pd.date_range("2004-09","2021-11",freq='M')
     mls['time'] = time
-    mls = cosweightlat(mls.H2O,-10,10)
+    mls = pf.cosweightlat(mls.H2O,-10,10)
     mls = mls.groupby('time.month').mean('time')
     # Convert mixing ratio values from ppmv to kg/kg
     mls = mls*18.015280/(1e6*28.964)
@@ -131,7 +135,7 @@ def tape_recorder(adfobj):
         dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0.Q.*.nc')[0])
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
-        dat_tropics = cosweightlat(datzm.Q, -10, 10)
+        dat_tropics = pf.cosweightlat(datzm.Q, -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         alldat.append(dat_mon)
         runname_LT.append(key)
@@ -446,6 +450,21 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     if (data.dims[1] != taxis):
         data = data.transpose(..., taxis)
 
+    #Make 24 months so we can have Jan-Dec repeated twice
+    case_seas = np.zeros((25,len(data[paxis])))
+    case_seas = xr.DataArray(case_seas, dims=[taxis,paxis],
+                                     coords={taxis: np.arange(1,26,1),
+                                             paxis: data[paxis]})
+    #Make array of monthly temp data
+    for m in range(0,25):
+        month = m
+    
+        if m > 11:
+            month = m-12
+        if month == 12:
+            month = 0    
+        case_seas[m] = data.sel(month=month+1)
+
     nlevs = (cmax - cmin)/ci + 1
     clevs = np.arange(cmin, cmax+ci, ci)
 
@@ -465,41 +484,27 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
 
     plt.rcParams['font.size'] = '14'
 
-    monticks_temp = np.arange(0,12,1)
-    monticks2_temp = np.arange(0,12,1)+0.5
+    case_seas = case_seas.transpose(..., taxis)
 
+    monticks_temp = np.arange(0,25,1)
     monticks = monticks_temp
-    monticks2 = np.zeros([len(monticks2_temp)+2])
-    monticks2[0] = -0.5 ; monticks2[len(monticks2)-1] = 12.5
-    monticks2[1:len(monticks2)-1] = monticks2_temp
 
-    dataplot = np.zeros([data[paxis].size,len(monticks2)])
-    dataplot[:,0] = data[:,11]
-    dataplot[:,len(monticks2)-1] = data[:,0]
-    dataplot[:,1:len(monticks2)-1] = data[:,:]
-
-    #Check for over plotting
     if not oplot:
         if (x1):
             ax = fig.add_axes([x1, y1, x2-x1, y2-y1])
         else:
             ax = fig.add_axes()
-
-    #Set up axis
     ax.xaxis.set_label_position('top')
     if climo_yrs:
         ax.set_xlabel(f"{climo_yrs}", loc='center',
                            fontsize=8)
-    ax.contourf(monticks2, -np.log10(data[paxis]), dataplot, levels=clevs, cmap=mymap, extend='max')
+    
+    ax.contourf(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, cmap=mymap, extend='max')
     ax.set_ylim(-np.log10(100),-np.log10(3))
     ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3)])
     ax.set_yticklabels(['100','30','10','3'])
-    ax.set_xlim([0,12])
-    ax.tick_params(which='minor', length=0)
-    ax.set_xticks(monticks)
-    ax.set_xticklabels([])
-    ax.set_xticks(monticks2[1:13], minor=True)
-    ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], minor=True, fontsize=14)
+    ax.set_xticks(monticks[0:25:3])
+    ax.set_xticklabels(['Jan','Apr','Jul','Oct']*2+["Jan"], fontsize=10)
     ax.set_title(expname, fontsize=16)
 
     return ax
