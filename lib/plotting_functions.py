@@ -2729,7 +2729,6 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         #The idea is to if the plots fill up each row, put the colorbar on last plot of row
         #If the row isn't filled up, put the color bar on last possible plot of row
         if ((4*(row-1) < idx < 4*(row+1)) and (idx == nplots-1)) or ((idx+1) % 4 == 0):
-                #if idx == nplots-1:
                 axins = inset_axes(ax,
                                 width="5%",
                                 height="80%",
@@ -2908,11 +2907,13 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         if x == "period":
             axes[side_axis].set_xlim(0,40)
             axes[side_axis].set_xticks(np.arange(0,41,10))
-            axes[side_axis].set_xlabel('months')
+            axes[side_axis].set_xticklabels(np.arange(0,41,10),fontsize=8)
+            axes[side_axis].set_xlabel('months',fontsize=10)
         if x == "amplitude":
             axes[side_axis].set_xlim(0,20)
-            axes[side_axis].set_xticks(np.arange(0,20,5))
-            axes[side_axis].set_xlabel('m/s')
+            axes[side_axis].set_xticks(np.arange(0,21,5))
+            axes[side_axis].set_xticklabels(np.arange(0,21,5),fontsize=8)
+            axes[side_axis].set_xlabel('m/s',fontsize=10)
         axes[side_axis].set_yticks([])
         return axes
 
@@ -2970,11 +2971,12 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     axes[main_key[merra_plot]].set_ylim(y_lims[0],y_lims[1])
     axes[main_key[merra_plot]].set_yscale("log")
     axes[main_key[merra_plot]].set_ylabel('hPa')
+    axes[main_key[merra_plot]].tick_params(axis='y', labelsize=10)
     axes[main_key[merra_plot]].set_title("MERRA2",y=y)
     axes[main_key[plot_num]].set_xticks(np.arange(1,nt+1,12),rotation=40)
 
     start_year = int(str(plotdata[start_ind].time.values)[0:4])
-    axes[main_key[plot_num]].set_xticklabels(np.arange(start_year,start_year+(nt/12),1).astype(int))
+    axes[main_key[plot_num]].set_xticklabels(np.arange(start_year,start_year+(nt/12),1).astype(int),fontsize=8)
 
     #MERRA QBO Amplitude side axis
     amp_m = qbo_amplitude(plotdata)
@@ -3032,7 +3034,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         else:
             axes[main_key[idx]].set_xticklabels(np.arange(int(yrs[0]+int(nt_sub/12)),int(yrs[0]+int(nt_sub/12))+int(nt_sub/12)+1,1))
         """
-        print("nt_sub",nt_sub)
+        #print("nt_sub",nt_sub)
         axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
         #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
         axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(start_idx/12)),
