@@ -2472,7 +2472,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         if idx > 0:
             plt.yticks([])
         else:
-            plt.ylabel('hPa')
+            plt.ylabel('hPa',fontsize=10)
         ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
@@ -2520,7 +2520,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         if idx > 0:
             plt.yticks([])
         else:
-            plt.ylabel('hPa')
+            plt.ylabel('hPa',fontsize=10)
 
         ax.tick_params(axis='y', labelsize=8)
 
@@ -2571,7 +2571,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         if idx > 0:
             plt.yticks([])
         else:
-            plt.ylabel('hPa')
+            plt.ylabel('hPa',fontsize=10)
         ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
