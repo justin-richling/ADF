@@ -2473,6 +2473,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
             plt.yticks([])
         else:
             plt.ylabel('hPa')
+        ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
         plt.title(case_name, fontsize=font_size)
@@ -2519,7 +2520,9 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         if idx > 0:
             plt.yticks([])
         else:
-            plt.ylabel('hPa')
+            plt.ylabel('hPa',fontsize=10)
+
+        ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
         local_title = f'{case_name}\n {delta_symbol} from MERRA2'
@@ -2564,10 +2567,12 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         ax.set_ylim(1000,0.1)
         plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
         plt.xticks(np.arange(-90,91,45),rotation=40)
+        ax.tick_params(axis='x', labelsize=8)
         if idx > 0:
             plt.yticks([])
         else:
             plt.ylabel('hPa')
+        ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
         local_title = f'{case_name}\n {delta_symbol} from SABER'
