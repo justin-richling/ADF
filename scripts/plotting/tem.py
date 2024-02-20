@@ -148,7 +148,7 @@ def tem(adf):
             adf.add_website_data(plot_name, "TEM", None, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle",multi_case=True)
 
         #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
-        elif (redo_plot) and plot_name.is_file():
+        elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
             plot_name.unlink()
         
             fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
