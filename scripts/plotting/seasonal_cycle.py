@@ -494,7 +494,6 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
             # CLIMO file: try to determine which dimension is month
 
             has_time = False
-            #print("not has_time")z
             if isinstance(data, xr.DataArray):
                 has_time = 'time' in data.dims
                 if not has_time:
@@ -502,7 +501,6 @@ def time_mean(ncfile, data, time_avg, interval, is_climo=None, obs=False):
                         data = data.rename({"month":"time"})
                         has_time = True
             if not has_time:
-                print("not has_time")
                 # this might happen if a pure numpy array gets passed in
                 # --> assumes ordered January to December.
                 assert ((12 in data.shape) and (data.shape.count(12) == 1)), f"Sorry, {data.shape.count(12)} dimensions have size 12, making determination of which dimension is month ambiguous. Please provide a `time` or `month` dimension."

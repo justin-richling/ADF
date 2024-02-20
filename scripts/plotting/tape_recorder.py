@@ -141,6 +141,8 @@ def tape_recorder(adfobj):
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
 
+    if len(case_names) > 4:
+        rows = 2
     fig = plt.figure(figsize=(25,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
