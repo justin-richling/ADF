@@ -2520,7 +2520,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         if idx > 0:
             plt.yticks([])
         else:
-            plt.ylabel('hPa',fontsize=10)
+            plt.ylabel('hPa')
 
         ax.tick_params(axis='y', labelsize=8)
 
@@ -2747,7 +2747,7 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
         ds = case_runs[case_name]
         ds_month = cases_monthly[case_name]
 
-
+        #Make 24 months so we can have Jan-Dec repeated twice
         case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
         case_seas = xr.DataArray(case_seas, dims=['month','lev', 'lat'],
                                  coords={'month': np.arange(1,26,1),
@@ -2764,7 +2764,6 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
             case_seas[m] = ds_month['T'][month_dict[month+1]]
 
         #Average over set of latitudes
-        #merra2_pcap = coslat_average(rfield_seas,slat,nlat)
         case_pcap = coslat_average(case_seas,slat,nlat)
         case_pcap = case_seas.sel(lev=90,method="nearest").sel(lat=slice(-45, 45))
 
