@@ -90,7 +90,7 @@ def tape_recorder(adfobj):
     #-----------------------------------------
 
     #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"Q_TapeRecorder_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+    plot_name = plot_loc / f"Q_TapeRecorder_ANN_WACCM_Mean.{plot_type}"
     #plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
     print(f"\t - Plotting annual tape recorder for Q")
 
@@ -98,12 +98,13 @@ def tape_recorder(adfobj):
     if (not redo_plot) and plot_name.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM", ext="SeasonalCycle_Mean",multi_case=True,category="Seasonal Cycle")
+        adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM", ext="Mean",multi_case=True,category="Seasonal Cycle")
         #adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
         return
 
-    elif (redo_plot) and plot_name.is_file():
-        plot_name.unlink()
+    elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+        if plot_name.is_file():
+            plot_name.unlink()
     
     #Make dictionary for case names and associated timeseries file locations
     runs_LT2={}

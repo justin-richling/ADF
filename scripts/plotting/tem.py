@@ -139,7 +139,7 @@ def tem(adf):
     #Loop over season dictionary:
     for s in seasons:
         #Location to save plots
-        plot_name = plot_location / f"TEM_{s}_WACCM_SeasonalCycle_Mean.png"
+        plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
 
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         if (not redo_plot) and plot_name.is_file():
