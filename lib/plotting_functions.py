@@ -2505,7 +2505,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                                color=contour.collections[0].get_edgecolor(),
                                label='MERRA2 interp')]
 
-            ax.legend(handles=legend_elements, loc='upper right', fontsize=10)
+            ax.legend(handles=legend_elements, loc='upper right', fontsize=10, bbox_to_anchor=(0.75, 1.1))
         #End if
 
         #Plot difference contour fill
@@ -2593,7 +2593,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
 
     #Set up main plot title
     if time_avg == "month":
-        str_interval = interval.lower().capitalize() #month_dict[interval].lower().capitalize()
+        str_interval = interval.lower().capitalize()
     else:
         str_interval = interval
     fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=16,y=0.93)
