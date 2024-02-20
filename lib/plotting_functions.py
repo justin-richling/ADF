@@ -2706,7 +2706,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         if idx > 0:
             plt.yticks([])
         else:
-            ax.set_yticklabels(["",100,"",10],fontsize=10)
+            ax.set_yticklabels(["","$10^{2}$","","$10^{1}$"],fontsize=10)
             plt.ylabel('hPa',fontsize=10)
 
         #Set title
@@ -3055,7 +3055,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     # Adjust the vertical spacing (hspace)
     plt.subplots_adjust(hspace=0.4)
 
-    fig.suptitle(f"QBO Diagnostics",fontsize=16,y=0.97,horizontalalignment="center")
+    fig.suptitle(f"QBO Diagnostics",fontsize=16,y=0.95,horizontalalignment="center")
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
