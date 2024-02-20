@@ -95,7 +95,6 @@ def tape_recorder(adfobj):
 
     #This may have to change if other variables are desired in this plot type?
     plot_name = plot_loc / f"Q_TapeRecorder_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
-    #plot_name = plot_location / f"TEM_{s}_WACCM_Mean.png"
     print(f"\t - Plotting annual tape recorder for Q")
 
     # Check redo_plot. If set to True: remove old plot, if it already exists:
@@ -103,7 +102,6 @@ def tape_recorder(adfobj):
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM", ext="SeasonalCycle_Mean",multi_case=True,category="Seasonal Cycle")
-        #adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean")
         return
 
     elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
@@ -143,7 +141,7 @@ def tape_recorder(adfobj):
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
 
-    fig = plt.figure(figsize=(16,16))
+    fig = plt.figure(figsize=(25,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
     plot_step = 0.5e-7
