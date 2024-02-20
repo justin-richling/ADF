@@ -2486,7 +2486,8 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                         loc='center right',
                         borderpad=-1.5
                        )
-            fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+            cbar.ax.tick_params(axis='y', labelsize=8)
 
         #Difference with MERRA2 and MERRA2 contours
         ###########################################
