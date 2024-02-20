@@ -259,8 +259,9 @@ def seasonal_cycle(adfobj):
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                 adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
             
-            elif (redo_plot) and plot_name.is_file():
-                plot_name.unlink()
+            elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+                if plot_name.is_file():
+                    plot_name.unlink()
                 print("making plots, eh?")
                 #for cam_var in calc_var_list:
                 #for interval in [6,12,"DJF", "JJA"]:
@@ -288,9 +289,10 @@ def seasonal_cycle(adfobj):
 
             #Continue to next iteration:
             #pass
-        elif (redo_plot) and plot_name.is_file():
+        elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
             print("making plots, eh?")
-            plot_name.unlink()
+            if plot_name.is_file():
+                plot_name.unlink()
 
             pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
@@ -337,9 +339,10 @@ def seasonal_cycle(adfobj):
                                     category="Seasonal Cycle",
                                     )
     
-    elif (redo_plot) and plot_name.is_file():
+    elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
         print("making plots, eh?")
-        plot_name.unlink()
+        if plot_name.is_file():
+            plot_name.unlink()
         pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
         adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                                     plot_type="WACCM",
@@ -360,8 +363,9 @@ def seasonal_cycle(adfobj):
                                     category="Seasonal Cycle",
                                     )
     
-    elif (redo_plot) and plot_name.is_file():
-        plot_name.unlink()
+    elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+        if plot_name.is_file():
+            plot_name.unlink()
         print("making plots, eh?")
         pf.waccm_qbo(plot_name, case_names, nicknames, cases_coords, merra2, syear_cases, eyear_cases)
         adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
