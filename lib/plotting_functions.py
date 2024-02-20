@@ -2586,7 +2586,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                         loc='center right',
                         borderpad=-1.5
                        )
-            fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+            fig.colorbar(cf, cax=axins, orientation="vertical", label=units,fontsize=10)
 
     #Set up main plot title
     if time_avg == "month":
