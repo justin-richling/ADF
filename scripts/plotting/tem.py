@@ -149,7 +149,8 @@ def tem(adf):
 
         #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
         elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
-            plot_name.unlink()
+            if plot_name.is_file():
+                plot_name.unlink()
         
             fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
                                     facecolor='w', edgecolor='k')
