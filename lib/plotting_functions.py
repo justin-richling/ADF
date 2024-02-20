@@ -2659,7 +2659,6 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     fig = plt.figure(figsize=(2*7,nrows*4))
 
     for idx,case_name in enumerate(case_names):
-        #ds = case_runs[case_name]
         ds = cases_coords[case_name]
         ds_month = cases_monthly[case_name]
 
@@ -2703,11 +2702,12 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         ax.set_ylim(300,1)
         ax.set_yticks([300,100,30,10])
         ax.set_xticks(np.arange(0,12,2),rotation=40)
-        ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40)
+        ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40,fontsize=10)
         if idx > 0:
             plt.yticks([])
         else:
-            plt.ylabel('hPa')
+            ax.set_yticklables(100,10,fontsize=10)
+            plt.ylabel('hPa',fontsize=10)
 
         #Set title
         local_title=f"{case_names[idx]}\n {delta_symbol} from MERRA2"
@@ -2799,7 +2799,6 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
         #Average over set of latitudes
         #merra2_pcap = coslat_average(rfield_seas,slat,nlat)
         case_pcap = coslat_average(case_seas,slat,nlat)
-        #print(case_seas.shape)
         case_pcap = case_seas.sel(lev=90,method="nearest").sel(lat=slice(-45, 45))
 
         #
