@@ -2899,11 +2899,12 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         """
         Format the period and amplitiude side axes
         """
-        if merra==False:
-            axes[side_axis].plot(data,case_lev,linewidth=1)
         axes[side_axis].plot(merra_data,merra2['lev'],color='k',linewidth=1)
         axes[side_axis].set_ylim(y_lims[0],y_lims[1])
         axes[side_axis].set_yscale("log")
+
+        if merra==False:
+            axes[side_axis].plot(data,case_lev,linewidth=1)
         if x == "period":
             axes[side_axis].set_xlim(0,40)
             axes[side_axis].set_xticks(np.arange(0,41,10))
@@ -2972,7 +2973,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     axes[main_key[merra_plot]].set_yscale("log")
     axes[main_key[merra_plot]].set_ylabel('hPa')
     axes[main_key[merra_plot]].tick_params(axis='y', labelsize=10)
-    axes[main_key[merra_plot]].set_title("MERRA2",y=y)
+    axes[main_key[merra_plot]].set_title("MERRA2",y=y,fontsize=12)
     axes[main_key[plot_num]].set_xticks(np.arange(1,nt+1,12),rotation=40)
 
     start_year = int(str(plotdata[start_ind].time.values)[0:4])
@@ -3020,7 +3021,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         axes[main_key[idx]].set_ylim(y_lims[0],y_lims[1])
         axes[main_key[idx]].set_yscale("log")
         axes[main_key[idx]].set_ylabel('hPa')
-        axes[main_key[idx]].set_title(nickname,y=y,fontsize=8)
+        axes[main_key[idx]].tick_params(axis='y', labelsize=10)
+        axes[main_key[idx]].set_title(nickname,y=y,fontsize=10)
         #print((nt_sub/12)+1)
         
         """
@@ -3039,7 +3041,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
         axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(start_idx/12)),
                                                       int(yrs+int(start_idx/12))+int(nt_sub/12)+1,
-                                                      1))
+                                                      1), labelsize=10)
+        #axes[main_key[merra_plot]].tick_params(axis='y', labelsize=10)
 
         #Case QBO Amplitude side axis
         amp = qbo_amplitude(plotdata)
@@ -3051,7 +3054,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 
         #Label first row of side axes only
         if idx==0:
-            axes[side1_key[idx]].set_title('Amplitude',y=y)
+            axes[side1_key[idx]].set_title('Amplitude',y=y,fontsize=12)
             axes[side2_key[idx]].set_title('Period',y=y)
 
     # Adjust the vertical spacing (hspace)
