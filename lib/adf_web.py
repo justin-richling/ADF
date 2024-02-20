@@ -288,8 +288,8 @@ class AdfWeb(AdfObs):
             asset_path = None
         else:
             html_name = f'plot_page_{web_data.stem}.html'
-            print(web_data)
-            print(html_name)
+            #print(web_data)
+            #print(html_name)
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
@@ -305,7 +305,7 @@ class AdfWeb(AdfObs):
                             html_file = html_file,
                             asset_path = asset_path,
                             multi_case = multi_case)
-        print("WTF????",web_data.ext)
+        #print("WTF????",web_data.ext)
 
         #Add web data object to list:
         self.__website_data.append(web_data)
@@ -635,7 +635,7 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 #End if
 
-                print(web_data.plot_type,web_data.ext)
+                #print(web_data.plot_type,web_data.ext)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "ext": web_data.ext,
@@ -689,7 +689,7 @@ class AdfWeb(AdfObs):
                 #Remove keys from main dictionary for this html page
                 templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                 templ_rend_kwarg_dict["list"] = jinja_list
-                print("AHHOIDHSKLFNLKSNFLK",templ_rend_kwarg_dict["plottype_title"],templ_rend_kwarg_dict["ext"])
+                #print("AHHOIDHSKLFNLKSNFLK",templ_rend_kwarg_dict["plottype_title"],templ_rend_kwarg_dict["ext"])
                 mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
 
                 #Write mean diagnostic plots HTML file:

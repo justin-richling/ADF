@@ -140,55 +140,64 @@ def tem(adf):
     for s in seasons:
         #Location to save plots
         plot_name = plot_location / f"TEM_{s}_WACCM_SeasonalCycle_Mean.png"
+
+        # Check redo_plot. If set to True: remove old plot, if it already exists:
+        if (not redo_plot) and plot_name.is_file():
+            #Add already-existing plot to website (if enabled):
+            adf.debug_log(f"'{plot_name}' exists and clobber is false.")
+            adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
+
         #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+        elif (redo_plot) and plot_name.is_file():
+            plot_name.unlink()
         
-        fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
-                                facecolor='w', edgecolor='k')
+            fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(fig_width,fig_height),
+                                    facecolor='w', edgecolor='k')
 
-        #Loop over model cases:
-        for idx,case_name in enumerate(case_names):
+            #Loop over model cases:
+            for idx,case_name in enumerate(case_names):
 
-            # Check redo_plot. If set to True: remove old plot, if it already exists:
-            if (not redo_plot) and plot_name.is_file():
-                #Add already-existing plot to website (if enabled):
-                adf.debug_log(f"'{plot_name}' exists and clobber is false.")
-                adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                #if (not redo_plot) and plot_name.is_file():
+                    #Add already-existing plot to website (if enabled):
+                #    adf.debug_log(f"'{plot_name}' exists and clobber is false.")
+                #    adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
 
-                #Continue to next iteration:
-                continue
-            elif (redo_plot) and plot_name.is_file():
-                plot_name.unlink()
+                    #Continue to next iteration:
+                    #continue
+                #elif (redo_plot) and plot_name.is_file():
+                #    plot_name.unlink()
 
-            #Extract start and end year values:
-            start_year = syear_cases[idx]
-            end_year   = eyear_cases[idx]
+                #Extract start and end year values:
+                start_year = syear_cases[idx]
+                end_year   = eyear_cases[idx]
 
-            #Open the TEM file
-            output_loc_idx = Path(tem_loc) / case_name
-            case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
-            tem = output_loc_idx / case_file_name
+                #Open the TEM file
+                output_loc_idx = Path(tem_loc) / case_name
+                case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
+                tem = output_loc_idx / case_file_name
 
-            #Grab the data for the TEM netCDF files
-            if tem.is_file():
-                ds = xr.open_dataset(tem)
-            else:
-                print(f"\t'{case_file_name}' does not exist. TEM plots will be skipped.")
-                return
+                #Grab the data for the TEM netCDF files
+                if tem.is_file():
+                    ds = xr.open_dataset(tem)
+                else:
+                    print(f"\t'{case_file_name}' does not exist. TEM plots will be skipped.")
+                    return
 
-            climo_yrs = {"test":[syear_cases[idx], eyear_cases[idx]],
-                         "base":[syear_baseline, eyear_baseline]}
+                climo_yrs = {"test":[syear_cases[idx], eyear_cases[idx]],
+                            "base":[syear_baseline, eyear_baseline]}
 
-            #Setup and plot the sub-plots
-            tem_plot(ds, ds_base, case_nicknames, axs, s, var_list, res, obs, climo_yrs)
+                #Setup and plot the sub-plots
+                tem_plot(ds, ds_base, case_nicknames, axs, s, var_list, res, obs, climo_yrs)
 
-        #Set figure title
-        plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.928)
+            #Set figure title
+            plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.928)
 
-        #Write the figure to provided workspace/file:
-        fig.savefig(plot_name, bbox_inches='tight', dpi=300)
+            #Write the figure to provided workspace/file:
+            fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
-        #Add plot to website (if enabled):
-        adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
+            #Add plot to website (if enabled):
+            adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
 
     print("  ...TEM plots have been generated successfully.")
 

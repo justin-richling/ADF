@@ -259,7 +259,8 @@ def seasonal_cycle(adfobj):
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                 adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
             
-            else:
+            elif (redo_plot) and plot_name.is_file():
+                plot_name.unlink()
                 print("making plots, eh?")
                 #for cam_var in calc_var_list:
                 #for interval in [6,12,"DJF", "JJA"]:
@@ -336,7 +337,7 @@ def seasonal_cycle(adfobj):
                                     category="Seasonal Cycle",
                                     )
     
-    else:
+    elif (redo_plot) and plot_name.is_file():
         print("making plots, eh?")
         plot_name.unlink()
         pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
@@ -359,7 +360,7 @@ def seasonal_cycle(adfobj):
                                     category="Seasonal Cycle",
                                     )
     
-    else:
+    elif (redo_plot) and plot_name.is_file():
         plot_name.unlink()
         print("making plots, eh?")
         pf.waccm_qbo(plot_name, case_names, nicknames, cases_coords, merra2, syear_cases, eyear_cases)
