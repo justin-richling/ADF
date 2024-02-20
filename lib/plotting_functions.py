@@ -2536,7 +2536,8 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                         loc='center right',
                         borderpad=-1.5
                        )
-            fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+            cbar.ax.tick_params(axis='y', labelsize=8)
 
         #Difference with SABER and SABER contours
         #########################################
@@ -2586,7 +2587,8 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                         loc='center right',
                         borderpad=-1.5
                        )
-            fig.colorbar(cf, cax=axins, orientation="vertical", label=units,labelsize=10)
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+            cbar.ax.tick_params(axis='y', labelsize=8)
 
     #Set up main plot title
     if time_avg == "month":
