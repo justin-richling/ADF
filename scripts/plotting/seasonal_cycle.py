@@ -205,7 +205,7 @@ def seasonal_cycle(adfobj):
 
     #Zoanl Mean Wind and Temp vs MERRA2 and SABER
     #--------------------------------------------
-    for cam_var in calc_var_list:
+    for cam_var in ["U","T"]:
         for interval in [6,12,"DJF", "JJA"]:
             if isinstance(interval, int):
                 interval = month_dict[interval]
