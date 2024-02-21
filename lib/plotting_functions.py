@@ -2677,7 +2677,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         ax.set_ylim(300,1)
         ax.set_yticks([300,100,30,10])
         ax.set_xticks(np.arange(0,12,2),rotation=40)
-        ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40,fontsize=10)
+        ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40,fontsize=8)
         if idx > 0:
             plt.yticks([])
         else:
@@ -2708,9 +2708,12 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
                                 width="5%",
                                 height="80%",
                                 loc='center right',
-                                borderpad=-2.5
+                                borderpad=-1.5
                                )
-                fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
+                cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
+                cbar.ax.tick_params(axis='y', labelsize=8)
+                # Set the font size for the colorbar label
+                cbar.set_label("K", fontsize=10, labelpad=1)
 
     
     
