@@ -2488,6 +2488,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                        )
             cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
             cbar.ax.tick_params(axis='y', labelsize=8)
+            cbar.set_label(units, fontsize=10, labelpad=1)
 
         #Difference with MERRA2 and MERRA2 contours
         ###########################################
@@ -2539,6 +2540,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                        )
             cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
             cbar.ax.tick_params(axis='y', labelsize=8)
+            cbar.set_label(units, fontsize=10, labelpad=1)
 
         #Difference with SABER and SABER contours
         #########################################
