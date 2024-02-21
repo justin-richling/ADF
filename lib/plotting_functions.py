@@ -2556,7 +2556,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                                color=contour.collections[0].get_edgecolor(),
                                label='SABER interp')]
 
-            ax.legend(handles=legend_elements, loc='upper right')
+            ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
         #End if
 
         #Plot difference contour fill
