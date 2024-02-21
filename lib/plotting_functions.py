@@ -2468,7 +2468,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         ax.set_ylim(1000,0.0001)
         plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
         plt.xticks(np.arange(-90,91,45),rotation=40)
-        ax.set_xticklabels([])
+        ax.tick_params(axis='x', labelsize=8)
         if idx > 0:
             plt.yticks([])
         else:
@@ -2518,7 +2518,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         ax.set_ylim(1000,0.1)
         plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
         plt.xticks(np.arange(-90,91,45),rotation=40)
-        ax.set_xticklabels([])
+        ax.tick_params(axis='x', labelsize=8)
         if idx > 0:
             plt.yticks([])
         else:
