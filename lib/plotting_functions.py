@@ -2839,7 +2839,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                                 borderpad=-2.5
                                )
                 cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,
-                                    ticks=np.arange(190,221,5)
+                                    ticks=levs
                                    )
                 cbar.add_lines(c)
     fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.97,horizontalalignment="center")
