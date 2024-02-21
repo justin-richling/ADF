@@ -2787,9 +2787,11 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
         #Average over set of latitudes
         case_pcap = coslat_average(case_seas,slat,nlat)
         case_pcap = case_seas.sel(lev=vert_lev,method="nearest").sel(lat=slice(slat, nlat))
+        if var == "Q":
+            case_pcap = case_pcap*1e6
 
         #
-        [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(-45, 45)),
+        [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(slat, nlat)),
                                             np.arange(0,25))
         #Set up plot
         ax = fig.add_subplot(nrows, ncols, idx+1)
