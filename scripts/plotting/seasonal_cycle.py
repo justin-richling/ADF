@@ -51,7 +51,7 @@ cont_ranges = {"U":{"levs":wind_levs,"diff_levs":wind_diff_levs,"units":"m/s"},
 
 calc_var_list = ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
 #calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
-calc_var_list = ['U','T']
+calc_var_list = ['U','T','Q']
 
 merra2_vars = ['U','T','V','lat','lev']
 
