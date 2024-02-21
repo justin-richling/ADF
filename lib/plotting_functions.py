@@ -2588,7 +2588,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                         loc='center right',
                         borderpad=-1.5
                        )
-            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,fontsize=10)
             cbar.ax.tick_params(axis='y', labelsize=8)
 
     #Set up main plot title
