@@ -59,6 +59,11 @@ merra2_vars = ['U','T','V','lat','lev']
 obs_cam_vars={"saber":{"U":"u", "T":"temp"},
               "merra":{"U":"U", "T":"T"}}
 
+var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.2),"cmap":'RdYlBu',"title":f"H$_{2}$O Mixing Ratio",
+                "ylabels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30},
+            "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,1),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
+                "ylabels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15}}
+
 #
 # --- Main Function Shares Name with Module: regional_map_multicase ---
 #
@@ -252,6 +257,7 @@ def seasonal_cycle(adfobj):
     
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
+    var = "T"
     plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
     if (not redo_plot) and plot_name.is_file():
@@ -267,8 +273,37 @@ def seasonal_cycle(adfobj):
         if plot_name.is_file():
             plot_name.unlink()
 
-        pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
+        #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
+        pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly)
         adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                                    plot_type="WACCM",
+                                    ext="SeasonalCycle_Mean",
+                                    category="Seasonal Cycle",
+                                    )
+    #End if
+
+
+    #H20 Mixing Ratio @ 100hPa
+    #----------------------------------
+    var = "Q"
+    plot_name = plot_loc / f"MixRatio_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+
+    if (not redo_plot) and plot_name.is_file():
+        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+        adfobj.add_website_data(plot_name, "MixRatio", case_name, season="ANN",
+                                    plot_type="WACCM",
+                                    ext="SeasonalCycle_Mean",
+                                    category="Seasonal Cycle",
+                                    )
+    
+    elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+        #If redo plot, delete the file
+        if plot_name.is_file():
+            plot_name.unlink()
+
+        #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
+        pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly)
+        adfobj.add_website_data(plot_name, "MixRatio", case_name, season="ANN",
                                     plot_type="WACCM",
                                     ext="SeasonalCycle_Mean",
                                     category="Seasonal Cycle",

@@ -2387,6 +2387,8 @@ obs_cam_vars={"saber":{"U":"u", "T":"temp"},
               "merra":{"U":"U", "T":"T"}}
 
 
+
+
 def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
     """
 
@@ -2729,8 +2731,8 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
 ########
 
 
-
-def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
+#def cold_point_temp(var, var_dict, plot_name, case_names, case_runs, cases_monthly):
+def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_monthly):
     """
     """
 
@@ -2738,8 +2740,17 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
     for i in list(month_dict.keys())[::3]:
         ahh.append(month_dict[i].lower().capitalize())
 
-    slat = -45
-    nlat = 45
+    #slat = -45
+    #nlat = 45
+    slat = var_dict[var]["slat"]
+    nlat = var_dict[var]["nlat"]
+    cmap = var_dict[var]["cmap"]
+    levs = var_dict[var]["levels"]
+    units = var_dict[var]["units"]
+    vert_lev = var_dict[var]["lev"]
+    title = var_dict[var]["title"]
+    y_labels = var_dict[var]["y_labels"]
+    tick_inter = var_dict[var]["tick_inter"]
 
     nplots = len(case_names)
     if nplots > 4:
@@ -2771,11 +2782,11 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
             if month == 12:
                 month = 0
 
-            case_seas[m] = ds_month['T'][month_dict[month+1]]
+            case_seas[m] = ds_month[var][month_dict[month+1]]
 
         #Average over set of latitudes
         case_pcap = coslat_average(case_seas,slat,nlat)
-        case_pcap = case_seas.sel(lev=90,method="nearest").sel(lat=slice(-45, 45))
+        case_pcap = case_seas.sel(lev=vert_lev,method="nearest").sel(lat=slice(slat, nlat))
 
         #
         [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(-45, 45)),
@@ -2784,11 +2795,11 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
         ax = fig.add_subplot(nrows, ncols, idx+1)
 
         cf=plt.contourf(lat_grid, time_grid, (case_pcap),
-                        levels=np.arange(190,221,1),
-                        cmap='RdBu_r',zorder=100
+                        levels=levs,
+                        cmap=cmap,zorder=100
                       )
         c=plt.contour(lat_grid, time_grid, (case_pcap),
-                        levels=np.arange(190,221,1),
+                        levels=levs,
                         colors='k',linewidths=0.5
                       )
 
@@ -2812,8 +2823,10 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
             plt.ylabel('Latitude')
 
         #Format the y-axis
-        ax.set_yticks(np.arange(-45,46,15))
-        ax.set_yticklabels(("45S","30S","15S","EQ","15N","30N","45N"))
+        #s = -int(y_labels[0][0:2])
+        #e = int(y_labels[0][0:2])
+        ax.set_yticks(np.arange(slat,nlat+1,tick_inter))
+        ax.set_yticklabels(y_labels)
 
         #Check to see where the colorbar will go
         if ((idx==2*(row-1)) and (idx == nplots-1)) or ((idx+1) % 2 == 0):
@@ -2823,11 +2836,11 @@ def cold_point_temp(plot_name, case_names, case_runs, cases_monthly):
                                 loc='center right',
                                 borderpad=-2.5
                                )
-                cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K',
+                cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,
                                     ticks=np.arange(190,221,5)
                                    )
                 cbar.add_lines(c)
-    fig.suptitle(f"Cold Point Tropopause (CPT) - 90hPa",fontsize=16,y=0.97,horizontalalignment="center")
+    fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.97,horizontalalignment="center")
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
