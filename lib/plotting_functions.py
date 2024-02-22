@@ -2822,13 +2822,13 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
 
         #Add latitude label to first column of each row
         if idx==2*(row-1):
-            plt.ylabel('Latitude')
+            plt.ylabel('Latitude',fontsize=10)
 
         #Format the y-axis
         #s = -int(y_labels[0][0:2])
         #e = int(y_labels[0][0:2])
         ax.set_yticks(np.arange(slat,nlat+1,tick_inter))
-        ax.set_yticklabels(y_labels)
+        ax.set_yticklabels(y_labels,fontsize=10)
 
         #Check to see where the colorbar will go
         if ((idx==2*(row-1)) and (idx == nplots-1)) or ((idx+1) % 2 == 0):
@@ -2839,9 +2839,13 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                                 borderpad=-1.5
                                )
                 cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,
-                                    ticks=levs
+                                    #ticks=levs
                                    )
                 cbar.add_lines(c)
+                cbar.ax.tick_params(axis='y', labelsize=8)
+                # Set the font size for the colorbar label
+                cbar.set_label(units, fontsize=10, labelpad=1)
+
     fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.97,horizontalalignment="center")
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)

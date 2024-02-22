@@ -709,7 +709,11 @@ class AdfWeb(AdfObs):
                 plot_types = plot_type_html
             plot_types = plot_type_html
             #End if
-
+            
+            #List of ADF default plot types
+            avail_plot_types = ["Tables","LatLon","LatLon_Vector","Zonal","Meridonal","NHPolar","SHPolar","Special","WACCM"]
+            if plot_types not in avail_plot_types:
+                avail_plot_types.append(plot_types)
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
@@ -718,7 +722,8 @@ class AdfWeb(AdfObs):
                                             base_name=data_name,
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
-                                            plot_types=plot_types)
+                                            plot_types=plot_types,
+                                            avail_plot_types=avail_plot_types)
 
             #Write Mean diagnostics index HTML file:
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
