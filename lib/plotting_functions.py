@@ -2952,9 +2952,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 
     contour_levels = np.arange(-35, 35, 2.5)
 
-    #MERRA2 plot asix number based off number of CAM cases
-    plot_num = len(case_names)
-    merra_plot = plot_num
+    #Plot MERRA2 last; this will be based on number of CAM cases
+    merra_idx = len(case_names)
 
     nt = 108
     plotdata = coslat_average(merra2['U'],-10,10)
@@ -2966,33 +2965,33 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     end_ind=start_ind+nt
 
     data = plotdata[start_ind:end_ind,:]
-    cf = axes[main_key[merra_plot]].contourf(lev_grid, time_grid, data,
+    cf = axes[main_key[merra_idx]].contourf(lev_grid, time_grid, data,
                                         levels=contour_levels, cmap='RdBu_r')
-    c = axes[main_key[merra_plot]].contour(lev_grid, time_grid, data,
-                                        levels=contour_levels[::5], colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
+    #c = axes[main_key[merra_plot]].contour(lev_grid, time_grid, data,
+    #                                    levels=contour_levels[::5], colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
     """
     axins = inset_axes(axes[main_key[merra_plot]], width="3%", height="80%", loc='center right', borderpad=-0.5)
     cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="m/s",
                                     ticks=contour_levels)
     cbar.add_lines(c)
     """
-    axes[main_key[merra_plot]].set_ylim(y_lims[0],y_lims[1])
-    axes[main_key[merra_plot]].set_yscale("log")
-    axes[main_key[merra_plot]].set_ylabel('hPa',fontsize=10)
-    axes[main_key[merra_plot]].tick_params(axis='y', labelsize=8)
-    axes[main_key[merra_plot]].set_title("MERRA2",y=y,fontsize=10)
-    axes[main_key[plot_num]].set_xticks(np.arange(1,nt+1,12),rotation=40)
+    axes[main_key[merra_idx]].set_ylim(y_lims[0],y_lims[1])
+    axes[main_key[merra_idx]].set_yscale("log")
+    axes[main_key[merra_idx]].set_ylabel('hPa',fontsize=10)
+    axes[main_key[merra_idx]].tick_params(axis='y', labelsize=8)
+    axes[main_key[merra_idx]].set_title("MERRA2",y=y,fontsize=10)
+    axes[main_key[merra_idx]].set_xticks(np.arange(1,nt+1,12),rotation=40)
 
     start_year = int(str(plotdata[start_ind].time.values)[0:4])
-    axes[main_key[plot_num]].set_xticklabels(np.arange(start_year,start_year+(nt/12),1).astype(int),fontsize=8)
+    axes[main_key[merra_idx]].set_xticklabels(np.arange(start_year,start_year+(nt/12),1).astype(int),fontsize=8)
 
     #MERRA QBO Amplitude side axis
     amp_m = qbo_amplitude(plotdata)
-    axes = format_side_axes(axes,side1_key[merra_plot],"amplitude",amp_m,merra=True)
+    axes = format_side_axes(axes,side1_key[merra_idx],"amplitude",amp_m,merra=True)
 
     #MERRA QBO Period side axis
     period_m = qbo_frequency(plotdata)
-    axes = format_side_axes(axes,side2_key[merra_plot],"period",period_m,merra=True)
+    axes = format_side_axes(axes,side2_key[merra_idx],"period",period_m,merra=True)
 
     #Loop over CAM case data
     for idx,case_name in enumerate(case_names):
@@ -3025,8 +3024,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         end_idx = start_idx+(12*9)+1
         cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels, cmap='RdBu_r')
-        c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
-                                    levels=contour_levels[::5], colors='k')
+        #c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
+        #                            levels=contour_levels[::5], colors='k')
         
         """
         axins = inset_axes(axes[main_key[idx]], width="3%", height="80%", loc='center right', borderpad=-0.5)
