@@ -687,11 +687,14 @@ class AdfWeb(AdfObs):
                 plot_types = plot_type_html
             plot_types = plot_type_html
             #End if
-            print(plot_types)
+
             #List of ADF default plot types
             avail_plot_types = ["Tables","LatLon","LatLon_Vector","Zonal","Meridonal","NHPolar","SHPolar","Special","WACCM"]
-            if plot_types not in avail_plot_types:
-                avail_plot_types.append(plot_types)
+            
+            for ptype in plot_types.keys():
+                print(ptype)
+                if ptype not in avail_plot_types:
+                    avail_plot_types.append(plot_types)
             print(avail_plot_types)
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
