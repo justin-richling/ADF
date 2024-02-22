@@ -35,14 +35,14 @@
     </div>
 
     <div class="grid-container">
-      {% for type, html_file in plot_types.items() %}
-        {% if type in avail_plot_types %}
+      {% for avail_type in avail_plot_types %}
+        {% if type in plot_types.keys() %}
           <div class="grid-item">
-            <a href={{ html_file }} style="font-size: 30px;"> &nbsp; {{ type }} </a>
+            <a href={{ plot_types[type] }} style="font-size: 30px;"> &nbsp; {{ type }} </a>
           </div><!--grid-item-->
         {% else %}
           <div class="grid-item-blocked">
-            <a-blocked style="font-size: 30px;">{{ type }}</a-blocked>
+            <a-blocked style="font-size: 30px;">{{ avail_type }}</a-blocked>
           </div><!--grid-item-blocked-->
         {% endif %}
       {% endfor %}
