@@ -402,10 +402,10 @@ def plotcolorbar(fig, ci, cmin, cmax, titlestr, x1, x2, y1, y2,
     
     if (ticks):
         clb = mpl.colorbar.ColorbarBase(ax, cmap=mymap,
-           orientation=orient, norm=norm, values=clevplot, ticks=ticks, pad=0.1)
+           orientation=orient, norm=norm, values=clevplot, ticks=ticks)
     else:
         clb = mpl.colorbar.ColorbarBase(ax, cmap=mymap, 
-           orientation=orient, norm=norm, values=clevplot, pad=0.1)
+           orientation=orient, norm=norm, values=clevplot)
 
     clb.ax.tick_params(labelsize=fsize)
     clb.set_label(titlestr, fontsize=fsize+2)
