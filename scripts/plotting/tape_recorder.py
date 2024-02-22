@@ -141,9 +141,13 @@ def tape_recorder(adfobj):
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
 
-    if len(case_names) > 4:
-        rows = 2
-    fig = plt.figure(figsize=(25,16))
+    # Total number of plots
+    case_num = alldat_concat_LT.run.size+2
+
+    # Calculate the number of rows needed
+    rows = (case_num + 5 - 1) // 5
+
+    fig = plt.figure(figsize=(28,rows*10))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
     plot_step = 0.5e-7
@@ -500,7 +504,7 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
                            fontsize=8)
     
     ax.contourf(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, cmap=mymap, extend='max')
-    ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, colors="k", extend='max',linewidth=0.75)
+    ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, colors="k", extend='max',linewidths=0.25)
     ax.set_ylim(-np.log10(100),-np.log10(3))
     ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3)])
     ax.set_yticklabels(['100','30','10','3'])
