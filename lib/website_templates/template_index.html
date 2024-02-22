@@ -35,7 +35,7 @@
     </div>
 
     <div class="grid-container">
-      {% for type, html_file in avail_plot_types %}
+      {% for type, html_file in plot_types.items() %}
         {% if type in avail_plot_types %}
           <div class="grid-item">
             <a href={{ html_file }} style="font-size: 30px;"> &nbsp; {{ type }} </a>
