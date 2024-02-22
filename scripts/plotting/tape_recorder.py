@@ -147,7 +147,7 @@ def tape_recorder(adfobj):
     # Calculate the number of rows needed
     rows = (case_num + 5 - 1) // 5
 
-    fig = plt.figure(figsize=(28,rows*10))
+    fig = plt.figure(figsize=(25,rows*16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
     plot_step = 0.5e-7
