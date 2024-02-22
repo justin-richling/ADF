@@ -38,7 +38,7 @@
       {% for avail_type in avail_plot_types %}
         {% if avail_type in plot_types.keys() %}
           <div class="grid-item">
-            <a href={{ plot_types[type] }} style="font-size: 30px;"> &nbsp; {{ avail_type }} </a>
+            <a href={{ plot_types[avail_type] }} style="font-size: 30px;"> &nbsp; {{ avail_type }} </a>
           </div><!--grid-item-->
         {% else %}
           <div class="grid-item-blocked">
