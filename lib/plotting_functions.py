@@ -2836,7 +2836,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                                 width="3%",
                                 height="80%",
                                 loc='center right',
-                                borderpad=-2.5
+                                borderpad=-1.5
                                )
                 cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,
                                     ticks=levs
@@ -2964,8 +2964,17 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     [time_grid, lev_grid] = np.meshgrid(merra2['lev'],np.arange(1,nt+1,1))
     start_ind=252-12
     end_ind=start_ind+nt
-    axes[main_key[merra_plot]].contourf(lev_grid, time_grid, plotdata[start_ind:end_ind,:],
+
+    data = plotdata[start_ind:end_ind,:]
+    cf = axes[main_key[merra_plot]].contourf(lev_grid, time_grid, data,
                                         levels=contour_levels, cmap='RdBu_r')
+    c = axes[main_key[merra_plot]].contour(lev_grid, time_grid, data,
+                                        levels=contour_levels, colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
+
+    axins = inset_axes(axes[main_key[merra_plot]], width="3%", height="80%", loc='center right', borderpad=-0.5)
+    cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="m/s",
+                                    ticks=contour_levels)
+    cbar.add_lines(c)
 
     axes[main_key[merra_plot]].set_ylim(y_lims[0],y_lims[1])
     axes[main_key[merra_plot]].set_yscale("log")
@@ -3013,8 +3022,16 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #QUESTION: what if the data doesn't have 9 years? - we will need to clip this...
         start_idx = 0 #119-24
         #print(plotdata[start_idx:start_idx+(12*9),:].shape)
-        axes[main_key[idx]].contourf(lev_grid[start_idx:start_idx+(12*9)+1,:], time_grid[start_idx:start_idx+(12*9)+1,:], plotdata[start_idx:start_idx+(12*9)+1,:],
+        end_idx = start_idx+(12*9)+1
+        cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels, cmap='RdBu_r')
+        c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
+                                    levels=contour_levels, colors='k')
+        
+        axins = inset_axes(axes[main_key[idx]], width="3%", height="80%", loc='center right', borderpad=-0.5)
+        cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="m/s",
+                                        ticks=contour_levels)
+        cbar.add_lines(c)
 
         axes[main_key[idx]].set_ylim(y_lims[0],y_lims[1])
         axes[main_key[idx]].set_yscale("log")
