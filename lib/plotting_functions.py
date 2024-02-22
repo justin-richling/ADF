@@ -2969,13 +2969,13 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     cf = axes[main_key[merra_plot]].contourf(lev_grid, time_grid, data,
                                         levels=contour_levels, cmap='RdBu_r')
     c = axes[main_key[merra_plot]].contour(lev_grid, time_grid, data,
-                                        levels=contour_levels, colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
-
+                                        levels=contour_levels[::5], colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
+    """
     axins = inset_axes(axes[main_key[merra_plot]], width="3%", height="80%", loc='center right', borderpad=-0.5)
     cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="m/s",
                                     ticks=contour_levels)
     cbar.add_lines(c)
-
+    """
     axes[main_key[merra_plot]].set_ylim(y_lims[0],y_lims[1])
     axes[main_key[merra_plot]].set_yscale("log")
     axes[main_key[merra_plot]].set_ylabel('hPa',fontsize=10)
@@ -3026,13 +3026,17 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels, cmap='RdBu_r')
         c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
-                                    levels=contour_levels, colors='k')
+                                    levels=contour_levels[::5], colors='k')
         
+        """
         axins = inset_axes(axes[main_key[idx]], width="3%", height="80%", loc='center right', borderpad=-0.5)
         cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="m/s",
                                         ticks=contour_levels)
         cbar.add_lines(c)
-
+        cbar.ax.tick_params(axis='y', labelsize=8)
+        # Set the font size for the colorbar label
+        cbar.set_label("m/s", fontsize=10, labelpad=1)
+        """
         axes[main_key[idx]].set_ylim(y_lims[0],y_lims[1])
         axes[main_key[idx]].set_yscale("log")
         axes[main_key[idx]].set_ylabel('hPa',fontsize=10)
