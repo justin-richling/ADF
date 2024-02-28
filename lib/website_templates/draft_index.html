@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+
+    <!-- update the title and add a description -->
+    <title>CESM Unified Diagnostics CUPiD</title>
+    <meta name="description" content="" />
+    <link rel="icon" href="https://raw.githubusercontent.com/NCAR/CUPiD/main/images/logo.png" />
+    <style>
+      .grid-container {
+  display: grid;
+  column-gap: 30px;
+  row-gap: 50px;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: #e4eef0;
+      padding: 25px;
+      border-radius: 15px;
+      }
+
+      .grid-item {
+  background-color: rgba(255, 255, 255, 0.6);
+  font-family: Tahoma, Geneva, Verdana, sans-serif;
+
+  border-radius: 15px;  padding: 10px;
+
+  text-align: center;
+      }
+
+
+      nav.primary-navigation {
+  margin: 0 auto;
+  display: block;
+  padding: 10px 0 0 0;
+  text-align: center;
+  font-size: 16px;
+}
+
+nav.primary-navigation ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  display: inline-block;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
+}
+
+nav.primary-navigation li {
+  display: inline-flex;
+  font-family: arvo, Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16pt;
+  text-align: center;
+  text-transform: none;
+  position: relative;
+  color: black;
+  min-width:max-content;
+}
+
+nav.primary-navigation li:hover {
+  cursor: pointer;
+}
+
+nav.primary-navigation ul li ul {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  margin-top: 1rem;
+  transition: all 0.25s ease;
+  background: white;
+  display: inline-block;
+  min-width:max-content;
+}
+
+nav.primary-navigation ul li:hover > ul, nav.primary-navigation ul li ul:hover {
+  visibility: visible;
+  opacity: 1;
+  display: block;
+  width: auto;
+  text-align: left;
+  margin-top: 2rem;
+  background: white;
+}
+
+nav.primary-navigation ul li ul li {
+  clear: both;
+  text-align: left;
+  margin-bottom:0px;
+  border-style: none;
+  background: white;
+  display: block;
+}
+
+nav.primary-navigation li a {
+  color: #174ea6;
+  display: block;
+  padding: 8px;
+}
+nav.primary-navigation li a:hover {
+  color: #3ca0e7;
+}
+
+nav.primary-navigation ul li ul li a:hover {
+  padding-left: 10px;
+  border-left: 2px solid #3ca0e7;
+  transition: all 0.3s ease;
+  display: block;
+}
+      </style>
+</head>
+
+<body class="ncar">
+
+
+    <main class="container-lg py-2 pt-md-3">
+      <h1>AMP Multi-Case Diagnostics</h1>
+
+      <div class="center">
+            <nav role="navigation" class="primary-navigation">
+            <ul>
+              <li><a href="index.html">Case Home</a></li>
+              <li><a href="#">Links &dtrif;</a>
+                <ul class="dropdown">
+                  <li><a href="https://www.cesm.ucar.edu">CESM</a></li>
+                  <li><a href="https://www.cesm.ucar.edu/working_groups/Atmosphere/?ref=nav">AMWG</a></li>
+                  <li><a href="https://www.cgd.ucar.edu/amp/">AMP</a></li>
+                </ul>
+              </li>
+              <li><a href="https://github.com/NCAR/ADF">About</a></li>
+              <li><a href="https://github.com/NCAR/ADF/discussions">Contact</a></li>
+            </ul>
+          </nav>
+        </div><!--center-->
+        <div class="d-grid d-print-flex">
+            <nav aria-label="breadcrumb" class="breadcrumb-wrapper mb-2 d-print-none">
+                <ol class="breadcrumb">
+                    <!-- breadcrumb links start -->
+                    <li class="breadcrumb-item"><a href="https://www.cgd.ucar.edu">Home</a></li>
+                    <li class="breadcrumb-item"><a href="https://www2.cgd.ucar.edu/systems/templates">Unity Templates</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Template - 1 column with table</li>
+                    <!-- breadcrumb links end -->
+                </ol>
+            </nav>
+
+            <article class="main-content-wrapper">
+                <!-- update the page title -->
+                <!--<h1>CESM Unified Diagnostics CUPiD</h1>-->
+
+                <div class="main-content clearfix">
+                    <!-- main content area start -->
+                    <p></p>
+
+                    <p></p>
+
+
+		    <table class="table">
+
+
+                        <tbody>
+                            <tr>
+                                
+				<td>
+				  <strong>Case Names</strong>:<br>
+                                    b.e23_alpha16g.BLT1850.ne30_t232.068<br>
+				    b.e23_alpha16g.BLT1850.ne30_t232.070<br>
+				</td>
+				<td>
+                                  <strong>Baseline Name</strong>:<br>
+				 b.e23_alpha16b.BLT1850.ne30_t232.054 <br>
+				  
+                                   
+                                </td>
+                               
+                            </tr>
+                        </tbody>
+                    </table>
+
+<br>
+                 
+      <a style="font-size:35px"><strong>Plot Types</strong></a><br><br>
+   
+		    <div class="grid-container">
+     
+		      <div class="grid-item">
+               <a href="https://project.cgd.ucar.edu/projects/ADF/" class="btn btn-outline-primary" style="font-size: 30px; border: none">Tables</a>
+            </div>
+            <div class="grid-item">
+                <a href="https://project.cgd.ucar.edu/projects/ADF/" class="btn btn-outline-primary" style="font-size: 30px; border: none">LatLon</a>
+            </div>
+            <div class="grid-item">
+                <a href="https://project.cgd.ucar.edu/projects/ADF/" class="btn btn-outline-primary" style="font-size: 30px; border: none">LatLon_Vector</a>
+            </div>
+            <div class="grid-item">
+                <a href="https://project.cgd.ucar.edu/projects/ADF/" class="btn btn-outline-primary" style="font-size: 30px; border: none">Zonal</a>
+            </div>
+            <div class="grid-item">
+                <button name="button" onclick="" style="font-size: 30px; border: none;" class="btn btn-outline-primary" disabled="">Meridonal</button>
+            </div>
+            <div class="grid-item">
+                <a href="https://project.cgd.ucar.edu/projects/ADF/" class="btn btn-outline-primary" style="font-size: 30px; border: none">NH Polar</a>
+            </div>
+            <div class="grid-item">
+                <a href="https://project.cgd.ucar.edu/projects/ADF/" class="btn btn-outline-primary" style="font-size: 30px; border: none">SH Polar</a>
+            </div>
+            <div class="grid-item">
+			<a href="https://project.cgd.ucar.edu/projects/ADF/multi-case/html_img/multi_case_mean_diag_Special.html" class="btn btn-outline-primary" style="font-size: 30px; border: none">Special</a>
+            </div>
+     
+		    </div><!--grid-container-ptype-->
+                    <!-- main content area end -->
+                </div>
+            </article>
+        </div>
+    </main>
+ 
+</body>
+</html>
