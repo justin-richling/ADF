@@ -4,7 +4,7 @@
     <!-- css -->
     <!--#include virtual="/styles/unity/css/css-include.html" -->
     <title>ADF Diagnostics</title>
-    <!--<link rel="stylesheet" href="templates/adf_diag.css">-->
+
     <meta name="description" content="" />
   </head>
   <body class="ncar">
@@ -46,30 +46,26 @@
               </tbody>
             </table>
           
+            <a style="font-size:35px"><strong>Plot Types</strong></a><br><br>
 
+            <div class="grid-container">
+              {% for avail_type in avail_plot_types %}
+                {% if avail_type in plot_types.keys() %}
+                  <div class="grid-item">
+                    <a href={{ plot_types[avail_type] }} class="btn btn-outline-primary" style="font-size: 30px; border: none">{{ avail_type }} </a>
+                  </div><!--grid-item-->
+                {% else %}
+                  <div class="grid-item">
+                    <button name="button" onclick="" style="font-size: 30px; border: none;" class="btn btn-outline-primary" disabled="">{{ avail_type }}</button>
+                  </div><!--grid-item-blocked-->
+                {% endif %}
+              {% endfor %}
+            </div><!--grid-container-->
 
-
-    <div class="center">
-      <h1>Plot Types</h1>
-    </div>
-
-    <div class="grid-container">
-      {% for avail_type in avail_plot_types %}
-        {% if avail_type in plot_types.keys() %}
-          <div class="grid-item">
-            <a href={{ plot_types[avail_type] }} class="btn btn-outline-primary" style="font-size: 30px; border: none">{{ avail_type }} </a>
-          </div><!--grid-item-->
-        {% else %}
-          <div class="grid-item-blocked">
-            <button name="button" onclick="" style="font-size: 30px; border: none;" class="btn btn-outline-primary" disabled="">{{ avail_type }}</button>
-          </div><!--grid-item-blocked-->
-        {% endif %}
-      {% endfor %}
-    </div><!--grid-container-ptype-->
-  </div><!--main-content clearfix-->
-  </article>
-</div><!--"d-grid d-print-flex"-->
-</main>
+          </div><!--main-content clearfix-->
+        </article>
+      </div><!--"d-grid d-print-flex"-->
+    </main>
   </body>
 </html>
 
