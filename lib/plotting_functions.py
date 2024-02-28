@@ -2984,10 +2984,11 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     data = plotdata[start_ind:end_ind,:]
     cf = axes[main_key[merra_idx]].contourf(lev_grid, time_grid, data,
                                         levels=contour_levels, cmap='RdBu_r')
+
+    c = axes[main_key[merra_idx]].contour(lev_grid, time_grid, data, alpha=0.5,
+                                        levels=contour_levels[::5], colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
     # add contour labels
-    lb = plt.clabel(cf, fontsize=6, inline=True, fmt='%r')
-    #c = axes[main_key[merra_plot]].contour(lev_grid, time_grid, data,
-    #                                    levels=contour_levels[::5], colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
+    lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
     """
     axins = inset_axes(axes[main_key[merra_plot]], width="3%", height="80%", loc='center right', borderpad=-0.5)
     cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="m/s",
@@ -3043,10 +3044,11 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         end_idx = start_idx+(12*9)+1
         cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels, cmap='RdBu_r')
+
+        c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
+                                    levels=contour_levels[::5], colors='k',alpha=0.5)
         # add contour labels
-        lb = plt.clabel(cf, fontsize=6, inline=True, fmt='%r');
-        #c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
-        #                            levels=contour_levels[::5], colors='k')
+        lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
         
         """
         axins = inset_axes(axes[main_key[idx]], width="3%", height="80%", loc='center right', borderpad=-0.5)
