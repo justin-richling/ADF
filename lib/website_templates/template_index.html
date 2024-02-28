@@ -24,34 +24,26 @@
 
         <article class="main-content-wrapper">
           <!-- update the page title -->
-          <h1>CESM Unified Diagnostics CUPiD</h1>
+          <h1>ADF Diagnostics</h1>
           <div class="main-content clearfix">
             <!-- main content area start -->
             <p></p>
 
             <p></p>
             <table class="table">
-              <thead class="">
-                <tr>
-                    <th>Brief Description</th>
-                    <th>Atmos</th>
-                    <th>Land</th>
-                    <th>Ice</th>
-                    <th>Ocean</th>
-                    <th>CVDP</th>
-                    <th>Length of Run Diagnostics</th>
-                </tr>
-              </thead>
               <tbody>
-                <tr>
+                  <tr>
                     <td>
-                      <strong>Baseline Name</strong>:<br>{{ base_name }}<br>
-                      <strong>Case Names</strong>:<br>{{ case_name }}<br>
-				  
-                                   
+                      <strong>Case Names</strong>:<br>
+                      b.e23_alpha16g.BLT1850.ne30_t232.068<br>
+                      b.e23_alpha16g.BLT1850.ne30_t232.070<br>
                     </td>
-
-
+                    <td>
+                      <strong>Baseline Name</strong>:<br>
+                      b.e23_alpha16b.BLT1850.ne30_t232.054<br>
+                    </td>
+                  </tr>
+              </tbody>
             </table>
           </div>
         </article>
@@ -87,12 +79,20 @@
     </div>
 
     <div class="grid-container">
-      {% for type, html_file in plot_types.items() %}
-      <div class="grid-item">
-        <a href={{ html_file }} style="font-size: 30px;"> &nbsp; {{ type }} </a>
-      </div><!--grid-item-->
+      {% for avail_type in avail_plot_types %}
+        {% if avail_type in plot_types.keys() %}
+          <div class="grid-item">
+            <a href={{ plot_types[avail_type] }} class="btn btn-outline-primary" style="font-size: 30px; border: none">{{ avail_type }} </a>
+          </div><!--grid-item-->
+        {% else %}
+          <div class="grid-item-blocked">
+            <button name="button" onclick="" style="font-size: 30px; border: none;" class="btn btn-outline-primary" disabled="">{{ avail_type }}</button>
+          </div><!--grid-item-blocked-->
+        {% endif %}
       {% endfor %}
     </div><!--grid-container-ptype-->
 
   </body>
 </html>
+
+<!--<a href="https://project.cgd.ucar.edu/projects/ADF/" class="btn btn-outline-primary" style="font-size: 30px; border: none">Tables</a>-->
