@@ -2620,12 +2620,12 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "s":
         slat = -90
         nlat = -60
-        title_ext = f"{nlat}-{slat}\u00b0"
+        title_ext = f"{np.abs(nlat)}-{np.abs(slat)}\u00b0S"
 
     if hemi == "n":
         slat = 60
         nlat = 90
-        title_ext = f"{slat}-{nlat}\u00b0"
+        title_ext = f"{slat}-{nlat}\u00b0N"
 
     nplots = len(case_names)
     if nplots > 4:
@@ -2727,7 +2727,8 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}",fontsize=13,y=0.97,horizontalalignment="center")
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}",fontsize=13,x=0.5,y=0.97,
+                 horizontalalignment="center")
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
@@ -2811,7 +2812,11 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                       )
         
         # add contour labels
-        lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
+        #lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
+
+        # Format contour labels
+        fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
+        ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
 
         #Add a horizontal line at 0 degrees latitude
         plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
