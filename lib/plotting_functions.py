@@ -2544,58 +2544,58 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
             cbar.ax.tick_params(axis='y', labelsize=8)
             cbar.set_label(units, fontsize=10, labelpad=1)
 
-        #Difference with SABER and SABER contours
-        #########################################
+        #Difference with SABER and SABER contours (Temp only)
+        #####################################################
+        if cam_var == "T":
+            #Set up new set of axes for third row
+            ax = fig.add_subplot(nrows, casenum, (casenum*2)+idx+1)
 
-        #Set up new set of axes for third row
-        ax = fig.add_subplot(nrows, casenum, (casenum*2)+idx+1)
+            #Plot interpolated contour
+            contour = plt.contour(lev_grid, lat_grid, saber_rfield.transpose(transpose_coords=True),
+                        colors='black', levels=levs,
+                        negative_linestyles='dashed', linewidths=.5, alpha=0.5)
+            if idx == 0:
+                #Add a legend for the contour lines for first plot only
+                legend_elements = [Line2D([0], [0],
+                                color=contour.collections[0].get_edgecolor(),
+                                label='SABER interp')]
 
-        #Plot interpolated contour
-        contour = plt.contour(lev_grid, lat_grid, saber_rfield.transpose(transpose_coords=True),
-                    colors='black', levels=levs,
-                    negative_linestyles='dashed', linewidths=.5, alpha=0.5)
-        if idx == 0:
-            #Add a legend for the contour lines for first plot only
-            legend_elements = [Line2D([0], [0],
-                               color=contour.collections[0].get_edgecolor(),
-                               label='SABER interp')]
+                ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
+            #End if
 
-            ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
-        #End if
+            #Plot difference contour fill
+            cf=plt.contourf(lev_grid, lat_grid,
+                            (data_array-saber_rfield).transpose(transpose_coords=True),
+                            levels=diff_levs, cmap='RdBu_r')
 
-        #Plot difference contour fill
-        cf=plt.contourf(lev_grid, lat_grid,
-                        (data_array-saber_rfield).transpose(transpose_coords=True),
-                        levels=diff_levs, cmap='RdBu_r')
+            #Format axes
+            plt.yscale("log")
+            ax.set_ylim(1000,0.1)
+            plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
+            plt.xticks(np.arange(-90,91,45),rotation=40)
+            ax.tick_params(axis='x', labelsize=8)
+            if idx > 0:
+                plt.yticks([])
+            else:
+                plt.ylabel('hPa',fontsize=10)
+            ax.tick_params(axis='y', labelsize=8)
 
-        #Format axes
-        plt.yscale("log")
-        ax.set_ylim(1000,0.1)
-        plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
-        plt.xticks(np.arange(-90,91,45),rotation=40)
-        ax.tick_params(axis='x', labelsize=8)
-        if idx > 0:
-            plt.yticks([])
-        else:
-            plt.ylabel('hPa',fontsize=10)
-        ax.tick_params(axis='y', labelsize=8)
+            #Set individual plot title
+            local_title = f'{case_name}\n {delta_symbol} from SABER'
+            plt.title(local_title, fontsize=font_size)
 
-        #Set individual plot title
-        local_title = f'{case_name}\n {delta_symbol} from SABER'
-        plt.title(local_title, fontsize=font_size)
-
-        #Make colorbar on last plot only
-        if idx == casenum-1:
-            axins = inset_axes(ax,
-                        width="5%",
-                        height="80%",
-                        loc='center right',
-                        borderpad=-1.5
-                       )
-            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
-            cbar.ax.tick_params(axis='y', labelsize=8)
-            # Set the font size for the colorbar label
-            cbar.set_label(units, fontsize=10, labelpad=1)
+            #Make colorbar on last plot only
+            if idx == casenum-1:
+                axins = inset_axes(ax,
+                            width="5%",
+                            height="80%",
+                            loc='center right',
+                            borderpad=-1.5
+                        )
+                cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units)
+                cbar.ax.tick_params(axis='y', labelsize=8)
+                # Set the font size for the colorbar label
+                cbar.set_label(units, fontsize=10, labelpad=1)
 
     #Set up main plot title
     if time_avg == "month":
@@ -2620,9 +2620,12 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "s":
         slat = -90
         nlat = -60
+        title_ext = f"{nlat}-{slat}\u00b0"
+
     if hemi == "n":
         slat = 60
         nlat = 90
+        title_ext = f"{slat}-{nlat}\u00b0"
 
     nplots = len(case_names)
     if nplots > 4:
@@ -2723,6 +2726,8 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         ptype = "SHPolar"
     if hemi == "n":
         ptype = "NHPolar"
+
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}",fontsize=16,y=0.97,horizontalalignment="center")
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
@@ -2804,6 +2809,9 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                         levels=levs,
                         colors='k',linewidths=0.5
                       )
+        
+        # add contour labels
+        lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
 
         #Add a horizontal line at 0 degrees latitude
         plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
@@ -2971,6 +2979,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     data = plotdata[start_ind:end_ind,:]
     cf = axes[main_key[merra_idx]].contourf(lev_grid, time_grid, data,
                                         levels=contour_levels, cmap='RdBu_r')
+    # add contour labels
+    lb = plt.clabel(cf, fontsize=6, inline=True, fmt='%r')
     #c = axes[main_key[merra_plot]].contour(lev_grid, time_grid, data,
     #                                    levels=contour_levels[::5], colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
     """
@@ -3028,6 +3038,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         end_idx = start_idx+(12*9)+1
         cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels, cmap='RdBu_r')
+        # add contour labels
+        lb = plt.clabel(cf, fontsize=6, inline=True, fmt='%r');
         #c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
         #                            levels=contour_levels[::5], colors='k')
         
