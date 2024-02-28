@@ -2727,7 +2727,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}",fontsize=12,x=0.5,y=0.97) #,horizontalalignment="center"
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}",fontsize=12,x=0.5,y=0.97,horizontalalignment="center") #,horizontalalignment="center"
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
@@ -2997,6 +2997,10 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     axins = inset_axes(axes[main_key[merra_idx]], width="100%", height="5%", loc='lower center', borderpad = -3.5)
     cbar = fig.colorbar(cf, cax=axins, orientation="horizontal", label="m/s",
                                         ticks=contour_levels[::3])
+    cbar.ax.tick_params(axis='x', labelsize=8)
+    # Set the font size for the colorbar label
+    cbar.set_label("m/s", fontsize=10, labelpad=1)
+
     axes[main_key[merra_idx]].set_ylim(y_lims[0],y_lims[1])
     axes[main_key[merra_idx]].set_yscale("log")
     axes[main_key[merra_idx]].set_ylabel('hPa',fontsize=10)

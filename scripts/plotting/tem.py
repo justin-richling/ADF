@@ -489,12 +489,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 dseasons.plot(ax=axs[8,2], y='lev', yscale='log', vmax=0.001, ylim=[1e3,1],cmap="BrBG",
                                     cbar_kwargs={'label': ds[var].units})
 
-        # EP flux divergence - meridionverticalal component
+        # EP flux divergence - meridional vertical component
         #------------------------------------------------------------------------------------------
         if var == "utendwtem":
             mseasons.plot(ax=axs[9,0], y='lev', yscale='log',vmax=0.0001, ylim=[1e3,1],
                                             cbar_kwargs={'label': ds[var].units})
-            mseasons.plot.contour(ax=axs[5,0], levels = 7, y='lev', yscale='log',
+            mseasons.plot.contour(ax=axs[9,0], levels = 7, y='lev', yscale='log',
                                             ylim=[1e3,1],
                                             colors='black', linestyles=None)
 
