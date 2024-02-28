@@ -2803,11 +2803,11 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
 
         cf=plt.contourf(lat_grid, time_grid, (case_pcap),
                         levels=levs,
-                        cmap=cmap,zorder=100
+                        cmap=cmap,#zorder=100
                       )
         c=plt.contour(lat_grid, time_grid, (case_pcap),
                         levels=levs,
-                        colors='k',linewidths=0.5
+                        colors='k',linewidths=0.5,alpha=0.5
                       )
         
         # add contour labels
