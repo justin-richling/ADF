@@ -2636,7 +2636,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     ncols = 4
     nrows = int(np.ceil(nplots/ncols))
 
-    fig = plt.figure(figsize=(2*7,nrows*4))
+    fig = plt.figure(figsize=(2*7,nrows*5))
 
     for idx,case_name in enumerate(case_names):
         ds = cases_coords[case_name]
@@ -2727,7 +2727,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}\n",fontsize=13,x=0.2,y=0.97)
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}\n",fontsize=12,x=0.5,y=1.1)
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
