@@ -190,7 +190,7 @@ def tape_recorder(adfobj):
     y1_loc = y1[count]-0.03
     y2_loc = y1[count]-0.02
 
-    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, 'Q (kg/kg)',
+    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, 'Q (vmr)',
                       x1_loc, x2_loc, y1_loc, y2_loc,
                       cmap=cmap)
 
