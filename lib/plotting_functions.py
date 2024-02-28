@@ -2727,8 +2727,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}",fontsize=13,x=0.5,y=0.97,
-                 horizontalalignment="center")
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}\n",fontsize=13,x=0.2,y=0.97)
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
