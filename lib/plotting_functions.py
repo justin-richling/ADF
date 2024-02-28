@@ -2667,7 +2667,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         [time_grid, lev_grid] = np.meshgrid(ds['lev'],np.arange(0,12))
 
         #Set up plot
-        ax = fig.add_subplot(nrows, ncols, idx)
+        ax = fig.add_subplot(nrows, ncols, idx+1)
 
         cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
                         levels=np.arange(-10,11,1),cmap='RdBu_r'
