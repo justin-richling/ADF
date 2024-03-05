@@ -2673,15 +2673,31 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
 
         #Set up plot
         ax = fig.add_subplot(nrows, ncols, idx+1)
-
+        clevs = np.arange(-10,11,1)
         cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
                         levels=np.arange(-10,11,1),cmap='RdYlBu_r'
                        ) #np.arange(-10,11,1)
+        c0=plt.contour(lev_grid, time_grid, (case_pcap-merra2_pcap), colors='grey',
+                           levels=clevs[::3],
+                           negative_linestyles='dashed',
+                           linewidths=.5, alpha=0.5)
+        fmt = {lev: '{:.0f}'.format(lev) for lev in c0.levels}
+        ax.clabel(c0, c0.levels, inline=True, fmt=fmt, fontsize=8)
 
         c=plt.contour(lev_grid, time_grid, merra2_pcap, colors='black',
                            levels=temp_levs,
                            negative_linestyles='dashed',
                            linewidths=.5, alpha=0.5)
+
+        fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
+        ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
+        if idx == 0:
+            #Add a legend for the contour lines for first plot only
+            legend_elements = [Line2D([0], [0],
+                               color=c.collections[0].get_edgecolor(),
+                               label='MERRA2 interp')]
+
+            ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
         #Format the axes
         plt.yscale("log")
         ax.set_ylim(300,1)
@@ -2732,7 +2748,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,x=0.35,y=1.1,horizontalalignment="center") #,horizontalalignment="center"
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,x=0.3,y=0.97,horizontalalignment="center") #,horizontalalignment="center"
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
@@ -2975,7 +2991,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     y = 1.00
     y_lims = [100,0.1]
 
-    contour_levels = np.arange(-35, 35, 2.5)
+    contour_levels = np.arange(-35, 36, 2.5)
 
     #Plot MERRA2 last; this will be based on number of CAM cases
     merra_idx = len(case_names)

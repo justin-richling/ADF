@@ -252,7 +252,7 @@ def seasonal_cycle(adfobj):
     # Latitude vs Month Plots
     #########################
 
-    var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.4),"cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
+    var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.2),"cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
                 "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100},
             "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
                 "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
