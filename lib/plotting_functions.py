@@ -2829,7 +2829,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                         cmap=cmap,#zorder=100
                       )
         c=plt.contour(lat_grid, time_grid, (case_pcap),
-                        levels=levs[::3],
+                        levels=levs,
                         colors='k',linewidths=0.5,alpha=0.5
                       )
         
@@ -2841,7 +2841,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
             fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
         else:
             fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
-        ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
+        ax.clabel(c, c.levels[::3], inline=True, fmt=fmt, fontsize=8)
 
         #Add a horizontal line at 0 degrees latitude
         plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
