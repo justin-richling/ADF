@@ -678,6 +678,8 @@ T:
   obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
   obs_name: "ERA5"
   obs_var_name: "T"
+  waccm:
+
 
 OMEGA:
   category: "State"
@@ -1092,6 +1094,15 @@ utendwtem:
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendwtem"
+
+lat_vs_month:
+  Q: {"slat":-90,"nlat":90,"levels":[0.5,5,0.4],
+      "cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
+      "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100}
+
+  T: {"slat":-45,"nlat":45,"levels":[190,221,2x],
+      "cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)","tick_inter":15,"units":"K",
+      "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"lev":90}
 
 #-----------
 #End of File

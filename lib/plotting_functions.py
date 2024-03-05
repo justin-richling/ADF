@@ -2458,7 +2458,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         #Plot case contour fill
         cf=plt.contourf(lev_grid, lat_grid,
                         data_array.transpose(transpose_coords=True),
-                        levels=levs, cmap='RdBu_r')
+                        levels=levs, cmap='RdYlBu_r')
 
         #Plot case contours (for highlighting)
         plt.contour(lev_grid, lat_grid,
@@ -2502,6 +2502,8 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         contour = plt.contour(lev_grid, lat_grid, merra_rfield.transpose(transpose_coords=True),
                     colors='black', levels=levs,
                     negative_linestyles='dashed', linewidths=.5, alpha=0.5)
+        fmt = {lev: '{:.0f}'.format(lev) for lev in contour.levels}
+        ax.clabel(contour, contour.levels[::4], inline=True, fmt=fmt, fontsize=8)
         if idx == 0:
             #Add a legend for the contour lines for first plot only
             legend_elements = [Line2D([0], [0],
@@ -2514,7 +2516,10 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         #Plot difference contour fill
         cf=plt.contourf(lev_grid, lat_grid,
                         (data_array-merra_rfield).transpose(transpose_coords=True),
-                        levels=diff_levs, cmap='RdBu_r')
+                        levels=diff_levs, cmap='RdYlBu_r')
+        fmt = {lev: '{:.0f}'.format(lev) for lev in cf.levels}
+        ax.clabel(cf, cf.levels[::4], inline=True, fmt=fmt, fontsize=8)
+
         #Format axes
         plt.yscale("log")
         ax.set_ylim(1000,0.1)
@@ -2566,7 +2571,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
             #Plot difference contour fill
             cf=plt.contourf(lev_grid, lat_grid,
                             (data_array-saber_rfield).transpose(transpose_coords=True),
-                            levels=diff_levs, cmap='RdBu_r')
+                            levels=diff_levs, cmap='RdYlBu_r')
 
             #Format axes
             plt.yscale("log")
@@ -2670,7 +2675,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         ax = fig.add_subplot(nrows, ncols, idx+1)
 
         cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
-                        levels=np.arange(-10,11,1),cmap='RdBu_r'
+                        levels=np.arange(-10,11,1),cmap='RdYlBu_r'
                        ) #np.arange(-10,11,1)
 
         c=plt.contour(lev_grid, time_grid, merra2_pcap, colors='black',
@@ -2727,7 +2732,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temps - {title_ext}",fontsize=12,x=0.35,y=1.1,horizontalalignment="center") #,horizontalalignment="center"
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,x=0.35,y=1.1,horizontalalignment="center") #,horizontalalignment="center"
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
@@ -2747,6 +2752,8 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
 
     #slat = -45
     #nlat = 45
+    #var_dict = var_dict["lat_vs_month"]
+
     slat = var_dict[var]["slat"]
     nlat = var_dict[var]["nlat"]
     cmap = var_dict[var]["cmap"]
@@ -2806,7 +2813,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                         cmap=cmap,#zorder=100
                       )
         c=plt.contour(lat_grid, time_grid, (case_pcap),
-                        levels=levs,
+                        levels=levs[::3],
                         colors='k',linewidths=0.5,alpha=0.5
                       )
         
@@ -2814,7 +2821,10 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
         #lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
 
         # Format contour labels
-        fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
+        if var == "T":
+            fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
+        else:
+            fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
         ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
 
         #Add a horizontal line at 0 degrees latitude

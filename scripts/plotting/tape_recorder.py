@@ -504,7 +504,9 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
                            fontsize=8)
     
     ax.contourf(monticks_temp, -np.log10(case_seas[paxis]), case_seas*(29/18), levels=clevs*(29/18), cmap=mymap, extend='max')
-    ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas*(29/18), levels=clevs*(29/18), colors="k", extend='max',linewidths=0.25)
+    c= ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas*(29/18), levels=clevs[::3]*(29/18), colors="k", extend='max',linewidths=0.25)
+    fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
+    ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
     ax.set_ylim(-np.log10(100),-np.log10(3))
     ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3)])
     ax.set_yticklabels(['100','30','10','3'])
