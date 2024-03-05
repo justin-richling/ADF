@@ -2518,7 +2518,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                         (data_array-merra_rfield).transpose(transpose_coords=True),
                         levels=diff_levs, cmap='RdYlBu_r')
         fmt = {lev: '{:.0f}'.format(lev) for lev in cf.levels}
-        ax.clabel(cf, cf.levels[::4], inline=True, fmt=fmt, fontsize=8)
+        ax.clabel(cf, cf.levels[::3], inline=True, fmt=fmt, fontsize=8)
 
         #Format axes
         plt.yscale("log")
