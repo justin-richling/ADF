@@ -2875,8 +2875,7 @@ def qbo_amplitude(data):
     
     from scipy.signal import convolve
     
-    boxcar = np.ones((5, 1)) / 5
-    [dt,dx] = data.shape
+    boxcar = np.ones((6, 1)) / 6
     filtered_data = convolve(data, boxcar, mode='valid')
     amplitude=np.std(filtered_data, axis=0)
     
@@ -2897,7 +2896,7 @@ def qbo_frequency(data):
     fft_data = np.fft.fft(data, axis=0)
     fft_data = fft_data[1:dt2+1,:]
     
-    power_spectrum = np.abs(fft_data)**4
+    power_spectrum = np.abs(fft_data)**2
     
     period=np.sum(power_spectrum*(1/f),axis=0)/np.sum(power_spectrum,axis=0)
     
