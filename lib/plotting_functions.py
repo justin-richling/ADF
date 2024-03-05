@@ -2884,7 +2884,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                 # Set the font size for the colorbar label
                 cbar.set_label(units, fontsize=10, labelpad=1)
 
-    fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.97,horizontalalignment="center")
+    fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.99,horizontalalignment="center")
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
@@ -3021,7 +3021,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     """
     axins = inset_axes(axes[main_key[merra_idx]], width="100%", height="5%", loc='lower center', borderpad = -3.5)
     cbar = fig.colorbar(cf, cax=axins, orientation="horizontal", label="m/s",
-                                        ticks=contour_levels[::3])
+                                        ticks=contour_levels[::2])
     cbar.ax.tick_params(axis='x', labelsize=8)
     # Set the font size for the colorbar label
     cbar.set_label("m/s", fontsize=10, labelpad=1)
