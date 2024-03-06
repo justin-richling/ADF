@@ -46,10 +46,8 @@ def tape_recorder(adfobj):
     start_years = adfobj.climo_yrs["syears"]
     end_years = adfobj.climo_yrs["eyears"]
 
-    #Grab test case nickname(s)
-    test_nicknames = adfobj.get_cam_info('case_nickname')
-    if test_nicknames == None:
-        test_nicknames = case_names
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"]
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -64,9 +62,7 @@ def tape_recorder(adfobj):
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
         case_ts_locs = case_ts_locs+[data_ts_loc]
 
-        base_nickname = adfobj.get_baseline_info('case_nickname')
-        if base_nickname == None:
-            base_nickname = data_name
+        base_nickname = adfobj.case_nicknames["base_nickname"]
         test_nicknames = test_nicknames+[base_nickname]
 
         data_start_year = adfobj.climo_yrs["syear_baseline"]
