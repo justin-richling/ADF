@@ -2465,7 +2465,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                         data_array.transpose(transpose_coords=True),
                     colors="black",linewidths=0.5,levels=levs,zorder=100)
         fmt = {lev: '{:.0f}'.format(lev) for lev in contour.levels}
-        ax.clabel(contour, contour.levels[::3], inline=True, fmt=fmt, fontsize=8)
+        ax.clabel(contour, contour.levels[::2], inline=True, fmt=fmt, fontsize=8)
 
         #Format axes
         plt.yscale("log")
@@ -2504,15 +2504,15 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         contour = plt.contour(lev_grid, lat_grid, merra_rfield.transpose(transpose_coords=True),
                     colors='black', levels=levs,
                     negative_linestyles='dashed', linewidths=.5, alpha=0.5)
-        fmt = {lev: '{:.0f}'.format(lev) for lev in contour.levels}
-        ax.clabel(contour, contour.levels[::4], inline=True, fmt=fmt, fontsize=8)
-        if idx == 0:
-            #Add a legend for the contour lines for first plot only
-            legend_elements = [Line2D([0], [0],
+        #fmt = {lev: '{:.0f}'.format(lev) for lev in contour.levels}
+        #ax.clabel(contour, contour.levels[::4], inline=True, fmt=fmt, fontsize=8)
+        #if idx == 0:
+        #Add a legend for the contour lines for first plot only
+        legend_elements = [Line2D([0], [0],
                                color=contour.collections[0].get_edgecolor(),
-                               label='MERRA2 interp')]
+                               label=f'MERRA2 interp {cam_var}')]
 
-            ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
+        ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
         #End if
 
         #Plot difference contour fill
@@ -2561,13 +2561,13 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
             contour = plt.contour(lev_grid, lat_grid, saber_rfield.transpose(transpose_coords=True),
                         colors='black', levels=levs,
                         negative_linestyles='dashed', linewidths=.5, alpha=0.5)
-            if idx == 0:
-                #Add a legend for the contour lines for first plot only
-                legend_elements = [Line2D([0], [0],
+            #if idx == 0:
+            #Add a legend for the contour lines for first plot only
+            legend_elements = [Line2D([0], [0],
                                 color=contour.collections[0].get_edgecolor(),
-                                label='SABER interp')]
+                                label='SABER interp T')]
 
-                ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
+            ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
             #End if
 
             #Plot difference contour fill
@@ -2609,7 +2609,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         str_interval = interval.lower().capitalize()
     else:
         str_interval = interval
-    fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=16,y=0.93)
+    fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=16,y=0.91)
     
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
