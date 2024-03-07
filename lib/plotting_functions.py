@@ -2622,6 +2622,10 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     """
 
     temp_levs = cont_ranges["T"]["levs"]
+    levs = cont_ranges["T"]["levs"]
+
+    #Get number of test cases (number of columns)
+    casenum = len(case_names)
 
     font_size = 8
     if hemi == "s":
@@ -2673,8 +2677,20 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         #
         [time_grid, lev_grid] = np.meshgrid(ds['lev'],np.arange(0,12))
 
-        #Set up plot
-        ax = fig.add_subplot(nrows, ncols, idx+1)
+        #Set up first row - Temps
+        ax = fig.add_subplot(nrows, casenum, idx+1)
+        cf=plt.contourf(lev_grid, time_grid, case_pcap,
+                        levels=levs,cmap='RdYlBu_r'
+                       ) #np.arange(-10,11,1)
+        c0=plt.contour(lev_grid, time_grid, case_pcap, colors='grey',
+                           levels=levs[::3],
+                           negative_linestyles='dashed',
+                           linewidths=.5, alpha=1)
+        fmt = {lev: '{:.0f}'.format(lev) for lev in c0.levels}
+        ax.clabel(c0, c0.levels, inline=True, fmt=fmt, fontsize=8)
+
+        #Set up second row - Temp anomlies and Merra2 contours
+        ax = fig.add_subplot(nrows, casenum, casenum+idx+1)
         clevs = np.arange(-10,11,1)
         cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
                         levels=np.arange(-10,11,1),cmap='RdYlBu_r'
@@ -2682,7 +2698,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         c0=plt.contour(lev_grid, time_grid, (case_pcap-merra2_pcap), colors='grey',
                            levels=clevs[::3],
                            negative_linestyles='dashed',
-                           linewidths=.5, alpha=0.5)
+                           linewidths=.5, alpha=1)
         fmt = {lev: '{:.0f}'.format(lev) for lev in c0.levels}
         ax.clabel(c0, c0.levels, inline=True, fmt=fmt, fontsize=8)
 
@@ -2691,15 +2707,15 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
                            negative_linestyles='dashed',
                            linewidths=.5, alpha=0.5)
 
-        fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
-        ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
-        if idx == 0:
-            #Add a legend for the contour lines for first plot only
-            legend_elements = [Line2D([0], [0],
+        #fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
+        #ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
+        #if idx == 0:
+        #Add a legend for the contour lines for first plot only
+        legend_elements = [Line2D([0], [0],
                                color=c.collections[0].get_edgecolor(),
                                label='MERRA2 interp')]
 
-            ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
+        ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
         #Format the axes
         plt.yscale("log")
         ax.set_ylim(300,1)
