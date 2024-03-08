@@ -2522,6 +2522,13 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         #fmt = {lev: '{:.0f}'.format(lev) for lev in cf.levels}
         #ax.clabel(cf, cf.levels[::3], inline=True, fmt=fmt, fontsize=8)
 
+        #Plot case contours (for highlighting)
+        contour = plt.contour(lev_grid, lat_grid,
+                        (data_array-merra_rfield).transpose(transpose_coords=True),
+                    colors="black",linewidths=0.5,levels=diff_levs,zorder=100)
+        fmt = {lev: '{:.0f}'.format(lev) for lev in contour.levels}
+        ax.clabel(contour, contour.levels[::2], inline=True, fmt=fmt, fontsize=8)
+
         #Format axes
         plt.yscale("log")
         ax.set_ylim(1000,0.1)
@@ -2574,6 +2581,13 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
             cf=plt.contourf(lev_grid, lat_grid,
                             (data_array-saber_rfield).transpose(transpose_coords=True),
                             levels=diff_levs, cmap='RdYlBu_r')
+
+            #Plot case contours (for highlighting)
+            contour = plt.contour(lev_grid, lat_grid,
+                            (data_array-saber_rfield).transpose(transpose_coords=True),
+                        colors="black",linewidths=0.5,levels=diff_levs,zorder=100)
+            fmt = {lev: '{:.0f}'.format(lev) for lev in contour.levels}
+            ax.clabel(contour, contour.levels[::2], inline=True, fmt=fmt, fontsize=8)
 
             #Format axes
             plt.yscale("log")
@@ -2811,7 +2825,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,y=0.91) #,horizontalalignment="center"
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,y=0.93) #,horizontalalignment="center"
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
