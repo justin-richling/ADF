@@ -327,13 +327,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[2,0], y='lev', yscale='log',
-                                                ylim=[1e2,1],
+                                                ylim=[1e2,1],levs=11,
                                                 colors='black', linestyles=None)
 
             oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[2,1], y='lev', yscale='log',
-                                                ylim=[1e2,1],
+                                                ylim=[1e2,1],levs=11,
                                                 colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
@@ -424,14 +424,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[5,0], y='lev', yscale='log',
-                                            ylim=[1e2,2],
+                                            ylim=[1e2,2],levs=21,
                                             colors='black', linestyles=None)
 
             oseasons.plot.contourf(ax=axs[6,1], levels = 21, y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[6,1], y='lev', yscale='log',
-                                             ylim=[1e2,2],
+                                             ylim=[1e2,2],levs=21,
                                             colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
@@ -449,14 +449,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[7,0], y='lev', yscale='log',
-                                            ylim=[1e2,2],
+                                            ylim=[1e2,2],levs=11,
                                             colors='black', linestyles=None)
 
             oseasons.plot(ax=axs[7,1], y='lev', yscale='log',
                                             vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],
                                             cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[7,1], y='lev', yscale='log',
-                                            ylim=[1e2,2],
+                                            ylim=[1e2,2],levs=11,
                                             colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
