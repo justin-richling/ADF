@@ -371,6 +371,13 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     save_path = adfobj.plot_location[0]
+    print("'save path'",save_path,"\n")
+    #Convert output location string to a Path object:
+    output_location = Path(save_path)
+    #Check if analysis directory exists, and if not, then create it:
+    if not output_location.is_dir():
+        print(f"\t    {save_path} not found, making new directory")
+        output_location.mkdir(parents=True)
 
     plot_locations = adfobj.plot_location[0]
 
