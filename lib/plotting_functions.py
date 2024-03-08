@@ -2638,13 +2638,15 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         nlat = 90
         title_ext = f"{slat}-{nlat}\u00b0N"
 
+    """
     nplots = len(case_names)
     if nplots > 4:
         ncols = 4
     else:
         ncols = nplots
     #End if
-    #ncols = 4
+    """
+    ncols = 4
     nrows = 2
 
     fig = plt.figure(figsize=(ncols*7,nrows*5))
