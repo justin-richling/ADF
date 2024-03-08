@@ -2609,7 +2609,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         str_interval = interval.lower().capitalize()
     else:
         str_interval = interval
-    fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=16,y=0.91)
+    fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=12,y=0.91)
     
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
@@ -2703,6 +2703,10 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         else:
             ax.set_yticklabels(["","$10^{2}$","","$10^{1}$"],fontsize=10)
             plt.ylabel('hPa',fontsize=10)
+        
+        #Set title
+        local_title=f"{case_names[idx]}"
+        plt.title(local_title, fontsize=font_size)
 
         #Make colorbar on last plot only
         if idx == casenum-1:
@@ -2716,9 +2720,6 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
             cbar.ax.tick_params(axis='y', labelsize=8)
             cbar.set_label("K", fontsize=10, labelpad=1)
 
-        #Set title
-        local_title=f"{case_names[idx]}"
-        plt.title(local_title, fontsize=font_size)
 
         #Set up second row - Temp anomlies and Merra2 contours
         ax = fig.add_subplot(nrows, casenum, casenum+idx+1)
@@ -2810,7 +2811,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if hemi == "n":
         ptype = "NHPolar"
 
-    fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,x=0.3,y=0.97,horizontalalignment="center") #,horizontalalignment="center"
+    fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,y=0.91) #,horizontalalignment="center"
  
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
     
