@@ -2525,9 +2525,9 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         #Plot case contours (for highlighting)
         contour = plt.contour(lev_grid, lat_grid,
                         (data_array-merra_rfield).transpose(transpose_coords=True),
-                    colors="black",linewidths=0.5,levels=diff_levs,zorder=100)
+                    colors="black",linewidths=0.5,levels=diff_levs[::2],zorder=100)
         fmt = {lev: '{:.0f}'.format(lev) for lev in contour.levels}
-        ax.clabel(contour, contour.levels[::2], inline=True, fmt=fmt, fontsize=8)
+        ax.clabel(contour, contour.levels, inline=True, fmt=fmt, fontsize=8)
 
         #Format axes
         plt.yscale("log")

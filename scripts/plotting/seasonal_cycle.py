@@ -287,7 +287,7 @@ def seasonal_cycle(adfobj):
     #End if
 
 
-    #H20 Mixing Ratio @ 100hPa
+    #H20 Mixing Ratio @ 90 and 100hPa
     #----------------------------------
     var = "Q"
     #vert_lev = [90,100]
