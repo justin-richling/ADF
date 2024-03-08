@@ -2644,10 +2644,10 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     else:
         ncols = nplots
     #End if
-    ncols = 4
+    #ncols = 4
     nrows = 2
 
-    fig = plt.figure(figsize=(casenum*7,nrows*5))
+    fig = plt.figure(figsize=(ncols*7,nrows*5))
 
     for idx,case_name in enumerate(case_names):
         ds = cases_coords[case_name]
@@ -2683,11 +2683,28 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
                         levels=levs,cmap='RdYlBu_r'
                        ) #np.arange(-10,11,1)
         c0=plt.contour(lev_grid, time_grid, case_pcap, colors='grey',
-                           levels=levs[::3],
+                           levels=levs[::2],
                            negative_linestyles='dashed',
                            linewidths=.5, alpha=1)
         fmt = {lev: '{:.0f}'.format(lev) for lev in c0.levels}
         ax.clabel(c0, c0.levels, inline=True, fmt=fmt, fontsize=8)
+
+        ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
+        #Format the axes
+        plt.yscale("log")
+        ax.set_ylim(300,1)
+        ax.set_yticks([300,100,30,10])
+        ax.set_xticks(np.arange(0,12,2),rotation=40)
+        ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40,fontsize=8)
+        if idx > 0:
+            plt.yticks([])
+        else:
+            ax.set_yticklabels(["","$10^{2}$","","$10^{1}$"],fontsize=10)
+            plt.ylabel('hPa',fontsize=10)
+
+        #Set title
+        local_title=f"{case_names[idx]}"
+        plt.title(local_title, fontsize=font_size)
 
         #Set up second row - Temp anomlies and Merra2 contours
         ax = fig.add_subplot(nrows, casenum, casenum+idx+1)
@@ -2713,7 +2730,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         #Add a legend for the contour lines for first plot only
         legend_elements = [Line2D([0], [0],
                                color=c.collections[0].get_edgecolor(),
-                               label='MERRA2 interp')]
+                               label='MERRA2 interp T')]
 
         ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
         #Format the axes
