@@ -2689,7 +2689,6 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         fmt = {lev: '{:.0f}'.format(lev) for lev in c0.levels}
         ax.clabel(c0, c0.levels, inline=True, fmt=fmt, fontsize=8)
 
-        ax.legend(handles=legend_elements, loc='upper right', fontsize=5, bbox_to_anchor=(1., 1.))
         #Format the axes
         plt.yscale("log")
         ax.set_ylim(300,1)
