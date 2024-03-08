@@ -396,14 +396,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #------------------------------------------------------------------------------------------
         if var == "wtem":
             mseasons.plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
-                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1]
+                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
             oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
-                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1]
+                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',
                                             vmax=0.03, vmin=-0.03, ylim=[1e2,1],
