@@ -257,9 +257,11 @@ def seasonal_cycle(adfobj):
             "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
                 "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
 
+
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
     var = "T"
+    vert_lev = 90
     plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
     if (not redo_plot) and plot_name.is_file():
@@ -276,7 +278,7 @@ def seasonal_cycle(adfobj):
             plot_name.unlink()
 
         #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
-        pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly)
+        pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
         adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                                     plot_type="WACCM",
                                     ext="SeasonalCycle_Mean",
@@ -288,29 +290,33 @@ def seasonal_cycle(adfobj):
     #H20 Mixing Ratio @ 100hPa
     #----------------------------------
     var = "Q"
-    plot_name = plot_loc / f"MixRatio_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+    #vert_lev = [90,100]
 
-    if (not redo_plot) and plot_name.is_file():
-        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "MixRatio", case_name, season="ANN",
-                                    plot_type="WACCM",
-                                    ext="SeasonalCycle_Mean",
-                                    category="Seasonal Cycle",
-                                    )
-    
-    elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
-        #If redo plot, delete the file
-        if plot_name.is_file():
-            plot_name.unlink()
+    for vert_lev in [90, 100]:
+        plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
-        #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
-        pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly)
-        adfobj.add_website_data(plot_name, "MixRatio", case_name, season="ANN",
-                                    plot_type="WACCM",
-                                    ext="SeasonalCycle_Mean",
-                                    category="Seasonal Cycle",
-                                    )
-    #End if
+        if (not redo_plot) and plot_name.is_file():
+            adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+            adfobj.add_website_data(plot_name, "MixRatio", case_name, season="ANN",
+                                        plot_type="WACCM",
+                                        ext="SeasonalCycle_Mean",
+                                        category="Seasonal Cycle",
+                                        )
+        
+        elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+            #If redo plot, delete the file
+            if plot_name.is_file():
+                plot_name.unlink()
+
+            #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
+            pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
+            adfobj.add_website_data(plot_name, "MixRatio", case_name, season="ANN",
+                                        plot_type="WACCM",
+                                        ext="SeasonalCycle_Mean",
+                                        category="Seasonal Cycle",
+                                        )
+        #End if
+    #End for
 
 
 
