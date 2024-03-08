@@ -297,7 +297,7 @@ def seasonal_cycle(adfobj):
 
         if (not redo_plot) and plot_name.is_file():
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-            adfobj.add_website_data(plot_name, "MixRatio_{vert_lev}hPa", case_name, season="ANN",
+            adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
                                         plot_type="WACCM",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
@@ -310,7 +310,7 @@ def seasonal_cycle(adfobj):
 
             #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
             pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
-            adfobj.add_website_data(plot_name, "MixRatio_{vert_lev}hPa", case_name, season="ANN",
+            adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
                                         plot_type="WACCM",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
