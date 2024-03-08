@@ -2645,7 +2645,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         ncols = nplots
     #End if
     ncols = 4
-    nrows = int(np.ceil(nplots/ncols))
+    nrows = 2
 
     fig = plt.figure(figsize=(casenum*7,nrows*5))
 
