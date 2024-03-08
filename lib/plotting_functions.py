@@ -2703,6 +2703,18 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
             ax.set_yticklabels(["","$10^{2}$","","$10^{1}$"],fontsize=10)
             plt.ylabel('hPa',fontsize=10)
 
+        #Make colorbar on last plot only
+        if idx == casenum-1:
+            axins = inset_axes(ax,
+                        width="5%",
+                        height="80%",
+                        loc='center right',
+                        borderpad=-1.5
+                       )
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="K")
+            cbar.ax.tick_params(axis='y', labelsize=8)
+            cbar.set_label("K", fontsize=10, labelpad=1)
+
         #Set title
         local_title=f"{case_names[idx]}"
         plt.title(local_title, fontsize=font_size)
@@ -2757,7 +2769,20 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         #required_wspace = 0.
         # Adjust the wspace dynamically
         #plt.subplots_adjust(wspace=required_wspace)
+        #Make colorbar on last plot only
+        if idx == casenum-1:
+            axins = inset_axes(ax,
+                                width="5%",
+                                height="80%",
+                                loc='center right',
+                                borderpad=-1.5
+                               )
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
+            cbar.ax.tick_params(axis='y', labelsize=8)
+            # Set the font size for the colorbar label
+            cbar.set_label("K", fontsize=10, labelpad=1)
 
+        """
         #Check for start of new row
         if idx % 4 == 0:
             row = idx // 4 + 1
@@ -2765,7 +2790,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         #Check to see where the colorbar will go
         #The idea is to if the plots fill up each row, put the colorbar on last plot of row
         #If the row isn't filled up, put the color bar on last possible plot of row
-        if ((4*(row-1) < idx < 4*(row+1)) and (idx == nplots-1)) or ((idx+1) % 4 == 0):
+        if ((4*(row-1) < idx < 4*(row+1)) and (idx == casenum-1)) or ((idx+1) % 4 == 0):
                 axins = inset_axes(ax,
                                 width="5%",
                                 height="80%",
@@ -2776,7 +2801,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
                 cbar.ax.tick_params(axis='y', labelsize=8)
                 # Set the font size for the colorbar label
                 cbar.set_label("K", fontsize=10, labelpad=1)
-
+        """
     
     
     if hemi == "s":
