@@ -371,18 +371,18 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # TEM meridional wind 
         #------------------------------------------------------------------------------------------
         if var == "vtem":
-            mseasons.plot.contourf(ax=axs[4,0], levels = 21,y='lev', yscale='log',
-                                                ylim=[1e2,1],vmax=3,vmin=-3,
+            mseasons.plot.contourf(ax=axs[4,0], levels = np.arange(0.5,0.6,0.05),y='lev', yscale='log',
+                                                ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            mseasons.plot.contour(ax=axs[4,0],  y='lev', yscale='log',levels = 21,
-                                                ylim=[1e2,1],vmax=3,vmin=-3,
+            mseasons.plot.contour(ax=axs[4,0],  y='lev', yscale='log',levels = np.arange(0.5,0.6,0.1),
+                                                ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[4,1], levels = 21, y='lev', yscale='log',
-                                                ylim=[1e2,1],vmax=3,vmin=-3,
+            oseasons.plot.contourf(ax=axs[4,1], levels = np.arange(0.5,0.6,0.05), y='lev', yscale='log',
+                                                ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            oseasons.plot.contour(ax=axs[4,1],  y='lev', yscale='log',levels = 21,
-                                               ylim=[1e2,1],vmax=3,vmin=-3,
+            oseasons.plot.contour(ax=axs[4,1],  y='lev', yscale='log',levels = np.arange(0.5,0.6,0.1),
+                                               ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
