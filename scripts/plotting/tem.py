@@ -274,7 +274,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
         #difference: each entry should be (lat, lon)
         dseasons = mseasons-oseasons
-        print(dseasons.min(),dseasons.max())
+        #print(dseasons.min(),dseasons.max())
 
         #Run through variables and plot each against the baseline on each row
         #Each column will be a case, ie (test, base, difference)
