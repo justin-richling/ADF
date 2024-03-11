@@ -348,16 +348,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # EP Flux - vertical component
         #------------------------------------------------------------------------------------------
         if var == "epfz":
-            mseasons.plot(ax=axs[3,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],levels=21,
+            mseasons.plot(ax=axs[3,0], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],levels=np.arange(-3e5,3e5,0.5e5),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[3,0],  y='lev', yscale='log',
-                                                levels = 21,ylim=[1e2,1],
+                                                levels = np.arange(-3e5,3e5,0.5e5),ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
-            oseasons.plot(ax=axs[3,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],levels=21,
+            oseasons.plot(ax=axs[3,1], y='lev', yscale='log',vmax=1e5,ylim=[1e2,1],levels=np.arange(-3e5,3e5,0.5e5),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[3,1],  y='lev', yscale='log',
-                                                levels = 21,ylim=[1e2,1],
+                                                levels = np.arange(-3e5,3e5,0.5e5),ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
@@ -396,17 +396,17 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # TEM vertical wind
         #------------------------------------------------------------------------------------------
         if var == "wtem":
-            mseasons.plot.contourf(ax=axs[5,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[5,0], levels = np.arange(-5e-3,5e-3,0.1e-3), y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',levels=21,
+            mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',levels=11,
                                             vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[5,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[5,1], levels = np.arange(-5e-3,5e-3,0.1e-3), y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',levels=21,
+            oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',levels=11,
                                             vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
@@ -421,18 +421,18 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # TEM mass stream function
         #------------------------------------------------------------------------------------------
         if var == "psitem":
-            mseasons.plot.contourf(ax=axs[6,0], levels = 21, y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[6,0], levels = np.arange(-5e9,5e9,0.5e9), y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[6,0], y='lev', yscale='log',
-                                            ylim=[1e2,2],levels=21,
+                                            ylim=[1e2,2],levels=np.arange(-5e9,5e9,1e9),
                                             colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[6,1], levels = 21, y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[6,1], levels = np.arange(-5e9,5e9,0.5e9), y='lev', yscale='log',
                                                 vmax=5e9, ylim=[1e2,2],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[6,1], y='lev', yscale='log',
-                                             ylim=[1e2,2],levels=21,
+                                             ylim=[1e2,2],levels=np.arange(-5e9,5e9,1e9),
                                             colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
