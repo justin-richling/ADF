@@ -397,17 +397,17 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #------------------------------------------------------------------------------------------
         if var == "wtem":
             mseasons.plot.contourf(ax=axs[5,0], levels = np.arange(-5e-3,5.1e-3,0.5e-3), y='lev', yscale='log',
-                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1],
+                                                ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',levels = np.arange(-5e-3,5.1e-3,1e-3),
-                                            vmax=0.005, vmin=-0.005, ylim=[1e2,1],
+                                            ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
             oseasons.plot.contourf(ax=axs[5,1], levels = np.arange(-5e-3,5.1e-3,0.5e-3), y='lev', yscale='log',
-                                                vmax=0.005, vmin=-0.005, ylim=[1e2,1],
+                                                ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',levels = np.arange(-5e-3,5.1e-3,1e-3),
-                                            vmax=0.005, vmin=-0.005, ylim=[1e2,1],
+                                            ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
