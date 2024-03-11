@@ -355,7 +355,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                                                 colors='black', linestyles=None)
 
             oseasons.plot(ax=axs[3,1], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-3e4,3.1e4,0.25e4),vmax=3e4,
-                                    cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r",vmax=3e4)
+                                    cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[3,1],  y='lev', yscale='log',
                                                 levels = np.arange(-3e4,3.1e4,0.5e4),ylim=[1e2,1],
                                                 colors='black', linestyles=None)
