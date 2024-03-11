@@ -365,7 +365,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[3,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[3,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-0.1e7,0.11e7,0.01e7),
+                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-0.1e8,0.11e8,0.01e8),
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM meridional wind 
@@ -396,17 +396,17 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # TEM vertical wind
         #------------------------------------------------------------------------------------------
         if var == "wtem":
-            mseasons.plot.contourf(ax=axs[5,0], levels = np.arange(-5e-3,5.1e-3,0.1e-3), y='lev', yscale='log',
+            mseasons.plot.contourf(ax=axs[5,0], levels = np.arange(-5e-3,5.1e-3,0.5e-3), y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',levels = np.arange(-5e-3,5.1e-3,0.2e-3),
+            mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',levels = np.arange(-5e-3,5.1e-3,1e-3),
                                             vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[5,1], levels = np.arange(-5e-3,5.1e-3,0.1e-3), y='lev', yscale='log',
+            oseasons.plot.contourf(ax=axs[5,1], levels = np.arange(-5e-3,5.1e-3,0.5e-3), y='lev', yscale='log',
                                                 vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                                 cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',levels = np.arange(-5e-3,5.1e-3,0.2e-3),
+            oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',levels = np.arange(-5e-3,5.1e-3,1e-3),
                                             vmax=0.005, vmin=-0.005, ylim=[1e2,1],
                                             colors='black', linestyles=None)
 
