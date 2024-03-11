@@ -348,16 +348,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # EP Flux - vertical component vmax=1e5
         #------------------------------------------------------------------------------------------
         if var == "epfz":
-            mseasons.plot(ax=axs[3,0], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-3e5,3.1e5,0.25e5),
+            mseasons.plot(ax=axs[3,0], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-3e2,3.1e2,0.25e2),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[3,0],  y='lev', yscale='log',
-                                                levels = np.arange(-3e5,3.1e5,0.5e5),ylim=[1e2,1],
+                                                levels = np.arange(-3e2,3.1e2,0.5e2),ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
-            oseasons.plot(ax=axs[3,1], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-3e5,3.1e5,0.25e5),
+            oseasons.plot(ax=axs[3,1], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-3e2,3.1e2,0.25e2),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[3,1],  y='lev', yscale='log',
-                                                levels = np.arange(-3e5,3.1e5,0.5e5),ylim=[1e2,1],
+                                                levels = np.arange(-3e2,3.1e2,0.5e2),ylim=[1e2,1],
                                                 colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
@@ -365,7 +365,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[3,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[3,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-0.1e8,0.11e8,0.01e8),
+                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-1e1,1.1e1,0.2e1),
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM meridional wind 
