@@ -325,16 +325,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # EP Flux - meridional component
         #------------------------------------------------------------------------------------------
         if var == "epfy":
-            mseasons.plot(ax=axs[2,0], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-1e7,1.1e7,0.1e7),
+            mseasons.plot(ax=axs[2,0], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-0.5e7,0.6e7,0.1e7),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[2,0], y='lev', yscale='log',
-                                                ylim=[1e2,1],levels=np.arange(-1e7,1.1e7,0.2e7),
+                                                ylim=[1e2,1],levels=np.arange(-0.5e7,0.6e7,0.2e7),
                                                 colors='black', linestyles=None)
 
-            oseasons.plot(ax=axs[2,1], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-1e7,1.1e7,0.1e7),
+            oseasons.plot(ax=axs[2,1], y='lev', yscale='log',ylim=[1e2,1],levels=np.arange(-0.5e7,0.6e7,0.1e7),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[2,1], y='lev', yscale='log',
-                                                ylim=[1e2,1],levels=np.arange(-1e6,1.1e6,0.2e6),
+                                                ylim=[1e2,1],levels=np.arange(-0.5e6,0.6e6,0.2e6),
                                                 colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
