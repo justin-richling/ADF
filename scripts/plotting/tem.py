@@ -440,7 +440,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[6,2].text(prop_x, prop_y, empty_message, transform=axs[6,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[6,2], y='lev', yscale='log',
-                                    ylim=[1e2,2],cmap="BrBG",levels=np.arange(-1e9,1e9,0.5e9),
+                                    ylim=[1e2,2],cmap="BrBG",levels=np.arange(-1e9,1e9,0.1e9),
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence
@@ -465,7 +465,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[7,2].text(prop_x, prop_y, empty_message, transform=axs[7,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[7,2], y='lev', yscale='log',
-                                    ylim=[1e2,2],cmap="BrBG",levels=np.arange(-0.0002,0.00011,0.00001),
+                                    ylim=[1e2,2],cmap="BrBG",levels=np.arange(-0.00004,0.00004,0.000005),
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence - meridional component
