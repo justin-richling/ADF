@@ -365,7 +365,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[3,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[3,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-1e5,1.1e5,0.2e5),
+                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-1e3,1.1e3,0.2e3),
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM meridional wind 
