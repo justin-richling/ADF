@@ -131,10 +131,10 @@ def tem(adf):
     #Setup TEM plots
     nrows = len(var_list)
     ncols = len(case_nicknames)+1
-    fig_width = 20
+    fig_width = 25
 
     #try and dynamically create size of fig based off number of cases
-    fig_height = 15+(ncols*nrows)
+    fig_height = 18+(ncols*nrows)
 
     #Loop over season dictionary:
     for s in seasons:
