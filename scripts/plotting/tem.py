@@ -282,15 +282,15 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # Zonal mean zonal wind
         #------------------------------------------------------------------------------------------
         if var == "uzm":
-            mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],
+            mseasons.plot(ax=axs[0,0], y='lev', yscale='log',ylim=[1e3,1],levels=np.arange(-40,40,5),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            mseasons.plot.contour(ax=axs[0,0], levels = 11, y='lev', yscale='log',
+            mseasons.plot.contour(ax=axs[0,0], levels = np.arange(-40,40,10), y='lev', yscale='log',
                                                 ylim=[1e3,1],
                                                 colors='black', linestyles=None)
 
-            oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],
+            oseasons.plot(ax=axs[0,1], y='lev', yscale='log',ylim=[1e3,1],levels=np.arange(-40,40,5),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
-            oseasons.plot.contour(ax=axs[0,1], levels = 11, y='lev', yscale='log',
+            oseasons.plot.contour(ax=axs[0,1], levels = np.arange(-40,40,10), y='lev', yscale='log',
                                                 ylim=[1e3,1],
                                                 colors='black', linestyles=None)
 
@@ -328,13 +328,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             mseasons.plot(ax=axs[2,0], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],levels=np.arange(-1e6,1e6,0.05e6),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             mseasons.plot.contour(ax=axs[2,0], y='lev', yscale='log',
-                                                ylim=[1e2,1],levels=11,
+                                                ylim=[1e2,1],levels=np.arange(-1e6,1e6,0.5e6),
                                                 colors='black', linestyles=None)
 
             oseasons.plot(ax=axs[2,1], y='lev', yscale='log',vmax=1e6,ylim=[1e2,1],levels=np.arange(-1e6,1e6,0.05e6),
                                     cbar_kwargs={'label': ds[var].units},cmap="RdYlBu_r")
             oseasons.plot.contour(ax=axs[2,1], y='lev', yscale='log',
-                                                ylim=[1e2,1],levels=11,
+                                                ylim=[1e2,1],levels=np.arange(-1e6,1e6,0.5e6),
                                                 colors='black', linestyles=None)
 
             #Check if difference plot has contour levels, if not print notification
