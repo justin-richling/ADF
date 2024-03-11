@@ -342,7 +342,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[1,2].text(prop_x, prop_y, empty_message, transform=axs[2,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[2,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=11, #np.arange(-1,1,0.5)
+                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-1e9,1e9,0.1e9),
                                     cbar_kwargs={'label': ds[var].units})
         
         # EP Flux - vertical component
@@ -365,7 +365,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[2,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[3,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=11,
+                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(-1e7,1e7,0.1e5),
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM meridional wind 
