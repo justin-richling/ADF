@@ -279,6 +279,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #Run through variables and plot each against the baseline on each row
         #Each column will be a case, ie (test, base, difference)
 
+        if i == len(wrap_fields)-1:
+            levels = cp_info['levelsdiff']
+            cmap = cp_info['cmapdiff']
+            norm = cp_info['normdiff']
+        else:
+            levels = cp_info['levels1']
+            cmap = cp_info['cmap1']
+            norm = cp_info['norm1']
+        cmap=cmap, norm=norm,levels=levels
+
         # Zonal mean zonal wind
         #------------------------------------------------------------------------------------------
         if var == "uzm":
