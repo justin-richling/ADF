@@ -3015,12 +3015,12 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         """
         Format the period and amplitiude side axes
         """
-        axes[side_axis].plot(merra_data,merra2['lev'],color='k',linewidth=1)
+        axes[side_axis].plot(merra_data,merra2['lev'],color='k',s=1)
         axes[side_axis].set_ylim(y_lims[0],y_lims[1])
         axes[side_axis].set_yscale("log")
 
         if merra==False:
-            axes[side_axis].plot(data,case_lev,linewidth=1)
+            axes[side_axis].plot(data,case_lev,linewidths=1)
         if x == "period":
             axes[side_axis].set_xlim(0,40)
             axes[side_axis].set_xticks(np.arange(0,41,10))
@@ -3086,7 +3086,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     cf = axes[main_key[merra_idx]].contourf(lev_grid, time_grid, data,
                                         levels=contour_levels, cmap='RdBu_r')
 
-    c = axes[main_key[merra_idx]].contour(lev_grid, time_grid, data, alpha=0.5,linewidth=0.3,
+    c = axes[main_key[merra_idx]].contour(lev_grid, time_grid, data, alpha=0.5,linewidths=0.3,
                                         levels=contour_levels[::5], colors='k',linestyles=['dashed' if val < 0 else 'solid' for val in np.unique(data)])
     # add contour labels
     lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
