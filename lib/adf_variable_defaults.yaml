@@ -758,7 +758,8 @@ SWCF:
   category: "TOA energy flux"
 
 LWCF:
-  colormap: "Oranges"
+  #colormap: "Oranges"
+  colormap_file: "/glade/u/home/richling/nrl_sirkes.rgb"
   contour_levels_range: [-10, 100, 5]
   diff_colormap: "BrBG"
   diff_contour_range: [-15, 15, 1]
