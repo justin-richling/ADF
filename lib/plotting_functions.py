@@ -87,6 +87,7 @@ _meridional_plot_preslon
 
 #import statements:
 from typing import Optional
+from pathlib import Path
 import numpy as np
 import xarray as xr
 import pandas as pd
@@ -1217,6 +1218,10 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
 
+            if 'colormap_file' in kwargs:
+                cmap_file = Path(kwargs['colormap_file'])
+                cmap,_ = cmap_from_file(cmap_file)
+
         levs = np.unique(np.array(levels))
         if len(levs) < 2:
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
@@ -1773,6 +1778,10 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     else:
         cmap1 = 'coolwarm'
     #End if
+
+    if 'colormap_file' in kwargs:
+        cmap_file = Path(kwargs['colormap_file'])
+        cmap1,_ = cmap_from_file(cmap_file)
 
     if 'contour_levels' in kwargs:
         levels1 = kwargs['contour_levels']
@@ -2369,6 +2378,89 @@ def square_contour_difference(fld1, fld2, **kwargs):
     cb1 = fig.colorbar(img1, cax=cbax_top)
     cb2 = fig.colorbar(img3, cax=cbax_bot, orientation='horizontal')
     return fig
+
+
+
+
+def ncl_to_mpl(nclmap, name):
+    if nclmap.max() > 1:
+        try:
+            vals = nclmap / 255
+        except:
+            print(f"ERROR: could not divide by 255. {type(nclmap) = }")
+            print(nclmap)
+            return None
+    else:
+        print(f"{name} seems to be 0-1")
+        vals = nclmap
+    assert vals.shape[1] == 3, 'vals.shape should be (N,3)'
+    ncolors = vals.shape[0]
+    if ncolors > 100:
+        my_cmap = mpl.colors.LinearSegmentedColormap.from_list(name, vals)
+        my_cmap_r = my_cmap.reversed()
+    else:
+        my_cmap = mpl.colors.ListedColormap(vals, name)
+        my_cmap_r = my_cmap.reversed()
+    # my_cmap, my_cmap_r from reversing a colormap
+    # ALLOW MPL TO KNOW ABOUT THE COLORMAP:
+    # mpl.colormaps.register(cmap=my_cmap)
+    # mpl.colormaps.register(cmap=my_cmap_r)
+    return my_cmap, my_cmap_r
+
+def cmap_from_csv(csv_file="ncl_default.csv"):
+    cmap = pd.read_csv(csv_file)
+    cmap_colors = []
+    for i in range(0,len(cmap)):
+        cmap_colors.append((float(cmap["r "][i]),
+                            float(cmap["g"][i]),
+                            float(cmap["b"][i]),
+                                 ))
+        if "a" in cmap:
+            cmap_colors.append((float(cmap["a"][i])))
+
+    cmap_name="ncl_default"
+    my_cmap = mpl.colors.LinearSegmentedColormap.from_list(
+                cmap_name, cmap_colors)
+    my_cmap_r = my_cmap.reversed()
+
+    return my_cmap, my_cmap_r
+
+
+
+#cmap_file = "nrl_sirkes.rgb"
+def cmap_from_file(cmap_file):
+    if cmap_file.suffix == ".rgb":
+        import re
+        with open(cmap_file) as f:
+            table_exists = False
+            for count, line in enumerate(f):
+                line_str = line.strip() # remove leading/trailing whitespace
+                if (len(line_str) == 0) or (not line_str[0].isdigit()):
+                    continue # empty line or non-data line 
+                    # NOTE: also skips if the first value is negative (hlu_default) 
+                else:
+                    if re.search(r'[^\s0-9-\.]', line_str): # any non number characters ASSUMED AT END
+                        # take the string up to the non-matching character
+                        line_vals = line_str[:re.search(r'[^\s0-9-\.]', line_str).start()-1].strip().split()
+                    else:
+                        line_vals = line_str.split()
+                    try:
+                        row = [float(r) for r in line_vals]
+                    except:
+                        print("ERROR")
+                        print(line_vals)
+                    if table_exists:
+                        table = np.vstack([table, row])
+                    else:
+                        table = np.array(row)
+                        table_exists=True
+
+
+        cmap, cmap_r = ncl_to_mpl(table, "nrl_sirkes")
+
+    if cmap_file.suffix == ".csv":
+        cmap, cmap_r = cmap_from_csv(csv_file=f"{cmap_file}")
+    return cmap, cmap_r 
 
 #####################
 #END HELPER FUNCTIONS

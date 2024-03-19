@@ -739,7 +739,8 @@ RESTOM:
   derivable_from: ['FLNT','FSNT']
 
 SWCF:
-  colormap: "Blues"
+  #colormap: "Blues"
+  colormap_file: "/glade/u/home/richling/ncl_default.rgb"
   contour_levels_range: [-150, 50, 10]
   diff_colormap: "BrBG"
   diff_contour_range: [-20, 20, 2]
