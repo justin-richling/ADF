@@ -131,10 +131,10 @@ def tem(adf):
     #Setup TEM plots
     nrows = len(var_list)
     ncols = len(case_nicknames)+1
-    fig_width = 15
+    fig_width = 20
 
     #try and dynamically create size of fig based off number of cases
-    fig_height = 15+(ncols*nrows)
+    fig_height = 20+(ncols*nrows)
 
     #Loop over season dictionary:
     for s in seasons:
@@ -308,7 +308,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[0,2].text(prop_x, prop_y, empty_message, transform=axs[0,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=np.arange(-10,21,2),
+                dseasons.plot.contour(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=np.arange(-10,21,2),
                                     cbar_kwargs={'label': ds[var].units})
 
         # Zonal mean temperature
@@ -329,7 +329,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[1,2].text(prop_x, prop_y, empty_message, transform=axs[1,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[1,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=11,
+                dseasons.plot.contour(ax=axs[1,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=11,
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP Flux - meridional component
@@ -351,7 +351,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[2,2].text(prop_x, prop_y, empty_message, transform=axs[2,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[2,2], y='lev', yscale='log',
+                dseasons.plot.contour(ax=axs[2,2], y='lev', yscale='log',
                             ylim=[1e2,1],cmap="BrBG",levels=np.arange(-0.2e7,0.21e7,0.05e7),
                                     cbar_kwargs={'label': ds[var].units})
         
@@ -374,7 +374,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[3,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[3,2], y='lev', yscale='log',
+                dseasons.plot.contour(ax=axs[3,2], y='lev', yscale='log',
                             ylim=[1e2,1],cmap="BrBG",levels=np.arange(-1e4,1.1e4,0.2e4),
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -399,7 +399,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[4,2].text(prop_x, prop_y, empty_message, transform=axs[4,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[4,2], y='lev', yscale='log',
+                dseasons.plot.contour(ax=axs[4,2], y='lev', yscale='log',
                             ylim=[1e2,1],cmap="BrBG",levels=np.arange(-0.5,0.5,0.05),
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -424,7 +424,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[5,2].text(prop_x, prop_y, empty_message, transform=axs[5,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[5,2], y='lev', yscale='log',
+                dseasons.plot.contour(ax=axs[5,2], y='lev', yscale='log',
                             ylim=[1e2,1],cmap="BrBG",levels=np.arange(-0.002,0.002,0.0001),
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -449,7 +449,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[6,2].text(prop_x, prop_y, empty_message, transform=axs[6,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[6,2], y='lev', yscale='log',
+                dseasons.plot.contour(ax=axs[6,2], y='lev', yscale='log',
                                     ylim=[1e2,2],cmap="BrBG",levels=np.arange(-1e9,1.1e9,0.1e9),
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -474,7 +474,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[7,2].text(prop_x, prop_y, empty_message, transform=axs[7,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[7,2], y='lev', yscale='log',
+                dseasons.plot.contour(ax=axs[7,2], y='lev', yscale='log',
                                     ylim=[1e2,2],cmap="BrBG",levels=np.arange(-0.00004,0.000041,0.000005),
                                     cbar_kwargs={'label': ds[var].units})
 
@@ -497,7 +497,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[8,2].text(prop_x, prop_y, empty_message, transform=axs[8,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[8,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=11,
+                dseasons.plot.contour(ax=axs[8,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=11,
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence - vertical component
@@ -519,7 +519,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             if len(dseasons.lev) == 0:
                 axs[9,2].text(prop_x, prop_y, empty_message, transform=axs[9,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[9,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=11,
+                dseasons.plot.contour(ax=axs[9,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=11,
                                     cbar_kwargs={'label': ds[var].units})
 
     # Set the ticks and ticklabels for all x-axes
