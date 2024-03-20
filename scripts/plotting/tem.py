@@ -515,8 +515,11 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                             cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': units})
             axs[5,0].set_yscale("log")
+            axs[5,0].set_ylim(axs[5,0].get_ylim()[::-1])
             axs[5,1].set_yscale("log")
+            axs[5,1].set_ylim(axs[5,1].get_ylim()[::-1])
             axs[5,2].set_yscale("log")
+            axs[5,2].set_ylim(axs[5,2].get_ylim()[::-1])
             plt.colorbar(img0, ax=axs[5,0], location='right',)
             plt.colorbar(img1, ax=axs[5,1], location='right',)
             plt.colorbar(img2, ax=axs[5,2], location='right',)
