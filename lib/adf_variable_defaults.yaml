@@ -1058,14 +1058,14 @@ epfz:
   obs_var_name: "epfz"
 
 vtem:
-  #contour_levels_range: [-0.5,0.6,0.05]
-  contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
+  contour_levels_range: [-0.5,0.6,0.05]
+  #contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   non_linear: True
   diff_contour_range: [-0.5,0.5,0.05]
   ylim: [1e2,1]
   mpl:
     colorbar:
-      ticks: [-5,-1,-0.2,0.2,1,5]
+      #ticks: [-5,-1,-0.2,0.2,1,5]
       label : "m/s"
   units: m/s
   long_name: TEM meridional wind ($\bar{v}^{*}$)
