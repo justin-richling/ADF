@@ -512,7 +512,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             # Define custom formatter function
             def log_formatter(x, pos):
                 """Custom formatter for logarithmic scale"""
-                if x < 1:
+                if x < 0:
                     return f"{x:.2f}"
                 else:
                     return f"{int(x)}"
