@@ -514,6 +514,17 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             img2 = axs[5,2].contourf(lats,levs,dseasons, 
                             cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': units})
+
+            axs[5,0].contour(lats,levs,mseasons,levels = levels1[::2], 
+                                                norm=norm1,colors="k",
+                                                cbar_kwargs={'label': units})
+            axs[5,1].contour(lats,levs,oseasons,levels = levels1[::2],
+                                                norm=norm1,colors="k",
+                                                cbar_kwargs={'label': units})
+            axs[5,2].contour(lats,levs,dseasons, 
+                            colors="k",levels=diff_levs[::2],
+                                    cbar_kwargs={'label': units})
+
             axs[5,0].set_yscale("log")
             axs[5,0].set_ylim(axs[5,0].get_ylim()[::-1])
             axs[5,1].set_yscale("log")
