@@ -289,6 +289,9 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             norm = cp_info['norm1']
         cmap=cmap, norm=norm,levels=levels"""
 
+        minval = np.min([np.min(mseasons), np.min(oseasons)])
+        maxval = np.max([np.max(mseasons), np.max(oseasons)])
+
         #Gather contour level data (if applicable)
         if 'contour_levels_range' in vres:
             levs = vres['contour_levels_range']
@@ -298,6 +301,43 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             diff_levs = vres['diff_contour_range']
         else:
             diff_levs = 20
+
+        import matplotlib as mpl
+        
+
+        if 'colormap' in vres:
+            cmap1 = vres['colormap']
+        else:
+            cmap1 = 'coolwarm'
+        #End if
+
+        if 'contour_levels' in vres:
+            levels1 = vres['contour_levels']
+            if ('non_linear' in vres) and (vres['non_linear']):
+                cmap_obj = cm.get_cmap(cmap1)
+                norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+            else:
+                norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        elif 'contour_levels_range' in vres:
+            assert len(vres['contour_levels_range']) == 3, \
+            "contour_levels_range must have exactly three entries: min, max, step"
+
+            levels1 = np.arange(*vres['contour_levels_range'])
+            if ('non_linear' in vres) and (vres['non_linear']):
+                cmap_obj = cm.get_cmap(cmap1)
+                norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+            else:
+                norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        else:
+            levels1 = np.linspace(minval, maxval, 12)
+            if ('non_linear' in vres) and (vres['non_linear']):
+                cmap_obj = cm.get_cmap(cmap1)
+                norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+            else:
+                norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+        #End if
+
+
 
         # Zonal mean zonal wind
         #------------------------------------------------------------------------------------------
