@@ -302,8 +302,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         if 'diff_contour_range' in vres:
             diff_levs = vres['diff_contour_range']
             diff_levs = [float(x) for x in diff_levs]
-            print(diff_levs)
-            #diff_levs = np.arange(*diff_levs)
+            print(diff_levs,"\n")
+            diff_levs = np.arange(*diff_levs)
         else:
             diff_levs = 20
         
@@ -320,7 +320,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             levels1 = vres['contour_levels']
             if ('non_linear' in vres) and (vres['non_linear']):
                 cmap_obj = cm.get_cmap(cmap1)
-                print(levels1)
+                #print(levels1)
                 norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
                 #norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
             else:
