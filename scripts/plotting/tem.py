@@ -505,13 +505,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             lat = mseasons['zalat']
             lev = mseasons['lev']
             lats, levs = np.meshgrid(lat, lev)
-            axs[5,0].contourf(lats,levs,mseasons,levels = levels1, y='lev', yscale='log',
+            axs[5,0].contourf(lats,levs,mseasons,levels = levels1, yscale='log',
                                                 ylim=[1e2,1],norm=norm1,
                                                 cbar_kwargs={'label': units},cmap=cmap1)
-            axs[5,1].contourf(lats,levs,oseasons,levels = levels1, y='lev', yscale='log',
+            axs[5,1].contourf(lats,levs,oseasons,levels = levels1, yscale='log',
                                                 ylim=[1e2,1],norm=norm1,
                                                 cbar_kwargs={'label': units},cmap=cmap1)
-            axs[5,2].contourf(lats,levs,dseasons,y='lev', yscale='log',
+            axs[5,2].contourf(lats,levs,dseasons, yscale='log',
                             ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': units})
 
