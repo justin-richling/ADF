@@ -505,15 +505,18 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             lat = mseasons['zalat']
             lev = mseasons['lev']
             lats, levs = np.meshgrid(lat, lev)
-            axs[5,0].contourf(lats,levs,mseasons,levels = levels1, yscale='log',
-                                                ylim=[1e2,1],norm=norm1,
-                                                cbar_kwargs={'label': units},cmap=cmap1)
-            axs[5,1].contourf(lats,levs,oseasons,levels = levels1, yscale='log',
-                                                ylim=[1e2,1],norm=norm1,
-                                                cbar_kwargs={'label': units},cmap=cmap1)
-            axs[5,2].contourf(lats,levs,dseasons, yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
-                                    cbar_kwargs={'label': units})
+            img0 = axs[5,0].contourf(lats,levs,mseasons,levels = levels1, 
+                                                norm=norm1,cmap=cmap1,
+                                                cbar_kwargs={'label': units},cmap=cmap1).set_yscale("log")
+            img1 = axs[5,1].contourf(lats,levs,oseasons,levels = levels1,
+                                                norm=norm1,cmap=cmap1,
+                                                cbar_kwargs={'label': units},cmap=cmap1).set_yscale("log")
+            img2 = axs[5,2].contourf(lats,levs,dseasons, 
+                            cmap="BrBG",levels=diff_levs,
+                                    cbar_kwargs={'label': units}).set_yscale("log")
+            plt.colorbar(img0, ax=axs[5,0], location='right',)
+            plt.colorbar(img1, ax=axs[5,1], location='right',)
+            plt.colorbar(img2, ax=axs[5,2], location='right',)
 
         # TEM mass stream function
         #------------------------------------------------------------------------------------------
