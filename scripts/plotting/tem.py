@@ -4,6 +4,8 @@ import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import matplotlib.cm as cm
 import pandas as pd
 
 #Format warning messages:
@@ -301,10 +303,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             diff_levs = vres['diff_contour_range']
         else:
             diff_levs = 20
-
-        import matplotlib as mpl
         
 
+
+        
         if 'colormap' in vres:
             cmap1 = vres['colormap']
         else:
