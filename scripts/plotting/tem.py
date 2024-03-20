@@ -302,7 +302,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         if 'diff_contour_range' in vres:
             diff_levs = vres['diff_contour_range']
             diff_levs = [float(x) for x in diff_levs]
-            diff_levs = np.arange(*diff_levs)
+            print(diff_levs)
+            #diff_levs = np.arange(*diff_levs)
         else:
             diff_levs = 20
         
