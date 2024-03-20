@@ -1081,7 +1081,7 @@ wtem:
   ylim: [1e2,1]
   mpl:
     colorbar:
-      #ticks: [-2,-0.8,-0.2,0.2,0.8,2]
+      ticks: [-0.2,-0.08,-0.02,0.02,0.08,0.2]
       label : "cm/s"
   units: cm/s
   long_name: TEM vertical wind ($\bar{w}^{*}$)
