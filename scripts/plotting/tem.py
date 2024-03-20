@@ -302,6 +302,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         if 'diff_contour_range' in vres:
             diff_levs = vres['diff_contour_range']
             diff_levs = [float(x) for x in diff_levs]
+            diff_levs = np.arange(*diff_levs)
         else:
             diff_levs = 20
         
@@ -370,7 +371,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[0,2].text(prop_x, prop_y, empty_message, transform=axs[0,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[0,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",
-                                      levels=np.arange(*diff_levs), cbar_kwargs={'label': ds[var].units})
+                                      levels=diff_levs, cbar_kwargs={'label': ds[var].units})
 
         # Zonal mean temperature
         #------------------------------------------------------------------------------------------
@@ -413,7 +414,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[2,2].text(prop_x, prop_y, empty_message, transform=axs[2,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[2,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(*diff_levs),
+                            ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': ds[var].units})
         
         # EP Flux - vertical component vmax=1e5
@@ -436,7 +437,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[3,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[3,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(*diff_levs),
+                            ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM meridional wind 
@@ -461,7 +462,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[4,2].text(prop_x, prop_y, empty_message, transform=axs[4,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[4,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(*diff_levs),
+                            ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM vertical wind
@@ -489,7 +490,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[5,2].text(prop_x, prop_y, empty_message, transform=axs[5,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[5,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=np.arange(*diff_levs),
+                            ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': ds[var].units})
 
         # TEM mass stream function
@@ -514,7 +515,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[6,2].text(prop_x, prop_y, empty_message, transform=axs[6,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[6,2], y='lev', yscale='log',
-                                    ylim=[1e2,2],cmap="BrBG",levels=np.arange(*diff_levs),
+                                    ylim=[1e2,2],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence
@@ -539,7 +540,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[7,2].text(prop_x, prop_y, empty_message, transform=axs[7,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[7,2], y='lev', yscale='log',
-                                    ylim=[1e2,2],cmap="BrBG",levels=np.arange(*diff_levs),
+                                    ylim=[1e2,2],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': ds[var].units})
 
         # EP flux divergence - meridional component
