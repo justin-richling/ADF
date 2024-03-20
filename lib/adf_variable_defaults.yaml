@@ -1090,14 +1090,14 @@ wtem:
   obs_var_name: "wtem"
 
 psitem:
-  #contour_levels_range: [-5e9,5.1e9,0.5e9]
-  contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
+  contour_levels_range: [-5e9,5.1e9,0.5e9]
+  #contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   non_linear: True
   diff_contour_range: [-1e9,1.1e9,0.1e9]
   ylim: [1e2,1]
   mpl:
     colorbar:
-      ticks: [-0.5,0.5,0.05]
+      #ticks: [-0.5,0.5,0.05]
       label : "cm/s"
   units: m3 s−2
   long_name: TEM mass stream function ($\bar{\chi}^{*}$)
