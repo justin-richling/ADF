@@ -3015,7 +3015,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         """
         Format the period and amplitiude side axes
         """
-        axes[side_axis].plot(merra_data,merra2['lev'],color='k',s=1)
+        axes[side_axis].plot(merra_data,merra2['lev'],color='k')# s=1
         axes[side_axis].set_ylim(y_lims[0],y_lims[1])
         axes[side_axis].set_yscale("log")
 
