@@ -368,7 +368,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # Zonal mean temperature
         #------------------------------------------------------------------------------------------
         if var == "thzm":
-            continue
             #mseasons = np.log(mseasons)
             #oseasons = np.log(oseasons)
 

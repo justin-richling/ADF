@@ -1028,8 +1028,8 @@ vzm:
   obs_var_name: "vzm"
 
 thzm:
-  contour_levels_range: []
-  diff_contour_range: []
+  #contour_levels_range: []
+  #diff_contour_range: []
   ylim: [1e3,1]
   units: m s-1
   long_name: Zonal mean temperature ($\bar{T}$)
