@@ -476,6 +476,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         if var == "wtem":
             mseasons = mseasons*100
             oseasons = oseasons*100
+            """
             mseasons.plot.contourf(ax=axs[5,0], levels = levels1, y='lev', yscale='log',
                                                 ylim=[1e2,1],norm=norm1,
                                                 cbar_kwargs={'label': units},cmap=cmap1)
@@ -496,6 +497,20 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 axs[5,2].text(prop_x, prop_y, empty_message, transform=axs[5,2].transAxes, bbox=props)
             else:
                 dseasons.plot(ax=axs[5,2], y='lev', yscale='log',
+                            ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
+                                    cbar_kwargs={'label': units})
+            """
+            # mesh for plots:
+            lat = mseasons['lat']
+            lev = mseasons['lev']
+            lats, levs = np.meshgrid(lat, lev)
+            axs[5,0].contourf(lats,levs,mseasons,levels = levels1, y='lev', yscale='log',
+                                                ylim=[1e2,1],norm=norm1,
+                                                cbar_kwargs={'label': units},cmap=cmap1)
+            axs[5,1].contourf(lats,levs,oseasons,levels = levels1, y='lev', yscale='log',
+                                                ylim=[1e2,1],norm=norm1,
+                                                cbar_kwargs={'label': units},cmap=cmap1)
+            axs[5,2].contourf(lats,levs,dseasons,y='lev', yscale='log',
                             ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': units})
 
