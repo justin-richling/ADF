@@ -4,6 +4,7 @@ import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 import matplotlib as mpl
 import matplotlib.cm as cm
 import pandas as pd
@@ -538,6 +539,9 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             axs[5,1].set_ylim(axs[5,1].get_ylim()[::-1])
             axs[5,2].set_yscale("log")
             axs[5,2].set_ylim(axs[5,2].get_ylim()[::-1])
+            for a in axs[5,:]:
+                # Disable scientific notation on y-axis
+                a.yaxis.set_major_formatter(ScalarFormatter())
             plt.colorbar(img0, ax=axs[5,0], location='right',ticks=cbar_ticks)
             plt.colorbar(img1, ax=axs[5,1], location='right',ticks=cbar_ticks)
             plt.colorbar(img2, ax=axs[5,2], location='right',)
