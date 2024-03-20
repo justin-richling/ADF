@@ -314,6 +314,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         
 
 
+        cbar_ticks = vres['mpl']['colorbar']['ticks']
         
         if 'colormap' in vres:
             cmap1 = vres['colormap']
@@ -531,8 +532,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             axs[5,1].set_ylim(axs[5,1].get_ylim()[::-1])
             axs[5,2].set_yscale("log")
             axs[5,2].set_ylim(axs[5,2].get_ylim()[::-1])
-            plt.colorbar(img0, ax=axs[5,0], location='right',)
-            plt.colorbar(img1, ax=axs[5,1], location='right',)
+            plt.colorbar(img0, ax=axs[5,0], location='right',ticks=cbar_ticks)
+            plt.colorbar(img1, ax=axs[5,1], location='right',ticks=cbar_ticks)
             plt.colorbar(img2, ax=axs[5,2], location='right',)
 
         # TEM mass stream function
