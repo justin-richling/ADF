@@ -1059,6 +1059,7 @@ epfz:
 
 vtem:
   contour_levels_range: [-0.5,0.6,0.05]
+  contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   diff_contour_range: [-0.5,0.5,0.05]
   ylim: [1e2,1]
   units: m/s
@@ -1069,9 +1070,10 @@ vtem:
 
 wtem:
   contour_levels_range: [-5e-3,5.1e-3,0.5e-3]
+  contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   diff_contour_range: [-0.002,0.002,0.0001]
   ylim: [1e2,1]
-  units: m/s
+  units: cm/s
   long_name: TEM vertical wind ($\bar{w}^{*}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"

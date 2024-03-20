@@ -463,6 +463,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         # TEM vertical wind
         #------------------------------------------------------------------------------------------
         if var == "wtem":
+            mseasons = mseasons*100
+            oseasons = oseasons*100
             mseasons.plot.contourf(ax=axs[5,0], levels = levels1, y='lev', yscale='log',
                                                 ylim=[1e2,1],norm=norm1,
                                                 cbar_kwargs={'label': ds[var].units},cmap=cmap1)
