@@ -324,7 +324,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             print(var)
             assert len(vres['contour_levels_range']) == 3, \
             "contour_levels_range must have exactly three entries: min, max, step"
-
+            print(vres['contour_levels_range'])
             levels1 = np.arange(*vres['contour_levels_range'])
             if ('non_linear' in vres) and (vres['non_linear']):
                 cmap_obj = cm.get_cmap(cmap1)
