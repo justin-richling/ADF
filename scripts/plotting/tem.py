@@ -508,6 +508,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                             ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
                                     cbar_kwargs={'label': units})
             """
+            from matplotlib.ticker import FuncFormatter
+            # Define custom formatter function
+            def log_formatter(x, pos):
+                """Custom formatter for logarithmic scale"""
+                if x < 1:
+                    return f"{x:.2f}"
+                else:
+                    return f"{int(x)}"
             # mesh for plots:
             #print(mseasons)
             lat = mseasons['zalat']
@@ -541,7 +549,11 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             axs[5,2].set_ylim(axs[5,2].get_ylim()[::-1])
             for a in axs[5,:]:
                 # Disable scientific notation on y-axis
-                a.yaxis.set_major_formatter(ScalarFormatter())
+                #a.yaxis.set_major_formatter(ScalarFormatter())
+                
+
+                # Set the formatter
+                a.yaxis.set_major_formatter(FuncFormatter(log_formatter))
             plt.colorbar(img0, ax=axs[5,0], location='right',ticks=cbar_ticks)
             plt.colorbar(img1, ax=axs[5,1], location='right',ticks=cbar_ticks)
             plt.colorbar(img2, ax=axs[5,2], location='right',)
