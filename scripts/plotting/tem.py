@@ -321,6 +321,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             else:
                 norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
         elif 'contour_levels_range' in vres:
+            print(var)
             assert len(vres['contour_levels_range']) == 3, \
             "contour_levels_range must have exactly three entries: min, max, step"
 
