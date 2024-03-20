@@ -295,12 +295,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         maxval = np.max([np.max(mseasons), np.max(oseasons)])
 
         #Gather contour level data (if applicable)
-        if 'contour_levels_range' in vres:
-            levs = vres['contour_levels_range']
-        else:
-            levs = 20
+        #if 'contour_levels_range' in vres:
+        #    levs = vres['contour_levels_range']
+        #else:
+        #    levs = 20
         if 'diff_contour_range' in vres:
             diff_levs = vres['diff_contour_range']
+            diff_levs = [float(x) for x in diff_levs]
         else:
             diff_levs = 20
         
