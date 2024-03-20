@@ -501,6 +501,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                                     cbar_kwargs={'label': units})
             """
             # mesh for plots:
+            print(mseasons.variables)
             lat = mseasons['lat']
             lev = mseasons['lev']
             lats, levs = np.meshgrid(lat, lev)
