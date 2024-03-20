@@ -3020,7 +3020,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         axes[side_axis].set_yscale("log")
 
         if merra==False:
-            axes[side_axis].plot(data,case_lev,linewidths=1)
+            axes[side_axis].plot(data,case_lev)#linewidths=1
         if x == "period":
             axes[side_axis].set_xlim(0,40)
             axes[side_axis].set_xticks(np.arange(0,41,10))
