@@ -464,14 +464,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #------------------------------------------------------------------------------------------
         if var == "wtem":
             mseasons.plot.contourf(ax=axs[5,0], levels = levels1, y='lev', yscale='log',
-                                                ylim=[1e2,1],vmax=5e-3,norm=norm1,
+                                                ylim=[1e2,1],norm=norm1,
                                                 cbar_kwargs={'label': ds[var].units},cmap=cmap1)
             mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',levels = levels1[::5],
                                             ylim=[1e2,1],norm=norm1,
                                             colors='black', linestyles=None)
 
             oseasons.plot.contourf(ax=axs[5,1], levels = levels1, y='lev', yscale='log',
-                                                ylim=[1e2,1],vmax=5e-3,norm=norm1,
+                                                ylim=[1e2,1],norm=norm1,
                                                 cbar_kwargs={'label': ds[var].units},cmap=cmap1)
             oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',levels = levels1[::5],
                                             ylim=[1e2,1],norm=norm1,
@@ -490,14 +490,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #------------------------------------------------------------------------------------------
         if var == "psitem":
             mseasons.plot.contourf(ax=axs[6,0], levels = levels1, y='lev', yscale='log',
-                                                vmax=5e9, ylim=[1e2,2],norm=norm1,
+                                                 ylim=[1e2,2],norm=norm1,
                                                 cbar_kwargs={'label': ds[var].units},cmap=cmap1)
             mseasons.plot.contour(ax=axs[6,0], y='lev', yscale='log',norm=norm1,
                                             ylim=[1e2,2],levels=levels1[::2],
                                             colors='black', linestyles=None)
 
             oseasons.plot.contourf(ax=axs[6,1], levels = levels1, y='lev', yscale='log',
-                                                vmax=5e9, ylim=[1e2,2],norm=norm1,
+                                                 ylim=[1e2,2],norm=norm1,
                                                 cbar_kwargs={'label': ds[var].units},cmap=cmap1)
             oseasons.plot.contour(ax=axs[6,1], y='lev', yscale='log',norm=norm1,
                                              ylim=[1e2,2],levels=levels1[::2],
@@ -515,14 +515,14 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #------------------------------------------------------------------------------------------
         if var == "utendepfd":
             mseasons.plot.contourf(ax=axs[7,0], y='lev', yscale='log',levels=levels1,
-                                            vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],norm=norm1,
+                                             ylim=[1e2,2],norm=norm1,
                                             cbar_kwargs={'label': ds[var].units},cmap=cmap1)
             mseasons.plot.contour(ax=axs[7,0], y='lev', yscale='log',norm=norm1,
                                             ylim=[1e2,2],levels=levels1[::2],
                                             colors='black', linestyles=None)
 
             oseasons.plot.contourf(ax=axs[7,1], y='lev', yscale='log',levels=levels1,
-                                            vmax=0.0001, vmin=-0.0001, ylim=[1e2,2],norm=norm1,
+                                             ylim=[1e2,2],norm=norm1,
                                             cbar_kwargs={'label': ds[var].units},cmap=cmap1)
             oseasons.plot.contour(ax=axs[7,1], y='lev', yscale='log',norm=norm1,
                                             ylim=[1e2,2],levels=levels1[::2],
