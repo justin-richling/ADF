@@ -507,13 +507,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             lats, levs = np.meshgrid(lat, lev)
             img0 = axs[5,0].contourf(lats,levs,mseasons,levels = levels1, 
                                                 norm=norm1,cmap=cmap1,
-                                                cbar_kwargs={'label': units}).set_yscale("log")
+                                                cbar_kwargs={'label': units})
             img1 = axs[5,1].contourf(lats,levs,oseasons,levels = levels1,
                                                 norm=norm1,cmap=cmap1,
-                                                cbar_kwargs={'label': units}).set_yscale("log")
+                                                cbar_kwargs={'label': units})
             img2 = axs[5,2].contourf(lats,levs,dseasons, 
                             cmap="BrBG",levels=diff_levs,
-                                    cbar_kwargs={'label': units}).set_yscale("log")
+                                    cbar_kwargs={'label': units})
+            axs[5,0].set_yscale("log")
+            axs[5,1].set_yscale("log")
+            axs[5,2].set_yscale("log")
             plt.colorbar(img0, ax=axs[5,0], location='right',)
             plt.colorbar(img1, ax=axs[5,1], location='right',)
             plt.colorbar(img2, ax=axs[5,2], location='right',)
