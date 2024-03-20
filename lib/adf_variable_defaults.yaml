@@ -1008,6 +1008,8 @@ OMEGAT:
 # Category: TEM
 #++++++++++++++
 uzm:
+  contour_levels_range: [-40,41,5]
+  diff_contour_range: [-10,21,2]
   ylim: [1e3,1]
   units: m s-1
   long_name: Zonal mean zonal wind ($\bar{u}$)
@@ -1016,6 +1018,8 @@ uzm:
   obs_var_name: "uzm"
 
 vzm:
+  #contour_levels_range: []
+  #diff_contour_range: []
   ylim: [1e3,1]
   units: m s-1
   long_name: Zonal mean meridional wind ($\bar{v}$) 
@@ -1024,6 +1028,8 @@ vzm:
   obs_var_name: "vzm"
 
 thzm:
+  contour_levels_range: []
+  diff_contour_range: []
   ylim: [1e3,1]
   units: m s-1
   long_name: Zonal mean temperature ($\bar{T}$)
@@ -1032,6 +1038,8 @@ thzm:
   obs_var_name: "uzm"
 
 epfy:
+  contour_levels_range: [-5e6,5.1e6,0.5e6]
+  diff_contour_range: [-0.2e7,0.21e7,0.05e7]
   ylim: [1e2,1]
   units: K
   long_name: EP Flux - meridional component ($F_{y}$)
@@ -1040,6 +1048,8 @@ epfy:
   obs_var_name: "epfy"
 
 epfz:
+  contour_levels_range: [-3e4,3.1e4,0.25e4]
+  diff_contour_range: [-1e4,1.1e4,0.2e4]
   ylim: [1e2,1]
   units: m3 s−2
   long_name: EP Flux - vertical component ($F_{z}$)
@@ -1048,6 +1058,8 @@ epfz:
   obs_var_name: "epfz"
 
 vtem:
+  contour_levels_range: [-0.5,0.6,0.05]
+  diff_contour_range: [-0.5,0.5,0.05]
   ylim: [1e2,1]
   units: m/s
   long_name: TEM meridional wind ($\bar{v}^{*}$)
@@ -1056,6 +1068,8 @@ vtem:
   obs_var_name: "vtem"
 
 wtem:
+  contour_levels_range: [-5e-3,5.1e-3,0.5e-3]
+  diff_contour_range: [-0.002,0.002,0.0001]
   ylim: [1e2,1]
   units: m/s
   long_name: TEM vertical wind ($\bar{w}^{*}$)
@@ -1064,6 +1078,8 @@ wtem:
   obs_var_name: "wtem"
 
 psitem:
+  contour_levels_range: [-5e9,5.1e9,0.5e9]
+  diff_contour_range: [-1e9,1.1e9,0.1e9]
   ylim: [1e2,1]
   units: m3 s−2
   long_name: TEM mass stream function ($\bar{\chi}^{*}$)
@@ -1072,6 +1088,8 @@ psitem:
   obs_var_name: "psitem"
 
 utendepfd:
+  contour_levels_range: [-0.0001,0.00011,0.00001]
+  diff_contour_range: [-0.00004,0.000041,0.000005]
   ylim: [1e2,1]
   units: m3 s−2
   long_name: EP flux divergence ($\nabla \cdot F$)
@@ -1080,6 +1098,8 @@ utendepfd:
   obs_var_name: "utendepfd"
 
 utendvtem:
+  #contour_levels_range: []
+  #diff_contour_range: []
   ylim: [1e2,1]
   units: m3 s−2
   long_name: EP flux divergence - meridional component ($F_{yy}$)
@@ -1088,6 +1108,8 @@ utendvtem:
   obs_var_name: "utendvtem"
 
 utendwtem:
+  #contour_levels_range: []
+  #diff_contour_range: []
   ylim: [1e2,1]
   units: m3 s−2
   long_name: EP flux divergence - meridionverticalal component ($F_{zz})
