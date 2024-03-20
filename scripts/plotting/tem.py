@@ -321,11 +321,13 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             else:
                 norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
         elif 'contour_levels_range' in vres:
-            print(var)
             assert len(vres['contour_levels_range']) == 3, \
             "contour_levels_range must have exactly three entries: min, max, step"
             print(vres['contour_levels_range'])
-            levels1 = np.arange(*vres['contour_levels_range'])
+
+            lev_range = [float(x) for x in vres['contour_levels_range']]
+
+            levels1 = np.arange(*lev_range)
             if ('non_linear' in vres) and (vres['non_linear']):
                 cmap_obj = cm.get_cmap(cmap1)
                 norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
