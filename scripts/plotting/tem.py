@@ -328,7 +328,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         elif 'contour_levels_range' in vres:
             assert len(vres['contour_levels_range']) == 3, \
             "contour_levels_range must have exactly three entries: min, max, step"
-            print(vres['contour_levels_range'])
+            #print(vres['contour_levels_range'])
 
             lev_range = [float(x) for x in vres['contour_levels_range']]
 
