@@ -319,7 +319,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             #contourf_opt.update(kwargs['mpl'].get('contourf',{}))
             #colorbar_opt.update(kwargs['mpl'].get('colorbar',{}))
             if vres['mpl'].get('colorbar',{}):
-                cbar_ticks = vres['mpl']['colorbar']['ticks']
+                if vres['mpl']['colorbar'].get('ticks',{}):
+                    cbar_ticks = vres['mpl']['colorbar']['ticks']
         
         if 'colormap' in vres:
             cmap1 = vres['colormap']
