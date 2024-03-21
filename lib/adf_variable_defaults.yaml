@@ -1040,7 +1040,7 @@ thzm:
 
 epfy:
   colormap: "RdYlBu_r"
-  #contour_levels_range: [-5e6,5.1e6,0.5e6]
+  contour_levels_range: [-5e6,5.1e6,0.5e6]
   #diff_contour_range: [-0.2e7,0.21e7,0.05e7]
   ylim: [1e2,1]
   units: K
