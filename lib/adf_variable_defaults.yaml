@@ -1045,7 +1045,7 @@ thzm:
 epfy:
   colormap: "RdYlBu_r"
   contour_levels_range: [-5e6,5.1e6,0.5e6]
-  #diff_contour_range: [-0.2e7,0.21e7,0.05e7]
+  diff_contour_range: [-0.2e7,0.21e7,0.05e7]
   ylim: [1e2,1]
   #units: K
   mpl:
@@ -1060,7 +1060,7 @@ epfy:
 epfz:
   colormap: "RdYlBu_r"
   contour_levels_range: [-3e6,3.1e6,0.25e6]
-  #diff_contour_range: [-1e4,1.1e4,0.2e4]
+  diff_contour_range: [-1e4,1.1e4,0.2e4]
   ylim: [1e2,1]
   #units: m3 s−2
   mpl:
@@ -1126,7 +1126,7 @@ psitem:
   mpl:
     colorbar:
       #ticks: [-0.5,0.5,0.05]
-      #label : "cm/s"
+      label : "kg/s"
   units: kg/s
   long_name: TEM mass stream function ($\bar{\chi}^{*}$)
   obs_file: "TEM_ERA5.nc"
