@@ -357,6 +357,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             else:
                 norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
         #End if
+        
+        #
+        pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
+
+
+
 
         var_axs = {"uzm":0, "thzm":1, "epfy":2, "epfz":3, "vtem":4, "wtem":5,
                    "psitem":6, "utendepfd":7, "utendvtem":8, "utendwtem":9
