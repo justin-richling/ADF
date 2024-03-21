@@ -1121,7 +1121,7 @@ psitem:
   contour_levels_range: [-9e9,9.1e9,0.5e9]
   #contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   #non_linear: True
-  #diff_contour_range: [-1e9,1.1e9,0.1e9]
+  diff_contour_range: [-1e13,1.1e13,0.1e13]
   ylim: [1e2,1]
   mpl:
     colorbar:
