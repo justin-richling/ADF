@@ -9,6 +9,8 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import pandas as pd
 
+import plotting_functions as pf
+
 #Format warning messages:
 def my_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
@@ -297,6 +299,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         else:
             units = ''
 
+        """
         minval = np.min([np.min(mseasons), np.min(oseasons)])
         maxval = np.max([np.max(mseasons), np.max(oseasons)])
 
@@ -357,10 +360,16 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             else:
                 norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
         #End if
+        """
         
         #
-        pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
+        cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
+        levs = np.unique(np.array(cp_info['levels1']))
+        norm = np.unique(np.array(cp_info['norm1']))
+        cmap = cp_info['cmap1']
 
+
+        levs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
 
 
@@ -377,29 +386,29 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         axs_id = var_axs[var]
 
         #Contour fill
-        img0 = axs[axs_id,0].contourf(lats, levs,mseasons, levels=levels1, norm=norm1, cmap=cmap1)
-        img1 = axs[axs_id,1].contourf(lats, levs,oseasons, levels=levels1, norm=norm1, cmap=cmap1)
+        img0 = axs[axs_id,0].contourf(lats, levs,mseasons, levels=levs, norm=norm, cmap=cmap)
+        img1 = axs[axs_id,1].contourf(lats, levs,oseasons, levels=levs, norm=norm, cmap=cmap)
             
         #Add contours for highlighting
-        axs[axs_id,0].contour(lats,levs,mseasons,levels=levels1[::2], norm=norm1, colors="k")
-        axs[axs_id,1].contour(lats,levs,oseasons,levels=levels1[::2], norm=norm1, colors="k")
+        axs[axs_id,0].contour(lats,levs,mseasons,levels=levs[::2], norm=norm, colors="k")
+        axs[axs_id,1].contour(lats,levs,oseasons,levels=levs[::2], norm=norm, colors="k")
 
         #Check if difference plot has contour levels, if not print notification
         if len(dseasons.lev) == 0:
             axs[axs_id,2].text(prop_x, prop_y, empty_message,
                                transform=axs[axs_id,2].transAxes, bbox=props)
         else:
-            img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=diff_levs)
+            img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff)
             axs[axs_id,2].contour(lats,levs,dseasons, colors="k",)#levels=diff_levs[::2]
-            plt.colorbar(img2, ax=axs[axs_id,2], location='right',)
+            plt.colorbar(img2, ax=axs[axs_id,2], location='right',**cp_info['diff_colorbar_opt'])
 
         #Format y-axis
         for a in axs[axs_id,:]:
             a.set_yscale("log")
             a.set_ylim(axs[axs_id,2].get_ylim()[::-1])
 
-        plt.colorbar(img0, ax=axs[axs_id,0], location='right',ticks=cbar_ticks)
-        plt.colorbar(img1, ax=axs[axs_id,1], location='right',ticks=cbar_ticks)
+        plt.colorbar(img0, ax=axs[axs_id,0], location='right',**cp_info['colorbar_opt'])
+        plt.colorbar(img1, ax=axs[axs_id,1], location='right',**cp_info['colorbar_opt'])
 
         """
         # Zonal mean zonal wind
