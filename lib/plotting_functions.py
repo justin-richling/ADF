@@ -1814,12 +1814,15 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if "diff_contour_levels" in kwargs:
-        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+        lev_range = [float(x) for x in kwargs['diff_contour_range']]
+        levelsdiff = np.arange(*lev_range)
+        #levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
     elif "diff_contour_range" in kwargs:
         assert len(kwargs['diff_contour_range']) == 3, \
         "diff_contour_range must have exactly three entries: min, max, step"
-
-        levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        lev_range = [float(x) for x in kwargs['diff_contour_range']]
+        levelsdiff = np.arange(*lev_range)
+        #levelsdiff = np.arange(*kwargs['diff_contour_range'])
     else:
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))
