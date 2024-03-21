@@ -365,7 +365,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #
         cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
         clevs = np.unique(np.array(cp_info['levels1']))
-        norm = np.unique(np.array(cp_info['norm1']))
+        norm = cp_info['norm1']
         cmap = cp_info['cmap1']
 
 
