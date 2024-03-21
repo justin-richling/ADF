@@ -1118,10 +1118,10 @@ wtem:
 
 psitem:
   colormap: "RdYlBu_r"
-  contour_levels_range: [-9e13,9.1e13,0.5e13]
+  contour_levels_range: [-3e11,3e11,.3e11]
   #contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   #non_linear: True
-  diff_contour_range: [-1e12,1.1e12,0.1e12]
+  diff_contour_range: [-5e10,5.1e10,.5e10]
   ylim: [1e2,1]
   mpl:
     colorbar:
@@ -1177,5 +1177,9 @@ utendwtem:
 #      "cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)","tick_inter":15,"units":"K",
 #      "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"lev":90}
 
+
+SNOWDP:
+  contour_levels_range: [-9,10,1]
+  units: 'm'
 #-----------
 #End of File
