@@ -1136,7 +1136,7 @@ psitem:
 utendepfd:
   colormap: "RdYlBu_r"
   contour_levels_range: [-0.0001,0.00011,0.00001]
-  #diff_contour_range: [-0.00004,0.000041,0.000005]
+  diff_contour_range: [-0.00004,0.000041,0.000005]
   ylim: [1e2,1]
   units: m3 s−2
   long_name: EP flux divergence ($\nabla \cdot F$)
