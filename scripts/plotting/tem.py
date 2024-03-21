@@ -392,6 +392,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         axs_id = var_axs[var]
         #print(axs_id)
 
+        #x_filtered = x[~np.isnan(y)]
+
         #Contour fill
         img0 = axs[axs_id,0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
         img1 = axs[axs_id,1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
@@ -405,7 +407,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             axs[axs_id,2].text(prop_x, prop_y, empty_message,
                                transform=axs[axs_id,2].transAxes, bbox=props)
         else:
-            img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff)
+            img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=15)#levels=levs_diff
             axs[axs_id,2].contour(lats,levs,dseasons, colors="k",levels=15)#levels=diff_levs[::2]
             plt.colorbar(img2, ax=axs[axs_id,2], location='right',)#**cp_info['diff_colorbar_opt']
 
