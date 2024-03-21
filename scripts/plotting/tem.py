@@ -406,8 +406,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                                transform=axs[axs_id,2].transAxes, bbox=props)
         else:
             img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff)
-            axs[axs_id,2].contour(lats,levs,dseasons, colors="k",)#levels=diff_levs[::2]
-            #plt.colorbar(img2, ax=axs[axs_id,2], location='right',)#**cp_info['diff_colorbar_opt']
+            axs[axs_id,2].contour(lats,levs,dseasons, colors="k",levels=15)#levels=diff_levs[::2]
+            plt.colorbar(img2, ax=axs[axs_id,2], location='right',)#**cp_info['diff_colorbar_opt']
 
         #Format y-axis
         for a in axs[axs_id,:]:
