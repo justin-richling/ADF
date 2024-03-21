@@ -1013,6 +1013,10 @@ uzm:
   diff_contour_range: [-30,31,5]
   ylim: [1e3,1]
   units: m s-1
+  mpl:
+    colorbar:
+      #ticks: [-5,-1,-0.2,0.2,1,5]
+      label : "m/s"
   long_name: Zonal mean zonal wind ($\bar{u}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
@@ -1043,7 +1047,11 @@ epfy:
   contour_levels_range: [-5e6,5.1e6,0.5e6]
   #diff_contour_range: [-0.2e7,0.21e7,0.05e7]
   ylim: [1e2,1]
-  units: K
+  #units: K
+  mpl:
+    colorbar:
+      #ticks: [-5,-1,-0.2,0.2,1,5]
+      label : "m3/s2"
   long_name: EP Flux - meridional component ($F_{y}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
@@ -1054,7 +1062,11 @@ epfz:
   contour_levels_range: [-3e6,3.1e6,0.25e6]
   #diff_contour_range: [-1e4,1.1e4,0.2e4]
   ylim: [1e2,1]
-  units: m3 s−2
+  #units: m3 s−2
+  mpl:
+    colorbar:
+      #ticks: [-5,-1,-0.2,0.2,1,5]
+      label : "m3/s2"
   long_name: EP Flux - vertical component ($F_{z}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
@@ -1071,6 +1083,13 @@ vtem:
     colorbar:
       #ticks: [-5,-1,-0.2,0.2,1,5]
       label : "m/s"
+  #mpl:
+  #  colorbar:
+  #    label : "ug/m3"
+  #    ticks: [0.05,0.2,0.4,1,2,6,24,90]
+  #  diff_colorbar:
+  #    label : "ug/m3"
+  #    ticks: [-10,8,6,4,2,0,-2,-4,-6,-8,-10]
   units: m/s
   long_name: TEM meridional wind ($\bar{v}^{*}$)
   obs_file: "TEM_ERA5.nc"
