@@ -1044,8 +1044,8 @@ thzm:
 
 epfy:
   colormap: "RdYlBu_r"
-  contour_levels_range: [5e7,5.1e8,.5e7]
-  diff_contour_range: [-2e5,2.1e5,0.2e5]
+  contour_levels_range: [-1e8,1.1e8,.05e8]
+  diff_contour_range: [-2e7,2e7,0.2e7]
   ylim: [1e2,1]
   #units: K
   mpl:
