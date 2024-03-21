@@ -228,6 +228,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     prop_y = 0.42
 
     for var in var_list:
+        print(var)
         #Grab variable defaults for this variable
         vres = res[var]
 
