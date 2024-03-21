@@ -1107,7 +1107,7 @@ psitem:
   mpl:
     colorbar:
       #ticks: [-0.5,0.5,0.05]
-      label : "cm/s"
+      #label : "cm/s"
   units: m3 s−2
   long_name: TEM mass stream function ($\bar{\chi}^{*}$)
   obs_file: "TEM_ERA5.nc"
