@@ -364,7 +364,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         
         #
         cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
-        levs = np.unique(np.array(cp_info['levels1']))
+        clevs = np.unique(np.array(cp_info['levels1']))
         norm = np.unique(np.array(cp_info['norm1']))
         cmap = cp_info['cmap1']
 
@@ -386,12 +386,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         axs_id = var_axs[var]
 
         #Contour fill
-        img0 = axs[axs_id,0].contourf(lats, levs,mseasons, levels=levs, norm=norm, cmap=cmap)
-        img1 = axs[axs_id,1].contourf(lats, levs,oseasons, levels=levs, norm=norm, cmap=cmap)
+        img0 = axs[axs_id,0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
+        img1 = axs[axs_id,1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
             
         #Add contours for highlighting
-        axs[axs_id,0].contour(lats,levs,mseasons,levels=levs[::2], norm=norm, colors="k")
-        axs[axs_id,1].contour(lats,levs,oseasons,levels=levs[::2], norm=norm, colors="k")
+        axs[axs_id,0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
+        axs[axs_id,1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
 
         #Check if difference plot has contour levels, if not print notification
         if len(dseasons.lev) == 0:
