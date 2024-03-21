@@ -215,6 +215,11 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     TEM subplots
     
     """
+
+    var_axs = {"uzm":0, "thzm":1, "epfy":2, "epfz":3, "vtem":4, "wtem":5,
+                   "psitem":6, "utendepfd":7, "utendvtem":8, "utendwtem":9
+                  }
+
     #Set empty message for comparison of cases with different vertical levels
     #TODO: Work towards getting the vertical and horizontal interpolations!! - JR
     empty_message = "These have different vertical levels\nCan't compare cases currently"
@@ -373,9 +378,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
 
 
-        var_axs = {"uzm":0, "thzm":1, "epfy":2, "epfz":3, "vtem":4, "wtem":5,
-                   "psitem":6, "utendepfd":7, "utendvtem":8, "utendwtem":9
-                  }
+        
 
         # mesh for plots:
         lat = mseasons['zalat']
@@ -400,7 +403,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         else:
             img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff)
             axs[axs_id,2].contour(lats,levs,dseasons, colors="k",)#levels=diff_levs[::2]
-            plt.colorbar(img2, ax=axs[axs_id,2], location='right',)#**cp_info['diff_colorbar_opt']
+            #plt.colorbar(img2, ax=axs[axs_id,2], location='right',)#**cp_info['diff_colorbar_opt']
 
         #Format y-axis
         for a in axs[axs_id,:]:
