@@ -3212,5 +3212,55 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
+
+
+
+def tem_plot(wks, case_nickname, base_nickname,
+             case_climo_yrs, baseline_climo_yrs,
+             mdlfld, obsfld, diffld, obs=False, **kwargs):
+
+    # generate dictionary of contour plot settings:
+    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, **kwargs)
+
+    # create figure object
+    fig = plt.figure(figsize=(14,10))
+    img = []
+
+    # LAYOUT WITH GRIDSPEC
+    gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
+    #gs.tight_layout(fig)
+    ax1 = plt.subplot(gs[0:2, :3], **cp_info['subplots_opt'])
+    ax2 = plt.subplot(gs[0:2, 3:], **cp_info['subplots_opt'])
+    ax3 = plt.subplot(gs[2, 1:5], **cp_info['subplots_opt'])
+    ax = [ax1,ax2,ax3]
+
+    fields = (mdlfld, obsfld, diffld)
+    for i, a in enumerate(fields):
+
+        if i == len(fields)-1:
+            levels = cp_info['levelsdiff']
+            cmap = cp_info['cmapdiff']
+            norm = cp_info['normdiff']
+        else:
+            levels = cp_info['levels1']
+            cmap = cp_info['cmap1']
+            norm = cp_info['norm1']
+
+        levs = np.unique(np.array(levels))
+        if len(levs) < 2:
+            img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree()))
+            ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
+        else:
+            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), **cp_info['contourf_opt']))
+        #End if
+        #ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
+
+        # add contour lines <- Unused for now -JN
+        # TODO: add an option to turn this on -BM
+        #cs.append(ax[i].contour(lon2, lat2, fields[i], transform=ccrs.PlateCarree(), colors='k', linewidths=1))
+        #ax[i].clabel(cs[i], cs[i].levels, inline=True, fontsize=tiFontSize-2, fmt='%1.1f')
+        #ax[i].text( 10, -140, "CONTOUR FROM {} to {} by {}".format(min(cs[i].levels), max(cs[i].levels), cs[i].levels[1]-cs[i].levels[0]),
+        #bbox=dict(facecolor='none', edgecolor='black'), fontsize=tiFontSize-2)
+
 #####################
 #END HELPER FUNCTIONS

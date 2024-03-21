@@ -137,7 +137,7 @@ def tem(adf):
     fig_width = 20
 
     #try and dynamically create size of fig based off number of cases
-    fig_height = 20+(ncols*nrows)
+    fig_height = 15+(ncols*nrows)
 
     #Loop over season dictionary:
     for s in seasons:
@@ -333,15 +333,12 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             levels1 = vres['contour_levels']
             if ('non_linear' in vres) and (vres['non_linear']):
                 cmap_obj = cm.get_cmap(cmap1)
-                #print(levels1)
                 norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-                #norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
             else:
                 norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
         elif 'contour_levels_range' in vres:
             assert len(vres['contour_levels_range']) == 3, \
             "contour_levels_range must have exactly three entries: min, max, step"
-            #print(vres['contour_levels_range'])
 
             lev_range = [float(x) for x in vres['contour_levels_range']]
 
@@ -349,8 +346,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             
             if ('non_linear' in vres) and (vres['non_linear']):
                 cmap_obj = cm.get_cmap(cmap1)
-                #norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-                norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+                norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
             else:
                 norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
         else:
@@ -362,8 +358,44 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
                 norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
         #End if
 
+        var_axs = {"uzm":0, "thzm":1, "epfy":2, "epfz":3, "vtem":4, "wtem":5,
+                   "psitem":6, "utendepfd":7, "utendvtem":8, "utendwtem":9
+                  }
 
+        # mesh for plots:
+        lat = mseasons['zalat']
+        lev = mseasons['lev']
+        lats, levs = np.meshgrid(lat, lev)
 
+        #Get axis number for variable
+        axs_id = var_axs[var]
+
+        #Contour fill
+        img0 = axs[axs_id,0].contourf(lats, levs,mseasons, levels=levels1, norm=norm1, cmap=cmap1)
+        img1 = axs[axs_id,1].contourf(lats, levs,oseasons, levels=levels1, norm=norm1, cmap=cmap1)
+            
+        #Add contours for highlighting
+        axs[axs_id,0].contour(lats,levs,mseasons,levels=levels1[::2], norm=norm1, colors="k")
+        axs[axs_id,1].contour(lats,levs,oseasons,levels=levels1[::2], norm=norm1, colors="k")
+
+        #Check if difference plot has contour levels, if not print notification
+        if len(dseasons.lev) == 0:
+            axs[axs_id,2].text(prop_x, prop_y, empty_message,
+                               transform=axs[axs_id,2].transAxes, bbox=props)
+        else:
+            img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=diff_levs)
+            axs[axs_id,2].contour(lats,levs,dseasons, colors="k",)#levels=diff_levs[::2]
+            plt.colorbar(img2, ax=axs[axs_id,2], location='right',)
+
+        #Format y-axis
+        for a in axs[axs_id,:]:
+            a.set_yscale("log")
+            a.set_ylim(axs[axs_id,2].get_ylim()[::-1])
+
+        plt.colorbar(img0, ax=axs[axs_id,0], location='right',ticks=cbar_ticks)
+        plt.colorbar(img1, ax=axs[axs_id,1], location='right',ticks=cbar_ticks)
+
+        """
         # Zonal mean zonal wind
         #------------------------------------------------------------------------------------------
         if var == "uzm":    
@@ -484,84 +516,26 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         if var == "wtem":
             mseasons = mseasons*100
             oseasons = oseasons*100
-            """
-            mseasons.plot.contourf(ax=axs[5,0], levels = levels1, y='lev', yscale='log',
-                                                ylim=[1e2,1],norm=norm1,
-                                                cbar_kwargs={'label': units},cmap=cmap1)
-            mseasons.plot.contour(ax=axs[5,0],  y='lev', yscale='log',levels = levels1[::5],
-                                            ylim=[1e2,1],norm=norm1,
-                                            colors='black', linestyles=None)
 
-            oseasons.plot.contourf(ax=axs[5,1], levels = levels1, y='lev', yscale='log',
-                                                ylim=[1e2,1],norm=norm1,
-                                                cbar_kwargs={'label': units},cmap=cmap1)
-            oseasons.plot.contour(ax=axs[5,1],  y='lev', yscale='log',levels = levels1[::5],
-                                            ylim=[1e2,1],norm=norm1,
-                                            colors='black', linestyles=None)
-                                            #-5e-3,5.1e-3,2.5e-3
+            #Contour fill
+            img0 = axs[5,0].contourf(lats,levs,mseasons,levels=levels1, norm=norm1,cmap=cmap1)
+            img1 = axs[5,1].contourf(lats,levs,oseasons,levels=levels1, norm=norm1,cmap=cmap1)
+            
+            #Add contours for highlighting
+            axs[5,0].contour(lats,levs,mseasons,levels=levels1[::2], norm=norm1,colors="k")
+            axs[5,1].contour(lats,levs,oseasons,levels = levels1[::2], norm=norm1,colors="k")
 
             #Check if difference plot has contour levels, if not print notification
             if len(dseasons.lev) == 0:
-                axs[5,2].text(prop_x, prop_y, empty_message, transform=axs[5,2].transAxes, bbox=props)
+                axs[5,2].text(prop_x, prop_y, empty_message, transform=axs[3,2].transAxes, bbox=props)
             else:
-                dseasons.plot(ax=axs[5,2], y='lev', yscale='log',
-                            ylim=[1e2,1],cmap="BrBG",levels=diff_levs,
-                                    cbar_kwargs={'label': units})
-            """
-            from matplotlib.ticker import FuncFormatter
-            import matplotlib.ticker as mticker
+                img2 = axs[5,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=diff_levs)
+                axs[5,2].contour(lats,levs,dseasons, colors="k",)#levels=diff_levs[::2]
 
-            # Define custom formatter function
-            def log_formatter(x, pos):
-                """Custom formatter for logarithmic scale"""
-                if x < 0:
-                    print(f"{x:.2f}")
-                    return f"{x:.2f}"
-                else:
-                    return f"{int(x)}"
-            # mesh for plots:
-            #print(mseasons)
-            lat = mseasons['zalat']
-            lev = mseasons['lev']
-            lats, levs = np.meshgrid(lat, lev)
-            img0 = axs[5,0].contourf(lats,levs,mseasons,levels = levels1, 
-                                                norm=norm1,cmap=cmap1,
-                                                cbar_kwargs={'label': units})
-            img1 = axs[5,1].contourf(lats,levs,oseasons,levels = levels1,
-                                                norm=norm1,cmap=cmap1,
-                                                cbar_kwargs={'label': units})
-            img2 = axs[5,2].contourf(lats,levs,dseasons, 
-                            cmap="BrBG",levels=diff_levs,
-                                    cbar_kwargs={'label': units})
-
-            axs[5,0].contour(lats,levs,mseasons,levels = levels1[::2], 
-                                                norm=norm1,colors="k",
-                                                cbar_kwargs={'label': units})
-            axs[5,1].contour(lats,levs,oseasons,levels = levels1[::2],
-                                                norm=norm1,colors="k",
-                                                cbar_kwargs={'label': units})
-            axs[5,2].contour(lats,levs,dseasons, 
-                            colors="k",levels=diff_levs[::2],
-                                    cbar_kwargs={'label': units})
-
-            axs[5,0].set_yscale("log")
-            axs[5,0].set_ylim(axs[5,0].get_ylim()[::-1])
-            axs[5,1].set_yscale("log")
-            axs[5,1].set_ylim(axs[5,1].get_ylim()[::-1])
-            axs[5,2].set_yscale("log")
-            axs[5,2].set_ylim(axs[5,2].get_ylim()[::-1])
             for a in axs[5,:]:
-                # Disable scientific notation on y-axis
-                #a.yaxis.set_major_formatter(ScalarFormatter())
-                a.set_ylim(-np.log10(1000),-np.log10(0.1))
-                a.set_yticks([-np.log10(1000),-np.log10(100),-np.log10(10),-np.log10(1),-np.log10(0.11)])
-                a.set_yticklabels(['1000','100','10','1','0.1'])
-                
+                a.set_yscale("log")
+                a.set_ylim(axs[5,2].get_ylim()[::-1])
 
-                # Set the formatter
-                #a.yaxis.set_major_formatter(FuncFormatter(log_formatter))
-                #a.xaxis.set_major_formatter(mticker.ScalarFormatter())
-                #a.ticklabel_format(style='plain', axis='y')
             plt.colorbar(img0, ax=axs[5,0], location='right',ticks=cbar_ticks)
             plt.colorbar(img1, ax=axs[5,1], location='right',ticks=cbar_ticks)
             plt.colorbar(img2, ax=axs[5,2], location='right',)
@@ -659,7 +633,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             else:
                 dseasons.plot(ax=axs[9,2], y='lev', yscale='log', ylim=[1e3,1],cmap="BrBG",levels=11,
                                     cbar_kwargs={'label': units})
-
+        """
     # Set the ticks and ticklabels for all x-axes
     #NOTE: This has to come after all subplots have been done,
     #I am assuming this is because of the way xarray plots info automatically for labels and titles
