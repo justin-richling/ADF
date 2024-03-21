@@ -1760,6 +1760,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if 'contour_levels' in kwargs:
+        print('Looking at: contour_levels')
         #levels1 = kwargs['contour_levels']
         levels1 = [float(x) for x in kwargs['contour_levels']]
         #levels1 = np.arange(*lev_range)
@@ -1769,6 +1770,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     elif 'contour_levels_range' in kwargs:
+        print('Looking at: contour_levels_range')
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
 
@@ -1782,6 +1784,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     else:
+        print('Gonna make our own becaue your lazy and dumb')
         levels1 = np.linspace(minval, maxval, 12)
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
             cmap_obj = cm.get_cmap(cmap1)
@@ -1799,6 +1802,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
+        print('OH BOY THANKS FOR NOTHING')
         if ((minval < 0) and (0 < maxval)) and mplv > 2:
             norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
         else:
