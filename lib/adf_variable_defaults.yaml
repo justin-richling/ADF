@@ -1054,7 +1054,7 @@ epfy:
   #units: K
   mpl:
     colorbar:
-      ticks: [-5,-1,-0.2,0.2,1,5]
+      icks: [-5e7,-1e7,-0.2e7,0.2e7,1e7,5e7]
       label : "m3/s2"
   long_name: EP Flux - meridional component ($F_{y}$)
   obs_file: "TEM_ERA5.nc"
@@ -1072,7 +1072,7 @@ epfz:
   #units: m3 s−2
   mpl:
     colorbar:
-      #ticks: [-5,-1,-0.2,0.2,1,5]
+      ticks: [-5e6,-1e6,-0.2e6,0.2e6,1e6,5e6]
       label : "m3/s2"
   long_name: EP Flux - vertical component ($F_{z}$)
   obs_file: "TEM_ERA5.nc"
@@ -1112,7 +1112,7 @@ wtem:
   contour_levels: [-0.002,-0.0017,-0.0014,-0.0011,-0.0008,-0.00065,-0.0005,-0.00035,-0.0002,-0.0001,0,0.0001,0.0002,0.00035,0.0005,0.00065,0.0008,0.0011,0.0014,0.0017,0.002]
   scale_factor: 0.01
   non_linear: True
-  diff_contour_range: [-0.02,0.021,0.002]
+  diff_contour_range: [-0.0002,0.00021,0.00002]
   ylim: [1e2,1]
   mpl:
     colorbar:
