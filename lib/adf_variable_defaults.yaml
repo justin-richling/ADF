@@ -1044,7 +1044,8 @@ thzm:
 
 epfy:
   colormap: "RdYlBu_r"
-  contour_levels: [-5e8,-1e8,-0.2e8,0.2e8,1e8,5e8] #-5e8,-1e8,-0.2e8,0.2e8,1e8,5e8
+  #contour_levels: [-5e7,-1e7,-0.2e7,0.2e7,1e7,5e7] #-5e8,-1e8,-0.2e8,0.2e8,1e8,5e8
+  contour_levels: [-5e7,-4e7,-3e7,-2e7,-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7,2e7,3e7,4e7,5e7]
   non_linear: True
   #contour_levels_linspace: [-5e8,5.1e8,.5e8]
   #contour_levels_range: [-1e8,1.1e8,.05e8]
@@ -1063,7 +1064,8 @@ epfy:
 epfz:
   colormap: "RdYlBu_r"
   #contour_levels_range: [-3e6,3.1e6,0.25e6]
-  contour_levels: [-5e6,-1e6,-0.2e6,0.2e6,1e6,5e6]
+  #contour_levels: [-5e6,-1e6,-0.2e6,0.2e6,1e6,5e6]
+  contour_levels: [-5e6,-4e6,-3e6,-2e6,-1e6,-0.8e6,-0.6e6,-0.4e6,-0.2e6,-0.1e6,0,0.1e6,0.2e6,0.4e6,0.6e6,0.8e6,1e6,2e6,3e6,4e6,5e6]
   non_linear: True
   diff_contour_range: [-1e5,1.1e5,0.1e5]
   ylim: [1e2,1]
