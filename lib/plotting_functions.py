@@ -1751,6 +1751,9 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         - 'plot_log_p' : true/false whether to plot log(pressure) axis
     """
     # determine levels & color normalization:
+    # Replace inf values with NaN
+    minval = minval.where(~np.isinf(minval))
+    maxval = maxval.where(~np.isinf(maxval))
     minval = np.min([np.nanmin(adata), np.nanmin(bdata)])
     maxval = np.max([np.nanmax(adata), np.nanmax(bdata)])
     print(minval,maxval)
