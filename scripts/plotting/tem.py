@@ -388,6 +388,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         lev = mseasons['lev']
         lats, levs = np.meshgrid(lat, lev)
 
+
         #Get axis number for variable
         axs_id = var_axs[var]
         #print(axs_id)
@@ -409,7 +410,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         else:
             img2 = axs[axs_id,2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff,norm=cp_info['normdiff'])#levels=levs_diff
             axs[axs_id,2].contour(lats,levs,dseasons, colors="k",levels=levs_diff[::2],norm=cp_info['normdiff'])#levels=diff_levs[::2]
-            plt.colorbar(img2, ax=axs[axs_id,2], location='right',**cp_info['colorbar_opt'])#**cp_info['diff_colorbar_opt']
+            plt.colorbar(img2, ax=axs[axs_id,2], location='right',**cp_info['diff_colorbar_opt'])#**cp_info['diff_colorbar_opt']
 
         #Format y-axis
         for a in axs[axs_id,:]:
@@ -418,6 +419,177 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
 
         plt.colorbar(img0, ax=axs[axs_id,0], location='right',**cp_info['colorbar_opt'])
         plt.colorbar(img1, ax=axs[axs_id,1], location='right',**cp_info['colorbar_opt'])
+        """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # Generate zonal plot:
+        fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
+        levs = np.unique(np.array(cp_info['levels1']))
+
+        levs_diff = np.unique(np.array(cp_info['levelsdiff']))
+
+
+        if len(levs) < 2:
+            img0, = axs[axs_id,0].contourf(lats, levs, mseasons, ax=ax[0])
+            axs[axs_id,1].text(0.4, 0.4, empty_message, transform=ax[0].transAxes, bbox=props)
+            img1, = axs[axs_id,1].contourf(lats, levs, oseasons, ax=ax[1])
+            axs[axs_id,1].text(0.4, 0.4, empty_message, transform=ax[1].transAxes, bbox=props)
+        else:
+            img0, = axs[axs_id,0].contourf(lats, levs, mseasons, ax=ax[0], levels=clevs, norm=norm, cmap=cmap,**cp_info['contourf_opt'])
+            img1, = ax[1].contourf(lats, levs, oseasons, ax=ax[1], levels=clevs, norm=norm, cmap=cmap,**cp_info['contourf_opt'])
+            #Add contours for highlighting
+            axs[axs_id,0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
+            axsaxs[axs_id,1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
+            fig.colorbar(img0, ax=axs[axs_id,1], location='right',**cp_info['colorbar_opt'])
+            fig.colorbar(img1, ax=axs[axs_id,1], location='right',**cp_info['colorbar_opt'])
+        #End if
+
+        if len(levs_diff) < 2:
+            img2, = axs[axs_id,2].contourf(lats, levs, dseasons, ax=ax[2])
+            axs[axs_id,2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
+        else:
+            img2, axs[axs_id,2].contourf(lats, levs, dseasons, norm=cp_info['normdiff'],
+                                 cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],
+                                 **cp_info['contourf_opt'])
+            ax[2].contourf(lats, levs, dseasons, norm=cp_info['normdiff'],
+                           colors="k",levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
+            #img2, ax[2].contourf(lats, levs, dseasons, ax=ax[2], )
+            #ax[2].contourf(lats, levs, dseasons, ax=ax[2],)
+            
+            
+            #**cp_info['diff_colorbar_opt']
+            fig.colorbar(img2, ax=axs[axs_id,2], location='right',**cp_info['diff_colorbar_opt'])
+        tiFontSize = 10
+        ax[0].set_title("TEST", loc='left', fontsize=tiFontSize)
+        ax[1].set_title("BASE", loc='left', fontsize=tiFontSize)
+        ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
+
+
+        # style the plot:
+        #Set Main title for subplots:
+        #st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
+        #st.set_y(0.85)
+        ax[-1].set_xlabel("LATITUDE")
+
+        #if log_p:
+        [a.set_yscale("log") for a in ax]
+
+        fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
+        """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        """
+        #Extract variable of interest
+        odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
+        mdata = mclim_ds[var].squeeze()
+
+        # APPLY UNITS TRANSFORMATION IF SPECIFIED:
+        # NOTE: looks like our climo files don't have all their metadata
+        mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+        # update units
+        mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
+
+        # Do the same for the baseline case if need be:
+        if not adfobj.compare_obs:
+            odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+            # update units
+            odata.attrs['units'] = vres.get("new_unit", odata.attrs.get('units', 'none'))
+        # Or for observations
+        else:
+            odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
+            # Note: we are going to assume that the specification ensures the conversion makes the units the same. Doesn't make sense to add a different unit.
+
+         # determine whether it's 2D or 3D
+        # 3D triggers search for surface pressure
+        has_lat, has_lev = pf.zm_validate_dims(mdata)  # assumes will work for both mdata & odata
+
+        #Notify user of level dimension:
+        if has_lev:
+            print(f"\t   {var} has lev dimension.")
+
+        #
+        # Seasonal Averages
+        #
+
+        #Create new dictionaries:
+        mseasons = {}
+        oseasons = {}
+
+        #Loop over season dictionary:
+        for s in seasons:
+                    
+            # time to make plot; here we'd probably loop over whatever plots we want for this variable
+            # I'll just call this one "Zonal_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+            # NOTE: Up to this point, nothing really differs from global_latlon_map,
+            #       so we could have made one script instead of two.
+            #       Merging would make overall timing better because looping twice will double I/O steps.
+            #
+            plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+
+            if plot_name not in zonal_skip:
+
+                #Seasonal Averages
+                mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
+                oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+
+                # difference: each entry should be (lat, lon) or (plev, lat, lon)
+                # dseasons[s] = mseasons[s] - oseasons[s]
+                # difference will be calculated in plot_zonal_mean_and_save;
+                # because we can let any pressure-level interpolation happen there
+                # This could be re-visited for efficiency or improved code structure.
+
+                #Create new plot with log-p:
+                if has_lev:
+                    plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+
+                    if plot_name_log not in logp_zonal_skip:
+                        pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, base_nickname,
+                                                            [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                            [syear_baseline,eyear_baseline],
+                                                            mseasons[s], oseasons[s], has_lev, log_p=True, obs=obs, **vres)
+
+                        #Add plot to website (if enabled):
+                        adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
+
+        """
+
+
+
+
+
+
+
 
         """
         # Zonal mean zonal wind
