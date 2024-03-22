@@ -236,6 +236,22 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         mdata = ds[var].squeeze()
         odata = ds_base[var].squeeze()
 
+        # APPLY UNITS TRANSFORMATION IF SPECIFIED:
+        # NOTE: looks like our climo files don't have all their metadata
+        mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+        # update units
+        mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
+
+        # Do the same for the baseline case if need be:
+        if not obs:
+            odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+            # update units
+            odata.attrs['units'] = vres.get("new_unit", odata.attrs.get('units', 'none'))
+        # Or for observations
+        else:
+            odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
+            # Note: we are going to assume that the specification ensures the conversion makes the units the same. Doesn't make sense to add a different unit.
+
         #Create array to avoid weighting missing values:
         md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
         od_ones = xr.where(odata.isnull(), 0.0, 1.0)
