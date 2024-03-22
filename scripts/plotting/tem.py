@@ -111,7 +111,7 @@ def tem(adf):
     #Otherwise keep it simple
     else:
         #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem']
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem']
 
     #Baseline TEM location
     input_loc_idx = Path(tem_loc) / base_name
