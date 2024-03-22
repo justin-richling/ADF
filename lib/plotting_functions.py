@@ -1753,6 +1753,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     # determine levels & color normalization:
     minval = np.min([np.nanmin(adata), np.nanmin(bdata)])
     maxval = np.max([np.nanmax(adata), np.nanmax(bdata)])
+    print(minval,maxval)
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
