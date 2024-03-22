@@ -230,7 +230,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     for var in var_list:
         print(var,s)
         if var == "utendepfd":
-            pass
+            print("yup")
+            continue
         #Grab variable defaults for this variable
         vres = res[var]
 
