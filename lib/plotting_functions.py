@@ -1752,8 +1752,8 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     """
     # determine levels & color normalization:
     # Replace inf values with NaN
-    minval = minval.where(~np.isinf(minval))
-    maxval = maxval.where(~np.isinf(maxval))
+    adata = adata.where(~np.isinf(adata))
+    bdata = bdata.where(~np.isinf(bdata))
     minval = np.min([np.nanmin(adata), np.nanmin(bdata)])
     maxval = np.max([np.nanmax(adata), np.nanmax(bdata)])
     print(minval,maxval)
