@@ -110,7 +110,8 @@ def tem(adf):
                     'psitem','utendepfd','utendvtem','utendwtem']
     #Otherwise keep it simple
     else:
-        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem']
 
     #Baseline TEM location
     input_loc_idx = Path(tem_loc) / base_name
@@ -231,7 +232,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         print(var,s)
         if var == "utendepfd":
             print("yup")
-            continue
+            return
         #Grab variable defaults for this variable
         vres = res[var]
 
