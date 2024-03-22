@@ -1054,7 +1054,7 @@ epfy:
   #units: K
   mpl:
     colorbar:
-      icks: [-5e7,-1e7,-0.2e7,0.2e7,1e7,5e7]
+      ticks: [-5e7,-1e7,-0.2e7,0.2e7,1e7,5e7]
       label : "m3/s2"
   long_name: EP Flux - meridional component ($F_{y}$)
   obs_file: "TEM_ERA5.nc"
