@@ -1129,13 +1129,13 @@ wtem:
 psitem:
   colormap: "RdYlBu_r"
   #contour_levels_range: [-3e11,3e11,.3e11]
-  contour_levels: [-3e11,-2e11,-1e11,-0.8e11,-0.6e11,-0.4e11,-0.2e11,-0.1e11,0,0.1e11,0.2e11,0.4e11,0.6e11,0.8e11,1e11,2e11,3e11]
+  #contour_levels: [-3e11,-2e11,-1e11,-0.8e11,-0.6e11,-0.4e11,-0.2e11,-0.1e11,0,0.1e11,0.2e11,0.4e11,0.6e11,0.8e11,1e11,2e11,3e11]
   #non_linear: True
-  diff_contour_range: [-5e10,5.1e10,.5e10]
+  #diff_contour_range: [-5e10,5.1e10,.5e10]
   ylim: [1e2,1]
   mpl:
     colorbar:
-      ticks: [-3e11,-1e11,-.3e11,.3e11,1e11,3e11] #[-5e7,-1e7,-0.2e7,0.2e7,1e7,5e7]
+      #ticks: [-3e11,-1e11,-.3e11,.3e11,1e11,3e11] #[-5e7,-1e7,-0.2e7,0.2e7,1e7,5e7]
       label : "kg/s"
   units: kg/s
   long_name: TEM mass stream function ($\bar{\chi}^{*}$)
