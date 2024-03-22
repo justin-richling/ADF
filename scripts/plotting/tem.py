@@ -252,15 +252,6 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
             odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
             # Note: we are going to assume that the specification ensures the conversion makes the units the same. Doesn't make sense to add a different unit.
 
-         # determine whether it's 2D or 3D
-        # 3D triggers search for surface pressure
-        has_lat, has_lev = pf.zm_validate_dims(mdata)  # assumes will work for both mdata & odata
-
-        #Notify user of level dimension:
-        if has_lev:
-            print(f"\t   {var} has lev dimension.")
-
-
         #Create array to avoid weighting missing values:
         md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
         od_ones = xr.where(odata.isnull(), 0.0, 1.0)
@@ -413,7 +404,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         lev = mseasons['lev']
         lats, levs = np.meshgrid(lat, lev)
 
-        """
+        #"""
         #Get axis number for variable
         axs_id = var_axs[var]
         #print(axs_id)
@@ -513,7 +504,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         [a.set_yscale("log") for a in ax]
 
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
-        
+        """
 
 
 
