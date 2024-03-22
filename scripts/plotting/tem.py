@@ -416,8 +416,8 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #x_filtered = x[~np.isnan(y)]
 
         #Contour fill
-        img0 = axs[axs_id,0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
-        img1 = axs[axs_id,1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
+        img0 = axs[axs_id,0].contourf(lats, levs, mseasons, levels=clevs, norm=norm, cmap=cmap)
+        img1 = axs[axs_id,1].contourf(lats, levs, oseasons, levels=clevs, norm=norm, cmap=cmap)
             
         #Add contours for highlighting
         axs[axs_id,0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
