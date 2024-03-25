@@ -390,7 +390,7 @@ def tem(adf):
                 #fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
                 #                    sharex=True, sharey=True,**cp_info['subplots_opt'])
                 # create figure object
-                fig = plt.figure(figsize=(10,14))
+                fig = plt.figure(figsize=(10,10))
                 # LAYOUT WITH GRIDSPEC
                 gs = mpl.gridspec.GridSpec(4, 4, wspace=0.5,hspace=0.5) # 2 rows, 4 columns, but each map will take up 2 columns
                 #gs.tight_layout(fig)
@@ -442,7 +442,7 @@ def tem(adf):
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
-                ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}\n\n\n",fontsize=14)
+                ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}",fontsize=14)
 
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem
@@ -450,7 +450,7 @@ def tem(adf):
 
                 else:
                     base_yrs = f"{syear_baseline}-{eyear_baseline}"
-                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}"+longname+"\n",fontsize=14)
+                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}",fontsize=14)
                 
                 #Set main title for difference plots column
                 #ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=14)
