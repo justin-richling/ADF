@@ -1769,6 +1769,8 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if 'contour_levels' in kwargs:
         print('Looking at: contour_levels')
+
+        #Make these floats in case the contour levels are in scientific notation
         levels1 = [float(x) for x in kwargs['contour_levels']]
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
             cmap_obj = cm.get_cmap(cmap1)
@@ -1813,7 +1815,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-        print('OH BOY THANKS FOR NOTHING')
         if ((minval < 0) and (0 < maxval)) and mplv > 2:
             norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
         else:

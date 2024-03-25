@@ -483,7 +483,7 @@ def tem(adf):
                         y_lims = [float(lim) for lim in vres['ylim']]
                         a.set_ylim(y_lims)
                     else:
-                        a.set_ylim(ax[2].get_ylim()[::-1])
+                        a.set_ylim(a.get_ylim()[::-1])
 
 
                 plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
@@ -521,7 +521,8 @@ def tem(adf):
                 fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
                 #Add plot to website (if enabled):
-                adf.add_website_data(plot_name, var, case_name, season=s, plot_type="WACCM",ext="SeasonalCycle_Mean",category="TEM")
+                adf.add_website_data(plot_name, var, case_name, season=s, plot_type="WACCM",
+                                     ext="SeasonalCycle_Mean",category="TEM")
                 #Set variable name on center plot (except first plot, see above)
                 #for i in range(1,len(var_list)):
                     #vres = res[var_list[i]]

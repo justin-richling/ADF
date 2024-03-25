@@ -1008,7 +1008,8 @@ OMEGAT:
 # Category: TEM
 #++++++++++++++
 uzm:
-  colormap: "RdYlBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   contour_levels_range: [-60,61,8]
   diff_contour_range: [-35,36,7]
   ylim: [1e3,1]
@@ -1043,7 +1044,8 @@ thzm:
   obs_var_name: "uzm"
 
 epfy:
-  colormap: "RdYlBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: [-1e8,1.1e8,.05e8]
   contour_adjust: 1e7
   contour_levels: [-5e7,-4e7,-3e7,-2e7,-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7,2e7,3e7,4e7,5e7]
@@ -1061,7 +1063,8 @@ epfy:
   obs_var_name: "epfy"
 
 epfz:
-  colormap: "RdYlBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: [-3e6,3.1e6,0.25e6]
   contour_adjust: 1e6
   contour_levels: [-5e6,-4e6,-3e6,-2e6,-1e6,-0.8e6,-0.6e6,-0.4e6,-0.2e6,-0.1e6,0,0.1e6,0.2e6,0.4e6,0.6e6,0.8e6,1e6,2e6,3e6,4e6,5e6]
@@ -1079,7 +1082,8 @@ epfz:
   obs_var_name: "epfz"
 
 vtem:
-  colormap: "RdYlBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: [-0.5,0.6,0.05]
   contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   non_linear: True
@@ -1103,7 +1107,8 @@ vtem:
   obs_var_name: "vtem"
 
 wtem:
-  colormap: "RdYlBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: [-5e-1,5.1e-1,0.5e-1]
   contour_levels: [-2,-1.7,-1.4,-1.1,-0.8,-0.65,-0.5,-0.35,-0.2,-0.1,0,0.1,0.2,0.35,0.5,0.65,0.8,1.1,1.4,1.7,2]
   #contour_levels: [-0.2,-0.17,-0.14,-0.11,-0.08,-0.065,-0.05,-0.035,-0.02,-0.01,0,0.01,0.02,0.035,0.05,0.065,0.08,0.11,0.14,0.17,0.2]
@@ -1125,7 +1130,8 @@ wtem:
   obs_var_name: "wtem"
 
 psitem:
-  colormap: "RdYlBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: [-3e11,3e11,.3e11]
   contour_levels: [-3e11,-2e11,-1e11,-0.8e11,-0.6e11,-0.4e11,-0.2e11,-0.1e11,0,0.1e11,0.2e11,0.4e11,0.6e11,0.8e11,1e11,2e11,3e11]
   contour_adjust: 1e11
@@ -1143,7 +1149,8 @@ psitem:
   obs_var_name: "psitem"
 
 utendepfd:
-  colormap: "RdYlBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: [-2e-4,2e-4,2e-5]
   contour_adjust: 1e-4
   contour_levels: [-3e-4,-2e-4,-1e-4,-0.8e-4,-0.6e-4,-0.4e-4,-0.2e-4,-0.1e-4,0,0.1e-4,0.2e-4,0.4e-4,0.6e-4,0.8e-4,1e-4,2e-4,3e-4]
@@ -1161,6 +1168,8 @@ utendepfd:
   obs_var_name: "utendepfd"
 
 utendvtem:
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: []
   #diff_contour_range: []
   ylim: [1e2,1]
@@ -1171,6 +1180,8 @@ utendvtem:
   obs_var_name: "utendvtem"
 
 utendwtem:
+  #colormap: "RdYlBu_r"
+  colormap: "Spectral"
   #contour_levels_range: []
   #diff_contour_range: []
   ylim: [1e3,1e-1]
