@@ -396,7 +396,7 @@ def tem(adf):
                 #gs.tight_layout(fig)
                 ax1 = plt.subplot(gs[0:2, :2], **cp_info['subplots_opt'])
                 ax2 = plt.subplot(gs[0:2, 2:], **cp_info['subplots_opt'])
-                ax3 = plt.subplot(gs[2, 1:3], **cp_info['subplots_opt'])
+                ax3 = plt.subplot(gs[2:, 1:3], **cp_info['subplots_opt'])
                 ax = [ax1,ax2,ax3]
 
                 #Get axis number for variable
@@ -442,7 +442,7 @@ def tem(adf):
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
-                ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}",fontsize=14)
+                ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}\n",fontsize=10)
 
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem
@@ -450,7 +450,7 @@ def tem(adf):
 
                 else:
                     base_yrs = f"{syear_baseline}-{eyear_baseline}"
-                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}",fontsize=14)
+                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}\n",fontsize=10)
                 
                 #Set main title for difference plots column
                 #ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=14)
