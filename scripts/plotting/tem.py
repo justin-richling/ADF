@@ -484,7 +484,7 @@ def tem(adf):
                 #                                            [syear_cases[case_idx],eyear_cases[case_idx]],
                 #                                            [syear_baseline,eyear_baseline],
                 #                                            mseasons[s], oseasons[s], has_lev=True, log_p=False, obs=obs, **vres)
-
+                plt.close()
         
 
 # Helper functions
