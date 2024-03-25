@@ -424,16 +424,36 @@ def tem(adf):
                     
                 #Add contours for highlighting
                 c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k",linewidths=0.5)
-                # Add contour labels every third contour line
-                plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2],
-                            #fmt=FuncFormatter(format_contour_label)
-                            )
+                fmt = {}
+                #strs = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
+                if 'contour_adjust' in vres:
+                    strs = c0.levels/vres['contour_adjust']
+                    for l, s in zip(c0.levels, strs):
+                        fmt[l] = s
+
+                    # Add contour labels every third contour line
+                    plt.clabel(c0, inline=True, fontsize=8, levels=c1.levels[::2],
+                                fmt=fmt
+                                )
+                else:
+                    # Add contour labels every third contour line
+                    plt.clabel(c0, inline=True, fontsize=8, levels=c1.levels[::2])
 
                 c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k",linewidths=0.5)
-                # Add contour labels every third contour line
-                plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2],
-                            #fmt=FuncFormatter(format_contour_label)
-                            )
+                fmt = {}
+                #strs = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
+                if 'contour_adjust' in vres:
+                    strs = c1.levels/vres['contour_adjust']
+                    for l, s in zip(c1.levels, strs):
+                        fmt[l] = s
+
+                    # Add contour labels every third contour line
+                    plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2],
+                                fmt=fmt
+                                )
+                else:
+                    # Add contour labels every third contour line
+                    plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2])
 
 
                 #Check if difference plot has contour levels, if not print notification
