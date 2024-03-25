@@ -390,13 +390,16 @@ def tem(adf):
                 #fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
                 #                    sharex=True, sharey=True,**cp_info['subplots_opt'])
                 # create figure object
-                fig = plt.figure(figsize=(10,10))
+                fig = plt.figure(figsize=(14,10))
                 # LAYOUT WITH GRIDSPEC
-                gs = mpl.gridspec.GridSpec(4, 4, wspace=0.5,hspace=0.5) # 2 rows, 4 columns, but each map will take up 2 columns
+                gs = mpl.gridspec.GridSpec(4, 8, wspace=0.5,hspace=0.5) # 2 rows, 4 columns, but each map will take up 2 columns
                 #gs.tight_layout(fig)
-                ax1 = plt.subplot(gs[0:2, :2], **cp_info['subplots_opt'])
+                """ax1 = plt.subplot(gs[0:2, :2], **cp_info['subplots_opt'])
                 ax2 = plt.subplot(gs[0:2, 2:], **cp_info['subplots_opt'])
-                ax3 = plt.subplot(gs[2:, 1:3], **cp_info['subplots_opt'])
+                ax3 = plt.subplot(gs[2:, 1:3], **cp_info['subplots_opt'])"""
+                ax1 = plt.subplot(gs[0:2, :4], **cp_info['subplots_opt'])
+                ax2 = plt.subplot(gs[0:2, 4:], **cp_info['subplots_opt'])
+                ax3 = plt.subplot(gs[2:, 2:6], **cp_info['subplots_opt'])
                 ax = [ax1,ax2,ax3]
 
                 #Get axis number for variable
@@ -420,13 +423,13 @@ def tem(adf):
                         return x
                     
                 #Add contours for highlighting
-                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
+                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k",linewidths=0.5)
                 # Add contour labels every third contour line
                 plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2],
                             #fmt=FuncFormatter(format_contour_label)
                             )
 
-                c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
+                c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k",linewidths=0.5)
                 # Add contour labels every third contour line
                 plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2],
                             #fmt=FuncFormatter(format_contour_label)
