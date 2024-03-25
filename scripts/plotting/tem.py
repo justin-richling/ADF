@@ -437,8 +437,14 @@ def tem(adf):
                 plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
 
                 #Set titles of subplots
+                #Set figure title
+                plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.98)
+
                 #Variable plot title name
                 longname = vres["long_name"]
+                #ax.text(0.5, 0.95, 'Title 1', transform=ax.transAxes, fontsize=14,
+                #        verticalalignment='top', horizontalalignment='center')
+                plt.text(0.5, 0.92, longname, fontsize=12, ha='center', transform=fig.transFigure)
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
@@ -453,10 +459,7 @@ def tem(adf):
                     ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}\n",fontsize=10)
                 
                 #Set main title for difference plots column
-                #ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=14)
-
-                #Set figure title
-                #plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.98)
+                ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=10)
 
                 #Write the figure to provided workspace/file:
                 fig.savefig(plot_name, bbox_inches='tight', dpi=300)

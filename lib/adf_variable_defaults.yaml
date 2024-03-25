@@ -1171,7 +1171,7 @@ utendwtem:
   #diff_contour_range: []
   ylim: [1e2,1]
   units: m3 s−2
-  long_name: EP flux divergence - meridionverticalal component ($F_{zz})
+  long_name: EP flux divergence - vertical component ($F_{zz})
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendwtem"
