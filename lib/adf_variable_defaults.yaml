@@ -1067,7 +1067,7 @@ epfz:
   contour_levels: [-5e6,-4e6,-3e6,-2e6,-1e6,-0.8e6,-0.6e6,-0.4e6,-0.2e6,-0.1e6,0,0.1e6,0.2e6,0.4e6,0.6e6,0.8e6,1e6,2e6,3e6,4e6,5e6]
   non_linear: True
   diff_contour_range: [-1e5,1.1e5,0.1e5]
-  ylim: [1e2,1]
+  #ylim: [1e2,1]
   #units: m3 s−2
   mpl:
     colorbar:
@@ -1084,7 +1084,7 @@ vtem:
   contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   non_linear: True
   diff_contour_range: [-2,2.1,0.2]
-  ylim: [1e2,1]
+  #ylim: [1e2,1]
   mpl:
     colorbar:
       #ticks: [-5,-1,-0.2,0.2,1,5]
@@ -1173,7 +1173,7 @@ utendvtem:
 utendwtem:
   #contour_levels_range: []
   #diff_contour_range: []
-  ylim: [1e2,1]
+  ylim: [1e3,1e-1]
   units: m3 s−2
   long_name: EP flux divergence - vertical component ($F_{zz})
   obs_file: "TEM_ERA5.nc"

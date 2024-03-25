@@ -1,4 +1,5 @@
 #Import standard modules:
+from ast import AsyncFunctionDef
 from pathlib import Path
 import numpy as np
 import xarray as xr
@@ -478,7 +479,11 @@ def tem(adf):
                 #Format y-axis
                 for a in ax[:]:
                     a.set_yscale("log")
-                    a.set_ylim(ax[2].get_ylim()[::-1])
+                    if 'ylim' in vres:
+                        a.set_ylim(vres['ylim'])
+                    else:
+                        a.set_ylim(ax[2].get_ylim()[::-1])
+
 
                 plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
                 plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
