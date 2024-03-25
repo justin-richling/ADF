@@ -388,7 +388,7 @@ def tem(adf):
 
                 # Generate zonal plot:
                 #fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
-                                    sharex=True, sharey=True,**cp_info['subplots_opt'])
+                #                    sharex=True, sharey=True,**cp_info['subplots_opt'])
                 # create figure object
                 fig = plt.figure(figsize=(14,10))
                 # LAYOUT WITH GRIDSPEC
