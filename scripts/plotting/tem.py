@@ -413,9 +413,9 @@ def tem(adf):
                 from matplotlib.ticker import FuncFormatter
                 def format_contour_label(x, pos):
                     if abs(x) > 1000:
-                        x = "{:e}".format(x)
-                        #return '{:.2f}'.format(x)
-                        return x.split('e')[0]
+                        #x = "{:e}".format(x)
+                        return '{:.2f}'.format(x)
+                        #return x.split('e')[0]
                     if x == 0:#else:
                         return x
                     
@@ -460,7 +460,7 @@ def tem(adf):
                 longname = vres["long_name"]
                 #ax.text(0.5, 0.95, 'Title 1', transform=ax.transAxes, fontsize=14,
                 #        verticalalignment='top', horizontalalignment='center')
-                plt.text(0.5, 0.93, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
+                plt.text(0.5, 0.9, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
