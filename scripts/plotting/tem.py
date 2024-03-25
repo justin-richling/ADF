@@ -412,11 +412,11 @@ def tem(adf):
                 #Add contours for highlighting
                 c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
                 # Add contour labels every third contour line
-                plt.clabel(c0, inline=True, fontsize=8, manual=[(c0.levels[i], None, None) for i in range(0, len(c0.levels), 3)])
+                plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2])
 
                 c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
                 # Add contour labels every third contour line
-                plt.clabel(c1, inline=True, fontsize=8, manual=[(c1.levels[i], None, None) for i in range(0, len(c1.levels), 3)])
+                plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2])
 
 
                 #Check if difference plot has contour levels, if not print notification
