@@ -1048,8 +1048,9 @@ epfy:
   colormap: "Spectral"
   #contour_levels_range: [-1e8,1.1e8,.05e8]
   contour_adjust: 1e7
-  contour_levels: [-5e7,-4e7,-3e7,-2e7,-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7,2e7,3e7,4e7,5e7]
-  non_linear: True
+  contour_levels: [-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7]
+  #contour_levels: [-5e7,-4e7,-3e7,-2e7,-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7,2e7,3e7,4e7,5e7]
+  non_linear_levels: True
   diff_contour_range: [-2e7,2e7,0.2e7]
   ylim: [1e2,1]
   #units: K
@@ -1068,7 +1069,7 @@ epfz:
   #contour_levels_range: [-3e6,3.1e6,0.25e6]
   contour_adjust: 1e6
   contour_levels: [-5e6,-4e6,-3e6,-2e6,-1e6,-0.8e6,-0.6e6,-0.4e6,-0.2e6,-0.1e6,0,0.1e6,0.2e6,0.4e6,0.6e6,0.8e6,1e6,2e6,3e6,4e6,5e6]
-  non_linear: True
+  non_linear_levels: True
   diff_contour_range: [-1e5,1.1e5,0.1e5]
   #ylim: [1e2,1]
   #units: m3 s−2
@@ -1086,7 +1087,7 @@ vtem:
   colormap: "Spectral"
   #contour_levels_range: [-0.5,0.6,0.05]
   contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
-  non_linear: True
+  non_linear_levels: True
   diff_contour_range: [-2,2.1,0.2]
   #ylim: [1e2,1]
   mpl:
@@ -1115,7 +1116,7 @@ wtem:
   #contour_levels: [-0.002,-0.0017,-0.0014,-0.0011,-0.0008,-0.00065,-0.0005,-0.00035,-0.0002,-0.0001,0,0.0001,0.0002,0.00035,0.0005,0.00065,0.0008,0.0011,0.0014,0.0017,0.002]
   #contour_levels: [-0.02,-0.017,-0.014,-0.011,-0.008,-0.0065,-0.005,-0.0035,-0.002,-0.001,0,0.001,0.002,0.0035,0.005,0.0065,0.008,0.011,0.014,0.017,0.02]
   scale_factor: 100
-  non_linear: True
+  non_linear_levels: True
   diff_contour_range: [-2,2.1,0.2]
   ylim: [1e3,1e-1]
   mpl:
@@ -1135,7 +1136,7 @@ psitem:
   #contour_levels_range: [-3e11,3e11,.3e11]
   contour_levels: [-3e11,-2e11,-1e11,-0.8e11,-0.6e11,-0.4e11,-0.2e11,-0.1e11,0,0.1e11,0.2e11,0.4e11,0.6e11,0.8e11,1e11,2e11,3e11]
   contour_adjust: 1e11
-  non_linear: True
+  non_linear_levels: True
   diff_contour_range: [-5e10,5.1e10,.5e10]
   ylim: [1e2,1]
   mpl:
@@ -1154,7 +1155,7 @@ utendepfd:
   #contour_levels_range: [-2e-4,2e-4,2e-5]
   contour_adjust: 1e-4
   contour_levels: [-3e-4,-2e-4,-1e-4,-0.8e-4,-0.6e-4,-0.4e-4,-0.2e-4,-0.1e-4,0,0.1e-4,0.2e-4,0.4e-4,0.6e-4,0.8e-4,1e-4,2e-4,3e-4]
-  non_linear: True
+  non_linear_levels: True
   diff_contour_range: [-1e-4,1.1e-4,.1e-4]
   ylim: [1e2,1]
   units: m3 s−2
