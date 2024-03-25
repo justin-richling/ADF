@@ -480,7 +480,8 @@ def tem(adf):
                 for a in ax[:]:
                     a.set_yscale("log")
                     if 'ylim' in vres:
-                        a.set_ylim(vres['ylim'])
+                        y_lims = [float(lim) for lim in vres['ylim']]
+                        a.set_ylim(y_lims)
                     else:
                         a.set_ylim(ax[2].get_ylim()[::-1])
 
