@@ -432,12 +432,12 @@ def tem(adf):
                         fmt[l] = s
 
                     # Add contour labels every third contour line
-                    plt.clabel(c0, inline=True, fontsize=8, levels=c1.levels[::2],
+                    plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2],
                                 fmt=fmt
                                 )
                 else:
                     # Add contour labels every third contour line
-                    plt.clabel(c0, inline=True, fontsize=8, levels=c1.levels[::2])
+                    plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2])
 
                 c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k",linewidths=0.5)
                 fmt = {}
