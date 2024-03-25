@@ -439,24 +439,24 @@ def tem(adf):
                 #Set titles of subplots
                 #Variable plot title name
                 longname = vres["long_name"]
-                ax[1].set_title(longname+"\n",fontsize=14,loc="center")
+                #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
                 ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}\n\n\n",fontsize=14)
 
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem
-                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+longname+"\n",fontsize=14)
+                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}"+longname+"\n",fontsize=14)
 
                 else:
                     base_yrs = f"{syear_baseline}-{eyear_baseline}"
-                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}\n\n"+longname+"\n",fontsize=14)
+                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}"+longname+"\n",fontsize=14)
                 
                 #Set main title for difference plots column
-                ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=14)
+                #ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=14)
 
                 #Set figure title
-                plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.98)
+                #plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.98)
 
                 #Write the figure to provided workspace/file:
                 fig.savefig(plot_name, bbox_inches='tight', dpi=300)
