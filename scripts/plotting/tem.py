@@ -454,15 +454,18 @@ def tem(adf):
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
-                ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}\n",fontsize=10)
+                #ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}\n",fontsize=10)
+                ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
 
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem
-                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}"+longname+"\n",fontsize=14)
+                    #ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}"+longname+"\n",fontsize=14)
+                    ax[1].set_title(f"{obs_title}\n",fontsize=10)
 
                 else:
                     base_yrs = f"{syear_baseline}-{eyear_baseline}"
-                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}\n",fontsize=10)
+                    #ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}\n",fontsize=10)
+                    ax[1].set_title(f"{base_nickname}\n{base_yrs}",fontsize=10)
                 
                 #Set main title for difference plots column
                 ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=10)
