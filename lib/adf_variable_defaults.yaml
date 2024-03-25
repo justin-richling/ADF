@@ -1044,8 +1044,8 @@ thzm:
   obs_var_name: "uzm"
 
 epfy:
-  colormap: "RdYlBu_r"
-  #colormap: "RdBu_r"
+  #colormap: "RdYlBu_r"
+  colormap: "RdBu_r"
   #contour_levels_range: [-1e8,1.1e8,.05e8]
   contour_adjust: 1e7
   #contour_levels: [-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7]
