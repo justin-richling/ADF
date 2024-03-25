@@ -427,7 +427,9 @@ def tem(adf):
                 fmt = {}
                 #strs = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
                 if 'contour_adjust' in vres:
-                    strs = c0.levels/vres['contour_adjust']
+                    strs = []#c0.levels/vres['contour_adjust']
+                    for i in c0.levels:
+                        strs.append(i/vres['contour_adjust'])
                     for l, s in zip(c0.levels, strs):
                         fmt[l] = s
 
