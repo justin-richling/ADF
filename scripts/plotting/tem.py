@@ -392,7 +392,7 @@ def tem(adf):
                 # create figure object
                 fig = plt.figure(figsize=(14,10))
                 # LAYOUT WITH GRIDSPEC
-                gs = mpl.gridspec.GridSpec(4, 8, wspace=0.5,hspace=0.5) # 2 rows, 4 columns, but each map will take up 2 columns
+                gs = mpl.gridspec.GridSpec(4, 8, wspace=0.75,hspace=0.5) # 2 rows, 4 columns, but each map will take up 2 columns
                 #gs.tight_layout(fig)
                 """ax1 = plt.subplot(gs[0:2, :2], **cp_info['subplots_opt'])
                 ax2 = plt.subplot(gs[0:2, 2:], **cp_info['subplots_opt'])
@@ -448,7 +448,7 @@ def tem(adf):
                                     transform=ax[2].transAxes, bbox=props)
                 else:
                     img2 = ax[2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff,norm=cp_info['normdiff'])#levels=levs_diff
-                    ax[2].contour(lats,levs,dseasons, colors="k",levels=levs_diff[::2],norm=cp_info['normdiff'])#levels=diff_levs[::2]
+                    ax[2].contour(lats,levs,dseasons, colors="k",linewidths=0.5,levels=levs_diff[::2],norm=cp_info['normdiff'])#levels=diff_levs[::2]
                     plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])#**cp_info['diff_colorbar_opt']
 
                 #Format y-axis
@@ -467,7 +467,7 @@ def tem(adf):
                 longname = vres["long_name"]
                 #ax.text(0.5, 0.95, 'Title 1', transform=ax.transAxes, fontsize=14,
                 #        verticalalignment='top', horizontalalignment='center')
-                plt.text(0.5, 0.92, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
+                plt.text(0.5, 0.915, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
