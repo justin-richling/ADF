@@ -387,8 +387,17 @@ def tem(adf):
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Generate zonal plot:
-                fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
+                #fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
                                     sharex=True, sharey=True,**cp_info['subplots_opt'])
+                # create figure object
+                fig = plt.figure(figsize=(14,10))
+                # LAYOUT WITH GRIDSPEC
+                gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
+                #gs.tight_layout(fig)
+                ax1 = plt.subplot(gs[0:2, :3], **cp_info['subplots_opt'])
+                ax2 = plt.subplot(gs[0:2, 3:], **cp_info['subplots_opt'])
+                ax3 = plt.subplot(gs[2, 1:5], **cp_info['subplots_opt'])
+                ax = [ax1,ax2,ax3]
 
                 #Get axis number for variable
                 #axs_id = var_axs[var]
