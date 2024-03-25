@@ -422,11 +422,15 @@ def tem(adf):
                 #Add contours for highlighting
                 c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
                 # Add contour labels every third contour line
-                plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2],fmt=FuncFormatter(format_contour_label))
+                plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2],
+                            fmt=FuncFormatter(format_contour_label)
+                            )
 
                 c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
                 # Add contour labels every third contour line
-                plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2],fmt=FuncFormatter(format_contour_label))
+                plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2],
+                            fmt=FuncFormatter(format_contour_label)
+                            )
 
 
                 #Check if difference plot has contour levels, if not print notification
@@ -460,7 +464,7 @@ def tem(adf):
                 longname = vres["long_name"]
                 #ax.text(0.5, 0.95, 'Title 1', transform=ax.transAxes, fontsize=14,
                 #        verticalalignment='top', horizontalalignment='center')
-                plt.text(0.5, 0.9, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
+                plt.text(0.5, 0.92, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
