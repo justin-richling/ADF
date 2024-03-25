@@ -408,15 +408,25 @@ def tem(adf):
                 #Contour fill
                 img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
+
+                # Define a custom formatting function
+                from matplotlib.ticker import FuncFormatter
+                def format_contour_label(x, pos):
+                    if abs(x) > 1000:
+                        x = "{:e}".format(x)
+                        #return '{:.2f}'.format(x)
+                        return x.split('e')[0]
+                    if x == 0:#else:
+                        return x
                     
                 #Add contours for highlighting
                 c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
                 # Add contour labels every third contour line
-                plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2])
+                plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2],fmt=FuncFormatter(format_contour_label))
 
                 c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
                 # Add contour labels every third contour line
-                plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2])
+                plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2],fmt=FuncFormatter(format_contour_label))
 
 
                 #Check if difference plot has contour levels, if not print notification
@@ -450,7 +460,7 @@ def tem(adf):
                 longname = vres["long_name"]
                 #ax.text(0.5, 0.95, 'Title 1', transform=ax.transAxes, fontsize=14,
                 #        verticalalignment='top', horizontalalignment='center')
-                plt.text(0.5, 0.95, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
+                plt.text(0.5, 0.93, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
