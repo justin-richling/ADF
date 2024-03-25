@@ -1185,9 +1185,5 @@ utendwtem:
 #      "cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)","tick_inter":15,"units":"K",
 #      "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"lev":90}
 
-
-SNOWDP:
-  contour_levels_range: [-9,10,1]
-  units: 'm'
 #-----------
 #End of File

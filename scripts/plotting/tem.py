@@ -133,6 +133,7 @@ def tem(adf):
         print(f"\t'{base_file_name}' does not exist. TEM plots will be skipped.")
         return
 
+    """
     #Setup TEM plots
     nrows = len(var_list)
     ncols = len(case_nicknames)+1
@@ -204,8 +205,266 @@ def tem(adf):
 
             #Add plot to website (if enabled):
             adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="SeasonalCycle_Mean",category="Seasonal Cycle")
-
+    """
     print("  ...TEM plots have been generated successfully.")
+
+
+    #Loop over variables:
+    for var in var_list:
+        """
+        if adf.compare_obs:
+            #Check if obs exist for the variable:
+            if var in var_obs_dict:
+                #Note: In the future these may all be lists, but for
+                #now just convert the target_list.
+                #Extract target file:
+                dclimo_loc = var_obs_dict[var]["obs_file"]
+                #Extract target list (eventually will be a list, for now need to convert):
+                data_list = [var_obs_dict[var]["obs_name"]]
+                #Extract target variable name:
+                data_var = var_obs_dict[var]["obs_var"]
+            else:
+                dmsg = f"No obs found for variable `{var}`, zonal mean plotting skipped."
+                adfobj.debug_log(dmsg)
+                continue
+            #End if
+        else:
+            #Set "data_var" for consistent use below:
+            data_var = var
+        #End if
+        """
+
+        #Loop over model cases:
+        for idx,case_name in enumerate(case_names):
+
+            # Check redo_plot. If set to True: remove old plot, if it already exists:
+            #if (not redo_plot) and plot_name.is_file():
+                #Add already-existing plot to website (if enabled):
+            #    adf.debug_log(f"'{plot_name}' exists and clobber is false.")
+            #    adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
+
+                #Continue to next iteration:
+                #continue
+            #elif (redo_plot) and plot_name.is_file():
+            #    plot_name.unlink()
+
+            #Extract start and end year values:
+            start_year = syear_cases[idx]
+            end_year   = eyear_cases[idx]
+
+            #Open the TEM file
+            output_loc_idx = Path(tem_loc) / case_name
+            case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
+            tem = output_loc_idx / case_file_name
+
+            #Grab the data for the TEM netCDF files
+            if tem.is_file():
+                ds = xr.open_dataset(tem)
+            else:
+                print(f"\t'{case_file_name}' does not exist. TEM plots will be skipped.")
+                return
+
+            #Loop over season dictionary:
+            for s in seasons:
+
+                #Location to save plots
+                plot_name = plot_location / f"TEM_{var}_{s}_WACCM_SeasonalCycle_Mean.png"
+
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name.is_file():
+                    #Add already-existing plot to website (if enabled):
+                    adf.debug_log(f"'{plot_name}' exists and clobber is false.")
+                    adf.add_website_data(plot_name, var, None, season=s, plot_type="WACCM",ext="SeasonalCycle_Mean",category="TEM",multi_case=True)
+
+                #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+                elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+                    if plot_name.is_file():
+                        plot_name.unlink()
+
+                print(var,s)
+                #Grab variable defaults for this variable
+                vres = res[var]
+
+                #Gather data for both cases
+                mdata = ds[var].squeeze()
+                odata = ds_base[var].squeeze()
+
+                # APPLY UNITS TRANSFORMATION IF SPECIFIED:
+                # NOTE: looks like our climo files don't have all their metadata
+                mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+                # update units
+                mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
+
+                # Do the same for the baseline case if need be:
+                if not obs:
+                    odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+                    # update units
+                    odata.attrs['units'] = vres.get("new_unit", odata.attrs.get('units', 'none'))
+                # Or for observations
+                else:
+                    odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
+                    # Note: we are going to assume that the specification ensures the conversion makes the units the same. Doesn't make sense to add a different unit.
+
+                #Create array to avoid weighting missing values:
+                md_ones = xr.where(mdata.isnull(), 0.0, 1.0)
+                od_ones = xr.where(odata.isnull(), 0.0, 1.0)
+
+                month_length = mdata.time.dt.days_in_month
+                weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+
+                #Calculate monthly-weighted seasonal averages:
+                if s == 'ANN':
+
+                    #Calculate annual weights (i.e. don't group by season):
+                    weights_ann = month_length / month_length.sum()
+
+                    mseasons = (mdata * weights_ann).sum(dim='time')
+                    mseasons = mseasons / (md_ones*weights_ann).sum(dim='time')
+
+                    #Calculate monthly weights based on number of days:
+                    if obs:
+                        month_length_obs = odata.time.dt.days_in_month
+                        weights_ann_obs = month_length_obs / month_length_obs.sum()
+                        oseasons = (odata * weights_ann_obs).sum(dim='time')
+                        oseasons = oseasons / (od_ones*weights_ann_obs).sum(dim='time')
+                    else:
+                        month_length_base = odata.time.dt.days_in_month
+                        weights_ann_base = month_length_base / month_length_base.sum()
+                        oseasons = (odata * weights_ann_base).sum(dim='time')
+                        oseasons = oseasons / (od_ones*weights_ann_base).sum(dim='time')
+
+                else:
+                    #this is inefficient because we do same calc over and over
+                    mseasons = (mdata * weights).groupby("time.season").sum(dim="time").sel(season=s)
+                    wgt_denom = (md_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
+                    mseasons = mseasons / wgt_denom
+
+                    if obs:
+                        month_length_obs = odata.time.dt.days_in_month
+                        weights_obs = (month_length_obs.groupby("time.season") / month_length_obs.groupby("time.season").sum())
+                        oseasons = (odata * weights_obs).groupby("time.season").sum(dim="time").sel(season=s)
+                        wgt_denom = (od_ones*weights_obs).groupby("time.season").sum(dim="time").sel(season=s)
+                        oseasons = oseasons / wgt_denom
+                    else:
+                        month_length_base = odata.time.dt.days_in_month
+                        weights_base = (month_length_base.groupby("time.season") / month_length_base.groupby("time.season").sum())
+                        oseasons = (odata * weights_base).groupby("time.season").sum(dim="time").sel(season=s)
+                        wgt_denom_base = (od_ones*weights_base).groupby("time.season").sum(dim="time").sel(season=s)
+                        oseasons = oseasons / wgt_denom_base
+
+                #difference: each entry should be (lat, lon)
+                dseasons = mseasons-oseasons
+                #print(dseasons.min(),dseasons.max())
+
+                #Run through variables and plot each against the baseline on each row
+                #Each column will be a case, ie (test, base, difference)
+
+                if 'units' in vres:
+                    units = vres['units']
+                else:
+                    units = ''
+
+            
+                
+                #
+                cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
+                clevs = np.unique(np.array(cp_info['levels1']))
+                print(clevs)
+                norm = cp_info['norm1']
+                cmap = cp_info['cmap1']
+                print(cmap,"\n")
+
+
+                levs_diff = np.unique(np.array(cp_info['levelsdiff']))
+
+
+
+                
+
+                # mesh for plots:
+                lat = mseasons['zalat']
+                lev = mseasons['lev']
+                lats, levs = np.meshgrid(lat, lev)
+
+                # Generate zonal plot:
+                fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
+                                    sharex=True, sharey=True,**cp_info['subplots_opt'])
+
+                #Get axis number for variable
+                #axs_id = var_axs[var]
+                #print(axs_id)
+
+                #x_filtered = x[~np.isnan(y)]
+
+                #Contour fill
+                img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
+                img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
+                    
+                #Add contours for highlighting
+                ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
+                ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
+
+                #Check if difference plot has contour levels, if not print notification
+                if len(dseasons.lev) == 0:
+                    #Set empty message for comparison of cases with different vertical levels
+                    #TODO: Work towards getting the vertical and horizontal interpolations!! - JR
+                    empty_message = "These have different vertical levels\nCan't compare cases currently"
+                    props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
+                    prop_x = 0.18
+                    prop_y = 0.42
+                    ax[2].text(prop_x, prop_y, empty_message,
+                                    transform=ax[2].transAxes, bbox=props)
+                else:
+                    img2 = ax[2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff,norm=cp_info['normdiff'])#levels=levs_diff
+                    ax[2].contour(lats,levs,dseasons, colors="k",levels=levs_diff[::2],norm=cp_info['normdiff'])#levels=diff_levs[::2]
+                    plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])#**cp_info['diff_colorbar_opt']
+
+                #Format y-axis
+                for a in ax[:]:
+                    a.set_yscale("log")
+                    a.set_ylim(ax[2].get_ylim()[::-1])
+
+                plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
+                plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
+
+                #Set titles of subplots
+                #Variable plot title name
+                longname = vres["long_name"]
+                ax[1].set_title(longname+"\n",fontsize=14)
+
+                test_yrs = f"{start_year}-{end_year}"
+                ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{case_names[0]}\n\n\n",fontsize=14)
+
+                if obs:
+                    obs_title = Path(vres["obs_name"]).stem
+                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}\n\n"+longname+"\n",fontsize=14)
+
+                else:
+                    base_yrs = f"{syear_baseline}-{eyear_baseline}"
+                    ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{case_names[1]}\n\n"+longname+"\n",fontsize=14)
+                
+                #Set main title for difference plots column
+                ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$"+"\n\n\n",fontsize=14)
+
+                #Set figure title
+                plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.928)
+
+                #Write the figure to provided workspace/file:
+                fig.savefig(plot_name, bbox_inches='tight', dpi=300)
+
+                #Add plot to website (if enabled):
+                adf.add_website_data(plot_name, var, case_name, season=s, plot_type="WACCM",ext="SeasonalCycle_Mean",category="TEM")
+                #Set variable name on center plot (except first plot, see above)
+                #for i in range(1,len(var_list)):
+                    #vres = res[var_list[i]]
+
+                #Create new plot:
+                #pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
+                #                                            [syear_cases[case_idx],eyear_cases[case_idx]],
+                #                                            [syear_baseline,eyear_baseline],
+                #                                            mseasons[s], oseasons[s], has_lev=True, log_p=False, obs=obs, **vres)
+
+        
 
 # Helper functions
 ##################
