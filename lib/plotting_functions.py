@@ -1756,7 +1756,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     bdata = bdata.where(~np.isinf(bdata))
     minval = np.min([np.nanmin(adata), np.nanmin(bdata)])
     maxval = np.max([np.nanmax(adata), np.nanmax(bdata)])
-    print(minval,maxval)
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
@@ -1768,7 +1767,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if 'contour_levels' in kwargs:
-        print('Looking at: contour_levels')
 
         #Make these floats in case the contour levels are in scientific notation
         levels1 = [float(x) for x in kwargs['contour_levels']]
@@ -1779,7 +1777,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
 
     elif 'contour_levels_range' in kwargs:
-        print('Looking at: contour_levels_range')
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
 
@@ -1838,7 +1835,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         "diff_contour_range must have exactly three entries: min, max, step"
         lev_range = [float(x) for x in kwargs['diff_contour_range']]
         levelsdiff = np.arange(*lev_range)
-        print("Diff Levels:",levelsdiff)
         #levelsdiff = np.arange(*kwargs['diff_contour_range'])
     else:
         # set a symmetric color bar for diff:
