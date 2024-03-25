@@ -431,7 +431,7 @@ def tem(adf):
                     for i in c0.levels:
                         print(i)
                         print(vres['contour_adjust'])
-                        strs.append(i/vres['contour_adjust'])
+                        strs.append(i/float(vres['contour_adjust']))
                     for l, s in zip(c0.levels, strs):
                         fmt[l] = s
 
@@ -449,7 +449,7 @@ def tem(adf):
                 if 'contour_adjust' in vres:
                     strs = []#c1.levels/vres['contour_adjust']
                     for i in c1.levels:
-                        strs.append(i/vres['contour_adjust'])
+                        strs.append(i/float(vres['contour_adjust']))
                     for l, s in zip(c1.levels, strs):
                         fmt[l] = s
 
