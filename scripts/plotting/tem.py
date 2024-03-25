@@ -390,7 +390,7 @@ def tem(adf):
                 #fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
                 #                    sharex=True, sharey=True,**cp_info['subplots_opt'])
                 # create figure object
-                fig = plt.figure(figsize=(14,10))
+                fig = plt.figure(figsize=(14,20))
                 # LAYOUT WITH GRIDSPEC
                 gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
                 #gs.tight_layout(fig)
