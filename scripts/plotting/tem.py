@@ -410,8 +410,14 @@ def tem(adf):
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
                 #Add contours for highlighting
-                ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
-                ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
+                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k")
+                # Add contour labels every third contour line
+                plt.clabel(c0, inline=True, fontsize=8, manual=[(c0.levels[i], None, None) for i in range(0, len(c0.levels), 3)])
+
+                c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k")
+                # Add contour labels every third contour line
+                plt.clabel(c1, inline=True, fontsize=8, manual=[(c1.levels[i], None, None) for i in range(0, len(c1.levels), 3)])
+
 
                 #Check if difference plot has contour levels, if not print notification
                 if len(dseasons.lev) == 0:
@@ -444,7 +450,7 @@ def tem(adf):
                 longname = vres["long_name"]
                 #ax.text(0.5, 0.95, 'Title 1', transform=ax.transAxes, fontsize=14,
                 #        verticalalignment='top', horizontalalignment='center')
-                plt.text(0.5, 0.92, longname, fontsize=12, ha='center', transform=fig.transFigure)
+                plt.text(0.5, 0.95, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
                 #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
 
                 test_yrs = f"{start_year}-{end_year}"
