@@ -427,13 +427,11 @@ def tem(adf):
                 fmt = {}
                 #strs = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
                 if 'contour_adjust' in vres:
-                    strs = []#c0.levels/vres['contour_adjust']
-                    for i in c0.levels:
-                        print(i)
-                        print(vres['contour_adjust'])
-                        strs.append(i/float(vres['contour_adjust']))
-                    for l, s in zip(c0.levels, strs):
-                        fmt[l] = s
+                    strs = c0.levels/float(vres['contour_adjust'])
+                    #for i in c0.levels:
+                    #    strs.append(i/float(vres['contour_adjust']))
+                    for l, str0 in zip(c0.levels, strs):
+                        fmt[l] = str0
 
                     # Add contour labels every third contour line
                     plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels[::2],
@@ -447,11 +445,11 @@ def tem(adf):
                 fmt = {}
                 #strs = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
                 if 'contour_adjust' in vres:
-                    strs = []#c1.levels/vres['contour_adjust']
-                    for i in c1.levels:
-                        strs.append(i/float(vres['contour_adjust']))
-                    for l, s in zip(c1.levels, strs):
-                        fmt[l] = s
+                    strs = c1.levels/float(vres['contour_adjust'])
+                    #for i in c1.levels:
+                    #    strs.append(i/float(vres['contour_adjust']))
+                    for l, str0 in zip(c1.levels, strs):
+                        fmt[l] = str0
 
                     # Add contour labels every third contour line
                     plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels[::2],
