@@ -84,6 +84,7 @@ _meridional_plot_preslon
 """
 
 #import statements:
+from signal import SIG_DFL
 from typing import Optional
 import numpy as np
 import xarray as xr
@@ -1807,7 +1808,13 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         cmap_obj = cm.get_cmap(cmap1)
         norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
     else:
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+        if ('contour_levels' in kwargs) or ('contour_levels_range' in kwargs):
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        #elif 'contour_levels_range' in kwargs:
+        #   dfw 
+        else:
+            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+        #norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
 
     #Check if the minval and maxval are actually different.  If not,
     #then set "levels1" to be an empty list, which will cause the
