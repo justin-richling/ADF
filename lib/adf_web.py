@@ -692,10 +692,8 @@ class AdfWeb(AdfObs):
             avail_plot_types = ["Tables","LatLon","LatLon_Vector","Zonal","Meridonal","NHPolar","SHPolar","Special","WACCM"]
             
             for ptype in plot_types.keys():
-                #print(ptype)
                 if ptype not in avail_plot_types:
                     avail_plot_types.append(plot_types)
-            #print(avail_plot_types)
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
