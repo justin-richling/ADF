@@ -257,7 +257,7 @@ def seasonal_cycle(adfobj):
             "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
                 "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
 
-
+    var_dict = ['lat_vs_month']
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
     var = "T"
