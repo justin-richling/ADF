@@ -1201,5 +1201,57 @@ utendwtem:
 #      "cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)","tick_inter":15,"units":"K",
 #      "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"lev":90}
 
+#var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.2),"cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
+#                "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100},
+#            "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
+#                "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
+
+
+waccm_seasonal_cycle:
+  calc_var_list: ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
+  #calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
+  calc_var_list: ['U','T','Q']
+
+  merra2_vars: ['U','T','V','lat','lev']
+  merra2_filename: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
+  saber_filename: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
+  #swoosh_filename: 
+
+  obs_cam_vars:
+    saber:
+      U: "u"
+      T: "temp"
+    merra: 
+      U: "U"
+      T: "T"
+
+# Plot Specific formatting
+##########################
+
+# WACCM seasonal cycle plots
+lat_vs_month:
+  T: 
+    slat: -45
+    nlat: 45
+    levels: [190,221,2]
+    cmap: 'RdBu_r'
+    title: "Cold Point Tropopause (CPT)"
+    tick_inter: 15
+    units: "K",
+    y_labels: ["45S","30S","15S","EQ","15N","30N","45N"]
+    plot_vert_levs: [90,100]
+  
+  Q: 
+    slat: -90
+    nlat: 90
+    levels: [0.5,5,0.4]
+    cmap: 'RdYlBu_r'
+    title: f"H$_{2}$O Mixing Ratio"
+    y_labels: ["90S","60S","30S","EQ","30N","60N","90N"]
+    tick_inter: 30
+    units: "ppmv"
+    plot_vert_levs: [100]
+
+
 #-----------
 #End of File

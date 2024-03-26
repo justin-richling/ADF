@@ -290,7 +290,6 @@ def seasonal_cycle(adfobj):
     #H20 Mixing Ratio @ 90 and 100hPa
     #----------------------------------
     var = "Q"
-    #vert_lev = [90,100]
 
     for vert_lev in [90, 100]:
         plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
