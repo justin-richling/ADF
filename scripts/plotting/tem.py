@@ -234,6 +234,8 @@ def tem(adf):
             data_var = var
         #End if
         """
+        #Notify user of variable being plotted:
+        print(f"\t - TEM plots for {var}")
 
         #Loop over model cases:
         for idx,case_name in enumerate(case_names):
@@ -282,7 +284,6 @@ def tem(adf):
                     if plot_name.is_file():
                         plot_name.unlink()
 
-                print(var,s)
                 #Grab variable defaults for this variable
                 vres = res[var]
 

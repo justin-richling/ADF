@@ -1012,7 +1012,7 @@ uzm:
   colormap: "Spectral"
   contour_levels_range: [-60,61,8]
   diff_contour_range: [-35,36,7]
-  ylim: [1e3,1]
+  ylim: [1e3,1e-1]
   units: m s-1
   mpl:
     colorbar:
@@ -1026,7 +1026,7 @@ uzm:
 vzm:
   #contour_levels_range: []
   #diff_contour_range: []
-  ylim: [1e3,1]
+  ylim: [1e3,1e-1]
   units: m s-1
   long_name: Zonal mean meridional wind ($\bar{v}$) 
   obs_file: "TEM_ERA5.nc"
@@ -1036,7 +1036,7 @@ vzm:
 thzm:
   #contour_levels_range: []
   #diff_contour_range: []
-  ylim: [1e3,1]
+  ylim: [1e3,1e-1]
   units: m s-1
   long_name: Zonal mean temperature ($\bar{T}$)
   obs_file: "TEM_ERA5.nc"
@@ -1052,7 +1052,7 @@ epfy:
   contour_levels: [-5e7,-4e7,-3e7,-2e7,-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7,2e7,3e7,4e7,5e7]
   non_linear_levels: True
   diff_contour_range: [-2e7,2e7,0.2e7]
-  ylim: [1e2,1]
+  ylim: [1e3,1e-1]
   #units: K
   mpl:
     colorbar:
@@ -1071,7 +1071,7 @@ epfz:
   contour_levels: [-5e6,-4e6,-3e6,-2e6,-1e6,-0.8e6,-0.6e6,-0.4e6,-0.2e6,-0.1e6,0,0.1e6,0.2e6,0.4e6,0.6e6,0.8e6,1e6,2e6,3e6,4e6,5e6]
   non_linear_levels: True
   diff_contour_range: [-1e5,1.1e5,0.1e5]
-  #ylim: [1e2,1]
+  ylim: [1e3,1e-1]
   #units: m3 s−2
   mpl:
     colorbar:
@@ -1089,7 +1089,7 @@ vtem:
   contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
   non_linear_levels: True
   diff_contour_range: [-2,2.1,0.2]
-  #ylim: [1e2,1]
+  ylim: [1e3,1e-1]
   mpl:
     colorbar:
       ticks: [-5,-1,-0.2,0.2,1,5]
@@ -1138,7 +1138,7 @@ psitem:
   contour_adjust: 1e11
   non_linear_levels: True
   diff_contour_range: [-5e10,5.1e10,.5e10]
-  ylim: [1e2,1]
+  ylim: [1e3,1e-1]
   mpl:
     colorbar:
       #ticks: [-0.5,0.5,0.05]
@@ -1157,7 +1157,7 @@ utendepfd:
   contour_levels: [-3e-4,-2e-4,-1e-4,-0.8e-4,-0.6e-4,-0.4e-4,-0.2e-4,-0.1e-4,0,0.1e-4,0.2e-4,0.4e-4,0.6e-4,0.8e-4,1e-4,2e-4,3e-4]
   non_linear_levels: True
   diff_contour_range: [-1e-4,1.1e-4,.1e-4]
-  ylim: [1e2,1]
+  ylim: [1e3,1e-1]
   units: m3 s−2
   mpl:
     colorbar:
@@ -1173,7 +1173,7 @@ utendvtem:
   colormap: "Spectral"
   #contour_levels_range: []
   #diff_contour_range: []
-  ylim: [1e2,1]
+  ylim: [1e3,1e-1]
   units: m3 s−2
   long_name: EP flux divergence - meridional component ($F_{yy}$)
   obs_file: "TEM_ERA5.nc"
