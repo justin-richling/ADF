@@ -331,7 +331,7 @@ def global_latlon_map(adfobj):
                                 #Add already-existing plot to website (if enabled):
                                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                                 adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                                        season=s, plot_type="LatLon")
+                                                        season=s, plot_type="LatLon",ext="Mean")
 
                                 #Continue to next iteration:
                                 continue
@@ -368,7 +368,7 @@ def global_latlon_map(adfobj):
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                                    season=s, plot_type="LatLon")
+                                                    season=s, plot_type="LatLon",ext="Mean")
 
                     else: #mdata dimensions check
                         print(f"\t - skipping lat/lon map for {var} as it doesn't have only lat/lon dims.")
@@ -424,7 +424,7 @@ def global_latlon_map(adfobj):
                                     #Add already-existing plot to website (if enabled):
                                     adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                                     adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
-                                                            season=s, plot_type="LatLon")
+                                                            season=s, plot_type="LatLon",ext="Mean")
 
                                     #Continue to next iteration:
                                     continue
@@ -462,7 +462,7 @@ def global_latlon_map(adfobj):
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
-                                                        season=s, plot_type="LatLon")
+                                                        season=s, plot_type="LatLon",ext="Mean")
 
                             #End for (seasons)
                         #End for (pressure levels)

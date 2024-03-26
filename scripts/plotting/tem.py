@@ -480,6 +480,8 @@ def tem(adf):
                 #Format y-axis
                 for a in ax[:]:
                     a.set_yscale("log")
+                    a.set_xlabel("Latitude")
+                    a.set_ylabel('Pressure [hPa]', va='center', rotation='vertical')
                     if 'ylim' in vres:
                         y_lims = [float(lim) for lim in vres['ylim']]
                         a.set_ylim(y_lims)
