@@ -101,6 +101,16 @@ def seasonal_cycle(adfobj):
 
     nicknames = adfobj.case_nicknames["test_nicknames"]
 
+    res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
+    # or an empty dictionary if use_defaults was not specified in YAML.
+
+    try:
+        seas_cyc = res['waccm_seasonal_cycle']
+    except:
+        errmsg = "Missing 'waccm_seasonal_cycle' in variable defaults yaml file.\n"
+        errmsg += "Please"
+        print(errmsg)
+
     if not adfobj.get_basic_info("compare_obs"):
         obs = False
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
