@@ -1092,7 +1092,7 @@ vtem:
   #ylim: [1e2,1]
   mpl:
     colorbar:
-      #ticks: [-5,-1,-0.2,0.2,1,5]
+      ticks: [-5,-1,-0.2,0.2,1,5]
       label : "m/s"
   #mpl:
   #  colorbar:
@@ -1121,7 +1121,7 @@ wtem:
   ylim: [1e3,1e-1]
   mpl:
     colorbar:
-      #ticks: [-2,-0.8,-0.2,0.2,0.8,2]
+      ticks: [-2,-0.8,-0.2,0.2,0.8,2]
       #ticks: [-0.2,-0.08,-0.02,0.02,0.08,2]
       label : "cm/s"
   units: cm/s
