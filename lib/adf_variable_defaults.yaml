@@ -1011,7 +1011,7 @@ uzm:
   #colormap: "RdYlBu_r"
   colormap: "Spectral"
   contour_levels_range: [-60,61,8]
-  diff_contour_range: [-35,36,7]
+  diff_contour_range: [-35,36,5]
   ylim: [1e3,1e-1]
   units: m s-1
   mpl:
