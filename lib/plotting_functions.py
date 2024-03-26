@@ -1768,56 +1768,24 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if 'contour_levels' in kwargs:
-
         #Make these floats in case the contour levels are in scientific notation
         levels1 = [float(x) for x in kwargs['contour_levels']]
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-        """
-        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
-            cmap_obj = cm.get_cmap(cmap1)
-            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-        else:
-            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-        """
-
     elif 'contour_levels_range' in kwargs:
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
-
+        #Make these floats in case the contour levels are in scientific notation
         lev_range = [float(x) for x in kwargs['contour_levels_range']]
         levels1 = np.arange(*lev_range)
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-        """
-        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
-            cmap_obj = cm.get_cmap(cmap1)
-            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-        else:
-            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-        """
-
     else:
         levels1 = np.linspace(minval, maxval, 12)
         norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-        """
-        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
-            cmap_obj = cm.get_cmap(cmap1)
-            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-        else:
-            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-        """
     #End if
 
     if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
         cmap_obj = cm.get_cmap(cmap1)
         norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-    """else:
-        if ('contour_levels' in kwargs) or ('contour_levels_range' in kwargs):
-            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-        #elif 'contour_levels_range' in kwargs:
-        #   dfw 
-        else:
-            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-        #norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)"""
 
     #Check if the minval and maxval are actually different.  If not,
     #then set "levels1" to be an empty list, which will cause the
@@ -1843,15 +1811,14 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if "diff_contour_levels" in kwargs:
+        #Make these floats in case the contour levels are in scientific notation
         levelsdiff = [float(x) for x in kwargs['diff_contour_range']]
-        #levelsdiff = np.arange(*lev_range)
-        #levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
     elif "diff_contour_range" in kwargs:
         assert len(kwargs['diff_contour_range']) == 3, \
         "diff_contour_range must have exactly three entries: min, max, step"
+        #Make these floats in case the contour levels are in scientific notation
         lev_range = [float(x) for x in kwargs['diff_contour_range']]
         levelsdiff = np.arange(*lev_range)
-        #levelsdiff = np.arange(*kwargs['diff_contour_range'])
     else:
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))

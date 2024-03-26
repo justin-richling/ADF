@@ -356,109 +356,73 @@ def tem(adf):
 
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
-                #print(dseasons.min(),dseasons.max())
-
-                #Run through variables and plot each against the baseline on each row
-                #Each column will be a case, ie (test, base, difference)
-
-                if 'units' in vres:
-                    units = vres['units']
-                else:
-                    units = ''
-
-            
                 
-                #
+                #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
-                #print(clevs)
                 norm = cp_info['norm1']
                 cmap = cp_info['cmap1']
-                #print(cmap,"\n")
-
-
                 levs_diff = np.unique(np.array(cp_info['levelsdiff']))
-
-
-
-                
 
                 # mesh for plots:
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
-                # Generate zonal plot:
-                #fig, ax = plt.subplots(figsize=(10,10),nrows=3, constrained_layout=True,
-                #                    sharex=True, sharey=True,**cp_info['subplots_opt'])
                 # create figure object
                 fig = plt.figure(figsize=(14,10))
                 # LAYOUT WITH GRIDSPEC
-                gs = mpl.gridspec.GridSpec(4, 8, wspace=0.75,hspace=0.5) # 2 rows, 4 columns, but each map will take up 2 columns
-                #gs.tight_layout(fig)
-                """ax1 = plt.subplot(gs[0:2, :2], **cp_info['subplots_opt'])
-                ax2 = plt.subplot(gs[0:2, 2:], **cp_info['subplots_opt'])
-                ax3 = plt.subplot(gs[2:, 1:3], **cp_info['subplots_opt'])"""
+                # 4 rows, 8 columns, but each map will take up 4 columns and 2 rows
+                gs = mpl.gridspec.GridSpec(4, 8, wspace=0.75,hspace=0.5)
                 ax1 = plt.subplot(gs[0:2, :4], **cp_info['subplots_opt'])
                 ax2 = plt.subplot(gs[0:2, 4:], **cp_info['subplots_opt'])
                 ax3 = plt.subplot(gs[2:, 2:6], **cp_info['subplots_opt'])
                 ax = [ax1,ax2,ax3]
 
-                #Get axis number for variable
-                #axs_id = var_axs[var]
-                #print(axs_id)
-
-                #x_filtered = x[~np.isnan(y)]
-
                 #Contour fill
                 img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
-
-                # Define a custom formatting function
-                from matplotlib.ticker import FuncFormatter
-                def format_contour_label(x, pos):
-                    if abs(x) > 1000:
-                        #x = "{:e}".format(x)
-                        return '{:.2f}'.format(x)
-                        #return x.split('e')[0]
-                    if x == 0:#else:
-                        return x
                     
                 #Add contours for highlighting
-                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm, colors="k",linewidths=0.5)
+                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm,
+                                    colors="k", linewidths=0.5)
+    
+                #Check if contour labels need to be adjusted
+                #ie if the values are large and/or in scientific notation, just label the 
+                #contours with the leading numbers.
+                #EXAMPLE: plot values are 200000; plot the contours as 2.0 and let the colorbar
+                #         indicate that it is e5.
                 fmt = {}
-                #strs = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
                 if 'contour_adjust' in vres:
                     strs = c0.levels/float(vres['contour_adjust'])
-                    #for i in c0.levels:
-                    #    strs.append(i/float(vres['contour_adjust']))
                     for l, str0 in zip(c0.levels, strs):
                         fmt[l] = str0
 
-                    # Add contour labels every third contour line
-                    plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels,
-                                fmt=fmt
-                                )
+                    # Add contour labels
+                    plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels, fmt=fmt)
                 else:
-                    # Add contour labels every third contour line
+                    # Add contour labels
                     plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels)
 
-                c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm, colors="k",linewidths=0.5)
+                #Add contours for highlighting
+                c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm,
+                                    colors="k", linewidths=0.5)
+
+                #Check if contour labels need to be adjusted
+                #ie if the values are large and/or in scientific notation, just label the 
+                #contours with the leading numbers.
+                #EXAMPLE: plot values are 200000; plot the contours as 2.0 and let the colorbar
+                #         indicate that it is e5.
                 fmt = {}
-                #strs = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
                 if 'contour_adjust' in vres:
                     strs = c1.levels/float(vres['contour_adjust'])
-                    #for i in c1.levels:
-                    #    strs.append(i/float(vres['contour_adjust']))
                     for l, str0 in zip(c1.levels, strs):
                         fmt[l] = str0
 
-                    # Add contour labels every third contour line
-                    plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels,
-                                fmt=fmt
-                                )
+                    # Add contour labels
+                    plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels, fmt=fmt)
                 else:
-                    # Add contour labels every third contour line
+                    # Add contour labels
                     plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels)
 
 
@@ -473,9 +437,11 @@ def tem(adf):
                     ax[2].text(prop_x, prop_y, empty_message,
                                     transform=ax[2].transAxes, bbox=props)
                 else:
-                    img2 = ax[2].contourf(lats,levs,dseasons, cmap="BrBG",levels=levs_diff,norm=cp_info['normdiff'])#levels=levs_diff
-                    ax[2].contour(lats,levs,dseasons, colors="k",linewidths=0.5,levels=levs_diff[::2],norm=cp_info['normdiff'])#levels=diff_levs[::2]
-                    plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])#**cp_info['diff_colorbar_opt']
+                    img2 = ax[2].contourf(lats, levs, dseasons, cmap="BrBG", levels=levs_diff,
+                                            norm=cp_info['normdiff'])
+                    ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
+                                    levels=levs_diff[::2], norm=cp_info['normdiff'])
+                    plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
 
                 #Format y-axis
                 for a in ax[:]:
@@ -498,23 +464,18 @@ def tem(adf):
 
                 #Variable plot title name
                 longname = vres["long_name"]
-                #ax.text(0.5, 0.95, 'Title 1', transform=ax.transAxes, fontsize=14,
-                #        verticalalignment='top', horizontalalignment='center')
-                plt.text(0.5, 0.915, f"{longname}\n", fontsize=12, ha='center', transform=fig.transFigure)
-                #ax[1].set_title(longname+"\n",fontsize=14,loc="center")
+                plt.text(0.5, 0.915, f"{longname}\n", fontsize=12, ha='center',
+                            transform=fig.transFigure)
 
                 test_yrs = f"{start_year}-{end_year}"
-                #ax[0].set_title(f"\n\n"+"$\mathbf{Test}$"+f"  yrs: {test_yrs}\n"+f"{test_nicknames[idx]}\n",fontsize=10)
                 ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
 
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem
-                    #ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$\n"+f"{obs_title}"+longname+"\n",fontsize=14)
                     ax[1].set_title(f"{obs_title}\n",fontsize=10)
 
                 else:
                     base_yrs = f"{syear_baseline}-{eyear_baseline}"
-                    #ax[1].set_title(f"\n\n"+"$\mathbf{Baseline}$"+f"  yrs: {base_yrs}\n"+f"{base_nickname}\n",fontsize=10)
                     ax[1].set_title(f"{base_nickname}\n{base_yrs}",fontsize=10)
                 
                 #Set main title for difference plots column
@@ -526,17 +487,8 @@ def tem(adf):
                 #Add plot to website (if enabled):
                 adf.add_website_data(plot_name, var, case_name, season=s, plot_type="WACCM",
                                      ext="SeasonalCycle_Mean",category="TEM")
-                #Set variable name on center plot (except first plot, see above)
-                #for i in range(1,len(var_list)):
-                    #vres = res[var_list[i]]
 
-                #Create new plot:
-                #pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
-                #                                            [syear_cases[case_idx],eyear_cases[case_idx]],
-                #                                            [syear_baseline,eyear_baseline],
-                #                                            mseasons[s], oseasons[s], has_lev=True, log_p=False, obs=obs, **vres)
                 plt.close()
-        
 
 # Helper functions
 ##################
