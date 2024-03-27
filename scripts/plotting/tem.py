@@ -354,6 +354,22 @@ def tem(adf):
                         wgt_denom_base = (od_ones*weights_base).groupby("time.season").sum(dim="time").sel(season=s)
                         oseasons = oseasons / wgt_denom_base
 
+                if var == "thzm":
+                    import metpy.calc.thermo as thermo
+                    path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
+                    path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
+                    ds_pmid = xr.open_dataset(path+"f.cam6_3_132.FMTHIST_ne30.sponge.001.cam.h0.PMID.199601-200512.nc")
+
+                    pmid = ds_pmid.interp(lat=mseasons.zalat,method="nearest").mean(dim="lon")
+                    pmid.attrs['units'] = 'Pa'
+
+                    mseasons.attrs['units'] = "K"
+                    oseasons.attrs['units'] = "K"
+
+                    mseasons = thermo.temperature_from_potential_temperature(pmid,mseasons)
+                    oseasons = thermo.temperature_from_potential_temperature(pmid,oseasons)
+
+
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
                 

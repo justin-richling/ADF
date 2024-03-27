@@ -1036,6 +1036,9 @@ vzm:
 thzm:
   #contour_levels_range: []
   #diff_contour_range: []
+  # E = exp(kappa*z/H), such that Theta = T * E
+  colormap: "Spectral"
+  contour_levels_range: [185,282,6]
   ylim: [1e3,1e-1]
   units: m s-1
   long_name: Zonal mean temperature ($\bar{T}$)
@@ -1262,7 +1265,8 @@ lat_vs_month:
 # Comparison plots for SABER/MERRA2/SWOOSH
 comparison_plots:
   cam_vars: ["U","T"]
-  interval: [6,12,"DJF", "JJA"]
+  #NOTE: If using month number for month, you must keep it as an integer, not a string!
+  interval: [6,12,"DJF","JJA"]
 
   U:
     levs: [-120, 121, 10]
