@@ -360,7 +360,7 @@ def tem(adf):
                     path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
                     ds_pmid = xr.open_dataset(path+"f.cam6_3_132.FMTHIST_ne30.sponge.001.cam.h0.PMID.199601-200512.nc")
 
-                    ds_pmid_interp = ds_pmid.interp(lat=mseasons.zalat,method="nearest").mean(dim="lon")
+                    ds_pmid_interp = ds_pmid.interp(lat=mseasons.zalat,method="nearest")
                     pmid = ds_pmid_interp["PMID"]
                     pmid.attrs['units'] = 'Pa'
                     #print(pmid)
@@ -386,7 +386,7 @@ def tem(adf):
 
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
-
+                    pmid = pmid.mean(dim="lon")
                     mseasons = thermo.temperature_from_potential_temperature(pmid,mseasons)
                     oseasons = thermo.temperature_from_potential_temperature(pmid,oseasons)
 
