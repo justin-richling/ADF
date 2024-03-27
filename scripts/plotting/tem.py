@@ -362,6 +362,7 @@ def tem(adf):
 
                     pmid = ds_pmid.interp(lat=mseasons.zalat,method="nearest").mean(dim="lon")
                     pmid.attrs['units'] = 'Pa'
+                    print(pmid)
 
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
