@@ -240,7 +240,7 @@ def tem(adf):
         #Loop over model cases:
         for idx,case_name in enumerate(case_names):
 
-            # Check redo_plot. If set to True: remove old plot, if it already exists:
+            """# Check redo_plot. If set to True: remove old plot, if it already exists:
             if (not redo_plot) and plot_name.is_file():
                 #Add already-existing plot to website (if enabled):
                 adf.debug_log(f"'{plot_name}' exists and clobber is false.")
@@ -249,7 +249,7 @@ def tem(adf):
                 #Continue to next iteration:
                 continue
             elif (redo_plot) and plot_name.is_file():
-                plot_name.unlink()
+                plot_name.unlink()"""
 
             #Extract start and end year values:
             start_year = syear_cases[idx]
