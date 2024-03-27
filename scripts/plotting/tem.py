@@ -241,15 +241,15 @@ def tem(adf):
         for idx,case_name in enumerate(case_names):
 
             # Check redo_plot. If set to True: remove old plot, if it already exists:
-            #if (not redo_plot) and plot_name.is_file():
+            if (not redo_plot) and plot_name.is_file():
                 #Add already-existing plot to website (if enabled):
-            #    adf.debug_log(f"'{plot_name}' exists and clobber is false.")
-            #    adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
+                adf.debug_log(f"'{plot_name}' exists and clobber is false.")
+                adf.add_website_data(plot_name, "TEM", case_name, season=s, plot_type="WACCM",ext="Mean",category="Seasonal Cycle")
 
                 #Continue to next iteration:
-                #continue
-            #elif (redo_plot) and plot_name.is_file():
-            #    plot_name.unlink()
+                continue
+            elif (redo_plot) and plot_name.is_file():
+                plot_name.unlink()
 
             #Extract start and end year values:
             start_year = syear_cases[idx]
