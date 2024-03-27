@@ -1214,8 +1214,8 @@ waccm_seasonal_cycle:
 
   merra2_vars: ['U','T','V','lat','lev']
   saber_vars: ['u','temp','lat','lev']
-  merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
-  saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
+  merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
+  saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
   #swoosh_filename: 
 
   obs_cam_vars:
