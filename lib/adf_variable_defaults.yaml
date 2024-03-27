@@ -1039,7 +1039,7 @@ thzm:
   # E = exp(kappa*z/H), such that Theta = T * E
   colormap: "Spectral_r"
   contour_levels_range: [185,282,6]
-  diff_contour_range: [-10,11,2]
+  diff_contour_range: [-20,21,4]
   ylim: [1e3,1e-1]
   units: m s-1
   long_name: Zonal mean temperature ($\bar{T}$)
