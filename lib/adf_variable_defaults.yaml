@@ -1039,7 +1039,7 @@ thzm:
   # E = exp(kappa*z/H), such that Theta = T * E
   colormap: "Spectral_r"
   #contour_levels_range: [185,300,6]
-  contour_levels_range: [185,306,10]
+  contour_levels_range: [185,300,6]
   diff_contour_range: [-40,41,5]
   ylim: [1e3,1e-1]
   units: m s-1
