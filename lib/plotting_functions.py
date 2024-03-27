@@ -2867,7 +2867,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
     slat = var_dict[var]["slat"]
     nlat = var_dict[var]["nlat"]
     cmap = var_dict[var]["cmap"]
-    levs = var_dict[var]["levels"]
+    levs = np.arange(*var_dict[var]["levels"])
     units = var_dict[var]["units"]
     title = var_dict[var]["title"]
     y_labels = var_dict[var]["y_labels"]
