@@ -112,7 +112,8 @@ class AdfInfo(AdfConfig):
         #End if
 
         #Initialize ADF variable list:
-        self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
+        #self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
+        self.__diag_var_list = self.read_config_var('diag_var_list')
 
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
