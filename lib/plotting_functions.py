@@ -2396,29 +2396,29 @@ month_dict = {1:'JAN',
 
 delta_symbol = r'$\Delta$'
 
-temp_levs = np.arange(140, 300, 10)
-temp_diff_levs = np.arange(-40, 41, 4)
+#temp_levs = np.arange(140, 300, 10)
+#temp_diff_levs = np.arange(-40, 41, 4)
 
-wind_levs = np.arange(-120, 121, 10)
-wind_diff_levs = np.arange(-30, 31, 3)
-cont_ranges = {"U":{"levs":wind_levs,"diff_levs":wind_diff_levs,"units":"m/s"},
-               "T":{"levs":temp_levs,"diff_levs":temp_diff_levs,"units":"K"}}
+#wind_levs = np.arange(-120, 121, 10)
+#wind_diff_levs = np.arange(-30, 31, 3)
+#cont_ranges = {"U":{"levs":wind_levs,"diff_levs":wind_diff_levs,"units":"m/s"},
+#               "T":{"levs":temp_levs,"diff_levs":temp_diff_levs,"units":"K"}}
 
-obs_cam_vars={"saber":{"U":"u", "T":"temp"},
-              "merra":{"U":"U", "T":"T"}}
-
-
+#obs_cam_vars={"saber":{"U":"u", "T":"temp"},
+#              "merra":{"U":"U", "T":"T"}}
 
 
-def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval):
+
+
+def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval, comp_plots_dict, obs_cam_vars):
     """
 
     """
 
     #Get plotting details for variable
-    levs = cont_ranges[cam_var]["levs"]
-    diff_levs = cont_ranges[cam_var]["diff_levs"]
-    units = cont_ranges[cam_var]["units"]
+    levs = np.arange(*comp_plots_dict[cam_var]["levs"])
+    diff_levs = np.arange(*comp_plots_dict[cam_var]["diff_levs"])
+    units = comp_plots_dict[cam_var]["units"]
 
     #Grab obs variable corresponding to CAM variable
     saber_var = obs_cam_vars['saber'][cam_var]
@@ -2652,12 +2652,11 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
 
 
 
-def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly):
+def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly, pcap_dict):
     """
     """
 
-    temp_levs = cont_ranges["T"]["levs"]
-    levs = cont_ranges["T"]["levs"]
+    levs = pcap_dict["T"]["levs"]
 
     #Get number of test cases (number of columns)
     casenum = len(case_names)
@@ -2770,7 +2769,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         ax.clabel(c0, c0.levels, inline=True, fmt=fmt, fontsize=8)
 
         c=plt.contour(lev_grid, time_grid, merra2_pcap, colors='black',
-                           levels=temp_levs,
+                           levels=levs,
                            negative_linestyles='dashed',
                            linewidths=.5, alpha=0.5)
 

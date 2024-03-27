@@ -1213,8 +1213,9 @@ waccm_seasonal_cycle:
   calc_var_list: ['U','T','Q']
 
   merra2_vars: ['U','T','V','lat','lev']
-  merra2_filename: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
-  saber_filename: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
+  saber_vars: ['u','temp','lat','lev']
+  merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
+  saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
   #swoosh_filename: 
 
   obs_cam_vars:
@@ -1224,11 +1225,15 @@ waccm_seasonal_cycle:
     merra: 
       U: "U"
       T: "T"
+    swoosh:
+      O3: "O3"
 
 # Plot Specific formatting
 ##########################
 
 # WACCM seasonal cycle plots
+#---------------------------
+# Latitude vs Month
 lat_vs_month:
   T: 
     slat: -45
@@ -1240,6 +1245,7 @@ lat_vs_month:
     units: "K",
     y_labels: ["45S","30S","15S","EQ","15N","30N","45N"]
     plot_vert_levs: [90]
+    cmap: 'RdYlBu_r'
   
   Q: 
     slat: -90
@@ -1251,7 +1257,28 @@ lat_vs_month:
     tick_inter: 30
     units: "ppmv"
     plot_vert_levs: [90,100]
+    cmap: 'RdYlBu_r'
 
+# Comparison plots for SABER/MERRA2/SWOOSH
+comparison_plots:
+  cam_vars: ["U","T"]
+  interval: [6,12,"DJF", "JJA"]
+
+  U:
+    levs: [-120, 121, 10]
+    diff_levs: [-30, 31, 3]
+    units: "m/s"
+  T: 
+    levs: [140, 300, 10]
+    diff_levs: [-40, 41, 4]
+    units: "K"
+
+# Polar Cap Temps
+pcap_plots:
+  T: 
+    levs: [140, 300, 10]
+    diff_levs: [-40, 41, 4]
+    units: "K"
 
 #-----------
 #End of File

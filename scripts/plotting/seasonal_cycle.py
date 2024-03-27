@@ -38,7 +38,7 @@ month_dict = {1:'JAN',
 
 delta_symbol = r'$\Delta$'
 
-temp_levs = np.arange(140, 300, 10)
+"""temp_levs = np.arange(140, 300, 10)
 temp_diff_levs = np.arange(-40, 41, 4)
 
 #contour_levels = np.arange(-30, 31, 3)
@@ -46,18 +46,18 @@ temp_diff_levs = np.arange(-40, 41, 4)
 wind_levs = np.arange(-120, 121, 10)
 wind_diff_levs = np.arange(-30, 31, 3)
 cont_ranges = {"U":{"levs":wind_levs,"diff_levs":wind_diff_levs,"units":"m/s"},
-               "T":{"levs":temp_levs,"diff_levs":temp_diff_levs,"units":"K"}}
+               "T":{"levs":temp_levs,"diff_levs":temp_diff_levs,"units":"K"}}"""
 
 
-calc_var_list = ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
+#calc_var_list = ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
 #calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
-calc_var_list = ['U','T','Q']
+#calc_var_list = ['U','T','Q']
 
-merra2_vars = ['U','T','V','lat','lev']
+#merra2_vars = ['U','T','V','lat','lev']
 
 
-obs_cam_vars={"saber":{"U":"u", "T":"temp"},
-              "merra":{"U":"U", "T":"T"}}
+#obs_cam_vars={"saber":{"U":"u", "T":"temp"},
+#              "merra":{"U":"U", "T":"T"}}
 
 #
 # --- Main Function Shares Name with Module: regional_map_multicase ---
@@ -113,14 +113,16 @@ def seasonal_cycle(adfobj):
         return
 
     merra2_vars = seas_cyc_res['merra2_vars']
-    calc_var_list = seas_cyc_res['calc_var_list']
-
+    saber_vars = seas_cyc_res['saber_vars']
     obs_cam_vars = seas_cyc_res['obs_cam_vars']
 
-    merra_filename = seas_cyc_res['merra2_filename']
-    saber_filename = seas_cyc_res['saber_filename']
-    
+    calc_var_list = seas_cyc_res['calc_var_list']
 
+    merra_file = seas_cyc_res['merra2_file']
+    saber_file = seas_cyc_res['saber_file']
+
+
+    
 
     if not adfobj.get_basic_info("compare_obs"):
         obs = False
@@ -205,8 +207,8 @@ def seasonal_cycle(adfobj):
 
 
     #Get Obs and seasonal and monthly averages
-    saber, saber_monthly, saber_seasonal = saber_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc")
-    merra2, merra2_monthly, merra2_seasonal = merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
+    saber, saber_monthly, saber_seasonal = saber_data(saber_file, saber_vars)
+    merra2, merra2_monthly, merra2_seasonal = merra_data(merra_file, merra2_vars)
     #swoosh, swoosh_monthly, swoosh_seasonal = swoosh_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
 
     obs_seas_dict = {"saber":saber_seasonal, "merra":merra2_seasonal}
@@ -221,8 +223,15 @@ def seasonal_cycle(adfobj):
 
     #Zoanl Mean Wind and Temp vs MERRA2 and SABER
     #--------------------------------------------
-    for cam_var in ["U","T"]:
-        for interval in [6,12,"DJF", "JJA"]:
+    # Comparison plot defaults    
+    comp_plots_dict = res['comparison_plots']
+    #cont_ranges = comp_plots_dict['cont_ranges']
+
+    #for cam_var in ["U","T"]:
+    for cam_var in comp_plots_dict['cam_vars']:
+        #for interval in [6,12,"DJF", "JJA"]:
+        for interval in comp_plots_dict['interval']:
+            #Check if interval is integer (month number) or string (season)
             if isinstance(interval, int):
                 interval = month_dict[interval]
                 season = "month"
@@ -233,15 +242,20 @@ def seasonal_cycle(adfobj):
             plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
             if (not redo_plot) and plot_name.is_file():
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval,
+                                        plot_type="WACCM", category="Seasonal Cycle",
+                                        ext="SeasonalCycle_Mean",non_season=True)
             
             elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
                 #If redo plot, delete the file
                 if plot_name.is_file():
                     plot_name.unlink()
             
-                pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, season, interval)
-                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval, plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean",non_season=True)
+                pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict,
+                                    season, interval, comp_plots_dict, obs_cam_vars)
+                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval,
+                                        plot_type="WACCM", category="Seasonal Cycle",
+                                        ext="SeasonalCycle_Mean",non_season=True)
             #End if
         #End for
     #End for
@@ -249,6 +263,7 @@ def seasonal_cycle(adfobj):
 
     #Polar Cap Temps
     #---------------
+    pcap_dict = res['pcap_plots']
     for hemi in ["s","n"]:
 
         plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
@@ -259,24 +274,28 @@ def seasonal_cycle(adfobj):
         if (not redo_plot) and plot_name.is_file():
             #Add already-existing plot to website (if enabled):
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-            adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
+            adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN",
+                                    plot_type="WACCM", category="Seasonal Cycle",
+                                    ext="SeasonalCycle_Mean")
         elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
             #If redo plot, delete the file
             if plot_name.is_file():
                 plot_name.unlink()
 
-            pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly)
-            adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN", plot_type="WACCM", category="Seasonal Cycle",ext="SeasonalCycle_Mean")
+            pf.polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly, pcap_dict)
+            adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN",
+                                    plot_type="WACCM", category="Seasonal Cycle",
+                                    ext="SeasonalCycle_Mean")
         #End if
     #End for
 
     # Latitude vs Month Plots
     #########################
 
-    var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.2),"cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
-                "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100},
-            "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
-                "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
+    #var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.2),"cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
+    #            "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100},
+    #        "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
+    #            "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
 
     var_dict = ['lat_vs_month']
 
@@ -443,14 +462,14 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         return waccm_zm
 ########
 
-def saber_data(filename = "../SABER_monthly_2002-2014.nc"):
+def saber_data(filename, saber_vars):
     """
 
     """
     saber = {}
     saber_seasonal = {}
     saber_monthly = {}
-    saber_vars = ['u','temp','lat','lev']
+    #saber_vars = ['u','temp','lat','lev']
 
     saber_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
     saber_ncfile = saber_ncfile.rename({"latitude":"lat"})
@@ -493,7 +512,7 @@ def saber_data(filename = "../SABER_monthly_2002-2014.nc"):
     return saber, saber_monthly, saber_seasonal
 ########
 
-def merra_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"):
+def merra_data(filename, merra2_vars):
     """
     """
 
