@@ -302,7 +302,7 @@ def seasonal_cycle(adfobj):
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
     var = "T"
-    vert_lev = 90
+    #vert_lev = 90
     try:
         vert_levs = var_dict[var]["plot_vert_levs"]
     except:
