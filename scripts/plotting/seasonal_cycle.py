@@ -242,7 +242,7 @@ def seasonal_cycle(adfobj):
             plot_name = plot_loc / f"{cam_var}_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
             if (not redo_plot) and plot_name.is_file():
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval,
+                adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
                                         plot_type="WACCM", category="Seasonal Cycle",
                                         ext="SeasonalCycle_Mean",non_season=True)
             
@@ -253,7 +253,7 @@ def seasonal_cycle(adfobj):
             
                 pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict,
                                     season, interval, comp_plots_dict, obs_cam_vars)
-                adfobj.add_website_data(plot_name, cam_var, case_name, season=interval,
+                adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
                                         plot_type="WACCM", category="Seasonal Cycle",
                                         ext="SeasonalCycle_Mean",non_season=True)
             #End if

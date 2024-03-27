@@ -1250,9 +1250,9 @@ lat_vs_month:
   Q: 
     slat: -90
     nlat: 90
-    levels: [0.5,5,0.4]
+    levels: [0.5,5.1,0.3]
     cmap: 'RdYlBu_r'
-    title: f"H$_{2}$O Mixing Ratio"
+    title: "H$_{2}$O Mixing Ratio"
     y_labels: ["90S","60S","30S","EQ","30N","60N","90N"]
     tick_inter: 30
     units: "ppmv"
