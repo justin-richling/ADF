@@ -368,8 +368,8 @@ def tem(adf):
                     #Create array to avoid weighting missing values:
                     pmid_ones = xr.where(pmid.isnull(), 0.0, 1.0)
 
-                    month_length = pmid.time.dt.days_in_month
-                    weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+                    #month_length = pmid.time.dt.days_in_month
+                    #weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
                     if s == 'ANN':
 
                         #Calculate annual weights (i.e. don't group by season):
