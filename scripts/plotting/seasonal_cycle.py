@@ -105,11 +105,22 @@ def seasonal_cycle(adfobj):
     # or an empty dictionary if use_defaults was not specified in YAML.
 
     try:
-        seas_cyc = res['waccm_seasonal_cycle']
+        seas_cyc_res = res['waccm_seasonal_cycle']
     except:
-        errmsg = "Missing 'waccm_seasonal_cycle' in variable defaults yaml file.\n"
-        errmsg += "Please"
+        errmsg = "Missing 'waccm_seasonal_cycle' options in variable defaults yaml file.\n"
+        errmsg += "Please make sure to include these for the seasonal cycle plots!"
         print(errmsg)
+        return
+
+    merra2_vars = seas_cyc_res['merra2_vars']
+    calc_var_list = seas_cyc_res['calc_var_list']
+
+    obs_cam_vars = seas_cyc_res['obs_cam_vars']
+
+    merra_filename = seas_cyc_res['merra2_filename']
+    saber_filename = seas_cyc_res['saber_filename']
+    
+
 
     if not adfobj.get_basic_info("compare_obs"):
         obs = False
@@ -268,40 +279,56 @@ def seasonal_cycle(adfobj):
                 "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
 
     var_dict = ['lat_vs_month']
+
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
     var = "T"
     vert_lev = 90
-    plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+    try:
+        vert_levs = var_dict[var]["plot_vert_levs"]
+    except:
+        errmsg = f"Missing 'plot_vert_levs' in variable defaults file for '{var}'\n"
+        errmsg += "Please add it to the yaml file under 'lat_vs_month'"
+        print(errmsg)
 
-    if (not redo_plot) and plot_name.is_file():
-        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                                    plot_type="WACCM",
-                                    ext="SeasonalCycle_Mean",
-                                    category="Seasonal Cycle",
-                                    )
-    
-    elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
-        #If redo plot, delete the file
-        if plot_name.is_file():
-            plot_name.unlink()
+    for vert_lev in vert_levs:
+        plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
-        #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
-        pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
-        adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                                    plot_type="WACCM",
-                                    ext="SeasonalCycle_Mean",
-                                    category="Seasonal Cycle",
-                                    )
-    #End if
+        if (not redo_plot) and plot_name.is_file():
+            adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+            adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                                        plot_type="WACCM",
+                                        ext="SeasonalCycle_Mean",
+                                        category="Seasonal Cycle",
+                                        )
+        
+        elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+            #If redo plot, delete the file
+            if plot_name.is_file():
+                plot_name.unlink()
+
+            #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
+            pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
+            adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
+                                        plot_type="WACCM",
+                                        ext="SeasonalCycle_Mean",
+                                        category="Seasonal Cycle",
+                                        )
+        #End if
+    #End for
 
 
     #H20 Mixing Ratio @ 90 and 100hPa
     #----------------------------------
     var = "Q"
+    try:
+        vert_levs = var_dict[var]["plot_vert_levs"]
+    except:
+        errmsg = f"Missing 'plot_vert_levs' in variable defaults file for '{var}'\n"
+        errmsg += "Please add it to the yaml file under 'lat_vs_month'"
+        print(errmsg)
 
-    for vert_lev in [90, 100]:
+    for vert_lev in vert_levs:
         plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
@@ -317,7 +344,6 @@ def seasonal_cycle(adfobj):
             if plot_name.is_file():
                 plot_name.unlink()
 
-            #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
             pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
             adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
                                         plot_type="WACCM",

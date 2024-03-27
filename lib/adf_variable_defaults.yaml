@@ -1239,7 +1239,7 @@ lat_vs_month:
     tick_inter: 15
     units: "K",
     y_labels: ["45S","30S","15S","EQ","15N","30N","45N"]
-    plot_vert_levs: [90,100]
+    plot_vert_levs: [90]
   
   Q: 
     slat: -90
@@ -1250,7 +1250,7 @@ lat_vs_month:
     y_labels: ["90S","60S","30S","EQ","30N","60N","90N"]
     tick_inter: 30
     units: "ppmv"
-    plot_vert_levs: [100]
+    plot_vert_levs: [90,100]
 
 
 #-----------

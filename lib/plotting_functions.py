@@ -2864,16 +2864,12 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
     for i in list(month_dict.keys())[::3]:
         ahh.append(month_dict[i].lower().capitalize())
 
-    #slat = -45
-    #nlat = 45
-    #var_dict = var_dict["lat_vs_month"]
-
+    #Grab values for the month vs lat plot in variable defaults yaml file
     slat = var_dict[var]["slat"]
     nlat = var_dict[var]["nlat"]
     cmap = var_dict[var]["cmap"]
     levs = var_dict[var]["levels"]
     units = var_dict[var]["units"]
-    #vert_lev = var_dict[var]["lev"]
     title = var_dict[var]["title"]
     y_labels = var_dict[var]["y_labels"]
     tick_inter = var_dict[var]["tick_inter"]
@@ -2961,8 +2957,6 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
             plt.ylabel('Latitude',fontsize=10)
 
         #Format the y-axis
-        #s = -int(y_labels[0][0:2])
-        #e = int(y_labels[0][0:2])
         ax.set_yticks(np.arange(slat,nlat+1,tick_inter))
         ax.set_yticklabels(y_labels,fontsize=10)
 
