@@ -442,8 +442,6 @@ def global_latlon_map(adfobj):
                                 #End if
 
                                 # difference: each entry should be (lat, lon)
-                                print(mseasons[s].lon,"\n")
-                                print(oseasons[s].lon,"\n")
                                 dseasons[s] = mseasons[s] - oseasons[s]
 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
