@@ -844,6 +844,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax3.transAxes,
                     borderpad=0,
                     )
+    print(wks)
     if not bad:
         fig.colorbar(img3, cax=cb_diff_ax)
 
