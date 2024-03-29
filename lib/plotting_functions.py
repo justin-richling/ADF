@@ -847,8 +847,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     if not bad:
         fig.colorbar(img3, cax=cb_diff_ax)
 
-    # Save files
-    fig.savefig(wks, bbox_inches='tight', dpi=300)
+        # Save files
+        fig.savefig(wks, bbox_inches='tight', dpi=300)
 
     # Close figures to avoid memory issues:
     plt.close(fig)
