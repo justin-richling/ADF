@@ -776,7 +776,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         try:
             img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
         except:
-            img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+            img3 = ax3.plot([])
             ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
 
     #Set Main title for subplots:
