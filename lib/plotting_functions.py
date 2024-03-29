@@ -777,6 +777,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
         except:
             img3 = ax3.plot([])
+            bad = True
             ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
 
     #Set Main title for subplots:
@@ -843,7 +844,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax3.transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img3, cax=cb_diff_ax)
+    if not bad:
+        fig.colorbar(img3, cax=cb_diff_ax)
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
