@@ -845,7 +845,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     borderpad=0,
                     )
     print(wks)
-    if wks == "/glade/derecho/scratch/richling/adf-output/f.cam6_3_153.FLTHIST_ne30.rrtmgp.001_vs_f.cam6_3_153.FLTHIST_ne30.001/diag-plot/f.cam6_3_153.FLTHIST_ne30.rrtmgp.001_1995_2005_vs_f.cam6_3_153.FLTHIST_ne30.001_1995_2005/U_200hpa_DJF_NHPolar_Mean.png":
+    if wks != "/glade/derecho/scratch/richling/adf-output/f.cam6_3_153.FLTHIST_ne30.rrtmgp.001_vs_f.cam6_3_153.FLTHIST_ne30.001/diag-plot/f.cam6_3_153.FLTHIST_ne30.rrtmgp.001_1995_2005_vs_f.cam6_3_153.FLTHIST_ne30.001_1995_2005/U_200hpa_DJF_NHPolar_Mean.png":
         fig.colorbar(img3, cax=cb_diff_ax)
 
         # Save files
