@@ -2900,6 +2900,9 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     ax3 = plt.subplot(gs[2, 1:5])
     ax = [ax1,ax2,ax3]
 
+    #
+    pcap_vals = {}
+
     #for run in range(len(runs)):
     for idx,case_name in enumerate(case_names):
         ds = case_runs[case_name]
@@ -2930,6 +2933,10 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
         case_pcap = case_seas.sel(lev=vert_lev,method="nearest").sel(lat=slice(slat, nlat))
         if var == "Q":
             case_pcap = case_pcap*1e6
+
+        pcap_vals[case_name] = case_pcap
+        #cases_monthly["diff"] = cases_monthly[case_names[0]] - cases_monthly[case_names[1]]
+        #case_runs["diff"]
 
         #
         [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(slat, nlat)),
@@ -3033,19 +3040,21 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #Difference Plots
     #----------------
 
+    idx = 2
+
     #ds = case_runs[case_name]
     #ds_month = cases_monthly[case_name]
 
     #cases_monthly["diff"] = cases_monthly[case_names[0]] - cases_monthly[case_names[1]]
     #case_runs["diff"] = case_runs[case_names[0]] - case_runs[case_names[1]]
 
-    ds = cases_monthly[case_names[0]] - cases_monthly[case_names[1]]
-    ds_month = case_runs[case_names[0]] - case_runs[case_names[1]]
+    diff_pcap = pcap_vals[case_names[0]] - pcap_vals[case_names[1]]
+    #ds_month = case_runs[case_names[0]] - case_runs[case_names[1]]
 
     #if idx == len(case_names)-1:
     levs = diff_levs
     cmap = diff_cmap
-
+    """
     #Make 24 months so we can have Jan-Dec repeated twice
     case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
     case_seas = xr.DataArray(case_seas, dims=['month','lev', 'lat'],
@@ -3066,7 +3075,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     case_pcap = coslat_average(case_seas,slat,nlat)
     case_pcap = case_seas.sel(lev=vert_lev,method="nearest").sel(lat=slice(slat, nlat))
     if var == "Q":
-        case_pcap = case_pcap*1e6
+        case_pcap = case_pcap*1e6"""
 
     #
     [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(slat, nlat)),
@@ -3075,11 +3084,11 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #ax = fig.add_subplot(nrows, ncols, idx+1)
 
        
-    cf=ax[idx].contourf(lat_grid, time_grid, (case_pcap),
+    cf=ax[idx].contourf(lat_grid, time_grid, (diff_pcap),
                         levels=levs,
                         cmap=cmap,#zorder=100
                       )
-    c=ax[idx].contour(lat_grid, time_grid, (case_pcap),
+    c=ax[idx].contour(lat_grid, time_grid, (diff_pcap),
                         levels=levs,
                         colors='k',linewidths=0.5,alpha=0.5
                       )
