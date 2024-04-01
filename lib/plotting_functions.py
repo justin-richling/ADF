@@ -3092,7 +3092,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
                         cmap=cmap,#zorder=100
                       )
     c=ax[idx].contour(lat_grid, time_grid, (diff_pcap),
-                        levels=levs,
+                        levels=levs[::2],
                         colors='k',linewidths=0.5,alpha=0.5
                       )
         
