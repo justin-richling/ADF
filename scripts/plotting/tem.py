@@ -510,7 +510,7 @@ def tem(adf):
                 #ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
 
                 
-                plot_title = "$\mathbf{Baseline}:$"+f"{case_nicknames[1]}\nyears: {test_yrs}"
+                plot_title = "$\mathbf{Test}:$"+f"{test_nicknames[idx]}\nyears: {test_yrs}"
                 ax[0].set_title(plot_title, loc='left', fontsize=10)
                 #ax[idx].set_title(plot_title, loc='left', fontsize=10)
 
@@ -520,7 +520,8 @@ def tem(adf):
 
                 else:
                     base_yrs = f"{syear_baseline}-{eyear_baseline}"
-                    ax[1].set_title(f"{base_nickname}\n{base_yrs}",fontsize=10)
+                    plot_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {base_yrs}"
+                    ax[1].set_title(plot_title, loc='left', fontsize=10)
                 
                 #Set main title for difference plots column
                 ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=10)
