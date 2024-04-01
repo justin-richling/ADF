@@ -2424,7 +2424,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
     saber_var = obs_cam_vars['saber'][cam_var]
     merra_var = obs_cam_vars['merra'][cam_var]
 
-    font_size = 8
+    font_size = 6
 
     #Get number of test cases (number of columns)
     casenum = len(case_names)
@@ -2661,7 +2661,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     #Get number of test cases (number of columns)
     casenum = len(case_names)
 
-    font_size = 8
+    font_size = 6
     if hemi == "s":
         slat = -90
         nlat = -60
@@ -2989,7 +2989,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
             plot_title = "$\mathbf{Test}:$"+f"{case_nicknames[0]}\nyears: {climo_yrs[0][0]}-{climo_yrs[1][0]}"
         if idx == 1:
             plot_title = "$\mathbf{Baseline}:$"+f"{case_nicknames[1]}\nyears: {climo_yrs[0][1]}-{climo_yrs[1][1]}"
-        ax[idx].set_title(plot_title, loc='left', fontsize=8)
+        ax[idx].set_title(plot_title, loc='left', fontsize=10)
         #local_title=case_names[idx]
         #plt.title(local_title, fontsize=8)
 
@@ -3106,7 +3106,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #Set title
     local_title="$\mathbf{Test} - \mathbf{Baseline}$" #"Test - Baseline"#case_names[idx]
     #plt.title(local_title, fontsize=8)
-    ax[idx].set_title(local_title, fontsize=8)
+    ax[idx].set_title(local_title, fontsize=10)
 
     #Check for start of new row
     #if idx % 2 == 0:
