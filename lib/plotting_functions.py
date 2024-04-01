@@ -3316,9 +3316,10 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #If the number is greater than 10 years, clip it to 10 years?
         if nt > 120:
             nt_sub = 120
-            nt_sub = 108
+            #nt_sub = 108
         else:
             nt_sub = nt
+        print("nt",nt)
 
         [time_grid, lev_grid] = np.meshgrid(case_data['lev'],np.arange(0,nt_sub+1,1))
 
@@ -3334,7 +3335,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         start_idx = 0 #119-24
         #print(plotdata[start_idx:start_idx+(12*9),:].shape)
         end_idx = start_idx+(12*9)+1
-        print("AHH",start_idx+(12*9)+1,"\n")
+        end_idx = start_idx+nt+1
+        #print("AHH",start_idx+(12*9)+1,"\n")
         print("end_idx",end_idx,"\n\n")
         cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels, cmap='RdBu_r')
