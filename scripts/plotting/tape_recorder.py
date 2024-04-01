@@ -130,7 +130,19 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0.Q.*.nc')[0])
+        #dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0.Q.*.nc')[0])
+        file_loc = Path(runs_LT2[key])
+
+        # load re-gridded model files:
+        fils = sorted(file_loc.glob(f"*h0.Q.*.nc"))
+        dat = _load_dataset(fils)
+
+        if not dat:
+            errmsg = f"No Q files for '{runs_LT2[key]}'\n"
+            errmsg += "Please make sure Q is in the CAM output"
+            print(errmsg)
+            pass
+
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
         dat_tropics = pf.coslat_average(datzm.Q, -10, 10)
@@ -520,5 +532,25 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     return ax
 
 #########
+
+def _load_dataset(fils):
+    import warnings  # use to warn user about missing files.
+
+    def my_formatwarning(msg, *args, **kwargs):
+        # ignore everything except the message
+        return str(msg) + '\n'
+
+    warnings.formatwarning = my_formatwarning
+
+    if len(fils) == 0:
+        warnings.warn(f"Input file list is empty.")
+        return None
+    elif len(fils) > 1:
+        return xr.open_mfdataset(fils, combine='by_coords')
+    else:
+        sfil = str(fils[0])
+        return xr.open_dataset(sfil)
+    #End if
+#End def
 
 ###############
