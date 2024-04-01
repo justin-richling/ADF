@@ -478,7 +478,20 @@ def tem(adf):
                                             norm=cp_info['normdiff'])
                     c2 = ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
                                     levels=levs_diff[::2], norm=cp_info['normdiff'])
-                    plt.clabel(c2, inline=True, fontsize=8, levels=c2.levels)
+                    
+                    fmt = {}
+                    if 'contour_adjust' in vres:
+                        strs = c2.levels/float(vres['contour_adjust'])
+                        for l, str0 in zip(c2.levels, strs):
+                            fmt[l] = str0
+
+                        # Add contour labels
+                        plt.clabel(c2, inline=True, fontsize=8, levels=c2.levels, fmt=fmt)
+                    else:
+                        # Add contour labels
+                        plt.clabel(c2, inline=True, fontsize=8, levels=c2.levels)
+
+
                     plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
 
                 #Format y-axis
