@@ -2410,7 +2410,7 @@ delta_symbol = r'$\Delta$'
 
 
 
-def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, time_avg, interval, comp_plots_dict, obs_cam_vars):
+def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dict, obs_ds_dict, time_avg, interval, comp_plots_dict, obs_cam_vars):
     """
 
     """
@@ -2501,7 +2501,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
-        plt.title(case_name, fontsize=font_size)
+        plt.title(case_nicknames[idx], fontsize=font_size)
 
         #Make colorbar on last plot only
         if idx == casenum-1:
@@ -2564,7 +2564,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
         ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
-        local_title = f'{case_name}\n {delta_symbol} from MERRA2'
+        local_title = f'{case_nicknames[idx]}\n {delta_symbol} from MERRA2'
         plt.title(local_title, fontsize=font_size)
 
         #Make colorbar on last plot only
@@ -2623,7 +2623,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
             ax.tick_params(axis='y', labelsize=8)
 
             #Set individual plot title
-            local_title = f'{case_name}\n {delta_symbol} from SABER'
+            local_title = f'{case_nicknames[idx]}\n {delta_symbol} from SABER'
             plt.title(local_title, fontsize=font_size)
 
             #Make colorbar on last plot only

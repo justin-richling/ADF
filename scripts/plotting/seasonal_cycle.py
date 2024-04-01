@@ -258,8 +258,8 @@ def seasonal_cycle(adfobj):
                 if plot_name.is_file():
                     plot_name.unlink()
             
-                pf.comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict,
-                                    season, interval, comp_plots_dict, obs_cam_vars)
+                pf.comparison_plots(plot_name, cam_var, case_names, nicknames, case_ds_dict,
+                                    obs_ds_dict, season, interval, comp_plots_dict, obs_cam_vars)
                 adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
                                         plot_type="WACCM", category="Seasonal Cycle",
                                         ext="SeasonalCycle_Mean",non_season=True)
