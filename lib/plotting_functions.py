@@ -2855,7 +2855,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
 
 
 #def cold_point_temp(var, var_dict, plot_name, case_names, case_runs, cases_monthly):
-def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_monthly, vert_lev):
+def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, climo_yrs, case_runs, cases_monthly, vert_lev):
     """
     """
 
@@ -2867,11 +2867,16 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
     slat = var_dict[var]["slat"]
     nlat = var_dict[var]["nlat"]
     cmap = var_dict[var]["cmap"]
+    diff_cmap = var_dict[var]["diff_cmap"]
     levs = np.arange(*var_dict[var]["levels"])
+    diff_levs = np.arange(*var_dict[var]["diff_levels"])
     units = var_dict[var]["units"]
     title = var_dict[var]["title"]
     y_labels = var_dict[var]["y_labels"]
     tick_inter = var_dict[var]["tick_inter"]
+
+
+    
 
     nplots = len(case_names)
     if nplots > 4:
@@ -2882,12 +2887,27 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
     ncols = 2
     nrows = int(np.ceil(nplots/ncols))
 
-    fig = plt.figure(figsize=(2*8,nrows*5))
+    #fig = plt.figure(figsize=(2*8,nrows*5))
+
+    # create figure:
+    fig = plt.figure(figsize=(14,10))
+
+    # LAYOUT WITH GRIDSPEC
+    gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5, hspace=0.0)
+    gs.tight_layout(fig)
+    ax1 = plt.subplot(gs[0:2, :3])
+    ax2 = plt.subplot(gs[0:2, 3:])
+    ax3 = plt.subplot(gs[2, 1:5])
+    ax = [ax1,ax2,ax3]
 
     #for run in range(len(runs)):
     for idx,case_name in enumerate(case_names):
         ds = case_runs[case_name]
         ds_month = cases_monthly[case_name]
+
+        if idx == len(case_names)-1:
+            levs = diff_levs
+            cmap = "BrBG"
 
         #Make 24 months so we can have Jan-Dec repeated twice
         case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
@@ -2915,13 +2935,22 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
         [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(slat, nlat)),
                                             np.arange(0,25))
         #Set up plot
-        ax = fig.add_subplot(nrows, ncols, idx+1)
+        #ax = fig.add_subplot(nrows, ncols, idx+1)
 
-        cf=plt.contourf(lat_grid, time_grid, (case_pcap),
+        """cf=plt.contourf(lat_grid, time_grid, (case_pcap),
                         levels=levs,
                         cmap=cmap,#zorder=100
                       )
         c=plt.contour(lat_grid, time_grid, (case_pcap),
+                        levels=levs,
+                        colors='k',linewidths=0.5,alpha=0.5
+                      )"""
+
+        cf=ax[idx].contourf(lat_grid, time_grid, (case_pcap),
+                        levels=levs,
+                        cmap=cmap,#zorder=100
+                      )
+        c=ax[idx].contour(lat_grid, time_grid, (case_pcap),
                         levels=levs,
                         colors='k',linewidths=0.5,alpha=0.5
                       )
@@ -2934,32 +2963,42 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
             fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
         else:
             fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
-        ax.clabel(c, c.levels[::2], inline=True, fmt=fmt, fontsize=8)
+        ax[idx].clabel(c, c.levels[::2], inline=True, fmt=fmt, fontsize=8)
 
         #Add a horizontal line at 0 degrees latitude
         plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
 
         #Format the x-axis
-        ax.set_xticks(np.arange(0,25,3),rotation=40)
-        ax.set_xticklabels(ahh+ahh+["Jan"],rotation=40)
+        ax[idx].set_xticks(np.arange(0,25,3),rotation=40)
+        ax[idx].set_xticklabels(ahh+ahh+["Jan"],rotation=40)
 
         #Set title
-        local_title=case_names[idx]
-        plt.title(local_title, fontsize=8)
+        if idx == 0:
+            #eyear_cases = eyear_cases + [eyear_baseline]
+            #climo_yrs = [syear_cases, eyear_cases]
+
+            plot_title = "$\mathbf{Test}:$"+f"{case_nicknames[0]}\nyears: {climo_yrs[0][0]}-{climo_yrs[1][0]}"
+        if idx == 1:
+            plot_title = "$\mathbf{Baseline}:$"+f"{case_nicknames[1]}\nyears: {climo_yrs[0][1]}-{climo_yrs[1][1]}"
+        ax[idx].set_title(plot_title, loc='left', fontsize=8)
+        #local_title=case_names[idx]
+        #plt.title(local_title, fontsize=8)
 
         #Check for start of new row
         if idx % 2 == 0:
             row = idx // 2 + 1
 
         #Add latitude label to first column of each row
-        if idx==2*(row-1):
-            plt.ylabel('Latitude',fontsize=10)
+        #if idx==2*(row-1):
+        #   plt.ylabel('Latitude',fontsize=10)
+        
+        plt.ylabel('Latitude',fontsize=10)
 
         #Format the y-axis
-        ax.set_yticks(np.arange(slat,nlat+1,tick_inter))
-        ax.set_yticklabels(y_labels,fontsize=10)
+        ax[idx].set_yticks(np.arange(slat,nlat+1,tick_inter))
+        ax[idx].set_yticklabels(y_labels,fontsize=10)
 
-        #Check to see where the colorbar will go
+        """#Check to see where the colorbar will go
         if ((idx==2*(row-1)) and (idx == nplots-1)) or ((idx+1) % 2 == 0):
                 axins = inset_axes(ax,
                                 width="3%",
@@ -2973,7 +3012,132 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_runs, cases_mon
                 cbar.add_lines(c)
                 cbar.ax.tick_params(axis='y', labelsize=8)
                 # Set the font size for the colorbar label
-                cbar.set_label(units, fontsize=10, labelpad=1)
+                cbar.set_label(units, fontsize=10, labelpad=1)"""
+
+        axins = inset_axes(ax[idx],
+                                width="3%",
+                                height="80%",
+                                loc='center right',
+                                borderpad=-1.5
+                               )
+        cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,
+                                    #ticks=levs
+                                   )
+        cbar.add_lines(c)
+        cbar.ax.tick_params(axis='y', labelsize=8)
+        # Set the font size for the colorbar label
+        cbar.set_label(units, fontsize=10, labelpad=1)
+    #End cases
+
+
+    #Difference Plots
+    #----------------
+
+    #ds = case_runs[case_name]
+    #ds_month = cases_monthly[case_name]
+
+    #cases_monthly["diff"] = cases_monthly[case_names[0]] - cases_monthly[case_names[1]]
+    #case_runs["diff"] = case_runs[case_names[0]] - case_runs[case_names[1]]
+
+    ds = cases_monthly[case_names[0]] - cases_monthly[case_names[1]]
+    ds_month = case_runs[case_names[0]] - case_runs[case_names[1]]
+
+    #if idx == len(case_names)-1:
+    levs = diff_levs
+    cmap = diff_cmap
+
+    #Make 24 months so we can have Jan-Dec repeated twice
+    case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
+    case_seas = xr.DataArray(case_seas, dims=['month','lev', 'lat'],
+                                 coords={'month': np.arange(1,26,1),
+                                         'lev': ds['lev'],
+                                         'lat': ds['lat']})
+    #Make array of monthly temp data
+    for m in range(0,25):
+        month = m
+        if m > 11:
+            month = m-12
+        if month == 12:
+            month = 0
+
+        case_seas[m] = ds_month[var][month_dict[month+1]]
+
+    #Average over set of latitudes
+    case_pcap = coslat_average(case_seas,slat,nlat)
+    case_pcap = case_seas.sel(lev=vert_lev,method="nearest").sel(lat=slice(slat, nlat))
+    if var == "Q":
+        case_pcap = case_pcap*1e6
+
+    #
+    [time_grid, lat_grid] = np.meshgrid(ds['lat'].sel(lat=slice(slat, nlat)),
+                                            np.arange(0,25))
+    #Set up plot
+    #ax = fig.add_subplot(nrows, ncols, idx+1)
+
+       
+    cf=ax[idx].contourf(lat_grid, time_grid, (case_pcap),
+                        levels=levs,
+                        cmap=cmap,#zorder=100
+                      )
+    c=ax[idx].contour(lat_grid, time_grid, (case_pcap),
+                        levels=levs,
+                        colors='k',linewidths=0.5,alpha=0.5
+                      )
+        
+    # add contour labels
+    #lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
+
+    # Format contour labels
+    if var == "T":
+        fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
+    else:
+        fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
+    ax[idx].clabel(c, c.levels[::2], inline=True, fmt=fmt, fontsize=8)
+
+    #Add a horizontal line at 0 degrees latitude
+    plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
+
+    #Format the x-axis
+    ax[idx].set_xticks(np.arange(0,25,3),rotation=40)
+    ax[idx].set_xticklabels(ahh+ahh+["Jan"],rotation=40)
+
+    #Set title
+    local_title="$\mathbf{Test} - \mathbf{Baseline}$" #"Test - Baseline"#case_names[idx]
+    plt.title(local_title, fontsize=8)
+
+    #Check for start of new row
+    #if idx % 2 == 0:
+    #    row = idx // 2 + 1
+
+    #Add latitude label to first column of each row
+    #if idx==2*(row-1):
+    #   plt.ylabel('Latitude',fontsize=10)
+        
+    plt.ylabel('Latitude',fontsize=10)
+
+    #Format the y-axis
+    ax[idx].set_yticks(np.arange(slat,nlat+1,tick_inter))
+    ax[idx].set_yticklabels(y_labels,fontsize=10)
+
+       
+
+    axins = inset_axes(ax[idx],
+                                width="3%",
+                                height="80%",
+                                loc='center right',
+                                borderpad=-1.5
+                               )
+    cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,
+                                    #ticks=levs
+                                   )
+    cbar.add_lines(c)
+    cbar.ax.tick_params(axis='y', labelsize=8)
+    # Set the font size for the colorbar label
+    cbar.set_label(units, fontsize=10, labelpad=1)
+
+
+
+
 
     fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.99,horizontalalignment="center")
 

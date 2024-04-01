@@ -1247,6 +1247,7 @@ lat_vs_month:
     slat: -45
     nlat: 45
     levels: [190,221,2]
+    diff_levels: [-2,2.1,.2]
     cmap: 'RdBu_r'
     title: "Cold Point Tropopause (CPT)"
     tick_inter: 15
@@ -1254,11 +1255,13 @@ lat_vs_month:
     y_labels: ["45S","30S","15S","EQ","15N","30N","45N"]
     plot_vert_levs: [90]
     cmap: 'RdYlBu_r'
+    diff_cmap: "BrBG"
   
   Q: 
     slat: -90
     nlat: 90
     levels: [0.5,5.3,0.3]
+    diff_levels: [-2,2.1,.2]
     cmap: 'RdYlBu_r'
     title: "H$_{2}$O Mixing Ratio"
     y_labels: ["90S","60S","30S","EQ","30N","60N","90N"]
@@ -1266,6 +1269,7 @@ lat_vs_month:
     units: "ppmv"
     plot_vert_levs: [90,100]
     cmap: 'RdYlBu_r'
+    diff_cmap: "BrBG"
 
 # Comparison plots for SABER/MERRA2/SWOOSH
 comparison_plots:

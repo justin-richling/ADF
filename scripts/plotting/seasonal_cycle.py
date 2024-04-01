@@ -145,7 +145,14 @@ def seasonal_cycle(adfobj):
         #Get baeline case history location and add to hist loc list
         baseline_hist_locs = adfobj.get_baseline_info('cam_hist_loc')
         cam_hist_locs = cam_hist_locs + [baseline_hist_locs]
+    else:
+        syear_cases = syear_cases + [""]
+        eyear_cases = eyear_cases + [""]
     #End if
+
+    climo_yrs = [syear_cases, eyear_cases]
+    #climo_yrs["case"] = []
+    #climo_yrs["baseline"] = []
 
     # Notify user that script has started:
     print("\n  Generating zonal vertical seasonal cycle plots plots ...")
@@ -327,7 +334,7 @@ def seasonal_cycle(adfobj):
                 plot_name.unlink()
 
             #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
-            pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
+            pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, nicknames, climo_yrs, cases_coords, cases_monthly, vert_lev)
             adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
                                         plot_type="WACCM",
                                         ext="SeasonalCycle_Mean",
