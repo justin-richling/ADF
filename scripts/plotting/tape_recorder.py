@@ -141,7 +141,7 @@ def tape_recorder(adfobj):
             errmsg = f"No Q files for '{runs_LT2[key]}'\n"
             errmsg += "Please make sure Q is in the CAM output"
             print(errmsg)
-            pass
+            continue
 
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
