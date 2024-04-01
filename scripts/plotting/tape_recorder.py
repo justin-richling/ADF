@@ -138,7 +138,7 @@ def tape_recorder(adfobj):
         dat = _load_dataset(fils)
 
         if not dat:
-            errmsg = f"No Q files for '{key}'\n"
+            errmsg = f"No files for '{key}'\n"
             errmsg += "Please make sure Q is in the CAM output"
             print(errmsg)
             continue
@@ -152,7 +152,7 @@ def tape_recorder(adfobj):
 
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     if len(alldat) < 1:
-        print("No Q CAM files, so tape recorder plots will not be made. Moving on.")
+        print("No CAM cases for Q, so tape recorder plots will not be made. Moving on.")
         return
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
 
@@ -486,6 +486,7 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
 
     nlevs = (cmax - cmin)/ci + 1
     clevs = np.arange(cmin, cmax+ci, ci)
+    print("clevs",clevs)
 
     if (cmap == "blue2red"):
         mymap = blue2red_cmap(nlevs)
