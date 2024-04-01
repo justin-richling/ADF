@@ -3336,7 +3336,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
                                     levels=contour_levels, cmap='RdBu_r')
 
         c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
-                                    levels=contour_levels[::5], colors='k',alpha=0.5)
+                                    levels=contour_levels[::5], colors='k',alpha=0.5,linewidths=0.5)
         # add contour labels
         lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
         
@@ -3368,7 +3368,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             axes[main_key[idx]].set_xticklabels(np.arange(int(yrs[0]+int(nt_sub/12)),int(yrs[0]+int(nt_sub/12))+int(nt_sub/12)+1,1))
         """
         #print("nt_sub",nt_sub)
-        axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
+        #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
+        axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub),12),rotation=40)
         #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
         yr0 = int(yrs+int(start_idx/12))
         axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12)+1, 1), fontsize=8)
@@ -3397,7 +3398,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 
 
 
-def tem_plot(wks, case_nickname, base_nickname,
+"""def tem_plot(wks, case_nickname, base_nickname,
              case_climo_yrs, baseline_climo_yrs,
              mdlfld, obsfld, diffld, obs=False, **kwargs):
 
@@ -3443,6 +3444,6 @@ def tem_plot(wks, case_nickname, base_nickname,
         #ax[i].clabel(cs[i], cs[i].levels, inline=True, fontsize=tiFontSize-2, fmt='%1.1f')
         #ax[i].text( 10, -140, "CONTOUR FROM {} to {} by {}".format(min(cs[i].levels), max(cs[i].levels), cs[i].levels[1]-cs[i].levels[0]),
         #bbox=dict(facecolor='none', edgecolor='black'), fontsize=tiFontSize-2)
-
+"""
 #####################
 #END HELPER FUNCTIONS
