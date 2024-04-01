@@ -2908,9 +2908,9 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
         ds = case_runs[case_name]
         ds_month = cases_monthly[case_name]
 
-        if idx == len(case_names)-1:
-            levs = diff_levs
-            cmap = "BrBG"
+        #if idx == len(case_names)-1:
+        #    levs = diff_levs
+        #    cmap = "BrBG"
 
         #Make 24 months so we can have Jan-Dec repeated twice
         case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
