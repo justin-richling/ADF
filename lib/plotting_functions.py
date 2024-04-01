@@ -2971,7 +2971,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
             fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
         else:
             fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
-        ax[idx].clabel(c, c.levels[::2], inline=True, fmt=fmt, fontsize=8)
+        ax[idx].clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
 
         #Add a horizontal line at 0 degrees latitude
         #plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
@@ -3044,19 +3044,8 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #----------------
 
     idx = 2
-
-    #ds = case_runs[case_name]
-    #ds_month = cases_monthly[case_name]
-
-    #cases_monthly["diff"] = cases_monthly[case_names[0]] - cases_monthly[case_names[1]]
-    #case_runs["diff"] = case_runs[case_names[0]] - case_runs[case_names[1]]
-
     diff_pcap = pcap_vals[case_names[0]] - pcap_vals[case_names[1]]
-    #ds_month = case_runs[case_names[0]] - case_runs[case_names[1]]
 
-    #if idx == len(case_names)-1:
-    levs = diff_levs
-    cmap = diff_cmap
     """
     #Make 24 months so we can have Jan-Dec repeated twice
     case_seas = np.zeros((25,len(ds['lev']),len(ds['lat'])))
@@ -3088,11 +3077,11 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
 
        
     cf=ax[idx].contourf(lat_grid, time_grid, (diff_pcap),
-                        levels=levs,
-                        cmap=cmap,#zorder=100
+                        levels=diff_levs,
+                        cmap=diff_cmap,#zorder=100
                       )
     c=ax[idx].contour(lat_grid, time_grid, (diff_pcap),
-                        levels=levs[::2],
+                        levels=diff_levs[::2],
                         colors='k',linewidths=0.5,alpha=0.5
                       )
         
@@ -3104,7 +3093,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
         fmt = {lev: '{:.0f}'.format(lev) for lev in c.levels}
     else:
         fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
-    ax[idx].clabel(c, c.levels[::2], inline=True, fmt=fmt, fontsize=8)
+    ax[idx].clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
 
     #Add a horizontal line at 0 degrees latitude
     #plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
