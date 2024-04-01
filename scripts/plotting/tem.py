@@ -507,7 +507,12 @@ def tem(adf):
                 plt.suptitle(f'{longname}: {s}', fontsize=20, y=.97)
 
                 test_yrs = f"{start_year}-{end_year}"
-                ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
+                #ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
+
+                
+                plot_title = "$\mathbf{Baseline}:$"+f"{case_nicknames[1]}\nyears: {test_yrs}"
+                ax[0].set_title(plot_title, loc='left', fontsize=10)
+                #ax[idx].set_title(plot_title, loc='left', fontsize=10)
 
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem

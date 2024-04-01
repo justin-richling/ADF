@@ -2640,11 +2640,14 @@ def comparison_plots(plot_name, cam_var, case_names, case_ds_dict, obs_ds_dict, 
                 cbar.set_label(units, fontsize=10, labelpad=1)
 
     #Set up main plot title
+    """
     if time_avg == "month":
         str_interval = interval.lower().capitalize()
     else:
         str_interval = interval
     fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=12,y=0.91)
+    """
+    plt.suptitle(f"Zonal Mean {cam_var} - {interval}",fontsize=12,y=0.91)
     
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
@@ -3143,7 +3146,9 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
 
 
 
-    fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.94,horizontalalignment="center")
+    #fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.94,horizontalalignment="center")
+    plt.suptitle(f"{title} - {vert_lev}hPa",fontsize=20,y=0.97)
+    #plt.suptitle(f'{longname}: {s}', fontsize=20, y=.97)
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
