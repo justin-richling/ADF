@@ -3393,7 +3393,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         alright = np.arange(yr0, yr0+int(nt_sub/12), 1)
         if alright[-1] < yr0+10:
             print()
-            axes[main_key[idx]].set_xticklabels(np.arange(yr0, need_yrs, 1), fontsize=8)
+            axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+10, 1), fontsize=8)
         if alright[-1] == yr0+10:
             axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12), 1), fontsize=8)
         #axes[main_key[merra_plot]].tick_params(axis='y', labelsize=10)
