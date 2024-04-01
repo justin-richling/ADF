@@ -2973,7 +2973,8 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
         ax[idx].clabel(c, c.levels[::2], inline=True, fmt=fmt, fontsize=8)
 
         #Add a horizontal line at 0 degrees latitude
-        plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
+        #plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
+        ax[idx].axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
 
         #Format the x-axis
         ax[idx].set_xticks(np.arange(0,25,3),rotation=40)
@@ -2999,7 +3000,8 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
         #if idx==2*(row-1):
         #   plt.ylabel('Latitude',fontsize=10)
         
-        plt.ylabel('Latitude',fontsize=10)
+        #plt.ylabel('Latitude',fontsize=10)
+        ax[idx].set_ylabel('Latitude',fontsize=10)
 
         #Format the y-axis
         ax[idx].set_yticks(np.arange(slat,nlat+1,tick_inter))
@@ -3104,7 +3106,8 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     ax[idx].clabel(c, c.levels[::2], inline=True, fmt=fmt, fontsize=8)
 
     #Add a horizontal line at 0 degrees latitude
-    plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
+    #plt.axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
+    ax[idx].axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
 
     #Format the x-axis
     ax[idx].set_xticks(np.arange(0,25,3),rotation=40)
@@ -3112,7 +3115,8 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
 
     #Set title
     local_title="$\mathbf{Test} - \mathbf{Baseline}$" #"Test - Baseline"#case_names[idx]
-    plt.title(local_title, fontsize=8)
+    #plt.title(local_title, fontsize=8)
+    ax[idx].set_title(local_title, fontsize=8)
 
     #Check for start of new row
     #if idx % 2 == 0:
@@ -3122,7 +3126,8 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #if idx==2*(row-1):
     #   plt.ylabel('Latitude',fontsize=10)
         
-    plt.ylabel('Latitude',fontsize=10)
+    #plt.ylabel('Latitude',fontsize=10)
+    ax[idx].set_ylabel('Latitude',fontsize=10)
 
     #Format the y-axis
     ax[idx].set_yticks(np.arange(slat,nlat+1,tick_inter))
