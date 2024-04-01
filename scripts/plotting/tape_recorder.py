@@ -151,6 +151,9 @@ def tape_recorder(adfobj):
         runname_LT.append(key)
 
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
+    if len(alldat) < 1:
+        print("No files")
+        return
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
 
     # Total number of plots
