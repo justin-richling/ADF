@@ -3338,10 +3338,10 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         end_idx = start_idx+nt+1
         #print("AHH",start_idx+(12*9)+1,"\n")
         print("end_idx",end_idx,"\n\n")
-        cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
+        cf = axes[main_key[idx]].contourf(lev_grid[start_idx:end_idx-1,:], time_grid[start_idx:end_idx-1,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels, cmap='RdBu_r')
 
-        c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx,:], time_grid[start_idx:end_idx,:], plotdata[start_idx:end_idx,:],
+        c = axes[main_key[idx]].contour(lev_grid[start_idx:end_idx-1,:], time_grid[start_idx:end_idx-1,:], plotdata[start_idx:end_idx,:],
                                     levels=contour_levels[::5], colors='k',alpha=0.5,linewidths=0.5)
         # add contour labels
         lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
