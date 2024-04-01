@@ -152,7 +152,7 @@ def tape_recorder(adfobj):
 
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     if len(alldat) < 1:
-        print("No files")
+        print("No Q CAM files, so tape recorder plots will not be made. Moving on.")
         return
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
 
