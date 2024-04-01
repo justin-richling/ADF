@@ -476,8 +476,9 @@ def tem(adf):
                 else:
                     img2 = ax[2].contourf(lats, levs, dseasons, cmap="BrBG", levels=levs_diff,
                                             norm=cp_info['normdiff'])
-                    ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
+                    c2 = ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
                                     levels=levs_diff[::2], norm=cp_info['normdiff'])
+                    plt.clabel(c2, inline=True, fontsize=8, levels=c2.levels)
                     plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
 
                 #Format y-axis
