@@ -3370,6 +3370,9 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         else:
             axes[main_key[idx]].set_xticklabels(np.arange(int(yrs[0]+int(nt_sub/12)),int(yrs[0]+int(nt_sub/12))+int(nt_sub/12)+1,1))
         """
+        # Set the x-axis limits
+        axes[main_key[idx]].set_xlim(0, 12)  # Set the limits from 0 to 10
+        axes[main_key[idx]].set_xticks(range(0, 13, 1))
         #print("nt_sub",nt_sub)
         #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
         axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub),12),rotation=40)
