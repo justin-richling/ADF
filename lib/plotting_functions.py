@@ -2895,7 +2895,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     fig = plt.figure(figsize=(18,10))
 
     # LAYOUT WITH GRIDSPEC
-    gs = mpl.gridspec.GridSpec(4, 8, wspace=1.95,hspace=0.5)
+    gs = mpl.gridspec.GridSpec(4, 8, wspace=2.95,hspace=0.5)
     ax1 = plt.subplot(gs[0:2, :4])#, **cp_info['subplots_opt'])
     ax2 = plt.subplot(gs[0:2, 4:])#, **cp_info['subplots_opt'])
     ax3 = plt.subplot(gs[2:, 2:6])#, **cp_info['subplots_opt'])
