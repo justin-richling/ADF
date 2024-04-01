@@ -504,7 +504,7 @@ def tem(adf):
                 #plt.text(0.5, 0.915, f"{longname}\n", fontsize=12, ha='center',
                 #            transform=fig.transFigure)
 
-                plt.suptitle(f'{longname}: {s}', fontsize=20, y=.95)
+                plt.suptitle(f'{longname}: {s}\n', fontsize=20, y=.95)
 
                 test_yrs = f"{start_year}-{end_year}"
                 ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
