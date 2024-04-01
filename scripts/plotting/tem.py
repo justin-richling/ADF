@@ -497,12 +497,14 @@ def tem(adf):
 
                 #Set titles of subplots
                 #Set figure title
-                plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.98)
+                #plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.98)
 
                 #Variable plot title name
                 longname = vres["long_name"]
-                plt.text(0.5, 0.915, f"{longname}\n", fontsize=12, ha='center',
-                            transform=fig.transFigure)
+                #plt.text(0.5, 0.915, f"{longname}\n", fontsize=12, ha='center',
+                #            transform=fig.transFigure)
+
+                plt.suptitle(f'{longname}: {s}', fontsize=20, y=.95)
 
                 test_yrs = f"{start_year}-{end_year}"
                 ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
