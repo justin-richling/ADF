@@ -2890,7 +2890,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #fig = plt.figure(figsize=(2*8,nrows*5))
 
     # create figure:
-    fig = plt.figure(figsize=(14,10))
+    fig = plt.figure(figsize=(14,12))
 
     # LAYOUT WITH GRIDSPEC
     gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5, hspace=0.0)
