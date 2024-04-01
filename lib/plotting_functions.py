@@ -2888,16 +2888,17 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     nrows = int(np.ceil(nplots/ncols))
 
     #fig = plt.figure(figsize=(2*8,nrows*5))
+    #Gather contour plot options
+    #cp_info = prep_contour_plot(mseasons, oseasons, dseasons, **vres)
 
     # create figure:
-    fig = plt.figure(figsize=(14,12))
+    fig = plt.figure(figsize=(14,10))
 
     # LAYOUT WITH GRIDSPEC
-    gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5, hspace=0.0)
-    gs.tight_layout(fig)
-    ax1 = plt.subplot(gs[0:2, :3])
-    ax2 = plt.subplot(gs[0:2, 3:])
-    ax3 = plt.subplot(gs[2, 1:5])
+    gs = mpl.gridspec.GridSpec(4, 8, wspace=0.75,hspace=0.5)
+    ax1 = plt.subplot(gs[0:2, :4])#, **cp_info['subplots_opt'])
+    ax2 = plt.subplot(gs[0:2, 4:])#, **cp_info['subplots_opt'])
+    ax3 = plt.subplot(gs[2:, 2:6])#, **cp_info['subplots_opt'])
     ax = [ax1,ax2,ax3]
 
     #
