@@ -138,7 +138,7 @@ def tape_recorder(adfobj):
         dat = _load_dataset(fils)
 
         if not dat:
-            errmsg = f"No Q files for '{runs_LT2[key]}'\n"
+            errmsg = f"No Q files for '{key}'\n"
             errmsg += "Please make sure Q is in the CAM output"
             print(errmsg)
             continue
