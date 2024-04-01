@@ -2892,7 +2892,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #cp_info = prep_contour_plot(mseasons, oseasons, dseasons, **vres)
 
     # create figure:
-    fig = plt.figure(figsize=(18,10))
+    fig = plt.figure(figsize=(14,10))
 
     # LAYOUT WITH GRIDSPEC
     gs = mpl.gridspec.GridSpec(4, 8, wspace=4,hspace=0.5)
@@ -3154,7 +3154,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
 
 
 
-    fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.99,horizontalalignment="center")
+    fig.suptitle(f"{title} - {vert_lev}hPa",fontsize=16,y=0.94,horizontalalignment="center")
 
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
