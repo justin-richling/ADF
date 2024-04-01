@@ -370,7 +370,7 @@ def seasonal_cycle(adfobj):
             if plot_name.is_file():
                 plot_name.unlink()
 
-            pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, cases_coords, cases_monthly, vert_lev)
+            pf.month_vs_lat_plot(var, var_dict, plot_name, case_names, nicknames, climo_yrs, cases_coords, cases_monthly, vert_lev)
             adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
                                         plot_type="WACCM",
                                         ext="SeasonalCycle_Mean",
