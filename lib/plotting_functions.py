@@ -3028,7 +3028,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
                                 width="3%",
                                 height="80%",
                                 loc='center right',
-                                borderpad=-1.5
+                                borderpad=-2
                                )
         cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label=units,
                                     #ticks=levs
