@@ -1247,7 +1247,7 @@ lat_vs_month:
     slat: -45
     nlat: 45
     levels: [190,221,2]
-    diff_levels: [-20,21,2]
+    diff_levels: [-5,5.1,0.5]
     cmap: 'RdBu_r'
     title: "Cold Point Tropopause (CPT) Temps"
     tick_inter: 15
