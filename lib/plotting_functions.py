@@ -3255,13 +3255,15 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     #Plot MERRA2 last; this will be based on number of CAM cases
     merra_idx = len(case_names)
 
-    nt = 108
+    #nt = 108
+    nt = 120
     plotdata = coslat_average(merra2['U'],-10,10)
 
     plotdata_clip = np.clip(np.abs(plotdata), None, 35)
     plotdata=np.sign(plotdata)*plotdata_clip
     [time_grid, lev_grid] = np.meshgrid(merra2['lev'],np.arange(1,nt+1,1))
-    start_ind=252-12
+    #start_ind=252-12
+    start_ind=240
     end_ind=start_ind+nt
 
     data = plotdata[start_ind:end_ind,:]
