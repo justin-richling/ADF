@@ -3310,6 +3310,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         case_data = case_runs[case_name]
         nickname = nicknames[idx]
         yrs = syear_cases[idx]
+        last_yr = eyear_cases[idx]
         
         #Get number of time steps
         nt = len(case_data['time'])
@@ -3374,18 +3375,23 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             axes[main_key[idx]].set_xticklabels(np.arange(int(yrs[0]+int(nt_sub/12)),int(yrs[0]+int(nt_sub/12))+int(nt_sub/12)+1,1))
         """
         # Set the x-axis limits
-        axes[main_key[idx]].set_xlim(0, 12)  # Set the limits from 0 to 10
-        axes[main_key[idx]].set_xticks(range(0, 13, 1))
+        axes[main_key[idx]].set_xlim(0, 11)  # Set the limits from 0 to 11
+        axes[main_key[idx]].set_xticks(range(0, 12, 1))
         #print("nt_sub",nt_sub)
         #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
         #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub),12),rotation=40)
         #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
         yr0 = int(yrs+int(start_idx/12))
+        print("YEEHAW",yr0+10)
         #axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12)+1, 1), fontsize=8)
         print("\nWOWSA",np.arange(yr0, yr0+int(nt_sub/12), 1))
+        print("RANGE",(yr0+10)-last_yr)
         alright = np.arange(yr0, yr0+int(nt_sub/12), 1)
-        #if alright != 
-        axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12), 1), fontsize=8)
+        if alright[-1] < yr0+10:
+            print()
+            axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12), 1), fontsize=8)
+        if alright[-1] == yr0+10:
+            axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12), 1), fontsize=8)
         #axes[main_key[merra_plot]].tick_params(axis='y', labelsize=10)
 
         #Case QBO Amplitude side axis
