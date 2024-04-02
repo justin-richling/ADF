@@ -214,8 +214,8 @@ def seasonal_cycle(adfobj):
 
 
     #Get Obs and seasonal and monthly averages
-    saber, saber_monthly, saber_seasonal = saber_data(saber_file, saber_vars)
-    merra2, merra2_monthly, merra2_seasonal = merra_data(merra_file, merra2_vars)
+    saber, saber_monthly, saber_seasonal = saber_data(adfobj, saber_file, saber_vars)
+    merra2, merra2_monthly, merra2_seasonal = merra_data(adfobj, merra_file, merra2_vars)
     #swoosh, swoosh_monthly, swoosh_seasonal = swoosh_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
 
     obs_seas_dict = {"saber":saber_seasonal, "merra":merra2_seasonal}
@@ -412,6 +412,39 @@ def seasonal_cycle(adfobj):
 
 # Helper functions
 ##################
+
+def check_obs_file(adfobj, filepath):
+    """
+    Check whether provided obs file is in ADF defaults or a user supplied location
+
+    Usually the ADF takes care of this, but only for variables in the variable defaults yaml file.
+        - This is different since the object being called form variable defaults yaml file is plot related
+          not variable related, we need a check.
+
+      * If only file name is provided, we assume the file exists in the ADF default obs location
+      * If a full path and filename are provided, then the we assume it is a user supplied obs location
+
+    returns: full file path and name
+    """
+    
+    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
+    obs_filepath = adf_obs_loc / filepath.parts[-1]
+
+    #Check the file path structure
+    if str(filepath.parent) == ".":
+        print(f"Ah, must be ADF default obs file: '{obs_filepath}'")
+        if obs_filepath:
+            return obs_filepath
+        else:
+            print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
+            print("Or supply your own path to this file!")
+            print("Exiting...")
+    else:
+        print(f"Ok, your are providing your own obs file: '{filepath}'")
+        return filepath
+
+
+
 def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
     """
     Make zonal mean files from history monthly files
@@ -469,7 +502,7 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         return waccm_zm
 ########
 
-def saber_data(filename, saber_vars):
+def saber_data(adfobj, filename, saber_vars):
     """
 
     """
@@ -477,6 +510,22 @@ def saber_data(filename, saber_vars):
     saber_seasonal = {}
     saber_monthly = {}
     #saber_vars = ['u','temp','lat','lev']
+
+    # ERA5 data
+    #era5_file = res['tape_recorder']['era5']['obs_file']
+    filename = check_obs_file(adfobj, Path(filename))
+
+    """
+    if not era5_file:
+        no_era5 = False
+        era5 = pf.load_dataset(era5_file)
+        #era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
+        era5 = era5.groupby('time.month').mean('time')
+    else:
+        no_era5 = True
+        print("Incorrect ERA5 file/path provided, so ERA5 won't be plotted")
+        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.")
+    """
 
     saber_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
     saber_ncfile = saber_ncfile.rename({"latitude":"lat"})
@@ -519,7 +568,7 @@ def saber_data(filename, saber_vars):
     return saber, saber_monthly, saber_seasonal
 ########
 
-def merra_data(filename, merra2_vars):
+def merra_data(adfobj, filename, merra2_vars):
     """
     """
 
@@ -527,6 +576,8 @@ def merra_data(filename, merra2_vars):
     merra2_seasonal = {}
     merra2_monthly = {}
     merra2_vars = ['U','T','V','lat','lev']
+
+    filename = check_obs_file(adfobj, Path(filename))
 
     merra_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
     merra_ncfile = merra_ncfile.sel(time=merra_ncfile.time.values[0])
