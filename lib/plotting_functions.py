@@ -3,6 +3,8 @@ Generic computation and plotting helper functions
 
 Functions
 ---------
+load_dataset()
+    generalized load dataset method used for plotting/analysis functions
 use_this_norm()
     switches matplotlib color normalization method
 get_difference_colors(values)
