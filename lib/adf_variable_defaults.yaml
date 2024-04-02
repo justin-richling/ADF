@@ -1215,6 +1215,19 @@ utendwtem:
 #                "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
 
 
+
+
+# Plot Specific formatting
+##########################
+#NOTE: If using any obs file that is in the ADF default directory, provide just the file name
+#      ex: MERRA2_met.nc -> is an ADF default obs file
+#
+#      If providing your own path for obs file (not using ADF defaults), provide the full path and file name
+#      ex: /glade/work/richling/ADF/different_MERRA2.nc
+
+# WACCM seasonal cycle plots
+#---------------------------
+
 waccm_seasonal_cycle:
   calc_var_list: ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
   #calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
@@ -1222,9 +1235,12 @@ waccm_seasonal_cycle:
 
   merra2_vars: ['U','T','V','lat','lev']
   saber_vars: ['u','temp','lat','lev']
-  merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
-  saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
-  #swoosh_filename: 
+  #merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
+  #saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
+  
+  merra2_file: "MERRA2_met.nc"
+  saber_file: "SABER_monthly_2002-2014.nc"
+  #swoosh_file: 
 
   obs_cam_vars:
     saber:
@@ -1236,11 +1252,6 @@ waccm_seasonal_cycle:
     swoosh:
       O3: "O3"
 
-# Plot Specific formatting
-##########################
-
-# WACCM seasonal cycle plots
-#---------------------------
 # Latitude vs Month
 lat_vs_month:
   T: 
@@ -1293,6 +1304,18 @@ pcap_plots:
     levs: [140, 300, 10]
     diff_levs: [-40, 41, 4]
     units: "K"
+
+# Tape Recorder plot
+#-------------------
+#mls_dat_loc: "/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc"
+#era5_data_loc: "/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc"
+tape_recorder:
+  mls:
+    obs_file: "mls_h2o_latNpressNtime_3d_monthly_v5_FAKESIES.nc"
+    #obs_file: "mls_h2o_latNpressNtime_3d_monthly_v5.nc"
+
+  era5:
+    obs_file: "ERA5_Q_10Sto10N_1980to2020.nc"
 
 #-----------
 #End of File

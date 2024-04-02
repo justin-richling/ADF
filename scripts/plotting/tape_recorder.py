@@ -78,6 +78,9 @@ def tape_recorder(adfobj):
         end_years = end_years+[data_end_year]
     #End if
 
+    res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
+    # or an empty dictionary if use_defaults was not specified in the config YAML file.
+
     # Default colormap
     cmap='precip_nowhite'
 
@@ -114,18 +117,38 @@ def tape_recorder(adfobj):
         runs_LT2[val] = case_ts_locs[i]
 
     # MLS data
-    mls = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc")
-    mls = mls.rename(x='lat', y='lev', t='time')
-    time = pd.date_range("2004-09","2021-11",freq='M')
-    mls['time'] = time
-    mls = pf.coslat_average(mls.H2O,-10,10)
-    mls = mls.groupby('time.month').mean('time')
-    # Convert mixing ratio values from ppmv to kg/kg
-    mls = mls*18.015280/(1e6*28.964)
+    mls_file = res['tape_recorder']['mls']['obs_file']
+    mls_file = check_obs_file(adfobj, mls_file)
+    
+    if not mls_file:
+        no_mls = False
+        mls = pf.load_dataset(mls_file)
+        #mls = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc")
+        mls = mls.rename(x='lat', y='lev', t='time')
+        time = pd.date_range("2004-09","2021-11",freq='M')
+        mls['time'] = time
+        mls = pf.coslat_average(mls.H2O,-10,10)
+        mls = mls.groupby('time.month').mean('time')
+        # Convert mixing ratio values from ppmv to kg/kg
+        mls = mls*18.015280/(1e6*28.964)
+    else:
+        no_mls = True
+        print("Incorrect MLS file/path provided, so MLS won't be plotted")
+        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.")
 
     # ERA5 data
-    era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
-    era5 = era5.groupby('time.month').mean('time')
+    era5_file = res['tape_recorder']['era5']['obs_file']
+    era5_file = check_obs_file(adfobj, era5_file)
+
+    if not era5_file:
+        no_era5 = False
+        era5 = pf.load_dataset(era5_file)
+        #era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
+        era5 = era5.groupby('time.month').mean('time')
+    else:
+        no_era5 = True
+        print("Incorrect ERA5 file/path provided, so ERA5 won't be plotted")
+        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.")
 
     alldat=[]
     runname_LT=[]
@@ -149,18 +172,21 @@ def tape_recorder(adfobj):
 
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     
-    #Check if any cases were made, if none, kill this script and have ADF continue on
+    #Check if any CAM cases were made, if none, kill this script and have ADF continue on
     if len(alldat) < 1:
         print("No CAM cases for Q, so tape recorder plots will not be made. Moving on.")
         return
+
+    #Combine all case data arrays
     alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
 
-    # Total number of plots
+    #Total number of plots
     case_num = alldat_concat_LT.run.size+2
 
-    # Calculate the number of rows needed
+    #Calculate the number of rows needed
     rows = (case_num + 5 - 1) // 5
 
+    #Setup plots
     fig = plt.figure(figsize=(25,rows*16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
@@ -168,13 +194,15 @@ def tape_recorder(adfobj):
     plot_min = 1.5e-6
     plot_max = 3e-6
 
-    ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
-                      x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
-                      taxis='month',climo_yrs="2004-2021")
+    if not no_mls:
+        ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+                        x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
+                        taxis='month',climo_yrs="2004-2021")
 
-    ax = plot_pre_mon(fig, era5.Q, plot_step,plot_min,plot_max,
-                      'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
-                      taxis='month',climo_yrs="1980-2020")
+    if not no_era5:
+        ax = plot_pre_mon(fig, era5.Q, plot_step,plot_min,plot_max,
+                        'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
+                        taxis='month',climo_yrs="1980-2020")
 
     #Start count at 2 to account for MLS and ERA5 plots above
     count=2
@@ -204,7 +232,7 @@ def tape_recorder(adfobj):
     y1_loc = y1[count]-0.03
     y2_loc = y1[count]-0.02
 
-    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, 'Q (vmr)',
+    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, 'Q', #'Q (vmr)'
                       x1_loc, x2_loc, y1_loc, y2_loc,
                       cmap=cmap)
 
@@ -212,7 +240,8 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM", ext="SeasonalCycle_Mean",multi_case=True,category="Seasonal Cycle")
+    adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM",
+                            ext="SeasonalCycle_Mean", multi_case=True, category="Seasonal Cycle")
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
@@ -223,6 +252,38 @@ def tape_recorder(adfobj):
 
 # Helper Functions
 ###################
+
+def check_obs_file(adfobj, filepath):
+    """
+    Check whether provided obs file is in ADF defaults or a user supplied location
+
+    Usually the ADF takes care of this, but only for variables in the variable defaults yaml file.
+        - This is different since the object being called form variable defaults yaml file is plot related
+          not variable related, we need a check.
+
+      * If only file name is provided, we assume the file exists in the ADF default obs location
+      * If a full path and filename are provided, then the we assume it is a user supplied obs location
+
+    returns: full file path and name
+    """
+    
+    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
+    obs_filepath = adf_obs_loc / filepath.parts[-1]
+
+    #Check the file path structure
+    if str(filepath.parent) == ".":
+        print(f"Ah, must be ADF default obs file: '{obs_filepath}'")
+        if obs_filepath:
+            return obs_filepath
+        else:
+            print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
+            print("Or supply your own path to this file!")
+            print("Exiting...")
+    else:
+        print(f"Ok, your are providing your own obs file: '{filepath}'")
+        return filepath
+
+#########
 
 def blue2red_cmap(n, nowhite = False):
     """
