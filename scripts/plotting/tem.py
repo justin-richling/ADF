@@ -278,11 +278,14 @@ def tem(adf):
                     #Add already-existing plot to website (if enabled):
                     adf.debug_log(f"'{plot_name}' exists and clobber is false.")
                     adf.add_website_data(plot_name, var, None, season=s, plot_type="WACCM",ext="SeasonalCycle_Mean",category="TEM",multi_case=True)
-
-                #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+                    
+                    #Continue to next iteration:
+                    continue
                 elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
                     if plot_name.is_file():
                         plot_name.unlink()
+                    #End if
+                #End if
 
                 #Grab variable defaults for this variable
                 vres = res[var]
