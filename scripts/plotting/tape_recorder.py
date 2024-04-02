@@ -118,7 +118,7 @@ def tape_recorder(adfobj):
 
     # MLS data
     mls_file = res['tape_recorder']['mls']['obs_file']
-    mls_file = check_obs_file(adfobj, Path(mls_file))
+    mls_file = pf.check_obs_file(adfobj, Path(mls_file))
 
     if mls_file:
         no_mls = False
@@ -138,7 +138,7 @@ def tape_recorder(adfobj):
 
     # ERA5 data
     era5_file = res['tape_recorder']['era5']['obs_file']
-    era5_file = check_obs_file(adfobj, Path(era5_file))
+    era5_file = pf.check_obs_file(adfobj, Path(era5_file))
 
     if era5_file:
         no_era5 = False
@@ -250,7 +250,7 @@ def tape_recorder(adfobj):
 # Helper Functions
 ###################
 
-def check_obs_file(adfobj, filepath):
+'''def check_obs_file(adfobj, filepath):
     """
     Check whether provided obs file is in ADF defaults or a user supplied location
 
@@ -279,7 +279,7 @@ def check_obs_file(adfobj, filepath):
             return
     else:
         print(f"Ok, your are providing your own obs file: '{filepath}'")
-        return filepath
+        return filepath'''
 
 #########
 

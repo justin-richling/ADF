@@ -99,6 +99,7 @@ from cartopy.util import add_cyclic_point
 import geocat.comp as gcomp
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.lines import Line2D
+from pathlib import Path
 
 from adf_diag import AdfDiag
 from adf_base import AdfError
@@ -171,6 +172,38 @@ def use_this_norm():
             return mpl.colors.DivergingNorm, mplversion[0]
         else:
             return mpl.colors.TwoSlopeNorm, mplversion[0]
+
+
+def check_obs_file(adfobj, filepath):
+    """
+    Check whether provided obs file is in ADF defaults or a user supplied location
+
+    Usually the ADF takes care of this, but only for variables in the variable defaults yaml file.
+        - This is different since the object being called form variable defaults yaml file is plot related
+          not variable related, we need a check.
+
+      * If only file name is provided, we assume the file exists in the ADF default obs location
+      * If a full path and filename are provided, then the we assume it is a user supplied obs location
+
+    returns: full file path and name
+    """
+    
+    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
+    obs_filepath = adf_obs_loc / filepath.parts[-1]
+
+    #Check the file path structure
+    if str(filepath.parent) == ".":
+        print(f"Ah, must be ADF default obs file: '{obs_filepath}'")
+        if obs_filepath.exists():
+            return obs_filepath
+        else:
+            print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
+            print("Or supply your own path to this file!")
+            print("Exiting...")
+            return
+    else:
+        print(f"Ok, your are providing your own obs file: '{filepath}'")
+        return filepath
 
 
 def get_difference_colors(values):
