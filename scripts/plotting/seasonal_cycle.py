@@ -221,7 +221,8 @@ def seasonal_cycle(adfobj):
         #print("Results:", result1, result2, result3)
     else:
         # Exception occurred
-        print("Function call failed, returned None.")
+        print("Function call failed, returned None. ADF will skip seaosnal cycle plots")
+        return
 
 
     result = merra_data(adfobj, saber_file, saber_vars)
@@ -231,7 +232,8 @@ def seasonal_cycle(adfobj):
         #print("Results:", result1, result2, result3)
     else:
         # Exception occurred
-        print("Function call failed, returned None.")
+        print("Function call failed, returned None. ADF will skip seaosnal cycle plots")
+        return
 
 
     #saber, saber_monthly, saber_seasonal = saber_data(adfobj, saber_file, saber_vars)
