@@ -460,7 +460,7 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     save_path = adfobj.plot_location[0]
-    print("'save path'",save_path,"\n")
+
     #Convert output location string to a Path object:
     output_location = Path(save_path)
     #Check if analysis directory exists, and if not, then create it:
@@ -545,9 +545,8 @@ def saber_data(adfobj, filename, saber_vars):
         return saber, saber_monthly, saber_seasonal
     except Exception as e:
         # Handle the exception and return None
-        print({e})
         #Validate the obs file/location exist
-        #if not filename:
+
         errmsg = "Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted."
         errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
         errmsg += "ADF will move on to next script."
@@ -607,9 +606,8 @@ def merra_data(adfobj, filename, merra2_vars):
         return merra2, merra2_monthly, merra2_seasonal
     except Exception as e:
         # Handle the exception and return None
-        print({e})
+
         #Validate the obs file/location exist
-        #if not filename:
         errmsg = "Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted."
         errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
         errmsg += "ADF will move on to next script."
