@@ -119,6 +119,7 @@ def tape_recorder(adfobj):
     # MLS data
     mls_file = res['tape_recorder']['mls']['obs_file']
     mls_file = check_obs_file(adfobj, Path(mls_file))
+    print("\n",mls_file,"\n")
 
     if mls_file:
         no_mls = False
