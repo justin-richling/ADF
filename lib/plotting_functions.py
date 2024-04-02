@@ -91,6 +91,7 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 import matplotlib as mpl
+import matplotlib.cm as cm
 import cartopy.crs as ccrs
 #nice formatting for tick labels
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
