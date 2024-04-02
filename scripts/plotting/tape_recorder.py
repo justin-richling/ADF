@@ -120,7 +120,7 @@ def tape_recorder(adfobj):
     mls_file = res['tape_recorder']['mls']['obs_file']
     mls_file = check_obs_file(adfobj, Path(mls_file))
 
-    if not mls_file.exists():
+    if not mls_file:
         no_mls = False
         mls = pf.load_dataset(mls_file)
         #mls = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc")
@@ -140,7 +140,7 @@ def tape_recorder(adfobj):
     era5_file = res['tape_recorder']['era5']['obs_file']
     era5_file = check_obs_file(adfobj, Path(era5_file))
 
-    if not era5_file.exists():
+    if not era5_file:
         no_era5 = False
         era5 = pf.load_dataset(era5_file)
         #era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
@@ -279,7 +279,7 @@ def check_obs_file(adfobj, filepath):
             print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
             print("Or supply your own path to this file!")
             print("Exiting...")
-            return
+            return []
     else:
         print(f"Ok, your are providing your own obs file: '{filepath}'")
         return filepath
