@@ -86,13 +86,11 @@ _meridional_plot_preslon
 """
 
 #import statements:
-from signal import SIG_DFL
 from typing import Optional
 import numpy as np
 import xarray as xr
 import pandas as pd
 import matplotlib as mpl
-import matplotlib.cm as cm
 import cartopy.crs as ccrs
 #nice formatting for tick labels
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
@@ -103,6 +101,14 @@ from matplotlib.lines import Line2D
 
 from adf_diag import AdfDiag
 from adf_base import AdfError
+
+import warnings  # use to warn user about missing files.
+
+#Format warning messages:
+def my_formatwarning(msg, *args, **kwargs):
+    """Issue `msg` as warning."""
+    return str(msg) + '\n'
+warnings.formatwarning = my_formatwarning
 
 #Set non-X-window backend for matplotlib:
 mpl.use('Agg')
@@ -121,7 +127,6 @@ seasons = {"ANN": np.arange(1,13,1),
             "MAM": [3, 4, 5],
             "SON": [9, 10, 11]
             }
-
 
 #################
 #HELPER FUNCTIONS
