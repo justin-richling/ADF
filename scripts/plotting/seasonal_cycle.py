@@ -214,26 +214,25 @@ def seasonal_cycle(adfobj):
 
 
     #Get Obs and seasonal and monthly averages
+    # SABER
     result = saber_data(adfobj, saber_file, saber_vars)
     if result is not None:
         # Function call was successful
         saber, saber_monthly, saber_seasonal = result
-        #print("Results:", result1, result2, result3)
     else:
         # Exception occurred
-        print("Function call failed, returned None. ADF will skip seaosnal cycle plots")
         return
+    #End if
 
-
-    result = merra_data(adfobj, saber_file, saber_vars)
+    # MERRA2
+    result = merra_data(adfobj, merra_file, merra2_vars)
     if result is not None:
         # Function call was successful
         merra2, merra2_monthly, merra2_seasonal = result
-        #print("Results:", result1, result2, result3)
     else:
         # Exception occurred
-        print("Function call failed, returned None. ADF will skip seaosnal cycle plots")
         return
+    #End if
 
 
     #saber, saber_monthly, saber_seasonal = saber_data(adfobj, saber_file, saber_vars)
@@ -549,8 +548,10 @@ def saber_data(adfobj, filename, saber_vars):
         print({e})
         #Validate the obs file/location exist
         #if not filename:
-        print("Incorrect SABER file/path provided, so seasonal cycles won't be plotted")
-        print("Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file.")
+        errmsg = "Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted."
+        errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
+        errmsg += "ADF will move on to next script."
+        print(errmsg)
         #    return
         return None
 ########
@@ -609,8 +610,10 @@ def merra_data(adfobj, filename, merra2_vars):
         print({e})
         #Validate the obs file/location exist
         #if not filename:
-        print("Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted")
-        print("Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file.")
+        errmsg = "Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted."
+        errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
+        errmsg += "ADF will move on to next script."
+        print(errmsg)
         #    return
         return None
 ########
