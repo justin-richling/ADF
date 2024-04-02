@@ -130,13 +130,10 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        #dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0.Q.*.nc')[0])
-        file_loc = Path(runs_LT2[key])
+        fils= sorted(Path(runs_LT2[key]).glob('*h0.Q.*.nc'))
+        dat = pf.load_dataset(fils)
 
-        # load re-gridded model files:
-        fils = sorted(file_loc.glob(f"*h0.Q.*.nc"))
-        dat = _load_dataset(fils)
-
+        #Check if data files exist, skip current case if not
         if not dat:
             errmsg = f"No files for '{key}'\n"
             errmsg += "Please make sure Q is in the CAM output"
@@ -151,6 +148,8 @@ def tape_recorder(adfobj):
         runname_LT.append(key)
 
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
+    
+    #Check if any cases were made, if none, kill this script and have ADF continue on
     if len(alldat) < 1:
         print("No CAM cases for Q, so tape recorder plots will not be made. Moving on.")
         return
@@ -536,25 +535,5 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     return ax
 
 #########
-
-def _load_dataset(fils):
-    import warnings  # use to warn user about missing files.
-
-    def my_formatwarning(msg, *args, **kwargs):
-        # ignore everything except the message
-        return str(msg) + '\n'
-
-    warnings.formatwarning = my_formatwarning
-
-    if len(fils) == 0:
-        warnings.warn(f"Input file list is empty.")
-        return None
-    elif len(fils) > 1:
-        return xr.open_mfdataset(fils, combine='by_coords')
-    else:
-        sfil = str(fils[0])
-        return xr.open_dataset(sfil)
-    #End if
-#End def
 
 ###############
