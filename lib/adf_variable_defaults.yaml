@@ -1227,7 +1227,6 @@ utendwtem:
 
 # WACCM seasonal cycle plots
 #---------------------------
-
 waccm_seasonal_cycle:
   calc_var_list: ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
   #calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
@@ -1307,8 +1306,6 @@ pcap_plots:
 
 # Tape Recorder plot
 #-------------------
-#mls_dat_loc: "/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc"
-#era5_data_loc: "/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc"
 tape_recorder:
   mls:
     obs_file: "mls_h2o_latNpressNtime_3d_monthly_v5_FAKESIES.nc"

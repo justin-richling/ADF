@@ -118,15 +118,11 @@ def seasonal_cycle(adfobj):
 
     calc_var_list = seas_cyc_res['calc_var_list']
 
-    #Grab location of ADF default obs files
-    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
-    #saber_filename = seas_cyc_res['saber_file']
-    saber_filename = "SABER_monthly_2002-2014.nc"
-    saber_file = adf_obs_loc / saber_filename
-    #merra_filename = seas_cyc_res['merra2_file']
-    merra_filename = "MERRA2_met_FAKESIES.nc"
-    merra_file = adf_obs_loc / merra_filename
+    merra_file = seas_cyc_res['merra2_file']
+    saber_file = seas_cyc_res['saber_file']
 
+
+    
 
     if not adfobj.get_basic_info("compare_obs"):
         obs = False
@@ -218,7 +214,7 @@ def seasonal_cycle(adfobj):
 
 
     #Get Obs and seasonal and monthly averages
-    """# SABER
+    # SABER
     result = saber_data(adfobj, saber_file, saber_vars)
     if result is not None:
         # Function call was successful
@@ -237,12 +233,10 @@ def seasonal_cycle(adfobj):
         # Exception occurred
         return
     #End if
-    """
 
-    
 
-    saber, saber_monthly, saber_seasonal = saber_data(saber_file, saber_vars)
-    merra2, merra2_monthly, merra2_seasonal = merra_data(merra_file, merra2_vars)
+    #saber, saber_monthly, saber_seasonal = saber_data(adfobj, saber_file, saber_vars)
+    #merra2, merra2_monthly, merra2_seasonal = merra_data(adfobj, merra_file, merra2_vars)
     #swoosh, swoosh_monthly, swoosh_seasonal = swoosh_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
 
     obs_seas_dict = {"saber":saber_seasonal, "merra":merra2_seasonal}
@@ -497,100 +491,128 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         return waccm_zm
 ########
 
-def saber_data(filename, saber_vars):
+def saber_data(adfobj, filename, saber_vars):
     """
 
     """
     saber = {}
     saber_seasonal = {}
     saber_monthly = {}
+    #saber_vars = ['u','temp','lat','lev']
 
-    saber_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
-    saber_ncfile = saber_ncfile.rename({"latitude":"lat"})
-    saber_ncfile = saber_ncfile.rename({"pressure":"lev"})
+    #Validate if obs file location is good
+    filename = pf.check_obs_file(adfobj, Path(filename))
 
-    #WARNING: there is no actual time information in the `time` coordinate!
-    # - !! The assigned times are strictly from the file name !!
-    start_date = datetime(2002, 1, 1)
+    try:
+        saber_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
+        saber_ncfile = saber_ncfile.rename({"latitude":"lat"})
+        saber_ncfile = saber_ncfile.rename({"pressure":"lev"})
 
-    #Grab number of months
-    num_months = len(saber_ncfile.time)
+        #WARNING: there is no actual time information in the `time` coordinate!
+        # - !! The assigned times are strictly from the file name !!
+        start_date = datetime(2002, 1, 1)
 
-    # List to store datetime objects
-    datetime_list = []
+        #Grab number of months
+        num_months = len(saber_ncfile.time)
 
-    # Generate datetime objects incrementally by month
-    for i in range(num_months):
-        new_date = start_date + relativedelta(months=i)
+        # List to store datetime objects
+        datetime_list = []
 
-        # Set the day to the first day of the month
-        datetime_list.append(new_date.replace(day=1))
+        # Generate datetime objects incrementally by month
+        for i in range(num_months):
+            new_date = start_date + relativedelta(months=i)
 
-    for index, var in enumerate(saber_vars):
-        if var not in saber_seasonal:
-            saber_seasonal[var] = {}
-        if var not in saber_monthly:
-            saber_monthly[var] = {}
-        saber[var] = saber_ncfile[var]
-        if index < len(saber_vars)-2:
-            saber_ncfile[var] = saber_ncfile[var].assign_coords({"time": datetime_list})
+            # Set the day to the first day of the month
+            datetime_list.append(new_date.replace(day=1))
+
+        for index, var in enumerate(saber_vars):
+            if var not in saber_seasonal:
+                saber_seasonal[var] = {}
+            if var not in saber_monthly:
+                saber_monthly[var] = {}
             saber[var] = saber_ncfile[var]
-            for season in seasons:
-                saber_seasonal[var][season] = time_mean(saber_ncfile, saber_ncfile[var],
-                                                        time_avg="season", interval=season,
-                                                        is_climo=None, obs=True)
-            for month in np.arange(1,13,1):
-                saber_monthly[var][month_dict[month]] = time_mean(saber_ncfile, saber_ncfile[var],
-                                                                time_avg="month", interval=month,
-                                                                is_climo=None, obs=True)
-    return saber, saber_monthly, saber_seasonal
-
+            if index < len(saber_vars)-2:
+                saber_ncfile[var] = saber_ncfile[var].assign_coords({"time": datetime_list})
+                saber[var] = saber_ncfile[var]
+                for season in seasons:
+                    saber_seasonal[var][season] = time_mean(saber_ncfile, saber_ncfile[var],
+                                                            time_avg="season", interval=season,
+                                                            is_climo=None, obs=True)
+                for month in np.arange(1,13,1):
+                    saber_monthly[var][month_dict[month]] = time_mean(saber_ncfile, saber_ncfile[var],
+                                                                    time_avg="month", interval=month,
+                                                                    is_climo=None, obs=True)
+        return saber, saber_monthly, saber_seasonal
+    except Exception as e:
+        # Handle the exception and return None
+        print(f"{e}\n")
+        errmsg = "Incorrect SABER file/path provided, so seasonal cycles won't be plotted."
+        errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
+        errmsg += "ADF will move on to next script."
+        print(errmsg)
+        return None
 ########
 
-def merra_data(filename, merra2_vars):
+def merra_data(adfobj, filename, merra2_vars):
     """
     """
 
     merra2 = {}
     merra2_seasonal = {}
     merra2_monthly = {}
+    #merra2_vars = ['U','T','V','lat','lev']
+    
+    #Validate if obs file location is good
+    filename = pf.check_obs_file(adfobj, Path(filename))
 
-    merra_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
-    merra_ncfile = merra_ncfile.sel(time=merra_ncfile.time.values[0])
-    merra_ncfile = merra_ncfile.rename({"time":"first-time"})
-    merra_ncfile = merra_ncfile.rename({"record":"time"})
+    try:
+        #Validate if obs file location is good
+        #filename = pf.check_obs_file(adfobj, Path(filename))
 
-    for index, var in enumerate(merra2_vars):
+        merra_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
+        merra_ncfile = merra_ncfile.sel(time=merra_ncfile.time.values[0])
+        merra_ncfile = merra_ncfile.rename({"time":"first-time"})
+        merra_ncfile = merra_ncfile.rename({"record":"time"})
 
-        merra2[var] = merra_ncfile[var]
-        if index < len(merra2_vars)-2:
+        for index, var in enumerate(merra2_vars):
 
-            start_date = datetime(1980, 1, 1)
-
-            # Number of months to generate
-            num_months = len(merra_ncfile[var].time)
-
-            # List to store datetime objects
-            datetime_list = []
-
-            # Generate datetime objects incrementally by month
-            for i in range(num_months):
-                new_date = start_date + relativedelta(months=i)
-                datetime_list.append(new_date.replace(day=1))  # Set the day to the first day of the month
-
-            merra_ncfile[var] = merra_ncfile[var].assign_coords({"time": datetime_list})
-            if var not in merra2_seasonal:
-                merra2_seasonal[var] = {}
-            if var not in merra2_monthly:
-                merra2_monthly[var] = {}
             merra2[var] = merra_ncfile[var]
+            if index < len(merra2_vars)-2:
 
-            for season in seasons:
-                merra2_seasonal[var][season] = time_mean(merra_ncfile, merra2[var], time_avg="season", interval=season, is_climo=None, obs=True)
-            for month in np.arange(1,13,1):
-                merra2_monthly[var][month_dict[month]] = time_mean(merra_ncfile, merra2[var], time_avg="month", interval=month, is_climo=None, obs=True)
+                start_date = datetime(1980, 1, 1)
 
-    return merra2, merra2_monthly, merra2_seasonal
+                # Number of months to generate
+                num_months = len(merra_ncfile[var].time)
+
+                # List to store datetime objects
+                datetime_list = []
+
+                # Generate datetime objects incrementally by month
+                for i in range(num_months):
+                    new_date = start_date + relativedelta(months=i)
+                    datetime_list.append(new_date.replace(day=1))  # Set the day to the first day of the month
+
+                merra_ncfile[var] = merra_ncfile[var].assign_coords({"time": datetime_list})
+                if var not in merra2_seasonal:
+                    merra2_seasonal[var] = {}
+                if var not in merra2_monthly:
+                    merra2_monthly[var] = {}
+                merra2[var] = merra_ncfile[var]
+
+                for season in seasons:
+                    merra2_seasonal[var][season] = time_mean(merra_ncfile, merra2[var], time_avg="season", interval=season, is_climo=None, obs=True)
+                for month in np.arange(1,13,1):
+                    merra2_monthly[var][month_dict[month]] = time_mean(merra_ncfile, merra2[var], time_avg="month", interval=month, is_climo=None, obs=True)
+
+        return merra2, merra2_monthly, merra2_seasonal
+    except Exception as e:
+        # Handle the exception and return None
+        print(f"{e}\n")
+        errmsg = "Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted."
+        errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
+        errmsg += "ADF will move on to next script."
+        print(errmsg)
+        return None
 ########
 
 

@@ -81,9 +81,6 @@ def tape_recorder(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in the config YAML file.
 
-    #Grab location of ADF default obs files
-    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
-
     # Default colormap
     cmap='precip_nowhite'
 
@@ -120,50 +117,48 @@ def tape_recorder(adfobj):
         runs_LT2[val] = case_ts_locs[i]
 
     # MLS data
-    #mls_filename = res['tape_recorder']['mls']['obs_file']
-    mls_filename = "mls_h2o_latNpressNtime_3d_monthly_v5.nc"
-    mls_file = adf_obs_loc / mls_filename
-    #saber_filename = seas_cyc_res['saber_file']
-    #saber_file = adf_obs_loc / saber_filename
-    #merra_filename = seas_cyc_res['merra2_file']
-    #merra_file = adf_obs_loc / merra_filename
+    mls_file = res['tape_recorder']['mls']['obs_file']
+    mls_file = pf.check_obs_file(adfobj, Path(mls_file))
 
-
-
-    #mls_file = pf.check_obs_file(adfobj, Path(mls_file))
-
-    mls = pf.load_dataset(mls_file)
-    if mls:
-        #mls = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc")
-        mls = mls.rename(x='lat', y='lev', t='time')
-        time = pd.date_range("2004-09","2021-11",freq='M')
-        mls['time'] = time
-        mls = pf.coslat_average(mls.H2O,-10,10)
-        mls = mls.groupby('time.month').mean('time')
-        # Convert mixing ratio values from ppmv to kg/kg
-        mls = mls*18.015280/(1e6*28.964)
+    if mls_file:
+        no_mls = False
+        mls = pf.load_dataset(mls_file)
+        if mls:
+            #mls = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc")
+            mls = mls.rename(x='lat', y='lev', t='time')
+            time = pd.date_range("2004-09","2021-11",freq='M')
+            mls['time'] = time
+            mls = pf.coslat_average(mls.H2O,-10,10)
+            mls = mls.groupby('time.month').mean('time')
+            # Convert mixing ratio values from ppmv to kg/kg
+            mls = mls*18.015280/(1e6*28.964)
+        else:
+            no_mls = True
+            print("Incorrect MLS file/path provided, so MLS won't be plotted. ")
+            print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
     else:
         no_mls = True
         print("Incorrect MLS file/path provided, so MLS won't be plotted. ")
         print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
 
-
     # ERA5 data
-    #era5_filename = res['tape_recorder']['era5']['obs_file']
-    era5_filename = "ERA5_Q_10Sto10N_1980to2020.nc"
-    era5_file = adf_obs_loc / era5_filename
-    #era5_file = pf.check_obs_file(adfobj, Path(era5_file))
+    era5_file = res['tape_recorder']['era5']['obs_file']
+    era5_file = pf.check_obs_file(adfobj, Path(era5_file))
 
-
-    era5 = pf.load_dataset([era5_file])
-    if era5:
-        #era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
-        era5 = era5.groupby('time.month').mean('time')
+    if era5_file:
+        no_era5 = False
+        era5 = pf.load_dataset([era5_file])
+        if era5:
+            #era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
+            era5 = era5.groupby('time.month').mean('time')
+        else:
+            no_era5 = True
+            print("Incorrect ERA5 file/path provided, so ERA5 won't be plotted. ")
+            print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
     else:
         no_era5 = True
         print("Incorrect ERA5 file/path provided, so ERA5 won't be plotted. ")
         print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
-
 
     alldat=[]
     runname_LT=[]
@@ -264,6 +259,39 @@ def tape_recorder(adfobj):
 
 # Helper Functions
 ###################
+
+'''def check_obs_file(adfobj, filepath):
+    """
+    Check whether provided obs file is in ADF defaults or a user supplied location
+
+    Usually the ADF takes care of this, but only for variables in the variable defaults yaml file.
+        - This is different since the object being called form variable defaults yaml file is plot related
+          not variable related, we need a check.
+
+      * If only file name is provided, we assume the file exists in the ADF default obs location
+      * If a full path and filename are provided, then the we assume it is a user supplied obs location
+
+    returns: full file path and name
+    """
+    
+    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
+    obs_filepath = adf_obs_loc / filepath.parts[-1]
+
+    #Check the file path structure
+    if str(filepath.parent) == ".":
+        print(f"Ah, must be ADF default obs file: '{obs_filepath}'")
+        if obs_filepath.exists():
+            return obs_filepath
+        else:
+            print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
+            print("Or supply your own path to this file!")
+            print("Exiting...")
+            return
+    else:
+        print(f"Ok, your are providing your own obs file: '{filepath}'")
+        return filepath'''
+
+#########
 
 def blue2red_cmap(n, nowhite = False):
     """
