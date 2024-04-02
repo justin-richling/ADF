@@ -570,7 +570,7 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
     prop_y = 0.42
 
     for var in var_list:
-        print(var,s)
+        #print(var,s)
         #Grab variable defaults for this variable
         vres = res[var]
 
@@ -729,10 +729,10 @@ def tem_plot(ds, ds_base, case_names, axs, s, var_list, res, obs, climo_yrs):
         #
         cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
         clevs = np.unique(np.array(cp_info['levels1']))
-        print(clevs)
+        #print(clevs)
         norm = cp_info['norm1']
         cmap = cp_info['cmap1']
-        print(cmap,"\n")
+        #print(cmap,"\n")
 
 
         levs_diff = np.unique(np.array(cp_info['levelsdiff']))

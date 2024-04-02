@@ -3360,7 +3360,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             #nt_sub = 108
         else:
             nt_sub = nt
-        print("nt",nt)
+        #print("nt",nt)
 
         [time_grid, lev_grid] = np.meshgrid(case_data['lev'],np.arange(0,nt_sub+1,1))
 
@@ -3378,11 +3378,11 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #end_idx = start_idx+(12*9)+1
         end_idx = start_idx+nt+1
         #print("AHH",start_idx+(12*9)+1,"\n")
-        print("end_idx",end_idx,"\n\n")
+        #print("end_idx",end_idx,"\n\n")
 
 
-        print("WTF",time_grid[start_idx:end_idx-1,:],"\n")
-        print("WTF2",time_grid[start_idx:end_idx-1,0],"\n")
+        #print("WTF",time_grid[start_idx:end_idx-1,:],"\n")
+        #print("WTF2",time_grid[start_idx:end_idx-1,0],"\n")
         yr0 = int(yrs+int(start_idx/12))
         #axes[main_key[idx]].set_xlim(yr0, yr0+10)  # Set the limits from 0 to 11
         #axes[main_key[idx]].set_xticks(range(yr0, yr0+11, 1))
@@ -3439,10 +3439,10 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub),12),rotation=40)
         #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
         
-        print("YEEHAW",yr0+10)
+        #print("YEEHAW",yr0+10)
         #axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12)+1, 1), fontsize=8)
-        print("\nWOWSA",np.arange(yr0, yr0+int(nt_sub/12), 1))
-        print("RANGE",(yr0+10)-last_yr)
+        #print("\nWOWSA",np.arange(yr0, yr0+int(nt_sub/12), 1))
+        #print("RANGE",(yr0+10)-last_yr)
 
         need_yrs = []
         for i in range((yr0+10)-last_yr):
