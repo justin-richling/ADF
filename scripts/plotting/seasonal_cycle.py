@@ -439,9 +439,11 @@ def check_obs_file(adfobj, filepath):
             print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
             print("Or supply your own path to this file!")
             print("Exiting...")
+            return
     else:
         print(f"Ok, your are providing your own obs file: '{filepath}'")
         return filepath
+
 
 
 
