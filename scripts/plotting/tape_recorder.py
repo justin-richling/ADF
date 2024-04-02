@@ -143,7 +143,7 @@ def tape_recorder(adfobj):
 
     if era5_file:
         no_era5 = False
-        era5 = pf.load_dataset(era5_file)
+        era5 = pf.load_dataset([era5_file])
         #era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
         era5 = era5.groupby('time.month').mean('time')
     else:
