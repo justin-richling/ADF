@@ -119,7 +119,6 @@ def tape_recorder(adfobj):
     # MLS data
     mls_file = res['tape_recorder']['mls']['obs_file']
     mls_file = check_obs_file(adfobj, Path(mls_file))
-    print("\n",mls_file,"\n")
 
     if mls_file:
         no_mls = False
@@ -135,7 +134,7 @@ def tape_recorder(adfobj):
     else:
         no_mls = True
         print("Incorrect MLS file/path provided, so MLS won't be plotted")
-        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.")
+        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
 
     # ERA5 data
     era5_file = res['tape_recorder']['era5']['obs_file']
@@ -149,7 +148,7 @@ def tape_recorder(adfobj):
     else:
         no_era5 = True
         print("Incorrect ERA5 file/path provided, so ERA5 won't be plotted")
-        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.")
+        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
 
     alldat=[]
     runname_LT=[]
@@ -174,7 +173,7 @@ def tape_recorder(adfobj):
     runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
     
     #Check if any CAM cases were made, if none, kill this script and have ADF continue on
-    if len(alldat) < 1:
+    if len(alldat) == 0:
         print("No CAM cases for Q, so tape recorder plots will not be made. Moving on.")
         return
 
@@ -217,9 +216,6 @@ def tape_recorder(adfobj):
     
     #Shift colorbar if there are less than 5 subplots
     # There will always be at least 2 (MLS and ERA5)
-    if len(case_ts_locs) == 0:
-        print("Seems like there are no simulations to plot, exiting script.")
-        return
     if len(case_ts_locs) == 1:
         x1_loc = (x1[1]-x1[0])/2
         x2_loc = ((x2[2]-x2[1])/2)+x2[1]
