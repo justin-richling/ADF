@@ -500,10 +500,10 @@ def saber_data(adfobj, filename, saber_vars):
     saber_monthly = {}
     #saber_vars = ['u','temp','lat','lev']
 
-    try:
-        #Validate if obs file location is good
-        filename = pf.check_obs_file(adfobj, Path(filename))
+    #Validate if obs file location is good
+    filename = pf.check_obs_file(adfobj, Path(filename))
 
+    try:
         saber_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
         saber_ncfile = saber_ncfile.rename({"latitude":"lat"})
         saber_ncfile = saber_ncfile.rename({"pressure":"lev"})
@@ -545,13 +545,11 @@ def saber_data(adfobj, filename, saber_vars):
         return saber, saber_monthly, saber_seasonal
     except Exception as e:
         # Handle the exception and return None
-        #Validate the obs file/location exist
-
-        errmsg = "Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted."
+        print(f"{e}\n")
+        errmsg = "Incorrect SABER file/path provided, so seasonal cycles won't be plotted."
         errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
         errmsg += "ADF will move on to next script."
         print(errmsg)
-        #    return
         return None
 ########
 
@@ -563,10 +561,13 @@ def merra_data(adfobj, filename, merra2_vars):
     merra2_seasonal = {}
     merra2_monthly = {}
     #merra2_vars = ['U','T','V','lat','lev']
+    
+    #Validate if obs file location is good
+    filename = pf.check_obs_file(adfobj, Path(filename))
 
     try:
         #Validate if obs file location is good
-        filename = pf.check_obs_file(adfobj, Path(filename))
+        #filename = pf.check_obs_file(adfobj, Path(filename))
 
         merra_ncfile = xr.open_dataset(filename, decode_times=True, use_cftime=True)
         merra_ncfile = merra_ncfile.sel(time=merra_ncfile.time.values[0])
@@ -606,13 +607,11 @@ def merra_data(adfobj, filename, merra2_vars):
         return merra2, merra2_monthly, merra2_seasonal
     except Exception as e:
         # Handle the exception and return None
-
-        #Validate the obs file/location exist
+        print(f"{e}\n")
         errmsg = "Incorrect MERRA2 file/path provided, so seasonal cycles won't be plotted."
         errmsg += "Please check your location in the 'waccm_seasonal_cycle' section of the variable defaults yaml file."
         errmsg += "ADF will move on to next script."
         print(errmsg)
-        #    return
         return None
 ########
 

@@ -193,16 +193,15 @@ def check_obs_file(adfobj, filepath):
 
     #Check the file path structure
     if str(filepath.parent) == ".":
-        print(f"Ah, must be ADF default obs file: '{obs_filepath}'")
+        #print(f"Ah, must be ADF default obs file: '{obs_filepath}'")
         if obs_filepath.exists():
             return obs_filepath
         else:
             print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
             print("Or supply your own path to this file!")
-            print("Exiting...")
             return
     else:
-        print(f"Ok, your are providing your own obs file: '{filepath}'")
+        #print(f"Ok, your are providing your own obs file: '{filepath}'")
         return filepath
 
 

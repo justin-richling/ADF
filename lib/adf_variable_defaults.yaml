@@ -1238,7 +1238,7 @@ waccm_seasonal_cycle:
   #merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
   #saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
   
-  merra2_file: "MERRA2_met.nc"
+  merra2_file: "MERRA2_met_FAKESIES.nc"
   saber_file: "SABER_monthly_2002-2014.nc"
   #swoosh_file: 
 

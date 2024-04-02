@@ -544,7 +544,6 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
 
     nlevs = (cmax - cmin)/ci + 1
     clevs = np.arange(cmin, cmax+ci, ci)
-    print("clevs",clevs)
 
     if (cmap == "blue2red"):
         mymap = blue2red_cmap(nlevs)
