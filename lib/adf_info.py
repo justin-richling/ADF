@@ -674,7 +674,9 @@ class AdfInfo(AdfConfig):
         #Search for first variable in var_list to get a time series file to read
         #NOTE: it is assumed all the variables have the same dates!
 
-        print("input_location",input_location,"\n")
+        print("input_location",input_location)
+        print("case_name",case_name)
+        print("var_list[0]",var_list[0],"\n")
 
         ts_files = sorted(input_location.glob(f"{case_name}*.{var_list[0]}.*nc"))
 
