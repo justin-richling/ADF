@@ -106,6 +106,21 @@ def polar_map(adfobj):
         dclimo_loc  = Path(data_loc)
     #-----------------------
 
+    if paleo:
+        #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
+        landfrac_fils = sorted(dclimo_loc.glob(f"*_baseline.nc"))
+        if "LANDFRAC" in landfrac_fils:
+            landfrac_ds = pf.load_dataset(landfrac_fils)
+            landfrac = landfrac_ds["LANDFRAC"].isel(time=0)
+        else:
+            errmsg = "Missing LANDFRAC, can not create Paleo polar maps.\n"
+            errmsg += "Please make sure it is in CAM output. ADF will move on."
+            print(errmsg)
+            return
+            #adfobj.debug_log(errmsg)
+        #if "LANDFRAC" in mclim_ds:
+        #    mlandfrac = mclim_ds["LANDFRAC"].isel(time=0)
+
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
     pres_levs = adfobj.get_basic_info("plot_press_levels")
@@ -205,19 +220,6 @@ def polar_map(adfobj):
                 #Extract variable of interest
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
                 mdata = mclim_ds[var].squeeze()
-
-                if paleo:
-                    #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
-                    if "LANDFRAC" in sorted(dclimo_loc.glob(f"{data_src}_*_baseline.nc")):
-                        landfrac = oclim_ds["LANDFRAC"].isel(time=0)
-                    else:
-                        errmsg = "Missing LANDFRAC, can not create Paleo polar maps.\n"
-                        errmsg += "Please make sure it is in CAM output. ADF will move on."
-                        print(errmsg)
-                        return
-                        #adfobj.debug_log(errmsg)
-                    #if "LANDFRAC" in mclim_ds:
-                    #    mlandfrac = mclim_ds["LANDFRAC"].isel(time=0)
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
