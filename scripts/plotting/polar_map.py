@@ -34,7 +34,7 @@ def polar_map(adfobj):
         #if "paleo_proj" in basic_info_dict["paleo"]:
         #    paleo_proj = basic_info_dict["paleo"]["paleo_proj"]
         paleo_proj = basic_info_dict["paleo_vs_pi"]
-        if paleo_proj:
+        if not paleo_proj:
             print("\n  Paleo continents will be made from LANDFRAC")
     else:
         print("\n  Generating polar maps...")
