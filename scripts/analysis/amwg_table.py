@@ -314,12 +314,29 @@ def amwg_table(adf):
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
+        
+        
+        """# Define the patterns
+        pattern1 = '*b.e13.B1850C5.ne120_t12.icesm13_ihesp.PI.002.remapf09.csv'
+        pattern2 = '*b.e13.B1850C5.ne120_t12.icesm13_ihesp.LGM.004.remapf09_2.csv'
+
+        # Use glob to find files matching either pattern
+        files_matching_pattern1 = output_location.glob(pattern1)
+        files_matching_pattern2 = output_location.glob(pattern2)
+
+        # Combine the lists of files
+        all_matching_files = files_matching_pattern1 + files_matching_pattern2
+
+        print(all_matching_files)"""
+
         csv_list = sorted(output_location.glob("*.csv"))
+
+
         print(csv_list)
         print(output_location / 'amwg_table_comp.csv')
         #Check to make sure if ADF has run that the comp table is not included in the check below
         if 'amwg_table_comp.csv' in csv_list:
-            csv_list.remove(output_location / 'amwg_table_comp.csv')
+            csv_list = csv_list.remove(output_location / 'amwg_table_comp.csv')
         print(csv_list)
         print(len(csv_list))
         print(len(case_names))
