@@ -332,12 +332,12 @@ def amwg_table(adf):
         csv_list = sorted(output_location.glob("*.csv"))
 
 
-        print(csv_list)
+        #print(csv_list)
         print(output_location / 'amwg_table_comp.csv')
         #Check to make sure if ADF has run that the comp table is not included in the check below
         if 'amwg_table_comp.csv' in csv_list:
             csv_list = csv_list.remove(output_location / 'amwg_table_comp.csv')
-        print(csv_list)
+        #print(csv_list)
         print(len(csv_list))
         print(len(case_names))
         if len(csv_list) != len(case_names):
