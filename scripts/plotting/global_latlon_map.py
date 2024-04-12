@@ -387,7 +387,7 @@ def global_latlon_map(adfobj):
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
                                                  mseasons[s], oseasons[s], dseasons[s],
-                                                 obs, **vres)
+                                                 obs, paleo=paleo, landfrac_da=landfrac, **vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -481,7 +481,7 @@ def global_latlon_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s],
-                                                     obs, **vres)
+                                                     obs, paleo=paleo, landfrac_da=landfrac, **vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
