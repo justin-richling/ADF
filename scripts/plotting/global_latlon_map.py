@@ -98,11 +98,11 @@ def global_latlon_map(adfobj):
 
     #Notify user that script has started:
     #print("\n  Generating lat/lon maps...")
-    basic_info_dict = adfobj.read_config_var("diag_basic_info")
-    paleo = basic_info_dict["paleo"]
+    #basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    #paleo = basic_info_dict["paleo"]
     #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
     landfrac = None
-
+    paleo = False
     if paleo:
         print("\n  Generating paleo lat/lon maps...")
     else:
