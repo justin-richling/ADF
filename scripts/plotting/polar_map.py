@@ -29,18 +29,22 @@ def polar_map(adfobj):
 
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
     #paleo = basic_info_dict["paleo"]
-    if "paleo" in basic_info_dict:
-        print()
+    if "paleo_vs_pi" in basic_info_dict:
+        print("\n  Generating paleo polar maps...")
+        #if "paleo_proj" in basic_info_dict["paleo"]:
+        #    paleo_proj = basic_info_dict["paleo"]["paleo_proj"]
+        paleo_proj = basic_info_dict["paleo_vs_pi"]
     else:
-        print("Quitting!!")
-        return
+        print("\n  Generating polar maps...")
+        #paleo_proj = False
+
     #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
     landfrac = None
 
-    if paleo:
-        print("\n  Generating paleo polar maps...")
-    else:
-        print("\n  Generating polar maps...")
+    #if paleo:
+    #    print("\n  Generating paleo polar maps...")
+    #else:
+    #    print("\n  Generating polar maps...")
 
     #
     # Use ADF api to get all necessary information
@@ -111,7 +115,7 @@ def polar_map(adfobj):
         dclimo_loc  = Path(data_loc)
     #-----------------------
 
-    if paleo:
+    if paleo_proj:
         #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
         landfrac_fils = sorted(mclimo_rg_loc.glob(f"*LANDFRAC*_baseline.nc"))
         #print(landfrac_fils)
@@ -313,7 +317,7 @@ def polar_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi,
-                                                     obs=obs, paleo=paleo, landfrac_da=landfrac, **vres)
+                                                     obs=obs, paleo=paleo_proj, landfrac_da=landfrac, **vres)
 
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -395,7 +399,7 @@ def polar_map(adfobj):
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s],
                                                      hemisphere=hemi, obs=obs,
-                                                     paleo=paleo, landfrac_da=landfrac, **vres)
+                                                     paleo=paleo_proj, landfrac_da=landfrac, **vres)
 
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",

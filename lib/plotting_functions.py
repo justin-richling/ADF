@@ -605,7 +605,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     case_climo_yrs, baseline_climo_yrs,
                     d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,
                     domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False,
-                    paleo=False, landfrac_da=None, **kwargs):
+                    paleo_proj=False, landfrac_da=None, **kwargs):
 
     """Make a stereographic polar plot for the given data and hemisphere.
 
@@ -633,7 +633,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         Hemsiphere to plot
     obs: boolean
         check if comparing against obs to alter plot titles
-    paleo: boolean
+    paleo_proj: boolean
         check if this is a paleo climate run
         if True, create continents based off LANDFRAC variable
         and skip cartopy projection
@@ -761,7 +761,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     fig = plt.figure(figsize=(10,10))
     gs = mpl.gridspec.GridSpec(2, 4, wspace=0.9)
-    if paleo:
+    if paleo_proj:
         print("making paleo plots, right?!?!")
         ax1 = plt.subplot(gs[0, :2], polar=True)
         ax2 = plt.subplot(gs[0, 2:], polar=True)
@@ -774,7 +774,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     levs = np.unique(np.array(levels1))
     levs_diff = np.unique(np.array(levelsdiff))
 
-    if paleo:
+    if paleo_proj:
         #Threshold land fraction values to identify land areas
         land_mask = landfrac_da > 0.5
 
@@ -868,7 +868,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         ax3.set_ylabel(f"{dif.units}")
 
     #Format the axis
-    if paleo:
+    if paleo_proj:
         if hemisphere.upper() == "NH":
             #Set direction of angular axis
             [a.set_theta_direction(-1) for a in [ax1, ax2, ax3]]
