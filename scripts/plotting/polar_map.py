@@ -29,6 +29,11 @@ def polar_map(adfobj):
 
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
     paleo = basic_info_dict["paleo"]
+    if "paleo" in basic_info_dict:
+        print()
+    else:
+        print("Quitting!!")
+        return
     #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
     landfrac = None
 

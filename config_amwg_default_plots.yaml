@@ -74,7 +74,8 @@ diag_basic_info:
     compare_obs: false
 
     #Switch to Paleo climate plots if desired
-    paleo: false
+    paleo:
+        PI: true #false
 
     #Generate HTML website (assumed false if missing):
     #Note:  The website files themselves will be located in the path
