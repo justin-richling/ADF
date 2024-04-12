@@ -35,7 +35,7 @@ def polar_map(adfobj):
     if paleo:
         print("\n  Generating paleo polar maps...")
     else:
-        print("\n  Generating polar maps...")    
+        print("\n  Generating polar maps...")
 
     #
     # Use ADF api to get all necessary information
@@ -109,7 +109,7 @@ def polar_map(adfobj):
     if paleo:
         #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
         landfrac_fils = sorted(dclimo_loc.glob(f"*LANDFRAC*_baseline.nc"))
-        print(landfrac_fils)
+        #print(landfrac_fils)
         #if "LANDFRAC" in landfrac_fils:
         if landfrac_fils:
             landfrac_ds = pf.load_dataset(landfrac_fils)
@@ -308,7 +308,7 @@ def polar_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi,
-                                                     obs=obs, landfrac_da=landfrac, **vres)
+                                                     obs=obs, paleo=paleo, landfrac_da=landfrac, **vres)
 
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,

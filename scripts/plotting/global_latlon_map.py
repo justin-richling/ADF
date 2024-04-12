@@ -97,7 +97,16 @@ def global_latlon_map(adfobj):
     # - make plot
 
     #Notify user that script has started:
-    print("\n  Generating lat/lon maps...")
+    #print("\n  Generating lat/lon maps...")
+    basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    paleo = basic_info_dict["paleo"]
+    #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
+    landfrac = None
+
+    if paleo:
+        print("\n  Generating paleo lat/lon maps...")
+    else:
+        print("\n  Generating lat/lon maps...")
 
     #
     # Use ADF api to get all necessary information
@@ -168,6 +177,23 @@ def global_latlon_map(adfobj):
     if not adfobj.compare_obs:
         dclimo_loc  = Path(data_loc)
     #-----------------------
+
+    if paleo:
+        #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
+        landfrac_fils = sorted(dclimo_loc.glob(f"*LANDFRAC*_baseline.nc"))
+        #print(landfrac_fils)
+        #if "LANDFRAC" in landfrac_fils:
+        if landfrac_fils:
+            landfrac_ds = pf.load_dataset(landfrac_fils)
+            landfrac = landfrac_ds["LANDFRAC"].isel(time=0)
+        else:
+            errmsg = "Missing LANDFRAC, can not create Paleo polar maps.\n"
+            errmsg += "Please make sure it is in CAM output. ADF will move on."
+            print(errmsg)
+            return
+            #adfobj.debug_log(errmsg)
+        #if "LANDFRAC" in mclim_ds:
+        #    mlandfrac = mclim_ds["LANDFRAC"].isel(time=0)
 
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
