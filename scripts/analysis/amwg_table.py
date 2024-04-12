@@ -318,6 +318,8 @@ def amwg_table(adf):
         #Check to make sure if ADF has run that the comp table is not included in the check below
         if 'amwg_table_comp.csv' in csv_list:
             csv_list.remove('amwg_table_comp.csv')
+        print(len(csv_list))
+        print(len(case_names))
         if len(csv_list) != len(case_names):
             print("\tNot enough cases to compare, skipping comparison table...")
         else:
