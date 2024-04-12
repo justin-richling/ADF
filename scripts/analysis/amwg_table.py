@@ -314,9 +314,11 @@ def amwg_table(adf):
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
-        print(len(sorted(output_location.glob("*.csv"))))
-        print(len(case_names))
-        if len(sorted(output_location.glob("*.csv"))) != len(case_names):
+        csv_list = sorted(output_location.glob("*.csv"))
+        #Check to make sure if ADF has run that the comp table is not included in the check below
+        if 'amwg_table_comp.csv' in csv_list:
+            csv_list.remove('amwg_table_comp.csv')
+        if len(csv_list) != len(case_names):
             print("\tNot enough cases to compare, skipping comparison table...")
         else:
             #Create comparison table for both cases
