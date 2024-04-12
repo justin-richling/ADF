@@ -315,6 +315,7 @@ def amwg_table(adf):
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
         csv_list = sorted(output_location.glob("*.csv"))
+        print(output_location / 'amwg_table_comp.csv')
         #Check to make sure if ADF has run that the comp table is not included in the check below
         if 'amwg_table_comp.csv' in csv_list:
             csv_list.remove(output_location / 'amwg_table_comp.csv')
