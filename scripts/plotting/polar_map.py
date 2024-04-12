@@ -108,8 +108,10 @@ def polar_map(adfobj):
 
     if paleo:
         #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
-        landfrac_fils = sorted(dclimo_loc.glob(f"*_baseline.nc"))
-        if "LANDFRAC" in landfrac_fils:
+        landfrac_fils = sorted(dclimo_loc.glob(f"*LANDFRAC*_baseline.nc"))
+        print(landfrac_fils)
+        #if "LANDFRAC" in landfrac_fils:
+        if landfrac_fils:
             landfrac_ds = pf.load_dataset(landfrac_fils)
             landfrac = landfrac_ds["LANDFRAC"].isel(time=0)
         else:
