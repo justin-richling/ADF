@@ -81,6 +81,9 @@ diag_basic_info:
     #(usually "case_vs_obs_XXX" or "case_vs_baseline_XXX").
     create_html: true
 
+    #Switch to Paleo climate plots if desired
+    paleo: false
+
     #Location of observational datasets:
     #Note: this only matters if "compare_obs" is true and the path
     #isn't specified in the variable defaults file.

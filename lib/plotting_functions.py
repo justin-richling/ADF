@@ -604,7 +604,8 @@ def domain_stats(data, domain):
 def make_polar_plot(wks, case_nickname, base_nickname,
                     case_climo_yrs, baseline_climo_yrs,
                     d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,
-                    domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False, **kwargs):
+                    domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False,
+                    paleo=False, landfrac_da=None, **kwargs):
 
     """Make a stereographic polar plot for the given data and hemisphere.
 
@@ -630,6 +631,15 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         Defaults to pole to 45-degrees, all longitudes
     hemisphere : {'NH', 'SH'}, optional
         Hemsiphere to plot
+    obs: boolean
+        check if comparing against obs to alter plot titles
+    paleo: boolean
+        check if this is a paleo climate run
+        if True, create continents based off LANDFRAC variable
+        and skip cartopy projection
+            - LANDFRAC must be present for this case
+    landfrac_da: xr.DataArray
+        necessary data array for LANDFEC for Paleo diagnsotics
     kwargs : dict, optional
         variable-dependent options for plots, See Notes.
 
@@ -751,29 +761,79 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     fig = plt.figure(figsize=(10,10))
     gs = mpl.gridspec.GridSpec(2, 4, wspace=0.9)
-
-    ax1 = plt.subplot(gs[0, :2], projection=proj)
-    ax2 = plt.subplot(gs[0, 2:], projection=proj)
-    ax3 = plt.subplot(gs[1, 1:3], projection=proj)
+    if paleo:
+        ax1 = plt.subplot(gs[0, :2], polar=True)
+        ax2 = plt.subplot(gs[0, 2:], polar=True)
+        ax3 = plt.subplot(gs[1, 1:3], polar=True)
+    else:
+        ax1 = plt.subplot(gs[0, :2], projection=proj)
+        ax2 = plt.subplot(gs[0, 2:], projection=proj)
+        ax3 = plt.subplot(gs[1, 1:3], projection=proj)
 
     levs = np.unique(np.array(levels1))
     levs_diff = np.unique(np.array(levelsdiff))
 
-    if len(levs) < 2:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
-        ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
+    if paleo:
+        #Threshold land fraction values to identify land areas
+        land_mask = landfrac_da > 0.5
 
-        img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
-        ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
-    else:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
-        img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+        # Subset latitude range based on hemisphere
+        subset_land_mask = land_mask.sel(lat=slice(domain[2],domain[3]))
+        land_lons, land_lats = np.meshgrid(subset_land_mask.lon, subset_land_mask.lat)
 
-    if len(levs_diff) < 2:
-        img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
-        ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+        if hemisphere.upper() == "NH":
+            #Need to flip longitudes for NH to getter correct "projection"
+            #ax.contour(land_lons[::-1] * np.pi / 180, land_lats, subset_land_mask[:,::-1], levels=[0.5], colors='black')
+            land_lons = land_lons[::-1]
+            subset_land_mask = subset_land_mask[:,::-1]
+
+            lons = lons[::-1]
+            d1_cyclic = d1_cyclic[:,::-1]
+            d2_cyclic = d2_cyclic[:,::-1]
+            dif_cyclic = dif_cyclic[:,::-1]
+
+        if len(levs) < 2:
+            #img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            img1 = ax1.contourf(lons * np.pi / 180, lats, d1_cyclic, colors="w", norm=norm1)
+            ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
+
+            #img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            img2 = ax2.contourf(lons * np.pi / 180, lats, d2_cyclic, colors="w", norm=norm1)
+            ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
+        else:
+            img1 = ax1.contourf(lons * np.pi / 180, lats, d1_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
+            img2 = ax2.contourf(lons * np.pi / 180, lats, d1_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
+
+        if len(levs_diff) < 2:
+            #img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+            img3 = ax3.contourf(lons * np.pi / 180, lats, dif_cyclic, colors="w", norm=dnorm)
+            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+        else:
+            #img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+            img3 = ax3.contourf(lons * np.pi / 180, lats, dif_cyclic, cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        
+        #Now plot continent outlines over variable contour fills
+        for a in [ax1, ax2, ax3]:
+            a.contour(land_lons * np.pi / 180, land_lats, subset_land_mask,
+                        levels=[0.5], colors='black')
+        #End for
+
     else:
-        img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        if len(levs) < 2:
+            img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
+
+            img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
+        else:
+            img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+            img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+
+        if len(levs_diff) < 2:
+            img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+        else:
+            img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
 
     #Set Main title for subplots:
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
@@ -806,19 +866,46 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         ax2.set_ylabel(f"{dif.units}")
         ax3.set_ylabel(f"{dif.units}")
 
+    #Format the axis
+    if paleo:
+        if hemisphere.upper() == "NH":
+            #Set direction of angular axis
+            [a.set_theta_direction(-1) for a in [ax1, ax2, ax3]]
+            
+            #Set zero location of angular axis
+            [a.set_theta_zero_location('S') for a in [ax1, ax2, ax3]]
 
-    [a.set_extent(domain, ccrs.PlateCarree()) for a in [ax1, ax2, ax3]]
-    [a.coastlines() for a in [ax1, ax2, ax3]]
+            #Set proper radius for NH
+            [a.set_rmin(90) for a in [ax1, ax2, ax3]]
+            [a.set_rmax(45) for a in [ax1, ax2, ax3]]
+        else:
+            #Set direction of angular axis
+            [a.set_theta_direction(-1) for a in [ax1, ax2, ax3]]
+            
+            #Set zero location of angular axis
+            [a.set_theta_zero_location('N') for a in [ax1, ax2, ax3]]
+        #End if
 
-    # __Follow the cartopy gallery example to make circular__:
-    # Compute a circle in axes coordinates, which we can use as a boundary
-    # for the map. We can pan/zoom as much as we like - the boundary will be
-    # permanently circular.
-    theta = np.linspace(0, 2*np.pi, 100)
-    center, radius = [0.5, 0.5], 0.5
-    verts = np.vstack([np.sin(theta), np.cos(theta)]).T
-    circle = mpl.path.Path(verts * radius + center)
-    [a.set_boundary(circle, transform=a.transAxes) for a in [ax1, ax2, ax3]]
+        # Remove latitude and longitude lines and labels
+        [a.set_xticklabels([]) for a in [ax1, ax2, ax3]]
+        [a.set_yticklabels([]) for a in [ax1, ax2, ax3]]
+        [a.grid(False) for a in [ax1, ax2, ax3]]
+    #End if
+
+
+    else:
+        [a.set_extent(domain, ccrs.PlateCarree()) for a in [ax1, ax2, ax3]]
+        [a.coastlines() for a in [ax1, ax2, ax3]]
+
+        # __Follow the cartopy gallery example to make circular__:
+        # Compute a circle in axes coordinates, which we can use as a boundary
+        # for the map. We can pan/zoom as much as we like - the boundary will be
+        # permanently circular.
+        theta = np.linspace(0, 2*np.pi, 100)
+        center, radius = [0.5, 0.5], 0.5
+        verts = np.vstack([np.sin(theta), np.cos(theta)]).T
+        circle = mpl.path.Path(verts * radius + center)
+        [a.set_boundary(circle, transform=a.transAxes) for a in [ax1, ax2, ax3]]
 
     # __COLORBARS__
     cb_mean_ax = inset_axes(ax2,

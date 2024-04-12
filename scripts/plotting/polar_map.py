@@ -26,7 +26,16 @@ def polar_map(adfobj):
     [based on global_latlon_map.py]
     """
     #Notify user that script has started:
-    print("\n  Generating polar maps...")
+
+    basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    paleo = basic_info_dict["paleo"]
+    #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
+    landfrac = None
+
+    if paleo:
+        print("\n  Generating paleo polar maps...")
+    else:
+        print("\n  Generating polar maps...")    
 
     #
     # Use ADF api to get all necessary information
@@ -82,7 +91,6 @@ def polar_map(adfobj):
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
     # -- So check for it, and default to png
-    basic_info_dict = adfobj.read_config_var("diag_basic_info")
     plot_type = basic_info_dict.get('plot_type', 'png')
     print(f"\t NOTE: Plot type is set to {plot_type}")
 
@@ -198,6 +206,19 @@ def polar_map(adfobj):
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
                 mdata = mclim_ds[var].squeeze()
 
+                if paleo:
+                    #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
+                    if "LANDFRAC" in oclim_ds:
+                        landfrac = oclim_ds["LANDFRAC"].isel(time=0)
+                    else:
+                        errmsg = "Missing LANDFRAC, can not create Paleo polar maps.\n"
+                        errmsg += "Please make sure it is in CAM output. ADF will move on."
+                        print(errmsg)
+                        return
+                        #adfobj.debug_log(errmsg)
+                    #if "LANDFRAC" in mclim_ds:
+                    #    mlandfrac = mclim_ds["LANDFRAC"].isel(time=0)
+
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
                 mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
@@ -282,7 +303,8 @@ def polar_map(adfobj):
                                     pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi, obs=obs, **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi,
+                                                     obs=obs, landfrac_da=landfrac, **vres)
 
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -362,7 +384,9 @@ def polar_map(adfobj):
                                         pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi, obs=obs, **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s],
+                                                     hemisphere=hemi, obs=obs,
+                                                     paleo=paleo, landfrac_da=landfrac, **vres)
 
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
