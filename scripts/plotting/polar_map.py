@@ -208,7 +208,7 @@ def polar_map(adfobj):
 
                 if paleo:
                     #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
-                    if "LANDFRAC" in oclim_ds:
+                    if "LANDFRAC" in sorted(dclimo_loc.glob(f"{data_src}_*_baseline.nc")):
                         landfrac = oclim_ds["LANDFRAC"].isel(time=0)
                     else:
                         errmsg = "Missing LANDFRAC, can not create Paleo polar maps.\n"
