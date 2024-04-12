@@ -28,7 +28,7 @@ def polar_map(adfobj):
     #Notify user that script has started:
 
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
-    paleo = basic_info_dict["paleo"]
+    #paleo = basic_info_dict["paleo"]
     if "paleo" in basic_info_dict:
         print()
     else:
