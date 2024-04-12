@@ -1295,6 +1295,14 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
 
+    if paleo:
+        #Threshold land fraction values to identify land areas
+        land_mask = landfrac_da > 0.5
+
+        # Subset latitude range based on hemisphere
+        #subset_land_mask = land_mask.sel(lat=slice(domain[2],domain[3]))
+        land_lons, land_lats = np.meshgrid(land_mask.lon, land_mask.lat)
+
     for i, a in enumerate(wrap_fields):
 
         if i == len(wrap_fields)-1:
@@ -1311,7 +1319,12 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
-            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
+            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,
+                       **cp_info['contourf_opt']))
+            if paleo:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+
         #End if
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
 
