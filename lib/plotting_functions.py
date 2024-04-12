@@ -762,7 +762,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     fig = plt.figure(figsize=(10,10))
     gs = mpl.gridspec.GridSpec(2, 4, wspace=0.9)
     if paleo_proj:
-        print("making paleo plots, right?!?!")
         ax1 = plt.subplot(gs[0, :2], polar=True)
         ax2 = plt.subplot(gs[0, 2:], polar=True)
         ax3 = plt.subplot(gs[1, 1:3], polar=True)
