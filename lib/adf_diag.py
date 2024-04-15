@@ -474,14 +474,14 @@ class AdfDiag(AdfWeb):
                                 ofrac = xr.where(ofrac<0,0,ofrac)
                                 # mask the land in TS for global means
                                 tclim_ds['OCNFRAC'] = ofrac
-                                ts_tmp = tclim_ds[var]
+                                ts_tmp = tclim_ds['SST']
                                 ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
-                                tclim_ds[var] = ts_tmp
+                                tclim_ds['SST'] = ts_tmp
                                 #Finally, write re-gridded data to output file:
                                 save_to_nc(tclim_ds, ts_case_dir)
                             else:
                                 wmsg = "OCNFRAC not found in target,"
-                                wmsg += f" unable to apply mask to '{var}'"
+                                wmsg += f" unable to apply mask to 'SST'"
                                 print(wmsg)
                             #End if
                         #End if
