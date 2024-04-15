@@ -398,6 +398,44 @@ class AdfDiag(AdfWeb):
                 emsg = " Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
+
+                ts_case_dir = ts_dir[case_idx]
+
+
+                # Loop over CAM history variables:
+                vars_to_derive = []
+                # create copy of var list that can be modified for derivable variables
+                diag_var_list = self.diag_var_list
+                for var in diag_var_list:
+                    #if var not in hist_file_var_list:
+                    #Try and check if the variable is in the case TS directory
+                    # and if not, check if it is derived
+                    if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
+                        print(var,"\n")
+                        vres = res.get(var, {})
+                        if "derivable_from" in vres:
+                            constit_list = vres["derivable_from"]
+                            for constit in constit_list:
+                                if constit not in diag_var_list:
+                                    diag_var_list.append(constit)
+                            vars_to_derive.append(var)
+                            continue
+                        else:
+                            msg = f"WARNING: {var} is not in the variable defaults file for deriving."
+                            msg += " No time series will be generated."
+                            print(msg)
+                            continue
+                
+                if vars_to_derive:
+                    self.derive_variables(
+                        vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
+                    )
+
+
+
+
+
+
                 continue
             # End if
 
