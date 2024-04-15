@@ -458,7 +458,7 @@ class AdfDiag(AdfWeb):
                     #tgt_ocn_frc_ds = tgdata_interp
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
                     if ts_exist:
-                        tclim_ds = xr.open_dataset(ts_exist)
+                        tclim_ds = xr.open_dataset(ts_exist[0])
                     else:
                         print("Missing 'TS' variable, can't create SST time series.")
                         continue
