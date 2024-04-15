@@ -343,6 +343,8 @@ class AdfDiag(AdfWeb):
         """
         Generate time series versions of the CAM history file data.
         """
+        #CAM diagnostic plotting functions:
+        import plotting_functions as pf
 
         global call_ncrcat
 
@@ -430,6 +432,60 @@ class AdfDiag(AdfWeb):
                     self.derive_variables(
                         vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
                     )
+
+                def save_to_nc(tosave, outname, attrs=None, proc=None):
+                    """Saves xarray variable to new netCDF file"""
+
+                    xo = tosave  # used to have more stuff here.
+                    # deal with getting non-nan fill values.
+                    if isinstance(xo, xr.Dataset):
+                        enc_dv = {xname: {'_FillValue': None} for xname in xo.data_vars}
+                    else:
+                        enc_dv = {}
+                    #End if
+                    enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
+                    enc = {**enc_c, **enc_dv}
+                    if attrs is not None:
+                        xo.attrs = attrs
+                    if proc is not None:
+                        xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+                    xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
+
+                
+                #If the variable is ocean fraction, then save the dataset for use later:
+                if var == 'SST' and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
+                    #tgt_ocn_frc_ds = tgdata_interp
+                    ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
+                    if ts_exist:
+                        tclim_ds = xr.open_dataset(ts_exist)
+                    else:
+                        print("Missing 'TS' variable, can't create SST time series.")
+                        continue
+
+                    if 'mask' in vres:
+                        if vres['mask'].lower() == 'ocean':
+                            #Check if the ocean fraction has already been regridded
+                            #and saved:
+                            if tclim_ds:
+                                ofrac = tclim_ds['OCNFRAC']
+                                # set the bounds of regridded ocnfrac to 0 to 1
+                                ofrac = xr.where(ofrac>1,1,ofrac)
+                                ofrac = xr.where(ofrac<0,0,ofrac)
+                                # mask the land in TS for global means
+                                tclim_ds['OCNFRAC'] = ofrac
+                                ts_tmp = tclim_ds[var]
+                                ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                tclim_ds[var] = ts_tmp
+                                #Finally, write re-gridded data to output file:
+                                save_to_nc(tclim_ds, ts_case_dir)
+                            else:
+                                wmsg = "OCNFRAC not found in target,"
+                                wmsg += f" unable to apply mask to '{var}'"
+                                print(wmsg)
+                            #End if
+                        #End if
+                    #End if
+                #End if
 
 
 
