@@ -457,6 +457,8 @@ class AdfDiag(AdfWeb):
                     print("AHHHHHH")
                     #tgt_ocn_frc_ds = tgdata_interp
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
+                    print(ts_exist[0])
+                    print(type(ts_exist[0]))
                     if ts_exist:
                         tclim_ds = xr.open_dataset(ts_exist[0])
                     else:
