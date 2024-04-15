@@ -453,7 +453,7 @@ class AdfDiag(AdfWeb):
 
                 
                 #If the variable is ocean fraction, then save the dataset for use later:
-                if var == 'SST' and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
+                if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
                     print("AHHHHHH")
                     #tgt_ocn_frc_ds = tgdata_interp
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
