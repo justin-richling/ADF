@@ -500,7 +500,7 @@ class AdfDiag(AdfWeb):
                         omega = tclim_ds["OMEGA"]
                         # Interpolate the data to the nearest requested pressure level
                         omega_500 = omega.interp(lev=500, method='nearest')
-                        omega_500['OMEGA500'] = omega_500
+                        tclim_ds['OMEGA500'] = omega_500
                         save_to_nc(omega_500, Path(ts_case_dir) / Path(omega_exist[0].replace("OMEGA","OMEGA500")))
                     else:
                         print("Missing 'OMEGA' variable, can't create 'OMEGA500' time series.")
