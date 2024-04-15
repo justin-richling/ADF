@@ -1881,7 +1881,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     elif 'contour_levels_range' in kwargs:
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
-
+        print("levels1",levels1,"\n")
         levels1 = np.arange(*kwargs['contour_levels_range'])
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     else:

@@ -422,6 +422,8 @@ class AdfDiag(AdfWeb):
                                     diag_var_list.append(constit)
                             vars_to_derive.append(var)
                             continue
+                        elif var in ["SST","OMEGA500"]:
+                            print(f"'{var}' will be created from different way.")
                         else:
                             msg = f"WARNING: {var} is not in the variable defaults file for deriving."
                             msg += " No time series will be generated."
@@ -454,11 +456,7 @@ class AdfDiag(AdfWeb):
                 
                 #If the variable is ocean fraction, then save the dataset for use later:
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
-                    print("AHHHHHH")
-                    #tgt_ocn_frc_ds = tgdata_interp
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
-                    print(ts_exist[0])
-                    print(type(ts_exist[0]))
                     if ts_exist:
                         tclim_ds = xr.open_dataset(ts_exist[0])
                     else:
@@ -493,12 +491,10 @@ class AdfDiag(AdfWeb):
 
                 if 'OMEGA500' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*OMEGA500*")):
                     omega_exist = glob.glob(os.path.join(ts_case_dir, f"*OMEGA.*"))
-                    print(omega_exist[0])
-                    print(type(omega_exist[0]))
                     if omega_exist:
                         tclim_ds = xr.open_dataset(omega_exist[0])
                         omega = tclim_ds["OMEGA"]
-                        # Interpolate the data to the nearest requested pressure level
+                        # Interpolate the data to the nearest 500mb level
                         omega_500 = omega.interp(lev=500, method='nearest')
                         tclim_ds['OMEGA500'] = omega_500
                         tclim_ds.drop_vars(["OMEGA"])
