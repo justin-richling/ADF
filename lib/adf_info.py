@@ -187,6 +187,7 @@ class AdfInfo(AdfConfig):
                 #Get years from pre-made timeseries file(s)
                 found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)
                 found_yr_range = np.arange(found_syear_baseline,found_eyear_baseline,1)
+                print("found_yr_range",found_yr_range)
 
                 #History file path isn't needed if user is running ADF directly on time series.
                 #So make sure start and end year are specified:
@@ -695,6 +696,8 @@ class AdfInfo(AdfConfig):
         #Extract first and last years from dataset:
         syr = int(cam_ts_data.time[0].dt.year.values)
         eyr = int(cam_ts_data.time[-1].dt.year.values)
+
+        print(case_name,":",syr, eyr)
 
         if eyr-syr >= 100:
             msg = f"WARNING: the found climo year range is large: {eyr-syr} years, "
