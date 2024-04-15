@@ -1881,13 +1881,13 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     elif 'contour_levels_range' in kwargs:
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
-        print("levels1",levels1,"\n")
         levels1 = np.arange(*kwargs['contour_levels_range'])
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     else:
         levels1 = np.linspace(minval, maxval, 12)
         norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     #End if
+    print("levels1",levels1,"\n")
 
     #Check if the minval and maxval are actually different.  If not,
     #then set "levels1" to be an empty list, which will cause the
