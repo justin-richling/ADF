@@ -428,7 +428,7 @@ class AdfDiag(AdfWeb):
                             if "method" in vres["derive"]:
                                 if vres["derive"]["method"] == "interp":
                                     for dim in ["time","lat","lon","lev","ilev"]:
-                                        if dim in vres["derive"]["method"].keys():
+                                        if dim in vres["derive"].keys():
                                             print(res["derive"]["method"][dim])
                                             print(dim)
                                             der_from = vres['derive']['derivable_from']
