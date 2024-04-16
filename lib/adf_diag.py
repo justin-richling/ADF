@@ -471,7 +471,7 @@ class AdfDiag(AdfWeb):
                             #Check if the ocean fraction has already been regridded
                             #and saved:
                             if ts_ds:
-                                ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])  #tclim_ds['OCNFRAC']
+                                ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])
                                 if ofrac_ds:
                                     ofrac = ofrac_ds['OCNFRAC']
                                     # set the bounds of regridded ocnfrac to 0 to 1
