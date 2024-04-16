@@ -581,6 +581,7 @@ SST:
   #derivable_from: ['TS']
   derive: 
     method: "mask"
+    derivable_from: ['TS']
 
 U10:
   category: "Surface variables"
@@ -705,7 +706,8 @@ OMEGA500:
   #derivable_from: ['OMEGA']
   derive: 
     method: "interp"
-    level: 500
+    lev: 500
+    derivable_from: 'OMEGA'
 
 PINT:
   category: "State"

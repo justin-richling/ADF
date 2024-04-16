@@ -422,9 +422,36 @@ class AdfDiag(AdfWeb):
                                 if constit not in diag_var_list:
                                     diag_var_list.append(constit)
                             vars_to_derive.append(var)
-                            continue
-                        elif var in ["SST","OMEGA500"]:
-                            print(f"'{var}' will be created from different way.")
+                            #continue
+                        elif "derive" in vres:
+                            print()
+                            if "method" in vres["derive"]:
+                                if vres["derive"]["method"] is "interp":
+                                    for dim in ["time","lat","lon","lev","ilev"]:
+                                        if dim in vres["derive"]["method"].keys():
+                                            print(res["derive"]["method"][dim])
+                                            print(dim)
+                                            der_from = vres['derive']['derivable_from']
+                                            ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
+                                            if ts_exist:
+                                                der_from_ds = xr.open_dataset(ts_exist[0])
+                                                der_from_var = der_from_ds[der_from]
+                                                # Interpolate the data to the nearest 500mb level
+                                                der_var = der_from_var.interp(lev=500, method='nearest')
+                                                der_from_ds[var] = der_var
+                                                der_from_ds.drop_vars([der_from])
+
+                                                #Save to new time series file
+                                                save_to_nc(der_from_ds, Path(ts_case_dir) / Path(ts_exist[0].replace(der_from, var)))
+                                            else:
+                                                print(f"Missing '{der_from}' variable, can't create '{var}' time series.")
+                                                continue
+                                            #.interp(dim=vres["derive"]["method"][dim], method='nearest')
+                                if vres["derive"]["method"] is "mask":
+                                    print()
+
+                        #elif var in ["SST","OMEGA500"]:
+                        #    print(f"'{var}' will be created from different way.")
                         else:
                             msg = f"WARNING: {var} is not in the variable defaults file for deriving."
                             msg += " No time series will be generated."
@@ -504,7 +531,7 @@ class AdfDiag(AdfWeb):
                     #End if
                 #End if
 
-                if 'OMEGA500' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*OMEGA500*")):
+                """if 'OMEGA500' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*OMEGA500*")):
                     omega_exist = glob.glob(os.path.join(ts_case_dir, f"*OMEGA.*"))
                     if omega_exist:
                         omega_ds = xr.open_dataset(omega_exist[0])
@@ -518,7 +545,7 @@ class AdfDiag(AdfWeb):
                         save_to_nc(omega_ds, Path(ts_case_dir) / Path(omega_exist[0].replace("OMEGA","OMEGA500")))
                     else:
                         print("Missing 'OMEGA' variable, can't create 'OMEGA500' time series.")
-                        continue
+                        continue"""
                     
 
 
