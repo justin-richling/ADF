@@ -358,6 +358,24 @@ class AdfDiag(AdfWeb):
 
         # End def
 
+        def save_to_nc(tosave, outname, attrs=None, proc=None):
+            """Saves xarray variable to new netCDF file"""
+
+            xo = tosave  # used to have more stuff here.
+            # deal with getting non-nan fill values.
+            if isinstance(xo, xr.Dataset):
+                enc_dv = {xname: {'_FillValue': None} for xname in xo.data_vars}
+            else:
+                enc_dv = {}
+            #End if
+            enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
+            enc = {**enc_c, **enc_dv}
+            if attrs is not None:
+                xo.attrs = attrs
+            if proc is not None:
+                xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+            xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
+
         # Notify user that script has started:
         print("\n  Generating CAM time series files...")
 
@@ -466,23 +484,7 @@ class AdfDiag(AdfWeb):
                         vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
                     )
 
-                def save_to_nc(tosave, outname, attrs=None, proc=None):
-                    """Saves xarray variable to new netCDF file"""
-
-                    xo = tosave  # used to have more stuff here.
-                    # deal with getting non-nan fill values.
-                    if isinstance(xo, xr.Dataset):
-                        enc_dv = {xname: {'_FillValue': None} for xname in xo.data_vars}
-                    else:
-                        enc_dv = {}
-                    #End if
-                    enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
-                    enc = {**enc_c, **enc_dv}
-                    if attrs is not None:
-                        xo.attrs = attrs
-                    if proc is not None:
-                        xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
-                    xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
+                
 
                 #Derive variables that come from other means
                 #EXAMPLE: derive SST's from TS if not in CAM output
