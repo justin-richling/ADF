@@ -697,7 +697,7 @@ OMEGA:
   obs_var_name: "OMEGA"
 
 OMEGA500:
-  contour_levels_range: [-0.0675,0.068,0.0075]
+  contour_levels_range: [-0.000675,0.00068,0.000075]
   category: "State"
 
 PINT:
