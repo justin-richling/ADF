@@ -439,7 +439,7 @@ class AdfDiag(AdfWeb):
                                                 der_from_var = der_from_ds[der_from]
                                                 # Interpolate the data to the nearest 500mb level
                                                 #der_var = der_from_var.interp(dim=vres["derive"][dim], method='nearest')
-                                                der_var = der_from_var.interp({dim: ["derive"][dim]}, method='nearest')
+                                                der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
                                                 der_from_ds[var] = der_var
                                                 der_from_ds.drop_vars([der_from])
 
