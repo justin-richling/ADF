@@ -1148,6 +1148,7 @@ class AdfDiag(AdfWeb):
         """
 
         for var in vars_to_derive:
+            print(f"deriving from constituents for {var}\n")
             if var == "PRECT":
                 # PRECT can be found by simply adding PRECL and PRECC
                 # grab file names for the PRECL and PRECC files from the case ts directory
