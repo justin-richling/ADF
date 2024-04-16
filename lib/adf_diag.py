@@ -429,7 +429,7 @@ class AdfDiag(AdfWeb):
                                 if vres["derive"]["method"] == "interp":
                                     for dim in ["time","lat","lon","lev","ilev"]:
                                         if dim in vres["derive"].keys():
-                                            print(res["derive"]["method"][dim])
+                                            print(vres["derive"]["method"][dim])
                                             print(dim)
                                             der_from = vres['derive']['derivable_from']
                                             ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
