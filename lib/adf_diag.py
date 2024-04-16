@@ -413,9 +413,10 @@ class AdfDiag(AdfWeb):
                     #Try and check if the variable is in the case TS directory
                     # and if not, check if it is derived
                     if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
-                        print(var,"\n")
+                        
                         vres = res.get(var, {})
                         if "derivable_from" in vres:
+                            print("derivable_from",var,"\n")
                             constit_list = vres["derivable_from"]
                             for constit in constit_list:
                                 if constit not in diag_var_list:
