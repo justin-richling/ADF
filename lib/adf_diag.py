@@ -430,7 +430,7 @@ class AdfDiag(AdfWeb):
                                     for dim in ["time","lat","lon","lev","ilev"]:
                                         if dim in vres["derive"].keys():
                                             print(dim)
-                                            print(vres["derive"]["method"][dim])
+                                            print(vres["derive"][dim])
                                             
                                             der_from = vres['derive']['derivable_from']
                                             ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
@@ -438,7 +438,7 @@ class AdfDiag(AdfWeb):
                                                 der_from_ds = xr.open_dataset(ts_exist[0])
                                                 der_from_var = der_from_ds[der_from]
                                                 # Interpolate the data to the nearest 500mb level
-                                                der_var = der_from_var.interp(lev=500, method='nearest')
+                                                der_var = der_from_var.interp(dim=vres["derive"][dim], method='nearest')
                                                 der_from_ds[var] = der_var
                                                 der_from_ds.drop_vars([der_from])
 
