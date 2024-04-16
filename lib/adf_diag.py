@@ -426,7 +426,7 @@ class AdfDiag(AdfWeb):
                         elif "derive" in vres:
                             print()
                             if "method" in vres["derive"]:
-                                if vres["derive"]["method"] is "interp":
+                                if vres["derive"]["method"] == "interp":
                                     for dim in ["time","lat","lon","lev","ilev"]:
                                         if dim in vres["derive"]["method"].keys():
                                             print(res["derive"]["method"][dim])
@@ -447,7 +447,7 @@ class AdfDiag(AdfWeb):
                                                 print(f"Missing '{der_from}' variable, can't create '{var}' time series.")
                                                 continue
                                             #.interp(dim=vres["derive"]["method"][dim], method='nearest')
-                                if vres["derive"]["method"] is "mask":
+                                if vres["derive"]["method"] == "mask":
                                     print()
 
                         #elif var in ["SST","OMEGA500"]:
