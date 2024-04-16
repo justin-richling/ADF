@@ -429,7 +429,8 @@ class AdfDiag(AdfWeb):
                             msg += " No time series will be generated."
                             print(msg)
                             continue
-                
+
+                #Derive variables that come from constituents
                 if vars_to_derive:
                     self.derive_variables(
                         vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
@@ -453,12 +454,14 @@ class AdfDiag(AdfWeb):
                         xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
                     xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
 
-                
-                #If the variable is ocean fraction, then save the dataset for use later:
+                #Derive variables that come from other means
+                #EXAMPLE: derive SST's from TS if not in CAM output
+                #EXAMPLE: derive OMEGA500 from OMEGA, etc 
+
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
                     if ts_exist:
-                        tclim_ds = xr.open_dataset(ts_exist[0])
+                        ts_ds = xr.open_dataset(ts_exist[0])
                     else:
                         print("Missing 'TS' variable, can't create SST time series.")
                         continue
@@ -467,21 +470,28 @@ class AdfDiag(AdfWeb):
                         if vres['mask'].lower() == 'ocean':
                             #Check if the ocean fraction has already been regridded
                             #and saved:
-                            if tclim_ds:
+                            if ts_ds:
                                 ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])  #tclim_ds['OCNFRAC']
-                                ofrac = ofrac_ds['OCNFRAC']
-                                # set the bounds of regridded ocnfrac to 0 to 1
-                                ofrac = xr.where(ofrac>1,1,ofrac)
-                                ofrac = xr.where(ofrac<0,0,ofrac)
-                                # mask the land in TS for global means
-                                tclim_ds['OCNFRAC'] = ofrac
-                                ts_tmp = tclim_ds['TS']
-                                ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
-                                tclim_ds['SST'] = ts_tmp
-                                #Finally, write re-gridded data to output file:
-                                save_to_nc(tclim_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
+                                if ofrac_ds:
+                                    ofrac = ofrac_ds['OCNFRAC']
+                                    # set the bounds of regridded ocnfrac to 0 to 1
+                                    ofrac = xr.where(ofrac>1,1,ofrac)
+                                    ofrac = xr.where(ofrac<0,0,ofrac)
+                                    # mask the land in TS for global means
+                                    ts_ds['OCNFRAC'] = ofrac
+                                    ts_tmp = ts_ds['TS']
+                                    ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                    ts_ds['SST'] = ts_tmp
+
+                                    #Save to new time series file
+                                    save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
+                                else:
+                                    wmsg = "OCNFRAC not found in CAM output,"
+                                    wmsg += f" unable to apply mask to 'SST'"
+                                    print(wmsg)
+                                
                             else:
-                                wmsg = "OCNFRAC not found in target,"
+                                wmsg = "TS not found in CAM output,"
                                 wmsg += f" unable to apply mask to 'SST'"
                                 print(wmsg)
                             #End if
@@ -492,13 +502,15 @@ class AdfDiag(AdfWeb):
                 if 'OMEGA500' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*OMEGA500*")):
                     omega_exist = glob.glob(os.path.join(ts_case_dir, f"*OMEGA.*"))
                     if omega_exist:
-                        tclim_ds = xr.open_dataset(omega_exist[0])
-                        omega = tclim_ds["OMEGA"]
+                        omega_ds = xr.open_dataset(omega_exist[0])
+                        omega = omega_ds["OMEGA"]
                         # Interpolate the data to the nearest 500mb level
                         omega_500 = omega.interp(lev=500, method='nearest')
-                        tclim_ds['OMEGA500'] = omega_500
-                        tclim_ds.drop_vars(["OMEGA"])
-                        save_to_nc(tclim_ds, Path(ts_case_dir) / Path(omega_exist[0].replace("OMEGA","OMEGA500")))
+                        omega_ds['OMEGA500'] = omega_500
+                        omega_ds.drop_vars(["OMEGA"])
+
+                        #Save to new time series file
+                        save_to_nc(omega_ds, Path(ts_case_dir) / Path(omega_exist[0].replace("OMEGA","OMEGA500")))
                     else:
                         print("Missing 'OMEGA' variable, can't create 'OMEGA500' time series.")
                         continue
@@ -1191,3 +1203,44 @@ class AdfDiag(AdfWeb):
                 os.system(
                     f"ncap2 -s 'RESTOM=(FSNT-FLNT)' {constit_files[1]} {derived_file}"
                 )
+            
+            """if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
+                ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
+                if ts_exist:
+                    ts_ds = xr.open_dataset(ts_exist[0])
+                else:
+                    print("Missing 'TS' variable, can't create SST time series.")
+                    continue
+
+                if 'mask' in vres:
+                    if vres['mask'].lower() == 'ocean':
+                        #Check if the ocean fraction has already been regridded
+                        #and saved:
+                        if ts_ds:
+                            ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])  #tclim_ds['OCNFRAC']
+                            if ofrac_ds:
+                                ofrac = ofrac_ds['OCNFRAC']
+                                # set the bounds of regridded ocnfrac to 0 to 1
+                                ofrac = xr.where(ofrac>1,1,ofrac)
+                                ofrac = xr.where(ofrac<0,0,ofrac)
+                                # mask the land in TS for global means
+                                ts_ds['OCNFRAC'] = ofrac
+                                ts_tmp = ts_ds['TS']
+                                ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                ts_ds['SST'] = ts_tmp
+
+                                #Save to new time series file
+                                save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
+                            else:
+                                wmsg = "OCNFRAC not found in CAM output,"
+                                wmsg += f" unable to apply mask to 'SST'"
+                                print(wmsg)
+                                
+                        else:
+                            wmsg = "TS not found in CAM output,"
+                            wmsg += f" unable to apply mask to 'SST'"
+                            print(wmsg)
+                        #End if
+                    #End if
+                #End if
+            #End if"""

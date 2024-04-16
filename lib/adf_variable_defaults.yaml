@@ -578,6 +578,9 @@ SST:
   obs_var_name: "TS"
   category: "Surface variables"
   mask: "ocean"
+  derivable_from: ['TS']
+  derive: 
+    method: "mask"
 
 U10:
   category: "Surface variables"
@@ -697,8 +700,12 @@ OMEGA:
   obs_var_name: "OMEGA"
 
 OMEGA500:
-  contour_levels_range: [-0.000675,0.00068,0.000075]
+  #contour_levels_range: [-0.000675,0.00068,0.000075]
   category: "State"
+  derivable_from: ['OMEGA']
+  derive: 
+    method: "interp"
+    level: 500
 
 PINT:
   category: "State"
