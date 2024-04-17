@@ -1314,14 +1314,16 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             norm = cp_info['norm1']"""
         if i == 0:
             test_levels = cp_info['test_levels1']
+            levs = np.unique(np.array(test_levels))
             cmap = cp_info['cmap1']
             test_norm = cp_info['test_norm1']
         if i == 1:
             base_levels = cp_info['base_levels1']
+            levs = np.unique(np.array(base_levels))
             cmap = cp_info['cmap1']
             base_norm = cp_info['base_norm1']
 
-        levs = np.unique(np.array(levels))
+        #levs = np.unique(np.array(levels))
         if len(levs) < 2:
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
