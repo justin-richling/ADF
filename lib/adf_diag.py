@@ -1208,7 +1208,7 @@ class AdfDiag(AdfWeb):
                 print(ermsg)
             else:
                 #Open a new dataset with all the constituent files/variables
-                ds = xr.open_mfdataset(constit_files)
+                ds = xr.open_mfdataset(constit_files, compat='no_conflicts')
     
                 # create new file name for derived variable
                 derived_file = constit_files[0].replace(constit_list[0], var)
