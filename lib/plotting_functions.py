@@ -1418,6 +1418,16 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     )
     fig.colorbar(img[1], cax=cb_mean_ax, **cp_info['colorbar_opt'])
 
+    cb_mean_ax = inset_axes(ax1,
+                    width="5%",  # width = 5% of parent_bbox width
+                    height="100%",  # height : 100%
+                    loc='lower left',
+                    bbox_to_anchor=(1.05, 0, 1, 1),
+                    bbox_transform=ax2.transAxes,
+                    borderpad=0,
+                    )
+    fig.colorbar(img[0], cax=cb_mean_ax, **cp_info['colorbar_opt'])
+
     cb_diff_ax = inset_axes(ax3,
                     width="5%",  # width = 5% of parent_bbox width
                     height="100%",  # height : 100%
@@ -1959,10 +1969,8 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
         if ((minval < 0) and (0 < maxval)) and mplv > 2:
-            print("color norm: normfunc")
             norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
         else:
-            print("color norm: Normalize")
             norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
         #End if
     #End if
