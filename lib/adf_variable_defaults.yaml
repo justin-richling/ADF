@@ -708,6 +708,7 @@ OMEGA500:
   base_contour_levels_range: [-0.2,0.21,0.025]
   base_no_norm: True
   #diff_contour_range: [-0.2,0.3,0.025]
+  contour_levels_range: [-0.2,0.21,0.025]
   colormap: "RdBu_r"
   diff_contour_range: [-0.1,0.11,0.02]
   #contour_levels_range: [-0.00675,0.0068,0.00075]

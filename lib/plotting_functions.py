@@ -1327,13 +1327,13 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         if len(levs) < 2:
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
-        """else:
+        else:
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
                        transform=ccrs.PlateCarree(), transform_first=True,
                        **cp_info['contourf_opt']))
             if paleo:
-                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))"""
-        if i == 0:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+        """if i == 0:
             img.append(ax[i].contourf(lons, lats, a, levels=test_levels, cmap=cmap, norm=test_norm,
                        transform=ccrs.PlateCarree(), transform_first=True,
                        **cp_info['contourf_opt']))
@@ -1350,7 +1350,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                        transform=ccrs.PlateCarree(), transform_first=True,
                        **cp_info['contourf_opt']))
             if paleo:
-                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))"""
 
         #End if
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
@@ -1418,7 +1418,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     )
     fig.colorbar(img[1], cax=cb_mean_ax, **cp_info['colorbar_opt'])
 
-    cb_mean_ax = inset_axes(ax1,
+    """cb_mean_ax = inset_axes(ax1,
                     width="5%",  # width = 5% of parent_bbox width
                     height="100%",  # height : 100%
                     loc='lower left',
@@ -1426,7 +1426,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     bbox_transform=ax2.transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img[0], cax=cb_mean_ax, **cp_info['colorbar_opt'])
+    fig.colorbar(img[0], cax=cb_mean_ax, **cp_info['colorbar_opt'])"""
 
     cb_diff_ax = inset_axes(ax3,
                     width="5%",  # width = 5% of parent_bbox width
@@ -1913,7 +1913,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         cmap1 = 'coolwarm'
     #End if
 
-    """if 'contour_levels' in kwargs:
+    if 'contour_levels' in kwargs:
         levels1 = kwargs['contour_levels']
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     elif 'contour_levels_range' in kwargs:
@@ -1925,9 +1925,9 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     else:
         levels1 = np.linspace(minval, maxval, 12)
         norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    #End if"""
+    #End if
 
-    minval = np.min(adata)
+    """minval = np.min(adata)
     maxval = np.max(adata)
     if 'test_contour_levels' in kwargs:
         test_levels1 = kwargs['test_contour_levels']
@@ -1965,7 +1965,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     else:
         base_levels1 = np.linspace(minval, maxval, 12)
         base_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    #End if
+    #End if"""
 
     #Check if the minval and maxval are actually different.  If not,
     #then set "levels1" to be an empty list, which will cause the
@@ -2026,7 +2026,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         contourf_opt.update(kwargs['mpl'].get('contourf',{}))
         colorbar_opt.update(kwargs['mpl'].get('colorbar',{}))
     #End if
-    return {'subplots_opt': subplots_opt,
+    """return {'subplots_opt': subplots_opt,
             'contourf_opt': contourf_opt,
             'colorbar_opt': colorbar_opt,
             'normdiff': normdiff,
@@ -2037,6 +2037,18 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
             'base_levels1': base_levels1,
             'test_norm1': test_norm1,
             'test_levels1': test_levels1,
+            'plot_log_p': plot_log_p
+            }"""
+
+    return {'subplots_opt': subplots_opt,
+            'contourf_opt': contourf_opt,
+            'colorbar_opt': colorbar_opt,
+            'normdiff': normdiff,
+            'cmapdiff': cmapdiff,
+            'levelsdiff': levelsdiff,
+            'cmap1': cmap1,
+            'norm1': norm1,
+            'levels1': levels1,
             'plot_log_p': plot_log_p
             }
 
