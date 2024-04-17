@@ -1308,17 +1308,37 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
             norm = cp_info['normdiff']
-        else:
+        """else:
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
-            norm = cp_info['norm1']
+            norm = cp_info['norm1']"""
+        if i == 0:
+            test_levels = cp_info['test_levels1']
+            cmap = cp_info['cmap1']
+            test_norm = cp_info['test_norm1']
+        if i == 1:
+            base_levels = cp_info['base_levels1']
+            cmap = cp_info['cmap1']
+            base_norm = cp_info['base_norm1']
 
         levs = np.unique(np.array(levels))
         if len(levs) < 2:
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
-        else:
+        """else:
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,
+                       **cp_info['contourf_opt']))
+            if paleo:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))"""
+        if i == 0:
+            img.append(ax[i].contourf(lons, lats, a, levels=test_levels, cmap=cmap, norm=test_norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,
+                       **cp_info['contourf_opt']))
+            if paleo:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+        if i == 1:
+            img.append(ax[i].contourf(lons, lats, a, levels=base_levels, cmap=cmap, norm=base_norm,
                        transform=ccrs.PlateCarree(), transform_first=True,
                        **cp_info['contourf_opt']))
             if paleo:
@@ -1875,7 +1895,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         cmap1 = 'coolwarm'
     #End if
 
-    if 'contour_levels' in kwargs:
+    """if 'contour_levels' in kwargs:
         levels1 = kwargs['contour_levels']
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     elif 'contour_levels_range' in kwargs:
@@ -1887,6 +1907,35 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     else:
         levels1 = np.linspace(minval, maxval, 12)
         norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    #End if"""
+
+
+    if 'test_contour_levels' in kwargs:
+        test_levels1 = kwargs['test_contour_levels']
+        test_norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    elif 'test_contour_levels_range' in kwargs:
+        assert len(kwargs['test_contour_levels_range']) == 3, \
+        "test_contour_levels_range must have exactly three entries: min, max, step"
+        test_levels1 = np.arange(*kwargs['test_contour_levels_range'])
+        #norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    else:
+        test_levels1 = np.linspace(minval, maxval, 12)
+        test_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    #End if
+
+    if 'base_contour_levels' in kwargs:
+        base_levels1 = kwargs['base_contour_levels']
+        base_norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    elif 'base_contour_levels_range' in kwargs:
+        assert len(kwargs['base_contour_levels_range']) == 3, \
+        "base_contour_levels_range must have exactly three entries: min, max, step"
+        base_levels1 = np.arange(*kwargs['contour_levels_range'])
+        #norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        base_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    else:
+        base_levels1 = np.linspace(minval, maxval, 12)
+        base_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     #End if
 
     #Check if the minval and maxval are actually different.  If not,
@@ -1957,8 +2006,10 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
             'cmapdiff': cmapdiff,
             'levelsdiff': levelsdiff,
             'cmap1': cmap1,
-            'norm1': norm1,
-            'levels1': levels1,
+            'base_norm1': base_norm1,
+            'base_levels1': base_levels1,
+            'test_norm1': test_norm1,
+            'test_levels1': test_levels1,
             'plot_log_p': plot_log_p
             }
 
