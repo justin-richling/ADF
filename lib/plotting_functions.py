@@ -1416,7 +1416,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     bbox_transform=ax2.transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img[1], cax=cb_mean_ax, **cp_info['colorbar_opt'])
+    fig.colorbar(img[1], cax=cb_mean_ax, extend='both', **cp_info['colorbar_opt'])
 
     """cb_mean_ax = inset_axes(ax1,
                     width="5%",  # width = 5% of parent_bbox width

@@ -701,6 +701,9 @@ OMEGA:
   obs_var_name: "OMEGA"
 
 OMEGA500:
+  scale_factor: 864.0
+  new_unit: 'hPa d$^{-1}$'
+  contour_levels_range: [-100,101,10]
   test_contour_levels_range: [-0.2,0.21,0.025]
   test_no_norm: True
   #test_contour_levels_range: [-3,3.1,0.25]
