@@ -491,10 +491,8 @@ class AdfDiag(AdfWeb):
                 #EXAMPLE: derive OMEGA500 from OMEGA, etc 
 
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
-                    print("here?")
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
                     if ts_exist:
-                        print("here exist?")
                         ts_ds = xr.open_dataset(ts_exist[0])
                     else:
                         print("Missing 'TS' variable, can't create SST time series.")
@@ -505,10 +503,8 @@ class AdfDiag(AdfWeb):
                             #Check if the ocean fraction has already been regridded
                             #and saved:
                             if ts_ds:
-                                print("here ts_ds?")
                                 ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])
                                 if ofrac_ds:
-                                    print("here ofrac_ds?")
                                     ofrac = ofrac_ds['OCNFRAC']
                                     # set the bounds of regridded ocnfrac to 0 to 1
                                     ofrac = xr.where(ofrac>1,1,ofrac)
