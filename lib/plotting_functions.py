@@ -1909,10 +1909,11 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     #End if"""
 
-
+    minval = np.min(adata)
+    maxval = np.max(adata)
     if 'test_contour_levels' in kwargs:
         test_levels1 = kwargs['test_contour_levels']
-        test_norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        test_norm1 = mpl.colors.Normalize(vmin=min(test_levels1), vmax=max(test_levels1))
     elif 'test_contour_levels_range' in kwargs:
         assert len(kwargs['test_contour_levels_range']) == 3, \
         "test_contour_levels_range must have exactly three entries: min, max, step"
@@ -1924,9 +1925,11 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         test_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     #End if
 
+    minval = np.min(bdata)
+    maxval = np.max(bdata)
     if 'base_contour_levels' in kwargs:
         base_levels1 = kwargs['base_contour_levels']
-        base_norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        base_norm1 = mpl.colors.Normalize(vmin=min(base_levels1), vmax=max(base_levels1))
     elif 'base_contour_levels_range' in kwargs:
         assert len(kwargs['base_contour_levels_range']) == 3, \
         "base_contour_levels_range must have exactly three entries: min, max, step"
