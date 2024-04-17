@@ -435,7 +435,7 @@ class AdfDiag(AdfWeb):
                         vres = res.get(var, {})
                         if "derivable_from" in vres:
                             print("derivable_from",var,"\n")
-                            constit_list = vres["from"]
+                            constit_list = vres["derivable_from"]
                             for constit in constit_list:
                                 if constit not in diag_var_list:
                                     diag_var_list.append(constit)
