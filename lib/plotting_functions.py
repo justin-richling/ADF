@@ -1345,6 +1345,12 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                        **cp_info['contourf_opt']))
             if paleo:
                 img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+        if i == 2:
+            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,
+                       **cp_info['contourf_opt']))
+            if paleo:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
 
         #End if
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
