@@ -1918,7 +1918,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         "test_contour_levels_range must have exactly three entries: min, max, step"
         test_levels1 = np.arange(*kwargs['test_contour_levels_range'])
         #norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+        test_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     else:
         test_levels1 = np.linspace(minval, maxval, 12)
         test_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
