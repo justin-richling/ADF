@@ -1172,8 +1172,146 @@ class AdfDiag(AdfWeb):
         print("   ")
 
     #########
+    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+        """
+        Derive variables acccording to steps given here.  Since derivations will depend on the
+        variable, each variable to derive will need its own set of steps below.
 
-    def derive_variables(self, vars_to_derive=None, ts_dir=None, overwrite=None):
+        Caution: this method assumes that there will be one time series file per variable
+
+        If the file for the derived variable exists, the kwarg `overwrite` determines
+        whether to overwrite the file (true) or exit with a warning message.
+
+        """
+
+        for var in vars_to_derive:
+            print(f"\t - deriving time series for {var}")
+
+            #Check whether there are parts to derive from and if there is an associated equation
+            vres = res.get(var, {})
+            if "derivable_from" in vres:
+                constit_list = vres['derivable_from']
+            else:
+                print("WARNING: No constituents listed in defaults config file, moving on")
+                continue
+
+            #Grab all required time series files for derived var
+            constit_files = []
+            for constit in constit_list:
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
+
+            #Check if all the constituent files were found
+            if len(constit_files) != len(constit_list):
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                print(ermsg)
+            else:
+                #Open a new dataset with all the constituent files/variables
+                ds = xr.open_mfdataset(constit_files)
+    
+                # create new file name for derived variable
+                derived_file = constit_files[0].replace(constit_list[0], var)
+
+                #Check if clobber is true for file
+                if Path(derived_file).is_file():
+                    if overwrite:
+                        Path(derived_file).unlink()
+                    else:
+                        print(
+                            f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                        )
+                        continue
+
+                #NOTE: this will need to be changed when derived equations are more complex! - JR
+                if var == "RESTOM":
+                    der_val = ds["FSNT"]-ds["FLNT"]
+                else:
+                    #Loop through all constituents and sum
+                    der_val = 0
+                    for v in constit_list:
+                        der_val += ds[v]
+                
+                #Set derived variable name and add to dataset
+                der_val.name = var
+                ds[var] = der_val
+
+                #Aerosol Calculations - used for zonal plots
+                #These will be multiplied by rho (density of dry air)
+                ds_pmid_done = False
+                ds_t_done = False
+                if var in res["aerosol_zonal_list"]:
+                    
+                    #Only calculate once for all aerosol vars
+                    if not ds_pmid_done:
+                        ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
+                        ds_pmid_done = True
+                        if not ds_pmid:
+                            errmsg = f"Missing necessary files for dry air density (rho) calculation.\n"
+                            errmsg += "Please make sure 'PMID' is in the CAM run for aerosol calculations"
+                            print(errmsg)
+                            continue
+                    if not ds_t_done:
+                        ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
+                        ds_t_done = True
+                        if not ds_t:
+                            errmsg = f"Missing necessary files for dry air density (rho) calculation.\n"
+                            errmsg += "Please make sure 'T' is in the CAM run for aerosol calculations"
+                            print(errmsg)
+                            continue
+
+                    #Multiply aerosol by dry air density (rho): (P/Rd*T)
+                    ds[var] = ds[var]*(ds_pmid["PMID"]/(res["Rgas"]*ds_t["T"]))
+
+                    #Sulfate conversion factor
+                    if var == "SO4":
+                        ds[var] = ds[var]*(96./115.)
+
+                #Drop all constituents from final saved dataset
+                #These are not necessary because they have their own time series files
+                ds_final = ds.drop_vars(constit_list)
+                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+########
+
+#Helper Function(s)
+def _load_dataset(fils):
+    """
+    This method exists to get an xarray Dataset from input file information that can be passed into the plotting methods.
+
+    Parameters
+    ----------
+    fils : list
+        strings or paths to input file(s)
+
+    Returns
+    -------
+    xr.Dataset
+
+    Notes
+    -----
+    When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
+    """
+    import warnings  # use to warn user about missing files.
+
+    #Format warning messages:
+    def my_formatwarning(msg, *args, **kwargs):
+        """Issue `msg` as warning."""
+        return str(msg) + '\n'
+    warnings.formatwarning = my_formatwarning
+
+    if len(fils) == 0:
+        warnings.warn("Input file list is empty.")
+        return None
+    elif len(fils) > 1:
+        return xr.open_mfdataset(fils, combine='by_coords')
+    else:
+        return xr.open_dataset(fils[0])
+    #End if
+#End def
+########
+
+    '''def derive_variables(self, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1286,4 +1424,4 @@ class AdfDiag(AdfWeb):
                         #End if
                     #End if
                 #End if
-            #End if"""
+            #End if"""'''
