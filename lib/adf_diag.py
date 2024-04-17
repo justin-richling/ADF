@@ -1236,7 +1236,7 @@ class AdfDiag(AdfWeb):
                 der_val.name = var
                 ds[var] = der_val
 
-                #Aerosol Calculations - used for zonal plots
+                """#Aerosol Calculations - used for zonal plots
                 #These will be multiplied by rho (density of dry air)
                 ds_pmid_done = False
                 ds_t_done = False
@@ -1265,7 +1265,7 @@ class AdfDiag(AdfWeb):
 
                     #Sulfate conversion factor
                     if var == "SO4":
-                        ds[var] = ds[var]*(96./115.)
+                        ds[var] = ds[var]*(96./115.)"""
 
                 #Drop all constituents from final saved dataset
                 #These are not necessary because they have their own time series files
