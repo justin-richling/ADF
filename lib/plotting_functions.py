@@ -1422,7 +1422,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     width="5%",  # width = 5% of parent_bbox width
                     height="100%",  # height : 100%
                     loc='lower left',
-                    bbox_to_anchor=(0.45, 0, 1, 1),
+                    bbox_to_anchor=(0.05, 0, 1, 1),
                     bbox_transform=ax2.transAxes,
                     borderpad=0,
                     )

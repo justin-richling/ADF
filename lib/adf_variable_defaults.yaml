@@ -701,7 +701,8 @@ OMEGA:
   obs_var_name: "OMEGA"
 
 OMEGA500:
-  test_contour_levels_range: [-3,3.1,0.25]
+  test_contour_levels_range: [-0.2,0.21,0.025]
+  #test_contour_levels_range: [-3,3.1,0.25]
   base_contour_levels_range: [-1.5,1.6,0.25]
   #diff_contour_range: [-0.2,0.3,0.025]
   colormap: "RdBu_r"
