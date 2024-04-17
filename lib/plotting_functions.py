@@ -1308,11 +1308,11 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
             norm = cp_info['normdiff']
-        """else:
+        else:
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
-            norm = cp_info['norm1']"""
-        if i == 0:
+            norm = cp_info['norm1']
+        """if i == 0:
             test_levels = cp_info['test_levels1']
             levs = np.unique(np.array(test_levels))
             cmap = cp_info['cmap1']
@@ -1321,7 +1321,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             base_levels = cp_info['base_levels1']
             levs = np.unique(np.array(base_levels))
             cmap = cp_info['cmap1']
-            base_norm = cp_info['base_norm1']
+            base_norm = cp_info['base_norm1']"""
 
         #levs = np.unique(np.array(levels))
         if len(levs) < 2:
