@@ -435,7 +435,7 @@ class AdfDiag(AdfWeb):
                         vres = res.get(var, {})
                         if "derivable_from" in vres:
                             print("derivable_from",var,"\n")
-                            constit_list = vres["derivable_from"]
+                            constit_list = vres["from"]
                             for constit in constit_list:
                                 if constit not in diag_var_list:
                                     diag_var_list.append(constit)
@@ -450,12 +450,12 @@ class AdfDiag(AdfWeb):
                                             print(dim)
                                             print(vres["derive"][dim])
                                             
-                                            der_from = vres['derive']['derivable_from']
+                                            der_from = vres['derive']['from']
                                             ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
                                             if ts_exist:
                                                 der_from_ds = xr.open_dataset(ts_exist[0])
                                                 der_from_var = der_from_ds[der_from]
-                                                # Interpolate the data to the nearest 500mb level
+                                                # Interpolate the data to the nearest requested value
                                                 #der_var = der_from_var.interp(dim=vres["derive"][dim], method='nearest')
                                                 der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
                                                 der_from_ds[var] = der_var
