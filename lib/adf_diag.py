@@ -441,23 +441,33 @@ class AdfDiag(AdfWeb):
                                     diag_var_list.append(constit)
                             vars_to_derive.append(var)
                             #continue
+                        #Check if the derived method is different
                         elif "derive" in vres:
                             print()
                             if "method" in vres["derive"]:
                                 if vres["derive"]["method"] == "interp":
+
+                                    #Check if the interpolated dimension is part of CAM dimensions
                                     for dim in ["time","lat","lon","lev","ilev"]:
                                         if dim in vres["derive"].keys():
-                                            print(dim)
-                                            print(vres["derive"][dim])
+                                            #print(dim)
+                                            #print(vres["derive"][dim])
                                             
+                                            #Variable to derive quantity from
                                             der_from = vres['derive']['from']
+
+                                            #Check if it is part of the CAM files
                                             ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
                                             if ts_exist:
                                                 der_from_ds = xr.open_dataset(ts_exist[0])
+
+                                                #Grab variable to derive from
                                                 der_from_var = der_from_ds[der_from]
-                                                # Interpolate the data to the nearest requested value
-                                                #der_var = der_from_var.interp(dim=vres["derive"][dim], method='nearest')
+
+                                                # Interpolate the data to the nearest requested value: vres["derive"][dim]
                                                 der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
+                                                
+                                                #Set derived variable in dataset and remove the original variable
                                                 der_from_ds[var] = der_var
                                                 der_from_ds.drop_vars([der_from])
 
