@@ -1899,8 +1899,10 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
         if ((minval < 0) and (0 < maxval)) and mplv > 2:
+            print("color norm: normfunc")
             norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
         else:
+            print("color norm: Normalize")
             norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
         #End if
     #End if
