@@ -1329,7 +1329,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
-                       transform=ccrs.PlateCarree(), transform_first=True,
+                       transform=ccrs.PlateCarree(), transform_first=True,extend='both',
                        **cp_info['contourf_opt']))
             if paleo:
                 img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
@@ -1416,7 +1416,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     bbox_transform=ax2.transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img[1], cax=cb_mean_ax, extend='both', **cp_info['colorbar_opt'])
+    fig.colorbar(img[1], cax=cb_mean_ax, **cp_info['colorbar_opt'])
 
     """cb_mean_ax = inset_axes(ax1,
                     width="5%",  # width = 5% of parent_bbox width
