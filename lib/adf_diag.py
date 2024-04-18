@@ -498,8 +498,6 @@ class AdfDiag(AdfWeb):
 
                 #Derive variables that come from other means
                 #EXAMPLE: derive SST's from TS if not in CAM output
-                #EXAMPLE: derive OMEGA500 from OMEGA, etc 
-
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
                     if ts_exist:
