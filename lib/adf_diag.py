@@ -1224,6 +1224,7 @@ class AdfDiag(AdfWeb):
                 print()
             else:
                 if mutli_ts:
+                    print("matchies??",len(constit_files_dict[constit]) == len(constit_list))
                     #Check if all the constituent files were found
                     if len(constit_files_dict[constit]) != len(constit_list):
                         ermsg = f"Not all constituent files present; {var} cannot be calculated."
