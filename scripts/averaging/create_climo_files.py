@@ -145,6 +145,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Loop over CAM output variables:
         list_of_arguments = []
+        ts_files_to_remove = []
         for var in var_list:
             print(var)
 
@@ -184,11 +185,14 @@ def create_climo_files(adf, clobber=False, search=None):
                 print("ts_files[0]",ts_files[0])
                 ds_concat = xr.open_mfdataset(ts_files)
                 concat_file = str(ts_files[0]).replace(dates[0],final_date)
-                #ds_concat.to_netcdf(concat_file, unlimited_dims='time', mode='w')
-                list_of_arguments.append((ts_files, syr, eyr, output_file, ds_concat))
+                ds_concat.to_netcdf(concat_file, unlimited_dims='time', mode='w')
+                ts_files = [concat_file]
+                ts_files_to_remove.append(concat_file)
+                #list_of_arguments.append((ts_files, syr, eyr, output_file))
             
-            else:
-                list_of_arguments.append((ts_files, syr, eyr, output_file))
+            #else:
+                #list_of_arguments.append((ts_files, syr, eyr, output_file))
+            list_of_arguments.append((ts_files, syr, eyr, output_file))
 
 
         #End of var_list loop
@@ -197,6 +201,21 @@ def create_climo_files(adf, clobber=False, search=None):
         # Parallelize the computation using multiprocessing pool:
         with mp.Pool(processes=number_of_cpu) as p:
             result = p.starmap(process_variable, list_of_arguments)
+        print("ts_files_to_remove",ts_files_to_remove)
+        if ts_files_to_remove:
+            import os
+            for del_file in ts_files_to_remove:
+                # Specify the path to the NetCDF file you want to delete
+                #file_path = "path/to/your/file.nc"
+
+                # Check if the file exists before deleting
+                if os.path.exists(del_file):
+                    # Delete the file
+                    os.remove(del_file)
+                    print("File deleted successfully.")
+                else:
+                    print("File does not exist.")
+
 
     #End of model case loop
     #----------------------
@@ -217,8 +236,9 @@ def process_variable(ts_files, syr, eyr, output_file, ds_concat=None):
     if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     else:
+        print("THIS SHOULDNT WORK ANYMORE!")
         #cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
-        cam_ts_data = ds_concat
+        #cam_ts_data = ds_concat
         
         """concat_list = sorted(glob(ts_files))
         print("concat_list",concat_list)
