@@ -198,13 +198,13 @@ def amwg_table(adf):
                 continue
             #End if
 
-            #TEMPORARY:  For now, make sure only one file exists:
+            """#TEMPORARY:  For now, make sure only one file exists:
             if len(ts_files) != 1:
                 errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
                 errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
                 print(errmsg)
                 continue
-            #End if
+            #End if"""
 
             #Load model variable data from file:
             ds = pf.load_dataset(ts_files)
