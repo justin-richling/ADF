@@ -1225,10 +1225,13 @@ class AdfDiag(AdfWeb):
                         ahh = []
                         for cons in constit_files_dict.keys():
                             ahh.append(constit_files_dict[cons][i])
-
+                        print("ahh",ahh,"\n")
                         #Open a new dataset with all the constituent files/variables
                         ds = xr.open_mfdataset(ahh, compat='override')
                         # create new file name for derived variable
+
+                        print("fdghjk",constit_files_dict[constit_list[0]][i])
+
                         derived_file = constit_files_dict[constit_list[0]][i].replace(constit_files_dict[constit_list[0]][i], var)
                         print("derived_file",derived_file,"\n")
                         #Check if clobber is true for file
