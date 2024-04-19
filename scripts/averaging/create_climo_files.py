@@ -205,7 +205,9 @@ def process_variable(ts_files, syr, eyr, output_file):
         print("start time_bnds")
         time = cam_ts_data['time']
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
+        print("start xr.DataArray - load")
         time = xr.DataArray(cam_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+        print("finish xr.DataArray - load")
         cam_ts_data['time'] = time
         cam_ts_data.assign_coords(time=time)
         cam_ts_data = xr.decode_cf(cam_ts_data)
