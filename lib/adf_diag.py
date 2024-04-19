@@ -1196,6 +1196,7 @@ class AdfDiag(AdfWeb):
             #Grab all required time series files for derived var
             constit_files = []
             for constit in constit_list:
+                print(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))),"\n")
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                     constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
