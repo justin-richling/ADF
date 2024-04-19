@@ -1205,8 +1205,8 @@ class AdfDiag(AdfWeb):
 
 
 
-                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
-                    constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
+                #if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                #    constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
             print("constit_files",constit_files,"\n")
             
