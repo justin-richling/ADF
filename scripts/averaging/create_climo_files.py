@@ -13,6 +13,7 @@ import xarray as xr  # module-level import so all functions can get to it.
 
 import multiprocessing as mp
 
+from glob import glob
 
 ##############
 #Main function
@@ -203,7 +204,6 @@ def process_variable(var, ts_files, syr, eyr, input_location, output_file):
     '''
     Compute and save the climatology file.
     '''
-    from glob import glob
     print("ts_files",ts_files)
     #Read in files via xarray (xr):
     if len(ts_files) == 1:
