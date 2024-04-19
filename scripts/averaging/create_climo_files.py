@@ -168,8 +168,10 @@ def create_climo_files(adf, clobber=False, search=None):
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
                 warnings.warn(errmsg)
                 continue
-            
+            print(len(ts_files))
+            print("WTF 1")
             if len(ts_files) > 1:
+                print("WTF 2")
                 concat_list = sorted(glob(ts_files))
                 print("concat_list",concat_list)
                 ahh = [str(i).partition(f"{var}.") for i in concat_list]
