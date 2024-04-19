@@ -200,7 +200,7 @@ def process_variable(var, ts_files, syr, eyr, input_location, output_file):
     else:
         #cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
         
-        concat_list = sorted(glob(f"{input_location} / *{var}.*"))
+        concat_list = sorted(glob(ts_files))
         print("concat_list",concat_list)
         ahh = [str(i).partition(f"{var}.") for i in concat_list]
         dates = [ah[-1][:-3] for ah in ahh]
