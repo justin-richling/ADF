@@ -179,9 +179,12 @@ def create_climo_files(adf, clobber=False, search=None):
                 dates = [ah[-1][:-3] for ah in ahh]
                 print("dates",dates)
                 final_date = f"{dates[0][0:6]}-{dates[-1][-6:]}"
-                final_date
+                print("final_date",final_date)
 
                 print("ts_files[0]",ts_files[0])
+                ds_concat = xr.open_mfdataset(ts_files)
+                concat_file = ts_files[0].replace(dates[0],final_date)
+                ds_concat.to_netcdf(concat_file, unlimited_dims='time', mode='w')
             
             list_of_arguments.append((var, ts_files, syr, eyr, input_location, output_file))
 
