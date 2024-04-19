@@ -184,9 +184,11 @@ def create_climo_files(adf, clobber=False, search=None):
                 print("ts_files[0]",ts_files[0])
                 ds_concat = xr.open_mfdataset(ts_files)
                 concat_file = str(ts_files[0]).replace(dates[0],final_date)
-                ds_concat.to_netcdf(concat_file, unlimited_dims='time', mode='w')
+                #ds_concat.to_netcdf(concat_file, unlimited_dims='time', mode='w')
+                list_of_arguments.append((ts_files, syr, eyr, output_file, ds_concat))
             
-            list_of_arguments.append((var, ts_files, syr, eyr, input_location, output_file))
+            else:
+                list_of_arguments.append((ts_files, syr, eyr, output_file))
 
 
         #End of var_list loop
@@ -206,7 +208,7 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(var, ts_files, syr, eyr, input_location, output_file):
+def process_variable(ts_files, syr, eyr, output_file, ds_concat=None):
     '''
     Compute and save the climatology file.
     '''
@@ -215,7 +217,8 @@ def process_variable(var, ts_files, syr, eyr, input_location, output_file):
     if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     else:
-        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+        #cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+        cam_ts_data = ds_concat
         
         """concat_list = sorted(glob(ts_files))
         print("concat_list",concat_list)
