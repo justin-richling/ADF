@@ -168,7 +168,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 warnings.warn(errmsg)
                 continue
             
-            list_of_arguments.append((ts_files, syr, eyr, output_file))
+            list_of_arguments.append((var, ts_files, syr, eyr, input_location, output_file))
 
 
         #End of var_list loop
@@ -188,16 +188,29 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(ts_files, syr, eyr, output_file):
+def process_variable(var, ts_files, syr, eyr, input_location, output_file):
     '''
     Compute and save the climatology file.
     '''
+    from glob import glob
     print("ts_files",ts_files)
     #Read in files via xarray (xr):
     if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     else:
-        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True)
+        #cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+        
+        concat_list = sorted(glob(f"{input_location} / *{var}.*"))
+
+        ahh = [str(i).partition(f"{var}.") for i in concat_list]
+        dates = [ah[-1][:-3] for ah in ahh]
+        final_date = f"{dates[0][0:6]}-{dates[-1][-6:]}"
+        final_date
+
+        print("ts_files[0]",ts_files[0])
+
+        ds_concat = xr.open_mfdataset(concat_list)
+        ds_concat.to_netcdf(derived_file, unlimited_dims='time', mode='w')
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
         print("start time_bnds")
