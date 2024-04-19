@@ -1232,7 +1232,7 @@ class AdfDiag(AdfWeb):
 
                         print("fdghjk",constit_files_dict[constit_list[0]][i])
 
-                        derived_file = constit_files_dict[constit_list[0]][i].replace(constit_files_dict.keys()[0], var)
+                        derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
                         print("derived_file",derived_file,"\n")
                         #Check if clobber is true for file
                         if Path(derived_file).is_file():
