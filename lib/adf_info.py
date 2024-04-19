@@ -676,7 +676,7 @@ class AdfInfo(AdfConfig):
         #NOTE: it is assumed all the variables have the same dates!
 
         ts_files = sorted(input_location.glob(f"{case_name}*.{var_list[0]}.*nc"))
-        print(ts_files,"\n")
+        print("ts_files",ts_files,"\n")
         #Read in file(s)
         if len(ts_files) == 1:
             cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
