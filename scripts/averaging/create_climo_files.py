@@ -147,7 +147,7 @@ def create_climo_files(adf, clobber=False, search=None):
         list_of_arguments = []
         ts_files_to_remove = []
         for var in var_list:
-            print(var)
+            print(var,"\n")
 
             # Create name of climatology output file (which includes the full path)
             # and check whether it is there (don't do computation if we don't want to overwrite):
@@ -169,20 +169,20 @@ def create_climo_files(adf, clobber=False, search=None):
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
                 warnings.warn(errmsg)
                 continue
-            print(len(ts_files))
-            print("WTF 1")
+            #print(len(ts_files))
+            #print("WTF 1")
             if len(ts_files) > 1:
-                print("WTF 2")
+                #print("WTF 2")
                 #concat_list = sorted(glob(ts_files))
                 #print("concat_list",concat_list)
                 #ahh = [str(i).partition(f"{var}.") for i in concat_list]
                 ahh = [str(i).partition(f"{var}.") for i in ts_files]
                 dates = [ah[-1][:-3] for ah in ahh]
-                print("dates",dates)
+                #print("dates",dates)
                 final_date = f"{dates[0][0:6]}-{dates[-1][-6:]}"
-                print("final_date",final_date)
+                #print("final_date",final_date)
 
-                print("ts_files[0]",ts_files[0])
+                #print("ts_files[0]",ts_files[0])
                 ds_concat = xr.open_mfdataset(ts_files)
                 concat_file = str(ts_files[0]).replace(dates[0],final_date)
                 ds_concat.to_netcdf(concat_file, unlimited_dims='time', mode='w')
@@ -201,6 +201,7 @@ def create_climo_files(adf, clobber=False, search=None):
         # Parallelize the computation using multiprocessing pool:
         with mp.Pool(processes=number_of_cpu) as p:
             result = p.starmap(process_variable, list_of_arguments)
+        
         print("ts_files_to_remove",ts_files_to_remove)
         if ts_files_to_remove:
             import os
@@ -254,39 +255,39 @@ def process_variable(ts_files, syr, eyr, output_file, ds_concat=None):
         #ds_concat.to_netcdf(derived_file, unlimited_dims='time', mode='w')"""
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
-        print("start time_bnds")
+        #print("start time_bnds")
         time = cam_ts_data['time']
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
-        print("start xr.DataArray - load")
+        #print("start xr.DataArray - load")
         time = xr.DataArray(cam_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
-        print("finish xr.DataArray - load")
+        #print("finish xr.DataArray - load")
         cam_ts_data['time'] = time
         cam_ts_data.assign_coords(time=time)
         cam_ts_data = xr.decode_cf(cam_ts_data)
-        print("finish time_bnds")
+        #print("finish time_bnds")
     #Extract data subset using provided year bounds:
-    print("start cam_ts_data.sel")
+    #print("start cam_ts_data.sel")
     cam_ts_data = cam_ts_data.sel(time=slice(syr, eyr))
-    print("finish cam_ts_data.sel")
+    #print("finish cam_ts_data.sel")
     #Group time series values by month, and average those months together:
-    print("start cam_ts_data.groupby")
+    #print("start cam_ts_data.groupby")
     cam_climo_data = cam_ts_data.groupby('time.month').mean(dim='time')
-    print("finish cam_ts_data.groupby")
+    #print("finish cam_ts_data.groupby")
     #Rename "months" to "time":
-    print("start cam_climo_data.rename")
+    #print("start cam_climo_data.rename")
     cam_climo_data = cam_climo_data.rename({'month':'time'})
-    print("finish cam_climo_data.rename")
+    #print("finish cam_climo_data.rename")
     #Set netCDF encoding method (deal with getting non-nan fill values):
-    print("start encode")
+    #print("start encode")
     enc_dv = {xname: {'_FillValue': None, 'zlib': True, 'complevel': 4} for xname in cam_climo_data.data_vars}
     enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
     enc    = {**enc_c, **enc_dv}
-    print("finish encode")
+    #print("finish encode")
 
     #Output variable climatology to NetCDF-4 file:
-    print("start cam_climo_data.to_netcdf")
+    #print("start cam_climo_data.to_netcdf")
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
-    print("finish cam_climo_data.to_netcdf")
+    #print("finish cam_climo_data.to_netcdf")
     return 1  # All funcs return something. Could do error checking with this if needed.
 
 
