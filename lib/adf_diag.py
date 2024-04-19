@@ -1224,20 +1224,22 @@ class AdfDiag(AdfWeb):
                 print()
             else:
                 if mutli_ts:
-                    print("matchies??",len(constit_files_dict[constit]) == len(constit_list))
-                    #Check if all the constituent files were found
-                    if len(constit_files_dict[constit]) != len(constit_list):
-                        ermsg = f"Not all constituent files present; {var} cannot be calculated."
-                        ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                        print(ermsg)
-                        continue
-                    print()
+                    
                     #ahh = []
                     for i in range(len(constit_files_dict[constit_list[0]])):
+                        
+
                         ahh = []
                         for cons in constit_files_dict.keys():
                             ahh.append(constit_files_dict[cons][i])
                         print("ahh",ahh,"\n")
+                        print("matchies??",len(ahh) == len(constit_list))
+                        #Check if all the constituent files were found
+                        if len(ahh) != len(constit_list):
+                            ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                            ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                            print(ermsg)
+                            continue
                         #Open a new dataset with all the constituent files/variables
                         ds = xr.open_mfdataset(ahh, compat='override')
                         # create new file name for derived variable
