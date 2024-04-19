@@ -427,7 +427,6 @@ class AdfDiag(AdfWeb):
                 # create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
                 for var in diag_var_list:
-                    print(var,"   :   ",glob.glob(os.path.join(ts_case_dir, f"*{var}*")))
                     #if var not in hist_file_var_list:
                     #Try and check if the variable is in the case TS directory
                     # and if not, check if it is derived
@@ -1225,6 +1224,12 @@ class AdfDiag(AdfWeb):
                 print()
             else:
                 if mutli_ts:
+                    #Check if all the constituent files were found
+                    if len(constit_files_dict[constit]) != len(constit_list):
+                        ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                        ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                        print(ermsg)
+                        continue
                     print()
                     #ahh = []
                     for i in range(len(constit_files_dict[constit_list[0]])):
@@ -1273,6 +1278,12 @@ class AdfDiag(AdfWeb):
 
 
                 else:
+                    #Check if all the constituent files were found
+                    if len(constit_files) != len(constit_list):
+                        ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                        ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                        print(ermsg)
+                        continue
                     #Open a new dataset with all the constituent files/variables
                     ds = xr.open_mfdataset(constit_files, compat='override')
         
