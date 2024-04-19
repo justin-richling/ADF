@@ -1198,8 +1198,8 @@ class AdfDiag(AdfWeb):
             constit_files_dict = {}
             mutli_ts = False
             for constit in constit_list:
-                print(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))),"\n")
-                if sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))) > 1:
+                #print(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))),"\n")
+                if len(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))) > 1:
                     mutli_ts = True
                     constit_files_dict[constit] = sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))
 
