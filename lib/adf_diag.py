@@ -1205,6 +1205,7 @@ class AdfDiag(AdfWeb):
 
 
                 else:
+                    print("constit",constit,"\n")
                     if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                         print("HERE??")
                         constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
