@@ -166,7 +166,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
                 warnings.warn(errmsg)
                 continue
-
+            
             list_of_arguments.append((ts_files, syr, eyr, output_file))
 
 
@@ -191,6 +191,7 @@ def process_variable(ts_files, syr, eyr, output_file):
     '''
     Compute and save the climatology file.
     '''
+    print("ts_files",ts_files)
     #Read in files via xarray (xr):
     if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
