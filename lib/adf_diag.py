@@ -1230,7 +1230,7 @@ class AdfDiag(AdfWeb):
                         ds = xr.open_mfdataset(ahh, compat='override')
                         # create new file name for derived variable
                         derived_file = constit_files_dict[constit_list[0]][i].replace(constit_files_dict[constit_list[0]][i], var)
-
+                        print("derived_file",derived_file,"\n")
                         #Check if clobber is true for file
                         if Path(derived_file).is_file():
                             if overwrite:
