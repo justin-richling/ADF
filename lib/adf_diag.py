@@ -1221,7 +1221,7 @@ class AdfDiag(AdfWeb):
                 if mutli_ts:
                     print()
                     #ahh = []
-                    for i in range(constit_files_dict[constit_list[0]]):
+                    for i in range(len(constit_files_dict[constit_list[0]])):
                         ahh = []
                         for cons in constit_files_dict.keys():
                             ahh.append(constit_files_dict[cons][i])
