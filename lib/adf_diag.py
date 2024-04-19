@@ -1210,11 +1210,13 @@ class AdfDiag(AdfWeb):
 
             print("constit_files",constit_files,"\n")
             
-            #Check if all the constituent files were found
+            """ #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
                 ermsg = f"Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                print(ermsg)
+                print(ermsg)"""
+            if 0==1:
+                print()
             else:
                 if mutli_ts:
                     print()
