@@ -1195,12 +1195,20 @@ class AdfDiag(AdfWeb):
 
             #Grab all required time series files for derived var
             constit_files = []
+            constit_files_dict = {}
+            mutli_ts = False
             for constit in constit_list:
                 print(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))),"\n")
+                if sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))) > 1:
+                    mutli_ts = True
+                    constit_files_dict[constit] = sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))
+
+
+
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                     constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
-            print("constit_files",constit_files)
+            print("constit_files",constit_files,"\n")
             
             #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
@@ -1208,7 +1216,88 @@ class AdfDiag(AdfWeb):
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                 print(ermsg)
             else:
-                #Open a new dataset with all the constituent files/variables
+                if mutli_ts:
+                    print()
+                    #ahh = []
+                    for i in range(constit_files_dict[constit_list[0]]):
+                        ahh = []
+                        for cons in constit_files_dict.keys():
+                            ahh.append(constit_files_dict[cons][i])
+
+                        #Open a new dataset with all the constituent files/variables
+                        ds = xr.open_mfdataset(ahh, compat='override')
+                        # create new file name for derived variable
+                        derived_file = constit_files_dict[constit_list[0]][i].replace(constit_files_dict[constit_list[0]][i], var)
+
+                        #Check if clobber is true for file
+                        if Path(derived_file).is_file():
+                            if overwrite:
+                                Path(derived_file).unlink()
+                            else:
+                                print(
+                                    f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                                )
+                                continue
+
+                        #NOTE: this will need to be changed when derived equations are more complex! - JR
+                        if var == "RESTOM":
+                            der_val = ds["FSNT"]-ds["FLNT"]
+                        else:
+                            #Loop through all constituents and sum
+                            der_val = 0
+                            for v in constit_list:
+                                der_val += ds[v]
+                        
+                        #Set derived variable name and add to dataset
+                        der_val.name = var
+                        ds[var] = der_val
+                        #Drop all constituents from final saved dataset
+                        #These are not necessary because they have their own time series files
+                        ds_final = ds.drop_vars(constit_list)
+                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+
+
+
+
+
+                else:
+                    #Open a new dataset with all the constituent files/variables
+                    ds = xr.open_mfdataset(constit_files, compat='override')
+        
+                    # create new file name for derived variable
+                    derived_file = constit_files[0].replace(constit_list[0], var)
+
+                    #Check if clobber is true for file
+                    if Path(derived_file).is_file():
+                        if overwrite:
+                            Path(derived_file).unlink()
+                        else:
+                            print(
+                                f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                            )
+                            continue
+
+                    #NOTE: this will need to be changed when derived equations are more complex! - JR
+                    if var == "RESTOM":
+                        der_val = ds["FSNT"]-ds["FLNT"]
+                    else:
+                        #Loop through all constituents and sum
+                        der_val = 0
+                        for v in constit_list:
+                            der_val += ds[v]
+                    
+                    #Set derived variable name and add to dataset
+                    der_val.name = var
+                    ds[var] = der_val
+                    #Drop all constituents from final saved dataset
+                    #These are not necessary because they have their own time series files
+                    ds_final = ds.drop_vars(constit_list)
+                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+
+
+                '''#Open a new dataset with all the constituent files/variables
                 ds = xr.open_mfdataset(constit_files, compat='override')
     
                 # create new file name for derived variable
@@ -1271,7 +1360,7 @@ class AdfDiag(AdfWeb):
                 #Drop all constituents from final saved dataset
                 #These are not necessary because they have their own time series files
                 ds_final = ds.drop_vars(constit_list)
-                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')'''
 
 ########
 
