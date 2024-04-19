@@ -204,6 +204,7 @@ def process_variable(var, ts_files, syr, eyr, input_location, output_file):
 
         ahh = [str(i).partition(f"{var}.") for i in concat_list]
         dates = [ah[-1][:-3] for ah in ahh]
+        print("dates",dates)
         final_date = f"{dates[0][0:6]}-{dates[-1][-6:]}"
         final_date
 
