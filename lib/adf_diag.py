@@ -1249,7 +1249,7 @@ class AdfDiag(AdfWeb):
                         derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
                         print("derived_file",derived_file,"\n")
                         #Check if clobber is true for file
-                        if Path(derived_file).is_file():
+                        """if Path(derived_file).is_file():
                             if overwrite:
                                 Path(derived_file).unlink()
                             else:
@@ -1273,7 +1273,7 @@ class AdfDiag(AdfWeb):
                         #Drop all constituents from final saved dataset
                         #These are not necessary because they have their own time series files
                         ds_final = ds.drop_vars(constit_list)
-                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')"""
 
 
 
@@ -1293,7 +1293,7 @@ class AdfDiag(AdfWeb):
                     # create new file name for derived variable
                     derived_file = constit_files[0].replace(constit_list[0], var)
 
-                    #Check if clobber is true for file
+                    """#Check if clobber is true for file
                     if Path(derived_file).is_file():
                         if overwrite:
                             Path(derived_file).unlink()
@@ -1318,8 +1318,35 @@ class AdfDiag(AdfWeb):
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
-                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')"""
+                
+                
+                #Check if clobber is true for file
+                if Path(derived_file).is_file():
+                    if overwrite:
+                        Path(derived_file).unlink()
+                    else:
+                        print(
+                            f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                        )
+                        continue
 
+                #NOTE: this will need to be changed when derived equations are more complex! - JR
+                if var == "RESTOM":
+                    der_val = ds["FSNT"]-ds["FLNT"]
+                else:
+                    #Loop through all constituents and sum
+                    der_val = 0
+                    for v in constit_list:
+                        der_val += ds[v]
+                    
+                #Set derived variable name and add to dataset
+                der_val.name = var
+                ds[var] = der_val
+                #Drop all constituents from final saved dataset
+                #These are not necessary because they have their own time series files
+                ds_final = ds.drop_vars(constit_list)
+                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
 
                 '''#Open a new dataset with all the constituent files/variables
