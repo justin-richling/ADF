@@ -145,7 +145,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Loop over CAM output variables:
         list_of_arguments = []
         for var in var_list:
-            print(var)
+            #print(var)
 
             # Create name of climatology output file (which includes the full path)
             # and check whether it is there (don't do computation if we don't want to overwrite):
