@@ -526,6 +526,7 @@ class AdfDiag(AdfWeb):
                                     ts_ds['SST'] = ts_tmp
 
                                     #Save to new time series file
+                                    print("did it make it here?")
                                     save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
                                 else:
                                     wmsg = "OCNFRAC not found in CAM output,"
