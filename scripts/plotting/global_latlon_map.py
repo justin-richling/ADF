@@ -114,9 +114,12 @@ def global_latlon_map(adfobj):
         print("\n  Generating paleo lat/lon maps...")
         #if "paleo_proj" in basic_info_dict["paleo"]:
         #    paleo_proj = basic_info_dict["paleo"]["paleo_proj"]
-        paleo_proj = basic_info_dict["paleo_vs_pi"]
-        if not paleo_proj:
+        paleo_pi = basic_info_dict["paleo_vs_pi"]
+        if not paleo_pi:
+            paleo_proj = True
             print("\n  Paleo continents will be made from LANDFRAC")
+        else:
+            paleo_proj = False
     else:
         print("\n  Generating lat/lon maps...")
         #paleo_proj = False
