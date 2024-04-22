@@ -202,6 +202,9 @@ def create_climo_files(adf, clobber=False, search=None):
         with mp.Pool(processes=number_of_cpu) as p:
             result = p.starmap(process_variable, list_of_arguments)
         
+        #Remove created files
+        #MAYBE: instead of deleteing files, make a new sub-directory and save thsoe there...
+        #        Eh, then what about regridding script...
         print("ts_files_to_remove",ts_files_to_remove)
         if ts_files_to_remove:
             import os
