@@ -145,7 +145,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Loop over CAM output variables:
         list_of_arguments = []
         for var in var_list:
-            #print(var)
+            print("Climo calc for:",var)
 
             # Create name of climatology output file (which includes the full path)
             # and check whether it is there (don't do computation if we don't want to overwrite):
@@ -192,9 +192,10 @@ def process_variable(ts_files, syr, eyr, output_file):
     '''
     Compute and save the climatology file.
     '''
-    #print("ts_files",ts_files)
+    print("ts_files",ts_files)
     #Read in files via xarray (xr):
     if len(ts_files) == 1:
+        print("IT SHOULD BE HERE YEAH???")
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     else:
         #print("start xr.open_mfdataset")
