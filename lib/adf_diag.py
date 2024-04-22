@@ -471,10 +471,10 @@ class AdfDiag(AdfWeb):
                                                 
                                                 #Set derived variable in dataset and remove the original variable
                                                 der_from_ds[var] = der_var
-                                                der_from_ds.drop_vars([der_from])
+                                                ds_final = der_from_ds.drop_vars([der_from])
 
                                                 #Save to new time series file
-                                                save_to_nc(der_from_ds, Path(ts_case_dir) / Path(ts_exist[0].replace(der_from, var)))
+                                                save_to_nc(ds_final, Path(ts_case_dir) / Path(ts_exist[0].replace(der_from, var)))
                                             else:
                                                 print(f"Missing '{der_from}' variable, can't create '{var}' time series.")
                                                 continue
