@@ -108,6 +108,22 @@ def global_latlon_map(adfobj):
     else:
         print("\n  Generating lat/lon maps...")
 
+    basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    #paleo = basic_info_dict["paleo"]
+    if "paleo_vs_pi" in basic_info_dict:
+        print("\n  Generating paleo lat/lon maps...")
+        #if "paleo_proj" in basic_info_dict["paleo"]:
+        #    paleo_proj = basic_info_dict["paleo"]["paleo_proj"]
+        paleo_proj = basic_info_dict["paleo_vs_pi"]
+        if not paleo_proj:
+            print("\n  Paleo continents will be made from LANDFRAC")
+    else:
+        print("\n  Generating lat/lon maps...")
+        #paleo_proj = False
+
+    #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
+    landfrac = None
+
     #
     # Use ADF api to get all necessary information
     #
@@ -178,9 +194,9 @@ def global_latlon_map(adfobj):
         dclimo_loc  = Path(data_loc)
     #-----------------------
 
-    if paleo:
+    if paleo_proj:
         #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
-        landfrac_fils = sorted(dclimo_loc.glob(f"*LANDFRAC*_baseline.nc"))
+        landfrac_fils = sorted(mclimo_rg_loc.glob(f"*LANDFRAC*_baseline.nc"))
         #print(landfrac_fils)
         #if "LANDFRAC" in landfrac_fils:
         if landfrac_fils:
@@ -387,7 +403,7 @@ def global_latlon_map(adfobj):
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
                                                  mseasons[s], oseasons[s], dseasons[s],
-                                                 obs, paleo=paleo, landfrac_da=landfrac, **vres)
+                                                 obs, paleo=paleo_proj, landfrac_da=landfrac, **vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -481,7 +497,7 @@ def global_latlon_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s],
-                                                     obs, paleo=paleo, landfrac_da=landfrac, **vres)
+                                                     obs, paleo=paleo_proj, landfrac_da=landfrac, **vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
