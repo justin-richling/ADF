@@ -426,6 +426,18 @@ class AdfDiag(AdfWeb):
                 vars_to_derive = []
                 # create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
+                #Check if mid-level pressure, ocean fraction or land fraction exist
+                #in the variable list:
+                for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
+                    if var in diag_var_list:
+                        #If so, then move them to the front of variable list so
+                        #that they can be used to mask or vertically interpolate
+                        #other model variables if need be:
+                        var_idx = diag_var_list.index(var)
+                        diag_var_list.pop(var_idx)
+                        diag_var_list.insert(0,var)
+                    #End if
+                #End for
                 for var in diag_var_list:
                     print("var:",var)
                     #if var not in hist_file_var_list:
@@ -501,6 +513,7 @@ class AdfDiag(AdfWeb):
                 #Derive variables that come from other means
                 #EXAMPLE: derive SST's from TS if not in CAM output
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
+                    print("Need to make SST's")
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
                     if ts_exist:
                         ts_ds = xr.open_dataset(ts_exist[0])
