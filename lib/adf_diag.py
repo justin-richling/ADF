@@ -427,11 +427,13 @@ class AdfDiag(AdfWeb):
                 # create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
                 for var in diag_var_list:
+                    print("var:",var)
                     #if var not in hist_file_var_list:
                     #Try and check if the variable is in the case TS directory
                     # and if not, check if it is derived
                     if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
-                        
+                        print(f"{var} not in {ts_case_dir}")
+                        print(glob.glob(os.path.join(ts_case_dir, f"*{var}*")),"\n")
                         vres = res.get(var, {})
                         if "derivable_from" in vres:
                             print("derivable_from",var,"\n")
