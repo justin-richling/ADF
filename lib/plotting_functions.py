@@ -940,7 +940,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                            case_climo_yrs, baseline_climo_yrs,
                            plev, umdlfld_nowrap, vmdlfld_nowrap,
                            uobsfld_nowrap, vobsfld_nowrap,
-                           udiffld_nowrap, vdiffld_nowrap, obs=False, **kwargs):
+                           udiffld_nowrap, vdiffld_nowrap, obs=False,
+                           paleo=False, landfrac_da=None,**kwargs):
 
     """This plots a vector plot.
 
@@ -1000,6 +1001,14 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     vobsfld, _   = add_cyclic_point(vobsfld_nowrap, coord=vobsfld_nowrap['lon'])
     udiffld, _   = add_cyclic_point(udiffld_nowrap, coord=udiffld_nowrap['lon'])
     vdiffld, _   = add_cyclic_point(vdiffld_nowrap, coord=vdiffld_nowrap['lon'])
+
+    if paleo:
+        #Threshold land fraction values to identify land areas
+        land_mask = landfrac_da > 0.5
+
+        # Subset latitude range based on hemisphere
+        #subset_land_mask = land_mask.sel(lat=slice(domain[2],domain[3]))
+        land_lons, land_lats = np.meshgrid(land_mask.lon, land_mask.lat)
 
     # create mesh for plots:
     lons, lats = np.meshgrid(lon, lat)
@@ -1081,6 +1090,10 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
     img2 = ax2.contourf(lons, lats, obs_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True)
     ax2.quiver(lons[skip], lats[skip], uobsfld[skip], vobsfld[skip], obs_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
+    
+    if paleo:
+        ax1.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
+        ax2.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
 
     # We should think about how to do plot customization and defaults.
     # Here I'll just pop off a few custom ones, and then pass the rest into mpl.
@@ -1154,6 +1167,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     # Plot vector differences:
     img3 = ax3.contourf(lons, lats, diff_mag, transform=ccrs.PlateCarree(), transform_first=True, norm=normdiff, cmap='PuOr', alpha=0.5)
     ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
+    if paleo:
+        ax3.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
 
     # Add color bar to difference plot:
     cb_d_ax = inset_axes(ax3,
