@@ -451,7 +451,7 @@ def global_latlon_vect_map(adfobj):
                                                         umseasons[s], vmseasons[s],
                                                         uoseasons[s], voseasons[s],
                                                         udseasons[s], vdseasons[s], obs,
-                                                        paleo=paleo_proj, landfrac_da=landfrac,**vres)
+                                                        paleo_proj=paleo_proj, landfrac_da=landfrac,**vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
@@ -506,7 +506,7 @@ def global_latlon_vect_map(adfobj):
                                                       umseasons[s], vmseasons[s],
                                                       uoseasons[s], voseasons[s],
                                                       udseasons[s], vdseasons[s], obs,
-                                                      paleo=paleo_proj, landfrac_da=landfrac,**vres)
+                                                      paleo_proj=paleo_proj, landfrac_da=landfrac,**vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,

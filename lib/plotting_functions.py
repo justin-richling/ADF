@@ -941,7 +941,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                            plev, umdlfld_nowrap, vmdlfld_nowrap,
                            uobsfld_nowrap, vobsfld_nowrap,
                            udiffld_nowrap, vdiffld_nowrap, obs=False,
-                           paleo=False, landfrac_da=None,**kwargs):
+                           paleo_proj=False, landfrac_da=None,**kwargs):
 
     """This plots a vector plot.
 
@@ -1002,7 +1002,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     udiffld, _   = add_cyclic_point(udiffld_nowrap, coord=udiffld_nowrap['lon'])
     vdiffld, _   = add_cyclic_point(vdiffld_nowrap, coord=vdiffld_nowrap['lon'])
 
-    if paleo:
+    if paleo_proj:
         #Threshold land fraction values to identify land areas
         land_mask = landfrac_da > 0.5
 
@@ -1091,7 +1091,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     img2 = ax2.contourf(lons, lats, obs_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True)
     ax2.quiver(lons[skip], lats[skip], uobsfld[skip], vobsfld[skip], obs_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
     
-    if paleo:
+    if paleo_proj:
         ax1.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
         ax2.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
 
@@ -1144,7 +1144,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     # Add cosmetic plot features:
     for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-        if not paleo:
+        if not paleo_proj:
             a.coastlines()
         a.set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
         a.set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
@@ -1168,7 +1168,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     # Plot vector differences:
     img3 = ax3.contourf(lons, lats, diff_mag, transform=ccrs.PlateCarree(), transform_first=True, norm=normdiff, cmap='PuOr', alpha=0.5)
     ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
-    if paleo:
+    if paleo_proj:
         ax3.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
 
     # Add color bar to difference plot:
@@ -1193,7 +1193,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
-                      mdlfld, obsfld, diffld, obs=False, paleo=False, landfrac_da=None,
+                      mdlfld, obsfld, diffld, obs=False, paleo_proj=False, landfrac_da=None,
                       **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
 
@@ -1309,8 +1309,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                                         dateline_direction_label=False)
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
-    print("paleo??",paleo)
-    if paleo:
+    print("paleo??",paleo_proj)
+    if paleo_proj:
         #Threshold land fraction values to identify land areas
         land_mask = landfrac_da > 0.5
 
@@ -1347,7 +1347,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
                        transform=ccrs.PlateCarree(), transform_first=True,extend='both',
                        **cp_info['contourf_opt']))
-            if paleo:
+            if paleo_proj:
                 img.append(ax[i].contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
         """if i == 0:
             img.append(ax[i].contourf(lons, lats, a, levels=test_levels, cmap=cmap, norm=test_norm,
@@ -1415,7 +1415,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-        a.coastlines()
+        if not paleo_proj:
+            a.coastlines()
         a.set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
         a.set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
         a.tick_params('both', length=5, width=1.5, which='major')

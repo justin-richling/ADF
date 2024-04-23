@@ -322,7 +322,7 @@ def polar_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi,
-                                                     obs=obs, paleo=paleo_proj, landfrac_da=landfrac, **vres)
+                                                     obs=obs, paleo_proj=paleo_proj, landfrac_da=landfrac, **vres)
 
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -404,7 +404,7 @@ def polar_map(adfobj):
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s],
                                                      hemisphere=hemi, obs=obs,
-                                                     paleo=paleo_proj, landfrac_da=landfrac, **vres)
+                                                     paleo_proj=paleo_proj, landfrac_da=landfrac, **vres)
 
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
