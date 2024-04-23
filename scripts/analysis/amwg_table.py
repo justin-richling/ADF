@@ -150,6 +150,8 @@ def amwg_table(adf):
     #-----------------------------------------
 
     #Loop over CAM cases:
+    #Initialize list of case name csv files for case comparison check later
+    csv_list = []
     for case_idx, case_name in enumerate(case_names):
 
         #Convert output location string to a Path object:
@@ -306,6 +308,8 @@ def amwg_table(adf):
             print(f"\n\tAMWG table for '{case_name}' not created.\n")
         #End try/except
 
+        csv_list.append(output_location.glob(f"amwg_table_{case_name}.csv")[0])
+
     #End of model case loop
     #----------------------
 
@@ -329,15 +333,16 @@ def amwg_table(adf):
 
         print(all_matching_files)"""
 
-        csv_list = sorted(output_location.glob("*.csv"))
+        """csv_list = sorted(output_location.glob("*.csv"))
 
 
         #print(csv_list)
         print(output_location / 'amwg_table_comp.csv')
-        #Check to make sure if ADF has run that the comp table is not included in the check below
+        #Check to make sure if ADF has already ran that the comp table is not included in the check below
         if output_location / 'amwg_table_comp.csv' in csv_list:
             csv_list.remove(output_location / 'amwg_table_comp.csv')
-        #print(csv_list)
+        """
+        print(csv_list)
         print(len(csv_list))
         print(len(case_names))
         if len(csv_list) != len(case_names):
