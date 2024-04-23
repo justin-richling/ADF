@@ -109,6 +109,7 @@ def global_latlon_map(adfobj):
         print("\n  Generating lat/lon maps...")
 
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    print(basic_info_dict)
     #paleo = basic_info_dict["paleo"]
     if "paleo_vs_pi" in basic_info_dict:
         print("\n  Generating paleo lat/lon maps...")

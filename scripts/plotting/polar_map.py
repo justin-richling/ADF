@@ -28,6 +28,7 @@ def polar_map(adfobj):
     #Notify user that script has started:
 
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    print(basic_info_dict)
     #paleo = basic_info_dict["paleo"]
     if "paleo_vs_pi" in basic_info_dict:
         print("\n  Generating paleo polar maps...")
