@@ -1144,7 +1144,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     # Add cosmetic plot features:
     for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-        a.coastlines()
+        if not paleo:
+            a.coastlines()
         a.set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
         a.set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
         a.tick_params('both', length=5, width=1.5, which='major')
