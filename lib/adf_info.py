@@ -109,8 +109,9 @@ class AdfInfo(AdfConfig):
         hist_str = self.get_basic_info('hist_str')
         #If hist_str is not present, then default to 'cam.h0':
         if not hist_str:
-            hist_str = 'cam.h0'
+            hist_str = 'cam.h0a'
         #End if
+        self.__hist_str = hist_str
 
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
@@ -576,6 +577,10 @@ class AdfInfo(AdfConfig):
         base_nickname = self.__base_nickname
 
         return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
+
+    @property
+    def hist_str(self):
+        return self.__hist_str
 
     #########
 

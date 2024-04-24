@@ -385,7 +385,7 @@ class AdfDiag(AdfWeb):
         hist_str = self.get_basic_info("hist_str")
         # If hist_str is not present, then default to 'cam.h0':
         if not hist_str:
-            hist_str = "cam.h0"
+            hist_str = "cam.h0a"
         # End if
 
         # get info about variable defaults
