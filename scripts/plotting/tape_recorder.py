@@ -169,6 +169,7 @@ def tape_recorder(adfobj):
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
         fils= sorted(Path(runs_LT2[key]).glob(f'*{adfobj.hist_str}*.Q.*.nc'))
+        print(fils,"\n")
         dat = pf.load_dataset(str(fils))
 
         #Check if data files exist, skip current case if not
