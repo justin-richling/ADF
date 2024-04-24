@@ -132,7 +132,7 @@ def tape_recorder(adfobj):
 
     #mls_file = pf.check_obs_file(adfobj, Path(mls_file))
 
-    mls = pf.load_dataset(mls_file)
+    mls = pf.load_dataset(str(mls_file))
     if mls:
         #mls = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc")
         mls = mls.rename(x='lat', y='lev', t='time')
