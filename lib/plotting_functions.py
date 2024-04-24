@@ -151,6 +151,9 @@ def load_dataset(fils):
     -----
     When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
     """
+    print(fils,"\n")
+    print(len(fils))
+
     if len(fils) == 0:
         warnings.warn(f"Input file list is empty.")
         return None
