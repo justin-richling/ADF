@@ -426,12 +426,26 @@ class AdfDiag(AdfWeb):
                 vars_to_derive = []
                 # create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
+                #Check if mid-level pressure, ocean fraction or land fraction exist
+                #in the variable list:
+                for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
+                    if var in diag_var_list:
+                        #If so, then move them to the front of variable list so
+                        #that they can be used to mask or vertically interpolate
+                        #other model variables if need be:
+                        var_idx = diag_var_list.index(var)
+                        diag_var_list.pop(var_idx)
+                        diag_var_list.insert(0,var)
+                    #End if
+                #End for
                 for var in diag_var_list:
+                    print("var:",var)
                     #if var not in hist_file_var_list:
-                    #Try and check if the variable is in the case TS directory
-                    # and if not, check if it is derived
+                    #Try and check if the variable is in the case time series directory
+                    # and if not, check if it needs to be derived
                     if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
-                        
+                        print(f"{var} not in {ts_case_dir}")
+                        print(glob.glob(os.path.join(ts_case_dir, f"*{var}*")),"\n")
                         vres = res.get(var, {})
                         if "derivable_from" in vres:
                             print("derivable_from",var,"\n")
@@ -469,10 +483,10 @@ class AdfDiag(AdfWeb):
                                                 
                                                 #Set derived variable in dataset and remove the original variable
                                                 der_from_ds[var] = der_var
-                                                der_from_ds.drop_vars([der_from])
+                                                ds_final = der_from_ds.drop_vars([der_from])
 
                                                 #Save to new time series file
-                                                save_to_nc(der_from_ds, Path(ts_case_dir) / Path(ts_exist[0].replace(der_from, var)))
+                                                save_to_nc(ds_final, Path(ts_case_dir) / Path(ts_exist[0].replace(der_from, var)))
                                             else:
                                                 print(f"Missing '{der_from}' variable, can't create '{var}' time series.")
                                                 continue
@@ -499,6 +513,7 @@ class AdfDiag(AdfWeb):
                 #Derive variables that come from other means
                 #EXAMPLE: derive SST's from TS if not in CAM output
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
+                    print("Need to make SST's")
                     ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
                     if ts_exist:
                         ts_ds = xr.open_dataset(ts_exist[0])
@@ -524,6 +539,7 @@ class AdfDiag(AdfWeb):
                                     ts_ds['SST'] = ts_tmp
 
                                     #Save to new time series file
+                                    print("did it make it here?")
                                     save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
                                 else:
                                     wmsg = "OCNFRAC not found in CAM output,"
@@ -538,22 +554,6 @@ class AdfDiag(AdfWeb):
                         #End if
                     #End if
                 #End if
-
-                """if 'OMEGA500' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*OMEGA500*")):
-                    omega_exist = glob.glob(os.path.join(ts_case_dir, f"*OMEGA.*"))
-                    if omega_exist:
-                        omega_ds = xr.open_dataset(omega_exist[0])
-                        omega = omega_ds["OMEGA"]
-                        # Interpolate the data to the nearest 500mb level
-                        omega_500 = omega.interp(lev=500, method='nearest')
-                        omega_ds['OMEGA500'] = omega_500
-                        omega_ds.drop_vars(["OMEGA"])
-
-                        #Save to new time series file
-                        save_to_nc(omega_ds, Path(ts_case_dir) / Path(omega_exist[0].replace("OMEGA","OMEGA500")))
-                    else:
-                        print("Missing 'OMEGA' variable, can't create 'OMEGA500' time series.")
-                        continue"""
                     
 
 
