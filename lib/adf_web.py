@@ -55,7 +55,7 @@ class _WebData:
     needed by the website generator.
     """
 
-    def __init__(self, web_data, web_name, case_name,ext,
+    def __init__(self, web_data, web_name, case_name,ext=None,
                  category = None,
                  season = None,
                  non_season = False,
@@ -183,7 +183,7 @@ class AdfWeb(AdfObs):
 
     #########
 
-    def add_website_data(self, web_data, web_name, case_name,ext,
+    def add_website_data(self, web_data, web_name, case_name,ext=None,
                          category = None,
                          season = None,
                          non_season = False,
