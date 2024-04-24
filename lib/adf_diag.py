@@ -441,8 +441,8 @@ class AdfDiag(AdfWeb):
                 for var in diag_var_list:
                     print("var:",var)
                     #if var not in hist_file_var_list:
-                    #Try and check if the variable is in the case TS directory
-                    # and if not, check if it is derived
+                    #Try and check if the variable is in the case time series directory
+                    # and if not, check if it needs to be derived
                     if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
                         print(f"{var} not in {ts_case_dir}")
                         print(glob.glob(os.path.join(ts_case_dir, f"*{var}*")),"\n")
