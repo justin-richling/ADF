@@ -1249,7 +1249,7 @@ class AdfDiag(AdfWeb):
                         derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
                         print("derived_file",derived_file,"\n")
                         #Check if clobber is true for file
-                        """if Path(derived_file).is_file():
+                        if Path(derived_file).is_file():
                             if overwrite:
                                 Path(derived_file).unlink()
                             else:
@@ -1273,7 +1273,7 @@ class AdfDiag(AdfWeb):
                         #Drop all constituents from final saved dataset
                         #These are not necessary because they have their own time series files
                         ds_final = ds.drop_vars(constit_list)
-                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')"""
+                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
 
 
