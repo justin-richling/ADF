@@ -528,6 +528,7 @@ class AdfDiag(AdfWeb):
                             if ts_ds:
                                 ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])
                                 if ofrac_ds:
+                                    print("did it make it here?")
                                     ofrac = ofrac_ds['OCNFRAC']
                                     # set the bounds of regridded ocnfrac to 0 to 1
                                     ofrac = xr.where(ofrac>1,1,ofrac)
@@ -539,7 +540,7 @@ class AdfDiag(AdfWeb):
                                     ts_ds['SST'] = ts_tmp
 
                                     #Save to new time series file
-                                    print("did it make it here?")
+                                    print("did it make it here 2?")
                                     save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
                                 else:
                                     wmsg = "OCNFRAC not found in CAM output,"
