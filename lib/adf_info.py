@@ -185,7 +185,7 @@ class AdfInfo(AdfConfig):
                 skip_baseline_ts = True
                 #Get years from pre-made timeseries file(s)
                 input_climo_loc = self.get_baseline_info("cam_climo_loc")
-                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_climo(self, input_climo_loc, data_name)
+                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_climo(input_climo_loc, data_name)
                 #found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)
                 found_yr_range = np.arange(found_syear_baseline,found_eyear_baseline,1)
 
