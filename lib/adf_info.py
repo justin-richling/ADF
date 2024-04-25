@@ -175,6 +175,13 @@ class AdfInfo(AdfConfig):
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
 
+            #Check if user wants to skip time series file creation
+            calc_baseline_ts   = self.get_baseline_info("calc_cam_ts")
+
+            if not calc_baseline_ts:
+                print("User indicates the don't want to rely on any timeseries files what so ever")
+                pass
+
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if baseline_ts_done:
@@ -312,14 +319,20 @@ class AdfInfo(AdfConfig):
         
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
+
+        #Check if user wants to skip time series file creation
+        calc_case_ts   = self.get_cam_info("calc_cam_ts")
         
         #Grab case time series file location(s)
-        input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        input_ts_locs = self.get_cam_info("cam_ts_loc")
 
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
         for case_idx, case_name in enumerate(case_names):
+            if not calc_case_ts[case_idx]:
+                print("User indicates the don't want to rely on any timeseries files what so ever")
+                continue
 
             syear = syears[case_idx]
             eyear = eyears[case_idx]
