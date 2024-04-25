@@ -185,7 +185,7 @@ class AdfInfo(AdfConfig):
                 skip_baseline_ts = True
                 #Get years from pre-made timeseries file(s)
                 input_climo_loc = self.get_baseline_info("cam_climo_loc")
-                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_climo(input_climo_loc, data_name)
+                """found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_climo(input_climo_loc, data_name)
                 #found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)
                 found_yr_range = np.arange(found_syear_baseline,found_eyear_baseline,1)
 
@@ -211,7 +211,7 @@ class AdfInfo(AdfConfig):
                     msg = f"Given end year '{eyear_baseline}' is not in current dataset "
                     msg += f"{data_name}, using first found year: {found_eyear_baseline}\n"
                     print(msg)
-                    eyear_baseline = found_eyear_baseline
+                    eyear_baseline = found_eyear_baseline"""
 
             if not skip_baseline_ts:
                 #Check if time series files already exist,
@@ -462,7 +462,7 @@ class AdfInfo(AdfConfig):
                 print("User indicates the don't want to rely on any timeseries files what so ever")
                 skip_cam_ts[case_idx] = True
                 #continue
-                input_climo_loc = input_climo_locs[case_idx]
+                """input_climo_loc = input_climo_locs[case_idx]
                 found_syear, found_eyear = self.get_climo_yrs_from_climo(self, input_climo_loc, case_name)
                 found_yr_range = np.arange(found_syear,found_eyear,1)
                 #So make sure start and end year are specified:
@@ -487,7 +487,7 @@ class AdfInfo(AdfConfig):
                     msg += f"{case_name}, using last found year: {found_eyear}\n"
                     print(msg)
                     eyear = found_eyear
-                #End if
+                #End if"""
             
             if not skip_cam_ts[case_idx]:
                 #syear = syears[case_idx]
@@ -1001,6 +1001,9 @@ class AdfInfo(AdfConfig):
             cam_ts_data['time'] = time
             cam_ts_data.assign_coords(time=time)
             cam_ts_data = xr.decode_cf(cam_ts_data)
+
+        timefix = pd.date_range(start='1/1/1999', end='12/1/1999', freq='MS') # generic time coordinate from a non-leap-year
+        cam_ts_data = cam_ts_data.assign_coords({"time":timefix})
 
         #Extract first and last years from dataset:
         syr = int(cam_ts_data.time[0].dt.year.values)
