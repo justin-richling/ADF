@@ -138,7 +138,7 @@ def amwg_table(adf):
         #print("User indicates no time series files will be used")
         #print()
         emsg = " User indicates no time series files will be used."
-        emsg += " AMWG tables can't be calculated."
+        emsg += " Looking if tables already exisited:"
         print(emsg)
 
         #if ah:
@@ -152,6 +152,8 @@ def amwg_table(adf):
                 table_df = pd.read_csv(output_csv_file)
                 # last step is to add table dataframe to website (if enabled):
                 adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+            else:
+                print(f"  - AMWG table for '{case_name}' does not exist.")
         return
     else:
         input_ts_locs = adf.get_cam_info("cam_ts_loc")
@@ -167,7 +169,7 @@ def amwg_table(adf):
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
         if not calc_baseline_ts:
             emsg = " User indicates no time series files will be used."
-            emsg += " AMWG tables can't be calculated."
+            emsg += " Looking if tables already exisited:"
             print(emsg)
 
             output_location = Path(output_locs[0])
@@ -178,6 +180,8 @@ def amwg_table(adf):
                 table_df = pd.read_csv(output_csv_file)
                 # last step is to add table dataframe to website (if enabled):
                 adf.add_website_data(table_df, baseline_name, baseline_name, plot_type="Tables")
+            else:
+                print(f"  - AMWG table for '{baseline_name}' does not exist.")
             return
 
         case_names.append(baseline_name)
