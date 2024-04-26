@@ -184,13 +184,13 @@ class AdfInfo(AdfConfig):
                 print("User indicates they don't want to rely on any timeseries files what so ever")
                 skip_baseline_ts = True
 
-                #Initialize case nicknames:
+                """#Initialize case nicknames:
                 self.__test_nicknames = test_nicknames
                 self.__base_nickname = base_nickname
 
                 #Save starting and ending years as object variables:
                 self.__syear_baseline = syear_baseline
-                self.__eyear_baseline = eyear_baseline
+                self.__eyear_baseline = eyear_baseline"""
                 
                 """
                 #Get years from pre-made timeseries file(s)
