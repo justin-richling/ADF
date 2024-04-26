@@ -404,7 +404,7 @@ class AdfDiag(AdfWeb):
         for case_idx, case_name in enumerate(case_names):
             print("calc_cam_ts[case_idx]",calc_cam_ts[case_idx],"\n")
             # Check if particular case should be processed:
-            if calc_cam_ts[case_idx]:
+            if not calc_cam_ts[case_idx]:
                 emsg = " Configuration file indicates time series files don't need to be used"
                 emsg += f" for case '{case_name}'.  Will check for pre-made climo files."
                 print(emsg)
