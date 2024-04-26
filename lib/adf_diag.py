@@ -393,7 +393,7 @@ class AdfDiag(AdfWeb):
         hist_str = self.get_basic_info("hist_str")
         # If hist_str is not present, then default to 'cam.h0':
         if not hist_str:
-            hist_str = "cam.h0a"
+            hist_str = "cam.h0"
         # End if
 
         # get info about variable defaults
@@ -402,6 +402,7 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         no_msg = False
         for case_idx, case_name in enumerate(case_names):
+            print("calc_cam_ts[case_idx]",calc_cam_ts[case_idx],"\n")
             # Check if particular case should be processed:
             if calc_cam_ts[case_idx]:
                 emsg = " Configuration file indicates time series files don't need to be used"
