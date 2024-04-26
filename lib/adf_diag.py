@@ -366,7 +366,7 @@ class AdfDiag(AdfWeb):
             ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
             #Check if user wants to skip time series file creation
-            calc_cam_ts   = self.get_baseline_info("calc_cam_ts")
+            calc_cam_ts   = [self.get_baseline_info("calc_cam_ts")]
 
             skip_cam_ts = False
             start_years = [self.climo_yrs["syear_baseline"]]
