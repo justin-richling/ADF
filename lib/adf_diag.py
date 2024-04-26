@@ -400,18 +400,21 @@ class AdfDiag(AdfWeb):
         res = self.variable_defaults
 
         # Loop over cases:
+        no_msg = False
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
             if calc_cam_ts[case_idx]:
                 emsg = " Configuration file indicates time series files don't need to be used"
                 emsg += f" for case '{case_name}'.  Will check for pre-made climo files."
                 print(emsg)
+                no_msg = True
                 continue
 
             if cam_ts_done[case_idx]:
                 emsg = " Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
+                no_msg = True
                 continue
             # End if
 
@@ -667,7 +670,10 @@ class AdfDiag(AdfWeb):
         # End cases loop
 
         # Notify user that script has ended:
-        print("  ...CAM time series file generation has finished successfully.")
+        if no_msg:
+            print("  ...Moving on.")
+        else:
+            print("  ...CAM time series file generation has finished successfully.")
 
     #########
 
