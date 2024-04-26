@@ -402,7 +402,6 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         no_msg = False
         for case_idx, case_name in enumerate(case_names):
-            print("calc_cam_ts[case_idx]",calc_cam_ts[case_idx],"\n")
             # Check if particular case should be processed:
             if not calc_cam_ts[case_idx]:
                 emsg = " Configuration file indicates time series files don't need to be used"
@@ -743,8 +742,11 @@ class AdfDiag(AdfWeb):
         else:
             # If not, then notify user that climo file generation is skipped.
             print(
-                "\n  No climatology files were requested by user, so averaging will be skipped."
+                "\n  No climatology files were requested by user to be generated, so averaging will be skipped."
             )
+            print("   This either means:")
+            print("    Climo files exist and a relevent path has been included,")
+            print("    Or the user doesn't want to run the climo generation becasue their analysis doesn't require it.")
 
     #########
 

@@ -158,8 +158,6 @@ def amwg_table(adf):
         pass#return
     else:
         input_ts_locs = adf.get_cam_info("cam_ts_loc")
-    
-
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):

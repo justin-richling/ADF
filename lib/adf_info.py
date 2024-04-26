@@ -181,11 +181,21 @@ class AdfInfo(AdfConfig):
             skip_baseline_ts = False
 
             if not calc_baseline_ts:
-                print("User indicates the don't want to rely on any timeseries files what so ever")
+                print("User indicates they don't want to rely on any timeseries files what so ever")
                 skip_baseline_ts = True
+
+                #Initialize case nicknames:
+                self.__test_nicknames = test_nicknames
+                self.__base_nickname = base_nickname
+
+                #Save starting and ending years as object variables:
+                self.__syear_baseline = syear_baseline
+                self.__eyear_baseline = eyear_baseline
+                
+                """
                 #Get years from pre-made timeseries file(s)
                 input_climo_loc = self.get_baseline_info("cam_climo_loc")
-                """found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_climo(input_climo_loc, data_name)
+                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_climo(input_climo_loc, data_name)
                 #found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)
                 found_yr_range = np.arange(found_syear_baseline,found_eyear_baseline,1)
 
