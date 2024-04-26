@@ -234,6 +234,9 @@ def amwg_table(adf):
         #ocean fraction xarray data-array:
         ocn_frc_da = None
 
+        #Notify user that table is being created:
+        print(f"\n  Generating table for '{case_name}'...")
+
         #Loop over CAM output variables:
         for var in var_list:
 
