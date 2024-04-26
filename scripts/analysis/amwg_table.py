@@ -155,7 +155,7 @@ def amwg_table(adf):
             else:
                 print(f"  - AMWG table for (CASE) '{case_name}' does not exist.")
                 print('check here output_csv_file:',output_csv_file,"\n")
-        return
+        pass#return
     else:
         input_ts_locs = adf.get_cam_info("cam_ts_loc")
     
