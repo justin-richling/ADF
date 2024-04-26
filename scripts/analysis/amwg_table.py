@@ -137,8 +137,8 @@ def amwg_table(adf):
     if not calc_cam_ts:
         #print("User indicates no time series files will be used")
         #print()
-        emsg = "\t User indicates no time series files will be used."
-        emsg += "\t - Looking if tables already exisited:"
+        emsg = "\n  User indicates no time series files will be used."
+        emsg += " Looking if table already exisits:"
         print(emsg)
 
         #if ah:
@@ -169,8 +169,8 @@ def amwg_table(adf):
         #Check if user wants to skip time series file creation
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
         if not calc_baseline_ts:
-            emsg = "\n\t User indicates no time series files will be used."
-            emsg += "\t - Looking if tables already exisited:"
+            emsg = "\n  User indicates no time series files will be used."
+            emsg += " Looking if table already exisits:"
             print(emsg)
 
             output_location = Path(output_locs[0])
