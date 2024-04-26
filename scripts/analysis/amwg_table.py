@@ -184,6 +184,16 @@ def amwg_table(adf):
             else:
                 print(f"\t - AMWG table for (BASELINE) '{baseline_name}' does not exist.")
                 print('\t  check here:',output_csv_file,"\n")
+            
+            #Also check for comparison before quitting:
+            output_csv_file_comp = output_location / "amwg_table_comp.csv"
+            if Path(output_csv_file).is_file():
+                print(f"\t - AMWG comparison table exists, adding to website.")
+                df_comp = pd.read_csv(output_csv_file_comp)
+                # last step is to add table dataframe to website (if enabled):
+
+                #Add comparison table dataframe to website (if enabled):
+                adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
             return
 
         case_names.append(baseline_name)
