@@ -356,9 +356,6 @@ class AdfDiag(AdfWeb):
 
         # End def
 
-        # Notify user that script has started:
-        print("\n  Generating CAM time series files...")
-
         # Check if baseline time-series files are being created:
         if baseline:
             # Use baseline settings, while converting them all
@@ -389,11 +386,14 @@ class AdfDiag(AdfWeb):
             end_years = self.climo_yrs["eyears"]
         # End if
 
+        # Notify user that script has started:
+        print("\n  Generating CAM time series files...")
+
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info("hist_str")
         # If hist_str is not present, then default to 'cam.h0':
         if not hist_str:
-            hist_str = "cam.h0"
+            hist_str = "cam.h0a"
         # End if
 
         # get info about variable defaults
@@ -402,18 +402,18 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
+            if calc_cam_ts[case_idx]:
+                emsg = " Configuration file indicates time series files don't need to be used"
+                emsg += f" for case '{case_name}'.  Will check for pre-made climo files."
+                print(emsg)
+                continue
+
             if cam_ts_done[case_idx]:
                 emsg = " Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
                 continue
             # End if
-
-            if calc_cam_ts[case_idx]:
-                emsg = " Configuration file indicates time series files don't need to be used"
-                emsg += f" for case '{case_name}'.  Will check for pre-made climo files."
-                print(emsg)
-                continue
 
             print(f"\t Processing time series for case '{case_name}' :")
 

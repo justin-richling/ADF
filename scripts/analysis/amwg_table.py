@@ -130,16 +130,42 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
+
+    #Check if user wants to skip time series file creation
+    calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
+    if not calc_cam_ts:
+        #print("User indicates no time series files will be used")
+        #print()
+        emsg = " User indicates no time series files will be used"
+        emsg += f" for case '{case_name}'.  AMWG tables can't be calculated."
+        print(emsg)
+        pass
+    else:
+        input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    
+
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+        
+        #Check if user wants to skip time series file creation
+        calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
+        if not calc_baseline_ts:
+            emsg = " User indicates no time series files will be used"
+            emsg += f" for case '{case_name}'.  AMWG tables can't be calculated."
+            print(emsg)
+            pass
 
         case_names.append(baseline_name)
-        input_ts_locs.append(input_ts_baseline)
+
+        if not input_ts_locs:
+            input_ts_locs = []
+        else:
+            input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
+            input_ts_locs.append(input_ts_baseline)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
