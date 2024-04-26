@@ -140,6 +140,18 @@ def amwg_table(adf):
         emsg = " User indicates no time series files will be used."
         emsg += " AMWG tables can't be calculated."
         print(emsg)
+
+        #if ah:
+        for case_idx, case_name in enumerate(case_names):
+            #Convert output location string to a Path object:
+            output_location = Path(output_locs[case_idx])
+            #Create output file name:
+            output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+            if Path(output_csv_file).is_file():
+                #print()
+                table_df = pd.read_csv(output_csv_file)
+                # last step is to add table dataframe to website (if enabled):
+                adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
         return
     else:
         input_ts_locs = adf.get_cam_info("cam_ts_loc")
@@ -157,6 +169,15 @@ def amwg_table(adf):
             emsg = " User indicates no time series files will be used."
             emsg += " AMWG tables can't be calculated."
             print(emsg)
+
+            output_location = Path(output_locs[0])
+            #Create output file name:
+            output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
+            if Path(output_csv_file).is_file():
+                #print()
+                table_df = pd.read_csv(output_csv_file)
+                # last step is to add table dataframe to website (if enabled):
+                adf.add_website_data(table_df, baseline_name, baseline_name, plot_type="Tables")
             return
 
         case_names.append(baseline_name)
