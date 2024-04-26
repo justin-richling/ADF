@@ -356,9 +356,6 @@ class AdfDiag(AdfWeb):
 
         # End def
 
-        # Notify user that script has started:
-        print("\n  Generating CAM time series files...")
-
         # Check if baseline time-series files are being created:
         if baseline:
             # Use baseline settings, while converting them all
@@ -366,8 +363,11 @@ class AdfDiag(AdfWeb):
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             cam_ts_done = [self.get_baseline_info("cam_ts_done")]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
+            ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
+            #Check if user wants to skip time series file creation
+            calc_cam_ts   = [self.get_baseline_info("calc_cam_ts")]
+
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
         else:
@@ -375,8 +375,11 @@ class AdfDiag(AdfWeb):
             case_names = self.get_cam_info("cam_case_name", required=True)
             cam_ts_done = self.get_cam_info("cam_ts_done")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc", required=True)
+            ts_dir = self.get_cam_info("cam_ts_loc")
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            #Grab case time series file location(s)
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
+
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
         # End if
@@ -392,12 +395,25 @@ class AdfDiag(AdfWeb):
         res = self.variable_defaults
 
         # Loop over cases:
+        no_msg = False
         for case_idx, case_name in enumerate(case_names):
+            # Notify user that script has started:
+            print(f"\n  Generating CAM time series files for '{case_name}'...")
             # Check if particular case should be processed:
-            if cam_ts_done[case_idx]:
-                emsg = " Configuration file indicates time series files have been pre-computed"
-                emsg += f" for case '{case_name}'.  Will rely on those files directly."
+
+            #Check whether the user needs to use time series files at all
+            #or are missing the time series files all together.
+            if not calc_cam_ts[case_idx]:
+                emsg = "\tConfiguration file indicates time series files don't need to be calculated."
                 print(emsg)
+                no_msg = True
+                continue
+
+            if cam_ts_done[case_idx]:
+                emsg = "\tConfiguration file indicates time series files have been pre-computed."
+                emsg += f" Will rely on those files directly."
+                print(emsg)
+                no_msg = True
                 continue
             # End if
 
@@ -653,7 +669,10 @@ class AdfDiag(AdfWeb):
         # End cases loop
 
         # Notify user that script has ended:
-        print("  ...CAM time series file generation has finished successfully.")
+        if no_msg:
+            print("  ...Moving on.")
+        else:
+            print("  ...CAM time series file generation has finished successfully.")
 
     #########
 
@@ -722,8 +741,11 @@ class AdfDiag(AdfWeb):
         else:
             # If not, then notify user that climo file generation is skipped.
             print(
-                "\n  No climatology files were requested by user, so averaging will be skipped."
+                "\n  No climatology files were requested by user to be generated, so averaging will be skipped."
             )
+            print("   This either means:")
+            print("    Climo files exist and a relevent path has been included,")
+            print("    Or desired analysis doesn't require it.")
 
     #########
 

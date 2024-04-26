@@ -130,16 +130,82 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
+
+    #Check if user wants to skip time series file creation
+    calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
+    if not calc_cam_ts:
+        #print("User indicates no time series files will be used")
+        #print()
+        emsg = "\n    User indicates no time series files will be used."
+        emsg += " Looking if table already exisits:"
+        print(emsg)
+
+        #if ah:
+        for case_idx, case_name in enumerate(case_names):
+            #Convert output location string to a Path object:
+            output_location = Path(output_locs[case_idx])
+            #Create output file name:
+            output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+            if Path(output_csv_file).is_file():
+                print(f"\t - AMWG table for '{case_name}' exists, adding to website.")
+                table_df = pd.read_csv(output_csv_file)
+                # last step is to add table dataframe to website (if enabled):
+                adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+            else:
+                print(f"\t - AMWG table for '{case_name}' does not exist.")
+                print('\t  check here:',output_csv_file,"\n")
+        pass#return
+    else:
+        input_ts_locs = adf.get_cam_info("cam_ts_loc")
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+        
+        #Check if user wants to skip time series file creation
+        calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
+        if not calc_baseline_ts:
+            emsg = "\n    User indicates no time series files will be used."
+            emsg += " Looking if table already exisits:"
+            print(emsg)
+
+            output_location = Path(output_locs[0])
+            #Create output file name:
+            output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
+            if Path(output_csv_file).is_file():
+                print(f"\t - AMWG table for '{baseline_name}' exists, adding to website.")
+                table_df = pd.read_csv(output_csv_file)
+
+                #Add table dataframe to website (if enabled):
+                adf.add_website_data(table_df, baseline_name, baseline_name, plot_type="Tables")
+            else:
+                print(f"\t - AMWG table for '{baseline_name}' does not exist.")
+                print('\t  check here:',output_csv_file,"\n")
+            
+            #Also check for comparison before quitting:
+            output_csv_file_comp = output_location / "amwg_table_comp.csv"
+            if Path(output_csv_file).is_file():
+                print(f"\n\t - AMWG comparison table exists, adding to website.")
+                df_comp = pd.read_csv(output_csv_file_comp)
+
+                #Add comparison table dataframe to website (if enabled):
+                adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+            else:
+                print(f"\t - AMWG comparison table does not exist.")
+                print('\t  check here:',output_csv_file_comp,"\n")
+            #Notify user that script has ended:
+            print("  ...AMWG table(s) have finished.")
+            return
 
         case_names.append(baseline_name)
-        input_ts_locs.append(input_ts_baseline)
+
+        if not input_ts_locs:
+            input_ts_locs = []
+        else:
+            input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
+            input_ts_locs.append(input_ts_baseline)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
@@ -180,6 +246,9 @@ def amwg_table(adf):
         #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
         ocn_frc_da = None
+
+        #Notify user that table is being created:
+        print(f"\n  Generating table for '{case_name}'...")
 
         #Loop over CAM output variables:
         for var in var_list:
