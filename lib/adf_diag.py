@@ -386,9 +386,6 @@ class AdfDiag(AdfWeb):
             end_years = self.climo_yrs["eyears"]
         # End if
 
-        # Notify user that script has started:
-        print("\n  Generating CAM time series files...")
-
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info("hist_str")
         # If hist_str is not present, then default to 'cam.h0':
@@ -402,6 +399,8 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         no_msg = False
         for case_idx, case_name in enumerate(case_names):
+            # Notify user that script has started:
+            print(f"\n  Generating CAM time series files for '{case_name}'...")
             # Check if particular case should be processed:
             if not calc_cam_ts[case_idx]:
                 emsg = " Configuration file indicates time series files don't need to be used"
