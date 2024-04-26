@@ -366,8 +366,12 @@ class AdfDiag(AdfWeb):
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             cam_ts_done = [self.get_baseline_info("cam_ts_done")]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
+            ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
+            #Check if user wants to skip time series file creation
+            calc_cam_ts   = self.get_baseline_info("calc_cam_ts")
+
+            skip_cam_ts = False
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
         else:
@@ -375,8 +379,12 @@ class AdfDiag(AdfWeb):
             case_names = self.get_cam_info("cam_case_name", required=True)
             cam_ts_done = self.get_cam_info("cam_ts_done")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc", required=True)
+            ts_dir = self.get_cam_info("cam_ts_loc")
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            #Grab case time series file location(s)
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
+
+            skip_cam_ts = [False]*len(case_names)
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
         # End if
@@ -400,6 +408,12 @@ class AdfDiag(AdfWeb):
                 print(emsg)
                 continue
             # End if
+
+            if calc_cam_ts[case_idx]:
+                emsg = " Configuration file indicates time series files don't need to be used"
+                emsg += f" for case '{case_name}'.  Will check for pre-made climo files."
+                print(emsg)
+                continue
 
             print(f"\t Processing time series for case '{case_name}' :")
 
