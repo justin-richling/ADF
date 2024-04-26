@@ -137,8 +137,8 @@ def amwg_table(adf):
     if not calc_cam_ts:
         #print("User indicates no time series files will be used")
         #print()
-        emsg = " User indicates no time series files will be used."
-        emsg += " Looking if tables already exisited:"
+        emsg = "\t User indicates no time series files will be used."
+        emsg += "\t - Looking if tables already exisited:"
         print(emsg)
 
         #if ah:
@@ -148,13 +148,13 @@ def amwg_table(adf):
             #Create output file name:
             output_csv_file = output_location / f"amwg_table_{case_name}.csv"
             if Path(output_csv_file).is_file():
-                print(f"  - AMWG table for (CASE) '{case_name}' exists, adding to website!\nYou're so luck you HORDE data... Hahahaha")
+                print(f"\t - AMWG table for (CASE) '{case_name}' exists, adding to website!\nYou're so luck you HORDE data... Hahahaha")
                 table_df = pd.read_csv(output_csv_file)
                 # last step is to add table dataframe to website (if enabled):
                 adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
             else:
-                print(f"  - AMWG table for (CASE) '{case_name}' does not exist.")
-                print('check here output_csv_file:',output_csv_file,"\n")
+                print(f"\t - AMWG table for (CASE) '{case_name}' does not exist.")
+                print('\t  check here:',output_csv_file,"\n")
         pass#return
     else:
         input_ts_locs = adf.get_cam_info("cam_ts_loc")
@@ -169,21 +169,21 @@ def amwg_table(adf):
         #Check if user wants to skip time series file creation
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
         if not calc_baseline_ts:
-            emsg = " User indicates no time series files will be used."
-            emsg += " Looking if tables already exisited:"
+            emsg = "\n\t User indicates no time series files will be used."
+            emsg += "\t - Looking if tables already exisited:"
             print(emsg)
 
             output_location = Path(output_locs[0])
             #Create output file name:
             output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
             if Path(output_csv_file).is_file():
-                print(f"  - AMWG table for (BASELINE) '{baseline_name}' exists, adding to website.")
+                print(f"\t - AMWG table for (BASELINE) '{baseline_name}' exists, adding to website.")
                 table_df = pd.read_csv(output_csv_file)
                 # last step is to add table dataframe to website (if enabled):
                 adf.add_website_data(table_df, baseline_name, baseline_name, plot_type="Tables")
             else:
-                print(f"  - AMWG table for (BASELINE) '{baseline_name}' does not exist.")
-                print('check here output_csv_file:',output_csv_file,"\n")
+                print(f"\t - AMWG table for (BASELINE) '{baseline_name}' does not exist.")
+                print('\t  check here:',output_csv_file,"\n")
             return
 
         case_names.append(baseline_name)
