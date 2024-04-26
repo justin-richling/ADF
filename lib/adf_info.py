@@ -174,6 +174,8 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
+            if baseline_ts_done is None:
+                baseline_ts_done = False
 
             #Check if user wants to skip time series file creation
             calc_baseline_ts   = self.get_baseline_info("calc_cam_ts")
@@ -323,6 +325,8 @@ class AdfInfo(AdfConfig):
         
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
+        if cam_ts_done is None:
+            cam_ts_done = [False]*len(case_names)
 
         #Check if user wants to skip time series file creation
         calc_case_ts   = self.get_cam_info("calc_cam_ts")
