@@ -148,7 +148,7 @@ def amwg_table(adf):
             #Create output file name:
             output_csv_file = output_location / f"amwg_table_{case_name}.csv"
             if Path(output_csv_file).is_file():
-                print(f"\t - AMWG table for (CASE) '{case_name}' exists, adding to website!\nYou're so luck you HORDE data... Hahahaha")
+                print(f"\t - AMWG table for (CASE) '{case_name}' exists, adding to website.")
                 table_df = pd.read_csv(output_csv_file)
                 # last step is to add table dataframe to website (if enabled):
                 adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
@@ -188,7 +188,7 @@ def amwg_table(adf):
             #Also check for comparison before quitting:
             output_csv_file_comp = output_location / "amwg_table_comp.csv"
             if Path(output_csv_file).is_file():
-                print(f"\t - AMWG comparison table exists, adding to website.")
+                print(f"\n\t - AMWG comparison table exists, adding to website.")
                 df_comp = pd.read_csv(output_csv_file_comp)
                 # last step is to add table dataframe to website (if enabled):
 
