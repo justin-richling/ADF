@@ -194,6 +194,9 @@ def amwg_table(adf):
 
                 #Add comparison table dataframe to website (if enabled):
                 adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+            else:
+                print(f"\t - AMWG comparison table does not exist.")
+                print('\t  check here:',output_csv_file_comp,"\n")
             return
 
         case_names.append(baseline_name)
