@@ -406,14 +406,14 @@ class AdfDiag(AdfWeb):
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
             if not calc_cam_ts[case_idx]:
-                emsg = " Configuration file indicates time series files don't need to be used."
+                emsg = "\tConfiguration file indicates time series files don't need to be used."
                 emsg += f" Will check for pre-made climo files."
                 print(emsg)
                 no_msg = True
                 continue
 
             if cam_ts_done[case_idx]:
-                emsg = " Configuration file indicates time series files have been pre-computed."
+                emsg = "\tConfiguration file indicates time series files have been pre-computed."
                 emsg += f" Will rely on those files directly."
                 print(emsg)
                 no_msg = True
@@ -748,7 +748,7 @@ class AdfDiag(AdfWeb):
             )
             print("   This either means:")
             print("    Climo files exist and a relevent path has been included,")
-            print("    Or the user doesn't want to run the climo generation becasue their analysis doesn't require it.")
+            print("    Or desired analysis doesn't require it.")
 
     #########
 

@@ -181,7 +181,7 @@ class AdfInfo(AdfConfig):
             skip_baseline_ts = False
 
             if not calc_baseline_ts:
-                print(f"\nWARNING: User indicates they don't want to rely on timeseries or history files for '{data_name}'.")
+                print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
                 print("  - The climo years specified in the config file cannot be verified!")
                 skip_baseline_ts = True
 
@@ -470,7 +470,7 @@ class AdfInfo(AdfConfig):
             eyear = eyears[case_idx]
 
             if not calc_case_ts[case_idx]:
-                print(f"\nWARNING: User indicates they don't want to rely on timeseries or history files for '{case_name}.")
+                print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
                 print("  - The climo years specified in the config file cannot be verified!")
                 skip_cam_ts[case_idx] = True
                 #continue
@@ -969,7 +969,7 @@ class AdfInfo(AdfConfig):
 
         return syr, eyr
 
-    #Utility function to grab climo years from pre-made climo files:
+    '''#Utility function to grab climo years from pre-made climo files:
     def get_climo_yrs_from_climo(self, input_climo_loc, case_name):
         """
         Grab start and end climo years if none are specified in config file
@@ -1026,7 +1026,7 @@ class AdfInfo(AdfConfig):
             msg += "this may take a long time!"
             print(msg)
 
-        return syr, eyr
+        return syr, eyr'''
 
 #++++++++++++++++++++
 #End Class definition
