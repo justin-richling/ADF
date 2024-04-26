@@ -181,8 +181,8 @@ class AdfInfo(AdfConfig):
             skip_baseline_ts = False
 
             if not calc_baseline_ts:
-                print("User indicates they don't want to rely on any timeseries files what so ever")
-                print(" WARNING: the climo years specified in the config file cannot be verified!")
+                print("\nWARNING: User indicates they don't want to rely on timeseries or history files.")
+                print("  - The climo years specified in the config file cannot be verified!")
                 skip_baseline_ts = True
 
                 """#Initialize case nicknames:
@@ -470,8 +470,8 @@ class AdfInfo(AdfConfig):
             eyear = eyears[case_idx]
 
             if not calc_case_ts[case_idx]:
-                print("User indicates the don't want to rely on any timeseries files what so ever")
-                print(" WARNING: the climo years specified in the config file cannot be verified!")
+                print("\nWARNING: User indicates they don't want to rely on timeseries or history files.")
+                print("  - The climo years specified in the config file cannot be verified!")
                 skip_cam_ts[case_idx] = True
                 #continue
                 """input_climo_loc = input_climo_locs[case_idx]
