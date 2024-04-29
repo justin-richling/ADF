@@ -130,12 +130,13 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     var = "H2O"
+    var = "Q"
     for idx,key in enumerate(runs_LT2):
         fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
-        dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        #dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
-        dat_tropics = cosweightlat(datzm.H2O, -10, 10)
+        dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         alldat.append(dat_mon)
         runname_LT.append(key)
