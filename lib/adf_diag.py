@@ -552,6 +552,13 @@ class AdfDiag(AdfWeb):
                     if "derivable_from" in vres:
                         constit_list = vres["derivable_from"]
                         for constit in constit_list:
+                            if var == "SOA":
+                                if not glob.glob(os.path.join(hist_files[0], f"*.{constit}.*"))[0]:
+                                    if "derivable_from_cam_chem" in vres:
+                                        constit_list = vres['derivable_from_cam_chem']
+                                        for constit in constit_list:
+                                            if constit not in diag_var_list:
+                                                diag_var_list.append(constit)
                             if constit not in diag_var_list:
                                 diag_var_list.append(constit)
                         vars_to_derive.append(var)
@@ -561,6 +568,23 @@ class AdfDiag(AdfWeb):
                         msg += " No time series will be generated."
                         print(msg)
                         continue
+
+                """#Check if all the constituent files were found
+                if len(constit_files) != len(constit_list):
+                    if var == "SOA":
+                        if "derivable_from_cam_chem" in vres:
+                            constit_list = vres['derivable_from_cam_chem']
+                        else:
+                            print("WARNING: No constituents listed in defaults config file, moving on")
+                            continue
+                        for constit in constit_list:
+                            print("constit",constit)
+                            print(glob.glob(os.path.join(ts_dir, f"*.{constit}.*")),"\n")
+                            constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
+                    if len(constit_files) != len(constit_list):
+                        ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                        ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                        print(ermsg)"""
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
