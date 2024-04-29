@@ -112,6 +112,9 @@ class AdfInfo(AdfConfig):
             hist_str = 'cam.h0'
         #End if
 
+        #Initialize ADF variable
+        self.__hist_str = hist_str
+
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
@@ -576,6 +579,12 @@ class AdfInfo(AdfConfig):
         base_nickname = self.__base_nickname
 
         return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
+
+    @property
+    def hist_str(self):
+        """Return the test case and baseline history file string to the user if requested."""
+
+        return self.__hist_str
 
     #########
 
