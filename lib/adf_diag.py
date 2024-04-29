@@ -553,6 +553,8 @@ class AdfDiag(AdfWeb):
                         constit_list = vres["derivable_from"]
                         for constit in constit_list:
                             if var == "SOA":
+                                print(hist_files[0])
+                                print(glob.glob(os.path.join(hist_files[0], f"*.{constit}.*")))
                                 if not glob.glob(os.path.join(hist_files[0], f"*.{constit}.*"))[0]:
                                     if "derivable_from_cam_chem" in vres:
                                         constit_list = vres['derivable_from_cam_chem']
