@@ -553,9 +553,13 @@ class AdfDiag(AdfWeb):
                         constit_list = vres["derivable_from"]
                         for constit in constit_list:
                             if var == "SOA":
-                                print(hist_files[0])
-                                print(glob.glob(os.path.join(hist_files[0], f"*.{constit}.*")))
-                                if not glob.glob(os.path.join(hist_files[0], f"*.{constit}.*"))[0]:
+                                # Open the NetCDF file with xarray
+                                #file_path = 'path/to/your/netcdf/file.nc'
+                                dataset = xr.open_dataset(hist_files[0])
+
+                                # Check if a variable exists in the NetCDF file
+                                #variable_name = 'your_variable_name'
+                                if constit not in dataset.data_vars:
                                     if "derivable_from_cam_chem" in vres:
                                         constit_list = vres['derivable_from_cam_chem']
                                         for constit in constit_list:
