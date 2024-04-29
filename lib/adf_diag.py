@@ -561,8 +561,8 @@ class AdfDiag(AdfWeb):
                                 #variable_name = 'your_variable_name'
                                 if constit not in dataset.data_vars:
                                     if "derivable_from_cam_chem" in vres:
-                                        constit_list = vres['derivable_from_cam_chem']
-                                        for constit in constit_list:
+                                        constit_list2 = vres['derivable_from_cam_chem']
+                                        for constit in constit_list2:
                                             if constit not in diag_var_list:
                                                 diag_var_list.append(constit)
                             if constit not in diag_var_list:
@@ -1081,6 +1081,7 @@ class AdfDiag(AdfWeb):
 
             #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
+                print("uh-oh")
                 if var == "SOA":
                     if "derivable_from_cam_chem" in vres:
                         constit_list = vres['derivable_from_cam_chem']
