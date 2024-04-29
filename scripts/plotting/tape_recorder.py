@@ -75,6 +75,9 @@ def tape_recorder(adfobj):
         end_years = end_years+[data_end_year]
     #End if
 
+    #Grab history file string
+    hist_str = adfobj.hist_str
+
     # Default colormap
     cmap='precip_nowhite'
 
@@ -128,7 +131,7 @@ def tape_recorder(adfobj):
     runname_LT=[]
     var = "H2O"
     for idx,key in enumerate(runs_LT2):
-        fils= sorted(Path(runs_LT2[key]).glob(f'*h0.{var}.*.nc'))
+        fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
