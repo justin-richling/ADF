@@ -117,20 +117,22 @@ def tape_recorder(adfobj):
     mls = cosweightlat(mls.H2O,-10,10)
     mls = mls.groupby('time.month').mean('time')
     # Convert mixing ratio values from ppmv to kg/kg
-    mls = mls*18.015280/(1e6*28.964)
+    mls = mls#*18.015280/(1e6*28.964)
 
     # ERA5 data
     era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
     era5 = era5.groupby('time.month').mean('time')
+    era5 = era5/18.015280/(1e6*28.964)
 
     alldat=[]
     runname_LT=[]
+    var = "H2O"
     for idx,key in enumerate(runs_LT2):
-        fils= sorted(Path(runs_LT2[key]).glob('*h0.Q.*.nc'))
+        fils= sorted(Path(runs_LT2[key]).glob(f'*h0.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
-        dat_tropics = cosweightlat(datzm.Q, -10, 10)
+        dat_tropics = cosweightlat(datzm.H2O, -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         alldat.append(dat_mon)
         runname_LT.append(key)
