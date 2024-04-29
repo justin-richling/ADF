@@ -1092,6 +1092,7 @@ class AdfDiag(AdfWeb):
                         print("constit",constit)
                         print(glob.glob(os.path.join(ts_dir, f"*.{constit}.*")),"\n")
                         constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
+                        continue
                 if len(constit_files) != len(constit_list):
                     ermsg = f"Not all constituent files present; {var} cannot be calculated."
                     ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
