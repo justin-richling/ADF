@@ -1058,6 +1058,7 @@ class AdfDiag(AdfWeb):
                         print("WARNING: No constituents listed in defaults config file, moving on")
                         continue
                     for constit in constit_list:
+                        print("constit",constit,"\n")
                         constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
                 if len(constit_files) != len(constit_list):
                     ermsg = f"Not all constituent files present; {var} cannot be calculated."
