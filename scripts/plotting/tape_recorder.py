@@ -120,12 +120,12 @@ def tape_recorder(adfobj):
     mls = cosweightlat(mls.H2O,-10,10)
     mls = mls.groupby('time.month').mean('time')
     # Convert mixing ratio values from ppmv to kg/kg
-    mls = mls#*18.015280/(1e6*28.964)
+    mls = mls*18.015280/(1e6*28.964)
 
     # ERA5 data
     era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
     era5 = era5.groupby('time.month').mean('time')
-    era5 = era5/18.015280/(1e6*28.964)
+    #era5 = era5/18.015280/(1e6*28.964)
 
     alldat=[]
     runname_LT=[]
