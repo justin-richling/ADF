@@ -1064,6 +1064,7 @@ class AdfDiag(AdfWeb):
 
         for var in vars_to_derive:
             print(f"\t - deriving time series for {var}")
+            go_ahead = True
 
             #Check whether there are parts to derive from and if there is an associated equation
             vres = res.get(var, {})
@@ -1082,6 +1083,7 @@ class AdfDiag(AdfWeb):
             #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
                 print("uh-oh")
+                go_ahead = False
                 if var == "SOA":
                     if "derivable_from_cam_chem" in vres:
                         constit_list = vres['derivable_from_cam_chem']
@@ -1092,12 +1094,13 @@ class AdfDiag(AdfWeb):
                         print("constit",constit)
                         print(glob.glob(os.path.join(ts_dir, f"*.{constit}.*")),"\n")
                         constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
-                        continue
+                        go_ahead = True
                 if len(constit_files) != len(constit_list):
                     ermsg = f"Not all constituent files present; {var} cannot be calculated."
                     ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                     print(ermsg)
-            else:
+            #else:
+            if go_ahead:
                 #Open a new dataset with all the constituent files/variables
                 ds = xr.open_mfdataset(constit_files)
     
