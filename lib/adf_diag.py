@@ -1046,14 +1046,23 @@ class AdfDiag(AdfWeb):
             #Grab all required time series files for derived var
             constit_files = []
             for constit in constit_list:
-                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):                    
                     constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
             #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
-                ermsg = f"Not all constituent files present; {var} cannot be calculated."
-                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                print(ermsg)
+                if var == "SOA":
+                    if "derivable_from_cam_chem" in vres:
+                        constit_list = vres['derivable_from_cam_chem']
+                    else:
+                        print("WARNING: No constituents listed in defaults config file, moving on")
+                        continue
+                    for constit in constit_list:
+                        constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
+                if len(constit_files) != len(constit_list):
+                    ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                    ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                    print(ermsg)
             else:
                 #Open a new dataset with all the constituent files/variables
                 ds = xr.open_mfdataset(constit_files)
