@@ -244,7 +244,7 @@ SOA:
       label : '$\mu$g/m3'
   category: "Aerosols"
   derivable_from: ["soa_a1", "soa_a2"]
-  derivable_from: ["soa1_a1", "soa2_a1", "soa3_a1", "soa4_a1", "soa5_a1", "soa1_a2", "soa2_a2", "soa3_a2", "soa4_a2", "soa5_a2"]
+  derivable_from_cam_chem: ["soa1_a1", "soa2_a1", "soa3_a1", "soa4_a1", "soa5_a1", "soa1_a2", "soa2_a2", "soa3_a2", "soa4_a2", "soa5_a2"]
 
 
 DUST:
