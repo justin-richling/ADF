@@ -65,7 +65,7 @@ def create_climo_files(adf, clobber=False, search=None):
     calc_climos   = adf.get_cam_info("calc_cam_climo")
     cam_ts_loc_req = False
     if calc_climos:
-        calc_climos = True
+        cam_ts_loc_req = True
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
     output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
@@ -73,6 +73,7 @@ def create_climo_files(adf, clobber=False, search=None):
     #Extract simulation years:
     start_year = adf.climo_yrs["syears"]
     end_year   = adf.climo_yrs["eyears"]
+    
 
     #If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
