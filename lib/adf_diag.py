@@ -445,7 +445,7 @@ class AdfDiag(AdfWeb):
                     # and if not, check if it needs to be derived
                     if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
                         print(f"{var} not in {ts_case_dir}")
-                        print(glob.glob(os.path.join(ts_case_dir, f"*{var}*")),"\n")
+                        #print(glob.glob(os.path.join(ts_case_dir, f"*{var}*")),"\n")
                         vres = res.get(var, {})
                         if "derivable_from" in vres:
                             print("derivable_from",var,"\n")
@@ -460,8 +460,8 @@ class AdfDiag(AdfWeb):
                             print()
                             if "method" in vres["derive"]:
                                 if vres["derive"]["method"] == "interp":
-
-                                    #Check if the interpolated dimension is part of CAM dimensions
+                                    vars_to_derive.append(var)
+                                    """#Check if the interpolated dimension is part of CAM dimensions
                                     for dim in ["time","lat","lon","lev","ilev"]:
                                         if dim in vres["derive"].keys():
                                             #print(dim)
@@ -489,7 +489,7 @@ class AdfDiag(AdfWeb):
                                                 save_to_nc(ds_final, Path(ts_case_dir) / Path(ts_exist[0].replace(der_from, var)))
                                             else:
                                                 print(f"Missing '{der_from}' variable, can't create '{var}' time series.")
-                                                continue
+                                                continue"""
                                             #.interp(dim=vres["derive"]["method"][dim], method='nearest')
                                 if vres["derive"]["method"] == "mask":
                                     print()
@@ -1252,8 +1252,8 @@ class AdfDiag(AdfWeb):
 
 
                 else:
-                    print("constit",constit)
-                    print("ts_dir",ts_dir)
+                    #print("constit",constit)
+                    #print("ts_dir",ts_dir)
                     if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                         print("HERE??")
                         constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
@@ -1279,7 +1279,7 @@ class AdfDiag(AdfWeb):
                         ahh = []
                         for cons in constit_files_dict.keys():
                             ahh.append(constit_files_dict[cons][i])
-                        print("ahh",ahh,"\n")
+                        #print("ahh",ahh,"\n")
                         print("matchies??",len(ahh) == len(constit_list))
                         #Check if all the constituent files were found
                         if len(ahh) != len(constit_list):
@@ -1291,10 +1291,10 @@ class AdfDiag(AdfWeb):
                         ds = xr.open_mfdataset(ahh, compat='override')
                         # create new file name for derived variable
 
-                        print("fdghjk",constit_files_dict[constit_list[0]][i])
+                        #print("fdghjk",constit_files_dict[constit_list[0]][i])
 
                         derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
-                        print("derived_file",derived_file,"\n")
+                        #print("derived_file",derived_file,"\n")
                         #Check if clobber is true for file
                         if Path(derived_file).is_file():
                             if overwrite:
