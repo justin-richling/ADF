@@ -304,6 +304,7 @@ def amwg_table(adf):
             print(f"\n\tAMWG table for '{case_name}' not created.\n")
         #End try/except
 
+        #Keep track of case csv files for comparison table check later
         csv_list.append(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
 
     #End of model case loop
