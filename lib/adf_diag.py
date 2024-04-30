@@ -511,7 +511,7 @@ class AdfDiag(AdfWeb):
 
                 
 
-                """#Derive variables that come from other means
+                #Derive variables that come from other means
                 #EXAMPLE: derive SST's from TS if not in CAM output
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
                     print("Need to make SST's")
@@ -555,7 +555,7 @@ class AdfDiag(AdfWeb):
                             #End if
                         #End if
                     #End if
-                #End if"""
+                #End if
                     
 
 
@@ -1326,8 +1326,53 @@ class AdfDiag(AdfWeb):
                                     ds_final = der_from_ds.drop_vars(constit_list)
                                     ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
-                        if flag == "derive_mask":
+                        """if flag == "derive_mask":
                             print()
+                            #Derive variables that come from other means
+                            #EXAMPLE: derive SST's from TS if not in CAM output
+                            if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
+                                print("Need to make SST's")
+                                ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
+                                if ts_exist:
+                                    ts_ds = xr.open_dataset(ts_exist[0])
+                                else:
+                                    print("Missing 'TS' variable, can't create SST time series.")
+                                    continue
+
+                                if 'mask' in vres:
+                                    if vres['mask'].lower() == 'ocean':
+                                        #Check if the ocean fraction has already been regridded
+                                        #and saved:
+                                        if ts_ds:
+                                            ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])
+                                            if ofrac_ds:
+                                                print("did it make it here?")
+                                                ofrac = ofrac_ds['OCNFRAC']
+                                                # set the bounds of regridded ocnfrac to 0 to 1
+                                                ofrac = xr.where(ofrac>1,1,ofrac)
+                                                ofrac = xr.where(ofrac<0,0,ofrac)
+                                                # mask the land in TS for global means
+                                                ts_ds['OCNFRAC'] = ofrac
+                                                ts_tmp = ts_ds['TS']
+                                                ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                                ts_ds['SST'] = ts_tmp
+
+                                                #Save to new time series file
+                                                print("did it make it here 2?")
+                                                save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
+                                            else:
+                                                wmsg = "OCNFRAC not found in CAM output,"
+                                                wmsg += f" unable to apply mask to 'SST'"
+                                                print(wmsg)
+                                            
+                                        else:
+                                            wmsg = "TS not found in CAM output,"
+                                            wmsg += f" unable to apply mask to 'SST'"
+                                            print(wmsg)
+                                        #End if
+                                    #End if
+                                #End if
+                            #End if"""
 
                         
                         if flag == "derivable_from":
