@@ -171,7 +171,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 continue
             #print(len(ts_files))
             #print("WTF 1")
-            if len(ts_files) > 1:
+            """if len(ts_files) > 1:
                 #print("WTF 2")
                 #concat_list = sorted(glob(ts_files))
                 #print("concat_list",concat_list)
@@ -191,7 +191,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 #list_of_arguments.append((ts_files, syr, eyr, output_file))
             
             #else:
-                #list_of_arguments.append((ts_files, syr, eyr, output_file))
+                #list_of_arguments.append((ts_files, syr, eyr, output_file))"""
             list_of_arguments.append((ts_files, syr, eyr, output_file))
 
 
@@ -202,6 +202,7 @@ def create_climo_files(adf, clobber=False, search=None):
         with mp.Pool(processes=number_of_cpu) as p:
             result = p.starmap(process_variable, list_of_arguments)
         
+        """
         #Remove created files
         #MAYBE: instead of deleteing files, make a new sub-directory and save thsoe there...
         #        Eh, then what about regridding script...
@@ -219,6 +220,7 @@ def create_climo_files(adf, clobber=False, search=None):
                     print("File deleted successfully.")
                 else:
                     print("File does not exist.")
+        """
 
 
     #End of model case loop
@@ -239,9 +241,9 @@ def process_variable(ts_files, syr, eyr, output_file, ds_concat=None):
     #Read in files via xarray (xr):
     if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
-    else:
-        print("THIS SHOULDNT WORK ANYMORE!")
-        #cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+    if len(ts_files) > 1:
+        #print("THIS SHOULDNT WORK ANYMORE!")
+        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
         #cam_ts_data = ds_concat
         
         """concat_list = sorted(glob(ts_files))
