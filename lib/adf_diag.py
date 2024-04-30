@@ -1312,7 +1312,9 @@ class AdfDiag(AdfWeb):
                                     #der_from_ds = xr.open_dataset(ts_exist[0])
                                     der_from_ds = ds
                                     #Grab variable to derive from
-                                    der_from_var = der_from_ds[der_from]
+                                    #constit_list
+                                    der_from_var = der_from_ds[constit_list[0]]
+                                    #der_from_var = der_from_ds[der_from]
 
                                     # Interpolate the data to the nearest requested value: vres["derive"][dim]
                                     der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
