@@ -1190,6 +1190,52 @@ class AdfDiag(AdfWeb):
             vres = res.get(var, {})
             if "derivable_from" in vres:
                 constit_list = vres['derivable_from']
+                flag = "derivable_from"
+            
+            elif "derive" in vres:
+                print()
+                if "method" in vres["derive"]:
+                    if vres["derive"]["method"] == "interp":
+                        flag = "derive_interp"
+
+                        #Check if the interpolated dimension is part of CAM dimensions
+                        for dim in ["time","lat","lon","lev","ilev"]:
+                            if dim in vres["derive"].keys():
+                                #print(dim)
+                                #print(vres["derive"][dim])
+                                            
+                                #Variable to derive quantity from
+                                der_from = vres['derive']['from']
+                                constit_list = vres['derive']['from']
+
+                                """#Check if it is part of the CAM files
+                                ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
+                                if ts_exist:
+                                    der_from_ds = xr.open_dataset(ts_exist[0])
+
+                                    #Grab variable to derive from
+                                    der_from_var = der_from_ds[der_from]
+
+                                    # Interpolate the data to the nearest requested value: vres["derive"][dim]
+                                    der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
+                                                
+                                    #Set derived variable in dataset and remove the original variable
+                                    der_from_ds[var] = der_var
+                                    ds_final = der_from_ds.drop_vars([der_from])
+
+                                    #Save to new time series file
+                                    save_to_nc(ds_final, Path(ts_case_dir) / Path(ts_exist[0].replace(der_from, var)))
+                                else:
+                                    print(f"Missing '{der_from}' variable, can't create '{var}' time series.")
+                                    continue"""
+                                #.interp(dim=vres["derive"]["method"][dim], method='nearest')
+                    if vres["derive"]["method"] == "mask":
+                        print()
+                        flag = "derive_mask"
+
+
+
+
             else:
                 print("WARNING: No constituents listed in defaults config file, moving on")
                 continue
@@ -1259,7 +1305,43 @@ class AdfDiag(AdfWeb):
                                 )
                                 continue
 
-                        #NOTE: this will need to be changed when derived equations are more complex! - JR
+                        if flag == "derive_interp":
+                            #ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
+                            #der_from_ds = xr.open_dataset(ts_exist[0])
+                            der_from_ds = ds
+                            #Grab variable to derive from
+                            der_from_var = der_from_ds[der_from]
+
+                            # Interpolate the data to the nearest requested value: vres["derive"][dim]
+                            der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
+                                                
+                            #Set derived variable in dataset and remove the original variable
+                            der_from_ds[var] = der_var
+                            ds_final = der_from_ds.drop_vars([der_from])
+                            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+                        
+                        if flag == "derivable_from":
+                            #NOTE: this will need to be changed when derived equations are more complex! - JR
+                            if var == "RESTOM":
+                                der_val = ds["FSNT"]-ds["FLNT"]
+                            else:
+                                #Loop through all constituents and sum
+                                der_val = 0
+                                for v in constit_list:
+                                    der_val += ds[v]
+                            
+                            #Set derived variable name and add to dataset
+                            der_val.name = var
+                            ds[var] = der_val
+                            #Drop all constituents from final saved dataset
+                            #These are not necessary because they have their own time series files
+                            ds_final = ds.drop_vars(constit_list)
+                            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+                        
+                        
+                        """#NOTE: this will need to be changed when derived equations are more complex! - JR
                         if var == "RESTOM":
                             der_val = ds["FSNT"]-ds["FLNT"]
                         else:
@@ -1274,7 +1356,7 @@ class AdfDiag(AdfWeb):
                         #Drop all constituents from final saved dataset
                         #These are not necessary because they have their own time series files
                         ds_final = ds.drop_vars(constit_list)
-                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')"""
 
 
 
