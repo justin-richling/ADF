@@ -720,7 +720,7 @@ OMEGA500:
   derive: 
     method: "interp"
     lev: 500
-    from: 'OMEGA'
+    from: ['OMEGA']
 
 PINT:
   category: "State"
