@@ -150,6 +150,8 @@ def amwg_table(adf):
     #-----------------------------------------
 
     #Loop over CAM cases:
+    #Initialize list of case name csv files for case comparison check later
+    csv_list = []
     for case_idx, case_name in enumerate(case_names):
 
         #Convert output location string to a Path object:
@@ -198,17 +200,13 @@ def amwg_table(adf):
                 continue
             #End if
 
-            #TEMPORARY:  For now, make sure only one file exists:
-            if len(ts_files) != 1:
-                errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
-                errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
-                print(errmsg)
-                continue
-            #End if
-
             #Load model variable data from file:
             ds = pf.load_dataset(ts_files)
-            data = ds[var]
+
+            if len(ts_files) > 1:
+                data = ds[var].compute()
+            else:
+                data = ds[var]
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
@@ -306,6 +304,8 @@ def amwg_table(adf):
             print(f"\n\tAMWG table for '{case_name}' not created.\n")
         #End try/except
 
+        csv_list.append(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
+
     #End of model case loop
     #----------------------
 
@@ -314,7 +314,7 @@ def amwg_table(adf):
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
-        if len(sorted(output_location.glob("*.csv"))) != len(case_names):
+        if len(csv_list) != len(case_names):
             print("\tNot enough cases to compare, skipping comparison table...")
         else:
             #Create comparison table for both cases
