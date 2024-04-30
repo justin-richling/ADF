@@ -75,6 +75,7 @@ def create_climo_files(adf, clobber=False, search=None):
     if calc_climos:
         cam_ts_loc_req = True
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
+    print("input_ts_locs",input_ts_locs,"\n")
     output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
