@@ -100,6 +100,8 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Append to case lists:
         case_names.append(baseline_name)
+        if not input_ts_locs:
+            input_ts_locs = []
         input_ts_locs.append(input_ts_baseline)
         output_locs.append(output_bl_loc)
         calc_climos.append(calc_bl_climos)
