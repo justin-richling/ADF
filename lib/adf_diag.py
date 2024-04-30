@@ -1280,7 +1280,7 @@ class AdfDiag(AdfWeb):
                         for cons in constit_files_dict.keys():
                             ahh.append(constit_files_dict[cons][i])
                         #print("ahh",ahh,"\n")
-                        print("matchies??",len(ahh) == len(constit_list))
+                        print(f"{var}: matchies??",len(ahh) == len(constit_list))
                         #Check if all the constituent files were found
                         if len(ahh) != len(constit_list):
                             ermsg = f"Not all constituent files present; {var} cannot be calculated."
