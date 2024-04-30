@@ -242,7 +242,7 @@ def process_variable(ts_files, syr, eyr, output_file, ds_concat=None):
     if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     if len(ts_files) > 1:
-        #print("THIS SHOULDNT WORK ANYMORE!")
+        print("Oh boy, here we go")
         cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
         #cam_ts_data = ds_concat
         
@@ -260,39 +260,39 @@ def process_variable(ts_files, syr, eyr, output_file, ds_concat=None):
         #ds_concat.to_netcdf(derived_file, unlimited_dims='time', mode='w')"""
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
-        #print("start time_bnds")
+        print("start time_bnds")
         time = cam_ts_data['time']
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
-        #print("start xr.DataArray - load")
+        print("start xr.DataArray - load")
         time = xr.DataArray(cam_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
-        #print("finish xr.DataArray - load")
+        print("finish xr.DataArray - load")
         cam_ts_data['time'] = time
         cam_ts_data.assign_coords(time=time)
         cam_ts_data = xr.decode_cf(cam_ts_data)
-        #print("finish time_bnds")
+        print("finish time_bnds")
     #Extract data subset using provided year bounds:
-    #print("start cam_ts_data.sel")
+    print("start cam_ts_data.sel")
     cam_ts_data = cam_ts_data.sel(time=slice(syr, eyr))
-    #print("finish cam_ts_data.sel")
+    print("finish cam_ts_data.sel")
     #Group time series values by month, and average those months together:
-    #print("start cam_ts_data.groupby")
+    print("start cam_ts_data.groupby")
     cam_climo_data = cam_ts_data.groupby('time.month').mean(dim='time')
-    #print("finish cam_ts_data.groupby")
+    print("finish cam_ts_data.groupby")
     #Rename "months" to "time":
-    #print("start cam_climo_data.rename")
+    print("start cam_climo_data.rename")
     cam_climo_data = cam_climo_data.rename({'month':'time'})
-    #print("finish cam_climo_data.rename")
+    print("finish cam_climo_data.rename")
     #Set netCDF encoding method (deal with getting non-nan fill values):
-    #print("start encode")
+    print("start encode")
     enc_dv = {xname: {'_FillValue': None, 'zlib': True, 'complevel': 4} for xname in cam_climo_data.data_vars}
     enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
     enc    = {**enc_c, **enc_dv}
     #print("finish encode")
 
     #Output variable climatology to NetCDF-4 file:
-    #print("start cam_climo_data.to_netcdf")
+    print("start cam_climo_data.to_netcdf")
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
-    #print("finish cam_climo_data.to_netcdf")
+    print("finish cam_climo_data.to_netcdf")
     return 1  # All funcs return something. Could do error checking with this if needed.
 
 

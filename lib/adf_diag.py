@@ -449,10 +449,10 @@ class AdfDiag(AdfWeb):
                         vres = res.get(var, {})
                         if "derivable_from" in vres:
                             print("derivable_from",var,"\n")
-                            constit_list = vres["derivable_from"]
-                            for constit in constit_list:
-                                if constit not in diag_var_list:
-                                    diag_var_list.append(constit)
+                            #constit_list = vres["derivable_from"]
+                            #for constit in constit_list:
+                            #    if constit not in diag_var_list:
+                            #        diag_var_list.append(constit)
                             vars_to_derive.append(var)
                             #continue
                         #Check if the derived method is different
@@ -493,6 +493,7 @@ class AdfDiag(AdfWeb):
                                             #.interp(dim=vres["derive"]["method"][dim], method='nearest')
                                 if vres["derive"]["method"] == "mask":
                                     print()
+                                    vars_to_derive.append(var)
 
                         #elif var in ["SST","OMEGA500"]:
                         #    print(f"'{var}' will be created from different way.")
@@ -510,7 +511,7 @@ class AdfDiag(AdfWeb):
 
                 
 
-                #Derive variables that come from other means
+                """#Derive variables that come from other means
                 #EXAMPLE: derive SST's from TS if not in CAM output
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
                     print("Need to make SST's")
@@ -554,7 +555,7 @@ class AdfDiag(AdfWeb):
                             #End if
                         #End if
                     #End if
-                #End if
+                #End if"""
                     
 
 
@@ -1232,6 +1233,7 @@ class AdfDiag(AdfWeb):
                     if vres["derive"]["method"] == "mask":
                         print()
                         flag = "derive_mask"
+                        constit_list = vres['derive']['from']
 
 
 
@@ -1323,6 +1325,9 @@ class AdfDiag(AdfWeb):
                                     der_from_ds[var] = der_var
                                     ds_final = der_from_ds.drop_vars(constit_list)
                                     ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+                        if flag == "derive_mask":
+                            print()
 
                         
                         if flag == "derivable_from":
