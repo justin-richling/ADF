@@ -718,6 +718,9 @@ class AdfDiag(AdfWeb):
             calc_bl_climo = False
         # End if
 
+        print("calc_climo",calc_climo)
+        print("calc_bl_climo",calc_bl_climo,"\n")
+
         # Check if a user wants any climatologies to be calculated:
         if calc_climo or calc_bl_climo:
             # If so, then extract names of time-averaging scripts:
