@@ -1306,19 +1306,21 @@ class AdfDiag(AdfWeb):
                                 continue
 
                         if flag == "derive_interp":
-                            #ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
-                            #der_from_ds = xr.open_dataset(ts_exist[0])
-                            der_from_ds = ds
-                            #Grab variable to derive from
-                            der_from_var = der_from_ds[der_from]
+                            for dim in ["time","lat","lon","lev","ilev"]:
+                                if dim in vres["derive"].keys():
+                                    #ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
+                                    #der_from_ds = xr.open_dataset(ts_exist[0])
+                                    der_from_ds = ds
+                                    #Grab variable to derive from
+                                    der_from_var = der_from_ds[der_from]
 
-                            # Interpolate the data to the nearest requested value: vres["derive"][dim]
-                            der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
-                                                
-                            #Set derived variable in dataset and remove the original variable
-                            der_from_ds[var] = der_var
-                            ds_final = der_from_ds.drop_vars([der_from])
-                            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                                    # Interpolate the data to the nearest requested value: vres["derive"][dim]
+                                    der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
+                                                        
+                                    #Set derived variable in dataset and remove the original variable
+                                    der_from_ds[var] = der_var
+                                    ds_final = der_from_ds.drop_vars([der_from])
+                                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
                         
                         if flag == "derivable_from":
