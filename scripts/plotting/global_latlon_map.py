@@ -109,14 +109,18 @@ def global_latlon_map(adfobj):
         print("\n  Generating lat/lon maps...")
 
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
+    print(basic_info_dict)
     #paleo = basic_info_dict["paleo"]
     if "paleo_vs_pi" in basic_info_dict:
         print("\n  Generating paleo lat/lon maps...")
         #if "paleo_proj" in basic_info_dict["paleo"]:
         #    paleo_proj = basic_info_dict["paleo"]["paleo_proj"]
-        paleo_proj = basic_info_dict["paleo_vs_pi"]
-        if not paleo_proj:
+        paleo_pi = basic_info_dict["paleo_vs_pi"]
+        if not paleo_pi:
+            paleo_proj = True
             print("\n  Paleo continents will be made from LANDFRAC")
+        else:
+            paleo_proj = False
     else:
         print("\n  Generating lat/lon maps...")
         #paleo_proj = False
@@ -403,7 +407,7 @@ def global_latlon_map(adfobj):
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
                                                  mseasons[s], oseasons[s], dseasons[s],
-                                                 obs, paleo=paleo_proj, landfrac_da=landfrac, **vres)
+                                                 obs, paleo_proj=paleo_proj, landfrac_da=landfrac, **vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -497,7 +501,7 @@ def global_latlon_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s],
-                                                     obs, paleo=paleo_proj, landfrac_da=landfrac, **vres)
+                                                     obs, paleo_proj=paleo_proj, landfrac_da=landfrac, **vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
