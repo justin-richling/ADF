@@ -546,36 +546,7 @@ class AdfDiag(AdfWeb):
                     diag_var_list += ["T"]
             #End aerosol calcs
 
-            '''for var in diag_var_list:
-                if var not in hist_file_var_list:
-                    vres = res.get(var, {})
-                    if "derivable_from" in vres:
-                        """constit_list = vres["derivable_from"]
-                        for constit in constit_list:
-                            if var == "SOA":
-                                # Open the NetCDF file with xarray
-                                #file_path = 'path/to/your/netcdf/file.nc'
-                                dataset = xr.open_dataset(hist_files[0])
-
-                                # Check if a variable exists in the NetCDF file
-                                #variable_name = 'your_variable_name'
-                                if constit not in dataset.data_vars:
-                                    if "derivable_from_cam_chem" in vres:
-                                        constit_list2 = vres['derivable_from_cam_chem']
-                                        for constit in constit_list2:
-                                            if constit not in diag_var_list:
-                                                diag_var_list.append(constit)
-                            if constit not in diag_var_list:
-                                diag_var_list.append(constit)"""
-                        vars_to_derive.append(var)
-                        continue
-                    else:
-                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                        msg += " No time series will be generated."
-                        print(msg)
-                        continue'''
-
-            for var in diag_var_list:
+            """for var in diag_var_list:
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
@@ -606,7 +577,70 @@ class AdfDiag(AdfWeb):
                         print(msg)
                         continue
                     #End if constituents in variable defaults
-                #End if check var in history location
+                #End if check var in history location"""
+
+            """for var in diag_var_list:
+                if var not in hist_file_var_list:
+                    vres = res.get(var, {})
+                    if "derivable_from" in vres:
+                        constit_list = vres["derivable_from"]
+                        for constit in constit_list:
+                            if var == "SOA":
+                                # Open the NetCDF file with xarray
+                                #file_path = 'path/to/your/netcdf/file.nc'
+                                dataset = xr.open_dataset(hist_files[0])
+
+                                # Check if a variable exists in the NetCDF file
+                                #variable_name = 'your_variable_name'
+                                if constit not in dataset.data_vars:
+                                    if "derivable_from_cam_chem" in vres:
+                                        constit_list2 = vres['derivable_from_cam_chem']
+                                        for constit in constit_list2:
+                                            if constit not in diag_var_list:
+                                                diag_var_list.append(constit)
+                            if constit not in diag_var_list:
+                                diag_var_list.append(constit)
+                        vars_to_derive.append(var)
+                        continue
+                    else:
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
+                        continue"""
+
+                
+            for var in diag_var_list:
+                if var not in hist_file_var_list:
+                    vres = res.get(var, {})
+                    if "derivable_from" in vres:
+                        dataset = xr.open_dataset(hist_files[0])
+                        constit_list = vres["derivable_from"]
+                        for constit in constit_list:
+                            #if var == "SOA":
+                            # Open the NetCDF file with xarray
+                            #file_path = 'path/to/your/netcdf/file.nc'
+                            #dataset = xr.open_dataset(hist_files[0])
+
+                            # Check if a variable exists in the NetCDF file
+                            #variable_name = 'your_variable_name'
+                            if constit not in dataset.data_vars:
+                                if "derivable_from_cam_chem" in vres:
+                                    constit_list2 = vres['derivable_from_cam_chem']
+                                    for constit in constit_list2:
+                                        if constit not in diag_var_list:
+                                            diag_var_list.append(constit)
+                            if constit not in diag_var_list:
+                                diag_var_list.append(constit)
+                        vars_to_derive.append(var)
+                        continue
+                    else:
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
+                        continue
+
+            
+                
 
                 """#Check if all the constituent files were found
                 if len(constit_files) != len(constit_list):
