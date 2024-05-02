@@ -550,7 +550,7 @@ class AdfDiag(AdfWeb):
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
-                        constit_list = vres["derivable_from"]
+                        """constit_list = vres["derivable_from"]
                         for constit in constit_list:
                             if var == "SOA":
                                 # Open the NetCDF file with xarray
@@ -566,7 +566,7 @@ class AdfDiag(AdfWeb):
                                             if constit not in diag_var_list:
                                                 diag_var_list.append(constit)
                             if constit not in diag_var_list:
-                                diag_var_list.append(constit)
+                                diag_var_list.append(constit)"""
                         vars_to_derive.append(var)
                         continue
                     else:
@@ -1062,14 +1062,41 @@ class AdfDiag(AdfWeb):
 
         """
 
+
+
+
+        """
+        constit_list = vres["derivable_from"]
+                        for constit in constit_list:
+                            if var == "SOA":
+                                # Open the NetCDF file with xarray
+                                #file_path = 'path/to/your/netcdf/file.nc'
+                                dataset = xr.open_dataset(hist_files[0])
+
+                                # Check if a variable exists in the NetCDF file
+                                #variable_name = 'your_variable_name'
+                                if constit not in dataset.data_vars:
+                                    if "derivable_from_cam_chem" in vres:
+                                        constit_list2 = vres['derivable_from_cam_chem']
+                                        for constit in constit_list2:
+                                            if constit not in diag_var_list:
+                                                diag_var_list.append(constit)
+                            if constit not in diag_var_list:
+                                diag_var_list.append(constit)
+        """
+
+
+
         for var in vars_to_derive:
             print(f"\t - deriving time series for {var}")
-            go_ahead = True
+            #go_ahead = True
 
             #Check whether there are parts to derive from and if there is an associated equation
             vres = res.get(var, {})
             if "derivable_from" in vres:
                 constit_list = vres['derivable_from']
+            elif "derivable_from_cam_chem" in vres:
+                constit_list = vres['derivable_from_cam_chem']
             else:
                 print("WARNING: No constituents listed in defaults config file, moving on")
                 continue
@@ -1080,6 +1107,8 @@ class AdfDiag(AdfWeb):
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):                    
                     constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
+
+            """
             #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
                 print("uh-oh")
@@ -1099,8 +1128,16 @@ class AdfDiag(AdfWeb):
                     ermsg = f"Not all constituent files present; {var} cannot be calculated."
                     ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                     print(ermsg)
-            #else:
-            if go_ahead:
+            """
+
+            #Check if all the constituent files were found
+            if len(constit_files) != len(constit_list):
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                print(ermsg)
+
+            else:
+            #if go_ahead:
                 #Open a new dataset with all the constituent files/variables
                 ds = xr.open_mfdataset(constit_files)
     
