@@ -1129,6 +1129,8 @@ class AdfDiag(AdfWeb):
                     ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                     print(ermsg)
             """
+            print("constit_files: ",len(constit_files))
+            print("constit_list: ",len(constit_list))
 
             #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
