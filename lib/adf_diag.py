@@ -575,6 +575,39 @@ class AdfDiag(AdfWeb):
                         print(msg)
                         continue
 
+            for var in diag_var_list:
+                if var not in hist_file_var_list:
+                    vres = res.get(var, {})
+                    if "derivable_from" in vres:
+                        constit_list = vres["derivable_from"]
+                        if constit_list:
+                            for constit in constit_list:
+                                if constit not in diag_var_list:
+                                    diag_var_list.append(constit)
+                            vars_to_derive.append(var)
+                            continue
+                        else:
+                            print("WARNING: No constituents listed in defaults config file, moving on")
+                        #End if
+                    elif "derivable_from_cam_chem" in vres:
+                        constit_list = vres['derivable_from_cam_chem']
+                        if constit_list:
+                            for constit in constit_list:
+                                if constit not in diag_var_list:
+                                    diag_var_list.append(constit)
+                            vars_to_derive.append(var)
+                            continue
+                        else:
+                            print("WARNING: No constituents listed in defaults config file, moving on")
+                        #End if
+                    else:
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
+                        continue
+                    #End if constituents in variable defaults
+                #End if check var in history location
+
                 """#Check if all the constituent files were found
                 if len(constit_files) != len(constit_list):
                     if var == "SOA":
