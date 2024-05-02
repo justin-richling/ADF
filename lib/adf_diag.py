@@ -546,7 +546,7 @@ class AdfDiag(AdfWeb):
                     diag_var_list += ["T"]
             #End aerosol calcs
 
-            for var in diag_var_list:
+            '''for var in diag_var_list:
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
@@ -573,7 +573,7 @@ class AdfDiag(AdfWeb):
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         msg += " No time series will be generated."
                         print(msg)
-                        continue
+                        continue'''
 
             for var in diag_var_list:
                 if var not in hist_file_var_list:
