@@ -609,7 +609,7 @@ class AdfDiag(AdfWeb):
                         continue"""
 
                 
-            for var in diag_var_list:
+            """for var in diag_var_list:
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
@@ -625,10 +625,52 @@ class AdfDiag(AdfWeb):
                             #variable_name = 'your_variable_name'
                             if constit not in dataset.data_vars:
                                 if "derivable_from_cam_chem" in vres:
-                                    constit_list2 = vres['derivable_from_cam_chem']
-                                    for constit in constit_list2:
-                                        if constit not in diag_var_list:
-                                            diag_var_list.append(constit)
+                                    constit_list_chem = vres['derivable_from_cam_chem']
+                                    for constit_chem in constit_list_chem:
+                                        if constit_chem not in diag_var_list:
+                                            diag_var_list.append(constit_chem)
+                            if constit not in diag_var_list:
+                                diag_var_list.append(constit)
+                        vars_to_derive.append(var)
+                        continue
+                    else:
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
+                        continue"""
+
+            #if var in res["cam_chem_list"]:
+            if any(item in res["cam_chem_list"] for item in diag_var_list):
+                print("YAHOO")
+                dataset = xr.open_dataset(hist_files[0])
+                cam_chem_check = True
+            else:
+                cam_chem_check = False
+            for var in diag_var_list:
+                #Check if current variable is a derived quantity
+                if var not in hist_file_var_list:
+                    vres = res.get(var, {})
+                    if "derivable_from" in vres:
+                        #if var in res["cam_chem_list"]:
+                        #    dataset = xr.open_dataset(hist_files[0])
+                        #    cam_chem_check = True
+                        constit_list = vres["derivable_from"]
+                        for constit in constit_list:
+                            #Check if variable is part of a CAM-CHEM run
+                            #  - currently on SOA is the exception here
+                            #if var in res["cam_chem_list"]:
+                            #    dataset = xr.open_dataset(hist_files[0])
+                            if cam_chem_check:
+                                #Check if this is a regular CAM constituent
+                                if constit not in dataset.data_vars:
+                                    #If not, check the CAM-CHEM constituents
+                                    if "derivable_from_cam_chem" in vres:
+                                        constit_list_chem = vres['derivable_from_cam_chem']
+                                        for constit_chem in constit_list_chem:
+                                            if constit_chem not in diag_var_list:
+                                                diag_var_list.append(constit_chem)
+                                else:
+                                    continue
                             if constit not in diag_var_list:
                                 diag_var_list.append(constit)
                         vars_to_derive.append(var)

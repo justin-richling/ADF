@@ -79,6 +79,11 @@ default_ptypes: ["Tables","LatLon","LatLon_Vector","Zonal","Meridional",
 Rgas: 287.04 #[J/K/Kg]=8.314/0.028965
 
 #+++++++++++++
+# CAM CHEM Variables
+#+++++++++++++
+cam_chem_list: ["SOA"]
+
+#+++++++++++++
 # Category: Microphysics
 #+++++++++++++
 
