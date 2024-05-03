@@ -64,10 +64,10 @@ def create_climo_files(adf, clobber=False, search=None):
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     calc_climos   = adf.get_cam_info("calc_cam_climo")
     # Check if climo calculation config option is a list:
-    if isinstance(calc_climos, list):
+    """if isinstance(calc_climos, list):
         # If so, then check if any of the entries are "True":
         calc_climos = any(calc_climos)
-    # End if
+    # End if"""
 
     print("calc_climos",calc_climos,"\n")
 
