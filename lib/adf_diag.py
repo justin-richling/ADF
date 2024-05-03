@@ -650,7 +650,7 @@ class AdfDiag(AdfWeb):
             for var in diag_var_list:
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
-                    get_cam_chem_constits = False
+                    #get_cam_chem_constits = False
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
                         #if var in res["cam_chem_list"]:
@@ -658,6 +658,7 @@ class AdfDiag(AdfWeb):
                         #    cam_chem_check = True
                         constit_list = vres["derivable_from"]
                         for constit in constit_list:
+                            get_cam_chem_constits = False
                             """#Check if variable is part of a CAM-CHEM run
                             #  - currently on SOA is the exception here
                             #if var in res["cam_chem_list"]:
@@ -677,11 +678,11 @@ class AdfDiag(AdfWeb):
                                 if cam_chem_check:
                                     print("Checking if this a CAM-CHEM run?")
                                     get_cam_chem_constits = True
-                                    pass
+                                    #pass
                             
 
 
-                            if constit not in diag_var_list:
+                            if (constit not in diag_var_list) and (not get_cam_chem_constits):
                                 diag_var_list.append(constit)
 
                             """if "derivable_from_cam_chem" in vres:
