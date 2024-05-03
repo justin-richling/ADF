@@ -674,9 +674,10 @@ class AdfDiag(AdfWeb):
                                 for constit_chem in constit_list_chem:
                                     if constit_chem not in diag_var_list:
                                         diag_var_list.append(constit_chem)"""
-                        vars_to_derive.append(var)
-                        constit_dict[var] = constit_list
-                        continue
+                        if not get_cam_chem_constits:
+                            vars_to_derive.append(var)
+                            constit_dict[var] = constit_list
+                            continue
                     
                     else:
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
