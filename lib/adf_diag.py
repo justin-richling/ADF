@@ -641,10 +641,9 @@ class AdfDiag(AdfWeb):
 
             #if var in res["cam_chem_list"]:
             if any(item in res["cam_chem_list"] for item in diag_var_list):
-            #    dataset = xr.open_dataset(hist_files[case_idx])
                 cam_chem_check = True
-            #else:
-            #    cam_chem_check = False
+            else:
+                cam_chem_check = False
 
             constit_dict = {}
             for var in diag_var_list:
@@ -659,21 +658,7 @@ class AdfDiag(AdfWeb):
                         constit_list = vres["derivable_from"]
                         for constit in constit_list:
                             get_cam_chem_constits = False
-                            """#Check if variable is part of a CAM-CHEM run
-                            #  - currently on SOA is the exception here
-                            #if var in res["cam_chem_list"]:
-                            #    dataset = xr.open_dataset(hist_files[0])
-                            if cam_chem_check:
-                                #Check if this is a regular CAM constituent
-                                if constit not in dataset.data_vars:
-                                    #If not, check the CAM-CHEM constituents
-                                    if "derivable_from_cam_chem" in vres:
-                                        constit_list_chem = vres['derivable_from_cam_chem']
-                                        for constit_chem in constit_list_chem:
-                                            if constit_chem not in diag_var_list:
-                                                diag_var_list.append(constit_chem)
-                                else:
-                                    continue"""
+
                             if constit not in hist_file_ds.data_vars:
                                 if cam_chem_check:
                                     print("Checking if this a CAM-CHEM run?")
