@@ -661,7 +661,6 @@ class AdfDiag(AdfWeb):
 
                             if constit not in hist_file_ds.data_vars:
                                 if cam_chem_check:
-                                    print("Checking if this a CAM-CHEM run?")
                                     get_cam_chem_constits = True
                                     #pass
                             
@@ -669,18 +668,21 @@ class AdfDiag(AdfWeb):
 
                             if (constit not in diag_var_list) and (not get_cam_chem_constits):
                                 diag_var_list.append(constit)
+                                vars_to_derive.append(var)
+                                constit_dict[var] = constit_list
 
                             """if "derivable_from_cam_chem" in vres:
                                 constit_list_chem = vres['derivable_from_cam_chem']
                                 for constit_chem in constit_list_chem:
                                     if constit_chem not in diag_var_list:
                                         diag_var_list.append(constit_chem)"""
-                        vars_to_derive.append(var)
-                        constit_dict[var] = constit_list
+                        #vars_to_derive.append(var)
+                        #constit_dict[var] = constit_list
                         continue
                     
                     #elif
                     if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
+                        print(f"Looks like this a CAM-CHEM, checking constits for '{var}'")
                         constit_list = vres['derivable_from_cam_chem']
                         for constit_chem in constit_list:
                             if constit_chem not in diag_var_list:
