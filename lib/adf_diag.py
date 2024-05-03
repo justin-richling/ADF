@@ -692,7 +692,7 @@ class AdfDiag(AdfWeb):
                                         diag_var_list.append(constit_chem)"""
                         vars_to_derive.append(var)
                         constit_dict[var] = constit_list
-                        #continue
+                        continue
                     
                     #elif
                     if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
@@ -702,6 +702,7 @@ class AdfDiag(AdfWeb):
                                 diag_var_list.append(constit_chem)
                         vars_to_derive.append(var)
                         constit_dict[var] = constit_list
+                        continue
                     
                     else:
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
