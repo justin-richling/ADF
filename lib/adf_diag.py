@@ -1237,7 +1237,7 @@ class AdfDiag(AdfWeb):
             else:
                 print("WARNING: No constituents listed in defaults config file, moving on")
                 continue"""
-
+            print("constit_list",constit_list,"\n")
             #Grab all required time series files for derived var
             constit_files = []
             for constit in constit_list:
