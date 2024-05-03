@@ -641,11 +641,12 @@ class AdfDiag(AdfWeb):
 
             #if var in res["cam_chem_list"]:
             if any(item in res["cam_chem_list"] for item in diag_var_list):
-                print("YAHOO")
-                dataset = xr.open_dataset(hist_files[0])
+            #    dataset = xr.open_dataset(hist_files[case_idx])
                 cam_chem_check = True
-            else:
-                cam_chem_check = False
+            #else:
+            #    cam_chem_check = False
+
+
             for var in diag_var_list:
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
@@ -656,7 +657,7 @@ class AdfDiag(AdfWeb):
                         #    cam_chem_check = True
                         constit_list = vres["derivable_from"]
                         for constit in constit_list:
-                            #Check if variable is part of a CAM-CHEM run
+                            """#Check if variable is part of a CAM-CHEM run
                             #  - currently on SOA is the exception here
                             #if var in res["cam_chem_list"]:
                             #    dataset = xr.open_dataset(hist_files[0])
@@ -670,11 +671,33 @@ class AdfDiag(AdfWeb):
                                             if constit_chem not in diag_var_list:
                                                 diag_var_list.append(constit_chem)
                                 else:
-                                    continue
+                                    continue"""
+                            if constit not in hist_file_ds.data_vars:
+                                if cam_chem_check:
+                                    print("Checking if this a CAM-CHEM run?")
+                                    get_cam_chem_constits = True
+                                    pass
+                            get_cam_chem_constits = False
+
+
                             if constit not in diag_var_list:
                                 diag_var_list.append(constit)
+
+                            """if "derivable_from_cam_chem" in vres:
+                                constit_list_chem = vres['derivable_from_cam_chem']
+                                for constit_chem in constit_list_chem:
+                                    if constit_chem not in diag_var_list:
+                                        diag_var_list.append(constit_chem)"""
                         vars_to_derive.append(var)
                         continue
+                    
+                    #elif
+                    if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
+                        constit_list = vres['derivable_from_cam_chem']
+                        for constit_chem in constit_list:
+                            if constit_chem not in diag_var_list:
+                                diag_var_list.append(constit_chem)
+                    
                     else:
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         msg += " No time series will be generated."
@@ -785,7 +808,8 @@ class AdfDiag(AdfWeb):
 
             if vars_to_derive:
                 self.derive_variables(
-                    res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
+                    res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx],
+                    constit_list=constit_list
                 )
             # End with
 
@@ -1159,7 +1183,7 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, constit_list=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1200,7 +1224,7 @@ class AdfDiag(AdfWeb):
             print(f"\t - deriving time series for {var}")
             #go_ahead = True
 
-            #Check whether there are parts to derive from and if there is an associated equation
+            """#Check whether there are parts to derive from and if there is an associated equation
             vres = res.get(var, {})
             if "derivable_from" in vres:
                 constit_list = vres['derivable_from']
@@ -1208,7 +1232,7 @@ class AdfDiag(AdfWeb):
                 constit_list = vres['derivable_from_cam_chem']
             else:
                 print("WARNING: No constituents listed in defaults config file, moving on")
-                continue
+                continue"""
 
             #Grab all required time series files for derived var
             constit_files = []
