@@ -646,7 +646,7 @@ class AdfDiag(AdfWeb):
             #else:
             #    cam_chem_check = False
 
-            
+            constit_dict = {}
             for var in diag_var_list:
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
@@ -691,7 +691,8 @@ class AdfDiag(AdfWeb):
                                     if constit_chem not in diag_var_list:
                                         diag_var_list.append(constit_chem)"""
                         vars_to_derive.append(var)
-                        continue
+                        constit_dict[var] = constit_list
+                        #continue
                     
                     #elif
                     if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
@@ -700,6 +701,7 @@ class AdfDiag(AdfWeb):
                             if constit_chem not in diag_var_list:
                                 diag_var_list.append(constit_chem)
                         vars_to_derive.append(var)
+                        constit_dict[var] = constit_list
                     
                     else:
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
@@ -813,7 +815,7 @@ class AdfDiag(AdfWeb):
             if vars_to_derive:
                 self.derive_variables(
                     res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx],
-                    constit_list=constit_list
+                    constit_dict=constit_dict
                 )
             # End with
 
@@ -1187,7 +1189,7 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, constit_list=None, overwrite=None):
+    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, constit_dict=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
