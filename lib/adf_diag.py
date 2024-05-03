@@ -678,7 +678,13 @@ class AdfDiag(AdfWeb):
                         constit_dict[var] = constit_list
                         continue
                     
-                    #elif
+                    else:
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
+                        #continue
+
+
                     if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
                         print(f"Looks like this a CAM-CHEM, checking constits for '{var}'")
                         constit_list = vres['derivable_from_cam_chem']
