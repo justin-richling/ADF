@@ -689,7 +689,7 @@ class AdfDiag(AdfWeb):
                                 for constit_chem in constit_list_chem:
                                     if constit_chem not in diag_var_list:
                                         diag_var_list.append(constit_chem)"""
-                        vars_to_derive.append(var)
+                        #vars_to_derive.append(var)
                         continue
                     
                     #elif
@@ -704,6 +704,7 @@ class AdfDiag(AdfWeb):
                         msg += " No time series will be generated."
                         print(msg)
                         continue
+                    vars_to_derive.append(var)
 
             
                 
