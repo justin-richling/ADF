@@ -393,7 +393,6 @@ class AdfDiag(AdfWeb):
             for i,loc in enumerate(calc_cam_ts):
                 if loc is None:
                     calc_cam_ts[i] = False
-
         else:
             calc_cam_ts = [False]*len(case_names)
 
