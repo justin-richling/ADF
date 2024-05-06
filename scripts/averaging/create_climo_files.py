@@ -63,7 +63,12 @@ def create_climo_files(adf, clobber=False, search=None):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    output_locs   = adf.get_cam_info("cam_climo_loc")
     calc_climos   = adf.get_cam_info("calc_cam_climo")
+
+    #Extract simulation years:
+    start_year = adf.climo_yrs["syears"]
+    end_year   = adf.climo_yrs["eyears"]
 
     """for i in calc_climos:
         if i:
@@ -81,10 +86,10 @@ def create_climo_files(adf, clobber=False, search=None):
 
     print("calc_climos",calc_climos,"\n")
 
-    cam_ts_loc_req = False
+    """cam_ts_loc_req = False
     if calc_climos:
         cam_ts_loc_req = True
-        input_ts_locs = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
+        #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
         output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
         overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
@@ -97,7 +102,9 @@ def create_climo_files(adf, clobber=False, search=None):
         end_year = []
         output_locs = []
         overwrite = []
-        input_ts_locs = []
+        input_ts_locs = []"""
+
+    
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
     print("input_ts_locs",input_ts_locs,"\n")
     """output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
@@ -178,13 +185,17 @@ def create_climo_files(adf, clobber=False, search=None):
             #raise AdfError(errmsg)"""
 
         #Check that time series input directory actually exists:
-        if (not input_location.is_dir()) and (not calc_climos[case_idx]):
+        if (not input_location.is_dir()):
             #errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
-            
-            msg = f"No time series requested for '{case_name}'; climo files have been supplied"
-            print(msg)
-            continue
+            if not calc_climos[case_idx]:
+                msg = f"No time series requested for '{case_name}'; climo files have been supplied"
+                print(msg)
+                continue
             #raise AdfError(errmsg)
+            else:
+                errmsg = f"Time series directory '{input_location}' not found."
+                print(msg)
+                continue
 
         #Check if climo directory exists, and if not, then create it:
         if not output_location.is_dir():
