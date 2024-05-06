@@ -69,12 +69,12 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #Check if using pre-made ts files
     #cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
-    for i,loc in enumerate(cam_climo_loc):
+    for i,loc in enumerate(output_locs):
         if loc is None:
-            cam_climo_loc[i] = False
+            output_locs[i] = False
 
-    if cam_climo_loc is None:
-        cam_climo_loc = [False]*len(case_names)
+    if output_locs is None:
+        output_locs = [False]*len(case_names)
 
     #overwrite = adf.get_cam_info("cam_overwrite_climo")
     if overwrite is None:
