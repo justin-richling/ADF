@@ -653,8 +653,9 @@ class AdfDiag(AdfWeb):
                     vres = res.get(var, {})
                     if "derivable_from" in vres:
                         constit_list = vres["derivable_from"]
+                        get_cam_chem_constits = False
                         for constit in constit_list:
-                            get_cam_chem_constits = False
+                            #get_cam_chem_constits = False
 
                             if constit not in hist_file_ds.data_vars:
                                 if cam_chem_check:
