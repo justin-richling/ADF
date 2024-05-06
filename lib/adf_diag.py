@@ -376,26 +376,38 @@ class AdfDiag(AdfWeb):
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
             
-            cam_ts_done = self.cam_ts_done
-            #cam_ts_done = self.get_cam_info("cam_ts_done")
-            #if cam_ts_done is None:
-            #    cam_ts_done = [False]*len(case_names)
-            #cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            cam_hist_locs = self.cam_hist_locs
-            #ts_dir = self.get_cam_info("cam_ts_loc")
-            ts_dir = self.input_ts_locs
+            #cam_ts_done = self.cam_ts_done
+            cam_ts_done = self.get_cam_info("cam_ts_done")
+            if cam_ts_done is None:
+                cam_ts_done = [False]*len(case_names)
+
+            cam_hist_locs = self.get_cam_info("cam_hist_loc")
+            if cam_hist_locs is None:
+                cam_hist_locs = [False]*len(case_names)
+            #cam_hist_locs = self.cam_hist_locs
+            
+            ts_dir = self.get_cam_info("cam_ts_loc")
+            if ts_dir is None:
+                ts_dir = [False]*len(case_names)
+            #ts_dir = self.input_ts_locs
 
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
-            if overwrite_ts is not None:
+            if overwrite_ts is None:
+                overwrite_ts = [False]*len(case_names)
+            """if overwrite_ts is not None:
                 for i,loc in enumerate(overwrite_ts):
                     if loc is None:
                         overwrite_ts[i] = False
             else:
-                overwrite_ts = [False]*len(case_names)
+                overwrite_ts = [False]*len(case_names)"""
+
             #Grab case time series file location(s)
-            #calc_cam_ts = self.get_cam_info("calc_cam_ts")
-        
-            calc_cam_ts = self.calc_case_ts
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
+            if calc_cam_ts is None:
+                calc_cam_ts = [False]*len(case_names)
+            #calc_cam_ts = self.calc_case_ts
+
+
 
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]

@@ -322,14 +322,16 @@ class AdfInfo(AdfConfig):
 
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        if cam_hist_locs is None:
+            cam_hist_locs = [False]*len(case_names)
         #Check if using pre-made ts files
         #cam_climo_loc   = self.get_cam_info("cam_climo_loc")
-        if cam_hist_locs is not None:
+        """if cam_hist_locs is not None:
             for i,loc in enumerate(cam_hist_locs):
                 if loc is None:
                     cam_hist_locs[i] = False
         else:
-            cam_hist_locs = [False]*len(case_names)
+            cam_hist_locs = [False]*len(case_names)"""
         
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
@@ -355,12 +357,14 @@ class AdfInfo(AdfConfig):
 
         #Check if using pre-made ts files
         cam_climo_loc   = self.get_cam_info("cam_climo_loc")
-        for i,loc in enumerate(cam_climo_loc):
+        if cam_climo_loc is None:
+            cam_climo_loc = [False]*len(case_names)
+        """for i,loc in enumerate(cam_climo_loc):
             if loc is None:
                 cam_climo_loc[i] = False
 
         if cam_climo_loc is None:
-            cam_climo_loc = [False]*len(case_names)
+            cam_climo_loc = [False]*len(case_names)"""
 
         overwrite = self.get_cam_info("cam_overwrite_climo")
         if overwrite is None:

@@ -76,43 +76,51 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #Test case(s) input time series file locations
     input_ts_locs = adf.get_cam_info("cam_ts_loc")
-    if input_ts_locs is not None:
+    if input_ts_locs is None:
+        input_ts_locs = [False]*len(case_names)
+    """if input_ts_locs is not None:
         for i,loc in enumerate(input_ts_locs):
             if loc is None:
                 input_ts_locs[i] = False
     else:
         input_ts_locs = [False]*len(case_names)
-    #End if
+    #End if"""
 
     #Test case(s) output climo file locations
     output_locs   = adf.get_cam_info("cam_climo_loc")
-    if output_locs is not None:
+    if output_locs is None:
+        output_locs = [False]*len(case_names)
+    """if output_locs is not None:
         for i,loc in enumerate(output_locs):
             if loc is None:
                 output_locs[i] = False
     else:
         output_locs = [False]*len(case_names)
-    #End if
+    #End if"""
 
     #Test case(s) overwrite climo files boolean
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
-    if overwrite is not None:
+    if overwrite is None:
+        overwrite = [False]*len(case_names)
+    """if overwrite is not None:
         for i,loc in enumerate(overwrite):
             if loc is None:
                 overwrite[i] = False
     else:
         overwrite = [False]*len(case_names)
-    #End if
+    #End if"""
 
     #Test case(s) calculate climo files boolean
     calc_climos   = adf.get_cam_info("calc_cam_climo")
-    if calc_climos is not None:
+    if calc_climos is None:
+        calc_climos = [False]*len(case_names)
+    """if calc_climos is not None:
         for i,loc in enumerate(calc_climos):
             if loc is None:
                 calc_climos[i] = False
     else:
         calc_climos = [False]*len(case_names)
-    #End if
+    #End if"""
     
 
 
@@ -237,7 +245,7 @@ def create_climo_files(adf, clobber=False, search=None):
             #raise AdfError(errmsg)"""
 
         #Check that time series input directory actually exists:
-        if (not input_location.is_dir()):
+        if not input_location.is_dir():
             #errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
             if not calc_climos[case_idx]:
                 msg = f"No time series requested for '{case_name}'; climo files have been supplied"
