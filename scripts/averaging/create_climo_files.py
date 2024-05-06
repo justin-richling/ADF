@@ -62,7 +62,17 @@ def create_climo_files(adf, clobber=False, search=None):
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    input_ts_locs = adf.get_cam_info("cam_ts_loc")
     calc_climos   = adf.get_cam_info("calc_cam_climo")
+
+    """for i in calc_climos:
+        if i:
+            ts_loc = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
+            input_ts_locs.append(ts_loc)
+        else:
+            input_ts_locs.append(None)"""
+
+
     # Check if climo calculation config option is a list:
     """if isinstance(calc_climos, list):
         # If so, then check if any of the entries are "True":
@@ -105,6 +115,8 @@ def create_climo_files(adf, clobber=False, search=None):
     if not overwrite:
         overwrite = [None]*len(case_names)
     #End if
+
+    
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -158,10 +170,21 @@ def create_climo_files(adf, clobber=False, search=None):
         #Whether to overwrite existing climo files
         clobber = overwrite[case_idx]
 
-        #Check that time series input directory actually exists:
+        """#Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
-            raise AdfError(errmsg)
+            #errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
+            print(errmsg)
+            continue
+            #raise AdfError(errmsg)"""
+
+        #Check that time series input directory actually exists:
+        if (not input_location.is_dir()) and (not calc_climos[case_idx]):
+            #errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
+            
+            msg = f"No time series requested for '{case_name}'; climo files have been supplied"
+            print(msg)
+            continue
+            #raise AdfError(errmsg)
 
         #Check if climo directory exists, and if not, then create it:
         if not output_location.is_dir():
