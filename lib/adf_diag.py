@@ -673,7 +673,7 @@ class AdfDiag(AdfWeb):
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         msg += " No time series will be generated."
                         print(msg)
-                        #continue
+                        continue
 
 
                     if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
