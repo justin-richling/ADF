@@ -350,6 +350,10 @@ class AdfInfo(AdfConfig):
         if cam_climo_loc is None:
             cam_climo_loc = [False]*len(case_names)
 
+        overwrite = self.get_cam_info("cam_overwrite_climo")
+        if overwrite is None:
+            overwrite = [False]*len(case_names)
+
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
