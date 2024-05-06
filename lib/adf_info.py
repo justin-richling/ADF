@@ -330,11 +330,25 @@ class AdfInfo(AdfConfig):
 
         #Check if user wants to skip time series file creation
         calc_case_ts   = self.get_cam_info("calc_cam_ts")
+        #Check if using pre-made ts files
+        #cam_climo_loc   = self.get_cam_info("cam_climo_loc")
+        if calc_case_ts is None:
+            calc_case_ts = [False]*len(case_names)
         
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
+        #Check if using pre-made ts files
+        #cam_climo_loc   = self.get_cam_info("cam_ts_loc")
+        if input_ts_locs is None:
+            input_ts_locs = [False]*len(case_names)
 
+        #
         skip_cam_ts = [False]*len(case_names)
+
+        #Check if using pre-made ts files
+        cam_climo_loc   = self.get_cam_info("cam_climo_loc")
+        if cam_climo_loc is None:
+            cam_climo_loc = [False]*len(case_names)
 
         #Loop over cases:
         syears_fixed = []
