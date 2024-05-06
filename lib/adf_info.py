@@ -347,6 +347,10 @@ class AdfInfo(AdfConfig):
 
         #Check if using pre-made ts files
         cam_climo_loc   = self.get_cam_info("cam_climo_loc")
+        for i,loc in enumerate(cam_climo_loc):
+            if loc is None:
+                cam_climo_loc[i] = False
+
         if cam_climo_loc is None:
             cam_climo_loc = [False]*len(case_names)
 
