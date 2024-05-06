@@ -358,6 +358,15 @@ class AdfInfo(AdfConfig):
         if overwrite is None:
             overwrite = [False]*len(case_names)
 
+
+        self.__cam_climo_loc = cam_climo_loc
+        self.__cam_hist_locs = cam_hist_locs
+        self.__cam_ts_done = cam_ts_done
+        self.__calc_case_ts = calc_case_ts
+        self.__input_ts_locs = input_ts_locs
+        self.__cam_climo_loc = cam_climo_loc
+        self.__overwrite = overwrite
+
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
@@ -613,6 +622,35 @@ class AdfInfo(AdfConfig):
         eyears = copy.copy(self.__eyears)
         return {"syears":syears,"eyears":eyears,
                 "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
+
+    """# Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        self.__cam_climo_loc
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        self.__cam_hist_locs
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        self.__cam_ts_done
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        self.__calc_case_ts
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        self.__input_ts_locs
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        self.__cam_climo_loc
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def climo_yrs(self):
+        self.__overwrite"""
 
 
     # Create property needed to return the case nicknames to user:
