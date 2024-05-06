@@ -324,7 +324,7 @@ class AdfInfo(AdfConfig):
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
         #Check if using pre-made ts files
         #cam_climo_loc   = self.get_cam_info("cam_climo_loc")
-        if cam_hist_locs is None:
+        if cam_hist_locs is not None:
             for i,loc in enumerate(cam_hist_locs):
                 if loc is None:
                     cam_hist_locs[i] = False
