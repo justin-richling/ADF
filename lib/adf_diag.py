@@ -388,6 +388,14 @@ class AdfDiag(AdfWeb):
             end_years = self.climo_yrs["eyears"]
         # End if
 
+        #cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
+        for i,loc in enumerate(calc_cam_ts):
+            if loc is None:
+                calc_cam_ts[i] = False
+
+        if calc_cam_ts is None:
+            calc_cam_ts = [False]*len(case_names)
+
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info("hist_str")
         # If hist_str is not present, then default to 'cam.h0':
