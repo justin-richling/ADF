@@ -375,26 +375,41 @@ class AdfDiag(AdfWeb):
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
-            cam_ts_done = self.get_cam_info("cam_ts_done")
-            if cam_ts_done is None:
-                cam_ts_done = [False]*len(case_names)
-            cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc")
+            
+            cam_ts_done = self.cam_ts_done
+            #cam_ts_done = self.get_cam_info("cam_ts_done")
+            #if cam_ts_done is None:
+            #    cam_ts_done = [False]*len(case_names)
+            #cam_hist_locs = self.get_cam_info("cam_hist_loc")
+            cam_hist_locs = self.cam_hist_locs
+            #ts_dir = self.get_cam_info("cam_ts_loc")
+            ts_dir = self.input_ts_locs
+
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            if overwrite_ts is not None:
+                for i,loc in enumerate(overwrite_ts):
+                    if loc is None:
+                        overwrite_ts[i] = False
+            else:
+                overwrite_ts = [False]*len(case_names)
             #Grab case time series file location(s)
-            calc_cam_ts = self.get_cam_info("calc_cam_ts")
+            #calc_cam_ts = self.get_cam_info("calc_cam_ts")
+        
+            calc_cam_ts = self.calc_case_ts
 
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
         # End if
 
-        #cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
+
+
+        """#cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
         if calc_cam_ts is not None:
             for i,loc in enumerate(calc_cam_ts):
                 if loc is None:
                     calc_cam_ts[i] = False
         else:
-            calc_cam_ts = [False]*len(case_names)
+            calc_cam_ts = [False]*len(case_names)"""
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info("hist_str")

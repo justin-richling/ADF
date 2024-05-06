@@ -322,6 +322,14 @@ class AdfInfo(AdfConfig):
 
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        #Check if using pre-made ts files
+        #cam_climo_loc   = self.get_cam_info("cam_climo_loc")
+        if cam_hist_locs is None:
+            for i,loc in enumerate(cam_hist_locs):
+                if loc is None:
+                    cam_hist_locs[i] = False
+        else:
+            cam_hist_locs = [False]*len(case_names)
         
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
@@ -365,7 +373,7 @@ class AdfInfo(AdfConfig):
         self.__calc_case_ts = calc_case_ts
         self.__input_ts_locs = input_ts_locs
         self.__cam_climo_loc = cam_climo_loc
-        self.__overwrite = overwrite
+        self.__overwrite_climo = overwrite
 
         #Loop over cases:
         syears_fixed = []
@@ -623,34 +631,40 @@ class AdfInfo(AdfConfig):
         return {"syears":syears,"eyears":eyears,
                 "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
 
-    """# Create property needed to return the climo start (syear) and end (eyear) years to user:
-    @property
-    def climo_yrs(self):
-        self.__cam_climo_loc
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
-    def climo_yrs(self):
-        self.__cam_hist_locs
+    def cam_climo_loc(self):
+        return copy.copy(self.__cam_climo_loc)
+
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
-    def climo_yrs(self):
-        self.__cam_ts_done
+    def cam_hist_locs(self):
+        return copy.copy(self.__cam_hist_locs)
+
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
-    def climo_yrs(self):
-        self.__calc_case_ts
+    def cam_ts_done(self):
+        return copy.copy(self.__cam_ts_done)
+
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
-    def climo_yrs(self):
-        self.__input_ts_locs
+    def calc_case_ts(self):
+        return copy.copy(self.__calc_case_ts)
+
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
-    def climo_yrs(self):
-        self.__cam_climo_loc
+    def input_ts_locs(self):
+        return copy.copy(self.__input_ts_locs)
+
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
-    def climo_yrs(self):
-        self.__overwrite"""
+    def cam_climo_loc(self):
+        return copy.copy(self.__cam_climo_loc)
+
+    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    @property
+    def overwrite_climo(self):
+        return copy.copy(self.__overwrite_climo)
 
 
     # Create property needed to return the case nicknames to user:

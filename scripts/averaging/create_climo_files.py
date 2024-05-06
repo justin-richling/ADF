@@ -49,6 +49,17 @@ def create_climo_files(adf, clobber=False, search=None):
     from pathlib import Path
     from adf_base import AdfError
 
+    def check_test_case_lists(old_list):
+        if old_list is not None:
+            for i,loc in enumerate(old_list):
+                if loc is None:
+                    old_list[i] = False
+        else:
+            old_list = [False]*len(case_names)
+        #End if
+        new_list = old_list
+        return new_list
+
     #Notify user that script has started:
     print("\n  Calculating CAM climatologies...")
 
@@ -62,34 +73,50 @@ def create_climo_files(adf, clobber=False, search=None):
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc")
-    output_locs   = adf.get_cam_info("cam_climo_loc")
-    calc_climos   = adf.get_cam_info("calc_cam_climo")
-    overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
-    #Check if using pre-made ts files
+    #Test case(s) input time series file locations
+    input_ts_locs = adf.get_cam_info("cam_ts_loc")
     if input_ts_locs is not None:
         for i,loc in enumerate(input_ts_locs):
             if loc is None:
                 input_ts_locs[i] = False
-
     else:
         input_ts_locs = [False]*len(case_names)
+    #End if
 
-
-
-    #cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
+    #Test case(s) output climo file locations
+    output_locs   = adf.get_cam_info("cam_climo_loc")
     if output_locs is not None:
         for i,loc in enumerate(output_locs):
             if loc is None:
                 output_locs[i] = False
-
     else:
         output_locs = [False]*len(case_names)
+    #End if
 
-    #overwrite = adf.get_cam_info("cam_overwrite_climo")
-    if overwrite is None:
+    #Test case(s) overwrite climo files boolean
+    overwrite     = adf.get_cam_info("cam_overwrite_climo")
+    if overwrite is not None:
+        for i,loc in enumerate(overwrite):
+            if loc is None:
+                overwrite[i] = False
+    else:
         overwrite = [False]*len(case_names)
+    #End if
+
+    #Test case(s) calculate climo files boolean
+    calc_climos   = adf.get_cam_info("calc_cam_climo")
+    if calc_climos is not None:
+        for i,loc in enumerate(calc_climos):
+            if loc is None:
+                calc_climos[i] = False
+    else:
+        calc_climos = [False]*len(case_names)
+    #End if
+    
+
+
+
 
     #Extract simulation years:
     start_year = adf.climo_yrs["syears"]
@@ -140,13 +167,13 @@ def create_climo_files(adf, clobber=False, search=None):
     end_year   = adf.climo_yrs["eyears"]"""
     
 
-    #If variables weren't provided in config file, then make them a list
+    """#If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
     if not calc_climos:
         calc_climos = [None]*len(case_names)
     if not overwrite:
         overwrite = [None]*len(case_names)
-    #End if
+    #End if"""
 
     
 
