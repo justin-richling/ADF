@@ -149,6 +149,12 @@ def amwg_table(adf):
 
     #-----------------------------------------
 
+    #Check if user wants to skip time series file creation
+    calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
+
+    #if calc_cam_ts is None:
+    #    calc_cam_ts = [False]*len(case_names)
+
     #Loop over CAM cases:
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
