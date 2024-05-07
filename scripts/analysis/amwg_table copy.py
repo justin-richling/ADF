@@ -133,7 +133,11 @@ def amwg_table(adf):
     #input_ts_locs = adf.get_cam_info("cam_ts_loc")
 
     #Check if user wants to skip time series file creation
-    calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
+    calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
+
+
+    if any()
+
     if not calc_cam_ts:
         #print("User indicates no time series files will be used")
         #print()
@@ -141,8 +145,13 @@ def amwg_table(adf):
         emsg += " Looking if table already exisits:"
         print(emsg)
 
+        input_ts_locs = adf.get_cam_info("cam_climo_loc")
+
         #if ah:
         for case_idx, case_name in enumerate(case_names):
+
+            input_climo_loc = Path(input_ts_locs[case_idx])
+
             #Convert output location string to a Path object:
             output_location = Path(output_locs[case_idx])
             #Create output file name:
@@ -184,7 +193,9 @@ def amwg_table(adf):
                 print(f"\t - AMWG table for '{baseline_name}' does not exist.")
                 print('\t  check here:',output_csv_file,"\n")
             
-            #Also check for comparison before quitting:
+
+            
+            """#Also check for comparison before quitting:
             output_csv_file_comp = output_location / "amwg_table_comp.csv"
             if Path(output_csv_file).is_file():
                 print(f"\n\t - AMWG comparison table exists, adding to website.")
@@ -195,23 +206,51 @@ def amwg_table(adf):
             else:
                 print(f"\t - AMWG comparison table does not exist.")
                 print('\t  check here:',output_csv_file_comp,"\n")
+
+                #We can build the comparison tables!
+                
+
+                #Add comparison table dataframe to website (if enabled):
+                adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")"""
+
             #Notify user that script has ended:
             print("  ...AMWG table(s) have finished.")
-            return
+            pass#return
 
-        case_names.append(baseline_name)
-
-        if not input_ts_locs:
-            input_ts_locs = []
         else:
-            input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
-            input_ts_locs.append(input_ts_baseline)
+            case_names.append(baseline_name)
 
-        #Save the baseline to the first case's plots directory:
-        output_locs.append(output_locs[0])
+            if not input_ts_locs:
+                input_ts_locs = []
+            else:
+                input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
+                input_ts_locs.append(input_ts_baseline)
+
+            #Save the baseline to the first case's plots directory:
+            output_locs.append(output_locs[0])
     else:
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
+
+    #Also check for comparison before quitting:
+    if 1==1: #not calc_baseline_ts or not calc_cam_ts
+        output_csv_file_comp = output_location / "amwg_table_comp.csv"
+        if Path(output_csv_file).is_file():
+            print(f"\n\t - AMWG comparison table exists, adding to website.")
+            df_comp = pd.read_csv(output_csv_file_comp)
+
+            #Add comparison table dataframe to website (if enabled):
+            adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+        else:
+            print(f"\t - AMWG comparison table does not exist.")
+            print('\t  check here:',output_csv_file_comp,"\n")
+
+            #We can build the comparison tables!
+                
+
+            #Add comparison table dataframe to website (if enabled):
+            adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+        return
 
     #-----------------------------------------
 
