@@ -639,7 +639,11 @@ class AdfDiag(AdfWeb):
                         print(msg)
                         continue"""
 
-            #if var in res["cam_chem_list"]:
+
+
+
+            # THIS ONE WORKS!!
+            """#if var in res["cam_chem_list"]:
             if any(item in res["cam_chem_list"] for item in diag_var_list):
                 cam_chem_check = True
             else:
@@ -690,7 +694,79 @@ class AdfDiag(AdfWeb):
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         msg += " No time series will be generated."
                         print(msg)
+                        continue"""
+
+
+
+
+
+
+
+
+            """#if var in res["cam_chem_list"]:
+            if any(item in res["cam_chem_list"] for item in diag_var_list):
+                cam_chem_check = True
+            else:
+                cam_chem_check = False"""
+
+            #Initialize dictionary for derived var with needed list of constituents
+            constit_dict = {}
+            for var in diag_var_list:
+                #Check if current variable is a derived quantity
+                if var not in hist_file_var_list:
+                    vres = res.get(var, {})
+                    
+                    #intialize boolean to check if variable is derivable
+                    #NOTE: there can be many reasons why the variable doesn't get derived...
+                    no_derive = False
+                    if "derivable_from" in vres:
+                        constit_list = vres["derivable_from"]
+                        if (any(item not in hist_file_ds.data_vars for item in constit_list)) and (var in res["cam_chem_list"]):
+                            #Set check to look for cam-chem sonstituents list in variable defaults
+                            get_cam_chem_constits = True
+                        else:
+                            get_cam_chem_constits = False
+                        #End if
+
+                        #Try and build variable from 'derivable_from'
+                        if not get_cam_chem_constits:
+                            for constit in constit_list:
+                                if constit not in diag_var_list:
+                                    diag_var_list.append(constit)
+                        else:
+                            #if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
+                            if "derivable_from_cam_chem" in vres:
+                                print(f"Looks like this a CAM-CHEM run, checking constits for '{var}'")
+                                constit_list = vres['derivable_from_cam_chem']
+                                for constit_chem in constit_list:
+                                    if constit_chem not in diag_var_list:
+                                        diag_var_list.append(constit_chem)
+                                #vars_to_derive.append(var)
+                                #constit_dict[var] = constit_list
+                                #continue
+                            else:
+                                no_derive = True
+                                #continue
+                            #End if
+                        #End if
+                    else:
+                        no_derive = True
+                        #continue
+                    #End if
+
+                    if no_derive:
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
                         continue
+                    #End if
+
+                    #Add variable to list to derive
+                    vars_to_derive.append(var)
+                    #Add constituent list to variable key in dictionary
+                    constit_dict[var] = constit_list
+                #End if
+
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
