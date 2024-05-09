@@ -130,249 +130,34 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
-
-    #Check if user wants to skip time series file creation
-    calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
-
-
-    #if any(check for check in calc_cam_ts):
-    has_false = False in calc_cam_ts
-    #if not calc_cam_ts:
-    if has_false:
-        #print("User indicates no time series files will be used")
-        #print()
-        emsg = "\n    User indicates no time series files will be used."
-        emsg += " Looking if table already exisits:"
-        print(emsg)
-
-        input_climo_locs = adf.get_cam_info("cam_climo_loc")
-
-        #if ah:
-        csv_list = []
-        for case_idx, case_name in enumerate(case_names):
-            #if not calc_cam_ts[case_idx]:
-            if 1==1:
-
-                input_location = Path(input_climo_locs[case_idx])
-
-                #Convert output location string to a Path object:
-                output_location = Path(output_locs[case_idx])
-                #Create output file name:
-                output_csv_file = output_location / f"amwg_table_{case_name}.csv"
-                if Path(output_csv_file).is_file():
-                    print(f"\t - AMWG table for '{case_name}' exists, adding to website.")
-                    table_df = pd.read_csv(output_csv_file)
-                    # last step is to add table dataframe to website (if enabled):
-                    adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
-                
-                #Attempt to get the mean at least
-                else:
-                    print(f"\t - AMWG table for '{case_name}' does not exist.")
-                    #print('\t  check here:',output_csv_file,"\n")
-
-                    #Loop over CAM output variables:
-                    for var in var_list:
-
-                        #Notify users of variable being added to table:
-                        print(f"\t - Variable '{var}' being added to table")
-
-                        #Create list of time series files present for variable:
-                        ts_filenames = f'{case_name}.*.{var}.*nc'
-                        ts_files = sorted(input_location.glob(ts_filenames))
-
-                        # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
-                        if not ts_files:
-                            errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
-                            warnings.warn(errmsg)
-                            continue
-                        #End if
-
-                        #TEMPORARY:  For now, make sure only one file exists:
-                        if len(ts_files) != 1:
-                            errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
-                            errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
-                            print(errmsg)
-                            continue
-                        #End if
-
-                        var_default_dict = var_defaults.get(var, {})
-                        #data, unit_str = calc_data_from_climo(var, ts_files, var_default_dict)
-
-                        calc_data_form_climo(var, ts_files, var_default_dict, output_csv_file)
-                        #Keep track of case csv files for comparison table check later
-                        csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
-
-                        """data_mean = data.data.mean()
-                        #Conditional Formatting depending on type of float
-                        if np.abs(data_mean) < 1:
-                            formatter = ".3g"
-                        else:
-                            formatter = ".3f"
-                        mean_final = f'{data_mean:{formatter}}'
-
-                        # create a dataframe:
-                        cols = ['variable', 'unit', 'mean']
-                        row_values = [var, unit_str] + [mean_final]
-
-                        # Format entries:
-                        dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
-
-                        # Add entries to Pandas structure:
-                        df = pd.DataFrame(dfentries)
-
-                        # Check if the output CSV file exists,
-                        # if so, then append to it:
-                        if output_csv_file.is_file():
-                            df.to_csv(output_csv_file, mode='a', header=False, index=False)
-                        else:
-                            df.to_csv(output_csv_file, header=cols, index=False)"""
-
-
-        pass#return
-    else:
-        input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        
-        #Check if user wants to skip time series file creation
-        calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
-        if not calc_baseline_ts:
-            emsg = "\n    User indicates no time series files will be used."
-            emsg += " Looking if table already exisits:"
-            print(emsg)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
 
-            output_location = Path(output_locs[0])
-            #Create output file name:
-            output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
-            if Path(output_csv_file).is_file():
-                print(f"\t - AMWG table for '{baseline_name}' exists, adding to website.")
-                table_df = pd.read_csv(output_csv_file)
+        case_names.append(baseline_name)
+        input_ts_locs.append(input_ts_baseline)
 
-                #Add table dataframe to website (if enabled):
-                adf.add_website_data(table_df, baseline_name, baseline_name, plot_type="Tables")
-            else:
-                print(f"\t - AMWG table for '{baseline_name}' does not exist.")
-                print('\t  check here:',output_csv_file,"\n")
-
-                input_climo_locs = adf.get_baseline_info("cam_climo_loc")
-                input_location = Path(input_climo_locs)
-
-
-                #Loop over CAM output variables:
-                for var in var_list:
-
-                    #Notify users of variable being added to table:
-                    print(f"\t - Variable '{var}' being added to table")
-
-                    #Create list of time series files present for variable:
-                    ts_filenames = f'{case_name}.*.{var}.*nc'
-                    ts_files = sorted(input_location.glob(ts_filenames))
-
-                    # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
-                    if not ts_files:
-                        errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
-                        warnings.warn(errmsg)
-                        continue
-                    #End if
-
-                    #TEMPORARY:  For now, make sure only one file exists:
-                    if len(ts_files) != 1:
-                        errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
-                        errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
-                        print(errmsg)
-                        continue
-                    #End if
-
-                    var_default_dict = var_defaults.get(var, {})
-                    #data, unit_str = calc_data_from_climo(var, ts_files, var_default_dict)
-
-                    calc_data_form_climo(var, ts_files, var_default_dict, output_csv_file)
-                    csv_list.extend(sorted(output_location.glob(f"amwg_table_{baseline_name}.csv")))
-
-            
-            """#Also check for comparison before quitting:
-            output_csv_file_comp = output_location / "amwg_table_comp.csv"
-            if Path(output_csv_file).is_file():
-                print(f"\n\t - AMWG comparison table exists, adding to website.")
-                df_comp = pd.read_csv(output_csv_file_comp)
-
-                #Add comparison table dataframe to website (if enabled):
-                adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
-            else:
-                print(f"\t - AMWG comparison table does not exist.")
-                print('\t  check here:',output_csv_file_comp,"\n")
-
-                #We can build the comparison tables!
-                
-
-                #Add comparison table dataframe to website (if enabled):
-                adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")"""
-
-            #Notify user that script has ended:
-            print("  ...AMWG table(s) have finished.")
-            pass#return
-
-        else:
-            case_names.append(baseline_name)
-
-            if not input_ts_locs:
-                input_ts_locs = []
-            else:
-                input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
-                input_ts_locs.append(input_ts_baseline)
-
-            #Save the baseline to the first case's plots directory:
-            output_locs.append(output_locs[0])
+        #Save the baseline to the first case's plots directory:
+        output_locs.append(output_locs[0])
     else:
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
-    #Also check for comparison before quitting:
-    if 1==1: #not calc_baseline_ts or not calc_cam_ts
-        output_csv_file_comp = output_location / "amwg_table_comp.csv"
-        if Path(output_csv_file).is_file():
-            print(f"\n\t - AMWG comparison table exists, adding to website.")
-            df_comp = pd.read_csv(output_csv_file_comp)
-
-            #Add comparison table dataframe to website (if enabled):
-            adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
-        else:
-            print(f"\t - AMWG comparison table does not exist.")
-            print('\t  check here:',output_csv_file_comp,"\n")
-
-            #We can build the comparison tables!
-            #Start case comparison tables
-            #----------------------------
-            #Check if observations are being compared to, if so skip table comparison...
-            if not adf.get_basic_info("compare_obs"):
-                #Check if all tables were created to compare against, if not, skip table comparison...
-                if len(sorted(output_location.glob("*.csv"))) != len(case_names):
-                    print("\tNot enough cases to compare, skipping comparison table...")
-                else:
-                    #Create comparison table for both cases
-                    print("\n  Making comparison table...")
-                    _df_comp_table(adf, output_location, case_names)
-                    print("  ... Comparison table has been generated successfully")
-                #End if
-            else:
-                print(" No comparison table will be generated due to running against obs.")
-            #End if
-
-            #Notify user that script has ended:
-            print("  ...AMWG variable table(s) have been generated successfully.")
-                
-
-            #Add comparison table dataframe to website (if enabled):
-            adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
-        return
-
     #-----------------------------------------
 
+    #Check if user wants to skip time series file creation
+    calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
+
+    #if calc_cam_ts is None:
+    #    calc_cam_ts = [False]*len(case_names)
+
     #Loop over CAM cases:
+    #Initialize list of case name csv files for case comparison check later
+    csv_list = []
     for case_idx, case_name in enumerate(case_names):
 
         #Convert output location string to a Path object:
@@ -400,12 +185,11 @@ def amwg_table(adf):
             Path.unlink(output_csv_file)
         #End if
 
-        #Create/reset new variable that potentially stores the re-gridded
+        csv_list = make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list)
+
+        """#Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
         ocn_frc_da = None
-
-        #Notify user that table is being created:
-        print(f"\n  Generating table for '{case_name}'...")
 
         #Loop over CAM output variables:
         for var in var_list:
@@ -432,7 +216,7 @@ def amwg_table(adf):
                 continue
             #End if
 
-            """#Load model variable data from file:
+            #Load model variable data from file:
             ds = pf.load_dataset(ts_files)
             data = ds[var]
 
@@ -491,10 +275,7 @@ def amwg_table(adf):
                 data = pf.spatial_average(data)  # changes data "in place"
 
             # In order to get correct statistics, average to annual or seasonal
-            data = pf.annual_mean(data, whole_years=True, time_name='time')"""
-
-            var_default_dict = var_defaults.get(var, {})
-            data, unit_str = calc_data(var, ts_files, var_default_dict)
+            data = pf.annual_mean(data, whole_years=True, time_name='time')
 
             # create a dataframe:
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
@@ -535,6 +316,9 @@ def amwg_table(adf):
             print(f"\n\tAMWG table for '{case_name}' not created.\n")
         #End try/except
 
+        #Keep track of case csv files for comparison table check later
+        csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))"""
+
     #End of model case loop
     #----------------------
 
@@ -543,7 +327,7 @@ def amwg_table(adf):
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
-        if len(sorted(output_location.glob("*.csv"))) != len(case_names):
+        if len(csv_list) != len(case_names):
             print("\tNot enough cases to compare, skipping comparison table...")
         else:
             #Create comparison table for both cases
@@ -563,97 +347,140 @@ def amwg_table(adf):
 # Helper functions
 ##################
 
-def calc_data_form_climo(var, data_files, var_default_dict, output_csv_file):
-    """
-    
-    """
-    #Load model variable data from file:
-    ds = pf.load_dataset(data_files)
-    data = ds[var]
+def make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list):
+    #Create/reset new variable that potentially stores the re-gridded
+    #ocean fraction xarray data-array:
+    ocn_frc_da = None
 
-    #Extract units string, if available:
-    if hasattr(data, 'units'):
-        unit_str = data.units
-    else:
-        unit_str = '--'
+    #Loop over CAM output variables:
+    for var in var_list:
 
-    #Check if variable has a vertical coordinate:
-    if 'lev' in data.coords or 'ilev' in data.coords:
-        print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                "which is currently not supported for the AMWG Table. Skipping...")
-        #Skip this variable and move to the next variable in var_list:
-        #continue
-    #End if
+        #Notify users of variable being added to table:
+        print(f"\t - Variable '{var}' being added to table")
 
-    #Extract defaults for variable:
-    #var_default_dict = var_defaults.get(var, {})
+        #Create list of time series files present for variable:
+        ts_filenames = f'{case_name}.*.{var}.*nc'
+        ts_files = sorted(input_location.glob(ts_filenames))
 
-    #Check if variable should be masked:
-    if 'mask' in var_default_dict:
-        if var_default_dict['mask'].lower() == 'ocean':
-            #Check if the ocean fraction has already been regridded
-            #and saved:
-            if ocn_frc_da is not None:
-                ofrac = ocn_frc_da
-                # set the bounds of regridded ocnfrac to 0 to 1
-                ofrac = xr.where(ofrac>1,1,ofrac)
-                ofrac = xr.where(ofrac<0,0,ofrac)
-
-                # apply ocean fraction mask to variable
-                data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
-                #data = var_tmp
-            else:
-                print(f"OCNFRAC not found, unable to apply mask to '{var}'")
-            #End if
-        else:
-            #Currently only an ocean mask is supported, so print warning here:
-            wmsg = "Currently the only variable mask option is 'ocean',"
-            wmsg += f"not '{var_default_dict['mask'].lower()}'"
-            print(wmsg)
+        # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+        if not ts_files:
+            errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
+            warnings.warn(errmsg)
+            continue
         #End if
-    #End if
 
-    #If the variable is ocean fraction, then save the dataset for use later:
-    if var == 'OCNFRAC':
-        ocn_frc_da = data
-    #End if
+        #TEMPORARY:  For now, make sure only one file exists:
+        if len(ts_files) != 1:
+            errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
+            errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
+            print(errmsg)
+            continue
+        #End if
 
-    # we should check if we need to do area averaging:
-    if len(data.dims) > 1:
-        # flags that we have spatial dimensions
-        # Note: that could be 'lev' which should trigger different behavior
-        # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
-        data = pf.spatial_average(data)  # changes data "in place"
+        #Load model variable data from file:
+        ds = pf.load_dataset(ts_files)
+        data = ds[var]
 
-    # In order to get correct statistics, average to annual or seasonal
-    data = pf.annual_mean(data, whole_years=True, time_name='time')
+        #Extract units string, if available:
+        if hasattr(data, 'units'):
+            unit_str = data.units
+        else:
+            unit_str = '--'
 
-    data_mean = data.data.mean()
-    #Conditional Formatting depending on type of float
-    if np.abs(data_mean) < 1:
-        formatter = ".3g"
-    else:
-        formatter = ".3f"
-    mean_final = f'{data_mean:{formatter}}'
+        #Check if variable has a vertical coordinate:
+        if 'lev' in data.coords or 'ilev' in data.coords:
+            print(f"\t   Variable '{var}' has a vertical dimension, "+\
+                    "which is currently not supported for the AMWG Table. Skipping...")
+            #Skip this variable and move to the next variable in var_list:
+            continue
+        #End if
 
-    # create a dataframe:
-    cols = ['variable', 'unit', 'mean']
-    row_values = [var, unit_str] + [mean_final]
+        #Extract defaults for variable:
+        var_default_dict = var_defaults.get(var, {})
 
-    # Format entries:
-    dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
+        #Check if variable should be masked:
+        if 'mask' in var_default_dict:
+            if var_default_dict['mask'].lower() == 'ocean':
+                #Check if the ocean fraction has already been regridded
+                #and saved:
+                if ocn_frc_da is not None:
+                    ofrac = ocn_frc_da
+                    # set the bounds of regridded ocnfrac to 0 to 1
+                    ofrac = xr.where(ofrac>1,1,ofrac)
+                    ofrac = xr.where(ofrac<0,0,ofrac)
 
-    # Add entries to Pandas structure:
-    df = pd.DataFrame(dfentries)
+                    # apply ocean fraction mask to variable
+                    data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
+                    #data = var_tmp
+                else:
+                    print(f"OCNFRAC not found, unable to apply mask to '{var}'")
+                #End if
+            else:
+                #Currently only an ocean mask is supported, so print warning here:
+                wmsg = "Currently the only variable mask option is 'ocean',"
+                wmsg += f"not '{var_default_dict['mask'].lower()}'"
+                print(wmsg)
+            #End if
+        #End if
 
-    # Check if the output CSV file exists,
-    # if so, then append to it:
-    if output_csv_file.is_file():
-        df.to_csv(output_csv_file, mode='a', header=False, index=False)
-    else:
-        df.to_csv(output_csv_file, header=cols, index=False)
+        #If the variable is ocean fraction, then save the dataset for use later:
+        if var == 'OCNFRAC':
+            ocn_frc_da = data
+        #End if
 
-    #return data, unit_str
+        # we should check if we need to do area averaging:
+        if len(data.dims) > 1:
+            # flags that we have spatial dimensions
+            # Note: that could be 'lev' which should trigger different behavior
+            # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
+            data = pf.spatial_average(data)  # changes data "in place"
+
+        # In order to get correct statistics, average to annual or seasonal
+        data = pf.annual_mean(data, whole_years=True, time_name='time')
+
+        # create a dataframe:
+        cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
+                    'standard error', '95% CI', 'trend', 'trend p-value']
+
+        # These get written to our output file:
+        stats_list = _get_row_vals(data)
+        row_values = [var, unit_str] + stats_list
+
+        # Format entries:
+        dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
+
+        # Add entries to Pandas structure:
+        df = pd.DataFrame(dfentries)
+
+        # Check if the output CSV file exists,
+        # if so, then append to it:
+        if output_csv_file.is_file():
+            df.to_csv(output_csv_file, mode='a', header=False, index=False)
+        else:
+            df.to_csv(output_csv_file, header=cols, index=False)
+
+    #End of var_list loop
+    #--------------------
+
+    # Move RESTOM to top of table (if applicable)
+    #--------------------------------------------
+    try:
+        table_df = pd.read_csv(output_csv_file)
+        if 'RESTOM' in table_df['variable'].values:
+            table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+            table_df = table_df.drop_duplicates()
+            table_df.to_csv(output_csv_file, header=cols, index=False)
+
+        # last step is to add table dataframe to website (if enabled):
+        adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+    except FileNotFoundError:
+        print(f"\n\tAMWG table for '{case_name}' not created.\n")
+    #End try/except
+
+    #Keep track of case csv files for comparison table check later
+    csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
+    return csv_list
+
 
 def _get_row_vals(data):
     # Now that data is (time,), we can do our simple stats:
