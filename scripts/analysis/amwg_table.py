@@ -135,6 +135,7 @@ def amwg_table(adf):
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
     input_climo_locs = adf.get_cam_info("cam_climo_loc")
+    print("input_climo_locs",input_climo_locs,"\n")
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
