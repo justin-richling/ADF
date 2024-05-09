@@ -154,7 +154,7 @@ def amwg_table(adf):
     if not calc_cam_ts:
         #calc_ts = [None]
         for case in case_names:
-            calc_ts[case] = None
+            calc_ts[case] = False
     else:
         #calc_ts = {}
         for i,case in enumerate(case_names):
@@ -162,7 +162,7 @@ def amwg_table(adf):
                 #print()
                 calc_ts[case] = calc_cam_ts[i]
             else:
-                calc_ts[case] = None
+                calc_ts[case] = False
 
     
     input_climo_locs = adf.get_cam_info("cam_climo_loc")
@@ -179,7 +179,7 @@ def amwg_table(adf):
                 climo_locs[case] = input_climo_locs[i]
             else:
                 climo_locs[case] = None
-    print("input_climo_locs",input_climo_locs,"\n")
+
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -205,7 +205,7 @@ def amwg_table(adf):
         if calc_baseline_ts:
             calc_ts[baseline_name] = calc_baseline_ts
         else:
-            calc_ts[baseline_name] = None
+            calc_ts[baseline_name] = False
 
 
 
@@ -256,7 +256,7 @@ def amwg_table(adf):
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
         print(f"Making AMWG table for case'{case_name}'")
-        if calc_cam_ts[case_idx]:
+        if calc_ts[case_idx]:
             print()
             is_climo = False
         else:
