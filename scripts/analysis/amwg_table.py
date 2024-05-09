@@ -185,38 +185,31 @@ def amwg_table(adf):
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
+        case_names.append(baseline_name)
 
+        #Check if time series location was provided (premade climo files were supplied?)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
         if input_ts_baseline:
             ts_locs[baseline_name] = input_ts_baseline
         else:
             ts_locs[baseline_name] = None
+        #End if
 
-
-
-
-        """case_names.append(baseline_name)
-        if not input_ts_locs:
-            input_ts_locs = [None]
-            if input_ts_baseline:
-                input_ts_locs.append(input_ts_baseline)"""
-        
+        #Check if premade climo files were supplied        
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
         if calc_baseline_ts:
             calc_ts[baseline_name] = calc_baseline_ts
         else:
             calc_ts[baseline_name] = False
+        #End if
 
-
-
-        
-
-
+        #Check if climo location was provided (premade climo files were supplied?)
         input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
         if input_base_climo_loc:
             climo_locs[baseline_name] = input_base_climo_loc
         else:
             climo_locs[baseline_name] = None
+        #End if
 
 
 
@@ -476,6 +469,9 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
             #Create list of time series files present for variable:
             filenames = f'{case_name}.*.{var}.*nc'
         files = sorted(input_location.glob(filenames))
+        print(f"TABLES for {case_name}")
+        print("input_location",input_location)
+        print("filenames",filenames,"\n")
 
         # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
         if not files:
