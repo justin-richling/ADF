@@ -192,6 +192,8 @@ def amwg_table(adf):
             print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
             is_climo = True
 
+        print("\nis_climo:",is_climo,"\n")
+
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
 
@@ -200,6 +202,7 @@ def amwg_table(adf):
             input_location = Path(input_ts_locs[case_idx])
         if is_climo:
             input_location = Path(input_climo_locs[case_idx])
+        print("input_location",input_location,"\n")
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
