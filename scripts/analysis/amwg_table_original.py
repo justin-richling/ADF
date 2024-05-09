@@ -185,9 +185,7 @@ def amwg_table(adf):
             Path.unlink(output_csv_file)
         #End if
 
-        csv_list = make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list)
-
-        """#Create/reset new variable that potentially stores the re-gridded
+        #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
         ocn_frc_da = None
 
@@ -317,7 +315,7 @@ def amwg_table(adf):
         #End try/except
 
         #Keep track of case csv files for comparison table check later
-        csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))"""
+        csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
 
     #End of model case loop
     #----------------------
@@ -346,141 +344,6 @@ def amwg_table(adf):
 ##################
 # Helper functions
 ##################
-
-def make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list):
-    #Create/reset new variable that potentially stores the re-gridded
-    #ocean fraction xarray data-array:
-    ocn_frc_da = None
-
-    #Loop over CAM output variables:
-    for var in var_list:
-
-        #Notify users of variable being added to table:
-        print(f"\t - Variable '{var}' being added to table")
-
-        #Create list of time series files present for variable:
-        ts_filenames = f'{case_name}.*.{var}.*nc'
-        ts_files = sorted(input_location.glob(ts_filenames))
-
-        # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
-        if not ts_files:
-            errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
-            warnings.warn(errmsg)
-            continue
-        #End if
-
-        #TEMPORARY:  For now, make sure only one file exists:
-        if len(ts_files) != 1:
-            errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
-            errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
-            print(errmsg)
-            continue
-        #End if
-
-        #Load model variable data from file:
-        ds = pf.load_dataset(ts_files)
-        data = ds[var]
-
-        #Extract units string, if available:
-        if hasattr(data, 'units'):
-            unit_str = data.units
-        else:
-            unit_str = '--'
-
-        #Check if variable has a vertical coordinate:
-        if 'lev' in data.coords or 'ilev' in data.coords:
-            print(f"\t   Variable '{var}' has a vertical dimension, "+\
-                    "which is currently not supported for the AMWG Table. Skipping...")
-            #Skip this variable and move to the next variable in var_list:
-            continue
-        #End if
-
-        #Extract defaults for variable:
-        var_default_dict = var_defaults.get(var, {})
-
-        #Check if variable should be masked:
-        if 'mask' in var_default_dict:
-            if var_default_dict['mask'].lower() == 'ocean':
-                #Check if the ocean fraction has already been regridded
-                #and saved:
-                if ocn_frc_da is not None:
-                    ofrac = ocn_frc_da
-                    # set the bounds of regridded ocnfrac to 0 to 1
-                    ofrac = xr.where(ofrac>1,1,ofrac)
-                    ofrac = xr.where(ofrac<0,0,ofrac)
-
-                    # apply ocean fraction mask to variable
-                    data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
-                    #data = var_tmp
-                else:
-                    print(f"OCNFRAC not found, unable to apply mask to '{var}'")
-                #End if
-            else:
-                #Currently only an ocean mask is supported, so print warning here:
-                wmsg = "Currently the only variable mask option is 'ocean',"
-                wmsg += f"not '{var_default_dict['mask'].lower()}'"
-                print(wmsg)
-            #End if
-        #End if
-
-        #If the variable is ocean fraction, then save the dataset for use later:
-        if var == 'OCNFRAC':
-            ocn_frc_da = data
-        #End if
-
-        # we should check if we need to do area averaging:
-        if len(data.dims) > 1:
-            # flags that we have spatial dimensions
-            # Note: that could be 'lev' which should trigger different behavior
-            # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
-            data = pf.spatial_average(data)  # changes data "in place"
-
-        # In order to get correct statistics, average to annual or seasonal
-        data = pf.annual_mean(data, whole_years=True, time_name='time')
-
-        # create a dataframe:
-        cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
-                    'standard error', '95% CI', 'trend', 'trend p-value']
-
-        # These get written to our output file:
-        stats_list = _get_row_vals(data)
-        row_values = [var, unit_str] + stats_list
-
-        # Format entries:
-        dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
-
-        # Add entries to Pandas structure:
-        df = pd.DataFrame(dfentries)
-
-        # Check if the output CSV file exists,
-        # if so, then append to it:
-        if output_csv_file.is_file():
-            df.to_csv(output_csv_file, mode='a', header=False, index=False)
-        else:
-            df.to_csv(output_csv_file, header=cols, index=False)
-
-    #End of var_list loop
-    #--------------------
-
-    # Move RESTOM to top of table (if applicable)
-    #--------------------------------------------
-    try:
-        table_df = pd.read_csv(output_csv_file)
-        if 'RESTOM' in table_df['variable'].values:
-            table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-            table_df = table_df.drop_duplicates()
-            table_df.to_csv(output_csv_file, header=cols, index=False)
-
-        # last step is to add table dataframe to website (if enabled):
-        adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
-    except FileNotFoundError:
-        print(f"\n\tAMWG table for '{case_name}' not created.\n")
-    #End try/except
-
-    #Keep track of case csv files for comparison table check later
-    csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
-    return csv_list
-
 
 def _get_row_vals(data):
     # Now that data is (time,), we can do our simple stats:
