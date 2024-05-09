@@ -418,6 +418,8 @@ def amwg_table(adf):
                 # create a dataframe:
                 cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                             'standard error', '95% CI', 'trend', 'trend p-value']
+                stats_list = _get_row_vals(data)
+                row_values = [var, unit_str] + stats_list
 
             """# These get written to our output file:
             stats_list = _get_row_vals(data)
