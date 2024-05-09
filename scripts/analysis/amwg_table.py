@@ -151,16 +151,19 @@ def amwg_table(adf):
         
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
         if not calc_cam_ts:
-            calc_cam_ts = []
+            calc_cam_ts = [None]
             #calc_cam_ts.append(input_ts_baseline)
             if calc_baseline_ts:
                 calc_cam_ts.append(calc_baseline_ts)
-
+            else:
+                calc_cam_ts.append(None)
         input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
         if not input_climo_locs:
-            input_climo_locs = []
+            input_climo_locs = [None]
             if input_base_climo_loc:
                 input_climo_locs.append(input_base_climo_loc)
+            else:
+                input_climo_locs.append(None)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
