@@ -130,12 +130,55 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
+    
     input_ts_locs = adf.get_cam_info("cam_ts_loc")
-    #if not input_ts_locs
+    ts_locs = {}
+    if not input_ts_locs:
+        #ts_locs = [None]
+        for i,case in case_names:
+            ts_locs[case] = None
+    else:
+        #ts_locs = {}
+        for i,case in case_names:
+            if input_ts_locs[i]:
+                #print()
+                ts_locs[case] = input_ts_locs[i]
+            else:
+                ts_locs[case] = None
+
+
 
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
+    calc_ts = {}
+    if not calc_cam_ts:
+        #calc_ts = [None]
+        for i,case in case_names:
+            calc_ts[case] = None
+    else:
+        #calc_ts = {}
+        for i,case in case_names:
+            if calc_cam_ts[i]:
+                #print()
+                calc_ts[case] = calc_cam_ts[i]
+            else:
+                calc_ts[case] = None
+
+    
     input_climo_locs = adf.get_cam_info("cam_climo_loc")
+    climo_locs = {}
+    if not input_climo_locs:
+        #climo_locs = [None]
+        for i,case in case_names:
+            climo_locs[case] = None
+    else:
+        #climo_locs = {}
+        for i,case in case_names:
+            if input_climo_locs[i]:
+                #print()
+                climo_locs[case] = input_climo_locs[i]
+            else:
+                climo_locs[case] = None
     print("input_climo_locs",input_climo_locs,"\n")
 
     #Check if a baseline simulation is also being used:
@@ -144,24 +187,36 @@ def amwg_table(adf):
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
 
-        case_names.append(baseline_name)
+        if input_ts_baseline:
+            ts_locs[baseline_name] = input_ts_baseline
+        else:
+            ts_locs[baseline_name] = None
+
+
+
+
+        """case_names.append(baseline_name)
         if not input_ts_locs:
             input_ts_locs = [None]
             if input_ts_baseline:
-                input_ts_locs.append(input_ts_baseline)
+                input_ts_locs.append(input_ts_baseline)"""
         
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
-        if not calc_cam_ts:
-            calc_cam_ts = [None]
-            #calc_cam_ts.append(input_ts_baseline)
-            if calc_baseline_ts:
-                calc_cam_ts.append(calc_baseline_ts)
-            else:
-                calc_cam_ts.append(None)
-            #Check that climo loc is given
-            input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
-            if input_base_climo_loc:
-                input_climo_locs.append(input_base_climo_loc)
+        if calc_baseline_ts:
+            calc_ts[baseline_name] = calc_baseline_ts
+        else:
+            calc_ts[baseline_name] = None
+
+
+
+        
+
+
+        input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
+        if input_base_climo_loc:
+            climo_locs[baseline_name] = input_base_climo_loc
+        else:
+            climo_locs[baseline_name] = None
 
 
 
@@ -180,9 +235,9 @@ def amwg_table(adf):
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
-    print("input_ts_locs",input_ts_locs)
-    print("input_climo_locs",input_climo_locs)
-    print("calc_cam_ts",calc_cam_ts,"\n")
+    print("ts_locs",ts_locs)
+    print("climo_locs",climo_locs)
+    print("calc_ts",calc_ts,"\n")
 
     #-----------------------------------------
 
@@ -218,7 +273,7 @@ def amwg_table(adf):
             input_location = Path(input_ts_locs[case_idx])
         if is_climo:
             input_location = Path(input_climo_locs[case_idx])
-        print("input_location",input_location,"\n")
+        #print("input_location",input_location,"\n")
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
