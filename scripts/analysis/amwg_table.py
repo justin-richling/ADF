@@ -130,7 +130,7 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    input_ts_locs = adf.get_cam_info("cam_ts_loc")
 
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
@@ -139,7 +139,7 @@ def amwg_table(adf):
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
 
         case_names.append(baseline_name)
         input_ts_locs.append(input_ts_baseline)
