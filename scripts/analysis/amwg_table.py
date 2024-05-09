@@ -151,6 +151,10 @@ def amwg_table(adf):
 
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
+    if not isinstance(calc_climos, list):
+        # If so, then check if any of the entries are "True":
+        calc_climos = list(calc_climos)
+    # End if
 
     #if calc_cam_ts is None:
     #    calc_cam_ts = [False]*len(case_names)
