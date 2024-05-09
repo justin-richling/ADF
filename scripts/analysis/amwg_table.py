@@ -171,6 +171,9 @@ def amwg_table(adf):
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
+    print("input_climo_locs",input_climo_locs)
+    print("calc_cam_ts",calc_cam_ts,"\n")
+
     #-----------------------------------------
 
     #Check if user wants to skip time series file creation
