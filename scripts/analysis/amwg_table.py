@@ -180,6 +180,16 @@ def amwg_table(adf):
             else:
                 climo_locs[case] = None
 
+    #Grab case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
+
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adf.climo_yrs["syear_baseline"]
+    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+    syear_cases.append(syear_baseline)
+    eyear_cases.append(eyear_baseline)
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -289,9 +299,9 @@ def amwg_table(adf):
         
         
         #Make and save the table to CSV file. Keep track of the file too for comparison table
-        csv_list = make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list, premade_climo=is_climo)
+        #csv_list = make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list, premade_climo=is_climo)
 
-        """#Create/reset new variable that potentially stores the re-gridded
+        #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
         ocn_frc_da = None
 
@@ -301,19 +311,26 @@ def amwg_table(adf):
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
 
-            #Create list of time series files present for variable:
-            ts_filenames = f'{case_name}.*.{var}.*nc'
-            ts_files = sorted(input_location.glob(ts_filenames))
+            if is_climo:
+                #Create list of climo files present for variable:
+                filenames = f'{case_name}_{var}_climo.nc'
+            else:
+                #Create list of time series files present for variable:
+                filenames = f'{case_name}.*.{var}.*nc'
+            files = sorted(input_location.glob(filenames))
+            #print(f"TABLES for {case_name}")
+            #print("input_location",input_location)
+            #print("filenames",filenames,"\n")
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
-            if not ts_files:
+            if not files:
                 errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
             #End if
 
             #TEMPORARY:  For now, make sure only one file exists:
-            if len(ts_files) != 1:
+            if len(files) != 1:
                 errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
                 errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
                 print(errmsg)
@@ -321,8 +338,10 @@ def amwg_table(adf):
             #End if
 
             #Load model variable data from file:
-            ds = pf.load_dataset(ts_files)
+            ds = pf.load_dataset(files)
             data = ds[var]
+
+            data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
@@ -377,6 +396,34 @@ def amwg_table(adf):
                 # Note: that could be 'lev' which should trigger different behavior
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = pf.spatial_average(data)  # changes data "in place"
+            
+
+
+            if is_climo:
+                data = pf.seasonal_mean(data, season="ANN", is_climo=True)
+                #Conditional Formatting depending on type of float
+                if np.abs(data) < 1:
+                    formatter = ".3g"
+                else:
+                    formatter = ".3f"
+                mean_final = f'{data:{formatter}}'
+
+                # create a dataframe:
+                cols = ['variable', 'unit', 'mean']
+                row_values = [var, unit_str] + [mean_final]
+
+            else:
+                # In order to get correct statistics, average to annual or seasonal
+                data = pf.annual_mean(data, whole_years=True, time_name='time')
+                # create a dataframe:
+                cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
+                            'standard error', '95% CI', 'trend', 'trend p-value']
+
+            """# These get written to our output file:
+            stats_list = _get_row_vals(data)
+            row_values = [var, unit_str] + stats_list
+
+
 
             # In order to get correct statistics, average to annual or seasonal
             data = pf.annual_mean(data, whole_years=True, time_name='time')
@@ -387,7 +434,7 @@ def amwg_table(adf):
 
             # These get written to our output file:
             stats_list = _get_row_vals(data)
-            row_values = [var, unit_str] + stats_list
+            row_values = [var, unit_str] + stats_list"""
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -421,7 +468,7 @@ def amwg_table(adf):
         #End try/except
 
         #Keep track of case csv files for comparison table check later
-        csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))"""
+        csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
 
     #End of model case loop
     #----------------------
@@ -491,6 +538,8 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
         #Load model variable data from file:
         ds = pf.load_dataset(files)
         data = ds[var]
+
+        data = fixcesmtime(data,start_years[idx],end_years[idx])
 
         #Extract units string, if available:
         if hasattr(data, 'units'):
@@ -612,6 +661,16 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
     #Keep track of case csv files for comparison table check later
     csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
     return csv_list
+
+
+def fixcesmtime(dat,syear,eyear):
+    """
+    Fix the CESM timestamp with a simple set of dates
+    """
+    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
+    dat = dat.assign_coords({"time":timefix})
+
+    return dat
 
 
 def _get_row_vals(data):
