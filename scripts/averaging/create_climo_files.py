@@ -2,6 +2,7 @@
 #Warnings function
 ##################
 
+from concurrent.futures import process
 import warnings  # use to warn user about missing files.
 def my_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
@@ -199,8 +200,11 @@ def create_climo_files(adf, clobber=False, search=None):
         #--------------------
 
         # Parallelize the computation using multiprocessing pool:
-        with mp.Pool(processes=number_of_cpu) as p:
-            result = p.starmap(process_variable, list_of_arguments)
+        #with mp.Pool(processes=number_of_cpu) as p:
+        #    result = p.starmap(process_variable, list_of_arguments)
+
+        for loa in list_of_arguments:
+            result = process_variable(*loa)
         
         """
         #Remove created files
@@ -243,7 +247,7 @@ def process_variable(ts_files, syr, eyr, output_file, ds_concat=None):
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     if len(ts_files) > 1:
         print("Oh boy, here we go")
-        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords').compute()
         #cam_ts_data = ds_concat
         
         """concat_list = sorted(glob(ts_files))
