@@ -256,7 +256,7 @@ def amwg_table(adf):
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
         print(f"Making AMWG table for case'{case_name}'")
-        if calc_ts[case_idx]:
+        if calc_ts[case_name]:
             print()
             is_climo = False
         else:
