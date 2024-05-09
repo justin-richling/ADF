@@ -135,11 +135,11 @@ def amwg_table(adf):
     ts_locs = {}
     if not input_ts_locs:
         #ts_locs = [None]
-        for i,case in case_names:
+        for case in case_names:
             ts_locs[case] = None
     else:
         #ts_locs = {}
-        for i,case in case_names:
+        for i,case in enumerate(case_names):
             if input_ts_locs[i]:
                 #print()
                 ts_locs[case] = input_ts_locs[i]
@@ -153,11 +153,11 @@ def amwg_table(adf):
     calc_ts = {}
     if not calc_cam_ts:
         #calc_ts = [None]
-        for i,case in case_names:
+        for case in case_names:
             calc_ts[case] = None
     else:
         #calc_ts = {}
-        for i,case in case_names:
+        for i,case in enumerate(case_names):
             if calc_cam_ts[i]:
                 #print()
                 calc_ts[case] = calc_cam_ts[i]
@@ -169,11 +169,11 @@ def amwg_table(adf):
     climo_locs = {}
     if not input_climo_locs:
         #climo_locs = [None]
-        for i,case in case_names:
+        for case in case_names:
             climo_locs[case] = None
     else:
         #climo_locs = {}
-        for i,case in case_names:
+        for i,case in enumerate(case_names):
             if input_climo_locs[i]:
                 #print()
                 climo_locs[case] = input_climo_locs[i]
