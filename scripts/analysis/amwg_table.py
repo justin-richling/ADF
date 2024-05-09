@@ -395,19 +395,23 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
         #Notify users of variable being added to table:
         print(f"\t - Variable '{var}' being added to table")
 
-        #Create list of time series files present for variable:
-        ts_filenames = f'{case_name}.*.{var}.*nc'
-        ts_files = sorted(input_location.glob(ts_filenames))
+        if premade_climo:
+            #Create list of climo files present for variable:
+            filenames = f'{case_name}.*.{var}_climo.nc'
+        else:
+            #Create list of time series files present for variable:
+            filenames = f'{case_name}.*.{var}.*nc'
+        files = sorted(input_location.glob(filenames))
 
         # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
-        if not ts_files:
+        if not files:
             errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
             warnings.warn(errmsg)
             continue
         #End if
 
         #TEMPORARY:  For now, make sure only one file exists:
-        if len(ts_files) != 1:
+        if len(files) != 1:
             errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
             errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
             print(errmsg)
@@ -415,7 +419,7 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
         #End if
 
         #Load model variable data from file:
-        ds = pf.load_dataset(ts_files)
+        ds = pf.load_dataset(files)
         data = ds[var]
 
         #Extract units string, if available:
