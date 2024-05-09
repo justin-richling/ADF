@@ -397,7 +397,7 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
 
         if premade_climo:
             #Create list of climo files present for variable:
-            filenames = f'{case_name}.*.{var}_climo.nc'
+            filenames = f'{case_name}.*_{var}_climo.nc'
         else:
             #Create list of time series files present for variable:
             filenames = f'{case_name}.*.{var}.*nc'
