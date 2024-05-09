@@ -131,6 +131,7 @@ def amwg_table(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    #if not input_ts_locs
 
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
@@ -145,7 +146,7 @@ def amwg_table(adf):
 
         case_names.append(baseline_name)
         if not input_ts_locs:
-            input_ts_locs = []
+            input_ts_locs = [None]
             if input_ts_baseline:
                 input_ts_locs.append(input_ts_baseline)
         
@@ -171,6 +172,7 @@ def amwg_table(adf):
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
+    print("input_ts_locs",input_ts_locs)
     print("input_climo_locs",input_climo_locs)
     print("calc_cam_ts",calc_cam_ts,"\n")
 
