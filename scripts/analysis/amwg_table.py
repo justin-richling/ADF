@@ -341,7 +341,8 @@ def amwg_table(adf):
             ds = pf.load_dataset(files)
             data = ds[var]
 
-            data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
+            if not is_climo:
+                data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
