@@ -469,9 +469,9 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
             #Create list of time series files present for variable:
             filenames = f'{case_name}.*.{var}.*nc'
         files = sorted(input_location.glob(filenames))
-        print(f"TABLES for {case_name}")
-        print("input_location",input_location)
-        print("filenames",filenames,"\n")
+        #print(f"TABLES for {case_name}")
+        #print("input_location",input_location)
+        #print("filenames",filenames,"\n")
 
         # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
         if not files:
