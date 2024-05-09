@@ -263,9 +263,9 @@ def amwg_table(adf):
 
         #Generate input file path:
         if not is_climo:
-            input_location = Path(input_ts_locs[case_name])
+            input_location = Path(ts_locs[case_name])
         if is_climo:
-            input_location = Path(input_climo_locs[case_name])
+            input_location = Path(climo_locs[case_name])
         #print("input_location",input_location,"\n")
 
         #Check that time series input directory actually exists:
