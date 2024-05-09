@@ -184,14 +184,21 @@ def amwg_table(adf):
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
+        print(f"Making AMWG table for case'{case_name}'")
+        if calc_cam_ts[case_idx]:
+            print()
+            is_climo = False
+        else:
+            print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
+            is_climo = True
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
 
         #Generate input file path:
-        try:
+        if not is_climo:
             input_location = Path(input_ts_locs[case_idx])
-        except IndexError:
+        if is_climo:
             input_location = Path(input_climo_locs[case_idx])
 
         #Check that time series input directory actually exists:
@@ -212,12 +219,7 @@ def amwg_table(adf):
         if Path(output_csv_file).is_file():
             Path.unlink(output_csv_file)
         #End if
-        if calc_cam_ts[case_idx]:
-            print()
-            is_climo = False
-        else:
-            print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
-            is_climo = True
+        
         
         #Make and save the table to CSV file. Keep track of the file too for comparison table
         csv_list = make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list, premade_climo=is_climo)
