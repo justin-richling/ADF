@@ -150,10 +150,10 @@ def amwg_table(adf):
     #-----------------------------------------
 
     #Check if user wants to skip time series file creation
-    calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
-    if not isinstance(calc_cam_ts, list):
-        # If so, then check if any of the entries are "True":
-        calc_cam_ts = list(calc_cam_ts)
+    calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
+    #if not isinstance(calc_cam_ts, list):
+    #    # If so, then check if any of the entries are "True":
+    #    calc_cam_ts = list(calc_cam_ts)
     # End if
 
     #if calc_cam_ts is None:
