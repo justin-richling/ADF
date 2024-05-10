@@ -1408,6 +1408,7 @@ class AdfDiag(AdfWeb):
                     if flag == "derivable_from":
                         #NOTE: this will need to be changed when derived equations are more complex! - JR
                         if var == "RESTOM":
+                            print("RESTOM\n")
                             der_val = ds["FSNT"]-ds["FLNT"]
                         else:
                             #Loop through all constituents and sum
