@@ -444,7 +444,7 @@ class AdfDiag(AdfWeb):
                 #Derive variables that come from constituents
                 if vars_to_derive:
                     self.derive_variables(
-                        diag_var_list, res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
+                        res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
                     )
                 continue
             # End if
