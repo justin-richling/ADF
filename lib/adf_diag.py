@@ -765,6 +765,7 @@ class AdfDiag(AdfWeb):
                     vars_to_derive.append(var)
                     #Add constituent list to variable key in dictionary
                     constit_dict[var] = constit_list
+                    continue
                 #End if
 
 
