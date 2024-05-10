@@ -492,7 +492,9 @@ PRECT:
   obs_name: "ERAI"
   obs_var_name: "PRECT"
   category: "Hydrologic cycle"
-  derivable_from: ['PRECL','PRECC']
+  #derivable_from: ['PRECL','PRECC']
+  derive:
+    from: ['PRECL','PRECC']
 
 QFLX:
   category: "Hydrologic cycle"
@@ -759,7 +761,9 @@ RESTOM:
     colorbar:
       label : "W m$^{-2}$"
   category: "TOA energy flux"
-  derivable_from: ['FLNT','FSNT']
+  #derivable_from: ['FLNT','FSNT']
+  derive:
+    from: ['FLNT','FSNT']
 
 SWCF:
   colormap: "Blues"

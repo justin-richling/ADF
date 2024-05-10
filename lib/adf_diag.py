@@ -1172,7 +1172,7 @@ class AdfDiag(AdfWeb):
         print("   ")
 
     #########
-    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
+    def derive_variables(self, diag_var_list, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1189,17 +1189,23 @@ class AdfDiag(AdfWeb):
 
             #Check whether there are parts to derive from and if there is an associated equation
             vres = res.get(var, {})
-            if "derivable_from" in vres:
+            '''if "derivable_from" in vres:
                 constit_list = vres['derivable_from']
-                flag = "derivable_from"
+                flag = "derivable_from"'''
             
-            elif "derive" in vres:
+            #elif "derive" in vres:
+            if "derive" in vres:
                 print()
+                if "from" in vres["derive"]:
+                    constit_list = vres["derive"]["from"]
+                    flag = "derivable_from"
+
+                #Check if it needs to be interpolated or masked
                 if "method" in vres["derive"]:
                     if vres["derive"]["method"] == "interp":
                         flag = "derive_interp"
 
-                        #Check if the interpolated dimension is part of CAM dimensions
+                        '''#Check if the interpolated dimension is part of CAM dimensions
                         for dim in ["time","lat","lon","lev","ilev"]:
                             if dim in vres["derive"].keys():
                                 #print(dim)
@@ -1207,7 +1213,7 @@ class AdfDiag(AdfWeb):
                                             
                                 #Variable to derive quantity from
                                 der_from = vres['derive']['from']
-                                constit_list = vres['derive']['from']
+                                #constit_list = vres['derive']['from']
 
                                 """#Check if it is part of the CAM files
                                 ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
@@ -1229,23 +1235,21 @@ class AdfDiag(AdfWeb):
                                 else:
                                     print(f"Missing '{der_from}' variable, can't create '{var}' time series.")
                                     continue"""
-                                #.interp(dim=vres["derive"]["method"][dim], method='nearest')
+                                #.interp(dim=vres["derive"]["method"][dim], method='nearest')'''
                     if vres["derive"]["method"] == "mask":
                         print()
                         flag = "derive_mask"
                         constit_list = vres['derive']['from']
-
-
-
-
+                    else:
+                        print("Huh, doesn't look like you specified a way to derive '{var}'. Please check again in the variable defaults config file.")
             else:
-                print("WARNING: No constituents listed in defaults config file, moving on")
+                print("WARNING: No constituents listed in defaults config file, moving on.")
                 continue
 
             #Grab all required time series files for derived var
             constit_files = []
             constit_files_dict = {}
-            mutli_ts = False
+            
             for constit in constit_list:
                 #print(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc"))),"\n")
                 if len(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))) > 1:
@@ -1254,6 +1258,7 @@ class AdfDiag(AdfWeb):
 
 
                 else:
+                    mutli_ts = False
                     #print("constit",constit)
                     #print("ts_dir",ts_dir)
                     if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
@@ -1269,133 +1274,126 @@ class AdfDiag(AdfWeb):
                 ermsg = f"Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                 print(ermsg)"""
-            if 0==1:
-                print()
-            else:
-                if mutli_ts:
+            #if 0==1:
+            #    print()
+            #else:
+            #    if mutli_ts:
                     
-                    #ahh = []
-                    for i in range(len(constit_files_dict[constit_list[0]])):
-                        
+            #ahh = []
+            if mutli_ts:
+                for i in range(len(constit_files_dict[constit_list[0]])):
+                            
 
-                        ahh = []
-                        for cons in constit_files_dict.keys():
-                            ahh.append(constit_files_dict[cons][i])
-                        #print("ahh",ahh,"\n")
-                        print(f"{var}: matchies??",len(ahh) == len(constit_list))
-                        #Check if all the constituent files were found
-                        if len(ahh) != len(constit_list):
-                            ermsg = f"Not all constituent files present; {var} cannot be calculated."
-                            ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                            print(ermsg)
+                    ahh = []
+                    for cons in constit_files_dict.keys():
+                        ahh.append(constit_files_dict[cons][i])
+                    #print("ahh",ahh,"\n")
+                    print(f"{var}: matchies??",len(ahh) == len(constit_list))
+                    #Check if all the constituent files were found
+                    if len(ahh) != len(constit_list):
+                        ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                        ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                        print(ermsg)
+                        continue
+                    #Open a new dataset with all the constituent files/variables
+                    ds = xr.open_mfdataset(ahh, compat='override')
+                    # create new file name for derived variable
+
+                    #print("fdghjk",constit_files_dict[constit_list[0]][i])
+
+                    derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
+                    #print("derived_file",derived_file,"\n")
+                    #Check if clobber is true for file
+                    if Path(derived_file).is_file():
+                        if overwrite:
+                            Path(derived_file).unlink()
+                        else:
+                            print(
+                                f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                            )
                             continue
-                        #Open a new dataset with all the constituent files/variables
-                        ds = xr.open_mfdataset(ahh, compat='override')
-                        # create new file name for derived variable
 
-                        #print("fdghjk",constit_files_dict[constit_list[0]][i])
+                    if flag == "derive_interp":
+                        for dim in ["time","lat","lon","lev","ilev"]:
+                            if dim in vres["derive"].keys():
+                                #ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
+                                #der_from_ds = xr.open_dataset(ts_exist[0])
+                                der_from_ds = ds
+                                #Grab variable to derive from
+                                #constit_list
+                                der_from_var = der_from_ds[constit_list[0]]
+                                #der_from_var = der_from_ds[der_from]
 
-                        derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
-                        #print("derived_file",derived_file,"\n")
-                        #Check if clobber is true for file
-                        if Path(derived_file).is_file():
-                            if overwrite:
-                                Path(derived_file).unlink()
+                                # Interpolate the data to the nearest requested value: vres["derive"][dim]
+                                der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
+                                                            
+                                #Set derived variable in dataset and remove the original variable
+                                der_from_ds[var] = der_var
+                                ds_final = der_from_ds.drop_vars(constit_list)
+                                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+                    if flag == "derive_mask":
+                        print()
+                        der_from_var = der_from_ds[constit_list[0]]
+                        #Derive variables that come from other means
+                        #EXAMPLE: derive SST's from TS if not in CAM output
+                        #if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*SST*")):
+                        if var in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*{var}*")):
+                            print(f"Need to make '{var}'")
+                            print(f"looks like it will come from '{der_from_var}'")
+                            ts_exist = glob.glob(os.path.join(ts_dir, f"*{der_from_var}*"))
+                            if ts_exist:
+                                ts_ds = xr.open_dataset(ts_exist[0])
                             else:
-                                print(
-                                    f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
-                                )
+                                print(f"Missing '{der_from_var}' variable, can't create '{var}' time series.")
                                 continue
 
-                        if flag == "derive_interp":
-                            for dim in ["time","lat","lon","lev","ilev"]:
-                                if dim in vres["derive"].keys():
-                                    #ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
-                                    #der_from_ds = xr.open_dataset(ts_exist[0])
-                                    der_from_ds = ds
-                                    #Grab variable to derive from
-                                    #constit_list
-                                    der_from_var = der_from_ds[constit_list[0]]
-                                    #der_from_var = der_from_ds[der_from]
+                            if 'mask' in vres:
+                                if vres['mask'].lower() == 'ocean':
+                                    #Check if the ocean fraction has already been regridded
+                                    #and saved:
+                                    if ts_ds:
+                                        ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_dir, f"*OCNFRAC*"))[0])
+                                        if ofrac_ds:
+                                            print("did it make it here?")
+                                            ofrac = ofrac_ds['OCNFRAC']
+                                            # set the bounds of regridded ocnfrac to 0 to 1
+                                            ofrac = xr.where(ofrac>1,1,ofrac)
+                                            ofrac = xr.where(ofrac<0,0,ofrac)
+                                            # mask the land in TS for global means
+                                            ts_ds['OCNFRAC'] = ofrac
+                                            #der_from_var = der_from_ds[constit_list[0]]
+                                            ts_tmp = ts_ds[der_from_var]
+                                            #Import ADF-specific modules:
+                                            import plotting_functions as pf
+                                            ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                            #ts_ds['SST'] = ts_tmp
+                                            ts_ds[var] = ts_tmp
+                                            #Set derived variable in dataset and remove the original variable
+                                            der_from_ds[var] = der_var
+                                            ds_final = der_from_ds.drop_vars(constit_list)
+                                            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
-                                    # Interpolate the data to the nearest requested value: vres["derive"][dim]
-                                    der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
-                                                        
-                                    #Set derived variable in dataset and remove the original variable
-                                    der_from_ds[var] = der_var
-                                    ds_final = der_from_ds.drop_vars(constit_list)
-                                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
-
-                        """if flag == "derive_mask":
-                            print()
-                            #Derive variables that come from other means
-                            #EXAMPLE: derive SST's from TS if not in CAM output
-                            if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
-                                print("Need to make SST's")
-                                ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
-                                if ts_exist:
-                                    ts_ds = xr.open_dataset(ts_exist[0])
-                                else:
-                                    print("Missing 'TS' variable, can't create SST time series.")
-                                    continue
-
-                                if 'mask' in vres:
-                                    if vres['mask'].lower() == 'ocean':
-                                        #Check if the ocean fraction has already been regridded
-                                        #and saved:
-                                        if ts_ds:
-                                            ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])
-                                            if ofrac_ds:
-                                                print("did it make it here?")
-                                                ofrac = ofrac_ds['OCNFRAC']
-                                                # set the bounds of regridded ocnfrac to 0 to 1
-                                                ofrac = xr.where(ofrac>1,1,ofrac)
-                                                ofrac = xr.where(ofrac<0,0,ofrac)
-                                                # mask the land in TS for global means
-                                                ts_ds['OCNFRAC'] = ofrac
-                                                ts_tmp = ts_ds['TS']
-                                                ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
-                                                ts_ds['SST'] = ts_tmp
-
-                                                #Save to new time series file
-                                                print("did it make it here 2?")
-                                                save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
-                                            else:
-                                                wmsg = "OCNFRAC not found in CAM output,"
-                                                wmsg += f" unable to apply mask to 'SST'"
-                                                print(wmsg)
-                                            
+                                            #Save to new time series file
+                                            print("did it make it here 2?")
+                                            #save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
                                         else:
-                                            wmsg = "TS not found in CAM output,"
-                                            wmsg += f" unable to apply mask to 'SST'"
+                                            wmsg = "OCNFRAC not found in CAM output,"
+                                            wmsg += f" unable to apply mask to '{var}'"
                                             print(wmsg)
-                                        #End if
+                                                
+                                    else:
+                                        wmsg = f"{der_from_var} not found in CAM output,"
+                                        wmsg += f" unable to apply mask to '{var}'"
+                                        print(wmsg)
                                     #End if
                                 #End if
-                            #End if"""
+                            #End if
+                        #End if
 
-                        
-                        if flag == "derivable_from":
-                            #NOTE: this will need to be changed when derived equations are more complex! - JR
-                            if var == "RESTOM":
-                                der_val = ds["FSNT"]-ds["FLNT"]
-                            else:
-                                #Loop through all constituents and sum
-                                der_val = 0
-                                for v in constit_list:
-                                    der_val += ds[v]
                             
-                            #Set derived variable name and add to dataset
-                            der_val.name = var
-                            ds[var] = der_val
-                            #Drop all constituents from final saved dataset
-                            #These are not necessary because they have their own time series files
-                            ds_final = ds.drop_vars(constit_list)
-                            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
-
-                        
-                        
-                        """#NOTE: this will need to be changed when derived equations are more complex! - JR
+                    if flag == "derivable_from":
+                        #NOTE: this will need to be changed when derived equations are more complex! - JR
                         if var == "RESTOM":
                             der_val = ds["FSNT"]-ds["FLNT"]
                         else:
@@ -1403,21 +1401,131 @@ class AdfDiag(AdfWeb):
                             der_val = 0
                             for v in constit_list:
                                 der_val += ds[v]
-                        
+                                
                         #Set derived variable name and add to dataset
                         der_val.name = var
                         ds[var] = der_val
                         #Drop all constituents from final saved dataset
                         #These are not necessary because they have their own time series files
                         ds_final = ds.drop_vars(constit_list)
-                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')"""
+                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+            else:
+                #Check if all the constituent files were found
+                print(f"{var}: matchies??",len(constit_files) == len(constit_list))
+                if len(constit_files) != len(constit_list):
+                    ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                    ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                    print(ermsg)
+                    continue
+                #Open a new dataset with all the constituent files/variables
+                ds = xr.open_mfdataset(constit_files, compat='override')
+        
+                # create new file name for derived variable
+                derived_file = constit_files[0].replace(constit_list[0], var)
 
 
+                
+                #print("derived_file",derived_file,"\n")
+                #Check if clobber is true for file
+                if Path(derived_file).is_file():
+                    if overwrite:
+                        Path(derived_file).unlink()
+                    else:
+                        print(
+                            f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                        )
+                        continue
 
+                if flag == "derive_interp":
+                    for dim in ["time","lat","lon","lev","ilev"]:
+                        if dim in vres["derive"].keys():
+                            #ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
+                            #der_from_ds = xr.open_dataset(ts_exist[0])
+                            der_from_ds = ds
+                            #Grab variable to derive from
+                            #constit_list
+                            der_from_var = der_from_ds[constit_list[0]]
+                            #der_from_var = der_from_ds[der_from]
 
+                            # Interpolate the data to the nearest requested value: vres["derive"][dim]
+                            der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
+                                                        
+                            #Set derived variable in dataset and remove the original variable
+                            der_from_ds[var] = der_var
+                            ds_final = der_from_ds.drop_vars(constit_list)
+                            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
+                if flag == "derive_mask":
+                    print()
+                    #Derive variables that come from other means
+                    #EXAMPLE: derive SST's from TS if not in CAM output
+                    if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
+                        print("Need to make SST's")
+                        ts_exist = glob.glob(os.path.join(ts_case_dir, f"*TS*"))
+                        if ts_exist:
+                            ts_ds = xr.open_dataset(ts_exist[0])
+                        else:
+                            print("Missing 'TS' variable, can't create SST time series.")
+                            continue
 
-                else:
+                        if 'mask' in vres:
+                            if vres['mask'].lower() == 'ocean':
+                                #Check if the ocean fraction has already been regridded
+                                #and saved:
+                                if ts_ds:
+                                    ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_case_dir, f"*OCNFRAC*"))[0])
+                                    if ofrac_ds:
+                                        print("did it make it here?")
+                                        ofrac = ofrac_ds['OCNFRAC']
+                                        # set the bounds of regridded ocnfrac to 0 to 1
+                                        ofrac = xr.where(ofrac>1,1,ofrac)
+                                        ofrac = xr.where(ofrac<0,0,ofrac)
+                                        # mask the land in TS for global means
+                                        ts_ds['OCNFRAC'] = ofrac
+                                        ts_tmp = ts_ds['TS']
+                                        ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                        ts_ds['SST'] = ts_tmp
+
+                                        #Save to new time series file
+                                        print("did it make it here 2?")
+                                        save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
+                                    else:
+                                        wmsg = "OCNFRAC not found in CAM output,"
+                                        wmsg += f" unable to apply mask to 'SST'"
+                                        print(wmsg)
+                                            
+                                else:
+                                    wmsg = "TS not found in CAM output,"
+                                    wmsg += f" unable to apply mask to 'SST'"
+                                    print(wmsg)
+                                #End if
+                            #End if
+                        #End if
+                    #End if
+
+                        
+                if flag == "derivable_from":
+                    #NOTE: this will need to be changed when derived equations are more complex! - JR
+                    if var == "RESTOM":
+                        der_val = ds["FSNT"]-ds["FLNT"]
+                    else:
+                        #Loop through all constituents and sum
+                        der_val = 0
+                        for v in constit_list:
+                            der_val += ds[v]
+                            
+                    #Set derived variable name and add to dataset
+                    der_val.name = var
+                    ds[var] = der_val
+                    #Drop all constituents from final saved dataset
+                    #These are not necessary because they have their own time series files
+                    ds_final = ds.drop_vars(constit_list)
+                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+                        
+                    
+
+                '''else:
                     #Check if all the constituent files were found
                     if len(constit_files) != len(constit_list):
                         ermsg = f"Not all constituent files present; {var} cannot be calculated."
@@ -1483,7 +1591,7 @@ class AdfDiag(AdfWeb):
                 #Drop all constituents from final saved dataset
                 #These are not necessary because they have their own time series files
                 ds_final = ds.drop_vars(constit_list)
-                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')'''
 
 
                 '''#Open a new dataset with all the constituent files/variables
