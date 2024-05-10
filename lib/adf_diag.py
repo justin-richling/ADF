@@ -1093,9 +1093,9 @@ class AdfDiag(AdfWeb):
                 if vres["derive"]["method"] == "mask":
                     #print(f"{var} getting a mask at the spa today")
                     flag = "derive_mask"
-            else:
-                print("WARNING: No constituents listed in defaults config file, moving on.")
-                continue
+            #else:
+            #    print("WARNING: No constituents listed in defaults config file, moving on.")
+            #    continue
             """#Check if appropriate config variable
             if "derive" in vres:
                 if "from" in vres["derive"]:
