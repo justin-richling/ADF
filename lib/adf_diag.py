@@ -1361,8 +1361,9 @@ class AdfDiag(AdfWeb):
                                     #if ts_ds:
                                     if ds:
                                         #ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_dir, f"*OCNFRAC*"))[0])
-                                        print("YEEHAWW",sorted(glob.glob(os.path.join(ts_dir, f"*OCNFRAC*"))))
-                                        ofrac_ds = xr.open_mfdataset(sorted(glob.glob(os.path.join(ts_dir, "*OCNFRAC*"))))#, compat='override'
+                                        ocnfrac_file = sorted(glob.glob(os.path.join(ts_dir, "*OCNFRAC*")))
+                                        print("YEEHAWW",ocnfrac_file)
+                                        ofrac_ds = xr.open_mfdataset(ocnfrac_file, compat='override')
                                         if ofrac_ds:
                                             print("did it make it here?")
                                             ofrac = ofrac_ds['OCNFRAC']
