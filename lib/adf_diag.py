@@ -1339,6 +1339,7 @@ class AdfDiag(AdfWeb):
 
                     if flag == "derive_mask":
                         print()
+                        der_from_ds = ds
                         der_from_var = der_from_ds[constit_list[0]]
                         #Derive variables that come from other means
                         #EXAMPLE: derive SST's from TS if not in CAM output
