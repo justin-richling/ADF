@@ -1242,11 +1242,11 @@ class AdfDiag(AdfWeb):
                                     continue"""
                                 #.interp(dim=vres["derive"]["method"][dim], method='nearest')'''
                     if vres["derive"]["method"] == "mask":
-                        print()
+                        print(f"{var} getting a mask at the spa today")
                         flag = "derive_mask"
-                        constit_list = vres['derive']['from']
+                        #constit_list = vres['derive']['from']
                     else:
-                        print("Huh, doesn't look like you specified a way to derive '{var}'. Please check again in the variable defaults config file.")
+                        print(f"Huh, doesn't look like you specified a way to derive '{var}'. Please check again in the variable defaults config file.")
             else:
                 print("WARNING: No constituents listed in defaults config file, moving on.")
                 continue
@@ -1272,7 +1272,7 @@ class AdfDiag(AdfWeb):
                 #if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                 #    constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
-            print("constit_files",constit_files,"\n")
+            #print("constit_files",constit_files,"\n")
             
             """ #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
