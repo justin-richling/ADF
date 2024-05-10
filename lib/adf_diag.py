@@ -1081,36 +1081,23 @@ class AdfDiag(AdfWeb):
             #if "derive" in vres:
             #if "from" in vres["derive"]:
                     
-            #Check if it needs to be interpolated or masked
+            #First check if it is just a simple derivation from constituents
             constit_list = vres["derive"]["from"]
             flag = "derivable_from"
-            #if "from" in vres["derive"]:
-            #    flag = "derivable_from"
-            #Check if it needs to be interpolated or masked
-            #Override the flag in case of interp or mask derivation
+
+            #Now check if it needs to be interpolated or masked
+            #NOTE: Override the flag in case
             if "method" in vres["derive"]:
                 if vres["derive"]["method"] == "interp":
                     flag = "derive_interp"
                 if vres["derive"]["method"] == "mask":
-                    #print(f"{var} getting a mask at the spa today")
                     flag = "derive_mask"
-            #else:
-            #    print("WARNING: No constituents listed in defaults config file, moving on.")
-            #    continue
-            """#Check if appropriate config variable
-            if "derive" in vres:
-                if "from" in vres["derive"]:
-                    constit_list = vres["derive"]["from"]
-                    flag = "derivable_from"
-                #Check if it needs to be interpolated or masked
-                if "method" in vres["derive"]:
-                    if vres["derive"]["method"] == "interp":
-                        flag = "derive_interp"
-                    if vres["derive"]["method"] == "mask":
-                        print(f"{var} getting a mask at the spa today")
-                        flag = "derive_mask"
-                    #else:
-                    #    print(f"Huh, doesn't look like you specified a way to derive '{var}'. Please check again in the variable defaults config file.")"""
+
+            #Raise error if constituents are missing entirely
+            if not constit_list:
+                print("WARNING: No constituents listed in defaults config file, moving on.")
+                continue
+           
 
             #Grab all required time series files for derived var
             constit_files = []
