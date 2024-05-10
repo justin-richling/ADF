@@ -1083,8 +1083,9 @@ class AdfDiag(AdfWeb):
                     
             #Check if it needs to be interpolated or masked
             constit_list = vres["derive"]["from"]
-            if "from" in vres["derive"]:
-                flag = "derivable_from"
+            flag = "derivable_from"
+            #if "from" in vres["derive"]:
+            #    flag = "derivable_from"
             #Check if it needs to be interpolated or masked
             #Override the flag in case of interp or mask derivation
             if "method" in vres["derive"]:
