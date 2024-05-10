@@ -1287,7 +1287,7 @@ class AdfDiag(AdfWeb):
             #ahh = []
             if mutli_ts:
                 for i in range(len(constit_files_dict[constit_list[0]])):
-                            
+                    print("AAAAHAHAHAHAHAHAH",len(constit_files_dict[constit_list[0]]))  
 
                     ahh = []
                     for cons in constit_files_dict.keys():
