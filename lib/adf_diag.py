@@ -1083,19 +1083,16 @@ class AdfDiag(AdfWeb):
                     
             #Check if it needs to be interpolated or masked
             constit_list = vres["derive"]["from"]
-            flag = "derivable_from"
+            if "from" in vres["derive"]:
+                flag = "derivable_from"
+            #Check if it needs to be interpolated or masked
+            #Override the flag in case of interp or mask derivation
             if "method" in vres["derive"]:
                 if vres["derive"]["method"] == "interp":
                     flag = "derive_interp"
                 if vres["derive"]["method"] == "mask":
                     #print(f"{var} getting a mask at the spa today")
                     flag = "derive_mask"
-            #elif:
-            #    constit_list = vres["derive"]["from"]
-            #    flag = "derivable_from"
-                #else:
-                #    print(f"Huh, doesn't look like you specified a way to derive '{var}'. Please check again in the variable defaults config file.")
-           
             else:
                 print("WARNING: No constituents listed in defaults config file, moving on.")
                 continue
