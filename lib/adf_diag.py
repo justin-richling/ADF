@@ -1287,13 +1287,13 @@ class AdfDiag(AdfWeb):
             #ahh = []
             if mutli_ts:
                 for i in range(len(constit_files_dict[constit_list[0]])):
-                    print("AAAAHAHAHAHAHAHAH",len(constit_files_dict[constit_list[0]]))  
+                    #print("AAAAHAHAHAHAHAHAH",len(constit_files_dict[constit_list[0]]))  
 
                     ahh = []
                     for cons in constit_files_dict.keys():
                         ahh.append(constit_files_dict[cons][i])
-                    print("\nahh",ahh,"\n")
-                    print(f"{var}: matchies??",len(ahh) == len(constit_list))
+                    #print("\nahh",ahh,"\n")
+                    #print(f"{var}: matchies??",len(ahh) == len(constit_list))
                     #Check if all the constituent files were found
                     if len(ahh) != len(constit_list):
                         ermsg = f"Not all constituent files present; {var} cannot be calculated."
@@ -1338,72 +1338,64 @@ class AdfDiag(AdfWeb):
                                 ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
                     if flag == "derive_mask":
-                        #print()
                         der_from_ds = ds
                         der_from_var = der_from_ds[constit_list[0]]
                         #Derive variables that come from other means
                         #EXAMPLE: derive SST's from TS if not in CAM output
                         #if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*SST*")):
                         #if var in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*{var}*")):
-                        if 1==1:
-                            print(f"Need to make '{var}'")
-                            print(f"looks like it will come from '{constit_list[0]}'")
-                            #ts_exist = glob.glob(os.path.join(ts_dir, f"*{constit_list[0]}*"))
-                            #if ts_exist:
-                            #    ts_ds = xr.open_dataset(ts_exist[0])
-                            #else:
-                            #    print(f"Missing '{constit_list[0]}' variable, can't create '{var}' time series.")
-                            #    continue
+                        #if 1==1:
+                        #print(f"Need to make '{var}'")
+                        #print(f"looks like it will come from '{constit_list[0]}'")
+                        #ts_exist = glob.glob(os.path.join(ts_dir, f"*{constit_list[0]}*"))
+                        #if ts_exist:
+                        #    ts_ds = xr.open_dataset(ts_exist[0])
+                        #else:
+                        #    print(f"Missing '{constit_list[0]}' variable, can't create '{var}' time series.")
+                        #    continue
 
-                            if 'mask' in vres:
-                                if vres['mask'].lower() == 'ocean':
-                                    #Check if the ocean fraction has already been regridded
-                                    #and saved:
-                                    #if ts_ds:
-                                    if ds:
-                                        #ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_dir, f"*OCNFRAC*"))[0])
-                                        ocnfrac_file = sorted(glob.glob(os.path.join(ts_dir, "*OCNFRAC*")))
-                                        print("YEEHAWW",ocnfrac_file)
-                                        ofrac_ds = xr.open_mfdataset(ocnfrac_file[i], compat='override')
-                                        if ofrac_ds:
-                                            print("did it make it here?")
-                                            ofrac = ofrac_ds['OCNFRAC']
-                                            # set the bounds of regridded ocnfrac to 0 to 1
-                                            ofrac = xr.where(ofrac>1,1,ofrac)
-                                            ofrac = xr.where(ofrac<0,0,ofrac)
-                                            # mask the land in TS for global means
-                                            #ts_ds['OCNFRAC'] = ofrac
-                                            ds['OCNFRAC'] = ofrac
-                                            #der_from_var = der_from_ds[constit_list[0]]
-                                            #ts_tmp = ts_ds[constit_list[0]]
-                                            ts_tmp = ds[constit_list[0]]
-                                            #Import ADF-specific modules:
-                                            import plotting_functions as pf
-                                            ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
-                                            #ts_ds['SST'] = ts_tmp
-                                            #ts_ds[var] = ts_tmp
-                                            ds[var] = ts_tmp
-                                            #Set derived variable in dataset and remove the original variable
-                                            der_from_ds[var] = der_from_var
-                                            ds_final = der_from_ds.drop_vars(constit_list)
-                                            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
-
-                                            #Save to new time series file
-                                            print("did it make it here 2?")
-                                            #save_to_nc(ts_ds, Path(ts_case_dir) / Path(ts_exist[0].replace("TS","SST")))
-                                        else:
-                                            wmsg = "OCNFRAC not found in CAM output,"
-                                            wmsg += f" unable to apply mask to '{var}'"
-                                            print(wmsg)
-                                                
+                        if 'mask' in vres:
+                            if vres['mask'].lower() == 'ocean':
+                                #Check if the ocean fraction has already been regridded
+                                #and saved:
+                                #if ts_ds:
+                                if ds:
+                                    #ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_dir, f"*OCNFRAC*"))[0])
+                                    ocnfrac_file = sorted(glob.glob(os.path.join(ts_dir, "*OCNFRAC*")))
+                                    ofrac_ds = xr.open_mfdataset(ocnfrac_file[i], compat='override')
+                                    if ofrac_ds:
+                                        ofrac = ofrac_ds['OCNFRAC']
+                                        # set the bounds of regridded ocnfrac to 0 to 1
+                                        ofrac = xr.where(ofrac>1,1,ofrac)
+                                        ofrac = xr.where(ofrac<0,0,ofrac)
+                                        # mask the land in TS for global means
+                                        #ts_ds['OCNFRAC'] = ofrac
+                                        ds['OCNFRAC'] = ofrac
+                                        #der_from_var = der_from_ds[constit_list[0]]
+                                        #ts_tmp = ts_ds[constit_list[0]]
+                                        ts_tmp = ds[constit_list[0]]
+                                        #Import ADF-specific modules:
+                                        import plotting_functions as pf
+                                        ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                        #ts_ds['SST'] = ts_tmp
+                                        #ts_ds[var] = ts_tmp
+                                        ds[var] = ts_tmp
+                                        #Set derived variable in dataset and remove the original variable
+                                        der_from_ds[var] = der_from_var
+                                        ds_final = der_from_ds.drop_vars(constit_list)
+                                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                                     else:
-                                        wmsg = f"{der_from_var} not found in CAM output,"
+                                        wmsg = "OCNFRAC not found in CAM output,"
                                         wmsg += f" unable to apply mask to '{var}'"
                                         print(wmsg)
-                                    #End if
+                                else:
+                                    wmsg = f"{der_from_var} not found in CAM output,"
+                                    wmsg += f" unable to apply mask to '{var}'"
+                                    print(wmsg)
                                 #End if
                             #End if
                         #End if
+                    #End if
 
                             
                     if flag == "derivable_from":
