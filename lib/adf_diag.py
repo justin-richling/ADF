@@ -1383,7 +1383,7 @@ class AdfDiag(AdfWeb):
                                             #ts_ds[var] = ts_tmp
                                             ds[var] = ts_tmp
                                             #Set derived variable in dataset and remove the original variable
-                                            der_from_ds[var] = der_var
+                                            der_from_ds[var] = der_from_var
                                             ds_final = der_from_ds.drop_vars(constit_list)
                                             ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
