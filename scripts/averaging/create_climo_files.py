@@ -199,13 +199,15 @@ def create_climo_files(adf, clobber=False, search=None):
         #End of var_list loop
         #--------------------
 
-        # Parallelize the computation using multiprocessing pool:
-        #with mp.Pool(processes=number_of_cpu) as p:
-        #    result = p.starmap(process_variable, list_of_arguments)
-
-        for loa in list_of_arguments:
-            result = process_variable(*loa)
-        
+        #Run it in serial if there are multiple time series available
+        if len(ts_files) > 1:
+            for loa in list_of_arguments:
+                result = process_variable(*loa)
+        else:
+            # Parallelize the computation using multiprocessing pool:
+            with mp.Pool(processes=number_of_cpu) as p:
+                result = p.starmap(process_variable, list_of_arguments)
+            
         """
         #Remove created files
         #MAYBE: instead of deleteing files, make a new sub-directory and save thsoe there...
