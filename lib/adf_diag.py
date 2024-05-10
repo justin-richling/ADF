@@ -1346,12 +1346,12 @@ class AdfDiag(AdfWeb):
                         #if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*SST*")):
                         if var in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*{var}*")):
                             print(f"Need to make '{var}'")
-                            print(f"looks like it will come from '{der_from_var}'")
-                            ts_exist = glob.glob(os.path.join(ts_dir, f"*{der_from_var}*"))
+                            print(f"looks like it will come from '{constit_list[0]}'")
+                            ts_exist = glob.glob(os.path.join(ts_dir, f"*{constit_list[0]}*"))
                             if ts_exist:
                                 ts_ds = xr.open_dataset(ts_exist[0])
                             else:
-                                print(f"Missing '{der_from_var}' variable, can't create '{var}' time series.")
+                                print(f"Missing '{constit_list[0]}' variable, can't create '{var}' time series.")
                                 continue
 
                             if 'mask' in vres:
@@ -1369,7 +1369,7 @@ class AdfDiag(AdfWeb):
                                             # mask the land in TS for global means
                                             ts_ds['OCNFRAC'] = ofrac
                                             #der_from_var = der_from_ds[constit_list[0]]
-                                            ts_tmp = ts_ds[der_from_var]
+                                            ts_tmp = ts_ds[constit_list[0]]
                                             #Import ADF-specific modules:
                                             import plotting_functions as pf
                                             ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
