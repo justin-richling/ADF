@@ -448,7 +448,7 @@ class AdfDiag(AdfWeb):
                         #print(glob.glob(os.path.join(ts_case_dir, f"*{var}*")),"\n")
                         vres = res.get(var, {})
                         if "from" in vres["derive"]:
-                            print("derivable_from",var,"\n")
+                            #print("derivable_from",var,"\n")
                             #constit_list = vres["derivable_from"]
                             #for constit in constit_list:
                             #    if constit not in diag_var_list:
@@ -1200,7 +1200,7 @@ class AdfDiag(AdfWeb):
             
             #elif "derive" in vres:
             if "derive" in vres:
-                print()
+                #print()
                 if "from" in vres["derive"]:
                     constit_list = vres["derive"]["from"]
                     flag = "derivable_from"
@@ -1338,13 +1338,14 @@ class AdfDiag(AdfWeb):
                                 ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
                     if flag == "derive_mask":
-                        print()
+                        #print()
                         der_from_ds = ds
                         der_from_var = der_from_ds[constit_list[0]]
                         #Derive variables that come from other means
                         #EXAMPLE: derive SST's from TS if not in CAM output
                         #if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*SST*")):
-                        if var in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*{var}*")):
+                        #if var in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*{var}*")):
+                        if 1==1:
                             print(f"Need to make '{var}'")
                             print(f"looks like it will come from '{constit_list[0]}'")
                             #ts_exist = glob.glob(os.path.join(ts_dir, f"*{constit_list[0]}*"))
