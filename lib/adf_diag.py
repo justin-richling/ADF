@@ -1292,7 +1292,7 @@ class AdfDiag(AdfWeb):
                     ahh = []
                     for cons in constit_files_dict.keys():
                         ahh.append(constit_files_dict[cons][i])
-                    #print("ahh",ahh,"\n")
+                    print("\nahh",ahh,"\n")
                     print(f"{var}: matchies??",len(ahh) == len(constit_list))
                     #Check if all the constituent files were found
                     if len(ahh) != len(constit_list):
