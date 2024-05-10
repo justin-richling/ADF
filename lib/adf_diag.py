@@ -506,12 +506,12 @@ class AdfDiag(AdfWeb):
                 #Derive variables that come from constituents
                 if vars_to_derive:
                     self.derive_variables(
-                        res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
+                        diag_var_list, res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
                     )
 
                 
 
-                #Derive variables that come from other means
+                """#Derive variables that come from other means
                 #EXAMPLE: derive SST's from TS if not in CAM output
                 if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_case_dir, f"*SST*")):
                     print("Need to make SST's")
@@ -555,7 +555,7 @@ class AdfDiag(AdfWeb):
                             #End if
                         #End if
                     #End if
-                #End if
+                #End if"""
                     
 
 
@@ -799,7 +799,7 @@ class AdfDiag(AdfWeb):
 
             if vars_to_derive:
                 self.derive_variables(
-                    res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
+                    diag_var_list, res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
                 )
             # End with
 
