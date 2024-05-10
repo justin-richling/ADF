@@ -1347,18 +1347,19 @@ class AdfDiag(AdfWeb):
                         if var in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*{var}*")):
                             print(f"Need to make '{var}'")
                             print(f"looks like it will come from '{constit_list[0]}'")
-                            ts_exist = glob.glob(os.path.join(ts_dir, f"*{constit_list[0]}*"))
-                            if ts_exist:
-                                ts_ds = xr.open_dataset(ts_exist[0])
-                            else:
-                                print(f"Missing '{constit_list[0]}' variable, can't create '{var}' time series.")
-                                continue
+                            #ts_exist = glob.glob(os.path.join(ts_dir, f"*{constit_list[0]}*"))
+                            #if ts_exist:
+                            #    ts_ds = xr.open_dataset(ts_exist[0])
+                            #else:
+                            #    print(f"Missing '{constit_list[0]}' variable, can't create '{var}' time series.")
+                            #    continue
 
                             if 'mask' in vres:
                                 if vres['mask'].lower() == 'ocean':
                                     #Check if the ocean fraction has already been regridded
                                     #and saved:
-                                    if ts_ds:
+                                    #if ts_ds:
+                                    if ds:
                                         ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_dir, f"*OCNFRAC*"))[0])
                                         if ofrac_ds:
                                             print("did it make it here?")
@@ -1367,14 +1368,17 @@ class AdfDiag(AdfWeb):
                                             ofrac = xr.where(ofrac>1,1,ofrac)
                                             ofrac = xr.where(ofrac<0,0,ofrac)
                                             # mask the land in TS for global means
-                                            ts_ds['OCNFRAC'] = ofrac
+                                            #ts_ds['OCNFRAC'] = ofrac
+                                            ds['OCNFRAC'] = ofrac
                                             #der_from_var = der_from_ds[constit_list[0]]
-                                            ts_tmp = ts_ds[constit_list[0]]
+                                            #ts_tmp = ts_ds[constit_list[0]]
+                                            ts_tmp = ds[constit_list[0]]
                                             #Import ADF-specific modules:
                                             import plotting_functions as pf
                                             ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
                                             #ts_ds['SST'] = ts_tmp
-                                            ts_ds[var] = ts_tmp
+                                            #ts_ds[var] = ts_tmp
+                                            ds[var] = ts_tmp
                                             #Set derived variable in dataset and remove the original variable
                                             der_from_ds[var] = der_var
                                             ds_final = der_from_ds.drop_vars(constit_list)
