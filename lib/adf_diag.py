@@ -447,7 +447,7 @@ class AdfDiag(AdfWeb):
                         print(f"{var} not in {ts_case_dir}")
                         #print(glob.glob(os.path.join(ts_case_dir, f"*{var}*")),"\n")
                         vres = res.get(var, {})
-                        if "derivable_from" in vres:
+                        if "from" in vres["derive"]:
                             print("derivable_from",var,"\n")
                             #constit_list = vres["derivable_from"]
                             #for constit in constit_list:
@@ -455,8 +455,13 @@ class AdfDiag(AdfWeb):
                             #        diag_var_list.append(constit)
                             vars_to_derive.append(var)
                             #continue
+                        else:
+                            msg = f"WARNING: {var} is not in the variable defaults file for deriving."
+                            msg += " No time series will be generated."
+                            print(msg)
+                            continue
                         #Check if the derived method is different
-                        elif "derive" in vres:
+                        '''elif "derive" in vres:
                             print()
                             if "method" in vres["derive"]:
                                 if vres["derive"]["method"] == "interp":
@@ -501,7 +506,7 @@ class AdfDiag(AdfWeb):
                             msg = f"WARNING: {var} is not in the variable defaults file for deriving."
                             msg += " No time series will be generated."
                             print(msg)
-                            continue
+                            continue'''
 
                 #Derive variables that come from constituents
                 if vars_to_derive:
