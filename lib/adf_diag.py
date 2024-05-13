@@ -1190,6 +1190,7 @@ class AdfDiag(AdfWeb):
 
             else:
                 #Open a new dataset with all the constituent files/variables
+                print("constit_files",constit_files,"\n")
                 ds = xr.open_mfdataset(constit_files)
     
                 # create new file name for derived variable
