@@ -695,6 +695,9 @@ SST:
   obs_var_name: "TS"
   category: "Surface variables"
   mask: "ocean"
+  derive: 
+    method: "mask"
+    from: ['TS']
 
 U10:
   category: "Surface variables"
@@ -815,6 +818,10 @@ OMEGA:
 
 OMEGA500:
   category: "State"
+  derive: 
+    method: "interp"
+    lev: 500
+    from: ['OMEGA']
 
 PINT:
   category: "State"
