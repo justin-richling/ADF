@@ -632,7 +632,7 @@ class AdfDiag(AdfWeb):
                     #intialize boolean to check if variable is derivable
                     #NOTE: there can be many reasons why the variable doesn't get derived...
                     derive = False # assume it can't be derived and update if it can
-                    if "derivable" in vres:
+                    if "derive" in vres:
                         if "from" in vres["derive"]:
                             derive = True
                             constit_list = vres["derive"]["from"]
