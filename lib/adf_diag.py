@@ -546,7 +546,7 @@ class AdfDiag(AdfWeb):
                     diag_var_list += ["T"]
             #End aerosol calcs
 
-            #Initialize dictionary for derived var with needed list of constituents
+            '''#Initialize dictionary for derived var with needed list of constituents
             constit_dict = {}
             for var in diag_var_list:
                 #Check if current variable is a derived quantity
@@ -601,6 +601,85 @@ class AdfDiag(AdfWeb):
 
                     else:
                         errmsg = f"\n Missing 'derivable_from' config argument for {var}."
+                        errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                        errmsg += " argument in variable defaults yaml file."
+                        print(errmsg)
+                        continue
+                    #End if 'derivable_from'
+
+                    #Lastly, raise error if the variable is not a derived quanitity but is also not
+                    #in the history file(s)
+                    if (not derive) and (not constit_list):
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
+                        continue
+                #End if'''
+
+
+                #Initialize dictionary for derived var with needed list of constituents
+            constit_dict = {}
+            for var in diag_var_list:
+                #Check if current variable is a derived quantity
+                if var not in hist_file_var_list:
+                    vres = res.get(var, {})
+
+                    #Initialiaze list for constituents
+                    #NOTE: This is meant for if the variable is NOT derivable but need
+                    # an empty list as a check later 
+                    constit_list = []
+                    
+                    #intialize boolean to check if variable is derivable
+                    #NOTE: there can be many reasons why the variable doesn't get derived...
+                    derive = False # assume it can't be derived and update if it can
+                    if "derivable" in vres:
+                        if "from" in vres["derive"]:
+                            derive = True
+                            constit_list = vres["derive"]["from"]
+                            #Check if variable is potentially part of a CAM-CHEM run
+                            if (any(item not in hist_file_ds.data_vars for item in constit_list)) and (var in res["cam_chem_list"]):
+                                #Set check to look for cam-chem constituents list in variable defaults
+                                get_cam_chem_constits = True
+                            else:
+                                get_cam_chem_constits = False
+                            #End if
+
+                            #Try and build variable from 'derivable_from'
+                            #If this is a CAM-CHEM run, update constit_list
+                            if get_cam_chem_constits:
+                                print(f"Looks like this a CAM-CHEM run, checking constits for '{var}'")
+                                if "from_cam_chem" in vres["derive"]:
+                                    constit_list = vres['derive']['from_cam_chem']
+                                else:
+                                    derive = False
+                                    errmsg = f"\n Missing 'from_cam_chem' derivation config argument for {var}."
+                                    errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                                    errmsg += " argument in variable defaults yaml file."
+                                    print(errmsg)
+                                #End if
+                            #End if
+
+                            #Now check if this variable can be derived
+                            if derive:
+                                for constit in constit_list:
+                                    if constit not in diag_var_list:
+                                        diag_var_list.append(constit)
+                                #Add variable to list to derive
+                                vars_to_derive.append(var)
+                                #Add constituent list to variable key in dictionary
+                                constit_dict[var] = constit_list
+                                continue
+                            #End if
+                        
+                        else:
+                            errmsg = f"\n Missing 'from' derivation config argument for {var}."
+                            errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                            errmsg += " argument in variable defaults yaml file."
+                            print(errmsg)
+                            continue
+
+                    else:
+                        errmsg = f"\n Missing 'derive' config argument for {var}."
                         errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                         errmsg += " argument in variable defaults yaml file."
                         print(errmsg)

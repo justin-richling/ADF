@@ -546,228 +546,75 @@ class AdfDiag(AdfWeb):
                     diag_var_list += ["T"]
             #End aerosol calcs
 
-            """for var in diag_var_list:
-                if var not in hist_file_var_list:
-                    vres = res.get(var, {})
-                    if "derivable_from" in vres:
-                        constit_list = vres["derivable_from"]
-                        if constit_list:
-                            for constit in constit_list:
-                                if constit not in diag_var_list:
-                                    diag_var_list.append(constit)
-                            vars_to_derive.append(var)
-                            continue
-                        else:
-                            print("WARNING: No constituents listed in defaults config file, moving on")
-                        #End if
-                    elif "derivable_from_cam_chem" in vres:
-                        constit_list = vres['derivable_from_cam_chem']
-                        if constit_list:
-                            for constit in constit_list:
-                                if constit not in diag_var_list:
-                                    diag_var_list.append(constit)
-                            vars_to_derive.append(var)
-                            continue
-                        else:
-                            print("WARNING: No constituents listed in defaults config file, moving on")
-                        #End if
-                    else:
-                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                        msg += " No time series will be generated."
-                        print(msg)
-                        continue
-                    #End if constituents in variable defaults
-                #End if check var in history location"""
-
-            """for var in diag_var_list:
-                if var not in hist_file_var_list:
-                    vres = res.get(var, {})
-                    if "derivable_from" in vres:
-                        constit_list = vres["derivable_from"]
-                        for constit in constit_list:
-                            if var == "SOA":
-                                # Open the NetCDF file with xarray
-                                #file_path = 'path/to/your/netcdf/file.nc'
-                                dataset = xr.open_dataset(hist_files[0])
-
-                                # Check if a variable exists in the NetCDF file
-                                #variable_name = 'your_variable_name'
-                                if constit not in dataset.data_vars:
-                                    if "derivable_from_cam_chem" in vres:
-                                        constit_list2 = vres['derivable_from_cam_chem']
-                                        for constit in constit_list2:
-                                            if constit not in diag_var_list:
-                                                diag_var_list.append(constit)
-                            if constit not in diag_var_list:
-                                diag_var_list.append(constit)
-                        vars_to_derive.append(var)
-                        continue
-                    else:
-                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                        msg += " No time series will be generated."
-                        print(msg)
-                        continue"""
-
-                
-            """for var in diag_var_list:
-                if var not in hist_file_var_list:
-                    vres = res.get(var, {})
-                    if "derivable_from" in vres:
-                        dataset = xr.open_dataset(hist_files[0])
-                        constit_list = vres["derivable_from"]
-                        for constit in constit_list:
-                            #if var == "SOA":
-                            # Open the NetCDF file with xarray
-                            #file_path = 'path/to/your/netcdf/file.nc'
-                            #dataset = xr.open_dataset(hist_files[0])
-
-                            # Check if a variable exists in the NetCDF file
-                            #variable_name = 'your_variable_name'
-                            if constit not in dataset.data_vars:
-                                if "derivable_from_cam_chem" in vres:
-                                    constit_list_chem = vres['derivable_from_cam_chem']
-                                    for constit_chem in constit_list_chem:
-                                        if constit_chem not in diag_var_list:
-                                            diag_var_list.append(constit_chem)
-                            if constit not in diag_var_list:
-                                diag_var_list.append(constit)
-                        vars_to_derive.append(var)
-                        continue
-                    else:
-                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                        msg += " No time series will be generated."
-                        print(msg)
-                        continue"""
-
-
-
-
-            # THIS ONE WORKS!!
-            """#if var in res["cam_chem_list"]:
-            if any(item in res["cam_chem_list"] for item in diag_var_list):
-                cam_chem_check = True
-            else:
-                cam_chem_check = False
-            
             #Initialize dictionary for derived var with needed list of constituents
             constit_dict = {}
             for var in diag_var_list:
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
-                    if "derivable_from" in vres:
-                        constit_list = vres["derivable_from"]
-                        #get_cam_chem_constits = False
-                        for constit in constit_list:
-                            get_cam_chem_constits = False
 
-                            if constit not in hist_file_ds.data_vars:
-                                if cam_chem_check:
-                                    get_cam_chem_constits = True
-
-                            if (constit not in diag_var_list) and (not get_cam_chem_constits):
-                                diag_var_list.append(constit)
-
-                        if not get_cam_chem_constits:
-                            vars_to_derive.append(var)
-                            constit_dict[var] = constit_list
-                            continue
-                    
-                    else:
-                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                        msg += " No time series will be generated."
-                        print(msg)
-                        continue
-
-
-                    if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
-                        print(f"Looks like this a CAM-CHEM, checking constits for '{var}'")
-                        constit_list = vres['derivable_from_cam_chem']
-                        for constit_chem in constit_list:
-                            if constit_chem not in diag_var_list:
-                                diag_var_list.append(constit_chem)
-                        vars_to_derive.append(var)
-                        constit_dict[var] = constit_list
-                        continue
-                    
-                    else:
-                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                        msg += " No time series will be generated."
-                        print(msg)
-                        continue"""
-
-
-
-
-
-
-
-
-            """#if var in res["cam_chem_list"]:
-            if any(item in res["cam_chem_list"] for item in diag_var_list):
-                cam_chem_check = True
-            else:
-                cam_chem_check = False"""
-
-            #Initialize dictionary for derived var with needed list of constituents
-            constit_dict = {}
-            for var in diag_var_list:
-                #Check if current variable is a derived quantity
-                if var not in hist_file_var_list:
-                    vres = res.get(var, {})
+                    #Initialiaze list for constituents
+                    #NOTE: This is meant for if the variable is NOT derivable but need
+                    # an empty list as a check later 
+                    constit_list = []
                     
                     #intialize boolean to check if variable is derivable
                     #NOTE: there can be many reasons why the variable doesn't get derived...
-                    no_derive = False
+                    derive = False # assume it can't be derived and update if it can
                     if "derivable_from" in vres:
+                        derive = True
                         constit_list = vres["derivable_from"]
+                        #Check if variable is potentially part of a CAM-CHEM run
                         if (any(item not in hist_file_ds.data_vars for item in constit_list)) and (var in res["cam_chem_list"]):
-                            #Set check to look for cam-chem sonstituents list in variable defaults
+                            #Set check to look for cam-chem constituents list in variable defaults
                             get_cam_chem_constits = True
                         else:
                             get_cam_chem_constits = False
                         #End if
 
                         #Try and build variable from 'derivable_from'
-                        if not get_cam_chem_constits:
+                        #If this is a CAM-CHEM run, update constit_list
+                        if get_cam_chem_constits:
+                            print(f"Looks like this a CAM-CHEM run, checking constits for '{var}'")
+                            if "derivable_from_cam_chem" in vres:
+                                constit_list = vres['derivable_from_cam_chem']
+                            else:
+                                derive = False
+                                errmsg = f"\n Missing 'derivable_from_cam_chem' config argument for {var}."
+                                errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                                errmsg += " argument in variable defaults yaml file."
+                                print(errmsg)
+                            #End if
+                        #End if
+
+                        #Now check if this variable can be derived
+                        if derive:
                             for constit in constit_list:
                                 if constit not in diag_var_list:
                                     diag_var_list.append(constit)
-                        else:
-                            #if (get_cam_chem_constits) and ("derivable_from_cam_chem" in vres):
-                            if "derivable_from_cam_chem" in vres:
-                                print(f"Looks like this a CAM-CHEM run, checking constits for '{var}'")
-                                constit_list = vres['derivable_from_cam_chem']
-                                for constit_chem in constit_list:
-                                    if constit_chem not in diag_var_list:
-                                        diag_var_list.append(constit_chem)
-                                #vars_to_derive.append(var)
-                                #constit_dict[var] = constit_list
-                                #continue
-                            else:
-                                no_derive = True
-                                #continue
-                            #End if
+                            #Add variable to list to derive
+                            vars_to_derive.append(var)
+                            #Add constituent list to variable key in dictionary
+                            constit_dict[var] = constit_list
+                            continue
                         #End if
-                    else:
-                        no_derive = True
-                        #continue
-                    #End if
 
-                    if no_derive:
+                    else:
+                        errmsg = f"\n Missing 'derivable_from' config argument for {var}."
+                        errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                        errmsg += " argument in variable defaults yaml file."
+                        print(errmsg)
+                        continue
+                    #End if 'derivable_from'
+
+                    #Lastly, raise error if the variable is not a derived quanitity but is also not
+                    #in the history file(s)
+                    if (not derive) and (not constit_list):
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         msg += " No time series will be generated."
                         print(msg)
                         continue
-                    #End if
-
-                    #Add variable to list to derive
-                    vars_to_derive.append(var)
-                    #Add constituent list to variable key in dictionary
-                    constit_dict[var] = constit_list
-                    continue
                 #End if
-
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
@@ -1249,14 +1096,14 @@ class AdfDiag(AdfWeb):
             #Grab all required time series files for derived var
             constit_files = []
             for constit in constit_list:
-                #CHeck if the constituent file is present
+                #Check if the constituent file is present, if so add it to list
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):                    
                     constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
             print("constit_files: ",len(constit_files))
             print("constit_list: ",len(constit_list))
 
-            #Check if all the constituent files were found
+            #Check if all the necessary constituent files were found
             if len(constit_files) != len(constit_list):
                 ermsg = f"Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
