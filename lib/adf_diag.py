@@ -552,12 +552,17 @@ class AdfDiag(AdfWeb):
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
+
+                    #Initialiaze list for constituents
+                    #NOTE: This is meant for if the variable is NOT derivable but need
+                    # an empty list as a check later 
                     constit_list = []
                     
                     #intialize boolean to check if variable is derivable
                     #NOTE: there can be many reasons why the variable doesn't get derived...
-                    derive = True # assume it can be derived and update if not
+                    derive = False # assume it can't be derived and update if it can
                     if "derivable_from" in vres:
+                        derive = True
                         constit_list = vres["derivable_from"]
                         #Check if variable is potentially part of a CAM-CHEM run
                         if (any(item not in hist_file_ds.data_vars for item in constit_list)) and (var in res["cam_chem_list"]):
@@ -574,12 +579,15 @@ class AdfDiag(AdfWeb):
                             if "derivable_from_cam_chem" in vres:
                                 constit_list = vres['derivable_from_cam_chem']
                             else:
+                                derive = False
                                 errmsg = f"\n Missing 'derivable_from_cam_chem' config argument for {var}."
                                 errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                                 errmsg += " argument in variable defaults yaml file."
                                 print(errmsg)
-                                derive = False
-                                #continue
+                            #End if
+                        #End if
+
+                        #Now check if this variable can be derived
                         if derive:
                             for constit in constit_list:
                                 if constit not in diag_var_list:
@@ -589,38 +597,24 @@ class AdfDiag(AdfWeb):
                             #Add constituent list to variable key in dictionary
                             constit_dict[var] = constit_list
                             continue
-                        #else:
-                        #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                        #    msg += " No time series will be generated."
-                        #    print(msg)
-                        #    continue
                         #End if
 
-                    #End if
-
-                    #if not derive:
                     else:
                         errmsg = f"\n Missing 'derivable_from' config argument for {var}."
                         errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                         errmsg += " argument in variable defaults yaml file."
                         print(errmsg)
                         continue
-                    #End if
+                    #End if 'derivable_from'
 
-                    """#Add variable to list to derive
-                    vars_to_derive.append(var)
-                    #Add constituent list to variable key in dictionary
-                    constit_dict[var] = constit_list
-                    continue"""
-                
-                    #else:
-                    if (derive) and (not constit_list):
+                    #Lastly, raise error if the variable is not a derived quanitity but is also not
+                    #in the history file(s)
+                    if (not derive) and (not constit_list):
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         msg += " No time series will be generated."
                         print(msg)
                         continue
                 #End if
-
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
