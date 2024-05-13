@@ -862,7 +862,7 @@ RESTOM:
   category: "TOA energy flux"
   #derivable_from: ['FLNT','FSNT']
   derive:
-    from: ['FLNT','FSNT']
+    #from: ['FLNT','FSNT']
 
 SWCF:
   colormap: "Blues"

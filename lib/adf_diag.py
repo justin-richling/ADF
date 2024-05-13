@@ -656,6 +656,7 @@ class AdfDiag(AdfWeb):
                                     errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                                     errmsg += " argument in variable defaults yaml file."
                                     print(errmsg)
+                                    continue
                                 #End if
                             #End if
 
@@ -670,23 +671,22 @@ class AdfDiag(AdfWeb):
                                 constit_dict[var] = constit_list
                                 continue
                             #End if
-                        
                         else:
                             errmsg = f"\n Missing 'from' derivation config argument for {var}."
                             errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                             errmsg += " argument in variable defaults yaml file."
                             print(errmsg)
                             continue
-
+                        #End if 'from'
                     else:
                         errmsg = f"\n Missing 'derive' config argument for {var}."
                         errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                         errmsg += " argument in variable defaults yaml file."
                         print(errmsg)
                         continue
-                    #End if 'derivable_from'
+                    #End if 'derive'
 
-                    #Lastly, raise error if the variable is not a derived quanitity but is also not
+                    #Lastly, raise error if the variable is not a derived quantity but is also not
                     #in the history file(s)
                     if (not derive) and (not constit_list):
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
