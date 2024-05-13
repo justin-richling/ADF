@@ -633,8 +633,10 @@ class AdfDiag(AdfWeb):
                     #NOTE: there can be many reasons why the variable doesn't get derived...
                     derive = False # assume it can't be derived and update if it can
                     if "derive" in vres:
-                        if "from" in vres["derive"]:
-                            derive = True
+                        #if "from" in vres["derive"]:
+                            #derive = True
+                        derive = True
+                        try:
                             constit_list = vres["derive"]["from"]
                             #Check if variable is potentially part of a CAM-CHEM run
                             if (any(item not in hist_file_ds.data_vars for item in constit_list)) and (var in res["cam_chem_list"]):
@@ -671,12 +673,18 @@ class AdfDiag(AdfWeb):
                                 constit_dict[var] = constit_list
                                 continue
                             #End if
-                        else:
+                        except TypeError as e:
                             errmsg = f"\n Missing 'from' derivation config argument for {var}."
                             errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                             errmsg += " argument in variable defaults yaml file."
                             print(errmsg)
                             continue
+                        #else:
+                        #    errmsg = f"\n Missing 'from' derivation config argument for {var}."
+                        #    errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                        #    errmsg += " argument in variable defaults yaml file."
+                        #    print(errmsg)
+                        #    continue
                         #End if 'from'
                     else:
                         errmsg = f"\n Missing 'derive' config argument for {var}."
