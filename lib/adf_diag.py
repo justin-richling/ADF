@@ -650,15 +650,24 @@ class AdfDiag(AdfWeb):
                             #If this is a CAM-CHEM run, update constit_list
                             if get_cam_chem_constits:
                                 print(f"Looks like this a CAM-CHEM run, checking constits for '{var}'")
-                                if "from_cam_chem" in vres["derive"]:
+                                #if "from_cam_chem" in vres["derive"]:
+                                #    constit_list = vres['derive']['from_cam_chem']
+                                try:
                                     constit_list = vres['derive']['from_cam_chem']
-                                else:
+                                except TypeError:
                                     derive = False
                                     errmsg = f"\n Missing 'from_cam_chem' derivation config argument for {var}."
                                     errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
                                     errmsg += " argument in variable defaults yaml file."
                                     print(errmsg)
                                     continue
+                                #else:
+                                #    derive = False
+                                #    errmsg = f"\n Missing 'from_cam_chem' derivation config argument for {var}."
+                                #    errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                                #    errmsg += " argument in variable defaults yaml file."
+                                #    print(errmsg)
+                                #    continue
                                 #End if
                             #End if
 
@@ -1179,16 +1188,36 @@ class AdfDiag(AdfWeb):
             #Check whether there are parts to derive from and if there is an associated equation
             vres = res.get(var, {})
 
+            #Grab list of constituents for variable
             constit_list = constit_dict[var]
+            
+            #Default derivation flag to constituents
             flag = "derivable_from"
 
             #Now check if it needs to be interpolated or masked
             #NOTE: Override the flag in case
-            if "method" in vres["derive"]:
+            #if "method" in vres["derive"]:
+            try:
+                derive_method = vres["derive"]["method"]
+            except TypeError:
+                errmsg = f"\n Missing 'method' derivation config argument for {var}."
+                errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                errmsg += " argument in variable defaults yaml file."
+                print(errmsg)
+                continue
+            
+            #Update derivation flag if necessary
+            if derive_method == "interp":
+                flag = "derive_interp"
+            if derive_method == "mask":
+                flag = "derive_mask"
+            
+            '''if "method" in vres["derive"]:
                 if vres["derive"]["method"] == "interp":
                     flag = "derive_interp"
                 if vres["derive"]["method"] == "mask":
                     flag = "derive_mask"
+            '''
 
             #Raise error if constituents are missing entirely
             if not constit_list:
