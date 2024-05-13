@@ -588,7 +588,7 @@ class AdfDiag(AdfWeb):
                             vars_to_derive.append(var)
                             #Add constituent list to variable key in dictionary
                             constit_dict[var] = constit_list
-                            #continue
+                            continue
                         #else:
                         #    msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         #    msg += " No time series will be generated."
