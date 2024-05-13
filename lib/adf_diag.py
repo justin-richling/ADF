@@ -573,7 +573,7 @@ class AdfDiag(AdfWeb):
                         #End if
 
                         #Try and build variable from 'derivable_from'
-                        #If not a CAM-CHEM run, continue as usual
+                        #If this is a CAM-CHEM run, update constit_list
                         if get_cam_chem_constits:
                             print(f"Looks like this a CAM-CHEM run, checking constits for '{var}'")
                             if "derivable_from_cam_chem" in vres:
