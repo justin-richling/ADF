@@ -423,7 +423,7 @@ class AdfInfo(AdfConfig):
             eyear = eyears[case_idx]
 
             if not calc_case_ts[case_idx]:
-                print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
+                print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{case_name}'.")
                 print("  - The climo years specified in the config file cannot be verified!")
                 skip_cam_ts[case_idx] = True
             
