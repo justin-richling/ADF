@@ -171,14 +171,39 @@ class AdfInfo(AdfConfig):
 
             #Get climo years for verification or assignment if missing
             baseline_hist_locs = self.get_baseline_info('cam_hist_loc')
+            #if baseline_hist_locs is None:
+            #    baseline_hist_locs = False
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
-            if baseline_ts_done is None:
-                baseline_ts_done = False
+            #if baseline_ts_done is None:
+            #    baseline_ts_done = False
 
             #Check if user wants to skip time series file creation
             calc_baseline_ts   = self.get_baseline_info("calc_cam_ts")
+
+            baseline_ts_save   = self.get_cam_info("cam_ts_save")
+
+
+            #cam_hist_locs = self.get_cam_info('cam_hist_loc')
+            #cam_ts_done   = self.get_cam_info("cam_ts_done")
+            #calc_case_ts   = self.get_cam_info("calc_cam_ts")
+            input_ts_locs = self.get_baseline_info("cam_ts_loc")
+            calc_baseline_climo   = self.get_baseline_info("calc_cam_climo")
+            cam_climo_loc   = self.get_baseline_info("cam_climo_loc")
+            overwrite = self.get_baseline_info("cam_overwrite_climo")
+
+            #
+            self.__baseline_climo_loc = cam_climo_loc
+            self.__baseline_hist_loc = baseline_hist_locs
+            self.__baseline_ts_done = baseline_ts_done
+            self.__calc_baseline_ts = calc_baseline_ts
+            self.__baseline_ts_loc = input_ts_locs
+            self.__overwrite_baseline_climo = overwrite
+            self.__baseline_ts_save = baseline_ts_save
+            self.__calc_baseline_climo = calc_baseline_climo
+
+
 
             skip_baseline_ts = False
 
@@ -294,6 +319,8 @@ class AdfInfo(AdfConfig):
         #Save starting and ending years as object variables:
         self.__syear_baseline = syear_baseline
         self.__eyear_baseline = eyear_baseline
+        
+
 
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
@@ -323,61 +350,62 @@ class AdfInfo(AdfConfig):
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
         if cam_hist_locs is None:
-            cam_hist_locs = [False]*len(case_names)
-        #Check if using pre-made ts files
-        #cam_climo_loc   = self.get_cam_info("cam_climo_loc")
-        """if cam_hist_locs is not None:
-            for i,loc in enumerate(cam_hist_locs):
-                if loc is None:
-                    cam_hist_locs[i] = False
-        else:
-            cam_hist_locs = [False]*len(case_names)"""
-        
+            cam_hist_locs = [None]*len(case_names)
+
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
         if cam_ts_done is None:
             cam_ts_done = [False]*len(case_names)
 
+        #Check if using pre-made ts files
+        cam_ts_save   = self.get_cam_info("cam_ts_save")
+        if cam_ts_save is None:
+            cam_ts_save = [False]*len(case_names)
+
         #Check if user wants to skip time series file creation
         calc_case_ts   = self.get_cam_info("calc_cam_ts")
-        #Check if using pre-made ts files
-        #cam_climo_loc   = self.get_cam_info("cam_climo_loc")
         if calc_case_ts is None:
             calc_case_ts = [False]*len(case_names)
         
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
-        #Check if using pre-made ts files
-        #cam_climo_loc   = self.get_cam_info("cam_ts_loc")
         if input_ts_locs is None:
-            input_ts_locs = [False]*len(case_names)
+            input_ts_locs = [None]*len(case_names)
 
         #
         skip_cam_ts = [False]*len(case_names)
 
-        #Check if using pre-made ts files
+        cam_climo_done = self.get_cam_info("calc_cam_climo")
+        if cam_climo_done is None:
+            cam_climo_done = [None]*len(case_names)
+
+        #
         cam_climo_loc   = self.get_cam_info("cam_climo_loc")
         if cam_climo_loc is None:
-            cam_climo_loc = [False]*len(case_names)
-        """for i,loc in enumerate(cam_climo_loc):
-            if loc is None:
-                cam_climo_loc[i] = False
-
-        if cam_climo_loc is None:
-            cam_climo_loc = [False]*len(case_names)"""
+            cam_climo_loc = [None]*len(case_names)
 
         overwrite = self.get_cam_info("cam_overwrite_climo")
         if overwrite is None:
             overwrite = [False]*len(case_names)
 
 
-        self.__cam_climo_loc = cam_climo_loc
+        """self.__cam_climo_loc = cam_climo_loc
         self.__cam_hist_locs = cam_hist_locs
         self.__cam_ts_done = cam_ts_done
         self.__calc_case_ts = calc_case_ts
         self.__input_ts_locs = input_ts_locs
         self.__cam_climo_loc = cam_climo_loc
-        self.__overwrite_climo = overwrite
+        self.__overwrite_climo = overwrite"""
+
+        self.__test_climo_locs = cam_climo_loc
+        self.__test_hist_locs = cam_hist_locs
+        self.__test_ts_done = cam_ts_done
+        self.__calc_test_ts = calc_case_ts
+        self.__test_ts_locs = input_ts_locs
+        self.__calc_test_climos = cam_climo_done
+        self.__overwrite_test_climos = overwrite
+        self.__test_ts_save = cam_ts_save
+        
 
         #Loop over cases:
         syears_fixed = []
@@ -635,40 +663,76 @@ class AdfInfo(AdfConfig):
         return {"syears":syears,"eyears":eyears,
                 "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
 
-    # Create property needed to return the climo start (syear) and end (eyear) years to user:
-    @property
-    def cam_climo_loc(self):
-        return copy.copy(self.__cam_climo_loc)
 
-    # Create property needed to return the climo start (syear) and end (eyear) years to user:
-    @property
-    def cam_hist_locs(self):
-        return copy.copy(self.__cam_hist_locs)
 
-    # Create property needed to return the climo start (syear) and end (eyear) years to user:
-    @property
-    def cam_ts_done(self):
-        return copy.copy(self.__cam_ts_done)
+    """
+    self.__test_climo_locs = cam_climo_loc
+        self.__test_hist_locs = cam_hist_locs
+        self.__test_ts_done = cam_ts_done
+        self.__calc_test_ts = calc_case_ts
+        self.__test_ts_locs = input_ts_locs
+        self.__calc_test_climos = cam_climo_done
+        self.__overwrite_test_climos = overwrite
+        self.__test_ts_save = cam_ts_save
 
-    # Create property needed to return the climo start (syear) and end (eyear) years to user:
-    @property
-    def calc_case_ts(self):
-        return copy.copy(self.__calc_case_ts)
+        self.__baseline_climo_loc = cam_climo_loc
+            self.__baseline_hist_loc = baseline_hist_locs
+            self.__baseline_ts_done = baseline_ts_done
+            self.__calc_baseline_ts = calc_baseline_ts
+            self.__baseline_ts_loc = input_ts_locs
+            self.__overwrite_baseline_climo = overwrite
+            self.__baseline_ts_save = baseline_ts_save
+            self.__calc_baseline_climo = calc_baseline_climo
+    """            
 
-    # Create property needed to return the climo start (syear) and end (eyear) years to user:
-    @property
-    def input_ts_locs(self):
-        return copy.copy(self.__input_ts_locs)
 
-    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    # Create property needed to return the history file locations:
     @property
-    def cam_climo_loc(self):
-        return copy.copy(self.__cam_climo_loc)
+    def hist_locs(self):
+        return {"test": copy.copy(self.__test_hist_locs),
+                "baseline": copy.copy(self.__baseline_hist_loc)}
 
-    # Create property needed to return the climo start (syear) and end (eyear) years to user:
+    # Create property needed to return whether the time series will be saved:
+    @property
+    def ts_done(self):
+        return {"test": copy.copy(self.__test_ts_done),
+                "baseline": copy.copy(self.__baseline_ts_done)}
+
+    # Create property needed to return whether to caculate time series files:
+    @property
+    def calc_ts(self):
+        return {"test": copy.copy(self.__calc_test_ts),
+                "baseline": copy.copy(self.__calc_baseline_ts)}
+
+    # Create property needed to return whether to caculate time series files:
+    @property
+    def ts_save(self):
+        return {"test": copy.copy(self.__test_ts_save),
+                "baseline": copy.copy(self.__baseline_ts_save)}
+
+    # Create property needed to return the time series locations:
+    @property
+    def ts_locs(self):
+        return {"test": copy.copy(self.__test_ts_locs),
+                "baseline": copy.copy(self.__baseline_ts_loc)}
+
+    # Create property needed to return whether to caculate climatology files:
+    @property
+    def calc_climo(self):
+        return {"test": copy.copy(self.__calc_test_climos),
+                "baseline": copy.copy(self.__calc_baseline_climo)}
+
+    # Create property needed to return the overwrite climatology files:
     @property
     def overwrite_climo(self):
-        return copy.copy(self.__overwrite_climo)
+        return {"test": copy.copy(self.__overwrite_test_climos),
+                "baseline": copy.copy(self.__overwrite_baseline_climo)}
+
+    # Create property needed to return the climatology locations:
+    @property
+    def climo_locs(self):
+        return {"test": copy.copy(self.__test_climo_locs),
+                "baseline": copy.copy(self.__baseline_climo_loc)}
 
 
     # Create property needed to return the case nicknames to user:

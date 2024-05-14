@@ -75,131 +75,48 @@ def create_climo_files(adf, clobber=False, search=None):
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
     #Test case(s) input time series file locations
-    input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    """input_ts_locs = adf.get_cam_info("cam_ts_loc")
     #If this is not supplied at all, make a list of None
     if input_ts_locs is None:
-        input_ts_locs = [None]*len(case_names)
-    """if input_ts_locs is not None:
-        for i,loc in enumerate(input_ts_locs):
-            if loc is None:
-                input_ts_locs[i] = False
-    else:
-        input_ts_locs = [False]*len(case_names)
-    #End if"""
+        input_ts_locs = [None]*len(case_names)"""
+    input_ts_locs = adf.ts_locs['test']
+    
 
     #Test case(s) output climo file locations
-    output_locs   = adf.get_cam_info("cam_climo_loc")
+    """output_locs   = adf.get_cam_info("cam_climo_loc")
     #If this is not supplied at all, make a list of None
     if output_locs is None:
-        output_locs = [None]*len(case_names)
-    """if output_locs is not None:
-        for i,loc in enumerate(output_locs):
-            if loc is None:
-                output_locs[i] = False
-    else:
-        output_locs = [False]*len(case_names)
-    #End if"""
+        output_locs = [None]*len(case_names)"""
+    output_locs = adf.climo_locs['test']
+    
 
     #Test case(s) overwrite climo files boolean
-    overwrite     = adf.get_cam_info("cam_overwrite_climo")
+    """overwrite     = adf.get_cam_info("cam_overwrite_climo")
     #If this is not supplied at all, make a list of False
     if overwrite is None:
-        overwrite = [False]*len(case_names)
-    """if overwrite is not None:
-        for i,loc in enumerate(overwrite):
-            if loc is None:
-                overwrite[i] = False
-    else:
-        overwrite = [False]*len(case_names)
-    #End if"""
+        overwrite = [False]*len(case_names)"""
+    overwrite = adf.overwrite_climo['test']
+    
 
     #Test case(s) calculate climo files boolean
-    calc_climos   = adf.get_cam_info("calc_cam_climo")
+    """calc_climos   = adf.get_cam_info("calc_cam_climo")
     #If this is not supplied at all, make a list of False
     if calc_climos is None:
-        calc_climos = [False]*len(case_names)
-    """if calc_climos is not None:
-        for i,loc in enumerate(calc_climos):
-            if loc is None:
-                calc_climos[i] = False
-    else:
-        calc_climos = [False]*len(case_names)
-    #End if"""
-    
-
-
+        calc_climos = [False]*len(case_names)"""
+    calc_climos = adf.calc_climo['test']
 
 
     #Extract simulation years:
     start_year = adf.climo_yrs["syears"]
-    end_year   = adf.climo_yrs["eyears"]
-
-    """for i in calc_climos:
-        if i:
-            ts_loc = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
-            input_ts_locs.append(ts_loc)
-        else:
-            input_ts_locs.append(None)"""
-
-
-    # Check if climo calculation config option is a list:
-    """if isinstance(calc_climos, list):
-        # If so, then check if any of the entries are "True":
-        calc_climos = any(calc_climos)
-    # End if"""
-
-    print("calc_climos",calc_climos,"\n")
-
-    """cam_ts_loc_req = False
-    if calc_climos:
-        cam_ts_loc_req = True
-        #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
-        output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
-        overwrite     = adf.get_cam_info("cam_overwrite_climo")
-
-        #Extract simulation years:
-        start_year = adf.climo_yrs["syears"]
-        end_year   = adf.climo_yrs["eyears"]
-    else:
-        case_names = []
-        start_year = []
-        end_year = []
-        output_locs = []
-        overwrite = []
-        input_ts_locs = []"""
-
-    
-    #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=cam_ts_loc_req)
-    print("input_ts_locs",input_ts_locs,"\n")
-    """output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
-    overwrite     = adf.get_cam_info("cam_overwrite_climo")
-
-    #Extract simulation years:
-    start_year = adf.climo_yrs["syears"]
-    end_year   = adf.climo_yrs["eyears"]"""
-    
-
-    """#If variables weren't provided in config file, then make them a list
-    #containing only None-type entries:
-    if not calc_climos:
-        calc_climos = [None]*len(case_names)
-    if not overwrite:
-        overwrite = [None]*len(case_names)
-    #End if"""
-
-    
+    end_year   = adf.climo_yrs["eyears"]    
+   
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
-        #cam_ts_loc_req = False
-        #if calc_bl_climos:
-        #    cam_ts_loc_req = True
-        #input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=cam_ts_loc_req)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
-        #output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
         output_bl_loc     = adf.get_baseline_info("cam_climo_loc")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
@@ -209,8 +126,6 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Append to case lists:
         case_names.append(baseline_name)
-        #if not input_ts_locs:
-        #    input_ts_locs = []
         input_ts_locs.append(input_ts_baseline)
         output_locs.append(output_bl_loc)
         calc_climos.append(calc_bl_climos)
@@ -218,6 +133,12 @@ def create_climo_files(adf, clobber=False, search=None):
         start_year.append(bl_syr)
         end_year.append(bl_eyr)
     #-----------------------------------------
+
+
+    print("calc_climos",calc_climos,"\n")
+    print("overwrite",overwrite,"\n")
+    print("output_locs",output_locs,"\n")
+    print("input_ts_locs",input_ts_locs,"\n")
 
     # Check whether averaging interval is supplied
     # -> using only years takes from the beginning of first year to end of second year.
@@ -243,25 +164,19 @@ def create_climo_files(adf, clobber=False, search=None):
         #Whether to overwrite existing climo files
         clobber = overwrite[case_idx]
 
-        """#Check that time series input directory actually exists:
-        if not input_location.is_dir():
-            #errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
-            print(errmsg)
-            continue
-            #raise AdfError(errmsg)"""
-
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            #errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
+            #
             if not calc_climos[case_idx]:
                 msg = f"No time series requested for '{case_name}'; climo files have been supplied"
                 print(msg)
                 continue
-            #raise AdfError(errmsg)
             else:
                 errmsg = f"Time series directory '{input_location}' not found."
                 print(msg)
                 continue
+            #End if
+        #End if
 
         #Check if climo directory exists, and if not, then create it:
         if not output_location.is_dir():
