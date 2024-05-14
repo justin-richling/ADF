@@ -190,9 +190,9 @@ def create_climo_files(adf, clobber=False, search=None):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
-        cam_ts_loc_req = False
-        if calc_bl_climos:
-            cam_ts_loc_req = True
+        #cam_ts_loc_req = False
+        #if calc_bl_climos:
+        #    cam_ts_loc_req = True
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=cam_ts_loc_req)
         output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
