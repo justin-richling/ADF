@@ -76,8 +76,9 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #Test case(s) input time series file locations
     input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    #If this is not supplied at all, make a list of None
     if input_ts_locs is None:
-        input_ts_locs = [False]*len(case_names)
+        input_ts_locs = [None]*len(case_names)
     """if input_ts_locs is not None:
         for i,loc in enumerate(input_ts_locs):
             if loc is None:
@@ -88,8 +89,9 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #Test case(s) output climo file locations
     output_locs   = adf.get_cam_info("cam_climo_loc")
+    #If this is not supplied at all, make a list of None
     if output_locs is None:
-        output_locs = [False]*len(case_names)
+        output_locs = [None]*len(case_names)
     """if output_locs is not None:
         for i,loc in enumerate(output_locs):
             if loc is None:
@@ -100,6 +102,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #Test case(s) overwrite climo files boolean
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
+    #If this is not supplied at all, make a list of False
     if overwrite is None:
         overwrite = [False]*len(case_names)
     """if overwrite is not None:
@@ -112,6 +115,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #Test case(s) calculate climo files boolean
     calc_climos   = adf.get_cam_info("calc_cam_climo")
+    #If this is not supplied at all, make a list of False
     if calc_climos is None:
         calc_climos = [False]*len(case_names)
     """if calc_climos is not None:
