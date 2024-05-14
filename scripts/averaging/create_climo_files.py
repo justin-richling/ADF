@@ -193,8 +193,10 @@ def create_climo_files(adf, clobber=False, search=None):
         #cam_ts_loc_req = False
         #if calc_bl_climos:
         #    cam_ts_loc_req = True
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=cam_ts_loc_req)
-        output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
+        #input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=cam_ts_loc_req)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
+        #output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
+        output_bl_loc     = adf.get_baseline_info("cam_climo_loc")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
         #Extract baseline years:
