@@ -192,6 +192,7 @@ class AdfInfo(AdfConfig):
             calc_baseline_climo   = self.get_baseline_info("calc_cam_climo")
             cam_climo_loc   = self.get_baseline_info("cam_climo_loc")
             overwrite = self.get_baseline_info("cam_overwrite_climo")
+            overwrite_ts = self.get_baseline_info("cam_overwrite_ts")
 
             #
             self.__baseline_climo_loc = cam_climo_loc
@@ -202,6 +203,8 @@ class AdfInfo(AdfConfig):
             self.__overwrite_baseline_climo = overwrite
             self.__baseline_ts_save = baseline_ts_save
             self.__calc_baseline_climo = calc_baseline_climo
+            self.__overwrite_baseline_ts = overwrite_ts
+            
 
 
 
@@ -384,9 +387,13 @@ class AdfInfo(AdfConfig):
         if cam_climo_loc is None:
             cam_climo_loc = [None]*len(case_names)
 
-        overwrite = self.get_cam_info("cam_overwrite_climo")
-        if overwrite is None:
-            overwrite = [False]*len(case_names)
+        overwrite_climo = self.get_cam_info("cam_overwrite_climo")
+        if overwrite_climo is None:
+            overwrite_climo = [False]*len(case_names)
+
+        overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+        if overwrite_ts is None:
+            overwrite_ts = [False]*len(case_names)
 
 
         """self.__cam_climo_loc = cam_climo_loc
@@ -403,8 +410,9 @@ class AdfInfo(AdfConfig):
         self.__calc_test_ts = calc_case_ts
         self.__test_ts_locs = input_ts_locs
         self.__calc_test_climos = cam_climo_done
-        self.__overwrite_test_climos = overwrite
+        self.__overwrite_test_climos = overwrite_climo
         self.__test_ts_save = cam_ts_save
+        self.__overwrite_test_ts = overwrite_ts
         
 
         #Loop over cases:
@@ -709,6 +717,12 @@ class AdfInfo(AdfConfig):
     def ts_save(self):
         return {"test": copy.copy(self.__test_ts_save),
                 "baseline": copy.copy(self.__baseline_ts_save)}
+    
+    # Create property needed to return the overwrite time series files:
+    @property
+    def overwrite_ts(self):
+        return {"test": copy.copy(self.__overwrite_test_ts),
+                "baseline": copy.copy(self.__overwrite_baseline_ts)} 
 
     # Create property needed to return the time series locations:
     @property
