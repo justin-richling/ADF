@@ -525,6 +525,7 @@ class AdfInfo(AdfConfig):
 
             #Set the final directory name and save it to plot_location:
             direc_name = f"{case_name}_vs_{data_name}"
+            print("WTF",plot_dir, direc_name)
             self.__plot_location.append(os.path.join(plot_dir, direc_name))
 
             #If first iteration, then save directory name for use by baseline:
