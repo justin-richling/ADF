@@ -123,13 +123,12 @@ class AdfWeb(AdfObs):
             baseline_name = self.get_baseline_info('cam_case_name', required=True)
             #Append baseline to case list:
             case_names.append(baseline_name)
-        print("WTH",self.plot_location,'\n')
+        #End if
 
         #Loop over model cases and generate relevant website directories:
         for case_idx, case_name in enumerate(case_names):
 
             #Create new path object from user-specified plot directory path:
-            print("case_idx",case_idx,"\n")
             plot_path = Path(self.plot_location[case_idx])
 
             #Create directory path where the website will be built:
