@@ -124,6 +124,7 @@ class AdfWeb(AdfObs):
             #Append baseline to case list:
             case_names.append(baseline_name)
         #End if
+        print("WTH",self.plot_location,'\n')
 
         #Loop over model cases and generate relevant website directories:
         for case_idx, case_name in enumerate(case_names):
