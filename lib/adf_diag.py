@@ -376,7 +376,7 @@ class AdfDiag(AdfWeb):
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
             
-            #cam_ts_done = self.cam_ts_done
+            '''#cam_ts_done = self.cam_ts_done
             cam_ts_done = self.ts_done['test']
             """cam_ts_done = self.get_cam_info("cam_ts_done")
             if cam_ts_done is None:
@@ -405,8 +405,82 @@ class AdfDiag(AdfWeb):
             """calc_cam_ts = self.get_cam_info("calc_cam_ts")
             if calc_cam_ts is None:
                 calc_cam_ts = [False]*len(case_names)
-            #calc_cam_ts = self.calc_case_ts"""
+            #calc_cam_ts = self.calc_case_ts"""'''
 
+            #cam_ts_done = self.cam_ts_done
+            #cam_ts_done = self.test_ts_done
+
+
+            #cam_hist_locs = self.test_hist_locs
+
+            
+            #ts_dir = self.test_ts_locs
+
+
+            #overwrite_ts = self.overwrite_test_ts
+
+
+
+            #Grab case time series file location(s)
+            #calc_cam_ts = self.calc_test_ts
+
+
+
+
+
+
+            """
+            @property
+            def test_hist_locs(self):
+                return copy.copy(self.__test_hist_locs)
+
+            # Create property needed to return whether the time series will be saved:
+            @property
+            def test_ts_done(self):
+                return copy.copy(self.__test_ts_done)
+
+            # Create property needed to return whether to caculate time series files:
+            @property
+            def calc_test_ts(self):
+                return copy.copy(self.__calc_test_ts)
+
+            # Create property needed to return whether to caculate time series files:
+            @property
+            def test_ts_save(self):
+                return copy.copy(self.__test_ts_save)
+            
+            # Create property needed to return the overwrite time series files:
+            @property
+            def overwrite_test_ts(self):
+                return copy.copy(self.__overwrite_test_ts)
+
+            # Create property needed to return the time series locations:
+            @property
+            def test_ts_locs(self):
+                return copy.copy(self.__test_ts_locs)
+
+            # Create property needed to return whether to caculate climatology files:
+            @property
+            def calc_test_climo(self):
+                return copy.copy(self.__calc_test_climos)
+
+            # Create property needed to return the overwrite climatology files:
+            @property
+            def overwrite_test_climo(self):
+                return copy.copy(self.__overwrite_test_climos)
+
+            # Create property needed to return the climatology locations:
+            @property
+            def test_climo_locs(self):
+                return copy.copy(self.__test_climo_locs)
+            """
+
+
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
+            overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            ts_dir = self.get_cam_info("cam_ts_loc")
+            cam_hist_locs = self.get_cam_info("cam_hist_loc")
+            cam_ts_done = self.get_cam_info("cam_ts_done")
 
 
             start_years = self.climo_yrs["syears"]
@@ -729,7 +803,8 @@ class AdfDiag(AdfWeb):
         """
 
         # Extract climatology calculation config options:
-        calc_climo = self.get_cam_info("calc_cam_climo")
+        #calc_climo = self.get_cam_info("calc_cam_climo")
+        calc_climo = self.calc_test_climo
 
         # Check if climo calculation config option is a list:
         if isinstance(calc_climo, list):
@@ -945,7 +1020,8 @@ class AdfDiag(AdfWeb):
         eyears = self.climo_yrs["eyears"]
 
         # Timeseries locations:
-        cam_ts_loc = self.get_cam_info("cam_ts_loc")
+        #cam_ts_loc = self.get_cam_info("cam_ts_loc")
+        cam_ts_loc = self.test_ts_locs
 
         # set CVDP directory, recursively copy cvdp codebase to the CVDP directory
         if len(case_names) > 1:

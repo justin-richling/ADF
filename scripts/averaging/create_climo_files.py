@@ -74,12 +74,59 @@ def create_climo_files(adf, clobber=False, search=None):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
+    """
+            @property
+            def test_hist_locs(self):
+                return copy.copy(self.__test_hist_locs)
+
+            # Create property needed to return whether the time series will be saved:
+            @property
+            def test_ts_done(self):
+                return copy.copy(self.__test_ts_done)
+
+            # Create property needed to return whether to caculate time series files:
+            @property
+            def calc_test_ts(self):
+                return copy.copy(self.__calc_test_ts)
+
+            # Create property needed to return whether to caculate time series files:
+            @property
+            def test_ts_save(self):
+                return copy.copy(self.__test_ts_save)
+            
+            # Create property needed to return the overwrite time series files:
+            @property
+            def overwrite_test_ts(self):
+                return copy.copy(self.__overwrite_test_ts)
+
+            # Create property needed to return the time series locations:
+            @property
+            def test_ts_locs(self):
+                return copy.copy(self.__test_ts_locs)
+
+            # Create property needed to return whether to caculate climatology files:
+            @property
+            def calc_test_climo(self):
+                return copy.copy(self.__calc_test_climos)
+
+            # Create property needed to return the overwrite climatology files:
+            @property
+            def overwrite_test_climo(self):
+                return copy.copy(self.__overwrite_test_climos)
+
+            # Create property needed to return the climatology locations:
+            @property
+            def test_climo_locs(self):
+                return copy.copy(self.__test_climo_locs)
+            """
+
     #Test case(s) input time series file locations
     """input_ts_locs = adf.get_cam_info("cam_ts_loc")
     #If this is not supplied at all, make a list of None
     if input_ts_locs is None:
         input_ts_locs = [None]*len(case_names)"""
-    input_ts_locs = adf.ts_locs['test']
+    #input_ts_locs = adf.test_ts_locs #adf.ts_locs['test']
+    input_ts_locs = adf.get_cam_info("cam_ts_loc")
     
 
     #Test case(s) output climo file locations
@@ -87,7 +134,8 @@ def create_climo_files(adf, clobber=False, search=None):
     #If this is not supplied at all, make a list of None
     if output_locs is None:
         output_locs = [None]*len(case_names)"""
-    output_locs = adf.climo_locs['test']
+    #output_locs = adf.test_climo_locs#adf.climo_locs['test']
+    output_locs   = adf.get_cam_info("cam_climo_loc")
     
 
     #Test case(s) overwrite climo files boolean
@@ -95,7 +143,8 @@ def create_climo_files(adf, clobber=False, search=None):
     #If this is not supplied at all, make a list of False
     if overwrite is None:
         overwrite = [False]*len(case_names)"""
-    overwrite = adf.overwrite_climo['test']
+    #overwrite = adf.overwrite_test_climo#adf.overwrite_climo['test']
+    overwrite     = adf.get_cam_info("cam_overwrite_climo")
     
 
     #Test case(s) calculate climo files boolean
@@ -103,7 +152,8 @@ def create_climo_files(adf, clobber=False, search=None):
     #If this is not supplied at all, make a list of False
     if calc_climos is None:
         calc_climos = [False]*len(case_names)"""
-    calc_climos = adf.calc_climo['test']
+    #calc_climos = adf.calc_test_climo#adf.calc_climo['test']
+    calc_climos   = adf.get_cam_info("calc_cam_climo")
 
 
     #Extract simulation years:

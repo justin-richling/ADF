@@ -422,10 +422,12 @@ class AdfInfo(AdfConfig):
             syear = syears[case_idx]
             eyear = eyears[case_idx]
 
+            #Check to see if climo files are already generated
             if not calc_case_ts[case_idx]:
                 print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{case_name}'.")
                 print("  - The climo years specified in the config file cannot be verified!")
                 skip_cam_ts[case_idx] = True
+                continue
             
             if not skip_cam_ts[case_idx]:
                 #syear = syears[case_idx]
@@ -693,7 +695,22 @@ class AdfInfo(AdfConfig):
             self.__calc_baseline_climo = calc_baseline_climo
     """            
 
+    # Create property needed to return the case nicknames to user:
+    @property
+    def case_nicknames(self):
+        """Return the test case and baseline nicknames to the user if requested."""
 
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        test_nicknames = copy.copy(self.__test_nicknames)
+        base_nickname = self.__base_nickname
+
+        return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
+
+    #########
+
+    """#Set of config file arguments
+    #This is necessary for multi-case diagnostics
     # Create property needed to return the history file locations:
     @property
     def hist_locs(self):
@@ -746,21 +763,55 @@ class AdfInfo(AdfConfig):
     @property
     def climo_locs(self):
         return {"test": copy.copy(self.__test_climo_locs),
-                "baseline": copy.copy(self.__baseline_climo_loc)}
+                "baseline": copy.copy(self.__baseline_climo_loc)}"""
 
-
-    # Create property needed to return the case nicknames to user:
+    #Set of config file arguments
+    #This is necessary for multi-case diagnostics
+    # Create property needed to return the history file locations:
     @property
-    def case_nicknames(self):
-        """Return the test case and baseline nicknames to the user if requested."""
+    def test_hist_locs(self):
+        return copy.copy(self.__test_hist_locs)
 
-        #Note that copies are needed in order to avoid having a script mistakenly
-        #modify these variables, as they are mutable and thus passed by reference:
-        test_nicknames = copy.copy(self.__test_nicknames)
-        base_nickname = self.__base_nickname
+    # Create property needed to return whether the time series will be saved:
+    @property
+    def test_ts_done(self):
+        return copy.copy(self.__test_ts_done)
 
-        return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
+    # Create property needed to return whether to caculate time series files:
+    @property
+    def calc_test_ts(self):
+        return copy.copy(self.__calc_test_ts)
 
+    # Create property needed to return whether to caculate time series files:
+    @property
+    def test_ts_save(self):
+        return copy.copy(self.__test_ts_save)
+    
+    # Create property needed to return the overwrite time series files:
+    @property
+    def overwrite_test_ts(self):
+        return copy.copy(self.__overwrite_test_ts)
+
+    # Create property needed to return the time series locations:
+    @property
+    def test_ts_locs(self):
+        return copy.copy(self.__test_ts_locs)
+
+    # Create property needed to return whether to caculate climatology files:
+    @property
+    def calc_test_climo(self):
+        return copy.copy(self.__calc_test_climos)
+
+    # Create property needed to return the overwrite climatology files:
+    @property
+    def overwrite_test_climo(self):
+        return copy.copy(self.__overwrite_test_climos)
+
+    # Create property needed to return the climatology locations:
+    @property
+    def test_climo_locs(self):
+        return copy.copy(self.__test_climo_locs)
+    
     #########
 
     #Utility function to access expanded 'diag_basic_info' variables:

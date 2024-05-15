@@ -131,7 +131,8 @@ def amwg_table(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     
-    input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    input_ts_locs = adf.test_ts_locs
     ts_locs = {}
     if not input_ts_locs:
         #ts_locs = [None]
@@ -149,7 +150,8 @@ def amwg_table(adf):
 
 
     #Check if user wants to skip time series file creation
-    calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
+    #calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
+    calc_cam_ts   = adf.calc_test_ts
     calc_ts = {}
     if not calc_cam_ts:
         #calc_ts = [None]
@@ -166,6 +168,7 @@ def amwg_table(adf):
 
     
     input_climo_locs = adf.get_cam_info("cam_climo_loc")
+    #input_climo_locs = adf.test_climo_locs
     climo_locs = {}
     if not input_climo_locs:
         #climo_locs = [None]
