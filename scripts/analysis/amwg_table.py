@@ -131,51 +131,45 @@ def amwg_table(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     
+    #Check if time series location was provided
+    # * time series files need to be made from history files (save to this location)
+    # * premade time series files were supplied (use this location)
     input_ts_locs = adf.get_cam_info("cam_ts_loc")
     ts_locs = {}
     if not input_ts_locs:
-        #ts_locs = [None]
         for case in case_names:
             ts_locs[case] = None
     else:
-        #ts_locs = {}
         for i,case in enumerate(case_names):
             if input_ts_locs[i]:
-                #print()
                 ts_locs[case] = input_ts_locs[i]
             else:
                 ts_locs[case] = None
 
-
-
-    #Check if user wants to skip time series file creation
+    #Check if time series files need to be calculated
     calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
     calc_ts = {}
     if not calc_cam_ts:
-        #calc_ts = [None]
         for case in case_names:
             calc_ts[case] = False
     else:
-        #calc_ts = {}
         for i,case in enumerate(case_names):
             if calc_cam_ts[i]:
-                #print()
                 calc_ts[case] = calc_cam_ts[i]
             else:
                 calc_ts[case] = False
 
-    
+    #Check if climo location was provided
+    # * climo files need to be made from time series (save to this location)
+    # * premade climo files were supplied (use this location)
     input_climo_locs = adf.get_cam_info("cam_climo_loc")
     climo_locs = {}
     if not input_climo_locs:
-        #climo_locs = [None]
         for case in case_names:
             climo_locs[case] = None
     else:
-        #climo_locs = {}
         for i,case in enumerate(case_names):
             if input_climo_locs[i]:
-                #print()
                 climo_locs[case] = input_climo_locs[i]
             else:
                 climo_locs[case] = None
@@ -197,7 +191,9 @@ def amwg_table(adf):
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         case_names.append(baseline_name)
 
-        #Check if time series location was provided (premade climo files were supplied?)
+        #Check if time series location was provided
+        # * time series files need to be made from history files (save to this location)
+        # * premade time series files were supplied (use this location)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
         if input_ts_baseline:
             ts_locs[baseline_name] = input_ts_baseline
@@ -205,7 +201,7 @@ def amwg_table(adf):
             ts_locs[baseline_name] = None
         #End if
 
-        #Check if premade climo files were supplied        
+        #Check if time series files need to be calculated
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
         if calc_baseline_ts:
             calc_ts[baseline_name] = calc_baseline_ts
@@ -213,24 +209,15 @@ def amwg_table(adf):
             calc_ts[baseline_name] = False
         #End if
 
-        #Check if climo location was provided (premade climo files were supplied?)
+        #Check if climo location was provided
+        # * climo files need to be made from time series (save to this location)
+        # * premade climo files were supplied (use this location)
         input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
         if input_base_climo_loc:
             climo_locs[baseline_name] = input_base_climo_loc
         else:
             climo_locs[baseline_name] = None
         #End if
-
-
-
-
-        #input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
-        #if not input_climo_locs:
-        #    input_climo_locs = [None]
-        #    if input_base_climo_loc:
-        #        input_climo_locs.append(input_base_climo_loc)
-        #    else:
-        #        input_climo_locs.append(None)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
@@ -259,12 +246,24 @@ def amwg_table(adf):
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
         print(f"Making AMWG table for case'{case_name}'")
-        if calc_ts[case_name]:
-            print()
+        """if calc_ts[case_name]:
             is_climo = False
         else:
             print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
+            is_climo = True"""
+
+        """if not calc_ts[case_name]:
+            print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
             is_climo = True
+        else:
+            is_climo = False"""
+
+        
+        if not ts_locs[case_name]:
+            print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
+            is_climo = True
+        else:
+            is_climo = False
 
         print("\nis_climo:",is_climo,"\n")
 
@@ -278,9 +277,9 @@ def amwg_table(adf):
             input_location = Path(climo_locs[case_name])
         #print("input_location",input_location,"\n")
 
-        #Check that time series input directory actually exists:
+        #Check that time series/climo input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
+            errmsg = f"Directory '{input_location}' not found.  Script is exiting."
             raise AdfError(errmsg)
         #Write to debug log if enabled:
         adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
@@ -397,6 +396,7 @@ def amwg_table(adf):
                 # Note: that could be 'lev' which should trigger different behavior
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = pf.spatial_average(data)  # changes data "in place"
+            #End if
             
 
 
@@ -412,7 +412,6 @@ def amwg_table(adf):
                 # create a dataframe:
                 cols = ['variable', 'unit', 'mean']
                 row_values = [var, unit_str] + [mean_final]
-
             else:
                 # In order to get correct statistics, average to annual or seasonal
                 data = pf.annual_mean(data, whole_years=True, time_name='time')
@@ -421,6 +420,7 @@ def amwg_table(adf):
                             'standard error', '95% CI', 'trend', 'trend p-value']
                 stats_list = _get_row_vals(data)
                 row_values = [var, unit_str] + stats_list
+            #End if
 
             """# These get written to our output file:
             stats_list = _get_row_vals(data)
