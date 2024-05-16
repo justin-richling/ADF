@@ -146,7 +146,7 @@ def amwg_table(adf):
             else:
                 ts_locs[case] = None
 
-    #Check if time series files need to be calculated
+    """#Check if time series files need to be calculated
     calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
     calc_ts = {}
     if not calc_cam_ts:
@@ -157,7 +157,7 @@ def amwg_table(adf):
             if calc_cam_ts[i]:
                 calc_ts[case] = calc_cam_ts[i]
             else:
-                calc_ts[case] = False
+                calc_ts[case] = False"""
 
     #Check if climo location was provided
     # * climo files need to be made from time series (save to this location)
@@ -201,13 +201,13 @@ def amwg_table(adf):
             ts_locs[baseline_name] = None
         #End if
 
-        #Check if time series files need to be calculated
+        """#Check if time series files need to be calculated
         calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
         if calc_baseline_ts:
             calc_ts[baseline_name] = calc_baseline_ts
         else:
             calc_ts[baseline_name] = False
-        #End if
+        #End if"""
 
         #Check if climo location was provided
         # * climo files need to be made from time series (save to this location)
@@ -225,9 +225,9 @@ def amwg_table(adf):
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
-    print("ts_locs",ts_locs)
+    print("ts_locs",ts_locs,"\n")
     print("climo_locs",climo_locs)
-    print("calc_ts",calc_ts,"\n")
+    #print("calc_ts",calc_ts,"\n")
 
     #-----------------------------------------
 
