@@ -343,11 +343,62 @@ class AdfInfo(AdfConfig):
         if input_ts_locs is None:
             input_ts_locs = [None]*len(case_names)
 
+        
+
+
+
+
+
+
+
+        #Extract cam history files location:
+        cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        if cam_hist_locs is None:
+            cam_hist_locs = [None]*len(case_names)
+
+        #Check if using pre-made ts files
+        cam_ts_done   = self.get_cam_info("cam_ts_done")
+        if cam_ts_done is None:
+            cam_ts_done = [False]*len(case_names)
+
+        #Check if using pre-made ts files
+        cam_ts_save   = self.get_cam_info("cam_ts_save")
+        if cam_ts_save is None:
+            cam_ts_save = [False]*len(case_names)
+
+        ##Check if user wants to skip time series file creation
+        #calc_case_ts   = self.get_cam_info("calc_cam_ts")
+        #if calc_case_ts is None:
+        #    calc_case_ts = [False]*len(case_names)
+        
+        #Grab case time series file location(s)
+        input_ts_locs = self.get_cam_info("cam_ts_loc")
+        if input_ts_locs is None:
+            input_ts_locs = [None]*len(case_names)
+
+        #
+        cam_climo_done = self.get_cam_info("calc_cam_climo")
+        if cam_climo_done is None:
+            cam_climo_done = [None]*len(case_names)
+
+        #
+        cam_climo_loc   = self.get_cam_info("cam_climo_loc")
+        if cam_climo_loc is None:
+            cam_climo_loc = [None]*len(case_names)
+
+        overwrite_climo = self.get_cam_info("cam_overwrite_climo")
+        if overwrite_climo is None:
+            overwrite_climo = [False]*len(case_names)
+
+        overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+        if overwrite_ts is None:
+            overwrite_ts = [False]*len(case_names)
+
 
         self.__test_climo_locs = cam_climo_loc
         self.__test_hist_locs = cam_hist_locs
         self.__test_ts_done = cam_ts_done
-        self.__calc_test_ts = calc_case_ts
+        #self.__calc_test_ts = calc_case_ts
         self.__test_ts_locs = input_ts_locs
         self.__calc_test_climos = cam_climo_done
         self.__overwrite_test_climos = overwrite_climo
