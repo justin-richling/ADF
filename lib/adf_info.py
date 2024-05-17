@@ -606,6 +606,50 @@ class AdfInfo(AdfConfig):
 
     #########
 
+    #Set of config file arguments
+    #This is necessary for multi-case diagnostics
+    # Create property needed to return the history file locations:
+    @property
+    def test_hist_locs(self):
+        return copy.copy(self.__test_hist_locs)
+
+    # Create property needed to return whether the time series will be saved:
+    @property
+    def test_ts_done(self):
+        return copy.copy(self.__test_ts_done)
+
+    # Create property needed to return whether to caculate time series files:
+    @property
+    def test_ts_save(self):
+        return copy.copy(self.__test_ts_save)
+    
+    # Create property needed to return the overwrite time series files:
+    @property
+    def overwrite_test_ts(self):
+        return copy.copy(self.__overwrite_test_ts)
+
+    # Create property needed to return the time series locations:
+    @property
+    def test_ts_locs(self):
+        return copy.copy(self.__test_ts_locs)
+
+    # Create property needed to return whether to caculate climatology files:
+    @property
+    def calc_test_climo(self):
+        return copy.copy(self.__calc_test_climos)
+
+    # Create property needed to return the overwrite climatology files:
+    @property
+    def overwrite_test_climo(self):
+        return copy.copy(self.__overwrite_test_climos)
+
+    # Create property needed to return the climatology locations:
+    @property
+    def test_climo_locs(self):
+        return copy.copy(self.__test_climo_locs)
+    
+    #########
+
     #Utility function to access expanded 'diag_basic_info' variables:
     def get_basic_info(self, var_str, required=False):
         """

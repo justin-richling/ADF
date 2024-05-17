@@ -363,8 +363,8 @@ class AdfDiag(AdfWeb):
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             cam_ts_done = [self.get_baseline_info("cam_ts_done")]
-            if cam_ts_done is None:
-                cam_ts_done = [False]
+            #if cam_ts_done is None:
+            #    cam_ts_done = [False]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             #ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
             ts_dir = [self.get_baseline_info("cam_ts_loc")]
@@ -379,15 +379,23 @@ class AdfDiag(AdfWeb):
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
-            cam_ts_done = self.get_cam_info("cam_ts_done")
-            if cam_ts_done is None:
-                cam_ts_done = [False]*len(case_names)
-            cam_hist_locs = self.get_cam_info("cam_hist_loc")
+            cam_ts_done = self.test_ts_done
+            #cam_ts_done = self.get_cam_info("cam_ts_done")
+            #if cam_ts_done is None:
+            #    cam_ts_done = [False]*len(case_names)
+            
+            #cam_hist_locs = self.get_cam_info("cam_hist_loc")
+            cam_hist_locs = self.test_hist_locs
+
+            ts_dir = self.test_ts_locs
             #ts_dir = self.get_cam_info("cam_ts_loc", required=True)
-            ts_dir = self.get_cam_info("cam_ts_loc")
-            if ts_dir is None:
-                ts_dir = [None]*len(case_names)
-            overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            #ts_dir = self.get_cam_info("cam_ts_loc")
+            #if ts_dir is None:
+            #    ts_dir = [None]*len(case_names)
+            
+            #overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            overwrite_ts = self.overwrite_test_ts
+
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
         # End if
