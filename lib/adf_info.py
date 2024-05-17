@@ -344,7 +344,15 @@ class AdfInfo(AdfConfig):
             input_ts_locs = [None]*len(case_names)
 
 
-        
+        self.__test_climo_locs = cam_climo_loc
+        self.__test_hist_locs = cam_hist_locs
+        self.__test_ts_done = cam_ts_done
+        self.__calc_test_ts = calc_case_ts
+        self.__test_ts_locs = input_ts_locs
+        self.__calc_test_climos = cam_climo_done
+        self.__overwrite_test_climos = overwrite_climo
+        self.__test_ts_save = cam_ts_save
+        self.__overwrite_test_ts = overwrite_ts
 
         #Loop over cases:
         syears_fixed = []
