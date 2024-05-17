@@ -592,7 +592,6 @@ class AdfInfo(AdfConfig):
         return {"syears":syears,"eyears":eyears,
                 "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
 
-
     # Create property needed to return the case nicknames to user:
     @property
     def case_nicknames(self):
