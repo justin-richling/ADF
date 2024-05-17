@@ -346,6 +346,7 @@ class AdfInfo(AdfConfig):
             eyear = eyears[case_idx]
 
             #Check if time series files exist, if so don't rely on climo years
+            print("cam_ts_done:",cam_ts_done,type(cam_ts_done),"\n")
             if cam_ts_done[case_idx]:
                 cam_hist_locs[case_idx] = None
 
