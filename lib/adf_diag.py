@@ -385,6 +385,8 @@ class AdfDiag(AdfWeb):
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
             #ts_dir = self.get_cam_info("cam_ts_loc", required=True)
             ts_dir = self.get_cam_info("cam_ts_loc")
+            if ts_dir is None:
+                ts_dir = [None]*len(case_names)
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]

@@ -341,7 +341,7 @@ class AdfInfo(AdfConfig):
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
         if input_ts_locs is None:
-            input_ts_locs = [False]*len(case_names)
+            input_ts_locs = [None]*len(case_names)
 
         #Loop over cases:
         syears_fixed = []
