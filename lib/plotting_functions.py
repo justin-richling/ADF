@@ -98,7 +98,6 @@ from cartopy.util import add_cyclic_point
 import geocat.comp as gcomp
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.lines import Line2D
-import matplotlib.cm as cm
 
 from adf_diag import AdfDiag
 from adf_base import AdfError
@@ -605,7 +604,8 @@ def domain_stats(data, domain):
 def make_polar_plot(wks, case_nickname, base_nickname,
                     case_climo_yrs, baseline_climo_yrs,
                     d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,
-                    domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False, **kwargs):
+                    domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False,
+                    paleo_proj=False, landfrac_da=None, **kwargs):
 
     """Make a stereographic polar plot for the given data and hemisphere.
 
@@ -631,6 +631,15 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         Defaults to pole to 45-degrees, all longitudes
     hemisphere : {'NH', 'SH'}, optional
         Hemsiphere to plot
+    obs: boolean
+        check if comparing against obs to alter plot titles
+    paleo_proj: boolean
+        check if this is a paleo climate run
+        if True, create continents based off LANDFRAC variable
+        and skip cartopy projection
+            - LANDFRAC must be present for this case
+    landfrac_da: xr.DataArray
+        necessary data array for LANDFEC for Paleo diagnsotics
     kwargs : dict, optional
         variable-dependent options for plots, See Notes.
 
@@ -752,29 +761,78 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     fig = plt.figure(figsize=(10,10))
     gs = mpl.gridspec.GridSpec(2, 4, wspace=0.9)
-
-    ax1 = plt.subplot(gs[0, :2], projection=proj)
-    ax2 = plt.subplot(gs[0, 2:], projection=proj)
-    ax3 = plt.subplot(gs[1, 1:3], projection=proj)
+    if paleo_proj:
+        ax1 = plt.subplot(gs[0, :2], polar=True)
+        ax2 = plt.subplot(gs[0, 2:], polar=True)
+        ax3 = plt.subplot(gs[1, 1:3], polar=True)
+    else:
+        ax1 = plt.subplot(gs[0, :2], projection=proj)
+        ax2 = plt.subplot(gs[0, 2:], projection=proj)
+        ax3 = plt.subplot(gs[1, 1:3], projection=proj)
 
     levs = np.unique(np.array(levels1))
     levs_diff = np.unique(np.array(levelsdiff))
 
-    if len(levs) < 2:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
-        ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
+    if paleo_proj:
+        #Threshold land fraction values to identify land areas
+        land_mask = landfrac_da > 0.5
 
-        img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
-        ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
-    else:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
-        img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+        # Subset latitude range based on hemisphere
+        subset_land_mask = land_mask.sel(lat=slice(domain[2],domain[3]))
+        land_lons, land_lats = np.meshgrid(subset_land_mask.lon, subset_land_mask.lat)
 
-    if len(levs_diff) < 2:
-        img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
-        ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+        if hemisphere.upper() == "NH":
+            #Need to flip longitudes for NH to getter correct "projection"
+            land_lons = land_lons[::-1]
+            subset_land_mask = subset_land_mask[:,::-1]
+
+            lons = lons[::-1]
+            d1_cyclic = d1_cyclic[:,::-1]
+            d2_cyclic = d2_cyclic[:,::-1]
+            dif_cyclic = dif_cyclic[:,::-1]
+
+        if len(levs) < 2:
+            #img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            img1 = ax1.contourf(lons * np.pi / 180, lats, d1_cyclic, colors="w", norm=norm1)
+            ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
+
+            #img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            img2 = ax2.contourf(lons * np.pi / 180, lats, d2_cyclic, colors="w", norm=norm1)
+            ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
+        else:
+            img1 = ax1.contourf(lons * np.pi / 180, lats, d1_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
+            img2 = ax2.contourf(lons * np.pi / 180, lats, d1_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
+
+        if len(levs_diff) < 2:
+            #img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+            img3 = ax3.contourf(lons * np.pi / 180, lats, dif_cyclic, colors="w", norm=dnorm)
+            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+        else:
+            #img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+            img3 = ax3.contourf(lons * np.pi / 180, lats, dif_cyclic, cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        
+        #Now plot continent outlines over variable contour fills
+        for a in [ax1, ax2, ax3]:
+            a.contour(land_lons * np.pi / 180, land_lats, subset_land_mask,
+                        levels=[0.5], colors='black')
+        #End for
+
     else:
-        img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        if len(levs) < 2:
+            img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
+
+            img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
+        else:
+            img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+            img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+
+        if len(levs_diff) < 2:
+            img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+        else:
+            img3 = ax3.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
 
     #Set Main title for subplots:
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
@@ -807,19 +865,46 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         ax2.set_ylabel(f"{dif.units}")
         ax3.set_ylabel(f"{dif.units}")
 
+    #Format the axis
+    if paleo_proj:
+        if hemisphere.upper() == "NH":
+            #Set direction of angular axis
+            [a.set_theta_direction(-1) for a in [ax1, ax2, ax3]]
+            
+            #Set zero location of angular axis
+            [a.set_theta_zero_location('S') for a in [ax1, ax2, ax3]]
 
-    [a.set_extent(domain, ccrs.PlateCarree()) for a in [ax1, ax2, ax3]]
-    [a.coastlines() for a in [ax1, ax2, ax3]]
+            #Set proper radius for NH
+            [a.set_rmin(90) for a in [ax1, ax2, ax3]]
+            [a.set_rmax(45) for a in [ax1, ax2, ax3]]
+        else:
+            #Set direction of angular axis
+            [a.set_theta_direction(-1) for a in [ax1, ax2, ax3]]
+            
+            #Set zero location of angular axis
+            [a.set_theta_zero_location('N') for a in [ax1, ax2, ax3]]
+        #End if
 
-    # __Follow the cartopy gallery example to make circular__:
-    # Compute a circle in axes coordinates, which we can use as a boundary
-    # for the map. We can pan/zoom as much as we like - the boundary will be
-    # permanently circular.
-    theta = np.linspace(0, 2*np.pi, 100)
-    center, radius = [0.5, 0.5], 0.5
-    verts = np.vstack([np.sin(theta), np.cos(theta)]).T
-    circle = mpl.path.Path(verts * radius + center)
-    [a.set_boundary(circle, transform=a.transAxes) for a in [ax1, ax2, ax3]]
+        # Remove latitude and longitude lines and labels
+        [a.set_xticklabels([]) for a in [ax1, ax2, ax3]]
+        [a.set_yticklabels([]) for a in [ax1, ax2, ax3]]
+        [a.grid(False) for a in [ax1, ax2, ax3]]
+    #End if
+
+
+    else:
+        [a.set_extent(domain, ccrs.PlateCarree()) for a in [ax1, ax2, ax3]]
+        [a.coastlines() for a in [ax1, ax2, ax3]]
+
+        # __Follow the cartopy gallery example to make circular__:
+        # Compute a circle in axes coordinates, which we can use as a boundary
+        # for the map. We can pan/zoom as much as we like - the boundary will be
+        # permanently circular.
+        theta = np.linspace(0, 2*np.pi, 100)
+        center, radius = [0.5, 0.5], 0.5
+        verts = np.vstack([np.sin(theta), np.cos(theta)]).T
+        circle = mpl.path.Path(verts * radius + center)
+        [a.set_boundary(circle, transform=a.transAxes) for a in [ax1, ax2, ax3]]
 
     # __COLORBARS__
     cb_mean_ax = inset_axes(ax2,
@@ -854,7 +939,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                            case_climo_yrs, baseline_climo_yrs,
                            plev, umdlfld_nowrap, vmdlfld_nowrap,
                            uobsfld_nowrap, vobsfld_nowrap,
-                           udiffld_nowrap, vdiffld_nowrap, obs=False, **kwargs):
+                           udiffld_nowrap, vdiffld_nowrap, obs=False,
+                           paleo_proj=False, landfrac_da=None,**kwargs):
 
     """This plots a vector plot.
 
@@ -914,6 +1000,14 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     vobsfld, _   = add_cyclic_point(vobsfld_nowrap, coord=vobsfld_nowrap['lon'])
     udiffld, _   = add_cyclic_point(udiffld_nowrap, coord=udiffld_nowrap['lon'])
     vdiffld, _   = add_cyclic_point(vdiffld_nowrap, coord=vdiffld_nowrap['lon'])
+
+    if paleo_proj:
+        #Threshold land fraction values to identify land areas
+        land_mask = landfrac_da > 0.5
+
+        # Subset latitude range based on hemisphere
+        #subset_land_mask = land_mask.sel(lat=slice(domain[2],domain[3]))
+        land_lons, land_lats = np.meshgrid(land_mask.lon, land_mask.lat)
 
     # create mesh for plots:
     lons, lats = np.meshgrid(lon, lat)
@@ -995,6 +1089,10 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
     img2 = ax2.contourf(lons, lats, obs_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True)
     ax2.quiver(lons[skip], lats[skip], uobsfld[skip], vobsfld[skip], obs_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
+    
+    if paleo_proj:
+        ax1.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
+        ax2.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
 
     # We should think about how to do plot customization and defaults.
     # Here I'll just pop off a few custom ones, and then pass the rest into mpl.
@@ -1045,7 +1143,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     # Add cosmetic plot features:
     for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-        a.coastlines()
+        if not paleo_proj:
+            a.coastlines()
         a.set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
         a.set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
         a.tick_params('both', length=5, width=1.5, which='major')
@@ -1068,6 +1167,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     # Plot vector differences:
     img3 = ax3.contourf(lons, lats, diff_mag, transform=ccrs.PlateCarree(), transform_first=True, norm=normdiff, cmap='PuOr', alpha=0.5)
     ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
+    if paleo_proj:
+        ax3.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
 
     # Add color bar to difference plot:
     cb_d_ax = inset_axes(ax3,
@@ -1091,7 +1192,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
-                      mdlfld, obsfld, diffld, obs=False, **kwargs):
+                      mdlfld, obsfld, diffld, obs=False, paleo_proj=False, landfrac_da=None,
+                      **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
 
     Parameters
@@ -1206,6 +1308,14 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                                         dateline_direction_label=False)
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
+    print("paleo??",paleo_proj)
+    if paleo_proj:
+        #Threshold land fraction values to identify land areas
+        land_mask = landfrac_da > 0.5
+
+        # Subset latitude range based on hemisphere
+        #subset_land_mask = land_mask.sel(lat=slice(domain[2],domain[3]))
+        land_lons, land_lats = np.meshgrid(land_mask.lon, land_mask.lat)
 
     for i, a in enumerate(wrap_fields):
 
@@ -1217,13 +1327,47 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
+        """if i == 0:
+            test_levels = cp_info['test_levels1']
+            levs = np.unique(np.array(test_levels))
+            cmap = cp_info['cmap1']
+            test_norm = cp_info['test_norm1']
+        if i == 1:
+            base_levels = cp_info['base_levels1']
+            levs = np.unique(np.array(base_levels))
+            cmap = cp_info['cmap1']
+            base_norm = cp_info['base_norm1']"""
 
         levs = np.unique(np.array(levels))
         if len(levs) < 2:
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
-            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
+            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,extend='both',
+                       **cp_info['contourf_opt']))
+            if paleo_proj:
+                #img.append(ax[i].contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+                ax[i].contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black')
+        """if i == 0:
+            img.append(ax[i].contourf(lons, lats, a, levels=test_levels, cmap=cmap, norm=test_norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,
+                       **cp_info['contourf_opt']))
+            if paleo:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+        if i == 1:
+            img.append(ax[i].contourf(lons, lats, a, levels=base_levels, cmap=cmap, norm=base_norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,
+                       **cp_info['contourf_opt']))
+            if paleo:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))
+        if i == 2:
+            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
+                       transform=ccrs.PlateCarree(), transform_first=True,
+                       **cp_info['contourf_opt']))
+            if paleo:
+                img.append(ax.contour(land_mask.lon, land_mask.lat, land_mask, levels=[0.5], colors='black'))"""
+
         #End if
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
 
@@ -1271,7 +1415,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-        a.coastlines()
+        if not paleo_proj:
+            a.coastlines()
         a.set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
         a.set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
         a.tick_params('both', length=5, width=1.5, which='major')
@@ -1289,6 +1434,16 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     borderpad=0,
                     )
     fig.colorbar(img[1], cax=cb_mean_ax, **cp_info['colorbar_opt'])
+
+    """cb_mean_ax = inset_axes(ax1,
+                    width="5%",  # width = 5% of parent_bbox width
+                    height="100%",  # height : 100%
+                    loc='lower left',
+                    bbox_to_anchor=(-1.05, 0, 1, 1),
+                    bbox_transform=ax2.transAxes,
+                    borderpad=0,
+                    )
+    fig.colorbar(img[0], cax=cb_mean_ax, **cp_info['colorbar_opt'])"""
 
     cb_diff_ax = inset_axes(ax3,
                     width="5%",  # width = 5% of parent_bbox width
@@ -1754,7 +1909,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         - 'subplots_opt': mpl kwargs for subplots
         - 'contourf_opt': mpl kwargs for contourf
         - 'colorbar_opt': mpl kwargs for colorbar
-        - 'diff_colorbar_opt' : mpl kwargs for difference colorbar
         - 'normdiff': color normalization for difference panel
         - 'cmapdiff': colormap for difference panel
         - 'levelsdiff': contour levels for difference panel
@@ -1778,29 +1932,57 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if 'contour_levels' in kwargs:
         levels1 = kwargs['contour_levels']
-        if ('non_linear' in kwargs) and (kwargs['non_linear']):
-            cmap_obj = cm.get_cmap(cmap1)
-            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-        else:
-            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     elif 'contour_levels_range' in kwargs:
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
-
         levels1 = np.arange(*kwargs['contour_levels_range'])
-        if ('non_linear' in kwargs) and (kwargs['non_linear']):
-            cmap_obj = cm.get_cmap(cmap1)
-            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-        else:
-            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        #norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     else:
         levels1 = np.linspace(minval, maxval, 12)
-        if ('non_linear' in kwargs) and (kwargs['non_linear']):
-            cmap_obj = cm.get_cmap(cmap1)
-            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-        else:
-            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     #End if
+
+    """minval = np.min(adata)
+    maxval = np.max(adata)
+    if 'test_contour_levels' in kwargs:
+        test_levels1 = kwargs['test_contour_levels']
+        test_norm1 = mpl.colors.Normalize(vmin=min(test_levels1), vmax=max(test_levels1))
+    elif 'test_contour_levels_range' in kwargs:
+        assert len(kwargs['test_contour_levels_range']) == 3, \
+        "test_contour_levels_range must have exactly three entries: min, max, step"
+        test_levels1 = np.arange(*kwargs['test_contour_levels_range'])
+        #norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        if kwargs['test_no_norm']:
+            print()
+            test_norm1 = None
+        else:
+            test_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    else:
+        test_levels1 = np.linspace(minval, maxval, 12)
+        test_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    #End if
+
+    minval = np.min(bdata)
+    maxval = np.max(bdata)
+    if 'base_contour_levels' in kwargs:
+        base_levels1 = kwargs['base_contour_levels']
+        base_norm1 = mpl.colors.Normalize(vmin=min(base_levels1), vmax=max(base_levels1))
+    elif 'base_contour_levels_range' in kwargs:
+        assert len(kwargs['base_contour_levels_range']) == 3, \
+        "base_contour_levels_range must have exactly three entries: min, max, step"
+        base_levels1 = np.arange(*kwargs['base_contour_levels_range'])
+        #norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        if kwargs['base_no_norm']:
+            print()
+            base_norm1 = None
+        else:
+            base_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    else:
+        base_levels1 = np.linspace(minval, maxval, 12)
+        base_norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    #End if"""
 
     #Check if the minval and maxval are actually different.  If not,
     #then set "levels1" to be an empty list, which will cause the
@@ -1854,19 +2036,30 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     subplots_opt = {}
     contourf_opt = {}
     colorbar_opt = {}
-    diff_colorbar_opt = {}
 
     # extract any MPL kwargs that should be passed on:
     if 'mpl' in kwargs:
         subplots_opt.update(kwargs['mpl'].get('subplots',{}))
         contourf_opt.update(kwargs['mpl'].get('contourf',{}))
         colorbar_opt.update(kwargs['mpl'].get('colorbar',{}))
-        diff_colorbar_opt.update(kwargs['mpl'].get('diff_colorbar',{}))
     #End if
+    """return {'subplots_opt': subplots_opt,
+            'contourf_opt': contourf_opt,
+            'colorbar_opt': colorbar_opt,
+            'normdiff': normdiff,
+            'cmapdiff': cmapdiff,
+            'levelsdiff': levelsdiff,
+            'cmap1': cmap1,
+            'base_norm1': base_norm1,
+            'base_levels1': base_levels1,
+            'test_norm1': test_norm1,
+            'test_levels1': test_levels1,
+            'plot_log_p': plot_log_p
+            }"""
+
     return {'subplots_opt': subplots_opt,
             'contourf_opt': contourf_opt,
             'colorbar_opt': colorbar_opt,
-            'diff_colorbar_opt': diff_colorbar_opt,
             'normdiff': normdiff,
             'cmapdiff': cmapdiff,
             'levelsdiff': levelsdiff,
@@ -1953,6 +2146,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
         levs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
+
         if len(levs) < 2:
             img0, ax[0] = zonal_plot(adata['lat'], azm, ax=ax[0])
             ax[0].text(0.4, 0.4, empty_message, transform=ax[0].transAxes, bbox=props)
@@ -1970,7 +2164,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
         else:
             img2, ax[2] = zonal_plot(adata['lat'], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
-            fig.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
+            fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
 
         ax[0].set_title(case_title, loc='left', fontsize=tiFontSize)
         ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)

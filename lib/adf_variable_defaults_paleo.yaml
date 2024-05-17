@@ -81,8 +81,7 @@ Rgas: 287.04 #[J/K/Kg]=8.314/0.028965
 #+++++++++++++
 # CAM CHEM Variables
 #+++++++++++++
-#List of variables for CAM-CHEM runs that have different constituents than regular CAM runs
-cam_chem_list: ["SOA","SO4"]
+cam_chem_list: ["SOA"]
 
 #+++++++++++++
 # Category: Microphysics
@@ -213,6 +212,7 @@ BC:
     colorbar:
       label : '$\mu$g/m3'
   category: "Aerosols"
+  #derivable_from: ["bc_a1", "bc_a4"]
   derive:
     from: ["bc_a1", "bc_a4"]
 
@@ -226,6 +226,7 @@ POM:
     colorbar:
       label : '$\mu$g/m3'
   category: "Aerosols"
+  #derivable_from: ["pom_a1", "pom_a4"]
   derive:
     from: ["pom_a1", "pom_a4"]
 
@@ -239,6 +240,8 @@ SO4:
     colorbar:
       label : '$\mu$g/m3'
   category: "Aerosols"
+  #derivable_from_cam_chem: ["so4_a1", "so4_a2", "so4_a3", "so4_a5"]
+  #derivable_from: ["so4_a1", "so4_a2", "so4_a3"]
   derive:
     from: ["so4_a1", "so4_a2", "so4_a3"]
     from_cam_chem: ["so4_a1", "so4_a2", "so4_a3", "so4_a5"]
@@ -253,9 +256,13 @@ SOA:
     colorbar:
       label : '$\mu$g/m3'
   category: "Aerosols"
+  #derivable_from: ["soa_a1", "soa_a2"]
+  #derivable_from_cam_chem: ["soa1_a1", "soa2_a1", "soa3_a1", "soa4_a1", "soa5_a1", "soa1_a2", "soa2_a2", "soa3_a2", "soa4_a2", "soa5_a2"]
   derive:
     from: ["soa_a1", "soa_a2"]
     from_cam_chem: ["soa1_a1", "soa2_a1", "soa3_a1", "soa4_a1", "soa5_a1", "soa1_a2", "soa2_a2", "soa3_a2", "soa4_a2", "soa5_a2"]
+  
+
 
 DUST:
   colormap: "RdBu_r"
@@ -269,6 +276,7 @@ DUST:
     colorbar:
       label : '$\mu$g/m3'
   category: "Aerosols"
+  #derivable_from: ["dst_a1", "dst_a2", "dst_a3"]
   derive:
     from: ["dst_a1", "dst_a2", "dst_a3"]
 
@@ -288,8 +296,11 @@ SeaSalt:
       label : '$\mu$g/m3'
       ticks: [-10,8,6,4,2,0,-2,-4,-6,-8,-10]
   category: "Aerosols"
+  #derivable_from: ["ncl_a1", "ncl_a2", "ncl_a3"]
   derive:
     from: ["ncl_a1", "ncl_a2", "ncl_a3"]
+
+
 
 #+++++++++++++++++
 # Category: Budget
@@ -385,6 +396,7 @@ H2SO4:
 
 N2O:
   category: "Composition"
+
 
 #+++++++++++++++++
 # Category: Clouds
@@ -596,6 +608,7 @@ PRECT:
   obs_name: "ERAI"
   obs_var_name: "PRECT"
   category: "Hydrologic cycle"
+  #derivable_from: ['PRECL','PRECC']
   derive:
     from: ['PRECL','PRECC']
 
@@ -714,6 +727,7 @@ OCNFRAC:
 
 LANDFRAC:
   category: "Surface variables"
+
 
 #+++++++++++++++++
 # Category: State
@@ -834,7 +848,6 @@ QRS:
 #+++++++++++++++++
 # Category: TOA energy flux
 #+++++++++++++++++
-
 RESTOM:
   colormap: "RdBu_r"
   contour_levels_range: [-100, 100, 5]
@@ -847,6 +860,7 @@ RESTOM:
     colorbar:
       label : "W m$^{-2}$"
   category: "TOA energy flux"
+  #derivable_from: ['FLNT','FSNT']
   derive:
     #from: ['FLNT','FSNT']
 
@@ -1128,7 +1142,6 @@ OMEGAT:
 #++++++++++++++
 # Category: TEM
 #++++++++++++++
-
 uzm:
   ylim: [1e3,1]
   units: m s-1

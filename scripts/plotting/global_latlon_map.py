@@ -99,6 +99,23 @@ def global_latlon_map(adfobj):
     #Notify user that script has started:
     print("\n  Generating lat/lon maps...")
 
+    #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
+    landfrac = None
+
+    #Get ADF basic run arguments
+    basic_info_dict = adfobj.read_config_var("diag_basic_info")
+
+    if "paleo_vs_pi" in basic_info_dict:
+        paleo_pi = basic_info_dict["paleo_vs_pi"]
+        if not paleo_pi:
+            paleo_proj = True
+            print("\n  Paleo continents will be made from LANDFRAC")
+        else:
+            paleo_proj = False
+
+    #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
+    landfrac = None
+
     #
     # Use ADF api to get all necessary information
     #
@@ -153,7 +170,6 @@ def global_latlon_map(adfobj):
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
     # -- So check for it, and default to png
-    basic_info_dict = adfobj.read_config_var("diag_basic_info")
     plot_type = basic_info_dict.get('plot_type', 'png')
     print(f"\t NOTE: Plot type is set to {plot_type}")
 
@@ -168,6 +184,20 @@ def global_latlon_map(adfobj):
     if not adfobj.compare_obs:
         dclimo_loc  = Path(data_loc)
     #-----------------------
+
+    if paleo_proj:
+        #Try to grab the LANDFRAC from the baseline case for Paleo continent creation
+        landfrac_fils = sorted(mclimo_rg_loc.glob(f"*LANDFRAC*_baseline.nc"))
+
+        #Check if LANDFRAC file is avilable for continent creation
+        if landfrac_fils:
+            landfrac_ds = pf.load_dataset(landfrac_fils)
+            landfrac = landfrac_ds["LANDFRAC"].isel(time=0)
+        else:
+            errmsg = "Missing LANDFRAC, can not create Paleo polar maps.\n"
+            errmsg += "Please make sure it is in CAM output. ADF will move on."
+            print(errmsg)
+            return
 
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
@@ -361,7 +391,7 @@ def global_latlon_map(adfobj):
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
                                                  mseasons[s], oseasons[s], dseasons[s],
-                                                 obs, **vres)
+                                                 obs, paleo_proj=paleo_proj, landfrac_da=landfrac, **vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -455,7 +485,7 @@ def global_latlon_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s],
-                                                     obs, **vres)
+                                                     obs, paleo_proj=paleo_proj, landfrac_da=landfrac, **vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
