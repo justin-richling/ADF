@@ -340,6 +340,8 @@ class AdfInfo(AdfConfig):
         #Grab case time series file location(s)
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
+        if input_ts_locs is None:
+            input_ts_locs = [False]*len(case_names)
 
         #Loop over cases:
         syears_fixed = []
