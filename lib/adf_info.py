@@ -174,19 +174,19 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
-            if baseline_ts_done is None:
-                baseline_ts_done = False
+            #if baseline_ts_done is None:
+            #    baseline_ts_done = False
 
             #Grab baseline time series file location
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-            if input_ts_baseline is None:
-                input_ts_baseline = False
+            #if input_ts_baseline is None:
+            #    input_ts_baseline = False
             #input_ts_loc = Path(input_ts_baseline)
 
             #Check if any time series locations exist (could be relying on premade climo files)
             if not input_ts_baseline:
                 msg = "\nWARNING: User indicates they don't want to rely on the ADF"
-                msg += f"for timeseries or history files for '{data_name}'."
+                msg += f"for timeseries or history files for '{data_name}'.\n"
                 msg += "  - The climo years specified in the config file cannot be verified!"
                 print(msg)
                 pass
@@ -325,7 +325,7 @@ class AdfInfo(AdfConfig):
             eyears = [None]*len(case_names)
         #End if
 
-        #Extract cam history files location:
+        """#Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
         if cam_hist_locs is None:
             cam_hist_locs = [False]*len(case_names)
@@ -341,7 +341,7 @@ class AdfInfo(AdfConfig):
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
         if input_ts_locs is None:
-            input_ts_locs = [None]*len(case_names)
+            input_ts_locs = [None]*len(case_names)"""
 
         
 
@@ -379,7 +379,7 @@ class AdfInfo(AdfConfig):
         #
         cam_climo_done = self.get_cam_info("calc_cam_climo")
         if cam_climo_done is None:
-            cam_climo_done = [None]*len(case_names)
+            cam_climo_done = [False]*len(case_names)
 
         #
         cam_climo_loc   = self.get_cam_info("cam_climo_loc")
@@ -394,7 +394,7 @@ class AdfInfo(AdfConfig):
         if overwrite_ts is None:
             overwrite_ts = [False]*len(case_names)
 
-
+        #Write out all updated test variable lists from config file
         self.__test_climo_locs = cam_climo_loc
         self.__test_hist_locs = cam_hist_locs
         self.__test_ts_done = cam_ts_done
