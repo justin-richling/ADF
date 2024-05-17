@@ -356,35 +356,72 @@ class AdfDiag(AdfWeb):
 
         # End def
 
-        
         # Check if baseline time-series files are being created:
         if baseline:
             # Use baseline settings, while converting them all
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             cam_ts_done = [self.get_baseline_info("cam_ts_done")]
+            if cam_ts_done is None:
+                cam_ts_done = [False]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            #ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
             ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
-
             #Check if user wants to skip time series file creation
             calc_cam_ts   = [self.get_baseline_info("calc_cam_ts")]
 
-            #Grab climo years
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
+            
+            #cam_ts_done = self.cam_ts_done
             cam_ts_done = self.get_cam_info("cam_ts_done")
+            if cam_ts_done is None:
+                cam_ts_done = [False]*len(case_names)
+
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            #ts_dir = self.get_cam_info("cam_ts_loc", required=True)
+            if cam_hist_locs is None:
+                cam_hist_locs = [False]*len(case_names)
+            #cam_hist_locs = self.cam_hist_locs
+            
             ts_dir = self.get_cam_info("cam_ts_loc")
+            if ts_dir is None:
+                ts_dir = [False]*len(case_names)
+            #ts_dir = self.input_ts_locs
+
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            if overwrite_ts is None:
+                overwrite_ts = [False]*len(case_names)
+            """if overwrite_ts is not None:
+                for i,loc in enumerate(overwrite_ts):
+                    if loc is None:
+                        overwrite_ts[i] = False
+            else:
+                overwrite_ts = [False]*len(case_names)"""
+
+            #Grab case time series file location(s)
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
+            if calc_cam_ts is None:
+                calc_cam_ts = [False]*len(case_names)
+            #calc_cam_ts = self.calc_case_ts
+
+
+
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
         # End if
+
+
+
+        """#cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
+        if calc_cam_ts is not None:
+            for i,loc in enumerate(calc_cam_ts):
+                if loc is None:
+                    calc_cam_ts[i] = False
+        else:
+            calc_cam_ts = [False]*len(case_names)"""
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info("hist_str")
@@ -405,12 +442,11 @@ class AdfDiag(AdfWeb):
 
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
-            if not ts_dir[case_idx]:
+            if not calc_cam_ts[case_idx]:
                 emsg = "\tConfiguration file indicates time series files don't need to be calculated."
                 print(emsg)
                 no_msg = True
                 continue
-            #End if
 
             if cam_ts_done[case_idx]:
                 emsg = "\tConfiguration file indicates time series files have been pre-computed."
@@ -565,77 +601,21 @@ class AdfDiag(AdfWeb):
                     diag_var_list += ["T"]
             #End aerosol calcs
 
-            #Initialize dictionary for derived var with needed list of constituents
-            constit_dict = {}
             for var in diag_var_list:
-                #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
-
-                    #Initialiaze list for constituents
-                    #NOTE: This is if the variable is NOT derivable but need
-                    # an empty list as a check later
-                    constit_list = []
-
-                    #intialize boolean to check if variable is derivable
-                    derive = False # assume it can't be derived and update if it can
-                    #intialize boolean for CAM-CHEM variable
-                    get_cam_chem_constits = False
-
-                    #Try and build variable from 'derivable_from'
                     if "derivable_from" in vres:
-                        derive = True
                         constit_list = vres["derivable_from"]
-                        #Check if variable is potentially part of a CAM-CHEM run
-                        if any(item not in hist_file_ds.data_vars for item in constit_list):
-                            if var in res["cam_chem_list"]:
-                                #Set check to look for CAM-CHEM constituents in variable defaults
-                                get_cam_chem_constits = True
-                        #End if
-
-                        #If this is a CAM-CHEM run, update constit_list
-                        if get_cam_chem_constits:
-                            print("Looks like this a CAM-CHEM run,")
-                            print(f" checking constituents for '{var}'")
-                            if "derivable_from_cam_chem" in vres:
-                                constit_list = vres['derivable_from_cam_chem']
-                            else:
-                                derive = False
-                                errmsg = "\n Missing 'derivable_from_cam_chem' "
-                                errmsg += f"config argument for {var}."
-                                errmsg += "\n\tPlease remove variable from ADF run or set"
-                                errmsg += " appropriate argument in variable defaults yaml file."
-                                print(errmsg)
-                            #End if
-                        #End if
-
-                        #Now check if this variable can be derived
-                        if derive:
-                            for constit in constit_list:
-                                if constit not in diag_var_list:
-                                    diag_var_list.append(constit)
-                            #Add variable to list to derive
-                            vars_to_derive.append(var)
-                            #Add constituent list to variable key in dictionary
-                            constit_dict[var] = constit_list
-                            continue
-                        #End if
-
+                        for constit in constit_list:
+                            if constit not in diag_var_list:
+                                diag_var_list.append(constit)
+                        vars_to_derive.append(var)
+                        continue
                     else:
-                        errmsg = f"\n Missing 'derivable_from' config argument for {var}."
-                        errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
-                        errmsg += " argument in variable defaults yaml file."
-                        print(errmsg)
-                    #End if 'derivable_from'
-
-                    #Lastly, raise error if the variable is not a derived quanitity but is also not
-                    #in the history file(s)
-                    if (not derive) and (not constit_list):
                         msg = f"WARNING: {var} is not in the file {hist_files[0]}."
                         msg += " No time series will be generated."
                         print(msg)
                         continue
-                #End if
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
@@ -721,8 +701,7 @@ class AdfDiag(AdfWeb):
 
             if vars_to_derive:
                 self.derive_variables(
-                    res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx],
-                    constit_dict=constit_dict
+                    res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
                 )
             # End with
 
@@ -773,6 +752,9 @@ class AdfDiag(AdfWeb):
             # Just set to False:
             calc_bl_climo = False
         # End if
+
+        print("calc_climo",calc_climo)
+        print("calc_bl_climo",calc_bl_climo,"\n")
 
         # Check if a user wants any climatologies to be calculated:
         if calc_climo or calc_bl_climo:
@@ -981,12 +963,6 @@ class AdfDiag(AdfWeb):
             )
         # End if
 
-        #intialize objects that might not be declared later
-        case_name_baseline = None
-        baseline_ts_loc = None
-        syears_baseline = None
-        eyears_baseline = None
-
         # check to see if there is a CAM baseline case. If there is, read in relevant information.
         if not self.get_basic_info("compare_obs"):
             case_name_baseline = self.get_baseline_info("cam_case_name")
@@ -1108,8 +1084,7 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None,
-                         constit_dict=None, overwrite=None):
+    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1121,36 +1096,32 @@ class AdfDiag(AdfWeb):
 
         """
 
-        #Loop through derived variables
         for var in vars_to_derive:
             print(f"\t - deriving time series for {var}")
 
-            #Grab list of constituents for this variable
-            constit_list = constit_dict[var]
+            #Check whether there are parts to derive from and if there is an associated equation
+            vres = res.get(var, {})
+            if "derivable_from" in vres:
+                constit_list = vres['derivable_from']
+            else:
+                print("WARNING: No constituents listed in defaults config file, moving on")
+                continue
 
-            #Grab all required time series files for derived variable
+            #Grab all required time series files for derived var
             constit_files = []
             for constit in constit_list:
-                #Check if the constituent file is present, if so add it to list
                 if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
                     constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
-            #Check if all the necessary constituent files were found
+            #Check if all the constituent files were found
             if len(constit_files) != len(constit_list):
                 ermsg = f"Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                 print(ermsg)
-                #Add what's missing to debug log
-                dmsg = "create time series:"
-                dmsg += f"\n\tneeded constituents for derivation of {var}:\n\t\t- {constit_list}\n"
-                dmsg += f"\tfound constituent file(s) in {Path(constit_files[0]).parent}:\n"
-                dmsg += f"\t\t- {[Path(f).parts[-1] for f in constit_files if Path(f).is_file()]}"
-                self.debug_log(dmsg)
-
             else:
                 #Open a new dataset with all the constituent files/variables
                 ds = xr.open_mfdataset(constit_files)
-
+    
                 # create new file name for derived variable
                 derived_file = constit_files[0].replace(constit_list[0], var)
 
@@ -1159,9 +1130,9 @@ class AdfDiag(AdfWeb):
                     if overwrite:
                         Path(derived_file).unlink()
                     else:
-                        msg = f"[{__name__}] Warning: '{var}' file was found "
-                        msg += "and overwrite is False. Will use existing file."
-                        print(msg)
+                        print(
+                            f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                        )
                         continue
 
                 #NOTE: this will need to be changed when derived equations are more complex! - JR
@@ -1172,35 +1143,32 @@ class AdfDiag(AdfWeb):
                     der_val = 0
                     for v in constit_list:
                         der_val += ds[v]
-
+                
                 #Set derived variable name and add to dataset
                 der_val.name = var
                 ds[var] = der_val
 
-                #Aerosol Calculations
-                #----------------------------------------------------------------------------------
+                #Aerosol Calculations - used for zonal plots
                 #These will be multiplied by rho (density of dry air)
                 ds_pmid_done = False
                 ds_t_done = False
                 if var in res["aerosol_zonal_list"]:
-
+                    
                     #Only calculate once for all aerosol vars
                     if not ds_pmid_done:
                         ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
                         ds_pmid_done = True
                         if not ds_pmid:
-                            errmsg = "Missing necessary files for dry air density (rho) "
-                            errmsg += "calculation.\nPlease make sure 'PMID' is in the CAM "
-                            errmsg += "run for aerosol calculations"
+                            errmsg = f"Missing necessary files for dry air density (rho) calculation.\n"
+                            errmsg += "Please make sure 'PMID' is in the CAM run for aerosol calculations"
                             print(errmsg)
                             continue
                     if not ds_t_done:
                         ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
                         ds_t_done = True
                         if not ds_t:
-                            errmsg = "Missing necessary files for dry air density (rho) "
-                            errmsg += "calculation.\nPlease make sure 'T' is in the CAM "
-                            errmsg += "run for aerosol calculations"
+                            errmsg = f"Missing necessary files for dry air density (rho) calculation.\n"
+                            errmsg += "Please make sure 'T' is in the CAM run for aerosol calculations"
                             print(errmsg)
                             continue
 
@@ -1210,7 +1178,6 @@ class AdfDiag(AdfWeb):
                     #Sulfate conversion factor
                     if var == "SO4":
                         ds[var] = ds[var]*(96./115.)
-                #----------------------------------------------------------------------------------
 
                 #Drop all constituents from final saved dataset
                 #These are not necessary because they have their own time series files
@@ -1222,8 +1189,7 @@ class AdfDiag(AdfWeb):
 #Helper Function(s)
 def _load_dataset(fils):
     """
-    This method exists to get an xarray Dataset from input file information that
-    can be passed into the plotting methods.
+    This method exists to get an xarray Dataset from input file information that can be passed into the plotting methods.
 
     Parameters
     ----------
@@ -1249,7 +1215,7 @@ def _load_dataset(fils):
     if len(fils) == 0:
         warnings.warn("Input file list is empty.")
         return None
-    if len(fils) > 1:
+    elif len(fils) > 1:
         return xr.open_mfdataset(fils, combine='by_coords')
     else:
         return xr.open_dataset(fils[0])

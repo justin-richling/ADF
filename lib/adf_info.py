@@ -175,14 +175,27 @@ class AdfInfo(AdfConfig):
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
 
+            #Grab baseline time series file location
+            input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+            input_ts_loc = Path(input_ts_baseline)
+
+            #Check if any time series locations exist (could be relying on premade climo files)
+            if not input_ts_baseline:
+                msg = "\nWARNING: User indicates they don't want to rely on the ADF"
+                msg += f"for timeseries or history files for '{data_name}'."
+                msg += "  - The climo years specified in the config file cannot be verified!"
+                print(msg)
+                pass
+
+
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if baseline_ts_done:
                 baseline_hist_locs = None
 
-                #Grab baseline time series file location
-                input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
-                input_ts_loc = Path(input_ts_baseline)
+                ##Grab baseline time series file location
+                #input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
+                #input_ts_loc = Path(input_ts_baseline)
 
                 #Get years from pre-made timeseries file(s)
                 found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)
@@ -271,7 +284,8 @@ class AdfInfo(AdfConfig):
             eyear_baseline = int(eyear_baseline)
 
             #Update baseline case name:
-            data_name += f"_{syear_baseline}_{eyear_baseline}"
+            if (syear_baseline) and (eyear_baseline):
+                data_name += f"_{syear_baseline}_{eyear_baseline}"
         #End if (compare_obs)
 
         #Initialize case nicknames:
@@ -314,7 +328,8 @@ class AdfInfo(AdfConfig):
         cam_ts_done   = self.get_cam_info("cam_ts_done")
         
         #Grab case time series file location(s)
-        input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        input_ts_locs = self.get_cam_info("cam_ts_loc")
 
         #Loop over cases:
         syears_fixed = []
