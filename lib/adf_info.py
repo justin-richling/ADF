@@ -179,7 +179,9 @@ class AdfInfo(AdfConfig):
 
             #Grab baseline time series file location
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-            input_ts_loc = Path(input_ts_baseline)
+            if input_ts_baseline is None:
+                input_ts_baseline = False
+            #input_ts_loc = Path(input_ts_baseline)
 
             #Check if any time series locations exist (could be relying on premade climo files)
             if not input_ts_baseline:
@@ -200,7 +202,7 @@ class AdfInfo(AdfConfig):
                 #input_ts_loc = Path(input_ts_baseline)
 
                 #Get years from pre-made timeseries file(s)
-                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)
+                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(Path(input_ts_baseline), data_name)
                 found_yr_range = np.arange(found_syear_baseline,found_eyear_baseline,1)
 
                 #History file path isn't needed if user is running ADF directly on time series.
