@@ -94,6 +94,8 @@ def create_climo_files(adf, clobber=False, search=None):
         #Append to case lists:
         case_names.append(baseline_name)
         input_ts_locs.append(input_ts_baseline)
+        if input_ts_locs is None:
+            input_ts_locs = [None]*len(case_names)
         output_locs.append(output_bl_loc)
         calc_climos.append(calc_bl_climos)
         overwrite.append(ovr_bl)
