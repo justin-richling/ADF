@@ -328,6 +328,8 @@ class AdfInfo(AdfConfig):
         cam_ts_done   = self.get_cam_info("cam_ts_done")
         if cam_ts_done is None:
             cam_ts_done = [False]*len(case_names)
+
+        print("cam_ts_done:",cam_ts_done,type(cam_ts_done),"\n")
         
         #Grab case time series file location(s)
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
