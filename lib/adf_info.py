@@ -327,6 +327,8 @@ class AdfInfo(AdfConfig):
 
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        if cam_hist_locs is None:
+            cam_hist_locs = [False]*len(case_names)
         
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
