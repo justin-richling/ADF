@@ -763,7 +763,6 @@ class AdfDiag(AdfWeb):
 
                     #Try and build variable from 'derivable_from'
                     if "derive" in vres:
-                        if "from" in vres["derive"]:
                         #if "from" in vres["derive"]:
                         try:
                             constit_list = vres["derive"]["from"]
