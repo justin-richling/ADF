@@ -432,7 +432,7 @@ class AdfDiag(AdfWeb):
                 print(emsg)
                 no_msg = True
 
-                ts_case_dir = ts_dir[case_idx]
+                #ts_case_dir = ts_dir[case_idx]
 
 
                 # Loop over CAM history variables:
@@ -451,9 +451,107 @@ class AdfDiag(AdfWeb):
                         diag_var_list.insert(0,var)
                     #End if
                 #End for
+
+                # Aerosol Calcs
+                #--------------
+                #Always make sure PMID is made if aerosols are desired in config file
+                if "PMID" not in diag_var_list:
+                    if any(item in res["aerosol_zonal_list"] for item in diag_var_list):
+                        diag_var_list += ["PMID"]
+                if "T" not in diag_var_list:
+                    if any(item in res["aerosol_zonal_list"] for item in diag_var_list):
+                        diag_var_list += ["T"]
+                #End aerosol calcs
+
+                #Initialize dictionary for derived var with needed list of constituents
+                constit_dict = {}
                 for var in diag_var_list:
                     print("var:",var)
-                    #Try and check if the variable is in the case time series directory
+
+                    vres = res.get(var, {})
+
+                    #Initialiaze list for constituents
+                    #NOTE: This is if the variable is NOT derivable but need
+                    # an empty list as a check later
+                    constit_list = []
+
+                    #intialize boolean to check if variable is derivable
+                    derive = False # assume it can't be derived and update if it can
+                    #intialize boolean for CAM-CHEM variable
+                    get_cam_chem_constits = False
+
+                    #Try and build variable from 'derivable_from'
+                    if "derive" in vres:
+                        if "from" in vres["derive"]:
+                            derive = True
+                            constit_list = vres["derive"]["from"]
+                            #Check if variable is potentially part of a CAM-CHEM run
+                            #if any(item not in hist_file_ds.data_vars for item in constit_list):
+                            if any(item not in hist_file_ds.data_vars for item in constit_list):
+                                if var in res["cam_chem_list"]:
+                                    #Set check to look for CAM-CHEM constituents in variable defaults
+                                    get_cam_chem_constits = True
+                            #End if
+
+                            #If this is a CAM-CHEM run, update constit_list
+                            if get_cam_chem_constits:
+                                print("Looks like this a CAM-CHEM run,")
+                                print(f" checking constituents for '{var}'")
+                                try:
+                                    constit_list = vres['derive']['from_cam_chem']
+                                except TypeError:
+                                    derive = False
+                                    errmsg = f"\n Missing 'from_cam_chem' in 'derive' config argument for {var}."
+                                    errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                                    errmsg += " argument in variable defaults yaml file."
+                                    print(errmsg)
+                                    continue
+                                #if "derivablfrom_cam_chem" in vres:
+                                #    constit_list = vres["derive"]["from_cam_chem"]
+                                #else:
+                                #    derive = False
+                                #    errmsg = "\n Missing 'derivable_from_cam_chem' "
+                                #    errmsg += f"config argument for {var}."
+                                #    errmsg += "\n\tPlease remove variable from ADF run or set"
+                                #    errmsg += " appropriate argument in variable defaults yaml file."
+                                #    print(errmsg)
+                                #End if
+                            #End if
+
+                            #Now check if this variable can be derived
+                            if derive:
+                                for constit in constit_list:
+                                    if constit not in diag_var_list:
+                                        diag_var_list.append(constit)
+                                #Add variable to list to derive
+                                vars_to_derive.append(var)
+                                #Add constituent list to variable key in dictionary
+                                constit_dict[var] = constit_list
+                                continue
+                            #End if
+                        else:
+                            errmsg = f"\n Missing 'from' in 'derive' config argument for {var}."
+                            errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                            errmsg += " argument in variable defaults yaml file."
+                            print(errmsg)
+
+                    else:
+                        errmsg = f"\n Missing 'derive' config argument for {var}."
+                        errmsg += "\n\tPlease remove variable from ADF run or set appropriate"
+                        errmsg += " argument in variable defaults yaml file."
+                        print(errmsg)
+                    #End if 'derivable_from'
+
+                    #Lastly, raise error if the variable is not a derived quanitity but is also not
+                    #in the history file(s)
+                    if (not derive) and (not constit_list):
+                        msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                        msg += " No time series will be generated."
+                        print(msg)
+                        continue
+                    #End if
+
+                    """#Try and check if the variable is in the case time series directory
                     # and if not, check if it needs to be derived
                     if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
                         print(f"{var} not in {ts_case_dir}")
@@ -472,11 +570,14 @@ class AdfDiag(AdfWeb):
                             msg = f"WARNING: {var} is not in the variable defaults file for deriving."
                             msg += " No time series will be generated."
                             print(msg)
-                            continue
+                            continue"""
+
+                    
                 #Derive variables that come from constituents
                 if vars_to_derive:
                     self.derive_variables(
-                        res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
+                        res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx],
+                        constit_dict=constit_dict
                     )
                 continue
             # End if
