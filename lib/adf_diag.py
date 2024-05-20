@@ -463,41 +463,6 @@ class AdfDiag(AdfWeb):
                         diag_var_list += ["T"]
                 #End aerosol calcs
 
-                """
-                #End for
-                for var in diag_var_list:
-                    print("var:",var)
-                    #Try and check if the variable is in the case time series directory
-                    # and if not, check if it needs to be derived
-                    if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
-                        print(f"{var} not in {ts_case_dir}")
-
-                        vres = res.get(var, {})
-                        if "derive" in vres:
-                            if "from" in vres["derive"]:
-                                vars_to_derive.append(var)
-                                #continue
-                            else:
-                                msg = f"WARNING: {var} is not in the variable defaults file for deriving."
-                                msg += " No time series will be generated."
-                                print(msg)
-                                continue
-                        else:
-                            msg = f"WARNING: {var} is not in the variable defaults file for deriving."
-                            msg += " No time series will be generated."
-                            print(msg)
-                            continue
-                #Derive variables that come from constituents
-                if vars_to_derive:
-                    self.derive_variables(
-                        res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
-                    )
-                continue
-            # End if
-
-                
-                """
-
                 #Initialize dictionary for derived var with needed list of constituents
                 constit_dict = {}
                 for var in diag_var_list:
@@ -596,7 +561,7 @@ class AdfDiag(AdfWeb):
                         #Lastly, raise error if the variable is not a derived quanitity but is also not
                         #in the history file(s)
                         if (not derive) and (not constit_list):
-                            msg = f"WARNING: {var} is not in the file {hist_files[0]}."
+                            msg = f"WARNING: {var} cannot be derived."
                             msg += " No time series will be generated."
                             print(msg)
                             continue
@@ -631,7 +596,7 @@ class AdfDiag(AdfWeb):
                         constit_dict=constit_dict
                     )
                 continue
-            # End if
+            # End if cam_ts_done
 
             print(f"\t Processing time series for case '{case_name}' :")
 
