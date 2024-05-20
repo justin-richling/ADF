@@ -746,6 +746,7 @@ class AdfDiag(AdfWeb):
             #Initialize dictionary for derived var with needed list of constituents
             constit_dict = {}
             for var in diag_var_list:
+                print("var:",var)
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
                     vres = res.get(var, {})
