@@ -1462,7 +1462,7 @@ class AdfDiag(AdfWeb):
                 if flag == "derive_interp":
                     derive_interp(ds, vres, constit_list, var, derived_file) 
                 if flag == "derive_mask":
-                    derive_masked(ds, vres, constit_list, var, ts_dir, i, derived_file)    
+                    derive_masked(ds, vres, constit_list, var, ts_dir, 0, derived_file)    
                 if flag == "derivable_from":
                     #derive_from_constits(ds, constit_list, var, derived_file)
                     derive_from_constits(ds, ts_dir, res, constit_list, var, derived_file)
