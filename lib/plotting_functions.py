@@ -208,6 +208,8 @@ def get_difference_colors(values):
             cmap = mpl.cm.BuPu_r
         else:
             dnorm = mpl.colors.TwoSlopeNorm(vmin=dmin, vcenter=0, vmax=dmax)
+    if not cmap:
+        cmap = mpl.cm.RdBu_r
     return dnorm, cmap
 
 
