@@ -40,8 +40,8 @@ def polar_map(adfobj):
         if not paleo_pi:
             paleo_proj = True
             print("\n  Paleo continents will be made from LANDFRAC")
-        else:
-            paleo_proj = False
+    else:
+        paleo_proj = False
 
     #Set landfrac to false initially, then if Paleo diags, set to LANDFRAC dataArray further down
     landfrac = None
