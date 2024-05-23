@@ -196,6 +196,7 @@ def open_process_sonde_data_simone(obsdir):
 
    #Grab and package all of the data that will be used for plotting
    NRegions=define_regions(0)[1]
+   print("NRegions",NRegions)
    
    O3_MeanC=[]
    O3_WidthC=[]
@@ -738,8 +739,11 @@ def ozone_diagnostics (adfobj):
       MaxLat=Region_Info[3]
       MinLon=Region_Info[4]
       MaxLon=Region_Info[5]
-      oFile_Seasonal = plot_locations+'/O3SeasonalCycle_'+SName+'_Special.png'
-      oFile_Profile = plot_locations+'/O3Profile_'+SName+'_Special.png'
+      #oFile_Seasonal = plot_locations+'/O3SeasonalCycle_'+SName+'_Special.png'
+      #oFile_Profile = plot_locations+'/O3Profile_'+SName+'_Special.png'
+
+      oFile_Seasonal = plot_locations+'/'+SName+'_SeasonalCycle_ANN_Special_Mean.png'
+      oFile_Profile = plot_locations+'/'+SName+'_Profile_ANN_Special_Mean.png'
       
       #-----------------------------------------------------------------------------------
       #Check if redo_plot set and if not and plots exist already then
