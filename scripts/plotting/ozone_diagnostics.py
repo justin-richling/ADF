@@ -697,6 +697,7 @@ def ozone_diagnostics (adfobj):
    #--------------------------------------------------------------------------------------
    Test_Data=get_model_data(climo_test) #Grab test model data
    print("Test_Data",type(Test_Data),"\n")
+   print(Test_Data)
    if Compare_Obs <= 0:
       Base_Data=get_model_data(climo_base) #Grab base model data
    
