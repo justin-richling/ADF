@@ -470,10 +470,12 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             print(type(Model_Dat.o3))
             O3_00=Model_Dat.o3.sel(lon=slice(MinLon+360.0,360.0),lat=slice(MinLat,MaxLat))
             O3_01=Model_Dat.o3.sel(lon=slice(0,MaxLon),lat=slice(MinLat,MaxLat))
-            O3_0 = np.concatenate( (O3_00,O3_01),axis=3)
+            #O3_0 = np.concatenate( (O3_00,O3_01),axis=3)
+            O3_0 = xr.concat([O3_00, O3_01], dim='lon')
             PS_00=Model_Dat.ps.sel(lon=slice(MinLon+360.0,360.0),lat=slice(MinLat,MaxLat))
             PS_01=Model_Dat.ps.sel(lon=slice(0,MaxLon),lat=slice(MinLat,MaxLat))
-            PS_0 = np.concatenate( (PS_00,PS_01),axis=2)
+            #PS_0 = np.concatenate( (PS_00,PS_01),axis=2)
+            PS_0 = xr.concat([PS_00, PS_01], dim='lon')
             lon_00=Model_Dat.lon.sel(lon=slice(MinLon+360.0,360.0))
             lon_01=Model_Dat.lon.sel(lon=slice(0,MaxLon))
             lon_0 = np.concatenate( (lon_00,lon_01))
@@ -481,9 +483,9 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             #resort the arrays as needed
             lon_sort=lon_0.argsort()
             #O3_0 = O3_0[:,:,:,lon_sort]
-            O3_0 = O3_0.sel(lon_sort)
+            O3_0 = O3_0.sel(lon=lon_sort)
             #PS_0 = PS_0[:,:,lon_sort]
-            PS_0 = PS_0.sel(lon_sort)
+            PS_0 = PS_0.sel(lon=lon_sort)
             lon_0  = lon_0[lon_sort]
          
             O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9 #get the lowest model surface level data
