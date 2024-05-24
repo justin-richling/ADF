@@ -500,7 +500,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             O3_0=Model_Dat.o3.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             PS_0=Model_Dat.ps.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             lon_0=Model_Dat.lon.sel(lon=slice(MinLon,MaxLon))
-            O3_sfc=O3_0.isel(lev=[-1])*1.0e9
+            O3_sfc=O3_0.isel(lev=[-1]).squeeze()*1.0e9
             #O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9
 
         print("type(O3_0)",type(O3_0),"\n")
@@ -543,8 +543,8 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
                     O3_Pt=np.vstack( (O3_Pt,[i,float(ILAT[j]),float(ILON[j])] ))
       
         months=[1,2,3,4,5,6,7,8,9,10,11,12]
-        print("\n",O3_Pt.shape,"\n")
-        print("\n",O3_sfc.shape,"\n")
+        print("\nO3_Pt.shape",O3_Pt.shape,"\n")
+        print("\nO3_sfc.shape",O3_sfc.shape,"\n")
       
         #set up the regular grid interpolator for each case and level
         interp_0 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,0,:,:]))
