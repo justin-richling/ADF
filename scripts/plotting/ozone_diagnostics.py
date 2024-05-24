@@ -478,7 +478,8 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             PS_0 = xr.concat([PS_00, PS_01], dim='lon')
             lon_00=Model_Dat.lon.sel(lon=slice(MinLon+360.0,360.0))
             lon_01=Model_Dat.lon.sel(lon=slice(0,MaxLon))
-            lon_0 = np.concatenate( (lon_00,lon_01))
+            #lon_0 = np.concatenate( (lon_00,lon_01))
+            lon_0 = xr.concat([lon_00, lon_01], dim='lon')
          
             #resort the arrays as needed
             lon_sort=lon_0.argsort()
@@ -487,8 +488,8 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             O3_0 = O3_0.isel(lon=lon_sort)
             #PS_0 = PS_0[:,:,lon_sort]
             PS_0 = PS_0.isel(lon=lon_sort)
-            lon_0  = lon_0[lon_sort]
-            #lon_0  = lon_0.isel(lon_sort)
+            #lon_0  = lon_0[lon_sort]
+            lon_0 = lon_0.sel(lon=slice(MinLon,MaxLon))
          
             O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9 #get the lowest model surface level data
          
@@ -540,7 +541,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
                     O3_Pt=np.vstack( (O3_Pt,[i,float(ILAT[j]),float(ILON[j])] ))
       
         months=[1,2,3,4,5,6,7,8,9,10,11,12]
-        print("\n",O3_0I.values[:,0,:,:].shape,"\n")
+        print("\n",O3_Pt.shape,"\n")
       
         #set up the regular grid interpolator for each case and level
         interp_0 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,0,:,:]))
