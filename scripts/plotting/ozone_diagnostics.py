@@ -499,11 +499,12 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         for p in pnew:
           pnew_2.append(p*100)
 
-        #O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
-        #O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
-        #                                                      new_levels=np.array(pnew_2),method='linear')*1.0e9
-        O3_0I = gcomp.interp_hybrid_to_pressure(
-                    Model_Dat.hyam, Model_Dat.hybm, PS_0, O3_0, new_levels=pnew, p0=1000.0, method='linear')
+        O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
+        print("\nNgl:",type(O3_0I),O3_0I,"\n")
+        O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
+                                                              new_levels=np.array(pnew_2),method='linear')*1.0e9
+        print("geocat:",type(O3_0I),O3_0I,"\n\n")
+
       
         #Get the seasonal cycle of the base case at each needed pressure level
         #and average over the region.
