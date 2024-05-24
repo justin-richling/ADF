@@ -544,12 +544,13 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
       
         months=[1,2,3,4,5,6,7,8,9,10,11,12]
         print("\n",O3_Pt.shape,"\n")
+        print("\n",O3_sfc.shape,"\n")
       
         #set up the regular grid interpolator for each case and level
         interp_0 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,0,:,:]))
         interp_1 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,1,:,:]))
         interp_2 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,2,:,:]))
-        interp_3 = RegularGridInterpolator((months,lat_0,lon_0), O3_sfc)
+        interp_3 = RegularGridInterpolator((months,lat_0,lon_0), O3_sfc.values)
       
         #interpolate the model data at each case and pressure level
         O3_station_0 = interp_0(O3_Pt)
