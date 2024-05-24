@@ -466,7 +466,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
 
         #get the model data from the base and test cases for the region
         if (MinLon < 0 and MaxLon > 0): #if the region crosses the date line - do different processing
-            print("\nIS IT CROSSING THE DTE LINE>")
+            print("\nIS IT CROSSING THE DATE LINE>")
             print(type(Model_Dat.o3))
             O3_00=Model_Dat.o3.sel(lon=slice(MinLon+360.0,360.0),lat=slice(MinLat,MaxLat))
             O3_01=Model_Dat.o3.sel(lon=slice(0,MaxLon),lat=slice(MinLat,MaxLat))
@@ -516,8 +516,12 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         print("\nPS_0.dims:",PS_0.dims,"\n")
         #O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
         #print("\nNgl:",type(O3_0I),O3_0I.shape,"\n")
-        O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
-                                                              new_levels=np.array(pnew),method='linear',p0=1000.,lev_dim="lev")*1.0e9
+        #O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
+        #                                                      new_levels=np.array(pnew),method='linear',p0=1000.,lev_dim="lev")*1.0e9
+        O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
+                                                             new_levels=np.array(pnew),ps=PS_0,
+                                                              method='linear',p0=1000.0)*1.0e9
+        
         print("geocat:",type(O3_0I),O3_0I.shape,"\n\n")
         #O3_0I = O3_0I.values
 
@@ -589,18 +593,13 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
 def process_model_profiles(Model_Dat,O3_0,PS_0,pnew,intyp,kxtrp,ILAT,ILON,lat_0,lon_0):
 
     class model_dat_proc:
-      pnew_2 = []
-      for p in pnew:
-        pnew_2.append(p*100)
 
       O3_0I1 = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
-      #O3_0I1 = gcomp.interpolation.interp_hybrid_to_pressure(O3_0,PS_0,Model_Dat.hyam,Model_Dat.hybm,1000.0*100,
-      #                                                        pnew_2,method='linear')*1.0e9
-
-      O3_0I1 = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
-                                                              new_levels=np.array(pnew_2),method='linear')*1.0e9
+      print("Ngl:",type(O3_0I1),O3_0I1.shape,"\n\n")
+      O3_0I1 = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
+                                                             new_levels=np.array(pnew),ps=PS_0,
+                                                              method='linear',p0=1000.0)*1.0e9
       print("geocat:",type(O3_0I1),O3_0I1.shape,"\n\n")
-      #O3_0I1 = O3_0I1.values
       
       Locate_Bad=np.where(O3_0I1.values > 10000.0)
       if len(Locate_Bad) > 0:
@@ -790,8 +789,11 @@ def ozone_diagnostics (adfobj):
       #-----------------------------------------------------------------------------------
       if (not(redo_plot)) and (os.path.isfile(oFile_Seasonal)) and (os.path.isfile(oFile_Profile)):
           print(SName,' region plots exist and redo_plot is false.  Adding to website and Skipping plot.')
-          adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
-          adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
+          #adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
+          #adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
+
+          adfobj.add_website_data(oFile_Seasonal,SName+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
+          adfobj.add_website_data(oFile_Profile,SName+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
           continue
       else:
           print("Plotting Region ",LName)
