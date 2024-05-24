@@ -251,7 +251,6 @@ def Subplot_O3(ax,X0,Y0,X1,Model0,Model1,SondeMean,SondeLow,SondeHigh,PLevel,plo
    #Red is the test case - should always be plotted
 
    Model_linewidth=0.75
-   print("Model1",Model1,"\n")
    
    if plottype == 0:
        ax.plot(Y0,X1,'tab:red',linestyle='dashed',linewidth=Model_linewidth)
