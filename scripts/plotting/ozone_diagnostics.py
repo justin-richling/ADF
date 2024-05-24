@@ -504,6 +504,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
                                                               new_levels=np.array(pnew_2),method='linear')*1.0e9
         print("geocat:",type(O3_0I),O3_0I.shape,"\n\n")
+        O3_0I = O3_0I.values
 
       
         #Get the seasonal cycle of the base case at each needed pressure level
