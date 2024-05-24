@@ -482,7 +482,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             lon_0 = xr.concat([lon_00, lon_01], dim='lon')
          
             #resort the arrays as needed
-            lon_sort=lon_0.argsort()
+            lon_sort=np.concatenate( (lon_00,lon_01)).argsort()
             print("lon_sort:",lon_sort,"\n")
             #O3_0 = O3_0[:,:,:,lon_sort]
             O3_0 = O3_0.isel(lon=lon_sort)
