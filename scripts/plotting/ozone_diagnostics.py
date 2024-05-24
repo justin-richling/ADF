@@ -910,7 +910,10 @@ def ozone_diagnostics (adfobj):
       #-----------------------------------------------------------------------------------
       #Once the plots have successfully run, add the web page entries (if enabled).
       #-----------------------------------------------------------------------------------
-      adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
-      adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
+      #adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
+      #adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
+
+      adfobj.add_website_data(oFile_Seasonal,SName+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
+      adfobj.add_website_data(oFile_Profile,SName+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
       
    print("Ozone Diagnostics Generated Successfully!")
