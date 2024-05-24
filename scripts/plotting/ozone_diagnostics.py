@@ -467,7 +467,6 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         #get the model data from the base and test cases for the region
         if (MinLon < 0 and MaxLon > 0): #if the region crosses the date line - do different processing
             print("\nIS IT CROSSING THE DATE LINE>")
-            print(type(Model_Dat.o3))
             O3_00=Model_Dat.o3.sel(lon=slice(MinLon+360.0,360.0),lat=slice(MinLat,MaxLat))
             O3_01=Model_Dat.o3.sel(lon=slice(0,MaxLon),lat=slice(MinLat,MaxLat))
             #O3_0 = np.concatenate( (O3_00,O3_01),axis=3)
@@ -728,8 +727,6 @@ def ozone_diagnostics (adfobj):
    #Get model data from get_model_data()
    #--------------------------------------------------------------------------------------
    Test_Data=get_model_data(climo_test) #Grab test model data
-   print("Test_Data",type(Test_Data),"\n")
-   print(Test_Data)
    if Compare_Obs <= 0:
       Base_Data=get_model_data(climo_base) #Grab base model data
    
