@@ -490,6 +490,8 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             PS_0=Model_Dat.ps.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             lon_0=Model_Dat.lon.sel(lon=slice(MinLon,MaxLon))
             O3_sfc=np.squeeze(O3_0.values[:,-1,:,:])*1.0e9
+
+        print("type(O3_0)",type(O3_0),"\n")
          
 
         lat_0=Model_Dat.lat.sel(lat=slice(MinLat,MaxLat))
