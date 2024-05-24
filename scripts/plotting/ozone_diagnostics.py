@@ -466,6 +466,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
 
         #get the model data from the base and test cases for the region
         if (MinLon < 0 and MaxLon > 0): #if the region crosses the date line - do different processing
+            print("\nIS IT CROSSING THE DTE LINE>")
             O3_00=Model_Dat.o3.sel(lon=slice(MinLon+360.0,360.0),lat=slice(MinLat,MaxLat))
             O3_01=Model_Dat.o3.sel(lon=slice(0,MaxLon),lat=slice(MinLat,MaxLat))
             O3_0 = np.concatenate( (O3_00,O3_01),axis=3)
@@ -490,6 +491,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             PS_0=Model_Dat.ps.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             lon_0=Model_Dat.lon.sel(lon=slice(MinLon,MaxLon))
             O3_sfc=np.squeeze(O3_0.values[:,-1,:,:])*1.0e9
+            #O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9
 
         print("type(O3_0)",type(O3_0),"\n")
          
