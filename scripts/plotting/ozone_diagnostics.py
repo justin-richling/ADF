@@ -308,7 +308,7 @@ def Subplot_O3(ax,X0,Y0,X1,Model0,Model1,SondeMean,SondeLow,SondeHigh,PLevel,plo
           
           if Compare_Obs >0:
               ax.text(0.12,0.15,"Region Avg.",fontsize=5.0,color='tab:red',transform=ax.transAxes)
-              ax.text(0.12,0.09,case_test[0],fontsize=5.0,color='tab:red',transform=ax.transAxes)
+              ax.text(0.12,0.09,case_test,fontsize=5.0,color='tab:red',transform=ax.transAxes)
               ax.plot([0.03,0.11],[0.16,0.16],'tab:red',linestyle='dashed',transform=ax.transAxes,linewidth=0.75)
               ax.plot([0.03,0.11],[0.10,0.10],'tab:red',linestyle='solid',transform=ax.transAxes,linewidth=0.75)
           else:
@@ -317,7 +317,7 @@ def Subplot_O3(ax,X0,Y0,X1,Model0,Model1,SondeMean,SondeLow,SondeHigh,PLevel,plo
               ax.plot([0.03,0.11],[0.28,0.28],'tab:blue',linestyle='dashed',transform=ax.transAxes,linewidth=0.75)
               ax.plot([0.03,0.11],[0.22,0.22],'tab:blue',linestyle='solid',transform=ax.transAxes,linewidth=0.75)
               ax.text(0.12,0.15,"Region Avg.",fontsize=5.0,color='tab:red',transform=ax.transAxes)
-              ax.text(0.12,0.09,case_test[0],fontsize=5.0,color='tab:red',transform=ax.transAxes)
+              ax.text(0.12,0.09,case_test,fontsize=5.0,color='tab:red',transform=ax.transAxes)
               ax.plot([0.03,0.11],[0.16,0.16],'tab:red',linestyle='dashed',transform=ax.transAxes,linewidth=0.75)
               ax.plot([0.03,0.11],[0.10,0.10],'tab:red',linestyle='solid',transform=ax.transAxes,linewidth=0.75)
               
@@ -356,7 +356,7 @@ def Subplot_O3(ax,X0,Y0,X1,Model0,Model1,SondeMean,SondeLow,SondeHigh,PLevel,plo
               ax.plot([0.06],[0.04+offset],'ko',markersize=1.25,transform=ax.transAxes)
           
           ax.text(0.12,0.27+offset,"Region Avg.",fontsize=5.0,color='tab:red',transform=ax.transAxes)
-          ax.text(0.12,0.21+offset,case_test[0],fontsize=5.0,color='tab:red',transform=ax.transAxes)
+          ax.text(0.12,0.21+offset,case_test,fontsize=5.0,color='tab:red',transform=ax.transAxes)
           ax.plot([0.03,0.11],[0.28+offset,0.28+offset],'tab:red',linestyle='dashed',transform=ax.transAxes,linewidth=0.75)
           ax.plot([0.03,0.11],[0.22+offset,0.22+offset],'tab:red',linestyle='solid',transform=ax.transAxes,linewidth=0.75)
           
@@ -642,7 +642,7 @@ def ozone_diagnostics (adfobj):
    case_base = adfobj.get_baseline_info('cam_case_name',required=True)
    
    #Grab all case nickname(s)
-   test_nicknames = adfobj.case_nicknames["test_nicknames"]
+   test_nicknames = adfobj.case_nicknames["test_nicknames"][0]
    base_nickname = adfobj.case_nicknames["base_nickname"]
    
    plot_locations = adfobj.plot_location[0]
