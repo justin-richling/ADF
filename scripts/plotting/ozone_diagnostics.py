@@ -486,8 +486,9 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             #O3_0 = O3_0[:,:,:,lon_sort]
             O3_0 = O3_0.isel(lon=lon_sort)
             #PS_0 = PS_0[:,:,lon_sort]
-            PS_0 = PS_0.sel(lon=lon_sort)
+            PS_0 = PS_0.isel(lon=lon_sort)
             lon_0  = lon_0[lon_sort]
+            lon_0  = lon_0.isel(lon_sort)
          
             O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9 #get the lowest model surface level data
          
