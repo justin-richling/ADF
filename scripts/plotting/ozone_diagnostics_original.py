@@ -81,7 +81,6 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import Ngl
-import geocat.comp as gcomp
 from scipy.interpolate import RegularGridInterpolator
 from scipy import stats
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
@@ -197,7 +196,6 @@ def open_process_sonde_data_simone(obsdir):
 
    #Grab and package all of the data that will be used for plotting
    NRegions=define_regions(0)[1]
-   print("NRegions",NRegions)
    
    O3_MeanC=[]
    O3_WidthC=[]
@@ -466,67 +464,44 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
 
         #get the model data from the base and test cases for the region
         if (MinLon < 0 and MaxLon > 0): #if the region crosses the date line - do different processing
-            print("\nIS IT CROSSING THE DATE LINE>")
             O3_00=Model_Dat.o3.sel(lon=slice(MinLon+360.0,360.0),lat=slice(MinLat,MaxLat))
             O3_01=Model_Dat.o3.sel(lon=slice(0,MaxLon),lat=slice(MinLat,MaxLat))
-            #O3_0 = np.concatenate( (O3_00,O3_01),axis=3)
-            O3_0 = xr.concat([O3_00, O3_01], dim='lon')
+            O3_0 = np.concatenate( (O3_00,O3_01),axis=3)
             PS_00=Model_Dat.ps.sel(lon=slice(MinLon+360.0,360.0),lat=slice(MinLat,MaxLat))
             PS_01=Model_Dat.ps.sel(lon=slice(0,MaxLon),lat=slice(MinLat,MaxLat))
-            #PS_0 = np.concatenate( (PS_00,PS_01),axis=2)
-            PS_0 = xr.concat([PS_00, PS_01], dim='lon')
+            PS_0 = np.concatenate( (PS_00,PS_01),axis=2)
             lon_00=Model_Dat.lon.sel(lon=slice(MinLon+360.0,360.0))
             lon_01=Model_Dat.lon.sel(lon=slice(0,MaxLon))
-            #lon_0 = np.concatenate( (lon_00,lon_01))
-            lon_0 = xr.concat([lon_00, lon_01], dim='lon')
+            lon_0 = np.concatenate( (lon_00,lon_01))
          
             #resort the arrays as needed
-            lon_sort=np.concatenate( (lon_00,lon_01)).argsort()
-            #print("lon_sort:",lon_sort,"\n")
-            #O3_0 = O3_0[:,:,:,lon_sort]
-            O3_0 = O3_0.isel(lon=lon_sort)
-            #PS_0 = PS_0[:,:,lon_sort]
-            PS_0 = PS_0.isel(lon=lon_sort)
-            #lon_0  = lon_0[lon_sort]
-            lon_0 = lon_0.isel(lon=lon_sort)
+            lon_sort=lon_0.argsort()
+            O3_0 = O3_0[:,:,:,lon_sort]
+            PS_0 = PS_0[:,:,lon_sort]
+            lon_0  = lon_0[lon_sort]
          
-            #O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9 #get the lowest model surface level data
-            #O3_sfc=O3_0[:,-1,:,:]*1.0e9 #get the lowest model surface level data
-            O3_sfc=O3_0.isel(lev=[-1]).squeeze()*1.0e9
+            O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9 #get the lowest model surface level data
          
         else: #if the region does not cross the date line
          
             O3_0=Model_Dat.o3.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             PS_0=Model_Dat.ps.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             lon_0=Model_Dat.lon.sel(lon=slice(MinLon,MaxLon))
-            O3_sfc=O3_0.isel(lev=[-1]).squeeze()*1.0e9
-            #O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9
-
-        #print("type(O3_0)",type(O3_0),"\n")
+            O3_sfc=np.squeeze(O3_0.values[:,-1,:,:])*1.0e9
          
 
         lat_0=Model_Dat.lat.sel(lat=slice(MinLat,MaxLat))
 
         O3_sfc_04=np.mean(O3_sfc,axis=(1,2))
 
-        #print("\nO3_0.dims:",O3_0.dims,"\n")
-        #print("\nPS_0.dims:",PS_0.dims,"\n")
-        #O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
-        #print("\nNgl:",type(O3_0I),O3_0I.shape,"\n")
-        #O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
-        #                                                      new_levels=np.array(pnew),method='linear',p0=1000.,lev_dim="lev")*1.0e9
-        O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
-                                                             new_levels=np.array(pnew),ps=PS_0,
-                                                              method='linear',p0=1000.0)*1.0e9
-        
-        #print("geocat:",type(O3_0I),O3_0I.shape,"\n\n")
+        O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
       
         #Get the seasonal cycle of the base case at each needed pressure level
         #and average over the region.
-        O3_01=np.mean(O3_0I.values[:,0,:,:],axis=(1,2))
-        O3_02=np.mean(O3_0I.values[:,1,:,:],axis=(1,2))
-        O3_03=np.mean(O3_0I.values[:,2,:,:],axis=(1,2))
-        O3_04=np.mean(O3_0I.values[:,3,:,:],axis=(1,2))
+        O3_01=np.mean(O3_0I[:,0,:,:],axis=(1,2))
+        O3_02=np.mean(O3_0I[:,1,:,:],axis=(1,2))
+        O3_03=np.mean(O3_0I[:,2,:,:],axis=(1,2))
+        O3_04=np.mean(O3_0I[:,3,:,:],axis=(1,2))
       
         #Interpolate the model at each ozonesonde location and extract the needed information for the plot
         Station_Find = np.where( (Station_Lons >= MinLon) & (Station_Lons <= MaxLon) & (Station_Lats >= MinLat) & (Station_Lats <= MaxLat))
@@ -542,14 +517,12 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
                     O3_Pt=np.vstack( (O3_Pt,[i,float(ILAT[j]),float(ILON[j])] ))
       
         months=[1,2,3,4,5,6,7,8,9,10,11,12]
-        #print("\nO3_Pt.shape",O3_Pt.shape,"\n")
-        #print("\nO3_sfc.shape",O3_sfc.shape,"\n")
       
         #set up the regular grid interpolator for each case and level
-        interp_0 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,0,:,:]))
-        interp_1 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,1,:,:]))
-        interp_2 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,2,:,:]))
-        interp_3 = RegularGridInterpolator((months,lat_0,lon_0), O3_sfc.values)
+        interp_0 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I[:,0,:,:]))
+        interp_1 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I[:,1,:,:]))
+        interp_2 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I[:,2,:,:]))
+        interp_3 = RegularGridInterpolator((months,lat_0,lon_0), O3_sfc)
       
         #interpolate the model data at each case and pressure level
         O3_station_0 = interp_0(O3_Pt)
@@ -589,23 +562,18 @@ def process_model_profiles(Model_Dat,O3_0,PS_0,pnew,intyp,kxtrp,ILAT,ILON,lat_0,
 
     class model_dat_proc:
 
-      #O3_0I1 = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
-      #print("Ngl:",type(O3_0I1),O3_0I1.shape,"\n\n")
-      O3_0I1 = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
-                                                             new_levels=np.array(pnew),ps=PS_0,
-                                                              method='linear',p0=1000.0)*1.0e9
-      #print("geocat:",type(O3_0I1),O3_0I1.shape,"\n\n")
+      O3_0I1 = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
       
-      Locate_Bad=np.where(O3_0I1.values > 10000.0)
+      Locate_Bad=np.where(O3_0I1 > 10000.0)
       if len(Locate_Bad) > 0:
-          O3_0I1.values[Locate_Bad]=np.nan
+          O3_0I1[Locate_Bad]=np.nan
       
       #Get the monthly of the case at each needed pressure level
       #and average over the region.
-      O3_011=np.nanmean(O3_0I1.values[0,:,:,:],axis=(1,2))
-      O3_021=np.nanmean(O3_0I1.values[3,:,:,:],axis=(1,2))
-      O3_031=np.nanmean(O3_0I1.values[6,:,:,:],axis=(1,2))
-      O3_041=np.nanmean(O3_0I1.values[9,:,:,:],axis=(1,2))
+      O3_011=np.nanmean(O3_0I1[0,:,:,:],axis=(1,2))
+      O3_021=np.nanmean(O3_0I1[3,:,:,:],axis=(1,2))
+      O3_031=np.nanmean(O3_0I1[6,:,:,:],axis=(1,2))
+      O3_041=np.nanmean(O3_0I1[9,:,:,:],axis=(1,2))
       
       #Set the points to interpolate to
       for i in range(0,len(pnew)):
@@ -616,10 +584,10 @@ def process_model_profiles(Model_Dat,O3_0,PS_0,pnew,intyp,kxtrp,ILAT,ILON,lat_0,
                 O3_Pt=np.vstack( (O3_Pt,[pnew[i],float(ILAT[j]),float(ILON[j])] ))
       
       #set up the regular grid interpolator for each case and level
-      interp_01 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[0,:,:,:]))
-      interp_11 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[3,:,:,:]))
-      interp_21 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[6,:,:,:]))
-      interp_31 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[9,:,:,:]))
+      interp_01 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[0,:,:,:]))
+      interp_11 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[3,:,:,:]))
+      interp_21 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[6,:,:,:]))
+      interp_31 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[9,:,:,:]))
       
       #interpolate the model data at each case and pressure level
       O3_station_01 = interp_01(O3_Pt)
@@ -671,7 +639,7 @@ def ozone_diagnostics (adfobj):
    case_base = adfobj.get_baseline_info('cam_case_name',required=True)
    
    #Grab all case nickname(s)
-   test_nicknames = adfobj.case_nicknames["test_nicknames"][0]
+   test_nicknames = adfobj.case_nicknames["test_nicknames"]
    base_nickname = adfobj.case_nicknames["base_nickname"]
    
    plot_locations = adfobj.plot_location[0]
@@ -770,11 +738,8 @@ def ozone_diagnostics (adfobj):
       MaxLat=Region_Info[3]
       MinLon=Region_Info[4]
       MaxLon=Region_Info[5]
-      #oFile_Seasonal = plot_locations+'/O3SeasonalCycle_'+SName+'_Special.png'
-      #oFile_Profile = plot_locations+'/O3Profile_'+SName+'_Special.png'
-
-      oFile_Seasonal = plot_locations+'/'+SName+'_SeasonalCycle_ANN_Special_Mean.png'
-      oFile_Profile = plot_locations+'/'+SName+'_Profile_ANN_Special_Mean.png'
+      oFile_Seasonal = plot_locations+'/O3SeasonalCycle_'+SName+'_Special.png'
+      oFile_Profile = plot_locations+'/O3Profile_'+SName+'_Special.png'
       
       #-----------------------------------------------------------------------------------
       #Check if redo_plot set and if not and plots exist already then
@@ -782,11 +747,8 @@ def ozone_diagnostics (adfobj):
       #-----------------------------------------------------------------------------------
       if (not(redo_plot)) and (os.path.isfile(oFile_Seasonal)) and (os.path.isfile(oFile_Profile)):
           print(SName,' region plots exist and redo_plot is false.  Adding to website and Skipping plot.')
-          #adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
-          #adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
-
-          adfobj.add_website_data(oFile_Seasonal,SName+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
-          adfobj.add_website_data(oFile_Profile,SName+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
+          adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
+          adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
           continue
       else:
           print("Plotting Region ",LName)
@@ -907,10 +869,7 @@ def ozone_diagnostics (adfobj):
       #-----------------------------------------------------------------------------------
       #Once the plots have successfully run, add the web page entries (if enabled).
       #-----------------------------------------------------------------------------------
-      #adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
-      #adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
-
-      adfobj.add_website_data(oFile_Seasonal,SName+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
-      adfobj.add_website_data(oFile_Profile,SName+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
+      adfobj.add_website_data(oFile_Seasonal,SName.replace("_","")+"_SeasonalCycle", None, season="ANN",multi_case=True,category="O3_DIAGNOSTICS")
+      adfobj.add_website_data(oFile_Profile,SName.replace("_","")+"_Profile", None, season="ANN", multi_case=True,category="O3_DIAGNOSTICS")
       
    print("Ozone Diagnostics Generated Successfully!")
