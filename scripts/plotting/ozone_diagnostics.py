@@ -502,7 +502,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
         print("\nNgl:",type(O3_0I),O3_0I.shape,"\n")
         O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
-                                                              new_levels=np.array(pnew),method='linear',p0=1000.)*1.0e9
+                                                              new_levels=np.array(pnew),method='linear',p0=1000.,lev_dim="lev")*1.0e9
         print("geocat:",type(O3_0I),O3_0I.shape,"\n\n")
         O3_0I = O3_0I.values
 
