@@ -500,7 +500,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
             O3_0=Model_Dat.o3.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             PS_0=Model_Dat.ps.sel(lon=slice(MinLon,MaxLon),lat=slice(MinLat,MaxLat))
             lon_0=Model_Dat.lon.sel(lon=slice(MinLon,MaxLon))
-            O3_sfc=O3_0.isel(lev=-1)*1.0e9
+            O3_sfc=O3_0.isel(lev=[-1])*1.0e9
             #O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9
 
         print("type(O3_0)",type(O3_0),"\n")
