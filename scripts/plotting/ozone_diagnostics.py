@@ -504,15 +504,15 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
                                                               new_levels=np.array(pnew),method='linear',p0=1000.,lev_dim="lev")*1.0e9
         print("geocat:",type(O3_0I),O3_0I.shape,"\n\n")
-        O3_0I = O3_0I.values
+        #O3_0I = O3_0I.values
 
       
         #Get the seasonal cycle of the base case at each needed pressure level
         #and average over the region.
-        O3_01=np.mean(O3_0I[:,0,:,:],axis=(1,2))
-        O3_02=np.mean(O3_0I[:,1,:,:],axis=(1,2))
-        O3_03=np.mean(O3_0I[:,2,:,:],axis=(1,2))
-        O3_04=np.mean(O3_0I[:,3,:,:],axis=(1,2))
+        O3_01=np.mean(O3_0I.values[:,0,:,:],axis=(1,2))
+        O3_02=np.mean(O3_0I.values[:,1,:,:],axis=(1,2))
+        O3_03=np.mean(O3_0I.values[:,2,:,:],axis=(1,2))
+        O3_04=np.mean(O3_0I.values[:,3,:,:],axis=(1,2))
       
         #Interpolate the model at each ozonesonde location and extract the needed information for the plot
         Station_Find = np.where( (Station_Lons >= MinLon) & (Station_Lons <= MaxLon) & (Station_Lats >= MinLat) & (Station_Lats <= MaxLat))
@@ -530,9 +530,9 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         months=[1,2,3,4,5,6,7,8,9,10,11,12]
       
         #set up the regular grid interpolator for each case and level
-        interp_0 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I[:,0,:,:]))
-        interp_1 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I[:,1,:,:]))
-        interp_2 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I[:,2,:,:]))
+        interp_0 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,0,:,:]))
+        interp_1 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,1,:,:]))
+        interp_2 = RegularGridInterpolator((months,lat_0,lon_0), np.squeeze(O3_0I.values[:,2,:,:]))
         interp_3 = RegularGridInterpolator((months,lat_0,lon_0), O3_sfc)
       
         #interpolate the model data at each case and pressure level
