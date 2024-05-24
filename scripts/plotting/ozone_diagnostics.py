@@ -493,7 +493,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
          
             #O3_sfc=np.squeeze(O3_0[:,-1,:,:])*1.0e9 #get the lowest model surface level data
             #O3_sfc=O3_0[:,-1,:,:]*1.0e9 #get the lowest model surface level data
-            O3_sfc=O3_0.isel(lev=-1)*1.0e9
+            O3_sfc=O3_0.isel(lev=-1).squeeze()*1.0e9
          
         else: #if the region does not cross the date line
          
