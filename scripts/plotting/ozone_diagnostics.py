@@ -577,8 +577,13 @@ def process_model_profiles(Model_Dat,O3_0,PS_0,pnew,intyp,kxtrp,ILAT,ILON,lat_0,
         pnew_2.append(p*100)
 
       #O3_0I1 = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
-      O3_0I1 = gcomp.interpolation.interp_hybrid_to_pressure(O3_0,PS_0,Model_Dat.hyam,Model_Dat.hybm,1000.0*100,
-                                                              pnew_2,method='linear')*1.0e9
+      #O3_0I1 = gcomp.interpolation.interp_hybrid_to_pressure(O3_0,PS_0,Model_Dat.hyam,Model_Dat.hybm,1000.0*100,
+      #                                                        pnew_2,method='linear')*1.0e9
+
+      O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
+                                                              new_levels=np.array(pnew_2),method='linear')*1.0e9
+      print("geocat:",type(O3_0I),O3_0I.shape,"\n\n")
+      O3_0I = O3_0I.values
       
       Locate_Bad=np.where(O3_0I1 > 10000.0)
       if len(Locate_Bad) > 0:
