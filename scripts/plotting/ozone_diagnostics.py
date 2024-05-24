@@ -499,8 +499,8 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         for p in pnew:
           pnew_2.append(p*100)
         print("\n",O3_0.dims,"\n")
-        O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
-        print("\nNgl:",type(O3_0I),O3_0I.shape,"\n")
+        #O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
+        #print("\nNgl:",type(O3_0I),O3_0I.shape,"\n")
         O3_0I = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
                                                               new_levels=np.array(pnew),method='linear',p0=1000.,lev_dim="lev")*1.0e9
         print("geocat:",type(O3_0I),O3_0I.shape,"\n\n")
@@ -583,18 +583,18 @@ def process_model_profiles(Model_Dat,O3_0,PS_0,pnew,intyp,kxtrp,ILAT,ILON,lat_0,
       O3_0I1 = gcomp.interpolation.interp_hybrid_to_pressure(data=O3_0,ps=PS_0,hyam=Model_Dat.hyam,hybm=Model_Dat.hybm,
                                                               new_levels=np.array(pnew_2),method='linear')*1.0e9
       print("geocat:",type(O3_0I1),O3_0I1.shape,"\n\n")
-      O3_0I1 = O3_0I1.values
+      #O3_0I1 = O3_0I1.values
       
-      Locate_Bad=np.where(O3_0I1 > 10000.0)
+      Locate_Bad=np.where(O3_0I1.values > 10000.0)
       if len(Locate_Bad) > 0:
-          O3_0I1[Locate_Bad]=np.nan
+          O3_0I1.values[Locate_Bad]=np.nan
       
       #Get the monthly of the case at each needed pressure level
       #and average over the region.
-      O3_011=np.nanmean(O3_0I1[0,:,:,:],axis=(1,2))
-      O3_021=np.nanmean(O3_0I1[3,:,:,:],axis=(1,2))
-      O3_031=np.nanmean(O3_0I1[6,:,:,:],axis=(1,2))
-      O3_041=np.nanmean(O3_0I1[9,:,:,:],axis=(1,2))
+      O3_011=np.nanmean(O3_0I1.values[0,:,:,:],axis=(1,2))
+      O3_021=np.nanmean(O3_0I1.values[3,:,:,:],axis=(1,2))
+      O3_031=np.nanmean(O3_0I1.values[6,:,:,:],axis=(1,2))
+      O3_041=np.nanmean(O3_0I1.values[9,:,:,:],axis=(1,2))
       
       #Set the points to interpolate to
       for i in range(0,len(pnew)):
@@ -605,10 +605,10 @@ def process_model_profiles(Model_Dat,O3_0,PS_0,pnew,intyp,kxtrp,ILAT,ILON,lat_0,
                 O3_Pt=np.vstack( (O3_Pt,[pnew[i],float(ILAT[j]),float(ILON[j])] ))
       
       #set up the regular grid interpolator for each case and level
-      interp_01 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[0,:,:,:]))
-      interp_11 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[3,:,:,:]))
-      interp_21 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[6,:,:,:]))
-      interp_31 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1[9,:,:,:]))
+      interp_01 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[0,:,:,:]))
+      interp_11 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[3,:,:,:]))
+      interp_21 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[6,:,:,:]))
+      interp_31 = RegularGridInterpolator((pnew,lat_0,lon_0), np.squeeze(O3_0I1.values[9,:,:,:]))
       
       #interpolate the model data at each case and pressure level
       O3_station_01 = interp_01(O3_Pt)
