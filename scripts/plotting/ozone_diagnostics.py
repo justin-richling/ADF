@@ -81,6 +81,7 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import Ngl
+import geocat.comp as gcomp
 from scipy.interpolate import RegularGridInterpolator
 from scipy import stats
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
@@ -496,6 +497,7 @@ def process_model_seasonal_cycle(MinLon,MaxLon,MinLat,MaxLat,Model_Dat,pnew,inty
         O3_sfc_04=np.mean(O3_sfc,axis=(1,2))
 
         O3_0I = Ngl.vinth2p(O3_0,Model_Dat.hyam,Model_Dat.hybm,pnew,PS_0,intyp,1000.0,1,kxtrp)*1.0e9
+        #O3_0I = gcomp.interpolation.interp_hybrid_to_pressure()
       
         #Get the seasonal cycle of the base case at each needed pressure level
         #and average over the region.
