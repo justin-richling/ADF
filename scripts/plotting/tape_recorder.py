@@ -36,7 +36,7 @@ def tape_recorder(adfobj):
     plot_location = adfobj.plot_location
     plot_loc = Path(plot_location[0])
 
-    #History string:
+    #Grab history string:
     hist_str = adfobj.hist_string
 
     #Grab test case name(s)
@@ -92,7 +92,7 @@ def tape_recorder(adfobj):
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
-    #
+    #Set location for observations
     obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
     #-----------------------------------------
 
