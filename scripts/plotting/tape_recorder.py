@@ -100,6 +100,8 @@ def tape_recorder(adfobj):
     #TODO: add option to look for H2O if Q is not available, and vice-versa
     var = "Q"
 
+    avail_vars = ["Q", "H2O"]
+
     #This may have to change if other variables are desired in this plot type?
     plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
     print(f"\t - Plotting annual tape recorder for {var}")
@@ -140,11 +142,27 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
+        """fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
-        datzm = datzm[var]
+        datzm = datzm[var]"""
+        try:
+            fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
+            dat = pf.load_dataset(fils)
+            dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+            datzm = dat.mean('lon')
+            datzm = datzm[var]
+        except:
+            # Find the other item using set operations
+            other_var = (set(avail_vars) - {var}).pop()
+            var = other_var
+            fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
+            dat = pf.load_dataset(fils)
+            dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+            datzm = dat.mean('lon')
+            datzm = datzm[var]
+            
         if var == "H2O":
             datzm = datzm[var]/18.015280/(1e6*28.964)
         dat_tropics = cosweightlat(datzm, -10, 10)
