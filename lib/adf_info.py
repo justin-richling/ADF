@@ -581,7 +581,7 @@ class AdfInfo(AdfConfig):
     @property
     def hist_string(self):
         """ Return the history string name to the user if requested."""
-        return copy.copy(self.__hist_str)
+        return self.__hist_str
         
 
     #########
