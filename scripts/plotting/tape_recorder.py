@@ -37,7 +37,7 @@ def tape_recorder(adfobj):
     plot_loc = Path(plot_location[0])
 
     #History string:
-    hist_str = adfobj.hist_str
+    hist_str = adfobj.hist_string
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
