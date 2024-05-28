@@ -436,20 +436,11 @@ class AdfInfo(AdfConfig):
             self.__plot_location.append(os.path.join(plot_dir, first_case_dir))
         #End if
 
+        #Go ahead and make the diag plot location if it doesn't exist already
         diag_location = Path(self.__plot_location[0])
         if not diag_location.is_dir():
             print(f"\t    {diag_location} not found, making new directory")
             diag_location.mkdir(parents=True)
-
-        """#Special ADF variable which contains the output paths for
-        #all generated plots and tables for each case:
-        output_locs = adf.plot_location
-        #Convert output location string to a Path object:
-        output_location = Path(output_locs[case_idx])
-        if not output_location.is_dir():
-            print(f"\t    {output_locs[case_idx]} not found, making new directory")
-            output_location.mkdir(parents=True)"""
-
         #-------------------------------------------------------------------------
 
         #Initialize "num_procs" variable:
