@@ -128,7 +128,7 @@ def tape_recorder(adfobj):
     for idx,key in enumerate(runs_LT2):
         fils= sorted(Path(runs_LT2[key]).glob('*h0.Q.*.nc'))
         dat = pf.load_dataset(fils)
-        dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        #dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm.Q, -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
