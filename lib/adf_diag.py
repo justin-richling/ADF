@@ -541,6 +541,8 @@ class AdfDiag(AdfWeb):
             # create copy of var list that can be modified for derivable variables
             diag_var_list = self.diag_var_list
 
+            constit_dict = {}
+
             for var in diag_var_list:
                 # Notify user of new time series file:
                 print(f"\t - time series for {var}")
@@ -555,6 +557,7 @@ class AdfDiag(AdfWeb):
                     #                                           ts_dir[case_idx], hist_files[0])
                     diag_var_list, constit_list = check_derive(self, res, var, case_name, diag_var_list, hist_file_ds)
                     print(f"the list that came out is {constit_list}\n")
+                    constit_dict[var] = constit_list
                     #else:
                     if not constit_list:
                         msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
@@ -638,9 +641,12 @@ class AdfDiag(AdfWeb):
 
                 # Add to command list for use in multi-processing pool:
                 list_of_commands.append(cmd)
-                if constit_list:
-                    print("deriving variable???")
-                    derive_variable(var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
+
+                if constit_dict:
+                    for der_var,constit_list in constit_dict.items():
+                        #constit_dict[var] = constit_list
+                        print("deriving variable???")
+                        derive_variable(der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
 
             # End variable loop
 
