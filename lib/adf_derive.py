@@ -134,7 +134,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
 
 
 
-def derive_variable(self, var, res=None, ts_dir=None,
+def derive_variable(self, case_name, var, res=None, ts_dir=None,
                          constit_list=None, overwrite=None):
     """
     Derive variables acccording to steps given here.  Since derivations will depend on the
@@ -169,14 +169,14 @@ def derive_variable(self, var, res=None, ts_dir=None,
         print(ermsg)
         if constit_files:
             #Add what's missing to debug log
-            dmsg = "derived time series:"
+            dmsg = f"derived time series for {case_name}:"
             dmsg += f"\n\tneeded constituents for derivation of "
             dmsg += f"{var}:\n\t\t- {constit_list}\n\tfound constituent file(s) in "
             dmsg += f"{Path(constit_files[0]).parent}:\n\t\t"
             dmsg += f"- {[Path(f).parts[-1] for f in constit_files if Path(f).is_file()]}"
             self.debug_log(dmsg)
         else:
-            dmsg = "derived time series:"
+            dmsg = f"derived time series for {case_name}:"
             dmsg += f"\n\tneeded constituents for derivation of "
             dmsg += f"{var}:\n\t\t- {constit_list}\n"
             dmsg += f"\tNo constituent(s) found in history files"
