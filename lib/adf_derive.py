@@ -148,11 +148,7 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
     """
 
     #Loop through derived variables
-    #for var in vars_to_derive:
     print(f"\t - deriving time series for {var}")
-
-    #Grab list of constituents for this variable
-    #constit_list = constit_dict[var]
 
     #Grab all required time series files for derived variable
     constit_files = []
@@ -186,7 +182,9 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
         #Open a new dataset with all the constituent files/variables
         ds = _load_dataset(constit_files)
         if not ds:
-            print("ahh")
+            dmsg = f"derived time series for {case_name}:"
+            dmsg += f"\n\tNo files to open."
+            self.debug_log(dmsg)
             return
 
         # create new file name for derived variable

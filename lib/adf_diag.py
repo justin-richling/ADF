@@ -551,30 +551,25 @@ class AdfDiag(AdfWeb):
 
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
+                    # Let user know variable is not in history file
                     print(f"\t     {var} not in history file, will try to derive if possible")
-                    #
-                    #diag_var_list, constit_list = check_derive(res, var, case_name,
-                    #                                           ts_dir[case_idx], hist_files[0])
-                    diag_var_list, constit_list = check_derive(self, res, var, case_name, diag_var_list, hist_file_ds)
-                    #print(f"the list that came out is {constit_list}\n")
+
+                    # Check if variable can be derived
+                    diag_var_list, constit_list = check_derive(self, res, var, case_name,
+                                                               diag_var_list, hist_file_ds)
+
+                    # Add variable and constituent list to dictionary
                     constit_dict[var] = constit_list
-                    #else:
-                    if isinstance(constit_list, list) and not constit_list:
+
+                    #if isinstance(constit_list, list) and not constit_list:
+                    if not constit_list:
+                        # If the variable can't be derived, remove from dictionary
                         constit_dict.pop(var)
                         msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
                         msg += "\n\t  ** No time series will be generated. **"
                         if verbose: # make this a wrapper!
                             print(msg)
                         self.debug_log(msg)
-                        #continue
-                    #elif constit_list is None:
-                    """if constit_list is None:
-                        print("is it none???")
-                        diag_var_list.remove(var)
-                        #continue"""
-                    #else:
-                    #    constit_dict[var] = constit_list
-                    #    continue
                     continue
 
                 # Check if variable has a "lev" dimension according to first file:
@@ -662,7 +657,7 @@ class AdfDiag(AdfWeb):
             #      time series files have to be made before derivation
             if constit_dict:
                 for der_var,constit_list in constit_dict.items():
-                    derive_variable(self, case_name, der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
+                    derive_variable(self, case_name, der_var, res, ts_dir[case_idx], constit_list)
 
         # End cases loop
 
