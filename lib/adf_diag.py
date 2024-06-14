@@ -566,6 +566,8 @@ class AdfDiag(AdfWeb):
                             print(msg)
                         self.debug_log(msg)
                         continue
+                    elif constit_list is None:
+                        diag_var_list.remove(var)
                     else:
                         continue
 
