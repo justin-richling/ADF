@@ -60,6 +60,11 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     constit_list = []
 
     try_cam_constits = True
+    """try:
+        vres = res[var]
+    except KeyError:
+        miss_var_msg = f"Missing "
+        self.debug_log(miss_var_msg)"""
 
     vres = res[var]
 
