@@ -82,6 +82,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
                 msg += f"checking constituents for '{var}'"
                 self.debug_log(msg)
             else:
+                print("is it coming here??")
                 constit_list = None
         else:
             self.debug_log(constit_errmsg)
@@ -92,6 +93,10 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     if try_cam_constits:
         if "derivable_from" in vres:
             constit_list = vres["derivable_from"]
+        if constit_list:
+            if not all(item in hist_file_ds.data_vars for item in constit_list):
+                print("is it coming here??")
+                constit_list = None
         else:
             # Missing variable or missing derivable_from argument
             der_from_msg = f"derive time series for {case_name}:"
