@@ -567,6 +567,7 @@ class AdfDiag(AdfWeb):
                         self.debug_log(msg)
                         continue
                     elif constit_list is None:
+                        print("is it none???")
                         diag_var_list.remove(var)
                     else:
                         constit_dict[var] = constit_list
