@@ -177,7 +177,7 @@ def derive_variable(self, var, res=None, ts_dir=None,
 
     else:
         #Open a new dataset with all the constituent files/variables
-        ds = xr.open_mfdataset(constit_files)
+        ds = _load_dataset(constit_files)
         if not ds:
             print("ahh")
             return
