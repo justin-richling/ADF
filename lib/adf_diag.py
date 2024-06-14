@@ -549,7 +549,7 @@ class AdfDiag(AdfWeb):
 
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
-
+                    print(f"\t - {var} not in history file... interesting")
                     #
                     #diag_var_list, constit_list = check_derive(res, var, case_name,
                     #                                           ts_dir[case_idx], hist_files[0])
