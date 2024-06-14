@@ -178,6 +178,9 @@ def derive_variable(self, var, res=None, ts_dir=None,
     else:
         #Open a new dataset with all the constituent files/variables
         ds = xr.open_mfdataset(constit_files)
+        if not ds:
+            print("ahh")
+            return
 
         # create new file name for derived variable
         derived_file = constit_files[0].replace(constit_list[0], var)
