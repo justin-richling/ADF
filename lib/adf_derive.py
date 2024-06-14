@@ -93,10 +93,6 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     if try_cam_constits:
         if "derivable_from" in vres:
             constit_list = vres["derivable_from"]
-        if constit_list:
-            if any(item not in hist_file_ds.data_vars for item in constit_list):
-                print("is it coming here??")
-                #constit_list = None
         else:
             # Missing variable or missing derivable_from argument
             der_from_msg = f"derive time series for {case_name}:"
@@ -113,20 +109,12 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     #Log if this variable can be derived but is missing list of constituents
     if isinstance(constit_list, list) and not constit_list:
         self.debug_log(constit_errmsg)
-    """#Lastly, raise error if the variable is not a derived quanitity but is also not
-    #in the history file(s)
-    else:
-        msg = f"WARNING: {var} is not in the file {hist_file0} "
-        msg += "nor can it be derived.\n"
-        msg += "\t  ** No time series will be generated."
-        print(msg)
-        #continue"""
-    #End if
 
     if constit_list:
         for constit in constit_list:
             if constit not in diag_var_list:
                 diag_var_list.append(constit)
+
     return diag_var_list, constit_list
 
 
@@ -159,7 +147,7 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
 
     #Check if all the necessary constituent files were found
     if len(constit_files) != len(constit_list):
-        ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated."
+        ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated. **"
         ermsg += f" Please remove {var} from 'diag_var_list' or find the "
         ermsg += "relevant CAM files.\n"
         print(ermsg)
