@@ -551,7 +551,7 @@ class AdfDiag(AdfWeb):
 
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
-                    print(f"\t     {var} not in history file... interesting")
+                    print(f"\t     {var} not in history file, will try to derive if possible")
                     #
                     #diag_var_list, constit_list = check_derive(res, var, case_name,
                     #                                           ts_dir[case_idx], hist_files[0])
@@ -560,7 +560,7 @@ class AdfDiag(AdfWeb):
                     constit_dict[var] = constit_list
                     #else:
                     if isinstance(constit_list, list) and not constit_list:
-                        #constit_dict.pop(var)
+                        constit_dict.pop(var)
                         msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
                         msg += "\n\t  ** No time series will be generated. **"
                         if verbose: # make this a wrapper!
