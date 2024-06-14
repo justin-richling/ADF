@@ -557,7 +557,7 @@ class AdfDiag(AdfWeb):
                     #                                           ts_dir[case_idx], hist_files[0])
                     diag_var_list, constit_list = check_derive(self, res, var, case_name, diag_var_list, hist_file_ds)
                     print(f"the list that came out is {constit_list}\n")
-                    constit_dict[var] = constit_list
+                    
                     #else:
                     if not constit_list:
                         msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
@@ -569,6 +569,7 @@ class AdfDiag(AdfWeb):
                     elif constit_list is None:
                         diag_var_list.remove(var)
                     else:
+                        constit_dict[var] = constit_list
                         continue
 
                 # Check if variable has a "lev" dimension according to first file:
