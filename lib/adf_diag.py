@@ -615,7 +615,7 @@ class AdfDiag(AdfWeb):
 
                         if "PS" in hist_file_var_list:
                             ncrcat_var_list = ncrcat_var_list + ",PS"
-                            print("Adding PS to file")
+                            print("\t     Adding PS to file")
                         else:
                             wmsg = "WARNING: PS not found in history file."
                             wmsg += " It might be needed at some point."
@@ -631,7 +631,7 @@ class AdfDiag(AdfWeb):
                             # PMID file to each one of those targets separately. -JN
                             if "PMID" in hist_file_var_list:
                                 ncrcat_var_list = ncrcat_var_list + ",PMID"
-                                print("Adding PMID to file")
+                                print("\t     Adding PMID to file")
                             else:
                                 wmsg = "WARNING: PMID not found in history file."
                                 wmsg += " It might be needed at some point."
