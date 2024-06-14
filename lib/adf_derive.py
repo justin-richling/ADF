@@ -94,7 +94,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
         if "derivable_from" in vres:
             constit_list = vres["derivable_from"]
         if constit_list:
-            if not all(item in hist_file_ds.data_vars for item in constit_list):
+            if any(item not in hist_file_ds.data_vars for item in constit_list):
                 print("is it coming here??")
                 constit_list = None
         else:
