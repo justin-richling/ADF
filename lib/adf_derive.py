@@ -111,7 +111,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     #End if
 
     #Log if this variable can be derived but is missing list of constituents
-    if not constit_list:
+    if isinstance(constit_list, list) and not constit_list:
         self.debug_log(constit_errmsg)
     """#Lastly, raise error if the variable is not a derived quanitity but is also not
     #in the history file(s)
