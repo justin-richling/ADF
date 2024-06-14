@@ -554,6 +554,7 @@ class AdfDiag(AdfWeb):
                     #diag_var_list, constit_list = check_derive(res, var, case_name,
                     #                                           ts_dir[case_idx], hist_files[0])
                     diag_var_list, constit_list = check_derive(self, res, var, case_name, diag_var_list, hist_file_ds)
+                    print(f"the list that came out is {constit_list}\n")
                     #else:
                     if not constit_list:
                         msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
