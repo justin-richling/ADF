@@ -562,6 +562,8 @@ class AdfDiag(AdfWeb):
                             print(msg)
                         self.debug_log(msg)
                         continue
+                    else:
+                        continue
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
