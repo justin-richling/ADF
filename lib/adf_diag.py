@@ -566,13 +566,14 @@ class AdfDiag(AdfWeb):
                             print(msg)
                         self.debug_log(msg)
                         continue
-                    elif constit_list is None:
+                    #elif constit_list is None:
+                    if constit_list is None:
                         print("is it none???")
                         #diag_var_list.remove(var)
                         continue
-                    else:
-                        constit_dict[var] = constit_list
-                        continue
+                    #else:
+                    #    constit_dict[var] = constit_list
+                    #    continue
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
