@@ -642,18 +642,18 @@ class AdfDiag(AdfWeb):
                 # Add to command list for use in multi-processing pool:
                 list_of_commands.append(cmd)
 
-                if constit_dict:
-                    for der_var,constit_list in constit_dict.items():
-                        #constit_dict[var] = constit_list
-                        print("deriving variable???")
-                        derive_variable(self, der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
-
             # End variable loop
 
             # Now run the "ncrcat" subprocesses in parallel:
             with mp.Pool(processes=self.num_procs) as mpool:
                 _ = mpool.map(call_ncrcat, list_of_commands)
             # End with
+
+            if constit_dict:
+                for der_var,constit_list in constit_dict.items():
+                    #constit_dict[var] = constit_list
+                    print("deriving variable???")
+                    derive_variable(self, der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
 
         # End cases loop
 
