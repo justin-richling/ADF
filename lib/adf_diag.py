@@ -560,6 +560,7 @@ class AdfDiag(AdfWeb):
                     constit_dict[var] = constit_list
                     #else:
                     if isinstance(constit_list, list) and not constit_list:
+                        constit_dict.pop(var)
                         msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
                         msg += "\n\t  ** No time series will be generated. **"
                         if verbose: # make this a wrapper!
