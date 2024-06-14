@@ -541,10 +541,9 @@ class AdfDiag(AdfWeb):
             # create copy of var list that can be modified for derivable variables
             diag_var_list = self.diag_var_list
 
-            # Notify user of new time series file:
-            print(f"\t - time series for {var}")
-
             for var in diag_var_list:
+                # Notify user of new time series file:
+                print(f"\t - time series for {var}")
 
                 constit_list = []
 
