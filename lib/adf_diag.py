@@ -545,6 +545,8 @@ class AdfDiag(AdfWeb):
                 # Notify user of new time series file:
                 print(f"\t - time series for {var}")
 
+                constit_list = []
+
                 #Check if current variable is a derived quantity
                 if var not in hist_file_var_list:
 
@@ -633,8 +635,8 @@ class AdfDiag(AdfWeb):
 
                 # Add to command list for use in multi-processing pool:
                 list_of_commands.append(cmd)
-
-                derive_variable(var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
+                if constit_list:
+                    derive_variable(var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
 
             # End variable loop
 
