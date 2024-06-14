@@ -82,6 +82,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
                 msg += f"checking constituents for '{var}'"
                 self.debug_log(msg)
         else:
+            constit_list = []
             self.debug_log(constit_errmsg)
         #End if
     #End if
