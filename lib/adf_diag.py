@@ -646,7 +646,7 @@ class AdfDiag(AdfWeb):
                     for der_var,constit_list in constit_dict.items():
                         #constit_dict[var] = constit_list
                         print("deriving variable???")
-                        derive_variable(der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
+                        derive_variable(self, der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
 
             # End variable loop
 
