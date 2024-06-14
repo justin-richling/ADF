@@ -60,13 +60,14 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     constit_list = []
 
     try_cam_constits = True
-    """try:
+    try:
         vres = res[var]
     except KeyError:
         miss_var_msg = f"Missing "
-        self.debug_log(miss_var_msg)"""
-    print(f"var {var} for res???\n")
-    vres = res[var]
+        self.debug_log(miss_var_msg)
+        return diag_var_list, []
+    #print(f"var {var} for res???\n")
+    #vres = res[var]
 
     #Check first if variable is potentially part of a CAM-CHEM run
     if "derivable_from_cam_chem" in vres:
