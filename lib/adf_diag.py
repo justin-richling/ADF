@@ -649,10 +649,9 @@ class AdfDiag(AdfWeb):
                 _ = mpool.map(call_ncrcat, list_of_commands)
             # End with
 
+            # Finally, run through the derived variables if applicable
             if constit_dict:
                 for der_var,constit_list in constit_dict.items():
-                    #constit_dict[var] = constit_list
-                    print("deriving variable???")
                     derive_variable(self, der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)
 
         # End cases loop
