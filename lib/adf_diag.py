@@ -557,7 +557,7 @@ class AdfDiag(AdfWeb):
                     #                                           ts_dir[case_idx], hist_files[0])
                     diag_var_list, constit_list = check_derive(self, res, var, case_name, diag_var_list, hist_file_ds)
                     #print(f"the list that came out is {constit_list}\n")
-                    #constit_dict[var] = constit_list
+                    constit_dict[var] = constit_list
                     #else:
                     if isinstance(constit_list, list) and not constit_list:
                         #constit_dict.pop(var)
@@ -566,15 +566,16 @@ class AdfDiag(AdfWeb):
                         if verbose: # make this a wrapper!
                             print(msg)
                         self.debug_log(msg)
-                        continue
+                        #continue
                     #elif constit_list is None:
-                    if constit_list is None:
+                    """if constit_list is None:
                         print("is it none???")
                         diag_var_list.remove(var)
-                        continue
-                    else:
-                        constit_dict[var] = constit_list
-                        continue
+                        #continue"""
+                    #else:
+                    #    constit_dict[var] = constit_list
+                    #    continue
+                    continue
 
                 # Check if variable has a "lev" dimension according to first file:
                 has_lev = bool("lev" in hist_file_ds[var].dims)
