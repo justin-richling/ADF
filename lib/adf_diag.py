@@ -650,6 +650,8 @@ class AdfDiag(AdfWeb):
             # End with
 
             # Finally, run through the derived variables if applicable
+            #NOTE: this has to happen after the variable loop because the constituent
+            #      time series files have to be made before derivation
             if constit_dict:
                 for der_var,constit_list in constit_dict.items():
                     derive_variable(self, der_var, res=res, ts_dir=ts_dir[case_idx], constit_list=constit_list)

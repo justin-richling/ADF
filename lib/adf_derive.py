@@ -71,7 +71,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
             if all(item in hist_file_ds.data_vars for item in constit_list):
                 #Set check to look for regular CAM constituents in variable defaults
                 try_cam_constits = False
-                msg = f"create time series for {case_name}:"
+                msg = f"derive time series for {case_name}:"
                 msg += "\n\tLooks like this a CAM-CHEM run, "
                 msg += f"checking constituents for '{var}'"
                 self.debug_log(msg)
@@ -86,7 +86,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
             constit_list = vres["derivable_from"]
         else:
             # Missing variable or missing derivable_from argument
-            der_from_msg = f"create time series for {case_name}:"
+            der_from_msg = f"derive time series for {case_name}:"
             der_from_msg += f"\n Can't create time series for {var}.\n\tEither "
             der_from_msg += "the variable is missing from CAM output or it is a "
             der_from_msg += "derived quantity and is missing the 'derivable_from' "
@@ -156,14 +156,14 @@ def derive_variable(self, var, res=None, ts_dir=None,
         print(ermsg)
         if constit_files:
             #Add what's missing to debug log
-            dmsg = "create time series:"
+            dmsg = "derived time series:"
             dmsg += f"\n\tneeded constituents for derivation of "
             dmsg += f"{var}:\n\t\t- {constit_list}\n\tfound constituent file(s) in "
             dmsg += f"{Path(constit_files[0]).parent}:\n\t\t"
             dmsg += f"- {[Path(f).parts[-1] for f in constit_files if Path(f).is_file()]}"
             self.debug_log(dmsg)
         else:
-            dmsg = "create time series:"
+            dmsg = "derived time series:"
             dmsg += f"\n\tneeded constituents for derivation of "
             dmsg += f"{var}:\n\t\t- {constit_list}\n"
             dmsg += f"\tNo constituent(s) found in history files"
@@ -200,6 +200,7 @@ def derive_variable(self, var, res=None, ts_dir=None,
 
         #Aerosol Calculations
         #----------------------------------------------------------------------------------
+        """
         #These will be multiplied by rho (density of dry air)
         ds_pmid_done = False
         ds_t_done = False
@@ -223,7 +224,33 @@ def derive_variable(self, var, res=None, ts_dir=None,
                     errmsg = "Missing necessary files for dry air density (rho) "
                     errmsg += "calculation.\nPlease make sure 'T' is in the CAM "
                     errmsg += "run for aerosol calculations"
-                    print(errmsg)
+                    print(errmsg)"""
+        #These will be multiplied by rho (density of dry air)
+
+        # User-defined defaults might not include aerosol zonal list
+        azl = res.get("aerosol_zonal_list", [])
+        if var in azl:
+            #Only calculate once for all aerosol vars - OUTDATED! NEED TO REMOVE
+            ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
+            if not ds_pmid:
+                errmsg = "Missing necessary files for dry air density (rho) "
+                errmsg += "calculation.\nPlease make sure 'PMID' is in the CAM "
+                errmsg += "run for aerosol calculations"
+                print(errmsg)
+                dmsg = "derived time series:"
+                dmsg += f"\n\t missing 'PMID' in {ts_dir}, can't make time series for {var} "
+                self.debug_log(dmsg)
+
+            ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
+            if not ds_t:
+                errmsg = "Missing necessary files for dry air density (rho) "
+                errmsg += "calculation.\nPlease make sure 'T' is in the CAM "
+                errmsg += "run for aerosol calculations"
+                print(errmsg)
+
+                dmsg = "derived time series:"
+                dmsg += f"\n\t missing 'T' in {ts_dir}, can't make time series for {var} "
+                self.debug_log(dmsg)
 
             #Multiply aerosol by dry air density (rho): (P/Rd*T)
             ds[var] = ds[var]*(ds_pmid["PMID"]/(res["Rgas"]*ds_t["T"]))
