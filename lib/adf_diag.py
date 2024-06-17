@@ -97,6 +97,7 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 
 # Finally, import needed ADF module:
 from adf_web import AdfWeb
+from adf_derive import check_derive, derive_variable
 
 
 #################
@@ -510,66 +511,53 @@ class AdfDiag(AdfWeb):
                     time_string_finish = last_file_split[-1].replace("-", "")
                 time_string = "-".join([time_string_start, time_string_finish])
 
-                # Loop over CAM history variables:
+                # Intitialize list for NCO commands
                 list_of_commands = []
-                vars_to_derive = []
-                # create copy of var list that can be modified for derivable variables
-                diag_var_list = self.diag_var_list
-                for var in diag_var_list:
-                    if var not in hist_file_var_list:
-                        vres = res.get(var, {})
-                        if "derivable_from" in vres:
-                            constit_list = vres["derivable_from"]
-                            for constit in constit_list:
-                                if constit not in diag_var_list:
-                                    diag_var_list.append(constit)
-                            vars_to_derive.append(var)
-                            continue
-                # INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
-                first_file_split = str(hist_files[0]).split(".")
-                if first_file_split[-1] == "nc":
-                    time_string_start = first_file_split[-2].replace("-", "")
-                else:
-                    time_string_start = first_file_split[-1].replace("-", "")
-                last_file_split = str(hist_files[-1]).split(".")
-                if last_file_split[-1] == "nc":
-                    time_string_finish = last_file_split[-2].replace("-", "")
-                else:
-                    time_string_finish = last_file_split[-1].replace("-", "")
-                time_string = "-".join([time_string_start, time_string_finish])
 
-                # Loop over CAM history variables:
-                list_of_commands = []
-                vars_to_derive = []
-                # create copy of var list that can be modified for derivable variables
+                # Create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
 
-                # Aerosol Calcs
-                #--------------
-                #Always make sure PMID is made if aerosols are desired in config file
-                if "PMID" not in diag_var_list:
-                    if any(item in res["aerosol_zonal_list"] for item in diag_var_list):
-                        diag_var_list += ["PMID"]
-                if "T" not in diag_var_list:
-                    if any(item in res["aerosol_zonal_list"] for item in diag_var_list):
-                        diag_var_list += ["T"]
-                #End aerosol calcs
+                # Intitialize dictionary for derived variables, if appplicable
+                constit_dict = {}
 
+                # Loop over CAM history variables:
                 for var in diag_var_list:
+                    # Notify user of new time series file:
+                    print(f"\t - time series for {var}")
+
+                    # Initialize list for constituents if variable is derivable
+                    constit_list = []
+
+                    #Check if current variable is not in history file(s)
                     if var not in hist_file_var_list:
-                        vres = res.get(var, {})
-                        if "derivable_from" in vres:
-                            constit_list = vres["derivable_from"]
-                            for constit in constit_list:
-                                if constit not in diag_var_list:
-                                    diag_var_list.append(constit)
-                            vars_to_derive.append(var)
-                            continue
-                        else:
-                            msg = f"WARNING: {var} is not in the file {hist_files[0]}."
-                            msg += " No time series will be generated."
+                        # Let user know variable is not in history file
+                        print(f"\t     {var} not in history file, will try to derive if possible")
+
+                        """# Check if variable can be derived
+                        diag_var_list, constit_list = check_derive(self, res, var, case_name,
+                                                                diag_var_list, hist_file_ds)
+
+                        # Check if constit_list is empty
+                        if not constit_list:
+                            # If the variable can't be derived, remove from dictionary
+                            msg = f"WARNING: {var} is not in the file {hist_files[0]} and can't be derived."
+                            msg += "\n\t  ** No time series will be generated. **"
+                            #if verbose: # make this a wrapper!
+                            #    print(msg)
                             print(msg)
-                            continue
+                            self.debug_log(msg)
+                        else:
+                            # Add variable and constituent list to dictionary
+                            constit_dict[var] = constit_list
+                        # End if"""
+
+                        # Check if variable can be derived
+                        diag_var_list, constit_dict = check_derive(self, res, var, case_name,
+                                                                   diag_var_list, constit_dict,
+                                                                   hist_file_ds, hist_files[0])
+                        # Move to the next variable
+                        continue
+                    # End if
 
                     # Check if variable has a "lev" dimension according to first file:
                     has_lev = bool("lev" in hist_file_ds[var].dims)
@@ -592,9 +580,6 @@ class AdfDiag(AdfWeb):
                             # If not, then simply skip this variable:
                             continue
 
-                    # Notify user of new time series file:
-                    print(f"\t - time series for {var}")
-
                     # Variable list starts with just the variable
                     ncrcat_var_list = f"{var}"
 
@@ -612,7 +597,7 @@ class AdfDiag(AdfWeb):
 
                             if "PS" in hist_file_var_list:
                                 ncrcat_var_list = ncrcat_var_list + ",PS"
-                                print("Adding PS to file")
+                                print("\t     Adding PS to file")
                             else:
                                 wmsg = "WARNING: PS not found in history file."
                                 wmsg += " It might be needed at some point."
@@ -628,7 +613,7 @@ class AdfDiag(AdfWeb):
                                 # PMID file to each one of those targets separately. -JN
                                 if "PMID" in hist_file_var_list:
                                     ncrcat_var_list = ncrcat_var_list + ",PMID"
-                                    print("Adding PMID to file")
+                                    print("\t     Adding PMID to file")
                                 else:
                                     wmsg = "WARNING: PMID not found in history file."
                                     wmsg += " It might be needed at some point."
@@ -652,12 +637,15 @@ class AdfDiag(AdfWeb):
                 # Now run the "ncrcat" subprocesses in parallel:
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_commands)
-
-                if vars_to_derive:
-                    self.derive_variables(
-                        res=res, vars_to_derive=vars_to_derive, ts_dir=ts_dir[case_idx]
-                    )
                 # End with
+
+                # Finally, run through the derived variables if applicable
+                #NOTE: this has to happen after the variable loop because the constituent
+                #      time series files have to be made before using in derivation
+                if constit_dict:
+                    for der_var,constit_list in constit_dict.items():
+                        derive_variable(self, case_name, der_var, res, ts_dir[case_idx], constit_list)
+
             # End for hist_str
 
         # End cases loop
@@ -1032,109 +1020,6 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables(self, res=None, vars_to_derive=None, ts_dir=None, overwrite=None):
-        """
-        Derive variables acccording to steps given here.  Since derivations will depend on the
-        variable, each variable to derive will need its own set of steps below.
-
-        Caution: this method assumes that there will be one time series file per variable
-
-        If the file for the derived variable exists, the kwarg `overwrite` determines
-        whether to overwrite the file (true) or exit with a warning message.
-
-        """
-
-        for var in vars_to_derive:
-            print(f"\t - deriving time series for {var}")
-
-            #Check whether there are parts to derive from and if there is an associated equation
-            vres = res.get(var, {})
-            if "derivable_from" in vres:
-                constit_list = vres['derivable_from']
-            else:
-                print("WARNING: No constituents listed in defaults config file, moving on")
-                continue
-
-            #Grab all required time series files for derived var
-            constit_files = []
-            for constit in constit_list:
-                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
-                    constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
-
-            #Check if all the constituent files were found
-            if len(constit_files) != len(constit_list):
-                ermsg = f"Not all constituent files present; {var} cannot be calculated."
-                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
-                print(ermsg)
-            else:
-                #Open a new dataset with all the constituent files/variables
-                ds = xr.open_mfdataset(constit_files)
-
-                # create new file name for derived variable
-                derived_file = constit_files[0].replace(constit_list[0], var)
-
-                #Check if clobber is true for file
-                if Path(derived_file).is_file():
-                    if overwrite:
-                        Path(derived_file).unlink()
-                    else:
-                        wmsg = f"[{__name__}] Warning: '{var}' file was found"
-                        wmsg += " and overwrite is False. Will use existing file."
-                        print(wmsg)
-                        continue
-
-                #NOTE: this will need to be changed when derived equations are more complex! - JR
-                if var == "RESTOM":
-                    der_val = ds["FSNT"]-ds["FLNT"]
-                else:
-                    #Loop through all constituents and sum
-                    der_val = 0
-                    for v in constit_list:
-                        der_val += ds[v]
-
-                #Set derived variable name and add to dataset
-                der_val.name = var
-                ds[var] = der_val
-
-                #Aerosol Calculations - used for zonal plots
-                #These will be multiplied by rho (density of dry air)
-                ds_pmid_done = False
-                ds_t_done = False
-                if var in res["aerosol_zonal_list"]:
-
-                    #Only calculate once for all aerosol vars
-                    if not ds_pmid_done:
-                        ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
-                        ds_pmid_done = True
-                        if not ds_pmid:
-                            errmsg = "Missing necessary files for dry air density"
-                            errmsg += " (rho) calculation.\n"
-                            errmsg += "Please make sure 'PMID' is in the CAM run"
-                            errmsg += " for aerosol calculations"
-                            print(errmsg)
-                            continue
-                    if not ds_t_done:
-                        ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
-                        ds_t_done = True
-                        if not ds_t:
-                            errmsg = "Missing necessary files for dry air density"
-                            errmsg += " (rho) calculation.\n"
-                            errmsg += "Please make sure 'T' is in the CAM run"
-                            errmsg += " for aerosol calculations"
-                            print(errmsg)
-                            continue
-
-                    #Multiply aerosol by dry air density (rho): (P/Rd*T)
-                    ds[var] = ds[var]*(ds_pmid["PMID"]/(res["Rgas"]*ds_t["T"]))
-
-                    #Sulfate conversion factor
-                    if var == "SO4":
-                        ds[var] = ds[var]*(96./115.)
-
-                #Drop all constituents from final saved dataset
-                #These are not necessary because they have their own time series files
-                ds_final = ds.drop_vars(constit_list)
-                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
     ######### MDTF functions #########
     def setup_run_mdtf(self):

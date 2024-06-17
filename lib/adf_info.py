@@ -237,8 +237,7 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
-                if not isinstance(conf_val, list):
-                    baseline_hist_str = [baseline_hist_str]
+                
                 hist_str = baseline_hist_str[0]
                 print("hist_str",hist_str,"\n")
                 starting_location = Path(baseline_hist_locs)
