@@ -23,6 +23,7 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
              * if missing `derived_from` argument(s)
              * if `derived_from` argument(s) exist but not declared
     """
+    print("constit_dict from inside function BEFORE",constit_dict,"\n")
 
     # Aerosol Calcs
     #--------------
