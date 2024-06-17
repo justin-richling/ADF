@@ -4,9 +4,6 @@ from pathlib import Path
 import xarray as xr
 
 
-
-
-
 def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     """
     For incoming variable, look for list of constituents if available
@@ -30,7 +27,7 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     # Aerosol Calcs
     #--------------
 
-    #Always make sure PMID is made if aerosols are desired in config file
+    # Always make sure PMID is made if aerosols are desired in config file
     # Since there's no requirement for `aerosol_zonal_list`, allow it to be absent:
     azl = res.get("aerosol_zonal_list", [])
     if azl:
@@ -42,10 +39,6 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
                 diag_var_list += ["T"]
     #End aerosol calcs
 
-    # create copy of var list that can be modified for derivable variables
-    #diag_var_list = self.diag_var_list
-
-
     # Set error messages for printing/debugging
     # Derived variable, but missing constituent list
     constit_errmsg = f"create time series for {case_name}:"
@@ -54,9 +47,9 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
     constit_errmsg += "\n\tPlease add list of constituents to 'derivable_from' "
     constit_errmsg += f"for {var} in variable defaults yaml file."
 
-    #Initialiaze list for constituents
-    #NOTE: This is if the variable is NOT derivable but needs
-    # an empty list as a check later
+    # Initialiaze list for constituents
+    # NOTE: This is if the variable is NOT derivable but needs
+    #       an empty list as a check later
     constit_list = []
 
     try_cam_constits = True
@@ -66,30 +59,25 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
         miss_var_msg = f"Missing "
         self.debug_log(miss_var_msg)
         return diag_var_list, []
-    #print(f"var {var} for res???\n")
-    #vres = res[var]
 
-    #Check first if variable is potentially part of a CAM-CHEM run
+    # Check first if variable is potentially part of a CAM-CHEM run
     if "derivable_from_cam_chem" in vres:
         constit_list = vres["derivable_from_cam_chem"]
 
         if constit_list:
             if all(item in hist_file_ds.data_vars for item in constit_list):
-                #Set check to look for regular CAM constituents in variable defaults
+                # Set check to look for regular CAM constituents in variable defaults
                 try_cam_constits = False
                 msg = f"derive time series for {case_name}:"
                 msg += "\n\tLooks like this a CAM-CHEM run, "
                 msg += f"checking constituents for '{var}'"
                 self.debug_log(msg)
-            else:
-                print("is it coming here CAM-CHEM??")
-                #constit_list = None
         else:
             self.debug_log(constit_errmsg)
-        #End if
-    #End if
+        # End if
+    # End if
     
-    #If not CAM-CHEM, check regular CAM runs
+    # If not CAM-CHEM, check regular CAM runs
     if try_cam_constits:
         if "derivable_from" in vres:
             constit_list = vres["derivable_from"]
@@ -103,10 +91,10 @@ def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
             der_from_msg += "or set appropriate argument in variable "
             der_from_msg += "defaults yaml file."
             self.debug_log(der_from_msg)
-        #End if
-    #End if
+        # End if
+    # End if
 
-    #Log if this variable can be derived but is missing list of constituents
+    # Log if this variable can be derived but is missing list of constituents
     if isinstance(constit_list, list) and not constit_list:
         self.debug_log(constit_errmsg)
 
@@ -135,24 +123,25 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
 
     """
 
-    #Loop through derived variables
+    # Loop through derived variables
     print(f"\t - deriving time series for {var}")
 
-    #Grab all required time series files for derived variable
+    # Grab all required time series files for derived variable
     constit_files = []
     for constit in constit_list:
         #Check if the constituent file is present, if so add it to list
         if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
             constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
+    # End for
 
-    #Check if all the necessary constituent files were found
+    # Check if all the necessary constituent files were found
     if len(constit_files) != len(constit_list):
-        ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated. **"
-        ermsg += f" Please remove {var} from 'diag_var_list' or find the "
+        ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated. **\n"
+        ermsg += f"\t     Please remove {var} from 'diag_var_list' or find the "
         ermsg += "relevant CAM files.\n"
         print(ermsg)
         if constit_files:
-            #Add what's missing to debug log
+            # Add what's missing to debug log
             dmsg = f"derived time series for {case_name}:"
             dmsg += f"\n\tneeded constituents for derivation of "
             dmsg += f"{var}:\n\t\t- {constit_list}\n\tfound constituent file(s) in "
@@ -167,7 +156,7 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
             self.debug_log(dmsg)
 
     else:
-        #Open a new dataset with all the constituent files/variables
+        # Open a new dataset with all the constituent files/variables
         ds = _load_dataset(constit_files)
         if not ds:
             dmsg = f"derived time series for {case_name}:"
@@ -178,7 +167,7 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
         # create new file name for derived variable
         derived_file = constit_files[0].replace(constit_list[0], var)
 
-        #Check if clobber is true for file
+        # Check if clobber is true for file
         if Path(derived_file).is_file():
             if overwrite:
                 Path(derived_file).unlink()
@@ -196,43 +185,18 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
             for v in constit_list:
                 der_val += ds[v]
 
-        #Set derived variable name and add to dataset
+        # Set derived variable name and add to dataset
         der_val.name = var
         ds[var] = der_val
 
-        #Aerosol Calculations
+        # Aerosol Calculations
         #----------------------------------------------------------------------------------
-        """
-        #These will be multiplied by rho (density of dry air)
-        ds_pmid_done = False
-        ds_t_done = False
+        # These will be multiplied by rho (density of dry air)
 
         # User-defined defaults might not include aerosol zonal list
         azl = res.get("aerosol_zonal_list", [])
         if var in azl:
-            #Only calculate once for all aerosol vars - OUTDATED! NEED TO REMOVE
-            if not ds_pmid_done:
-                ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
-                ds_pmid_done = True
-                if not ds_pmid:
-                    errmsg = "Missing necessary files for dry air density (rho) "
-                    errmsg += "calculation.\nPlease make sure 'PMID' is in the CAM "
-                    errmsg += "run for aerosol calculations"
-                    print(errmsg)
-            if not ds_t_done:
-                ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
-                ds_t_done = True
-                if not ds_t:
-                    errmsg = "Missing necessary files for dry air density (rho) "
-                    errmsg += "calculation.\nPlease make sure 'T' is in the CAM "
-                    errmsg += "run for aerosol calculations"
-                    print(errmsg)"""
-        #These will be multiplied by rho (density of dry air)
-
-        # User-defined defaults might not include aerosol zonal list
-        azl = res.get("aerosol_zonal_list", [])
-        if var in azl:
-            #Only calculate once for all aerosol vars - OUTDATED! NEED TO REMOVE
+            # Check if PMID is in file:
             ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
             if not ds_pmid:
                 errmsg = "Missing necessary files for dry air density (rho) "
@@ -243,6 +207,7 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
                 dmsg += f"\n\t missing 'PMID' in {ts_dir}, can't make time series for {var} "
                 self.debug_log(dmsg)
 
+            # Check if T is in file:
             ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
             if not ds_t:
                 errmsg = "Missing necessary files for dry air density (rho) "
