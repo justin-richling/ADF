@@ -111,6 +111,8 @@ class AdfInfo(AdfConfig):
 
         #Loop over all items in config dict:
         for conf_var, conf_val in self.__cam_climo_info.items():
+            print("conf_var", conf_var)
+            print("conf_val", conf_val,"\n")
             # Hist_str can be a list for each case, so set it as a nested list here
             if "hist_str" in conf_var:
                 self.hist_str_to_list(conf_var, conf_val)
@@ -233,7 +235,7 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
-                hist_str = baseline_hist_str[0]
+                hist_str = baseline_hist_str
                 print("hist_str",hist_str,"\n")
                 starting_location = Path(baseline_hist_locs)
                 print("starting_location",starting_location,"\n")
