@@ -555,10 +555,11 @@ class AdfDiag(AdfWeb):
                         diag_var_list, constit_dict = check_derive2(self, res, var, case_name,
                                                                    diag_var_list, constit_dict,
                                                                    hist_file_ds, hist_files[0])
+                        print(var, constit_dict,"\n")
                         # Move to the next variable
                         continue
                     # End if
-                    print(constit_dict,"\n")
+                    print("AHHHHHHh",var, constit_dict,"\n")
                     # Check if variable has a "lev" dimension according to first file:
                     has_lev = bool("lev" in hist_file_ds[var].dims)
 
