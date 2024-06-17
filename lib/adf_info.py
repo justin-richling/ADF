@@ -236,6 +236,7 @@ class AdfInfo(AdfConfig):
                 hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
                 file_list = sorted(starting_location.glob("*" + hist_str + ".*.nc"))
+                print("file_list",file_list,"\n")
                 # Partition string to find exactly where h-number is
                 # This cuts the string before and after the `{hist_str}.` sub-string
                 # so there will always be three parts:
