@@ -97,7 +97,7 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 
 # Finally, import needed ADF module:
 from adf_web import AdfWeb
-from adf_derive import check_derive, derive_variable, check_derive2
+from adf_derive import check_derive, derive_variable
 
 
 #################
@@ -552,7 +552,7 @@ class AdfDiag(AdfWeb):
                         # End if"""
 
                         # Check if variable can be derived
-                        diag_var_list, constit_dict = check_derive2(self, res, var, case_name,
+                        diag_var_list, constit_dict = check_derive(self, res, var, case_name,
                                                                    diag_var_list, constit_dict,
                                                                    hist_file_ds, hist_files[0])
                         print(var, constit_dict,"\n")
