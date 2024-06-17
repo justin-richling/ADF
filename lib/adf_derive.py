@@ -58,10 +58,15 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
     try:
         vres = res[var]
     except KeyError:
-        miss_var_msg = f"Missing "
-        self.debug_log(miss_var_msg)
+        # If the variable can't be derived, remove from dictionary
+        msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
+        msg += "\n\t  ** No time series will be generated. **"
+        #if verbose: # make this a wrapper!
+        #    print(msg)
+        print(msg)
+        self.debug_log(msg)
         err = []
-        return diag_var_list, constit_dict, err
+        return diag_var_list, constit_dict
 
     # Check first if variable is potentially part of a CAM-CHEM run
     if "derivable_from_cam_chem" in vres:
