@@ -552,7 +552,7 @@ class AdfDiag(AdfWeb):
                         # End if"""
 
                         # Check if variable can be derived
-                        diag_var_list, constit_dict = check_derive(self, res, var, case_name,
+                        diag_var_list, constit_dict = check_derive2(self, res, var, case_name,
                                                                    diag_var_list, constit_dict,
                                                                    hist_file_ds, hist_files[0])
                         # Move to the next variable
