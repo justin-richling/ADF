@@ -59,7 +59,7 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
     except KeyError:
         miss_var_msg = f"Missing "
         self.debug_log(miss_var_msg)
-        return diag_var_list, []
+        return diag_var_list, constit_dict
 
     # Check first if variable is potentially part of a CAM-CHEM run
     if "derivable_from_cam_chem" in vres:
