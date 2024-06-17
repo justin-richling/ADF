@@ -116,7 +116,7 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
         # Add variable and constituent list to dictionary
         constit_dict[var] = constit_list
     # Move to the next variable
-
+    print("constit_dict from inside function",constit_dict,"\n")
     #return diag_var_list, constit_list
     return diag_var_list, constit_dict
 
