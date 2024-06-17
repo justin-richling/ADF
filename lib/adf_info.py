@@ -235,7 +235,12 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
-                hist_str = baseline_hist_str
+                if isinstance(conf_val, list):
+                    print("is a list, taking first entry. Assuming it will always be h0???")
+                    hist_str = baseline_hist_str[0]
+                else:
+                    print("not a list, converting to one")
+                    hist_str = self.hist_str_to_list("hist_str", baseline_hist_str)
                 print("hist_str",hist_str,"\n")
                 starting_location = Path(baseline_hist_locs)
                 print("starting_location",starting_location,"\n")
