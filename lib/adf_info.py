@@ -246,6 +246,8 @@ class AdfInfo(AdfConfig):
                 base_climo_yrs = [int(str(i).partition(f"{hist_str}.")[2][0:4]) for i in file_list]
                 base_climo_yrs = sorted(np.unique(base_climo_yrs))
 
+                print("base_climo_yrs",base_climo_yrs,"\n")
+
                 base_found_syr = int(base_climo_yrs[0])
                 base_found_eyr = int(base_climo_yrs[-1])
 
