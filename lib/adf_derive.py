@@ -24,6 +24,7 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
              * if `derived_from` argument(s) exist but not declared
     """
     print("constit_dict from inside function BEFORE",constit_dict,"\n")
+    err = None
 
     # Aerosol Calcs
     #--------------
@@ -59,7 +60,8 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
     except KeyError:
         miss_var_msg = f"Missing "
         self.debug_log(miss_var_msg)
-        return diag_var_list, constit_dict
+        err = []
+        return diag_var_list, constit_dict, err
 
     # Check first if variable is potentially part of a CAM-CHEM run
     if "derivable_from_cam_chem" in vres:
@@ -104,6 +106,7 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
             if constit not in diag_var_list:
                 diag_var_list.append(constit)
 
+    print("INSIDE: wtf???",var,constit_list,"\n")
     # Check if constit_list is empty
     if not constit_list:
         # If the variable can't be derived, remove from dictionary
