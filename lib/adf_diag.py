@@ -533,7 +533,7 @@ class AdfDiag(AdfWeb):
                         # Let user know variable is not in history file
                         print(f"\t     {var} not in history file, will try to derive if possible")
 
-                        # Check if variable can be derived
+                        """# Check if variable can be derived
                         diag_var_list, constit_list = check_derive(self, res, var, case_name,
                                                                 diag_var_list, hist_file_ds)
 
@@ -549,16 +549,16 @@ class AdfDiag(AdfWeb):
                         else:
                             # Add variable and constituent list to dictionary
                             constit_dict[var] = constit_list
-                        # End if
+                        # End if"""
 
                         # Check if variable can be derived
-                        #diag_var_list, constit_dict = check_derive(self, res, var, case_name,
-                        #                                           diag_var_list, constit_dict,
-                        #                                           hist_file_ds, hist_files[0])
+                        diag_var_list, constit_dict = check_derive(self, res, var, case_name,
+                                                                   diag_var_list, constit_dict,
+                                                                   hist_file_ds, hist_files[0])
                         # Move to the next variable
                         continue
                     # End if
-
+                    print(constit_dict,"\n")
                     # Check if variable has a "lev" dimension according to first file:
                     has_lev = bool("lev" in hist_file_ds[var].dims)
 
