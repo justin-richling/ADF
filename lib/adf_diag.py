@@ -537,7 +537,6 @@ class AdfDiag(AdfWeb):
                         diag_var_list, constit_dict = check_derive(self, res, var, case_name,
                                                                    diag_var_list, constit_dict,
                                                                    hist_file_ds, hist_files[0])
-                        print(var, constit_dict,"\n")
                         # Move to the next variable
                         continue
                     # End if
