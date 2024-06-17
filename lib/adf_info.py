@@ -234,7 +234,9 @@ class AdfInfo(AdfConfig):
             # Check if history file path exists:
             if any(baseline_hist_locs):
                 hist_str = baseline_hist_str[0]
+                print("hist_str",hist_str,"\n")
                 starting_location = Path(baseline_hist_locs)
+                print("starting_location",starting_location,"\n")
                 file_list = sorted(starting_location.glob("*" + hist_str + ".*.nc"))
                 print("file_list",file_list,"\n")
                 # Partition string to find exactly where h-number is
