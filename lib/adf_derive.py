@@ -69,6 +69,10 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
     constit_errmsg += "\n\tPlease add list of constituents to 'derivable_from' "
     constit_errmsg += f"for {var} in variable defaults yaml file."
 
+    # No time series creation
+    exit_msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
+    exit_msg += "\n\t  ** No time series will be generated. **\n"
+
     # Initialiaze list for constituents
     # NOTE: This is if the variable is NOT derivable but needs
     #       an empty list as a check later
@@ -78,13 +82,10 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
     try:
         vres = res[var]
     except KeyError:
-        # If the variable can't be derived, remove from dictionary
-        msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
-        msg += "\n\t  ** No time series will be generated. **"
         #if verbose: # make this a wrapper!
-        #    print(msg)
-        print(msg)
-        self.debug_log(msg)
+        #    print(exit_msg)
+        print(exit_msg)
+        self.debug_log(exit_msg)
         return diag_var_list, constit_dict
 
     # Check first if variable is potentially part of a CAM-CHEM run
@@ -130,18 +131,15 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
         # Add variable and constituent list to dictionary
         constit_dict[var] = constit_list
 
-        # If all good, add constituent to ADF diag variable list
+        # Aadd constituents to ADF diag variable list for time series generation
         for constit in constit_list:
             if constit not in diag_var_list:
                 diag_var_list.append(constit)
     else:
-        # If the variable can't be derived, remove from dictionary
-        msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
-        msg += "\n\t  ** No time series will be generated. **"
         #if verbose: # make this a wrapper!
-        #    print(msg)
-        print(msg)
-        self.debug_log(msg)
+        #    print(exit_msg)
+        print(exit_msg)
+        self.debug_log(exit_msg)
     # End if
 
     return diag_var_list, constit_dict

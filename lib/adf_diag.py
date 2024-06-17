@@ -533,24 +533,6 @@ class AdfDiag(AdfWeb):
                         # Let user know variable is not in history file
                         print(f"\t     {var} not in history file, will try to derive if possible")
 
-                        """# Check if variable can be derived
-                        diag_var_list, constit_list = check_derive(self, res, var, case_name,
-                                                                diag_var_list, hist_file_ds)
-
-                        # Check if constit_list is empty
-                        if not constit_list:
-                            # If the variable can't be derived, remove from dictionary
-                            msg = f"WARNING: {var} is not in the file {hist_files[0]} and can't be derived."
-                            msg += "\n\t  ** No time series will be generated. **"
-                            #if verbose: # make this a wrapper!
-                            #    print(msg)
-                            print(msg)
-                            self.debug_log(msg)
-                        else:
-                            # Add variable and constituent list to dictionary
-                            constit_dict[var] = constit_list
-                        # End if"""
-
                         # Check if variable can be derived
                         diag_var_list, constit_dict = check_derive(self, res, var, case_name,
                                                                    diag_var_list, constit_dict,
@@ -559,7 +541,7 @@ class AdfDiag(AdfWeb):
                         # Move to the next variable
                         continue
                     # End if
-                    print("AHHHHHHh",var, constit_dict,"\n")
+
                     # Check if variable has a "lev" dimension according to first file:
                     has_lev = bool("lev" in hist_file_ds[var].dims)
 
