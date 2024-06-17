@@ -4,7 +4,7 @@ from pathlib import Path
 import xarray as xr
 
 
-def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_file_ds, hist0):
+def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_file_ds, hist0):
     """
     For incoming variable, look for list of constituents if available
      - as a list in variable defaults file
@@ -15,6 +15,25 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
      If the variable does have the argument `derivable_from` or `derivable_from_cam_chem`,
      first check cam-chem, then regular cam.
 
+    Arguments
+    ---------
+        self: self object?
+            - 
+        res: dict
+            - 
+        var: str
+            - 
+        case_name: str
+            - 
+        diag_var_list: list
+            - 
+        constit_dict: dict
+            - 
+        hist_file_ds: xarray.DataSet
+            - 
+        hist0: str
+            - 
+    
     Returns
     -------
         constit_list: list
@@ -22,9 +41,10 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
            - empty list:
              * if missing `derived_from` argument(s)
              * if `derived_from` argument(s) exist but not declared
+        
+        diag_var_list: list
+           - updated list (if applicable) of ADF variables for time series creation
     """
-    print("constit_dict from inside function BEFORE",constit_dict,"\n")
-    err = None
 
     # Aerosol Calcs
     #--------------
@@ -65,7 +85,6 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
         #    print(msg)
         print(msg)
         self.debug_log(msg)
-        err = []
         return diag_var_list, constit_dict
 
     # Check first if variable is potentially part of a CAM-CHEM run
@@ -106,14 +125,16 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
     if isinstance(constit_list, list) and not constit_list:
         self.debug_log(constit_errmsg)
 
+    # Check if any constituents were found
     if constit_list:
+        # Add variable and constituent list to dictionary
+        constit_dict[var] = constit_list
+
+        # If all good, add constituent to ADF diag variable list
         for constit in constit_list:
             if constit not in diag_var_list:
                 diag_var_list.append(constit)
-
-    print("INSIDE: wtf???",var,constit_list,"\n")
-    # Check if constit_list is empty
-    if not constit_list:
+    else:
         # If the variable can't be derived, remove from dictionary
         msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
         msg += "\n\t  ** No time series will be generated. **"
@@ -121,135 +142,11 @@ def check_derive2(self, res, var, case_name, diag_var_list, constit_dict, hist_f
         #    print(msg)
         print(msg)
         self.debug_log(msg)
-    else:
-        # Add variable and constituent list to dictionary
-        constit_dict[var] = constit_list
-    # Move to the next variable
-    print("constit_dict from inside function",constit_dict,"\n")
-    #return diag_var_list, constit_list
+    # End if
+
     return diag_var_list, constit_dict
 
-
-
-
-
-
-
-
-
-def check_derive(self, res, var, case_name, diag_var_list, hist_file_ds):
-    """
-    For incoming variable, look for list of constituents if available
-     - as a list in variable defaults file
-
-     If the variable does not have the argument `derivable_from` or `derivable_from_cam_chem`,
-     then it will be assumed not to be a derivable variable, just missing from history file
-
-     If the variable does have the argument `derivable_from` or `derivable_from_cam_chem`,
-     first check cam-chem, then regular cam.
-
-    Returns
-    -------
-        constit_list: list
-           - list of declared consituents from the variable defaults yaml file
-           - empty list:
-             * if missing `derived_from` argument(s)
-             * if `derived_from` argument(s) exist but not declared
-    """
-
-    # Aerosol Calcs
-    #--------------
-
-    # Always make sure PMID is made if aerosols are desired in config file
-    # Since there's no requirement for `aerosol_zonal_list`, allow it to be absent:
-    azl = res.get("aerosol_zonal_list", [])
-    if azl:
-        if "PMID" not in diag_var_list:
-            if any(item in azl for item in diag_var_list):
-                diag_var_list += ["PMID"]
-        if "T" not in diag_var_list:
-            if any(item in azl for item in diag_var_list):
-                diag_var_list += ["T"]
-    #End aerosol calcs
-
-    # Set error messages for printing/debugging
-    # Derived variable, but missing constituent list
-    constit_errmsg = f"create time series for {case_name}:"
-    constit_errmsg += f"\n Can't create time series for {var}. \n\tThis variable"
-    constit_errmsg += " is flagged for derivation, but is missing list of constiuents."
-    constit_errmsg += "\n\tPlease add list of constituents to 'derivable_from' "
-    constit_errmsg += f"for {var} in variable defaults yaml file."
-
-    # Initialiaze list for constituents
-    # NOTE: This is if the variable is NOT derivable but needs
-    #       an empty list as a check later
-    constit_list = []
-
-    try_cam_constits = True
-    try:
-        vres = res[var]
-    except KeyError:
-        miss_var_msg = f"Missing "
-        self.debug_log(miss_var_msg)
-        return diag_var_list, []
-
-    # Check first if variable is potentially part of a CAM-CHEM run
-    if "derivable_from_cam_chem" in vres:
-        constit_list = vres["derivable_from_cam_chem"]
-
-        if constit_list:
-            if all(item in hist_file_ds.data_vars for item in constit_list):
-                # Set check to look for regular CAM constituents in variable defaults
-                try_cam_constits = False
-                msg = f"derive time series for {case_name}:"
-                msg += "\n\tLooks like this a CAM-CHEM run, "
-                msg += f"checking constituents for '{var}'"
-                self.debug_log(msg)
-        else:
-            self.debug_log(constit_errmsg)
-        # End if
-    # End if
-    
-    # If not CAM-CHEM, check regular CAM runs
-    if try_cam_constits:
-        if "derivable_from" in vres:
-            constit_list = vres["derivable_from"]
-        else:
-            # Missing variable or missing derivable_from argument
-            der_from_msg = f"derive time series for {case_name}:"
-            der_from_msg += f"\n Can't create time series for {var}.\n\tEither "
-            der_from_msg += "the variable is missing from CAM output or it is a "
-            der_from_msg += "derived quantity and is missing the 'derivable_from' "
-            der_from_msg += "config argument.\n\tPlease add variable to CAM run "
-            der_from_msg += "or set appropriate argument in variable "
-            der_from_msg += "defaults yaml file."
-            self.debug_log(der_from_msg)
-        # End if
-    # End if
-
-    # Log if this variable can be derived but is missing list of constituents
-    if isinstance(constit_list, list) and not constit_list:
-        self.debug_log(constit_errmsg)
-
-    if constit_list:
-        for constit in constit_list:
-            if constit not in diag_var_list:
-                diag_var_list.append(constit)
-
-    return diag_var_list, constit_list
-
-
-
-
-
-
-
-
-
-
-
-
-
+########
 
 def derive_variable(self, case_name, var, res=None, ts_dir=None,
                          constit_list=None, overwrite=None):
