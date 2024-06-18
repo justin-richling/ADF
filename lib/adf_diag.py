@@ -92,8 +92,9 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 
 # +++++++++++++++++++++++++++++
 
-# Finally, import needed ADF module:
+# Finally, import needed ADF modules:
 from adf_web import AdfWeb
+from adf_dataset import AdfData
 
 
 #################
@@ -538,11 +539,13 @@ class AdfDiag(AdfWeb):
             # Aerosol Calcs
             #--------------
             #Always make sure PMID is made if aerosols are desired in config file
+            # Since there's no requirement for `aerosol_zonal_list` to be included, allow it to be absent:
+            azl = res.get("aerosol_zonal_list", [])
             if "PMID" not in diag_var_list:
-                if any(item in res["aerosol_zonal_list"] for item in diag_var_list):
+                if any(item in azl for item in diag_var_list):
                     diag_var_list += ["PMID"]
             if "T" not in diag_var_list:
-                if any(item in res["aerosol_zonal_list"] for item in diag_var_list):
+                if any(item in azl for item in diag_var_list):
                     diag_var_list += ["T"]
             #End aerosol calcs
 
@@ -1056,7 +1059,7 @@ class AdfDiag(AdfWeb):
                 print(ermsg)
             else:
                 #Open a new dataset with all the constituent files/variables
-                ds = xr.open_mfdataset(constit_files)
+                ds = xr.open_mfdataset(constit_files).compute()
     
                 # create new file name for derived variable
                 derived_file = constit_files[0].replace(constit_list[0], var)
@@ -1088,7 +1091,8 @@ class AdfDiag(AdfWeb):
                 #These will be multiplied by rho (density of dry air)
                 ds_pmid_done = False
                 ds_t_done = False
-                if var in res["aerosol_zonal_list"]:
+                azl = res.get("aerosol_zonal_list", []) # User-defined defaults might not include aerosol zonal list
+                if var in azl:
                     
                     #Only calculate once for all aerosol vars
                     if not ds_pmid_done:
