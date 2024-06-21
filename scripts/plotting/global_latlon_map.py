@@ -342,8 +342,8 @@ def global_latlon_map(adfobj):
 
 
                             if weight_season:
-                                mseasons[s] = gc.climatologies.month_to_season(mdata, season=s).mean(dim='time')
-                                oseasons[s] = gc.climatologies.month_to_season(odata, season=s).mean(dim='time')
+                                mseasons[s] = gc.climatologies.climatology_average(mdata, season=s).mean(dim='time')
+                                oseasons[s] = gc.climatologies.climatology_average(odata, season=s).mean(dim='time')
                                 #mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
                                 #oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
                             else:
