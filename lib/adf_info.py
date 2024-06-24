@@ -576,6 +576,8 @@ class AdfInfo(AdfConfig):
         self.__syears = syears_fixed
         self.__eyears = eyears_fixed
 
+        print("first_case_dir",first_case_dir,"\n")
+
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
         #listed case.
