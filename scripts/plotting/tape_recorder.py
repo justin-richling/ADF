@@ -36,10 +36,9 @@ def tape_recorder(adfobj):
     plot_location = adfobj.plot_location
     plot_loc = Path(plot_location[0])
 
-    #Grab history string:
-    #hist_str = adfobj.hist_string
+    
 
-    cam_hist_strs = adfobj.cam_hist_strs
+    """cam_hist_strs = adfobj.cam_hist_strs
     print("cam_hist_strs",cam_hist_strs,"\n")
     case_match = [string for string in cam_hist_strs if "h0" in string]
     print("which h0 were caught for the case:",case_match,"\n")
@@ -47,7 +46,21 @@ def tape_recorder(adfobj):
     baseline_hist_strs = adfobj.baseline_hist_strs
     print("baseline_hist_strs",baseline_hist_strs,"\n")
     base_match = [string for string in baseline_hist_strs if "h0" in string]
-    print("which h0 were caught for the base:",base_match,"\n")
+    print("which h0 were caught for the base:",base_match,"\n")"""
+
+    #Grab history string:
+    substrings = ["h0","h0a"]
+
+    cam_hist_strs = adfobj.cam_hist_strs
+    # Filter the list to include only strings that are exactly in the substrings list
+    #TODO: Impliment multi-case??
+    case_match = [string for string in cam_hist_strs[0] if string in substrings]
+    print(case_match)  # Output: ['h0a']
+
+    baseline_hist_strs = adfobj.baseline_hist_strs
+    # Filter the list to include only strings that are exactly in the substrings list
+    base_match = [string for string in baseline_hist_strs if string in substrings]
+    print(base_match)  # Output: ['h0a']
 
     hist_strs = case_match + base_match
     print("hist_strs",hist_strs,"\n")
@@ -137,7 +150,7 @@ def tape_recorder(adfobj):
     #Make dictionary for case names and associated timeseries file locations
     runs_LT2={}
     for i,val in enumerate(test_nicknames):
-        runs_LT2[val] = [case_ts_locs[i], hist_strs]
+        runs_LT2[val] = [case_ts_locs[i], hist_strs[i]]
 
     # MLS data
     mls = xr.open_dataset(obs_loc / "mls_h2o_latNpressNtime_3d_monthly_v5.nc")
@@ -158,7 +171,7 @@ def tape_recorder(adfobj):
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
         ts_loc = runs_LT2[key][0]
-        hist_str = runs_LT2[key][1][0]
+        hist_str = runs_LT2[key][1]
         #for hist_str in hist_strs:
         fils= sorted(Path(ts_loc).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
