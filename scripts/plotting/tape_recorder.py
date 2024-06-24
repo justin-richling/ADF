@@ -43,10 +43,11 @@ def tape_recorder(adfobj):
     print("cam_hist_strs",cam_hist_strs,"\n")
     case_match = [string for string in cam_hist_strs if "h0" in string]
     print("which h0 were caught for the case:",case_match,"\n")
+    
     baseline_hist_strs = adfobj.baseline_hist_strs
     print("baseline_hist_strs",baseline_hist_strs,"\n")
     base_match = [string for string in baseline_hist_strs if "h0" in string]
-    print(case_match)
+    print("which h0 were caught for the case:",base_match,"\n")
 
     hist_strs = case_match + base_match
     print("hist_strs",hist_strs,"\n")
