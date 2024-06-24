@@ -61,8 +61,8 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
+    input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    output_locs   = adf.get_cam_info("cam_climo_loc")
     calc_climos   = adf.get_cam_info("calc_cam_climo")
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
@@ -82,8 +82,8 @@ def create_climo_files(adf, clobber=False, search=None):
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
-        output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
+        output_bl_loc     = adf.get_baseline_info("cam_climo_loc")
         calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
@@ -100,6 +100,12 @@ def create_climo_files(adf, clobber=False, search=None):
         start_year.append(bl_syr)
         end_year.append(bl_eyr)
     #-----------------------------------------
+
+
+    print("calc_climos",calc_climos,"\n")
+    print("overwrite",overwrite,"\n")
+    print("output_locs",output_locs,"\n")
+    print("input_ts_locs",input_ts_locs,"\n")
 
     # Check whether averaging interval is supplied
     # -> using only years takes from the beginning of first year to end of second year.
@@ -127,8 +133,17 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
-            raise AdfError(errmsg)
+            #
+            if not calc_climos[case_idx]:
+                msg = f"No time series requested for '{case_name}'; climo files have been supplied"
+                print(msg)
+                continue
+            else:
+                errmsg = f"Time series directory '{input_location}' not found."
+                print(msg)
+                continue
+            #End if
+        #End if
 
         #Check if climo directory exists, and if not, then create it:
         if not output_location.is_dir():
@@ -137,7 +152,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Time series file search
         if search is None:
-            search = "{CASE}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
+            search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
 
         #Check model year bounds:
         syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
@@ -156,10 +171,12 @@ def create_climo_files(adf, clobber=False, search=None):
                 print(f"\t    INFO: Climo file exists for {var}, but clobber is {clobber}, so will OVERWRITE it.")
 
             #Create list of time series files present for variable:
-            ts_filenames = search.format(CASE=case_name, VARIABLE=var)
+            # Note that we hard-code for h0 because we only want to make climos of monthly output
+            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var)
             ts_files = sorted(list(input_location.glob(ts_filenames)))
 
-            #If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+            #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
+            # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
             if not ts_files:
                 errmsg = "Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
                 print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
