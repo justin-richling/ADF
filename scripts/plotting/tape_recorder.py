@@ -41,7 +41,7 @@ def tape_recorder(adfobj):
 
     cam_hist_strs = adfobj.cam_hist_strs
     print("cam_hist_strs",cam_hist_strs,"\n")
-    case_match = [string for string in cam_hist_strs if "h0" in string]
+    case_match = [string for string in cam_hist_strs if "h0" in string][0]
     baseline_hist_strs = adfobj.baseline_hist_strs
     print("baseline_hist_strs",baseline_hist_strs,"\n")
     base_match = [string for string in baseline_hist_strs if "h0" in string]
@@ -156,7 +156,7 @@ def tape_recorder(adfobj):
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
         ts_loc = runs_LT2[key][0]
-        hist_strs = runs_LT2[key][1][0]
+        hist_str = runs_LT2[key][1][0]
         #for hist_str in hist_strs:
         fils= sorted(Path(ts_loc).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)

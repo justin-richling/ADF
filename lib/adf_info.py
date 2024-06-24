@@ -231,7 +231,7 @@ class AdfInfo(AdfConfig):
             self.__baseline_ts_save = baseline_ts_save
             self.__calc_baseline_climo = calc_baseline_climo
             self.__overwrite_baseline_ts = overwrite_ts
-            self.__baseline_hist_str = baseline_hist_str[0]
+            self.__baseline_hist_str = baseline_hist_str
             
 
 
