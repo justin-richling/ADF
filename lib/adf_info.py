@@ -396,10 +396,10 @@ class AdfInfo(AdfConfig):
         if cam_ts_save is None:
             cam_ts_save = [False]*len(case_names)
 
-        """ #Check if user wants to skip time series file creation
+        #Check if user wants to skip time series file creation
         calc_case_ts   = self.get_cam_info("calc_cam_ts")
         if calc_case_ts is None:
-            calc_case_ts = [False]*len(case_names)"""
+            calc_case_ts = [False]*len(case_names)
         
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
@@ -451,14 +451,14 @@ class AdfInfo(AdfConfig):
         eyears_fixed = []
         for case_idx, case_name in enumerate(case_names):
 
-            if (cam_ts_done[case_idx]) or ():
-                calc_case_ts = False
+            #if (cam_ts_done[case_idx]) or ():
+            #    calc_case_ts = False
 
             syear = syears[case_idx]
             eyear = eyears[case_idx]
 
             #Check to see if climo files are already generated
-            if not calc_case_ts:
+            if not calc_case_ts[case_idx]:
                 print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{case_name}'.")
                 print("  - The climo years specified in the config file cannot be verified!")
                 skip_cam_ts[case_idx] = True
