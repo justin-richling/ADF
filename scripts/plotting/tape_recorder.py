@@ -132,7 +132,7 @@ def tape_recorder(adfobj):
     #Make dictionary for case names and associated timeseries file locations
     runs_LT2={}
     for i,val in enumerate(test_nicknames):
-        runs_LT2[val] = [case_ts_locs[i], hist_strs[i]]
+        runs_LT2[val] = [case_ts_locs[i], hist_strs]
 
     # MLS data
     mls = xr.open_dataset(obs_loc / "mls_h2o_latNpressNtime_3d_monthly_v5.nc")
@@ -153,7 +153,8 @@ def tape_recorder(adfobj):
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
         ts_loc = runs_LT2[key][0]
-        hist_str = runs_LT2[key][1]
+        hist_strs = runs_LT2[key][1][0]
+        #for hist_str in hist_strs:
         fils= sorted(Path(ts_loc).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         if not dat:
