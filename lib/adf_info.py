@@ -570,6 +570,7 @@ class AdfInfo(AdfConfig):
             if case_idx == 0:
                 first_case_dir = direc_name
             #End if
+            print("first_case_dir ahh",first_case_dir,"\n")
 
         #End for
 
