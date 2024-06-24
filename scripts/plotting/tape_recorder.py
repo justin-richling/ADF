@@ -67,7 +67,7 @@ def tape_recorder(adfobj):
 
     if not hist_strs:
         exitmsg = "WARNING: No h0* files in any case directory."
-        exitmsg += "\n\tNo tape recorder plots will be made."
+        exitmsg += " No tape recorder plots will be made."
         print(exitmsg)
         logmsg = "create tape recorder:"
         logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
@@ -192,7 +192,7 @@ def tape_recorder(adfobj):
         alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
     else:
         msg = f"WARNING: No cases seem to be available, please check history files for {var}."
-        msg += "\n\tNo tape recorder plots will be made."
+        msg += " No tape recorder plots will be made."
         print(msg)
         #End tape recorder plotting script:
         return
