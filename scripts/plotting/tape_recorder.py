@@ -49,7 +49,7 @@ def tape_recorder(adfobj):
     print("which h0 were caught for the base:",base_match,"\n")"""
 
     #Grab history string:
-    substrings = ["h0","h0a"]
+    substrings = ["cam.h0","cam.h0a"]
 
     cam_hist_strs = adfobj.cam_hist_strs
     # Filter the list to include only strings that are exactly in the substrings list
