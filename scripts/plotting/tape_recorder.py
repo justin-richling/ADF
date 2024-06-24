@@ -37,7 +37,7 @@ def tape_recorder(adfobj):
     plot_loc = Path(plot_location[0])
 
     #Grab history string:
-    hist_str = adfobj.hist_string
+    #hist_str = adfobj.hist_string
 
     cam_hist_strs = adfobj.cam_hist_strs
     case_match = [string for string in cam_hist_strs if "h0" in string]
