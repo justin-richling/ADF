@@ -456,10 +456,14 @@ class AdfInfo(AdfConfig):
             #if (cam_ts_done[case_idx]) or ():
             #    calc_case_ts = False
             #Update climo year lists in case anything changed
-            syear = int(syear)
-            eyear = int(eyear)
-            syears_fixed.append(syear)
-            eyears_fixed.append(eyear)
+
+            syear = syears[case_idx]
+            eyear = eyears[case_idx]
+            
+            #syear = int(syear)
+            #year = int(eyear)
+            syears_fixed.append(int(syear))
+            eyears_fixed.append(int(eyear))
             
             #Update case name with provided/found years:
             case_name += f"_{syear}_{eyear}"
@@ -474,9 +478,6 @@ class AdfInfo(AdfConfig):
                 first_case_dir = direc_name
             #End if
             print("first_case_dir ahh",first_case_dir,"\n")
-
-            syear = syears[case_idx]
-            eyear = eyears[case_idx]
 
             #Check to see if climo files are already generated
             if not calc_case_ts[case_idx]:
