@@ -353,6 +353,7 @@ class AdfDiag(AdfWeb):
 
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
+            case_type_string = "baseline"
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
