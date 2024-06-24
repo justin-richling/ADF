@@ -477,7 +477,6 @@ class AdfInfo(AdfConfig):
             if case_idx == 0:
                 first_case_dir = direc_name
             #End if
-            print("first_case_dir ahh",first_case_dir,"\n")
 
             #Check to see if climo files are already generated
             if not calc_case_ts[case_idx]:
@@ -572,14 +571,10 @@ class AdfInfo(AdfConfig):
                     #End if
                 #End if
 
-            
-
         #End for
 
         self.__syears = syears_fixed
         self.__eyears = eyears_fixed
-
-        print("first_case_dir",first_case_dir,"\n")
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
