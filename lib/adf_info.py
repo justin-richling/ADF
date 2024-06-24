@@ -231,6 +231,7 @@ class AdfInfo(AdfConfig):
             self.__baseline_ts_save = baseline_ts_save
             self.__calc_baseline_climo = calc_baseline_climo
             self.__overwrite_baseline_ts = overwrite_ts
+            self.__baseline_hist_str = baseline_hist_str[0]
             
 
 
@@ -444,6 +445,7 @@ class AdfInfo(AdfConfig):
         self.__overwrite_test_climos = overwrite_climo
         self.__test_ts_save = cam_ts_save
         self.__overwrite_test_ts = overwrite_ts
+        self.__cam_hist_str = cam_hist_str
         
 
         #Loop over cases:
@@ -862,6 +864,16 @@ class AdfInfo(AdfConfig):
     @property
     def test_climo_locs(self):
         return copy.copy(self.__test_climo_locs)
+
+    # Create property needed to return the baseline history file strings:
+    @property
+    def baseline_hist_strs(self):
+        return copy.copy(self.__baseline_hist_str)
+
+    # Create property needed to return the case history file strings:
+    @property
+    def cam_hist_strs(self):
+        return copy.copy(self.__cam_hist_str)
     
     #########
 

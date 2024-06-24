@@ -39,6 +39,25 @@ def tape_recorder(adfobj):
     #Grab history string:
     hist_str = adfobj.hist_string
 
+    cam_hist_strs = adfobj.cam_hist_strs
+    case_match = [string for string in cam_hist_strs if "h0" in string]
+    baseline_hist_strs = adfobj.baseline_hist_strs
+    base_match = [string for string in baseline_hist_strs if "h0" in string]
+    print(case_match)
+
+    hist_strs = case_match + base_match
+
+    if not hist_strs:
+        exitmsg = "WARNING: No h0* files in any case directory."
+        exitmsg += "\n\tNo tape recorder plots will be made."
+        print(msg)
+        logmsg = "create tape recorder:"
+        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
+        logmsg += f"\n None were found for any case. Please check the time series paths."
+        adfobj.debug_log(logmsg)
+        #End tape recorder plotting script:
+        return
+
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
@@ -113,7 +132,7 @@ def tape_recorder(adfobj):
     #Make dictionary for case names and associated timeseries file locations
     runs_LT2={}
     for i,val in enumerate(test_nicknames):
-        runs_LT2[val] = case_ts_locs[i]
+        runs_LT2[val] = [case_ts_locs[i], hist_strs[i]]
 
     # MLS data
     mls = xr.open_dataset(obs_loc / "mls_h2o_latNpressNtime_3d_monthly_v5.nc")
@@ -133,7 +152,9 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
+        ts_loc = runs_LT2[key][0]
+        hist_str = runs_LT2[key][1]
+        fils= sorted(Path(ts_loc).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         if not dat:
             dmsg = f"No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
@@ -146,8 +167,16 @@ def tape_recorder(adfobj):
         alldat.append(dat_mon)
         runname_LT.append(key)
 
-    runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
-    alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
+    #Check to see if any cases were successful
+    if runname_LT:
+        runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
+        alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
+    else:
+        msg = f"WARNING: No cases seem to be available, please check history files for {var}."
+        msg += "\n\tNo tape recorder plots will be made."
+        print(msg)
+        #End tape recorder plotting script:
+        return
 
     fig = plt.figure(figsize=(16,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
@@ -166,7 +195,7 @@ def tape_recorder(adfobj):
 
 
 
-    #Start count at 2 to account for MLS and ERA5 plots above
+    #Loop over case(s) and start count at 2 to account for MLS and ERA5 plots above
     count=2
     for irun in np.arange(0,alldat_concat_LT.run.size,1):
         title = f"{alldat_concat_LT.run.isel(run=irun).values}"
@@ -178,13 +207,10 @@ def tape_recorder(adfobj):
     
     #Shift colorbar if there are less than 5 subplots
     # There will always be at least 2 (MLS and ERA5)
-    if len(case_ts_locs) == 0:
-        print("Seems like there are no simulations to plot, exiting script.")
-        return
-    if len(case_ts_locs) == 1:
+    if len(runname_LT) == 1:
         x1_loc = (x1[1]-x1[0])/2
         x2_loc = ((x2[2]-x2[1])/2)+x2[1]
-    elif len(case_ts_locs) == 2:
+    elif len(runname_LT) == 2:
         x1_loc = (x1[1]-x1[0])/2
         x2_loc = ((x2[3]-x2[2])/2)+x2[2]
     else:
