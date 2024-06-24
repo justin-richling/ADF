@@ -356,7 +356,7 @@ class AdfDiag(AdfWeb):
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
-            #calc_cam_ts = self.get_cam_info("calc_cam_ts")
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
             cam_ts_done = self.get_cam_info("cam_ts_done")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
             ts_dir = self.get_cam_info("cam_ts_loc")
