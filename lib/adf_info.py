@@ -455,6 +455,18 @@ class AdfInfo(AdfConfig):
 
             #if (cam_ts_done[case_idx]) or ():
             #    calc_case_ts = False
+            #Update climo year lists in case anything changed
+            syear = int(syear)
+            eyear = int(eyear)
+            syears_fixed.append(syear)
+            eyears_fixed.append(eyear)
+            
+            #Update case name with provided/found years:
+            case_name += f"_{syear}_{eyear}"
+
+            #Set the final directory name and save it to plot_location:
+            direc_name = f"{case_name}_vs_{data_name}"
+            self.__plot_location.append(os.path.join(plot_dir, direc_name))
 
             #If first iteration, then save directory name for use by baseline:
             first_case_dir = ''
@@ -559,18 +571,7 @@ class AdfInfo(AdfConfig):
                     #End if
                 #End if
 
-            #Update climo year lists in case anything changed
-            syear = int(syear)
-            eyear = int(eyear)
-            syears_fixed.append(syear)
-            eyears_fixed.append(eyear)
-
-            #Update case name with provided/found years:
-            case_name += f"_{syear}_{eyear}"
-
-            #Set the final directory name and save it to plot_location:
-            direc_name = f"{case_name}_vs_{data_name}"
-            self.__plot_location.append(os.path.join(plot_dir, direc_name))
+            
 
         #End for
 
