@@ -284,11 +284,11 @@ class AdfInfo(AdfConfig):
                 #Check if history file path exists:
                 if any(baseline_hist_locs):
                     hist_str = baseline_hist_str[0]
-                    print("hist_str",hist_str,"\n")
+                    #print("hist_str",hist_str,"\n")
                     starting_location = Path(baseline_hist_locs)
-                    print("starting_location",starting_location,"\n")
+                    #print("starting_location",starting_location,"\n")
                     file_list = sorted(starting_location.glob(f"*{hist_str}.*.nc"))
-                    print("file_list",file_list,"\n")
+                    #print("file_list",file_list,"\n")
                     # Partition string to find exactly where h-number is
                     # This cuts the string before and after the `{hist_str}.` sub-string
                     # so there will always be three parts:
