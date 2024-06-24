@@ -46,11 +46,12 @@ def tape_recorder(adfobj):
     print(case_match)
 
     hist_strs = case_match + base_match
+    print("hist_strs",hist_strs,"\n")
 
     if not hist_strs:
         exitmsg = "WARNING: No h0* files in any case directory."
         exitmsg += "\n\tNo tape recorder plots will be made."
-        print(msg)
+        print(exitmsg)
         logmsg = "create tape recorder:"
         logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
         logmsg += f"\n None were found for any case. Please check the time series paths."
