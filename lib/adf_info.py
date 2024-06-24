@@ -456,6 +456,13 @@ class AdfInfo(AdfConfig):
             #if (cam_ts_done[case_idx]) or ():
             #    calc_case_ts = False
 
+            #If first iteration, then save directory name for use by baseline:
+            first_case_dir = ''
+            if case_idx == 0:
+                first_case_dir = direc_name
+            #End if
+            print("first_case_dir ahh",first_case_dir,"\n")
+
             syear = syears[case_idx]
             eyear = eyears[case_idx]
 
@@ -564,13 +571,6 @@ class AdfInfo(AdfConfig):
             #Set the final directory name and save it to plot_location:
             direc_name = f"{case_name}_vs_{data_name}"
             self.__plot_location.append(os.path.join(plot_dir, direc_name))
-
-            #If first iteration, then save directory name for use by baseline:
-            first_case_dir = ''
-            if case_idx == 0:
-                first_case_dir = direc_name
-            #End if
-            print("first_case_dir ahh",first_case_dir,"\n")
 
         #End for
 
