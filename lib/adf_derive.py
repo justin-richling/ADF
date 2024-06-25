@@ -146,7 +146,7 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
 
 ########
 
-def derive_variable(self, case_name, var, res=None, ts_dir=None,
+def derive_variable(self, case_name, res=None, vars_to_derive=None, ts_dir=None,
                          constit_list=None, overwrite=None):
     """
     Derive variables acccording to steps given here.  Since derivations will depend on the
@@ -160,117 +160,240 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
     """
 
     # Loop through derived variables
-    print(f"\t - deriving time series for {var}")
+    for var in vars_to_derive:
+        print(f"\t - deriving time series for {var}")
 
-    # Grab all required time series files for derived variable
-    constit_files = []
-    for constit in constit_list:
-        #Check if the constituent file is present, if so add it to list
-        if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
-            constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
-    # End for
+        #Check whether there are parts to derive from and if there is an associated equation
+        vres = res.get(var, {})
+        #Check if appropriate config variable
+        #if "derive" in vres:
+        #if "from" in vres["derive"]:
+                    
+        #First check if it is just a simple derivation from constituents
+        constit_list = vres["derivable_from"]
+        flag = "derivable_from"
 
-    # Check if all the necessary constituent files were found
-    if len(constit_files) != len(constit_list):
-        ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated. **\n"
-        ermsg += f"\t     Please remove {var} from 'diag_var_list' or find the "
-        ermsg += "relevant CAM files.\n"
-        print(ermsg)
-        if constit_files:
-            # Add what's missing to debug log
-            dmsg = f"derived time series for {case_name}:"
-            dmsg += f"\n\tneeded constituents for derivation of "
-            dmsg += f"{var}:\n\t\t- {constit_list}\n\tfound constituent file(s) in "
-            dmsg += f"{Path(constit_files[0]).parent}:\n\t\t"
-            dmsg += f"- {[Path(f).parts[-1] for f in constit_files if Path(f).is_file()]}"
-            self.debug_log(dmsg)
-        else:
-            dmsg = f"derived time series for {case_name}:"
-            dmsg += f"\n\tneeded constituents for derivation of "
-            dmsg += f"{var}:\n\t\t- {constit_list}\n"
-            dmsg += f"\tNo constituent(s) found in history files"
-            self.debug_log(dmsg)
+        # Grab all required time series files for derived variable
+        constit_files = []
+        constit_files_dict = {}
 
-    else:
-        # Open a new dataset with all the constituent files/variables
-        ds = _load_dataset(constit_files)
-        if not ds:
-            dmsg = f"derived time series for {case_name}:"
-            dmsg += f"\n\tNo files to open."
-            self.debug_log(dmsg)
-            return
-
-        # create new file name for derived variable
-        derived_file = constit_files[0].replace(constit_list[0], var)
-
-        # Check if clobber is true for file
-        if Path(derived_file).is_file():
-            if overwrite:
-                Path(derived_file).unlink()
+        for constit in constit_list:
+            if len(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))) > 1:
+                mutli_ts = True
+                constit_files_dict[constit] = sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))
             else:
-                msg = f"[{__name__}] Warning: '{var}' file was found "
-                msg += "and overwrite is False. Will use existing file."
-                print(msg)
+                mutli_ts = False
+                if glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")):
+                    print("single time series HERE??")
+                    constit_files.append(glob.glob(os.path.join(ts_dir, f"*.{constit}.*"))[0])
 
-        #NOTE: this will need to be changed when derived equations are more complex! - JR
-        if var == "RESTOM":
-            der_val = ds["FSNT"]-ds["FLNT"]
+        if mutli_ts:
+            for i in range(len(constit_files_dict[constit_list[0]])):
+
+                ahh = []
+                for cons in constit_files_dict.keys():
+                    ahh.append(constit_files_dict[cons][i])
+
+                #Check if all the constituent files were found
+                if len(ahh) != len(constit_list):
+                    ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                    ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                    print(ermsg)
+                    continue
+                #Open a new dataset with all the constituent files/variables
+                ds = xr.open_mfdataset(ahh, compat='override')
+                # create new file name for derived variable
+
+                #print("fdghjk",constit_files_dict[constit_list[0]][i])
+
+                derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
+                #print("derived_file",derived_file,"\n")
+                #Check if clobber is true for file
+                if Path(derived_file).is_file():
+                    if overwrite:
+                        Path(derived_file).unlink()
+                    else:
+                        print(
+                            f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                        )
+                        continue
+
+                ###
+
+
+
         else:
-            #Loop through all constituents and sum
-            der_val = 0
-            for v in constit_list:
-                der_val += ds[v]
+            #Check if all the constituent files were found
+            print(f"{var}: matchies??",len(constit_files) == len(constit_list))
+            if len(constit_files) != len(constit_list):
+                ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                print(ermsg)
+                continue
+            #Open a new dataset with all the constituent files/variables
+            ds = xr.open_mfdataset(constit_files, compat='override')
+        
+            # create new file name for derived variable
+            derived_file = constit_files[0].replace(constit_list[0], var)
 
-        # Set derived variable name and add to dataset
-        der_val.name = var
-        ds[var] = der_val
 
-        # Aerosol Calculations
-        #----------------------------------------------------------------------------------
-        # These will be multiplied by rho (density of dry air)
+                
+            #print("derived_file",derived_file,"\n")
+            #Check if clobber is true for file
+            if Path(derived_file).is_file():
+                if overwrite:
+                    Path(derived_file).unlink()
+                else:
+                    print(
+                        f"[{__name__}] Warning: '{var}' file was found and overwrite is False. Will use existing file."
+                    )
+                    continue
 
-        # User-defined defaults might not include aerosol zonal list
-        azl = res.get("aerosol_zonal_list", [])
-        if var in azl:
-            # Check if PMID is in file:
-            ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
-            if not ds_pmid:
-                errmsg = "Missing necessary files for dry air density (rho) "
-                errmsg += "calculation.\nPlease make sure 'PMID' is in the CAM "
-                errmsg += "run for aerosol calculations"
-                print(errmsg)
-                dmsg = "derived time series:"
-                dmsg += f"\n\t missing 'PMID' in {ts_dir}, can't make time series for {var} "
-                self.debug_log(dmsg)
+            """if flag == "derive_interp":
+                derive_interp(ds, vres, constit_list, var, derived_file)
+                    
+            if flag == "derive_mask":
+                derive_masked(ds, vres, constit_list, var, ts_dir, i, derived_file)
+      
+            if flag == "derivable_from":
+                derive_from_constits(ds, constit_list, var, derived_file)"""
 
-            # Check if T is in file:
-            ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
-            if not ds_t:
-                errmsg = "Missing necessary files for dry air density (rho) "
-                errmsg += "calculation.\nPlease make sure 'T' is in the CAM "
-                errmsg += "run for aerosol calculations"
-                print(errmsg)
+        if flag == "derivable_from":
+            derive_from_constits(ds, constit_list, var, derived_file)
 
-                dmsg = "derived time series:"
-                dmsg += f"\n\t missing 'T' in {ts_dir}, can't make time series for {var} "
-                self.debug_log(dmsg)
 
-            #Multiply aerosol by dry air density (rho): (P/Rd*T)
-            ds[var] = ds[var]*(ds_pmid["PMID"]/(res["Rgas"]*ds_t["T"]))
-
-            #Sulfate conversion factor
-            if var == "SO4":
-                ds[var] = ds[var]*(96./115.)
-        #----------------------------------------------------------------------------------
-
-        #Drop all constituents from final saved dataset
-        #These are not necessary because they have their own time series files
-        ds_final = ds.drop_vars(constit_list)
-        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
-
+        
 ########
 
 #Helper Function(s)
+def derive_from_constits(ds, ts_dir, res, constit_list, var, derived_file):
+    #NOTE: this will need to be changed when derived equations are more complex! - JR
+    if var == "RESTOM":
+        print("RESTOM\n")
+        der_val = ds["FSNT"]-ds["FLNT"]
+    else:
+        #Loop through all constituents and sum
+        der_val = 0
+        for v in constit_list:
+            der_val += ds[v]
+
+    #Set derived variable name and add to dataset
+    der_val.name = var
+    ds[var] = der_val
+
+    #If variable is an aerosol, do extra processesing
+    if var in res["aerosol_zonal_list"]:
+        ds = calc_aerosol(var, ts_dir, res, ds)
+
+    #Drop all constituents from final saved dataset
+    #These are not necessary because they have their own time series files
+    ds_final = ds.drop_vars(constit_list)
+    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+def derive_interp(ds, vres, constit_list, var, derived_file):
+    for dim in ["time","lat","lon","lev","ilev"]:
+        if dim in vres["derive"].keys():
+            #ts_exist = glob.glob(os.path.join(ts_case_dir, f"*.{der_from}.*"))
+            #der_from_ds = xr.open_dataset(ts_exist[0])
+            der_from_ds = ds
+            #Grab variable to derive from
+            #constit_list
+            der_from_var = der_from_ds[constit_list[0]]
+            #der_from_var = der_from_ds[der_from]
+
+            # Interpolate the data to the nearest requested value: vres["derive"][dim]
+            der_var = der_from_var.interp({dim: vres["derive"][dim]}, method='nearest')
+                                                                
+            #Set derived variable in dataset and remove the original variable
+            der_from_ds[var] = der_var
+            ds_final = der_from_ds.drop_vars(constit_list)
+            ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+
+def derive_masked(ds, vres, constit_list, var, ts_dir, index, derived_file):
+    der_from_ds = ds
+    der_from_var = der_from_ds[constit_list[0]]
+    #Derive variables that come from other means
+    #EXAMPLE: derive SST's from TS if not in CAM output
+    #if 'SST' in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*SST*")):
+    #if var in diag_var_list and not glob.glob(os.path.join(ts_dir, f"*{var}*")):
+
+    if 'mask' in vres:
+        if vres['mask'].lower() == 'ocean':
+            #Check if the ocean fraction has already been regridded
+            #and saved:
+            #if ts_ds:
+            if ds:
+                #ofrac_ds = xr.open_dataset(glob.glob(os.path.join(ts_dir, f"*OCNFRAC*"))[0])
+                ocnfrac_file = sorted(glob.glob(os.path.join(ts_dir, "*OCNFRAC*")))
+                ofrac_ds = xr.open_mfdataset(ocnfrac_file[index], compat='override')
+                if ofrac_ds:
+                    ofrac = ofrac_ds['OCNFRAC']
+                    # set the bounds of regridded ocnfrac to 0 to 1
+                    ofrac = xr.where(ofrac>1,1,ofrac)
+                    ofrac = xr.where(ofrac<0,0,ofrac)
+                    # mask the land in TS for global means
+                    #ts_ds['OCNFRAC'] = ofrac
+                    ds['OCNFRAC'] = ofrac
+                    #der_from_var = der_from_ds[constit_list[0]]
+                    #ts_tmp = ts_ds[constit_list[0]]
+                    ts_tmp = ds[constit_list[0]]
+                    #Import ADF-specific modules:
+                    import plotting_functions as pf
+                    ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                    #ts_ds['SST'] = ts_tmp
+                    #ts_ds[var] = ts_tmp
+                    ds[var] = ts_tmp
+                    #Set derived variable in dataset and remove the original variable
+                    der_from_ds[var] = der_from_var
+                    ds_final = der_from_ds.drop_vars(constit_list)
+                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                else:
+                    wmsg = "OCNFRAC not found in CAM output,"
+                    wmsg += f" unable to apply mask to '{var}'"
+                    print(wmsg)
+            else:
+                wmsg = f"{der_from_var} not found in CAM output,"
+                wmsg += f" unable to apply mask to '{var}'"
+                print(wmsg)
+            #End if
+        #End if
+    #End if
+
+
+
+def calc_aerosol(var, ts_dir, res, ds):
+    #These will be multiplied by rho (density of dry air)
+    ds_pmid_done = False
+    ds_t_done = False
+
+    #Only calculate once for all aerosol vars
+    if not ds_pmid_done:
+        ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
+        ds_pmid_done = True
+        if not ds_pmid:
+            errmsg = "Missing necessary files for dry air density (rho) "
+            errmsg += "calculation.\nPlease make sure 'PMID' is in the CAM "
+            errmsg += "run for aerosol calculations"
+            print(errmsg)
+            #continue
+    if not ds_t_done:
+        ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
+        ds_t_done = True
+        if not ds_t:
+            errmsg = "Missing necessary files for dry air density (rho) "
+            errmsg += "calculation.\nPlease make sure 'T' is in the CAM "
+            errmsg += "run for aerosol calculations"
+            print(errmsg)
+            #continue
+
+    #Multiply aerosol by dry air density (rho): (P/Rd*T)
+    ds[var] = ds[var]*(ds_pmid["PMID"]/(res["Rgas"]*ds_t["T"]))
+
+    #Sulfate conversion factor
+    if var == "SO4":
+        ds[var] = ds[var]*(96./115.)
+    return ds
+
 def _load_dataset(fils):
     """
     This method exists to get an xarray Dataset from input file information that
@@ -306,4 +429,5 @@ def _load_dataset(fils):
         return xr.open_dataset(fils[0])
     #End if
 #End def
+
 ########
