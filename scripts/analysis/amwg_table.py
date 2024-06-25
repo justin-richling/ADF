@@ -318,17 +318,13 @@ def amwg_table(adf):
                 continue
             #End if
 
-            #TEMPORARY:  For now, make sure only one file exists:
-            if len(files) != 1:
-                errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
-                errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
-                print(errmsg)
-                continue
-            #End if
-
             #Load model variable data from file:
             ds = pf.load_dataset(files)
-            data = ds[var]
+
+            if len(files) != 1:
+                data = ds[var].compute()
+            else:
+                data = ds[var]
 
             if not is_climo:
                 data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
