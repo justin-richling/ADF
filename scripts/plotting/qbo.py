@@ -34,11 +34,20 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.get_cam_info('cam_ts_loc')
+    """case_loc = adfobj.get_cam_info('cam_ts_loc')
     no_case_loc = False
     if not case_loc:
         print(f"User requests premade climo for '{case_names[0]}', which means time series are missing.\n")
         no_case_loc = True
+    """
+    
+    #Grab test case time series locs(s)
+    case_loc = adfobj.test_ts_locs
+    no_case_loc = []
+    for idx, case_ts_loc in enumerate(case_loc):
+        if not case_ts_loc:
+            print(f"User requests premade climo for '{case_names[idx]}', which means time series are missing.\n")         
+            no_case_loc.append(True)
 
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
