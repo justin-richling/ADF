@@ -382,8 +382,6 @@ def amwg_table(adf):
                 # Note: that could be 'lev' which should trigger different behavior
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = pf.spatial_average(data)  # changes data "in place"
-            
-
 
             if is_climo:
                 data = pf.seasonal_mean(data, season="ANN", is_climo=True)
