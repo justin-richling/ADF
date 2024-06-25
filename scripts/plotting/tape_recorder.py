@@ -80,7 +80,11 @@ def tape_recorder(adfobj):
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
-    case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
+    case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
+    no_case_loc = False
+    if not case_ts_locs:
+        print(f"User requests premade climo for '{case_names[0]}', which means time series are missing.\n")
+        no_case_loc = True
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
@@ -99,7 +103,18 @@ def tape_recorder(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
         case_names = case_names + [data_name]
         
-        data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
+        data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
+        no_base_loc = False
+        if not data_ts_loc:
+            print(f"User requests premade climo for '{data_name}', which means time series are missing.\n")
+            no_base_loc = True
+
+        if (no_base_loc) and (no_case_loc):
+            exitmsg = "No time series files are available for any case."
+            exitmsg += " Tape Recorder plots will not be made."
+            print(exitmsg)
+            return
+
         case_ts_locs = case_ts_locs+[data_ts_loc]
 
         base_nickname = adfobj.case_nicknames['base_nickname']
