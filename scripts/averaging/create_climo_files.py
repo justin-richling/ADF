@@ -61,22 +61,38 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc")
-    output_locs   = adf.get_cam_info("cam_climo_loc")
-    calc_climos   = adf.get_cam_info("calc_cam_climo")
-    overwrite     = adf.get_cam_info("cam_overwrite_climo")
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    #output_locs   = adf.get_cam_info("cam_climo_loc")
+    #calc_climos   = adf.get_cam_info("calc_cam_climo")
+    #overwrite     = adf.get_cam_info("cam_overwrite_climo")
+
+    #Test case(s) input time series file locations
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    #if input_ts_locs is None:
+    #    input_ts_locs = [None]*len(case_names)
+    input_ts_locs = adf.test_ts_locs
+
+    #Test case(s) output climo file locations
+    #output_locs   = adf.get_cam_info("cam_climo_loc")
+    #if output_locs is None:
+    #    output_locs = [None]*len(case_names)
+    output_locs = adf.test_climo_locs
+
+    #Test case(s) calculate climo files boolean
+    #calc_climos   = adf.get_cam_info("calc_cam_climo")
+    #if calc_climos is None:
+    #    calc_climos = [False]*len(case_names)
+    calc_climos = adf.calc_test_climo
+
+    #Test case(s) overwrite climo files boolean
+    #overwrite     = adf.get_cam_info("cam_overwrite_climo")
+    #if overwrite is None:
+    #    overwrite = [False]*len(case_names)
+    overwrite     = adf.overwrite_test_climo
 
     #Extract simulation years:
     start_year = adf.climo_yrs["syears"]
     end_year   = adf.climo_yrs["eyears"]
-
-    #If variables weren't provided in config file, then make them a list
-    #containing only None-type entries:
-    if not calc_climos:
-        calc_climos = [None]*len(case_names)
-    if not overwrite:
-        overwrite = [None]*len(case_names)
-    #End if
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
