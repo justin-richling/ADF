@@ -80,7 +80,8 @@ def tape_recorder(adfobj):
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
-    case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
+    #case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
+    case_ts_locs = adfobj.test_ts_locs
     no_case_loc = []
     for idx, case_ts_loc in enumerate(case_ts_locs):
         if not case_ts_loc:
