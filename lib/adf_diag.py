@@ -97,9 +97,6 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 # Finally, import needed ADF module:
 from adf_web import AdfWeb
 from adf_derive import check_derive, derive_variable
-#CAM diagnostic plotting functions:
-import plotting_functions as pf
-
 
 #################
 # Helper functions
