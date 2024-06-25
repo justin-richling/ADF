@@ -34,14 +34,25 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    try:
-        case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
-    except KeyError:
-        print("User requests premade climo, which means time series are missing.\n")
-        print("QBO plots will not be made.")
+    case_loc = adfobj.get_cam_info('cam_ts_loc')
+    no_case_loc = False
+    if not case_loc:
+        print(f"User requests premade climo for '{case_names[0]}', which means time series are missing.\n")
+        no_case_loc = True
 
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
+    no_base_loc = False
+    if not base_loc:
+        print(f"User requests premade climo for '{base_name}', which means time series are missing.\n")
+        no_base_loc = True
+
+    if (no_base_loc) and (no_case_loc):
+        exitmsg = "No time series files are available for any case."
+        exitmsg += " QBO plots will not be made."
+        print(exitmsg)
+        return
+    
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
     plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
