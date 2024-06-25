@@ -52,6 +52,7 @@ def tape_recorder(adfobj):
     substrings = ["cam.h0","cam.h0a"]
 
     cam_hist_strs = adfobj.cam_hist_strs
+    print("cam_hist_strs",cam_hist_strs,"\n")
     # Filter the list to include only strings that are exactly in the substrings list
     #TODO: Impliment multi-case??
     case_match = [string for string in cam_hist_strs[0] if string in substrings]
