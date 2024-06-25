@@ -51,6 +51,18 @@ def tape_recorder(adfobj):
     #Grab history string:
     substrings = ["cam.h0","cam.h0a"]
 
+    # Single case, single history file type
+    #cam_hist_strs -> [['cam.h0a']]
+    
+    # Single case, multiple history file types per case
+    #cam_hist_strs -> [['cam.h0a', 'cam.h3']]
+
+    # Multi case, single history file type per case
+    #cam_hist_strs -> [['cam.h0'], ['cam.h0a']]
+
+    # Multi case, multiple history file types per case
+    #cam_hist_strs -> [['cam.h0', 'cam.h3'], ['cam.h0a', 'cam.h3']]
+
     cam_hist_strs = adfobj.cam_hist_strs
     print("cam_hist_strs",cam_hist_strs,"\n")
     # Filter the list to include only strings that are exactly in the substrings list

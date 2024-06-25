@@ -32,6 +32,35 @@ def qbo(adfobj):
     #Notify user that script has started:
     print("\n  Generating qbo plots...")
 
+    #Grab history string:
+    substrings = ["cam.h0","cam.h0a"]
+
+    cam_hist_strs = adfobj.cam_hist_strs
+    print("cam_hist_strs",cam_hist_strs,"\n")
+    # Filter the list to include only strings that are exactly in the substrings list
+    #TODO: Impliment multi-case??
+    case_match = [string for string in cam_hist_strs[0] if string in substrings]
+    print(case_match)  # Output: ['h0a']
+
+    baseline_hist_strs = adfobj.baseline_hist_strs
+    # Filter the list to include only strings that are exactly in the substrings list
+    base_match = [string for string in baseline_hist_strs if string in substrings]
+    print(base_match)  # Output: ['h0a']
+
+    hist_strs = case_match + base_match
+    print("hist_strs",hist_strs,"\n")
+
+    if not hist_strs:
+        exitmsg = "WARNING: No h0* files in any case directory."
+        exitmsg += " No QBO plots will be made."
+        print(exitmsg)
+        logmsg = "create QBO:"
+        logmsg += f"\n QBO plots require monthly mean h0 time series files."
+        logmsg += f"\n None were found for any case. Please check the time series paths."
+        adfobj.debug_log(logmsg)
+        #End tape recorder plotting script:
+        return
+
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
     """case_loc = adfobj.get_cam_info('cam_ts_loc')
