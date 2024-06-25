@@ -167,8 +167,8 @@ def amwg_table(adf):
                 calc_ts[case] = False
 
     
-    input_climo_locs = adf.get_cam_info("cam_climo_loc")
-    #input_climo_locs = adf.test_climo_locs
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc")
+    input_climo_locs = adf.test_climo_locs
     climo_locs = {}
     if not input_climo_locs:
         #climo_locs = [None]
