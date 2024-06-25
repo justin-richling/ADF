@@ -97,6 +97,8 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 # Finally, import needed ADF module:
 from adf_web import AdfWeb
 from adf_derive import check_derive, derive_variable
+#CAM diagnostic plotting functions:
+import plotting_functions as pf
 
 
 #################
@@ -337,7 +339,6 @@ class AdfDiag(AdfWeb):
 
         # End def
 
-        print("\n  Generating CAM time series files...")
 
         # Check if baseline time-series files are being created:
         if baseline:
@@ -405,8 +406,65 @@ class AdfDiag(AdfWeb):
                 emsg += f" Will rely on those files directly."
                 print(emsg)
                 no_msg = True
+
+
+
+
+
+
+
+                ts_case_dir = ts_dir[case_idx]
+
+                # Loop over CAM history variables:
+                vars_to_derive = []
+                # create copy of var list that can be modified for derivable variables
+                diag_var_list = self.diag_var_list
+                #Check if mid-level pressure, ocean fraction or land fraction exist
+                #in the variable list:
+                for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
+                    if var in diag_var_list:
+                        #If so, then move them to the front of variable list so
+                        #that they can be used to mask or vertically interpolate
+                        #other model variables if need be:
+                        var_idx = diag_var_list.index(var)
+                        diag_var_list.pop(var_idx)
+                        diag_var_list.insert(0,var)
+                    #End if
+                #End for
+                for var in diag_var_list:
+                    # Notify user of new time series file:
+                    print(f"\t - time series for {var}")
+
+                    # Initialize list for constituents if variable is derivable
+                    #constit_list = []
+
+                    #Check if current variable is not in history file(s)
+                    if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
+                        # Let user know variable is not in history file
+                        print(f"\t     {var} not in history file, will try to derive if possible")
+
+                        # Check if variable can be derived
+                        diag_var_list, constit_dict = check_derive(self, res, var, case_name,
+                                                                    diag_var_list, constit_dict,
+                                                                    hist_file_ds, hist_files[0])
+                        # Move to the next variable
+                        continue
+                    # End if
+
+                    # Finally, run through the derived variables if applicable
+                    #NOTE: this has to happen after the variable loop because the constituent
+                    #      time series files have to be made before using in derivation
+                    if constit_dict:
+                        for der_var,constit_list in constit_dict.items():
+                            derive_variable(self, case_name, der_var, res, ts_dir[case_idx], constit_list)
                 continue
             # End if
+
+
+
+
+
+
 
             # Extract start and end year values:
             start_year = start_years[case_idx]
@@ -548,7 +606,7 @@ class AdfDiag(AdfWeb):
                     print(f"\t - time series for {var}")
 
                     # Initialize list for constituents if variable is derivable
-                    constit_list = []
+                    #constit_list = []
 
                     #Check if current variable is not in history file(s)
                     if var not in hist_file_var_list:
