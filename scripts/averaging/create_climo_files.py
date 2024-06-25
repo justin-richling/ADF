@@ -226,9 +226,9 @@ def process_variable(ts_files, syr, eyr, output_file):
     '''
     #Read in files via xarray (xr):
     if len(ts_files) == 1:
-        cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
+        cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True).compute()
     else:
-        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords').compute()
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
         time = cam_ts_data['time']
