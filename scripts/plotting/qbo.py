@@ -34,7 +34,12 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
+    try:
+        case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
+    except KeyError:
+        print("User requests premade climo, which means time series are missing.\n")
+        print("QBO plots will not be made.")
+
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
