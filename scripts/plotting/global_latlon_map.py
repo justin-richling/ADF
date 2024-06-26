@@ -180,8 +180,9 @@ def global_latlon_map(adfobj):
             mdata = adfobj.data.load_regrid_da(case_name, var)
 
             #Skip this variable/case if the regridded climo file doesn't exist:
-            print("mdata is None??")
+            print("checking if mdata is None...")
             if mdata is None:
+                print("mdata is None??")
                 continue
 
             #Determine dimensions of variable:
