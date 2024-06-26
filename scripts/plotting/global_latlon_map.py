@@ -236,7 +236,7 @@ def global_latlon_map(adfobj):
 
                     # difference: each entry should be (lat, lon)
                     dseasons[s] = mseasons[s] - oseasons[s]
-
+                    print("plotting non-level??")
                     pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                             [syear_cases[case_idx],eyear_cases[case_idx]],
                                             [syear_baseline,eyear_baseline],
@@ -277,7 +277,7 @@ def global_latlon_map(adfobj):
                         # difference: each entry should be (lat, lon)
                         dseasons[s] = mseasons[s] - oseasons[s]
 
-                        pf.plot_map_and_save(plot_name, case_nickname, data.ref_nickname,
+                        pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
                                                 [syear_baseline,eyear_baseline],
                                                 mseasons[s].sel(lev=pres), oseasons[s].sel(lev=pres), dseasons[s].sel(lev=pres),
