@@ -184,7 +184,7 @@ def global_latlon_map(adfobj):
             if mdata is None:
                 print("mdata is None??")
                 continue
-
+            print(mdata.shape)
             #Determine dimensions of variable:
             has_dims_cam = pf.lat_lon_validate_dims(mdata) # T iff dims are (lat,lon) -- can't plot unless we have both
             _, has_lev = pf.zm_validate_dims(mdata)    # has_lev T if lev in mdata
