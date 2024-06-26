@@ -95,8 +95,9 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 
 # +++++++++++++++++++++++++++++
 
-# Finally, import needed ADF module:
+# Finally, import needed ADF modules:
 from adf_web import AdfWeb
+from adf_dataset import AdfData
 
 
 #################
@@ -337,6 +338,7 @@ class AdfDiag(AdfWeb):
 
         # End def
 
+        # Notify user that script has started:
         print("\n  Generating CAM time series files...")
 
         # Check if baseline time-series files are being created:
@@ -399,7 +401,7 @@ class AdfDiag(AdfWeb):
                 self.end_diag_fail(emsg)
             # End if
 
-            # Check if history files actually exqist. If not then kill script:
+            # Check if history files actually exist. If not then kill script:
             hist_str_case = hist_str_list[case_idx]
             for hist_str in hist_str_case:
 
@@ -1169,7 +1171,7 @@ class AdfDiag(AdfWeb):
 
             else:
                 #Open a new dataset with all the constituent files/variables
-                ds = xr.open_mfdataset(constit_files)
+                ds = xr.open_mfdataset(constit_files).compute()
 
                 # create new file name for derived variable
                 derived_file = constit_files[0].replace(constit_list[0], var)
