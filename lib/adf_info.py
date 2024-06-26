@@ -771,10 +771,18 @@ class AdfInfo(AdfConfig):
 
         #Average time dimension over time bounds, if bounds exist:
         if 'time_bnds' in cam_ts_data:
+            timeBoundsName = 'time_bnds'
+        elif 'time_bounds' in cam_ts_data:
+            timeBoundsName = 'time_bounds'
+        else:
+            timeBoundsName = None
+        
+        if timeBoundsName:
             time = cam_ts_data['time']
             #NOTE: force `load` here b/c if dask & time is cftime,
             #throws a NotImplementedError:
-            time = xr.DataArray(cam_ts_data['time_bnds'].load().mean(dim='nbnd').values, 
+
+            time = xr.DataArray(cam_ts_data[timeBoundsName].load().mean(dim='nbnd').values, 
                                 dims=time.dims, attrs=time.attrs)
             cam_ts_data['time'] = time
             cam_ts_data.assign_coords(time=time)
