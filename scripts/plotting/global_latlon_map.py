@@ -222,6 +222,7 @@ def global_latlon_map(adfobj):
                 #Loop over season dictionary:
                 for s in seasons:
                     plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+                    print("plot_name??")
                     if doplot[plot_name] is None:
                         continue
 
