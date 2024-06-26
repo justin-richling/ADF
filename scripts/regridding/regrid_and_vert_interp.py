@@ -59,6 +59,10 @@ def regrid_and_vert_interp(adf):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
+    #Grab case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
+
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
     for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
@@ -91,6 +95,12 @@ def regrid_and_vert_interp(adf):
     #Regrid target variables (either obs or a baseline run):
     if adf.compare_obs:
 
+        #Set obs name to match baseline (non-obs)
+        target_list = ["Obs"]
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = ""
+        eyear_baseline = ""
+
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
 
@@ -106,7 +116,15 @@ def regrid_and_vert_interp(adf):
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
+
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = adf.climo_yrs["syear_baseline"]
+        eyear_baseline = adf.climo_yrs["eyear_baseline"]
     #End if
+
+    #Set attributes dictionary for climo years to save in the file attributes
+    attr_dict = {"test_climo_yrs": "",
+                 "baseline_climo_yrs": f"{target_list[0]}: {syear_baseline}-{eyear_baseline}"}
 
     #-----------------------------------------
 
@@ -136,6 +154,14 @@ def regrid_and_vert_interp(adf):
         #pressure and mid-level pressure fields:
         ps_loc_dict = {}
         pmid_loc_dict = {}
+
+        #Get climo years for case
+        syear = syear_cases[case_idx]
+        eyear = eyear_cases[case_idx]
+
+        #Update attrs dict for current test case climo years
+        #attr_dict["test_climo_yrs"] = f"{syear}-{eyear}"
+        attr_dict["test_climo_yrs"] = f"{case_name}: {syear}-{eyear}"
 
         # probably want to do this one variable at a time:
         for var in var_list:
