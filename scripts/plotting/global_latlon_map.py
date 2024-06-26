@@ -123,7 +123,7 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    
+    print("adfobj.data.ref_var_nam",adfobj.data.ref_var_nam)
     # probably want to do this one variable at a time:
     for var in var_list:
         if var not in adfobj.data.ref_var_nam:
@@ -154,10 +154,12 @@ def global_latlon_map(adfobj):
         vres['central_longitude'] = pf.get_central_longitude(adfobj)
 
         # load reference data (observational or baseline)
-        odata = adfobj.data.load_reference_da(var)
+        #odata = adfobj.data.load_reference_da(var)
+        odata = adfobj.data.load_regrid_da(var)
         if odata is None:
             continue
         has_dims = pf.lat_lon_validate_dims(odata) # T iff dims are (lat,lon) -- can't plot unless we have both
+        print(odata.shape)
         if not has_dims:
             print(f"\t = skipping global map for {var} as REFERENCE does not have both lat and lon")
             continue
@@ -191,7 +193,7 @@ def global_latlon_map(adfobj):
             print("has_lev",has_lev)
             print("pres_levs",pres_levs)
             if not has_dims_cam:
-                print(f"\t = skipping global map for {var} for case {case_name} as it does not have both lat and lon")
+                print(f"\t - skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                 continue
             else: # i.e., has lat&lon
                 if pres_levs and (not has_lev):
