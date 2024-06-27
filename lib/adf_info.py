@@ -129,6 +129,14 @@ class AdfInfo(AdfConfig):
         # End for
         # -------------------------------------------
 
+        #Read hist_str (component.hist_num) from the yaml file, or set to default
+        hist_str = self.__cam_climo_info['hist_str']
+        #If hist_str is not present, then default to 'cam.h0':
+        if not hist_str:
+            hist_str = [['cam.h0']]*self.__num_cases
+        #End if
+        self.__hist_str = hist_str
+
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
