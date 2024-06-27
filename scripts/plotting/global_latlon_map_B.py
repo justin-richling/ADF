@@ -159,8 +159,10 @@ def global_latlon_map_B(adfobj):
         odata = adfobj.data.load_reference_da(var)
         if odata is None:
             continue
-        has_dims = pf.lat_lon_validate_dims(odata) # T iff dims are (lat,lon) -- can't plot unless we have both
-        if not has_dims:
+        #has_dims = pf.lat_lon_validate_dims(odata) # T iff dims are (lat,lon) -- can't plot unless we have both
+        o_has_dims = pf.lat_lon_validate_dims(odata) # T iff dims are (lat,lon) -- can't plot unless we have both
+        #if not has_dims:
+        if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
             print(f"\t = skipping global map for {var} as REFERENCE does not have both lat and lon")
             continue
 
