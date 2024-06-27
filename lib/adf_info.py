@@ -634,6 +634,11 @@ class AdfInfo(AdfConfig):
 
         return {"test_nicknames":test_nicknames,"base_nickname":base_nickname}
 
+    @property
+    def hist_string(self):
+        """ Return the history string name to the user if requested."""
+        return self.__hist_str
+
     #########
 
     #Utility function to access expanded 'diag_basic_info' variables:
