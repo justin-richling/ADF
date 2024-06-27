@@ -119,6 +119,22 @@ class AdfData:
         return da
 
 
+    def load_reference_regrid_dataset(self, case, field):
+        fils = self.get_ref_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        return self.load_dataset(fils)
+
+
+    def load_reference_regrid_da(self, case, field):
+        fils = self.get_ref_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        return self.load_da(fils, field)
+
+
     def load_climo_da(self, case, variablename):
         """Return DataArray from climo file"""
         fils = self.get_climo_file(case, variablename)
@@ -129,7 +145,7 @@ class AdfData:
         """Return Dataset for climo of variablename"""
         fils = self.get_climo_file(case, variablename)
         if not fils:
-            warnings.warning(f"ERROR: Did not find climo file for variable: {variablename}. Will try to skip.")
+            warnings.warn(f"ERROR: Did not find climo file for variable: {variablename}. Will try to skip.")
             return None
         return self.load_dataset(fils)
     
@@ -159,8 +175,13 @@ class AdfData:
             return ts_files
 
 
+    def get_ref_regrid_file(self, case, field):
+        model_rg_loc = Path(self.adf.get_baseline_info("cam_regrid_loc", required=True))
+        return sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
+    
+
     def get_regrid_file(self, case, field):
-        model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+        model_rg_loc = Path(self.adf.get_cam_info("cam_regrid_loc", required=True))
         rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
         return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_*.nc"))
     
