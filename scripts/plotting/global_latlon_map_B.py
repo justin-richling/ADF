@@ -1,4 +1,3 @@
-
 """
 Generate global maps of 2-D fields
 
@@ -44,7 +43,7 @@ def global_latlon_map_B(adfobj):
     -----
 
     It uses the AdfDiag object's methods to get necessary information.
-    This version passes the AdfDiag object to instatiate an AdfData object.
+    Makes use of AdfDiag's data sub-class.
     Explicitly accesses:
     adfobj.diag_var_list
         List of variables
@@ -62,6 +61,8 @@ def global_latlon_map_B(adfobj):
         Issues debug message
     adfobj.add_website_data
         Communicates information to the website generator
+    adfobj.compare_obs
+        Logical to determine if comparing to observations
 
         
     The `plotting_functions` module is needed for:
@@ -83,7 +84,6 @@ def global_latlon_map_B(adfobj):
     #
     # Use ADF api to get all necessary information
     #
-    # data = AdfData(adfobj) NO LONGER NEEDED
     var_list = adfobj.diag_var_list
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
@@ -160,7 +160,6 @@ def global_latlon_map_B(adfobj):
         if odata is None:
             continue
         has_dims = pf.lat_lon_validate_dims(odata) # T iff dims are (lat,lon) -- can't plot unless we have both
-        print(has_dims)
         if not has_dims:
             print(f"\t = skipping global map for {var} as REFERENCE does not have both lat and lon")
             continue
@@ -187,14 +186,12 @@ def global_latlon_map_B(adfobj):
                 continue
 
             #Determine dimensions of variable:
-            has_dims_cam = pf.lat_lon_validate_dims(mdata) # T iff dims are (lat,lon) -- can't plot unless we have both
-            _, has_lev = pf.zm_validate_dims(mdata)    # has_lev T if lev in mdata
-            print(mdata.shape)
-            if not has_dims_cam:
+            has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+            if (not has_dims['has_lat']) or (not has_dims['has_lon']):
                 print(f"\t = skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                 continue
             else: # i.e., has lat&lon
-                if pres_levs and (not has_lev):
+                if pres_levs and (not has_dims['has_lev']):
                     print(f"\t - skipping global map for {var} as it has more than lat/lon dims, but no pressure levels were provided")
                     continue
 
