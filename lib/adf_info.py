@@ -347,7 +347,7 @@ class AdfInfo(AdfConfig):
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
 
         # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
-        cam_hist_str = self.get_cam_info("hist_str")
+        cam_hist_str = self.__hist_str
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
