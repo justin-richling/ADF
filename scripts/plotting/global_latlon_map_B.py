@@ -260,7 +260,7 @@ def global_latlon_map_B(adfobj):
                     #exists in the model data, which should already
                     #have been interpolated to the standard reference
                     #pressure levels:
-                    if not (pres in mdata['lev']):
+                    if (not pres in mdata['lev']) or (not pres in odata['lev']):
                         print(f"plot_press_levels value '{pres}' not present in {var}, so skipping.")
                         continue
 
