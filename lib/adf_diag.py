@@ -183,6 +183,8 @@ class AdfDiag(AdfWeb):
         # Add plotting script names:
         self.__plotting_scripts = self.read_config_var("plotting_scripts")
 
+        self.data = AdfData(self)
+
     # Create property needed to return "plotting_scripts" variable to user:
     @property
     def plotting_scripts(self):
