@@ -160,6 +160,7 @@ def global_latlon_map_B(adfobj):
         if odata is None:
             continue
         has_dims = pf.lat_lon_validate_dims(odata) # T iff dims are (lat,lon) -- can't plot unless we have both
+        print(has_dims)
         if not has_dims:
             print(f"\t = skipping global map for {var} as REFERENCE does not have both lat and lon")
             continue
@@ -188,6 +189,7 @@ def global_latlon_map_B(adfobj):
             #Determine dimensions of variable:
             has_dims_cam = pf.lat_lon_validate_dims(mdata) # T iff dims are (lat,lon) -- can't plot unless we have both
             _, has_lev = pf.zm_validate_dims(mdata)    # has_lev T if lev in mdata
+            print(mdata.shape)
             if not has_dims_cam:
                 print(f"\t = skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                 continue
