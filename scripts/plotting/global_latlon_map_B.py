@@ -193,7 +193,8 @@ def global_latlon_map_B(adfobj):
                 continue
             else: # i.e., has lat&lon
                 if pres_levs and (not has_dims['has_lev']):
-                    print(f"\t - skipping global map for {var} as it has more than lat/lon dims, but no pressure levels were provided")
+                    print(f"\t - skipping global map for {var} pres_levs check: {pres_levs}")
+                    print(f"{has_dims}")
                     continue
 
             # Check output file. If file does not exist, proceed.
