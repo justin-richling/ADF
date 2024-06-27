@@ -176,7 +176,7 @@ class AdfData:
 
 
     def get_ref_regrid_file(self, case, field):
-        model_rg_loc = Path(self.adf.get_baseline_info("cam_regrid_loc", required=True))
+        model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
         return sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
     
 
