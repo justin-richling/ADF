@@ -157,7 +157,7 @@ def global_latlon_map_B(adfobj):
 
         # load reference data (observational or baseline)
         #odata = adfobj.data.load_reference_da(var)
-        odata = adfobj.data.load_reference_regrid_da(var)
+        odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
         if odata is None:
             continue
         #has_dims = pf.lat_lon_validate_dims(odata) # T iff dims are (lat,lon) -- can't plot unless we have both
