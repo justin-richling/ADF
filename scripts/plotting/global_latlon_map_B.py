@@ -191,11 +191,11 @@ def global_latlon_map_B(adfobj):
             if (not has_dims['has_lat']) or (not has_dims['has_lon']):
                 print(f"\t = skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                 continue
-            """else: # i.e., has lat&lon
+            else: # i.e., has lat&lon
                 if pres_levs and (not has_dims['has_lev']):
                     print(f"\t - skipping global map for {var} pres_levs check: {pres_levs}")
                     print(f"{has_dims}")
-                    continue"""
+                    continue
 
             # Check output file. If file does not exist, proceed.
             # If file exists:
