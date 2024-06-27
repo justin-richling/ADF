@@ -187,6 +187,7 @@ def global_latlon_map_B(adfobj):
 
             #Determine dimensions of variable:
             has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+            print(mdata.dims)
             if (not has_dims['has_lat']) or (not has_dims['has_lon']):
                 print(f"\t = skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                 continue
