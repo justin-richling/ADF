@@ -131,6 +131,7 @@ def global_latlon_map(adfobj):
         if var not in adfobj.data.ref_var_nam:
             dmsg = f"No reference data found for variable `{var}`, zonal mean plotting skipped."
             adfobj.debug_log(dmsg)
+            print(dmsg)
             continue        
 
         #Notify user of variable being plotted:
