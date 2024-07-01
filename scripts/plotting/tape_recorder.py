@@ -36,8 +36,43 @@ def tape_recorder(adfobj):
     plot_location = adfobj.plot_location
     plot_loc = Path(plot_location[0])
 
+
     #Grab history string:
-    hist_str = adfobj.hist_string["test_hist_str"]
+    substrings = ["cam.h0","cam.h0a"]
+
+    # Single case, single history file type
+    #cam_hist_strs -> [['cam.h0a']]
+    
+    # Single case, multiple history file types per case
+    #cam_hist_strs -> [['cam.h0a', 'cam.h3']]
+
+    # Multi case, single history file type per case
+    #cam_hist_strs -> [['cam.h0'], ['cam.h0a']]
+
+    # Multi case, multiple history file types per case
+    #cam_hist_strs -> [['cam.h0', 'cam.h3'], ['cam.h0a', 'cam.h3']]
+
+    cam_hist_strs = adfobj.hist_string["test_hist_str"]
+    print("cam_hist_strs",cam_hist_strs,"\n")
+    # Filter the list to include only strings that are exactly in the substrings list
+    #TODO: Impliment multi-case??
+    case_match = [string for string in cam_hist_strs[0] if string in substrings]
+    print(case_match)  # Output: ['h0a']
+
+
+    """if not hist_strs:
+        exitmsg = "WARNING: No h0* files in any case directory."
+        exitmsg += " No tape recorder plots will be made."
+        print(exitmsg)
+        logmsg = "create tape recorder:"
+        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
+        logmsg += f"\n None were found for any case. Please check the time series paths."
+        adfobj.debug_log(logmsg)
+        #End tape recorder plotting script:
+        return"""
+
+    #Grab history string:
+    #hist_str = adfobj.hist_string["test_hist_str"]
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
@@ -79,7 +114,17 @@ def tape_recorder(adfobj):
             #baseline_hist_str = [baseline_hist_str]
             #base_hist_str = baseline_hist_str[0]
             print()
+
+        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+        if not isinstance(baseline_hist_strs, list):
+            baseline_hist_strs = [baseline_hist_strs]
+        # Filter the list to include only strings that are exactly in the substrings list
+        base_match = [string for string in baseline_hist_strs if string in substrings]
+        print(base_match)  # Output: ['h0a']
     #End if
+
+    hist_strs = case_match + base_match
+    print("hist_strs",hist_strs,"\n")
 
     # Default colormap
     cmap='precip_nowhite'
