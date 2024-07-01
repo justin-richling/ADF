@@ -232,12 +232,17 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
+                #Check if user provided
                 if not baseline_hist_str:
                     baseline_hist_str = ['cam.h0a']
                 else:
+                    #Make list if not already
                     if not isinstance(baseline_hist_str, list):
                         baseline_hist_str = [baseline_hist_str]
+                #Initialize baseline history string list
                 self.__base_hist_str = baseline_hist_str
+
+                #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
@@ -333,19 +338,31 @@ class AdfInfo(AdfConfig):
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
 
-        # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
-        #cam_hist_str = self.get_cam_info('hist_str')
-
-        #If hist_str (component.hist_num) was not in yaml file, set to default
+        #Read hist_str (component.hist_num, eg cam.h0)
+        #----------------------------------------------------------------------
+        #Get cleaned nested list for test case(s)
         cam_hist_str = self.__cam_climo_info['hist_str']
+        
+        # Single case, single history file type
+        #cam_hist_str -> [['cam.h0a']]
+        
+        # Single case, multiple history file types per case
+        #cam_hist_str -> [['cam.h0a', 'cam.h3a']]
+
+        # Multi case, single history file type per case
+        #cam_hist_str -> [['cam.h0'], ['cam.h0']]
+
+        # Multi case, multiple history file types per case
+        #cam_hist_str -> [['cam.h0', 'cam.h3'], ['cam.h0a', 'cam.h3a']]
+        #----------------------------------------------------------------------
 
         if not cam_hist_str:
-            print("cam_hist_str NO????",cam_hist_str,"\n")
             hist_str = [['cam.h0a']]*self.__num_cases
         else:
             hist_str = cam_hist_str
-            print("hist_str ELSE",hist_str,"\n")
         #End if
+
+        #Initialize CAM history string nested list
         self.__hist_str = hist_str
 
         #Check if using pre-made ts files
