@@ -184,6 +184,7 @@ def global_latlon_map(adfobj):
 
             #Skip this variable/case if the regridded climo file doesn't exist:
             if mdata is None:
+                print("WARNING: Looks like model data is empty??")
                 continue
 
             #Determine dimensions of variable:
