@@ -220,7 +220,7 @@ def global_latlon_map(adfobj):
             dseasons = {} # hold the differences
 
             if not has_dims['has_lev']:  # strictly 2-d data          
-
+                print("HERE at 2d?")
                 #Loop over season dictionary:
                 for s in seasons:
                     plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
