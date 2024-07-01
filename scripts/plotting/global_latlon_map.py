@@ -214,6 +214,8 @@ def global_latlon_map(adfobj):
                 print(f"All plots exist for {var}. Redo is {redo_plot}. Existing plots added to website data. Continue.")
                 continue
 
+            print("doplot",doplot)
+
             #Create new dictionaries:
             mseasons = {}
             oseasons = {}
