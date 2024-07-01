@@ -338,6 +338,7 @@ class AdfInfo(AdfConfig):
         #hist_str = self.__cam_climo_info['hist_str']
 
         if not cam_hist_str:
+            print("cam_hist_str NO????",hist_str,"\n")
             hist_str = [['cam.h0a']]*self.__num_cases
         else:
             hist_str = cam_hist_str
