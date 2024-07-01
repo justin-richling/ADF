@@ -54,18 +54,18 @@ def tape_recorder(adfobj):
     print("case_match", case_match)  # Output: ['h0a']
 
 
-    yah = []
+    case_match = []
     for i,cam_case_str in enumerate(cam_hist_strs):
-        yah2 = []
+        cam_hist_str = []
         print(f"cam_case_str for {case_names[i]}:",cam_case_str)
         for string in cam_case_str:
             print(f"   string:",string)
             if string in substrings:
                 print("     L-------> grab this")
-                yah2.append(string)
+                cam_hist_str.append(string[0])
             print()
-        yah.append(yah2)
-    print("NEW case_match", yah)
+        case_match.append(cam_hist_str)
+    print("NEW case_match", case_match)
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
