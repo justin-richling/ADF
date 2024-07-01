@@ -62,9 +62,9 @@ def tape_recorder(adfobj):
             print(f"   string:",string)
             if string in substrings:
                 print("     L-------> grab this")
-                cam_hist_str.append(string[0])
+                cam_hist_str.append(string)
             print()
-        case_match.append(cam_hist_str)
+        case_match.append(cam_hist_str[0])
     print("NEW case_match", case_match)
 
     #Grab test case climo years
