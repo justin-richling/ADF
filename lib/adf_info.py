@@ -336,7 +336,7 @@ class AdfInfo(AdfConfig):
 
         #If hist_str (component.hist_num) was not in yaml file, set to default
         #hist_str = self.__cam_climo_info['hist_str']
-        print("hist_str",hist_str,"\n")
+
         if not cam_hist_str:
             hist_str = [['cam.h0a']]*self.__num_cases
         else:
