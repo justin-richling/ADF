@@ -159,6 +159,7 @@ def global_latlon_map(adfobj):
         # odata = adfobj.data.load_reference_da(var)
         odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
         if odata is None:
+            print("WARNING: Looks like baseline data is empty??")
             continue
         o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
         if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
