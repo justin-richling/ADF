@@ -57,7 +57,7 @@ def tape_recorder(adfobj):
     # Filter the list to include only strings that are exactly in the substrings list
     #TODO: Impliment multi-case??
     case_match = [string for string in cam_hist_strs[0] if string in substrings]
-    print(case_match)  # Output: ['h0a']
+    print("case_match", case_match)  # Output: ['h0a']
 
 
     """if not hist_strs:
@@ -109,21 +109,14 @@ def tape_recorder(adfobj):
         end_years = end_years+[data_end_year]
 
         #Grab history string:
-        base_hist_str = adfobj.hist_string["base_hist_str"]
-        if isinstance(base_hist_str, list):
-            #baseline_hist_str = [baseline_hist_str]
-            #base_hist_str = baseline_hist_str[0]
-            print()
-
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
-        if not isinstance(baseline_hist_strs, list):
-            baseline_hist_strs = [baseline_hist_strs]
+        print("baseline_hist_strs",baseline_hist_strs,"\n")
         # Filter the list to include only strings that are exactly in the substrings list
         base_match = [string for string in baseline_hist_strs if string in substrings]
-        print(base_match)  # Output: ['h0a']
+        print("base_match", base_match)  # Output: ['h0a']
+        hist_strs = case_match + base_match
     #End if
 
-    hist_strs = case_match + base_match
     print("hist_strs",hist_strs,"\n")
 
     # Default colormap
@@ -165,7 +158,7 @@ def tape_recorder(adfobj):
     #Make dictionary for case names and associated timeseries file locations
     runs_LT2={}
     for i,val in enumerate(test_nicknames):
-        runs_LT2[val] = case_ts_locs[i]
+        runs_LT2[val] = [case_ts_locs[i], hist_strs[i]]
 
     # MLS data
     mls = xr.open_dataset(obs_loc / "mls_h2o_latNpressNtime_3d_monthly_v5.nc")
@@ -185,7 +178,7 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
+        fils= sorted(Path(runs_LT2[key][0]).glob(f'*{runs_LT2[key][1]}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         if not dat:
             dmsg = f"No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."

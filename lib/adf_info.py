@@ -232,8 +232,11 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
-                if not isinstance(baseline_hist_str, list):
-                    baseline_hist_str = [baseline_hist_str]
+                if not baseline_hist_str:
+                    baseline_hist_str = ['cam.h0a']
+                else:
+                    if not isinstance(baseline_hist_str, list):
+                        baseline_hist_str = [baseline_hist_str]
                 self.__base_hist_str = baseline_hist_str
                 base_hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
