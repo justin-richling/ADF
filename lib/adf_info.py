@@ -124,9 +124,6 @@ class AdfInfo(AdfConfig):
                 self.__cam_climo_info[conf_var] = [conf_val]
             #End if
         #End for
-
-        print("cam_hist_str",cam_hist_str,"\n")
-
         #-------------------------------------------
 
         #Initialize ADF variable list:
