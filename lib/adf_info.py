@@ -112,7 +112,7 @@ class AdfInfo(AdfConfig):
         for conf_var, conf_val in self.__cam_climo_info.items():
             # Hist_str can be a list for each case, so set it as a nested list here
             if "hist_str" in conf_var:
-                cam_hist_str = self.hist_str_to_list(conf_var, conf_val)
+                self.hist_str_to_list(conf_var, conf_val)
             elif isinstance(conf_val, list):
                 # If a list, then make sure it is has the correct number of entries:
                 if not len(conf_val) == self.__num_cases:
@@ -337,7 +337,7 @@ class AdfInfo(AdfConfig):
         #cam_hist_str = self.get_cam_info('hist_str')
 
         #If hist_str (component.hist_num) was not in yaml file, set to default
-        #hist_str = self.__cam_climo_info['hist_str']
+        cam_hist_str = self.__cam_climo_info['hist_str']
 
         if not cam_hist_str:
             print("cam_hist_str NO????",cam_hist_str,"\n")
