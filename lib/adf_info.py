@@ -112,7 +112,7 @@ class AdfInfo(AdfConfig):
         for conf_var, conf_val in self.__cam_climo_info.items():
             # Hist_str can be a list for each case, so set it as a nested list here
             if "hist_str" in conf_var:
-                self.hist_str_to_list(conf_var, conf_val)
+                cam_hist_str = self.hist_str_to_list(conf_var, conf_val)
             elif isinstance(conf_val, list):
                 # If a list, then make sure it is has the correct number of entries:
                 if not len(conf_val) == self.__num_cases:
@@ -124,12 +124,6 @@ class AdfInfo(AdfConfig):
                 self.__cam_climo_info[conf_var] = [conf_val]
             #End if
         #End for
-
-        #If hist_str (component.hist_num) was not in yaml file, set to default
-        hist_str = self.__cam_climo_info['hist_str']
-        if not hist_str:
-            hist_str = [['cam.h0a']]*self.__num_cases
-        #End if
 
         #-------------------------------------------
 
@@ -241,9 +235,10 @@ class AdfInfo(AdfConfig):
             if any(baseline_hist_locs):
                 if not isinstance(baseline_hist_str, list):
                     baseline_hist_str = [baseline_hist_str]
-                hist_str = baseline_hist_str[0]
+                self.__base_hist_str = base_hist_str
+                base_hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
-                file_list = sorted(starting_location.glob("*" + hist_str + ".*.nc"))
+                file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
                 # Partition string to find exactly where h-number is
                 # This cuts the string before and after the `{hist_str}.` sub-string
                 # so there will always be three parts:
@@ -251,7 +246,7 @@ class AdfInfo(AdfConfig):
                 #Since the last part always includes the time range, grab that with last index (2)
                 #NOTE: this is based off the current CAM file name structure in the form:
                 #  $CASE.cam.h#.YYYY<other date info>.nc
-                base_climo_yrs = [int(str(i).partition(f"{hist_str}.")[2][0:4]) for i in file_list]
+                base_climo_yrs = [int(str(i).partition(f"{base_hist_str}.")[2][0:4]) for i in file_list]
                 base_climo_yrs = sorted(np.unique(base_climo_yrs))
 
                 base_found_syr = int(base_climo_yrs[0])
@@ -337,7 +332,18 @@ class AdfInfo(AdfConfig):
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
 
         # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
-        cam_hist_str = self.get_cam_info('hist_str')
+        #cam_hist_str = self.get_cam_info('hist_str')
+
+        #If hist_str (component.hist_num) was not in yaml file, set to default
+        #hist_str = self.__cam_climo_info['hist_str']
+        print("hist_str",hist_str,"\n")
+        if not cam_hist_str:
+            hist_str = [['cam.h0a']]*self.__num_cases
+        else:
+            hist_str = cam_hist_str
+            print("hist_str ELSE",hist_str,"\n")
+        #End if
+        self.__hist_str = hist_str
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
@@ -391,7 +397,10 @@ class AdfInfo(AdfConfig):
             #End if
 
             #Check if history file path exists:
-            hist_str_case = cam_hist_str[case_idx]
+            print("hist_str2",hist_str)
+            print(case_idx,hist_str[case_idx])
+            hist_str_case = hist_str[case_idx]
+            print("hist_str_case",hist_str_case,'\n')
             if any(cam_hist_locs):
                 hist_str = hist_str_case[0]
 
@@ -632,8 +641,11 @@ class AdfInfo(AdfConfig):
 
     @property
     def hist_string(self):
-        """ Return the history string name to the user if requested."""
-        return self.__hist_str
+        """ Return the CAM history string list to the user if requested."""
+        cam_hist_strs = copy.copy(self.__hist_str)
+        base_hist_strs = copy.copy(self.__base_hist_str)
+        hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
+        return hist_strs
 
     #########
 
