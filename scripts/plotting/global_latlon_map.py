@@ -201,12 +201,12 @@ def global_latlon_map(adfobj):
             #   if redo_plot is true: delete it now and make plot
             #   if redo_plot is false: add to website and move on
             doplot = {}
-            if not pres_levs:
+            if not has_dims['has_lev']:
                 for s in seasons:
                     plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
                     doplot[plot_name] = plot_file_op(adfobj, plot_name, var, case_name, s, web_category, redo_plot, "LatLon")
             else:
-                for pres in pres_levs:
+                for pres in pres_levs and has_dims['has_lev']:
                     for s in seasons:
                         plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
                         doplot[plot_name] = plot_file_op(adfobj, plot_name, f"{var}_{pres}hpa", case_name, s, web_category, redo_plot, "LatLon")
