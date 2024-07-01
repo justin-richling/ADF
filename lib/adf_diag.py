@@ -95,8 +95,9 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 
 # +++++++++++++++++++++++++++++
 
-# Finally, import needed ADF module:
+# Finally, import needed ADF modules:
 from adf_web import AdfWeb
+from adf_dataset import AdfData
 
 
 #################
@@ -176,6 +177,9 @@ class AdfDiag(AdfWeb):
 
         # Add plotting script names:
         self.__plotting_scripts = self.read_config_var("plotting_scripts")
+
+        # Provide convenience functions for data handling:
+        self.data = AdfData(self)
 
     # Create property needed to return "plotting_scripts" variable to user:
     @property
@@ -1139,7 +1143,7 @@ class AdfDiag(AdfWeb):
 
             else:
                 #Open a new dataset with all the constituent files/variables
-                ds = xr.open_mfdataset(constit_files)
+                ds = xr.open_mfdataset(constit_files).compute()
 
                 # create new file name for derived variable
                 derived_file = constit_files[0].replace(constit_list[0], var)
