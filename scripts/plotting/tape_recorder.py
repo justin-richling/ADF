@@ -36,21 +36,15 @@ def tape_recorder(adfobj):
     plot_location = adfobj.plot_location
     plot_loc = Path(plot_location[0])
 
+    #Grab test case name(s)
+    case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
-    #Grab history string:
+    #Grab test case time series locs(s)
+    case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
+
+    #Grab history strings:
+    # - Look for either h0 of h0a
     substrings = ["cam.h0","cam.h0a"]
-
-    # Single case, single history file type
-    #cam_hist_strs -> [['cam.h0a']]
-    
-    # Single case, multiple history file types per case
-    #cam_hist_strs -> [['cam.h0a', 'cam.h3']]
-
-    # Multi case, single history file type per case
-    #cam_hist_strs -> [['cam.h0'], ['cam.h0a']]
-
-    # Multi case, multiple history file types per case
-    #cam_hist_strs -> [['cam.h0', 'cam.h3'], ['cam.h0a', 'cam.h3']]
 
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
     print("cam_hist_strs",cam_hist_strs,"\n")
@@ -60,25 +54,18 @@ def tape_recorder(adfobj):
     print("case_match", case_match)  # Output: ['h0a']
 
 
-    """if not hist_strs:
-        exitmsg = "WARNING: No h0* files in any case directory."
-        exitmsg += " No tape recorder plots will be made."
-        print(exitmsg)
-        logmsg = "create tape recorder:"
-        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
-        logmsg += f"\n None were found for any case. Please check the time series paths."
-        adfobj.debug_log(logmsg)
-        #End tape recorder plotting script:
-        return"""
-
-    #Grab history string:
-    #hist_str = adfobj.hist_string["test_hist_str"]
-
-    #Grab test case name(s)
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
-
-    #Grab test case time series locs(s)
-    case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
+    yah = []
+    for i,cam_case_str in enumerate(cam_hist_strs):
+        yah2 = []
+        print(f"cam_case_str for {case_names[i]}:",cam_case_str)
+        for string in cam_case_str:
+            print(f"   string:",string)
+            if string in substrings:
+                print("     L-------> grab this")
+                yah2.append(string)
+            print()
+        yah.append(yah2)
+    print("NEW case_match", yah)
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
@@ -118,6 +105,16 @@ def tape_recorder(adfobj):
     #End if
 
     print("hist_strs",hist_strs,"\n")
+    if not case_ts_locs:
+        exitmsg = "WARNING: No time series files in any case directory."
+        exitmsg += " No tape recorder plots will be made."
+        print(exitmsg)
+        logmsg = "create tape recorder:"
+        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
+        logmsg += f"\n None were found for any case. Please check the time series paths."
+        adfobj.debug_log(logmsg)
+        #End tape recorder plotting script:
+        return
 
     # Default colormap
     cmap='precip_nowhite'
