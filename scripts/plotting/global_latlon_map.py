@@ -206,7 +206,7 @@ def global_latlon_map(adfobj):
                     plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
                     doplot[plot_name] = plot_file_op(adfobj, plot_name, var, case_name, s, web_category, redo_plot, "LatLon")
             else:
-                for pres in pres_levs and has_dims['has_lev']:
+                for pres in pres_levs:
                     for s in seasons:
                         plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
                         doplot[plot_name] = plot_file_op(adfobj, plot_name, f"{var}_{pres}hpa", case_name, s, web_category, redo_plot, "LatLon")
