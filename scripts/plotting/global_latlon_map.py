@@ -24,7 +24,7 @@ def my_formatwarning(msg, *args, **kwargs):
     """Issue `msg` as warning."""
     return str(msg) + '\n'
 warnings.formatwarning = my_formatwarning
-
+print("AT LEAST HEAR ABOVE MAIN FUNCTION???")
 def global_latlon_map(adfobj):
     """
     This script/function is designed to generate global
