@@ -37,7 +37,7 @@ def tape_recorder(adfobj):
     plot_loc = Path(plot_location[0])
 
     #Grab history string:
-    hist_str = adfobj.hist_string
+    hist_str = adfobj.hist_string["test_hist_str"]
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
@@ -72,6 +72,13 @@ def tape_recorder(adfobj):
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
         start_years = start_years+[data_start_year]
         end_years = end_years+[data_end_year]
+
+        #Grab history string:
+        base_hist_str = adfobj.hist_string["base_hist_str"]
+        if isinstance(base_hist_str, list):
+            #baseline_hist_str = [baseline_hist_str]
+            #base_hist_str = baseline_hist_str[0]
+            print()
     #End if
 
     # Default colormap
