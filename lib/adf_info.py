@@ -285,6 +285,8 @@ class AdfInfo(AdfConfig):
                 base_nickname = self.get_baseline_info('case_nickname')
                 if base_nickname is None:
                     base_nickname = data_name
+            else:
+                print()
             #End if
 
             #Grab baseline nickname
