@@ -1407,6 +1407,7 @@ class AdfDiag(AdfWeb):
                     msg += f"\t Permission denied svaing time series file to '{derived_file}'"
                     msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
                     self.debug_log(msg)
+                    print(msg)
 
 
     ######### MDTF functions #########
