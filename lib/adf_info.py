@@ -763,6 +763,7 @@ class AdfInfo(AdfConfig):
         for var in var_list:
             try:
                 ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
+                break
             except OSError:
                 logmsg = "get years for time series:"
                 logmsg = f"\tVar '{var}' not in dataset, skip to next to try and find climo years..."
