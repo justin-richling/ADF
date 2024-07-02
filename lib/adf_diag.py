@@ -1334,6 +1334,9 @@ class AdfDiag(AdfWeb):
                 # create new file name for derived variable
                 derived_file = constit_files[0].replace(constit_list[0], var)
 
+                #print(Path(derived_file).root)
+                file_name = str(derived_file.name)
+
                 #Check if clobber is true for file
                 if Path(derived_file).is_file():
                     if overwrite:
@@ -1408,6 +1411,17 @@ class AdfDiag(AdfWeb):
                     msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
                     self.debug_log(msg)
                     print(msg)
+
+                    """#Go ahead and make the diag plot location if it doesn't exist already
+                    #Plot directory:
+                    plot_loc_base = self.__plot_location[0]
+                    plot_loc = os.path.join(plot_loc_base, "tmp_ts_files")
+                    diag_location = Path(plot_loc)
+                    if not diag_location.is_dir():
+                        print(f"\t    {diag_location} not found, making new directory")
+                        diag_location.mkdir(parents=True)"""
+                    temp_file_location = self.temp_file_location
+                    ds_final.to_netcdf(temp_file_location / file_name, unlimited_dims='time', mode='w')
 
 
     ######### MDTF functions #########

@@ -496,6 +496,16 @@ class AdfInfo(AdfConfig):
             self.__plot_location.append(os.path.join(plot_dir, first_case_dir))
         #End if
 
+        #Go ahead and make the diag plot location if it doesn't exist already
+        #Plot directory:
+        plot_loc_base = self.__plot_location[0]
+        temp_plot_loc = os.path.join(plot_loc_base, "tmp_ts_files")
+        temp_diag_location = Path(temp_plot_loc)
+        if not temp_diag_location.is_dir():
+            print(f"\t    {temp_diag_location} not found, making new directory")
+            temp_diag_location.mkdir(parents=True)
+        self.__temp_diag_location = temp_diag_location
+
         #-------------------------------------------------------------------------
 
         #Initialize "num_procs" variable:
@@ -629,6 +639,15 @@ class AdfInfo(AdfConfig):
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable:
         return copy.copy(self.__plot_location)
+
+    # Create property needed to return "temp_diag_location" variable to user:
+    @property
+    def temp_file_location(self):
+        """Return a copy of the '__temp_diag_location' string list to user if requested."""
+        #Note that a copy is needed in order to avoid having a script mistakenly
+        #modify this variable:
+        return copy.copy(self.__temp_diag_location)
+    
 
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
