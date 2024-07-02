@@ -465,7 +465,7 @@ class AdfDiag(AdfWeb):
                                 files_list.append(fname)
                             # End for
                         # End for"""
-
+                        print("ts_case_dir",ts_case_dir)
                         ts_var_path = sorted(ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year}*-{end_year}*"))
                         print("ts_var_path",ts_var_path)
 
