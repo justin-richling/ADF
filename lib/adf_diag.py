@@ -351,6 +351,8 @@ class AdfDiag(AdfWeb):
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
+            #Grab history strings:
+            hist_str_list = self.hist_string["base_hist_str"]
 
         else:
             # Use test case settings, which are already lists:
@@ -362,6 +364,8 @@ class AdfDiag(AdfWeb):
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
+            #Grab history strings:
+            hist_str_list = self.hist_string["test_hist_str"]
 
         # Notify user that script has started:
 
@@ -372,13 +376,13 @@ class AdfDiag(AdfWeb):
         dmsg = f"reading from {hist_str_list} files"
         self.debug_log(dmsg)
 
-        #Grab history strings:
+        """#Grab history strings:
         cam_hist_strs = self.hist_string["test_hist_str"]
 
         #Grab history strings:
         base_hist_strs = self.hist_string["base_hist_str"]
 
-        hist_str_list = cam_hist_strs + base_hist_strs
+        hist_str_list = cam_hist_strs + base_hist_strs"""
 
         # get info about variable defaults
         res = self.variable_defaults
