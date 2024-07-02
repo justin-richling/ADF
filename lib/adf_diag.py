@@ -468,7 +468,7 @@ class AdfDiag(AdfWeb):
                         #print("ts_case_dir",ts_case_dir)
                         #if i == 0:
                         #    print(sorted(ts_case_dir.glob("*.nc")))
-                        ts_var_path = sorted(ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year.zfill(4)}*-{end_year.zfill(4)}*"))
+                        ts_var_path = sorted(ts_case_dir.glob(f"*{hist_str}*.{var}.{str(start_year).zfill(4)}*-{str(end_year).zfill(4)}*"))
                         #print("ts_var_path",ts_var_path)
 
 
