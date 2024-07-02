@@ -1335,7 +1335,7 @@ class AdfDiag(AdfWeb):
                 derived_file = constit_files[0].replace(constit_list[0], var)
 
                 #print(Path(derived_file).root)
-                file_name = str(derived_file.name)
+                file_name = str(Path(derived_file).name)
 
                 #Check if clobber is true for file
                 if Path(derived_file).is_file():
