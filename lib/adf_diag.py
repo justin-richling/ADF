@@ -372,6 +372,14 @@ class AdfDiag(AdfWeb):
         dmsg = f"reading from {hist_str_list} files"
         self.debug_log(dmsg)
 
+        #Grab history strings:
+        cam_hist_strs = self.hist_string["test_hist_str"]
+
+        #Grab history strings:
+        base_hist_strs = self.hist_string["base_hist_str"]
+
+        hist_str_list = cam_hist_strs + base_hist_strs
+
         # get info about variable defaults
         res = self.variable_defaults
 
