@@ -382,6 +382,67 @@ class AdfDiag(AdfWeb):
                 emsg = " Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
+                ts_case_dir = ts_dir[case_idx]
+
+
+                # Loop over CAM history variables:
+                vars_to_derive = []
+                # create copy of var list that can be modified for derivable variables
+                diag_var_list = self.diag_var_list
+                #Check if mid-level pressure, ocean fraction or land fraction exist
+                #in the variable list:
+                for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
+                    if var in diag_var_list:
+                        #If so, then move them to the front of variable list so
+                        #that they can be used to mask or vertically interpolate
+                        #other model variables if need be:
+                        var_idx = diag_var_list.index(var)
+                        diag_var_list.pop(var_idx)
+                        diag_var_list.insert(0,var)
+                    #End if
+                #End for
+
+                # Aerosol Calcs
+                #--------------
+                #Always make sure PMID is made if aerosols are desired in config file
+                # Since there's no requirement for `aerosol_zonal_list`, allow it to be absent:
+                azl = res.get("aerosol_zonal_list", [])
+                if "PMID" not in diag_var_list:
+                    if any(item in azl for item in diag_var_list):
+                        diag_var_list += ["PMID"]
+                if "T" not in diag_var_list:
+                    if any(item in azl for item in diag_var_list):
+                        diag_var_list += ["T"]
+                #End aerosol calcs
+
+                for var in diag_var_list:
+                    print("var:",var)
+                    #Try and check if the variable is in the case time series directory
+                    # and if not, check if it needs to be derived
+                    if not glob.glob(os.path.join(ts_case_dir, f"*{var}*")):
+                        print(f"{var} not in {ts_case_dir}")
+
+                        vres = res.get(var, {})
+                        if "derive" in vres:
+                            if "from" in vres["derive"]:
+                                vars_to_derive.append(var)
+                                #continue
+                            else:
+                                msg = f"WARNING: {var} is not in the variable defaults file for deriving."
+                                msg += " No time series will be generated."
+                                print(msg)
+                                continue
+                        else:
+                            msg = f"WARNING: {var} is not in the variable defaults file for deriving."
+                            msg += " No time series will be generated."
+                            print(msg)
+                            continue
+                #Derive variables that come from constituents
+                if vars_to_derive:
+                    self.derive_variables(
+                            res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
+                            constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
+                        )
                 continue
             # End if
 
