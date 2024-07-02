@@ -466,7 +466,8 @@ class AdfDiag(AdfWeb):
                             # End for
                         # End for"""
 
-                        ts_var_path = ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year}*-{end_year}**")
+                        ts_var_path = ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year}*-{end_year}*")
+                        print("ts_var_path",ts_var_path)
 
 
                         """# Create ordered list of CAM history files:
