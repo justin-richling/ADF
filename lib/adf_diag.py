@@ -555,7 +555,7 @@ class AdfDiag(AdfWeb):
                                 res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
                                 constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
                             )
-                    continue
+                continue
             # End if
 
             # Create path object for the CAM history file(s) location:
