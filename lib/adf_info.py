@@ -761,7 +761,17 @@ class AdfInfo(AdfConfig):
         # NOTE: it is assumed all the variables have the same dates!
         # Also, it is assumed that only h0 files should be climo-ed.
         for var in var_list:
-            try:
+            ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
+            if ts_files:
+                print(var)
+                break
+            else:
+                logmsg = "get years for time series:"
+                logmsg = f"\tVar '{var}' not in dataset, skip to next to try and find climo years..."
+                self.debug_log(logmsg)
+                print(logmsg)
+    
+            """try:
                 ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
                 print(var)
                 break
@@ -769,7 +779,7 @@ class AdfInfo(AdfConfig):
                 logmsg = "get years for time series:"
                 logmsg = f"\tVar '{var}' not in dataset, skip to next to try and find climo years..."
                 self.debug_log(logmsg)
-                print(logmsg)
+                print(logmsg)"""
 
         #Read in file(s)
         if len(ts_files) == 1:
