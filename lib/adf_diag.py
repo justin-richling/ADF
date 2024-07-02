@@ -1398,7 +1398,14 @@ class AdfDiag(AdfWeb):
                 #Drop all constituents from final saved dataset
                 #These are not necessary because they have their own time series files
                 ds_final = ds.drop_vars(constit_list)
-                ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                try:
+                    ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                except PermissionError:
+                    msg = "saving time series file:"
+                    msg += f"\t Permission denied svaing time series file to '{derived_file}'"
+                    msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
+                    self.debug_log(msg)
+
 
     ######### MDTF functions #########
     def setup_run_mdtf(self):
