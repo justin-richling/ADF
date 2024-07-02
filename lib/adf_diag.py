@@ -420,139 +420,142 @@ class AdfDiag(AdfWeb):
                         diag_var_list += ["T"]
                 #End aerosol calcs
 
-                #Initialize dictionary for derived variable with needed list of constituents
-                constit_dict = {}
+                hist_str_case = hist_str_list[case_idx]
+                for hist_str in hist_str_case:
 
-                for var in diag_var_list:
-                    # Notify user of new time series file:
-                    #print(f"\t - time series for {var}")
+                    #Initialize dictionary for derived variable with needed list of constituents
+                    constit_dict = {}
 
-                    # Set error messages for printing/debugging
-                    # Derived variable, but missing constituent list
-                    constit_errmsg = f"create time series for {case_name}:"
-                    constit_errmsg += f"\n Can't create time series for {var}. \n\tThis variable"
-                    constit_errmsg += " is flagged for derivation, but is missing list of constiuents."
-                    constit_errmsg += "\n\tPlease add list of constituents to 'derivable_from' "
-                    constit_errmsg += f"for {var} in variable defaults yaml file."
+                    for var in diag_var_list:
+                        # Notify user of new time series file:
+                        #print(f"\t - time series for {var}")
 
-
-                    # Create empty list:
-                    #files_list = []
-
-                    """# Loop over start and end years:
-                    for year in range(start_year, end_year + 1):
-                        # Add files to main file list:
-                        for fname in ts_case_dir.glob(
-                            f"*{hist_str}.*{str(year).zfill(4)}*.nc"
-                        ):
-                            files_list.append(fname)
-                        # End for
-                    # End for"""
-
-                    ts_var_path = ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year}*-{end_year}**")
+                        # Set error messages for printing/debugging
+                        # Derived variable, but missing constituent list
+                        constit_errmsg = f"create time series for {case_name}:"
+                        constit_errmsg += f"\n Can't create time series for {var}. \n\tThis variable"
+                        constit_errmsg += " is flagged for derivation, but is missing list of constiuents."
+                        constit_errmsg += "\n\tPlease add list of constituents to 'derivable_from' "
+                        constit_errmsg += f"for {var} in variable defaults yaml file."
 
 
-                    """# Create ordered list of CAM history files:
-                    ts_files = sorted(files_list)
+                        # Create empty list:
+                        #files_list = []
 
-                    # Open an xarray dataset from the first model history file:
-                    hist_file_ds = xr.open_dataset(
-                        ts_files[0], decode_cf=False, decode_times=False
-                    )
+                        """# Loop over start and end years:
+                        for year in range(start_year, end_year + 1):
+                            # Add files to main file list:
+                            for fname in ts_case_dir.glob(
+                                f"*{hist_str}.*{str(year).zfill(4)}*.nc"
+                            ):
+                                files_list.append(fname)
+                            # End for
+                        # End for"""
 
-                    # Get a list of data variables in the 1st hist file:
-                    ts_file_var_list = list(hist_file_ds.data_vars)
-                    # Note: could use `open_mfdataset`, but that can become very slow;
-                    #      This approach effectively assumes that all files contain the same variables."""
+                        ts_var_path = ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year}*-{end_year}**")
 
 
-                    #Check if current variable is a derived quantity
-                    #if var not in ts_file_var_list:
-                    #if 1==1:
-                    if not ts_var_path:
-                        print(f"\t - time series for {var}")
+                        """# Create ordered list of CAM history files:
+                        ts_files = sorted(files_list)
 
-                        #Try to get varible defaults dictionary for
-                        #non-present quantity
-                        vres = res.get(var, {})
-
-                        #Initialiaze list for constituents
-                        #NOTE: This is if the variable is NOT derivable but needs
-                        # an empty list as a check later
-                        constit_list = []
-
-                        #intialize boolean to check if variable is derivable
-                        derive = False # assume it can't be derived and update if it can
-
-                        #intialize boolean for regular CAM variable constituents
-                        try_cam_constits = True
-
-                        #Check first if variable is potentially part of a CAM-CHEM run
-                        if "derivable_from_cam_chem" in vres:
-                            constit_list = vres["derivable_from_cam_chem"]
-                            if constit_list:
-                                if all(item in hist_file_ds.data_vars for item in constit_list):
-                                    #Set check to look for regular CAM constituents in variable defaults
-                                    try_cam_constits = False
-                                    derive = True
-                                    msg = f"create time series for {case_name}:"
-                                    msg += "\n\tLooks like this a CAM-CHEM run, "
-                                    msg += f"checking constituents for '{var}'"
-                                    self.debug_log(msg)
-                            else:
-                                self.debug_log(constit_errmsg)
-                            #End if
-                        #End if
-
-                        #If not CAM-CHEM, check regular CAM runs
-                        if try_cam_constits:
-                            if "derivable_from" in vres:
-                                derive = True
-                                constit_list = vres["derivable_from"]
-                        else:
-                            # Missing variable or missing derivable_from argument
-                            der_from_msg = f"create time series for {case_name}:"
-                            der_from_msg += f"\n Can't create time series for {var}.\n\tEither "
-                            der_from_msg += "the variable is missing from CAM output or it is a "
-                            der_from_msg += "derived quantity and is missing the 'derivable_from' "
-                            der_from_msg += "config argument.\n\tPlease add variable to CAM run "
-                            der_from_msg += "or set appropriate argument in variable "
-                            der_from_msg += "defaults yaml file."
-                            self.debug_log(der_from_msg)
-                        #End if
-
-                        #Check if this variable can be derived
-                        if (derive) and (constit_list):
-                            for constit in constit_list:
-                                if constit not in diag_var_list:
-                                    diag_var_list.append(constit)
-                            #Add variable to list to derive
-                            vars_to_derive.append(var)
-                            #Add constituent list to variable key in dictionary
-                            constit_dict[var] = constit_list
-                            continue
-                        #Log if this variable can be derived but is missing list of constituents
-                        elif (derive) and (not constit_list):
-                            self.debug_log(constit_errmsg)
-                            continue
-                        #Lastly, raise error if the variable is not a derived quanitity but is also not
-                        #in the history file(s)
-                        else:
-                            msg = f"WARNING: {var} is not in the file {ts_dir[case_idx]} "
-                            msg += "nor can it be derived.\n"
-                            msg += "\t  ** No time series will be generated."
-                            print(msg)
-                            continue
-                        #End if
-                    #End if (var in var_diag_list)
-                
-                #Derive variables that come from constituents
-                if vars_to_derive:
-                    self.derive_variables(
-                            res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
-                            constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
+                        # Open an xarray dataset from the first model history file:
+                        hist_file_ds = xr.open_dataset(
+                            ts_files[0], decode_cf=False, decode_times=False
                         )
-                continue
+
+                        # Get a list of data variables in the 1st hist file:
+                        ts_file_var_list = list(hist_file_ds.data_vars)
+                        # Note: could use `open_mfdataset`, but that can become very slow;
+                        #      This approach effectively assumes that all files contain the same variables."""
+
+
+                        #Check if current variable is a derived quantity
+                        #if var not in ts_file_var_list:
+                        #if 1==1:
+                        if not ts_var_path:
+                            print(f"\t - time series for {var}")
+
+                            #Try to get varible defaults dictionary for
+                            #non-present quantity
+                            vres = res.get(var, {})
+
+                            #Initialiaze list for constituents
+                            #NOTE: This is if the variable is NOT derivable but needs
+                            # an empty list as a check later
+                            constit_list = []
+
+                            #intialize boolean to check if variable is derivable
+                            derive = False # assume it can't be derived and update if it can
+
+                            #intialize boolean for regular CAM variable constituents
+                            try_cam_constits = True
+
+                            #Check first if variable is potentially part of a CAM-CHEM run
+                            if "derivable_from_cam_chem" in vres:
+                                constit_list = vres["derivable_from_cam_chem"]
+                                if constit_list:
+                                    if all(item in hist_file_ds.data_vars for item in constit_list):
+                                        #Set check to look for regular CAM constituents in variable defaults
+                                        try_cam_constits = False
+                                        derive = True
+                                        msg = f"create time series for {case_name}:"
+                                        msg += "\n\tLooks like this a CAM-CHEM run, "
+                                        msg += f"checking constituents for '{var}'"
+                                        self.debug_log(msg)
+                                else:
+                                    self.debug_log(constit_errmsg)
+                                #End if
+                            #End if
+
+                            #If not CAM-CHEM, check regular CAM runs
+                            if try_cam_constits:
+                                if "derivable_from" in vres:
+                                    derive = True
+                                    constit_list = vres["derivable_from"]
+                            else:
+                                # Missing variable or missing derivable_from argument
+                                der_from_msg = f"create time series for {case_name}:"
+                                der_from_msg += f"\n Can't create time series for {var}.\n\tEither "
+                                der_from_msg += "the variable is missing from CAM output or it is a "
+                                der_from_msg += "derived quantity and is missing the 'derivable_from' "
+                                der_from_msg += "config argument.\n\tPlease add variable to CAM run "
+                                der_from_msg += "or set appropriate argument in variable "
+                                der_from_msg += "defaults yaml file."
+                                self.debug_log(der_from_msg)
+                            #End if
+
+                            #Check if this variable can be derived
+                            if (derive) and (constit_list):
+                                for constit in constit_list:
+                                    if constit not in diag_var_list:
+                                        diag_var_list.append(constit)
+                                #Add variable to list to derive
+                                vars_to_derive.append(var)
+                                #Add constituent list to variable key in dictionary
+                                constit_dict[var] = constit_list
+                                continue
+                            #Log if this variable can be derived but is missing list of constituents
+                            elif (derive) and (not constit_list):
+                                self.debug_log(constit_errmsg)
+                                continue
+                            #Lastly, raise error if the variable is not a derived quanitity but is also not
+                            #in the history file(s)
+                            else:
+                                msg = f"WARNING: {var} is not in the file {ts_dir[case_idx]} "
+                                msg += "nor can it be derived.\n"
+                                msg += "\t  ** No time series will be generated."
+                                print(msg)
+                                continue
+                            #End if
+                        #End if (var in var_diag_list)
+                    
+                    #Derive variables that come from constituents
+                    if vars_to_derive:
+                        self.derive_variables(
+                                res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
+                                constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
+                            )
+                    continue
             # End if
 
             # Create path object for the CAM history file(s) location:
