@@ -561,7 +561,9 @@ class AdfDiag(AdfWeb):
                                 print(msg)
                                 continue
                             #End if
-                        #End if (var in var_diag_list)
+                        else:
+                            print("AHHHH")
+                    #End if (var in var_diag_list)
                     
                     #Derive variables that come from constituents
                     if vars_to_derive:
