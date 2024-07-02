@@ -384,6 +384,8 @@ class AdfDiag(AdfWeb):
 
         hist_str_list = cam_hist_strs + base_hist_strs"""
 
+        print("hist_str_list",hist_str_list)
+
         # get info about variable defaults
         res = self.variable_defaults
 
