@@ -486,6 +486,7 @@ class AdfDiag(AdfWeb):
                         #Check if current variable is a derived quantity
                         #if var not in ts_file_var_list:
                         #if 1==1:
+                        print("VAR:",var)
                         if not ts_var_path:
                             print(f"\t - time series for {var}")
 
