@@ -465,10 +465,10 @@ class AdfDiag(AdfWeb):
                                 files_list.append(fname)
                             # End for
                         # End for"""
-                        print("ts_case_dir",ts_case_dir)
-                        if i == 0:
-                            print(sorted(ts_case_dir.glob("*.nc")))
-                        ts_var_path = sorted(ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year}*-{end_year}*"))
+                        #print("ts_case_dir",ts_case_dir)
+                        #if i == 0:
+                        #    print(sorted(ts_case_dir.glob("*.nc")))
+                        ts_var_path = sorted(ts_case_dir.glob(f"*{hist_str}*.{var}.{start_year.zfill(4)}*-{end_year.zfill(4)}*"))
                         #print("ts_var_path",ts_var_path)
 
 
