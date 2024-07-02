@@ -489,7 +489,7 @@ class AdfDiag(AdfWeb):
                         #Check if current variable is a derived quantity
                         #if var not in ts_file_var_list:
                         #if 1==1:
-                        print("VAR:",var)
+                        #print("VAR:",var)
                         if not ts_var_path:
                             print(f"\t - time series for {var}")
 
@@ -559,10 +559,10 @@ class AdfDiag(AdfWeb):
                             #Lastly, raise error if the variable is not a derived quanitity but is also not
                             #in the history file(s)
                             else:
-                                msg = f"WARNING: {var} is not in the file {ts_dir[case_idx]} "
-                                msg += "nor can it be derived.\n"
-                                msg += "\t  ** No time series will be generated."
-                                print(msg)
+                                #msg = f"WARNING: {var} is not in the file {ts_dir[case_idx]} "
+                                #msg += "nor can it be derived.\n"
+                                #msg += "\t  ** No time series will be generated."
+                                #print(msg)
                                 continue
                             #End if
                         else:
