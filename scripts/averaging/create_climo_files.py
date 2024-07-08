@@ -169,19 +169,25 @@ def create_climo_files(adf, clobber=False, search=None):
                 warnings.warn(errmsg)
                 continue
 
-            list_of_arguments.append((ts_files, syr, eyr, output_file))
+            #list_of_arguments.append((ts_files, syr, eyr, output_file))
+            #Run it in serial if there are multiple time series available
+            if len(ts_files) > 1:
+                for loa in (ts_files, syr, eyr, output_file):
+                    result = process_variable(*loa)
+            else:
+                list_of_arguments.append((ts_files, syr, eyr, output_file))
 
 
         #End of var_list loop
         #--------------------
-        #Run it in serial if there are multiple time series available
+        """#Run it in serial if there are multiple time series available
         if len(ts_files) > 1:
             for loa in list_of_arguments:
-                result = process_variable(*loa)
-
-        # Parallelize the computation using multiprocessing pool:
-        with mp.Pool(processes=number_of_cpu) as p:
-            result = p.starmap(process_variable, list_of_arguments)
+                result = process_variable(*loa)"""
+        if list_of_arguments:
+            # Parallelize the computation using multiprocessing pool:
+            with mp.Pool(processes=number_of_cpu) as p:
+                result = p.starmap(process_variable, list_of_arguments)
 
     #End of model case loop
     #----------------------
@@ -199,7 +205,7 @@ def process_variable(ts_files, syr, eyr, output_file):
     '''
     #Read in files via xarray (xr):
     if len(ts_files) == 1:
-        cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True).compute()
+        cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     else:
         cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords').compute()
     #Average time dimension over time bounds, if bounds exist:
