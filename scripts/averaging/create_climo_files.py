@@ -173,7 +173,7 @@ def create_climo_files(adf, clobber=False, search=None):
             #Run it in serial if there are multiple time series available
             if len(ts_files) > 1:
                 #for loa in (ts_files, syr, eyr, output_file):
-                result = process_variable((ts_files, syr, eyr, output_file))
+                result = process_variable(ts_files, syr, eyr, output_file)
             else:
                 list_of_arguments.append((ts_files, syr, eyr, output_file))
 
