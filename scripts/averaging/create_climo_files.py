@@ -164,8 +164,8 @@ def create_climo_files(adf, clobber=False, search=None):
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
             if not ts_files:
-                ts_filenames = adf.temp_file_location
-                ts_files = sorted(list(input_location.glob(ts_filenames)))
+                temp_ts_filenames = adf.temp_file_location
+                ts_files = sorted(list(temp_ts_filenames.glob(ts_filenames)))
                 if not ts_files:
                     errmsg = "HHAW: Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
                     print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
