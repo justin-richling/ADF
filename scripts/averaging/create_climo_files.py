@@ -174,6 +174,10 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #End of var_list loop
         #--------------------
+        #Run it in serial if there are multiple time series available
+        if len(ts_files) > 1:
+            for loa in list_of_arguments:
+                result = process_variable(*loa)
 
         # Parallelize the computation using multiprocessing pool:
         with mp.Pool(processes=number_of_cpu) as p:
