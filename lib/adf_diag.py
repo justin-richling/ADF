@@ -1293,41 +1293,176 @@ class AdfDiag(AdfWeb):
 
             #Grab list of constituents for this variable
             constit_list = constit_dict[var]
+            #Raise error if constituents are missing entirely
+            if not constit_list:
+                print("WARNING: No constituents listed in defaults config file, moving on.")
+                continue
 
             #Grab all required time series files for derived variable
             constit_files = []
+            constit_files_dict = {}
             for constit in constit_list:
                 #Check if the constituent file is present, if so add it to list
                 if hist_str:
                     const_glob_str = f"*{hist_str}*.{constit}.*.nc"
                 else:
                     const_glob_str = f"*.{constit}.*.nc"
-                #end if
-                if glob.glob(os.path.join(ts_dir, const_glob_str)):
-                    constit_files.append(glob.glob(os.path.join(ts_dir, const_glob_str ))[0])
+                ##end if
+                #if glob.glob(os.path.join(ts_dir, const_glob_str)):
+                #    constit_files.append(glob.glob(os.path.join(ts_dir, const_glob_str ))[0])
 
-            #Check if all the necessary constituent files were found
-            if len(constit_files) != len(constit_list):
-                ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated."
-                ermsg += f" Please remove {var} from 'diag_var_list' or find the "
-                ermsg += "relevant CAM files.\n"
-                print(ermsg)
-                if constit_files:
-                    #Add what's missing to debug log
-                    dmsg = "create time series:"
-                    dmsg += "\n\tneeded constituents for derivation of "
-                    dmsg += f"{var}:\n\t\t- {constit_list}\n\tfound constituent file(s) in "
-                    dmsg += f"{Path(constit_files[0]).parent}:\n\t\t"
-                    dmsg += f"- {[Path(f).parts[-1] for f in constit_files if Path(f).is_file()]}"
-                    self.debug_log(dmsg)
+                if len(sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))) > 1:
+                    mutli_ts = True
+                    constit_files_dict[constit] = sorted(glob.glob(os.path.join(ts_dir, f"*.{constit}.*.nc")))
                 else:
-                    dmsg = "create time series:"
-                    dmsg += "\n\tneeded constituents for derivation of "
-                    dmsg += f"{var}:\n\t\t- {constit_list}\n"
-                    dmsg += "\tNo constituent(s) found in history files"
-                    self.debug_log(dmsg)
+                    mutli_ts = False
+                    if glob.glob(os.path.join(ts_dir, const_glob_str)):
+                        print("single time series HERE??")
+                        constit_files.append(glob.glob(os.path.join(ts_dir, const_glob_str))[0])
+            if mutli_ts:
+                for i in range(len(constit_files_dict[constit_list[0]])):
 
+                    ahh = []
+                    for cons in constit_files_dict.keys():
+                        ahh.append(constit_files_dict[cons][i])
+
+                    #Check if all the constituent files were found
+                    if len(ahh) != len(constit_list):
+                        ermsg = f"Not all constituent files present; {var} cannot be calculated."
+                        ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
+                        print(ermsg)
+                        continue
+                    print(f"{var}: multi matchies??",len(ahh) == len(constit_list))
+                    #Open a new dataset with all the constituent files/variables
+                    ds = xr.open_mfdataset(ahh, compat='override')
+                    # create new file name for derived variable
+
+                    #print("fdghjk",constit_files_dict[constit_list[0]][i])
+
+                    derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
+                    #print("derived_file",derived_file,"\n")
+
+                    
+                   
+                    #print(Path(derived_file).root)
+                    #file_name = str(Path(derived_file).name)
+
+                    #Check if clobber is true for file
+                    if Path(derived_file).is_file():
+                        if overwrite:
+                            Path(derived_file).unlink()
+                        else:
+                            msg = f"[{__name__}] Warning: '{var}' file was found "
+                            msg += "and overwrite is False. Will use existing file."
+                            print(msg)
+                            continue
+
+                    #NOTE: this will need to be changed when derived equations are more complex! - JR
+                    if var == "RESTOM":
+                        der_val = ds["FSNT"]-ds["FLNT"]
+                    else:
+                        #Loop through all constituents and sum
+                        der_val = 0
+                        for v in constit_list:
+                            der_val += ds[v]
+
+                    #Set derived variable name and add to dataset
+                    der_val.name = var
+                    ds[var] = der_val
+
+                    #Aerosol Calculations
+                    #----------------------------------------------------------------------------------
+                    #These will be multiplied by rho (density of dry air)
+                    ds_pmid_done = False
+                    ds_t_done = False
+
+                    # User-defined defaults might not include aerosol zonal list
+                    azl = res.get("aerosol_zonal_list", [])
+                    if var in azl:
+
+                        #Only calculate once for all aerosol vars
+                        if not ds_pmid_done:
+                            ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
+                            ds_pmid_done = True
+                            if not ds_pmid:
+                                errmsg = "Missing necessary files for dry air density"
+                                errmsg += " (rho) calculation.\n"
+                                errmsg += "Please make sure 'PMID' is in the CAM run"
+                                errmsg += " for aerosol calculations"
+                                print(errmsg)
+                                continue
+                        if not ds_t_done:
+                            ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
+                            ds_t_done = True
+                            if not ds_t:
+                                errmsg = "Missing necessary files for dry air density"
+                                errmsg += " (rho) calculation.\n"
+                                errmsg += "Please make sure 'T' is in the CAM run"
+                                errmsg += " for aerosol calculations"
+                                print(errmsg)
+                                continue
+
+                        #Multiply aerosol by dry air density (rho): (P/Rd*T)
+                        ds[var] = ds[var]*(ds_pmid["PMID"]/(res["Rgas"]*ds_t["T"]))
+
+                        #Sulfate conversion factor
+                        if var == "SO4":
+                            ds[var] = ds[var]*(96./115.)
+                    #----------------------------------------------------------------------------------
+
+                    #Drop all constituents from final saved dataset
+                    #These are not necessary because they have their own time series files
+                    ds_final = ds.drop_vars(constit_list)
+                    try:
+                        ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
+                    except PermissionError:
+                        msg = "saving time series file:"
+                        msg += f"\t Permission denied svaing time series file to '{derived_file}'"
+                        msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
+                        self.debug_log(msg)
+                        print(msg)
+
+                        """#Go ahead and make the diag plot location if it doesn't exist already
+                        #Plot directory:
+                        plot_loc_base = self.__plot_location[0]
+                        plot_loc = os.path.join(plot_loc_base, "tmp_ts_files")
+                        diag_location = Path(plot_loc)
+                        if not diag_location.is_dir():
+                            print(f"\t    {diag_location} not found, making new directory")
+                            diag_location.mkdir(parents=True)"""
+                        temp_file_location = self.temp_file_location
+                        ds_final.to_netcdf(temp_file_location / file_name, unlimited_dims='time', mode='w')
+
+                    
+                    """if flag == "derive_interp":
+                        derive_interp(ds, vres, constit_list, var, derived_file)
+                    if flag == "derive_mask":
+                        derive_masked(ds, vres, constit_list, var, ts_dir, i, derived_file)    
+                    if flag == "derivable_from":
+                        derive_from_constits(ds, constit_list, var, derived_file)"""
             else:
+                #Check if all the constituent files were found
+                print(f"{var}: matchies??",len(constit_files) == len(constit_list))
+                if len(constit_files) != len(constit_list):
+                    ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated."
+                    ermsg += f" Please remove {var} from 'diag_var_list' or find the "
+                    ermsg += "relevant CAM files.\n"
+                    print(ermsg)
+                    if constit_files:
+                        #Add what's missing to debug log
+                        dmsg = "create time series:"
+                        dmsg += "\n\tneeded constituents for derivation of "
+                        dmsg += f"{var}:\n\t\t- {constit_list}\n\tfound constituent file(s) in "
+                        dmsg += f"{Path(constit_files[0]).parent}:\n\t\t"
+                        dmsg += f"- {[Path(f).parts[-1] for f in constit_files if Path(f).is_file()]}"
+                        self.debug_log(dmsg)
+                    else:
+                        dmsg = "create time series:"
+                        dmsg += "\n\tneeded constituents for derivation of "
+                        dmsg += f"{var}:\n\t\t- {constit_list}\n"
+                        dmsg += "\tNo constituent(s) found in history files"
+                        self.debug_log(dmsg)
+    
                 #Open a new dataset with all the constituent files/variables
                 ds = xr.open_mfdataset(constit_files)
 
