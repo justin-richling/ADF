@@ -173,11 +173,11 @@ def create_climo_files(adf, clobber=False, search=None):
                     warnings.warn(errmsg)
                     continue
             #else:
-                errmsg = "WAHH: Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
-                print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
-                #  end_diag_script(errmsg) # Previously we would kill the run here.
-                warnings.warn(errmsg)
-                continue
+                #errmsg = "WAHH: Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
+                #print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
+                ##  end_diag_script(errmsg) # Previously we would kill the run here.
+                #warnings.warn(errmsg)
+                #continue
 
             #list_of_arguments.append((ts_files, syr, eyr, output_file))
             #Run it in serial if there are multiple time series available
