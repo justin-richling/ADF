@@ -1420,10 +1420,12 @@ class AdfDiag(AdfWeb):
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                     except PermissionError:
                         msg = "saving time series file:"
-                        msg += f"\t Permission denied svaing time series file to '{derived_file}'"
+                        msg += f"\t Permission denied svaing time series file '{file_name}' to '{str(derived_file.home())}'"
                         msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
                         self.debug_log(msg)
-                        print(msg)
+                        permissmsg = "tThe file can't be saved to input location.\n"
+                        permissmsg += f"t - Saving to temp ts loc: {temp_file_location / file_name}"
+                        print(permissmsg)
 
                         """#Go ahead and make the diag plot location if it doesn't exist already
                         #Plot directory:
