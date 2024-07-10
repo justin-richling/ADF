@@ -1422,6 +1422,7 @@ class AdfDiag(AdfWeb):
                     try:
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                     except PermissionError:
+                        temp_file_location = self.temp_file_location
                         msg = "saving time series file:"
                         msg += f"\t Permission denied svaing time series file '{file_name}' to '{str(derived_file.home())}'"
                         msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
@@ -1438,7 +1439,7 @@ class AdfDiag(AdfWeb):
                         if not diag_location.is_dir():
                             print(f"\t    {diag_location} not found, making new directory")
                             diag_location.mkdir(parents=True)"""
-                        temp_file_location = self.temp_file_location
+
                         ds_final.to_netcdf(temp_file_location / file_name, unlimited_dims='time', mode='w')
 
                     
@@ -1552,6 +1553,7 @@ class AdfDiag(AdfWeb):
                 try:
                     ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                 except PermissionError:
+                    temp_file_location = self.temp_file_location
                     msg = "saving time series file:"
                     msg += f"\t Permission denied svaing time series file '{file_name}' to '{str(derived_file.home())}'"
                     msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
@@ -1568,7 +1570,7 @@ class AdfDiag(AdfWeb):
                     if not diag_location.is_dir():
                         print(f"\t    {diag_location} not found, making new directory")
                         diag_location.mkdir(parents=True)"""
-                    temp_file_location = self.temp_file_location
+                    
                     ds_final.to_netcdf(temp_file_location / file_name, unlimited_dims='time', mode='w')
 
 
