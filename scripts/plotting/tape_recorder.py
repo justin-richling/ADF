@@ -174,8 +174,9 @@ def tape_recorder(adfobj):
             print(dmsg)
             continue
         print("\ndat time:",dat.time,"\n")
-        dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        #dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         dat_sub = dat.sel(time=slice(str(start_years[idx]).zfill(4), str(end_years[idx]).zfill(4)))
+        dat_sub = fixcesmtime(dat_sub,start_years[idx],end_years[idx])
         datzm = dat_sub.mean('lon')
         #datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
