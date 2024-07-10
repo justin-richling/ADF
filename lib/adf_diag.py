@@ -1342,18 +1342,21 @@ class AdfDiag(AdfWeb):
 
                     #print("fdghjk",constit_files_dict[constit_list[0]][i])
 
-                    derived_file = constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var)
+                    derived_file = Path(constit_files_dict[constit_list[0]][i].replace(list(constit_files_dict.keys())[0], var))
                     #print("derived_file",derived_file,"\n")
 
                     
                    
                     #print(Path(derived_file).root)
-                    file_name = str(Path(derived_file).name)
+                    #file_name = str(Path(derived_file).name)
+                    file_name = str(derived_file.name)
 
                     #Check if clobber is true for file
-                    if Path(derived_file).is_file():
+                    #if Path(derived_file).is_file():
+                    if derived_file.is_file():
                         if overwrite:
-                            Path(derived_file).unlink()
+                            #Path(derived_file).unlink()
+                            derived_file.unlink()
                         else:
                             msg = f"[{__name__}] Warning: '{var}' file was found "
                             msg += "and overwrite is False. Will use existing file."
@@ -1472,14 +1475,17 @@ class AdfDiag(AdfWeb):
                 ds = xr.open_mfdataset(constit_files)
 
                 # create new file name for derived variable
-                derived_file = constit_files[0].replace(constit_list[0], var)
+                derived_file = Path(constit_files[0].replace(constit_list[0], var))
 
                 #print(Path(derived_file).root)
-                file_name = str(Path(derived_file).name)
+                #file_name = str(Path(derived_file).name)
+                file_name = str(derived_file.name)
 
                 #Check if clobber is true for file
-                if Path(derived_file).is_file():
+                #if Path(derived_file).is_file():
+                if derived_file.is_file():
                     if overwrite:
+                        #Path(derived_file).unlink()
                         Path(derived_file).unlink()
                     else:
                         msg = f"[{__name__}] Warning: '{var}' file was found "
