@@ -1419,6 +1419,7 @@ class AdfDiag(AdfWeb):
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
+                    print(ds_final)
                     # Convert the 'time' coordinate to datetime64 using pandas
                     ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
 
