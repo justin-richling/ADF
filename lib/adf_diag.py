@@ -1424,7 +1424,7 @@ class AdfDiag(AdfWeb):
                     ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
 
                     # Ensure the dtype is datetime64[ns]
-                    ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
+                    #ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
                     try:
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                     except PermissionError:
