@@ -1420,6 +1420,7 @@ class AdfDiag(AdfWeb):
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
                     print("\n",ds_final["date_written"],"\n")
+                    ds_final['date_written'] = ds_final['date_written'].astype('datetime64[ns]')
 
                     # Convert the time coordinate to strings
                     #ds_final['time'] = ds_final.indexes['time'].to_datetimeindex().strftime('%Y-%m-%d %H:%M:%S')
@@ -1430,7 +1431,7 @@ class AdfDiag(AdfWeb):
                     # Ensure the dtype is datetime64[ns]
                     #ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
                     # Convert the time coordinate to strings
-                    ds_final['time'] = ds_final['time'].astype(str)
+                    #ds_final['time'] = ds_final['time'].astype(str)
                     #print("\n",ds_final,"\n")
                     try:
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
