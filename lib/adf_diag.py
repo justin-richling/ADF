@@ -1419,6 +1419,7 @@ class AdfDiag(AdfWeb):
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
+                    print("\nds_final\n",ds_final,"\n")
                     import dask.dataframe as dd
 
                     # Assume df is your Dask dataframe and date_written is a column in it
