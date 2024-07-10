@@ -888,13 +888,14 @@ class AdfDiag(AdfWeb):
                 # Now run the "ncrcat" subprocesses in parallel:
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_commands)
-
-                    if vars_to_derive:
-                        self.derive_variables(
-                            res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
-                            constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
-                        )
                 # End with
+
+                if vars_to_derive:
+                    self.derive_variables(
+                        res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
+                        constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
+                    )
+                
             # End for hist_str
         # End cases loop
 
