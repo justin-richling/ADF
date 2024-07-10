@@ -176,6 +176,8 @@ def tape_recorder(adfobj):
         print("\ndat time:",dat.time,"\n")
         #dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         dat_sub = dat.sel(time=slice(str(start_years[idx]).zfill(4), str(end_years[idx]).zfill(4)))
+        # Convert the time coordinate to strings
+        dat_sub['time'] = dat_sub['time'].astype(str)
         dat_sub = fixcesmtime(dat_sub,start_years[idx],end_years[idx])
         datzm = dat_sub.mean('lon')
         #datzm = dat.mean('lon')
