@@ -1335,7 +1335,7 @@ class AdfDiag(AdfWeb):
                         ermsg += f" Please remove {var} from diag_var_list or find the relevant CAM files."
                         print(ermsg)
                         continue
-                    print(f"{var}: multi matchies??",len(ahh) == len(constit_list))
+                    #print(f"{var}: multi matchies??",len(ahh) == len(constit_list))
                     #Open a new dataset with all the constituent files/variables
                     ds = xr.open_mfdataset(ahh)#, compat='override'
                     # create new file name for derived variable
