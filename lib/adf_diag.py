@@ -1433,8 +1433,8 @@ class AdfDiag(AdfWeb):
                         msg += f"\t Permission denied svaing time series file '{file_name}' to '{str(derived_file.home())}'"
                         msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
                         self.debug_log(msg)
-                        permissmsg = "tThe file can't be saved to input location.\n"
-                        permissmsg += f"t - Saving to temp ts loc: {temp_file_location / file_name}"
+                        permissmsg = "\tThe file can't be saved to input location.\n"
+                        permissmsg += f"\t - Saving to temp ts loc: {temp_file_location / file_name}"
                         print(permissmsg)
 
                         """#Go ahead and make the diag plot location if it doesn't exist already
@@ -1564,8 +1564,8 @@ class AdfDiag(AdfWeb):
                     msg += f"\t Permission denied svaing time series file '{file_name}' to '{str(derived_file.home())}'"
                     msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
                     self.debug_log(msg)
-                    permissmsg = "tThe file can't be saved to input location.\n"
-                    permissmsg += f"t - Saving to temp ts loc: {temp_file_location / file_name}"
+                    permissmsg = "\tThe file can't be saved to input location.\n"
+                    permissmsg += f"\t - Saving to temp ts loc: {temp_file_location / file_name}"
                     print(permissmsg)
 
                     """#Go ahead and make the diag plot location if it doesn't exist already
