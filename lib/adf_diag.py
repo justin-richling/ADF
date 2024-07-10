@@ -1415,7 +1415,7 @@ class AdfDiag(AdfWeb):
                         if var == "SO4":
                             ds[var] = ds[var]*(96./115.)
                     #----------------------------------------------------------------------------------
-                    import pandas as pd
+
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
 
