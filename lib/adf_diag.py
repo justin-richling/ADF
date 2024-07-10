@@ -1337,7 +1337,7 @@ class AdfDiag(AdfWeb):
                         continue
                     print(f"{var}: multi matchies??",len(ahh) == len(constit_list))
                     #Open a new dataset with all the constituent files/variables
-                    ds = xr.open_mfdataset(ahh, compat='override')
+                    ds = xr.open_mfdataset(ahh)#, compat='override'
                     # create new file name for derived variable
 
                     #print("fdghjk",constit_files_dict[constit_list[0]][i])
