@@ -1418,8 +1418,12 @@ class AdfDiag(AdfWeb):
                     import pandas as pd
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
-                    ds_final = ds.drop_vars(constit_list+["date_written", "time_written"])
-                    print("\n",ds_final,"\n")
+
+                    # Check if variables exist in the dataset before dropping them
+                    vars_to_drop = constit_list+["date_written", "time_written"]
+                    existing_vars_to_drop = [var for var in vars_to_drop if var in ds]
+                    ds_final = ds.drop_vars(existing_vars_to_drop)
+                    #print("\n",ds_final,"\n")
                     #ds_final['date_written'] = ds_final['date_written'].astype('datetime64[ns]')
 
                     # Convert the time coordinate to strings
@@ -1564,7 +1568,10 @@ class AdfDiag(AdfWeb):
 
                 #Drop all constituents from final saved dataset
                 #These are not necessary because they have their own time series files
-                ds_final = ds.drop_vars(constit_list)
+                #ds_final = ds.drop_vars(constit_list)
+                vars_to_drop = constit_list+["date_written", "time_written"]
+                existing_vars_to_drop = [var for var in vars_to_drop if var in ds]
+                ds_final = ds.drop_vars(existing_vars_to_drop)
                 try:
                     ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                 except PermissionError:
