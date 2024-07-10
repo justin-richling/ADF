@@ -1419,6 +1419,13 @@ class AdfDiag(AdfWeb):
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
+                    import dask.dataframe as dd
+
+                    # Assume df is your Dask dataframe and date_written is a column in it
+                    ds_final['time'] = dd.to_datetime(ds_final['time'])
+
+                    # Now convert the column to a Dask array with the desired dtype
+                    ds_final = ds_final['time'].astype('datetime64[ns]').values
                     try:
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                     except PermissionError:
