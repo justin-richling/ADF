@@ -1418,7 +1418,7 @@ class AdfDiag(AdfWeb):
                     import pandas as pd
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
-                    ds_final = ds.drop_vars(constit_list+["date_written"])
+                    ds_final = ds.drop_vars(constit_list+["date_written", "time_written"])
                     print("\n",ds_final,"\n")
                     #ds_final['date_written'] = ds_final['date_written'].astype('datetime64[ns]')
 
