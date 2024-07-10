@@ -352,6 +352,7 @@ class AdfDiag(AdfWeb):
             end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
             #Grab history strings:
+            #Don't make this a list, it will come as one from the adf object
             hist_str_list = self.hist_string["base_hist_str"]
 
         else:
