@@ -353,7 +353,7 @@ class AdfDiag(AdfWeb):
             case_type_string = "baseline"
             #Grab history strings:
             #Don't make this a list, it will come as one from the adf object
-            hist_str_list = self.hist_string["base_hist_str"]
+            hist_str_list = [self.hist_string["base_hist_str"]]
 
         else:
             # Use test case settings, which are already lists:
