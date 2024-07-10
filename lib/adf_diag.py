@@ -1429,7 +1429,9 @@ class AdfDiag(AdfWeb):
 
                     # Ensure the dtype is datetime64[ns]
                     #ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
-                    #print("\n",ds_final,"\n")
+                    # Convert the time coordinate to strings
+                    ds_final['time'] = ds_final['time'].astype(str)
+                    print("\n",ds_final,"\n")
                     try:
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                     except PermissionError:
