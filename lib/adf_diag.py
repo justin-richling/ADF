@@ -1446,7 +1446,7 @@ class AdfDiag(AdfWeb):
                         msg += "\n\t If this is a set of CMIP data, the file can't be saved to input location"
                         self.debug_log(msg)
                         permissmsg = "\t    The file can't be saved to input location.\n"
-                        permissmsg += f"\t     - Saving to temp ts loc: {temp_file_location / file_name}"
+                        permissmsg += f"\t     - Saving to temp ts loc: {temp_file_location / file_name}\n"
                         print(permissmsg)
 
                         """#Go ahead and make the diag plot location if it doesn't exist already
