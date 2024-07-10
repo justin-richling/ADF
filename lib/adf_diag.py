@@ -1420,6 +1420,10 @@ class AdfDiag(AdfWeb):
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
                     print(ds_final)
+
+                    # Convert the time coordinate to strings
+                    ds_final['time'] = ds_final.indexes['time'].to_datetimeindex().strftime('%Y-%m-%d %H:%M:%S')
+
                     # Convert the 'time' coordinate to datetime64 using pandas
                     ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
 
