@@ -1446,8 +1446,9 @@ class AdfDiag(AdfWeb):
                         if not diag_location.is_dir():
                             print(f"\t    {diag_location} not found, making new directory")
                             diag_location.mkdir(parents=True)"""
-
+                        print()
                         ds_final.to_netcdf(temp_file_location / file_name, unlimited_dims='time', mode='w')
+                        print()
 
                     
                     """if flag == "derive_interp":
