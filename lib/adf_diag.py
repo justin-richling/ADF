@@ -1419,17 +1419,17 @@ class AdfDiag(AdfWeb):
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
-                    print(ds_final)
+                    print("\n",ds_final,"\n")
 
                     # Convert the time coordinate to strings
-                    ds_final['time'] = ds_final.indexes['time'].to_datetimeindex().strftime('%Y-%m-%d %H:%M:%S')
+                    #ds_final['time'] = ds_final.indexes['time'].to_datetimeindex().strftime('%Y-%m-%d %H:%M:%S')
 
                     # Convert the 'time' coordinate to datetime64 using pandas
-                    ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
+                    #ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
 
                     # Ensure the dtype is datetime64[ns]
-                    ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
-                    print("\n",ds_final,"\n")
+                    #ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
+                    #print("\n",ds_final,"\n")
                     try:
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                     except PermissionError:
