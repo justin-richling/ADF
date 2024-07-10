@@ -1415,18 +1415,15 @@ class AdfDiag(AdfWeb):
                         if var == "SO4":
                             ds[var] = ds[var]*(96./115.)
                     #----------------------------------------------------------------------------------
-
+                    import pandas as pd
                     #Drop all constituents from final saved dataset
                     #These are not necessary because they have their own time series files
                     ds_final = ds.drop_vars(constit_list)
-                    print("\nds_final\n",ds_final,"\n")
-                    import dask.dataframe as dd
+                    # Convert the 'time' coordinate to datetime64 using pandas
+                    ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
 
-                    # Assume df is your Dask dataframe and date_written is a column in it
-                    ds_final['time'] = dd.to_datetime(ds_final['time'])
-
-                    # Now convert the column to a Dask array with the desired dtype
-                    ds_final = ds_final['time'].astype('datetime64[ns]').values
+                    # Ensure the dtype is datetime64[ns]
+                    ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
                     try:
                         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
                     except PermissionError:
