@@ -1421,7 +1421,7 @@ class AdfDiag(AdfWeb):
                     ds_final = ds.drop_vars(constit_list)
                     print(ds_final)
                     # Convert the 'time' coordinate to datetime64 using pandas
-                    #ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
+                    ds_final['time'] = xr.DataArray(pd.to_datetime(ds_final['time'].values), dims='time')
 
                     # Ensure the dtype is datetime64[ns]
                     ds_final['time'] = ds_final['time'].astype('datetime64[ns]')
