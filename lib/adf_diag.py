@@ -436,6 +436,7 @@ class AdfDiag(AdfWeb):
                 #End aerosol calcs
 
                 hist_str_case = hist_str_list[case_idx]
+                print(hist_str_case)
                 for i,hist_str in enumerate(hist_str_case):
 
                     #Initialize dictionary for derived variable with needed list of constituents
