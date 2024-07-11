@@ -359,7 +359,11 @@ def fixcesmtime(dat,syear,eyear):
     """
     Fix the CESM timestamp with a simple set of dates
     """
-    timefix = pd.date_range(start=f'1/1/{str(syear).zfill(4)}', end=f'12/1/{str(eyear).zfill(4)}', freq='MS') # generic time coordinate from a non-leap-year
+    from datetime import datetime
+    #timefix = pd.date_range(start=f'1/1/{str(syear).zfill(4)}', end=f'12/1/{str(eyear).zfill(4)}', freq='MS') # generic time coordinate from a non-leap-year
+    datetime_object_s = datetime.strptime(f'{syear}-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+    datetime_object_e = datetime.strptime(f'{eyear}-12-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+    timefix = pd.date_range(start=datetime_object_s, end=datetime_object_e, freq='MS')
     dat = dat.assign_coords({"time":timefix})
 
     return dat
