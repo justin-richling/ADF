@@ -165,7 +165,8 @@ def tape_recorder(adfobj):
         ts_loc = Path(runs_LT2[key][0])
         hist_str = runs_LT2[key][1]
         fils= sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        dat = pf.load_dataset(fils)
+        #dat = pf.load_dataset(fils)
+        dat = adfobj.data.load_timeseries_dataset(fils)
         if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
