@@ -160,8 +160,9 @@ def tape_recorder(adfobj):
             dmsg = f"No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
             continue
-        print(dat.time,"\n")
+        print("BAD:", dat.time,"\n")
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        print("FIXED: ",dat.time,"\n")
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
