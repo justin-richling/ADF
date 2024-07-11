@@ -339,8 +339,17 @@ class AdfInfo(AdfConfig):
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
 
-        # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
-        cam_hist_str = self.get_cam_info('hist_str')
+        #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
+        cam_hist_str = self.__cam_climo_info['hist_str']
+
+        if not cam_hist_str:
+            hist_str = [['cam.h0a']]*self.__num_cases
+        else:
+            hist_str = cam_hist_str
+        #End if
+
+        #Initialize CAM history string nested list
+        self.__hist_str = hist_str
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
