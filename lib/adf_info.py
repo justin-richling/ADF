@@ -637,8 +637,11 @@ class AdfInfo(AdfConfig):
 
     @property
     def hist_string(self):
-        """ Return the history string name to the user if requested."""
-        return self.get_cam_info('hist_str')
+        """ Return the CAM history string list to the user if requested."""
+        cam_hist_strs = copy.copy(self.__hist_str)
+        base_hist_strs = copy.copy(self.__base_hist_str)
+        hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
+        return hist_strs
 
     #########
 
