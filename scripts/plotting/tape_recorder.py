@@ -38,6 +38,7 @@ def tape_recorder(adfobj):
 
     #Grab history string:
     hist_str = adfobj.hist_string
+    print(hist_str)
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
