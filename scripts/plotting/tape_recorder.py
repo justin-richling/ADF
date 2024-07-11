@@ -173,6 +173,7 @@ def tape_recorder(adfobj):
             adfobj.debug_log(dmsg)
             continue
         #dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        dat = dat.sel(time=slice(start_years[idx],end_years[idx]))
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
@@ -204,8 +205,6 @@ def tape_recorder(adfobj):
     ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
                       'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
                       taxis='month',climo_yrs="1980-2020")
-
-
 
     #Loop over case(s) and start count at 2 to account for MLS and ERA5 plots above
     count=2
