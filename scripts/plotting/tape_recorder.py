@@ -146,8 +146,16 @@ def tape_recorder(adfobj):
         alldat.append(dat_mon)
         runname_LT.append(key)
 
-    runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
-    alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
+    #Check to see if any cases were successful
+    if runname_LT:
+        runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
+        alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
+    else:
+        msg = f"WARNING: No cases seem to be available, please check history files for {var}."
+        msg += "\n\tNo tape recorder plots will be made."
+        print(msg)
+        #End tape recorder plotting script:
+        return
 
     fig = plt.figure(figsize=(16,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
