@@ -178,8 +178,8 @@ def tape_recorder(adfobj):
         dat_sub = dat.sel(time=slice(str(start_years[idx]).zfill(4), str(end_years[idx]).zfill(4)))
         # Convert the time coordinate to strings
         #dat_sub['time'] = dat_sub['time'].astype(str)
-        import datetime as dt
-        dat_sub['time'] = dat_sub['time'].apply(lambda x: dt.datetime.strptime(x,'%Y-%m-%dT%H:%M:%S') if type(x)==str else pd.NaT)
+        #import datetime as dt
+        #dat_sub['time'] = dat_sub['time'].apply(lambda x: dt.datetime.strptime(x,'%Y-%m-%dT%H:%M:%S') if type(x)==str else pd.NaT)
 
         dat_sub = fixcesmtime(dat_sub,start_years[idx],end_years[idx])
         datzm = dat_sub.mean('lon')
