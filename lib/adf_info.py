@@ -757,6 +757,8 @@ class AdfInfo(AdfConfig):
         #Create "Path" objects:
         input_location  = Path(input_ts_loc)
 
+        print(f"{case_name} ts loc (in function): {input_ts_loc}")
+
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
             errmsg = f"Time series directory '{input_ts_loc}' not found.  Script is exiting."
