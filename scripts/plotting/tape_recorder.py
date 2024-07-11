@@ -154,7 +154,7 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
+        fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_strs[i]}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         if not dat:
             dmsg = f"No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
