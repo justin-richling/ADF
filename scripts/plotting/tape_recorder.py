@@ -165,14 +165,13 @@ def tape_recorder(adfobj):
         ts_loc = Path(runs_LT2[key][0])
         hist_str = runs_LT2[key][1]
         fils= sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        #dat = pf.load_dataset(fils)
         dat = adfobj.data.load_timeseries_dataset(fils)
         if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
             adfobj.debug_log(dmsg)
             continue
-        #dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        #Grab time slice based on requested years (if applicable)
         dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
@@ -346,17 +345,6 @@ def precip_cmap(n, nowhite=False):
     mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap', colors)
 
     return mymap
-
-#########
-
-def fixcesmtime(dat,syear,eyear):
-    """
-    Fix the CESM timestamp with a simple set of dates
-    """
-    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
-    dat = dat.assign_coords({"time":timefix})
-
-    return dat
 
 #########
 
