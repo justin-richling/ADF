@@ -767,7 +767,18 @@ class AdfInfo(AdfConfig):
         # Search for first variable in var_list to get a time series file to read
         # NOTE: it is assumed all the variables have the same dates!
         # Also, it is assumed that only h0 files should be climo-ed.
-        ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var_list[0]}.*nc"))
+        #ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var_list[0]}.*nc"))
+
+        for var in var_list:
+            ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
+            if ts_files:
+                print(var)
+                break
+            else:
+                logmsg = "get years for time series:"
+                logmsg = f"\tVar '{var}' not in dataset, skip to next to try and find climo years..."
+                self.debug_log(logmsg)
+                print(logmsg)
 
         #Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str = self.get_basic_info('hist_str')
