@@ -36,26 +36,14 @@ def tape_recorder(adfobj):
     plot_location = adfobj.plot_location
     plot_loc = Path(plot_location[0])
 
+    #Grab history string:
+    hist_str = adfobj.hist_string
+
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
-
-    #Grab history strings:
-    cam_hist_strs = adfobj.hist_string["test_hist_str"]
-
-    # Filter the list to include only strings that are exactly in the possible h0 strings
-    # - Search for either h0 of h0a
-    substrings = ["cam.h0","cam.h0a"]
-    case_hist_strs = []
-    for i,cam_case_str in enumerate(cam_hist_strs):
-        cam_hist_str = []
-        # Check each possible h0 string
-        for string in cam_case_str:
-            if string in substrings:
-                cam_hist_str.append(string)
-        case_hist_strs.append(cam_hist_str[0])
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
@@ -84,24 +72,7 @@ def tape_recorder(adfobj):
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
         start_years = start_years+[data_start_year]
         end_years = end_years+[data_end_year]
-
-        #Grab history string:
-        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
-        # Filter the list to include only strings that are exactly in the substrings list
-        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
-        hist_strs = case_hist_strs + base_hist_strs
     #End if
-
-    if not case_ts_locs:
-        exitmsg = "WARNING: No time series files in any case directory."
-        exitmsg += " No tape recorder plots will be made."
-        print(exitmsg)
-        logmsg = "create tape recorder:"
-        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
-        logmsg += f"\n None were found for any case. Please check the time series paths."
-        adfobj.debug_log(logmsg)
-        #End tape recorder plotting script:
-        return
 
     # Default colormap
     cmap='precip_nowhite'
@@ -131,7 +102,6 @@ def tape_recorder(adfobj):
 
     # Check redo_plot. If set to True: remove old plot, if it already exists:
     if (not redo_plot) and plot_name.is_file():
-        print("NO, not here?")
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
@@ -140,10 +110,10 @@ def tape_recorder(adfobj):
     elif (redo_plot) and plot_name.is_file():
         plot_name.unlink()
     
-    #Make dictionary for case names and associated timeseries file locations and hist strings
+    #Make dictionary for case names and associated timeseries file locations
     runs_LT2={}
     for i,val in enumerate(test_nicknames):
-        runs_LT2[val] = [case_ts_locs[i], hist_strs[i]]
+        runs_LT2[val] = case_ts_locs[i]
 
     # MLS data
     mls = xr.open_dataset(obs_loc / "mls_h2o_latNpressNtime_3d_monthly_v5.nc")
@@ -163,27 +133,14 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        # Search for files
-        ts_loc = Path(runs_LT2[key][0])
-        hist_str = runs_LT2[key][1]
-        fils= sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        print("fils",fils,"\n")
+        fils= sorted(Path(runs_LT2[key]).glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         if not dat:
             dmsg = f"No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
             continue
-        print("\ndat time:",dat.time,"\n")
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
-        #dat_sub = dat.sel(time=slice(str(start_years[idx]).zfill(4), str(end_years[idx]).zfill(4)))
-        # Convert the time coordinate to strings
-        #dat_sub['time'] = dat_sub['time'].astype(str)
-        #import datetime as dt
-        #dat_sub['time'] = dat_sub['time'].apply(lambda x: dt.datetime.strptime(x,'%Y-%m-%dT%H:%M:%S') if type(x)==str else pd.NaT)
-        dat_sub = dat
-        #dat_sub = fixcesmtime(dat_sub,start_years[idx],end_years[idx])
-        datzm = dat_sub.mean('lon')
-        #datzm = dat.mean('lon')
+        datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         alldat.append(dat_mon)
@@ -359,11 +316,7 @@ def fixcesmtime(dat,syear,eyear):
     """
     Fix the CESM timestamp with a simple set of dates
     """
-    from datetime import datetime
-    timefix = pd.date_range(start=f'1/1/{str(syear).zfill(4)}', end=f'12/1/{str(eyear).zfill(4)}', freq='MS') # generic time coordinate from a non-leap-year
-    #datetime_object_s = datetime.strptime(f'{str(syear).zfill(4)}-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
-    #datetime_object_e = datetime.strptime(f'{str(eyear).zfill(4)}-12-01 00:00:00', '%Y-%m-%d %H:%M:%S')
-    #timefix = pd.date_range(start=datetime_object_s, end=datetime_object_e, freq='MS')
+    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
     dat = dat.assign_coords({"time":timefix})
 
     return dat
