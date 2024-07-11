@@ -174,14 +174,14 @@ def tape_recorder(adfobj):
             print(dmsg)
             continue
         print("\ndat time:",dat.time,"\n")
-        #dat = fixcesmtime(dat,start_years[idx],end_years[idx])
-        dat_sub = dat.sel(time=slice(str(start_years[idx]).zfill(4), str(end_years[idx]).zfill(4)))
+        dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        #dat_sub = dat.sel(time=slice(str(start_years[idx]).zfill(4), str(end_years[idx]).zfill(4)))
         # Convert the time coordinate to strings
         #dat_sub['time'] = dat_sub['time'].astype(str)
         #import datetime as dt
         #dat_sub['time'] = dat_sub['time'].apply(lambda x: dt.datetime.strptime(x,'%Y-%m-%dT%H:%M:%S') if type(x)==str else pd.NaT)
-
-        dat_sub = fixcesmtime(dat_sub,start_years[idx],end_years[idx])
+        dat_sub = dat
+        #dat_sub = fixcesmtime(dat_sub,start_years[idx],end_years[idx])
         datzm = dat_sub.mean('lon')
         #datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
@@ -360,10 +360,10 @@ def fixcesmtime(dat,syear,eyear):
     Fix the CESM timestamp with a simple set of dates
     """
     from datetime import datetime
-    #timefix = pd.date_range(start=f'1/1/{str(syear).zfill(4)}', end=f'12/1/{str(eyear).zfill(4)}', freq='MS') # generic time coordinate from a non-leap-year
-    datetime_object_s = datetime.strptime(f'{str(syear).zfill(4)}-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
-    datetime_object_e = datetime.strptime(f'{str(eyear).zfill(4)}-12-01 00:00:00', '%Y-%m-%d %H:%M:%S')
-    timefix = pd.date_range(start=datetime_object_s, end=datetime_object_e, freq='MS')
+    timefix = pd.date_range(start=f'1/1/{str(syear).zfill(4)}', end=f'12/1/{str(eyear).zfill(4)}', freq='MS') # generic time coordinate from a non-leap-year
+    #datetime_object_s = datetime.strptime(f'{str(syear).zfill(4)}-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+    #datetime_object_e = datetime.strptime(f'{str(eyear).zfill(4)}-12-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+    #timefix = pd.date_range(start=datetime_object_s, end=datetime_object_e, freq='MS')
     dat = dat.assign_coords({"time":timefix})
 
     return dat
