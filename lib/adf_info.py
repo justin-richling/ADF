@@ -775,6 +775,8 @@ class AdfInfo(AdfConfig):
         if not hist_str:
             hist_str = 'cam.h0'
 
+        print("ts_files (in function):",ts_files)
+
         #Read in file(s)
         if len(ts_files) == 1:
             cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
