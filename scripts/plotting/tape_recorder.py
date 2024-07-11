@@ -37,14 +37,29 @@ def tape_recorder(adfobj):
     plot_loc = Path(plot_location[0])
 
     #Grab history string:
-    hist_str = adfobj.hist_string
-    print(hist_str)
+    #hist_str = adfobj.hist_string
+    #print(hist_str)
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
+
+    #Grab history strings:
+    cam_hist_strs = adfobj.hist_string["test_hist_str"]
+
+    # Filter the list to include only strings that are exactly in the possible h0 strings
+    # - Search for either h0 of h0a
+    substrings = ["cam.h0","cam.h0a"]
+    case_hist_strs = []
+    for i,cam_case_str in enumerate(cam_hist_strs):
+        cam_hist_str = []
+        # Check each possible h0 string
+        for string in cam_case_str:
+            if string in substrings:
+                cam_hist_str.append(string)
+        case_hist_strs.append(cam_hist_str[0])
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
@@ -73,6 +88,11 @@ def tape_recorder(adfobj):
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
         start_years = start_years+[data_start_year]
         end_years = end_years+[data_end_year]
+        #Grab history string:
+        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+        # Filter the list to include only strings that are exactly in the substrings list
+        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+        hist_strs = case_hist_strs + base_hist_strs
     #End if
 
     # Default colormap
