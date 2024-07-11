@@ -208,6 +208,8 @@ class AdfInfo(AdfConfig):
                 input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
                 input_ts_loc = Path(input_ts_baseline)
 
+                print(f"baseline ts loc: {input_ts_loc}")
+
                 #Get years from pre-made timeseries file(s)
                 found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(
                     input_ts_loc, data_name)
@@ -360,6 +362,8 @@ class AdfInfo(AdfConfig):
 
                 #Grab case time series file location
                 input_ts_loc = Path(input_ts_locs[case_idx])
+
+                print(f"{case_name} ts loc: {input_ts_loc}")
 
                 #Get years from pre-made timeseries file(s)
                 found_syear, found_eyear = self.get_climo_yrs_from_ts(input_ts_loc, case_name)
