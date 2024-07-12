@@ -161,6 +161,8 @@ def zonal_mean(adfobj):
 
         # load reference data (observational or baseline)
         odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
+        if var == "OMEGA500":
+            print(odata)
 
         #Check if regridded file exists, if not skip zonal plot for this var
         if not odata:
