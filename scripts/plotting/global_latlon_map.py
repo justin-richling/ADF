@@ -131,6 +131,7 @@ def global_latlon_map(adfobj):
         if var not in adfobj.data.ref_var_nam:
             dmsg = f"No reference data found for variable `{var}`, zonal mean plotting skipped."
             adfobj.debug_log(dmsg)
+            print(dmsg)
             continue        
 
         #Notify user of variable being plotted:
@@ -218,6 +219,8 @@ def global_latlon_map(adfobj):
             if all(value is None for value in doplot.values()):
                 print(f"All plots exist for {var}. Redo is {redo_plot}. Existing plots added to website data. Continue.")
                 continue
+
+            print("doplot",doplot,"\n")
 
             #Create new dictionaries:
             mseasons = {}
