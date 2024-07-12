@@ -161,7 +161,12 @@ def zonal_mean(adfobj):
 
         # load reference data (observational or baseline)
         odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
-        print("\n",odata,"\n")
+
+        #Check if regridded file exists, if not skip zonal plot for this var
+        if not odata:
+            dmsg = f"No regridded baseline file for variable `{var}`, zonal mean plotting skipped."
+            adfobj.debug_log(dmsg)
+            continue
         has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
 
         #Loop over model cases:
@@ -175,6 +180,11 @@ def zonal_mean(adfobj):
 
             # load re-gridded model files:
             mdata = adfobj.data.load_regrid_da(case_name, var)
+
+            if not mdata:
+                dmsg = f"No regridded test file {case_name} for variable `{var}`, zonal mean plotting skipped."
+                adfobj.debug_log(dmsg)
+                continue
 
             # determine whether it's 2D or 3D
             # 3D triggers search for surface pressure
