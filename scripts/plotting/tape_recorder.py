@@ -189,7 +189,7 @@ def tape_recorder(adfobj):
         #End tape recorder plotting script:
         return
 
-    print("\nalldat_concat_LT:",alldat_concat_LT,"\n")
+    print("\nalldat_concat_LT:",alldat_concat_LT.mean(),"\n")
 
     fig = plt.figure(figsize=(16,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
