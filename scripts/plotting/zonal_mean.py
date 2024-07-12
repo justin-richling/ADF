@@ -161,6 +161,7 @@ def zonal_mean(adfobj):
 
         # load reference data (observational or baseline)
         odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
+        print("\n",odata,"\n")
         has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
 
         #Loop over model cases:
