@@ -161,12 +161,10 @@ def zonal_mean(adfobj):
 
         # load reference data (observational or baseline)
         odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
-        if var == "OMEGA500":
-            print(odata)
 
         #Check if regridded file exists, if not skip zonal plot for this var
         if odata is None:
-            dmsg = f"No regridded baseline file for variable `{var}`, zonal mean plotting skipped."
+            dmsg = f"No regridded baseline file for {adfobj.data.ref_case_label} for variable `{var}`, zonal mean plotting skipped."
             adfobj.debug_log(dmsg)
             continue
         has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
@@ -184,7 +182,7 @@ def zonal_mean(adfobj):
             mdata = adfobj.data.load_regrid_da(case_name, var)
 
             if mdata is None:
-                dmsg = f"No regridded test file {case_name} for variable `{var}`, zonal mean plotting skipped."
+                dmsg = f"No regridded test file for {case_name} for variable `{var}`, zonal mean plotting skipped."
                 adfobj.debug_log(dmsg)
                 continue
 

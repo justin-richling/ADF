@@ -159,6 +159,8 @@ def global_latlon_map(adfobj):
         # odata = adfobj.data.load_reference_da(var)
         odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
         if odata is None:
+            dmsg = f"No regridded test file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
+            adfobj.debug_log(dmsg)
             continue
         o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
         if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
@@ -184,6 +186,8 @@ def global_latlon_map(adfobj):
 
             #Skip this variable/case if the regridded climo file doesn't exist:
             if mdata is None:
+                dmsg = f"No regridded test file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
+                adfobj.debug_log(dmsg)
                 continue
 
             #Determine dimensions of variable:
@@ -195,9 +199,6 @@ def global_latlon_map(adfobj):
                 if (has_dims['has_lev']) and (not pres_levs):
                     print(f"\t - skipping global map for {var} as it has more than lat/lon dims, but no pressure levels were provided")
                     continue
-                """if pres_levs and (not has_dims['has_lev']):
-                    print(f"\t - skipping global map for {var} as it has more than lat/lon dims, but no pressure levels were provided")
-                    continue"""
 
             # Check output file. If file does not exist, proceed.
             # If file exists:
