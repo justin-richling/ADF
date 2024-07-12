@@ -233,7 +233,7 @@ def zonal_mean(adfobj):
                                                     mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
 
                         #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
+                        adfobj.add_website_data(plot_name, f"{var}", case_name, season=s, plot_type="Zonal")
 
                 #Create new plot with log-p:
                 # NOTE: The log-p should be an option here.
@@ -245,7 +245,7 @@ def zonal_mean(adfobj):
                         print(f"Error: zonal mean contour expects `lev` dim to have same size, got {len(mdata['lev'])} and {len(odata['lev'])}")
                         continue
                     
-                    plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                    plot_name_log = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
                     if plot_name_log not in logp_zonal_skip:
                         #Seasonal Averages
                         mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
@@ -257,7 +257,7 @@ def zonal_mean(adfobj):
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
 
                         #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name_log, var, case_name, season=s, plot_type="Zonal_logp", category="Log-P")
+                        adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
 
             #End for (seasons loop)
         #End for (case names loop)
