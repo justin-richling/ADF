@@ -164,7 +164,7 @@ def tape_recorder(adfobj):
         # Search for files
         ts_loc = Path(runs_LT2[key][0])
         hist_str = runs_LT2[key][1]
-        fils= sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
+        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         dat = pf.load_dataset(fils)
         if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
@@ -188,6 +188,8 @@ def tape_recorder(adfobj):
         print(msg)
         #End tape recorder plotting script:
         return
+
+    print("\nalldat_concat_LT:",alldat_concat_LT,"\n")
 
     fig = plt.figure(figsize=(16,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
