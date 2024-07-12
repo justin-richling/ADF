@@ -129,7 +129,7 @@ def global_latlon_map(adfobj):
     # probably want to do this one variable at a time:
     for var in var_list:
         if var not in adfobj.data.ref_var_nam:
-            dmsg = f"No reference data found for variable `{var}`, zonal mean plotting skipped."
+            dmsg = f"No reference data found for variable `{var}`, global lat/lon mean plotting skipped."
             adfobj.debug_log(dmsg)
             print(dmsg)
             continue        
