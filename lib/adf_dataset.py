@@ -138,7 +138,7 @@ class AdfData:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
         #return self.load_da(fils, field)
-        return self.load_reference_da(fils, field)
+        return self.load_reference_da(field)
         #return self.load_ref_da(fils, field)
 
 
