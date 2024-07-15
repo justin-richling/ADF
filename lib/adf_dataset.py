@@ -132,6 +132,8 @@ class AdfData:
 
 
     def load_reference_regrid_da(self, case, field):
+        print("case", case)
+        print("field", field)
         fils = self.get_ref_regrid_file(case, field)
         print("var: ",field,"\nfils: ",fils)
         if not fils:
