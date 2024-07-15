@@ -216,57 +216,58 @@ def zonal_mean(adfobj):
                 #       Merging would make overall timing better because looping twice will double I/O steps.
                 #
 
-                
-                if has_lev:
-                    log_p = True
-                    plot_name_log = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
-                    plot_name = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
-                    var_name += "_logp"
-                    cat = "Log-P"
+                # difference: each entry should be (lat, lon) or (plev, lat, lon)
+                # dseasons[s] = mseasons[s] - oseasons[s]
+                # difference will be calculated in plot_zonal_mean_and_save;
+                # because we can let any pressure-level interpolation happen there
+                # This could be re-visited for efficiency or improved code structure.
 
-                    if (not has_lev_ref) or (not has_lev):
-                        print(f"Error: expecting lev for both case: {has_lev} and  ref: {has_lev_ref}")
+                #Seasonal Averages
+                mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
+                oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+
+                #if (not has_lev_ref) or (not has_lev):
+                #if not has_lev_ref:
+                #    print(f"Error: expecting lev for both case: {has_lev} and ref: {has_lev_ref}")
+
+                #Set the file name
+                plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                plot_name_log = None
+
+                if has_lev:
+                    #Set the file name for log-pressure plots
+                    plot_name_log = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
+
+                    #if (not has_lev_ref) or (not has_lev):
+                    if not has_lev_ref:
+                        print(f"Error: expecting lev for both case: {has_lev} and ref: {has_lev_ref}")
                         continue
                     if len(mdata['lev']) != len(odata['lev']):
                         print(f"Error: zonal mean contour expects `lev` dim to have same size, got {len(mdata['lev'])} and {len(odata['lev'])}")
                         continue
-                else:
-                    plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
-                    plot_name_log = None
-                    cat = None
-                    log_p = False
 
                 #Look for variables with vertical levels and create log-pressure plots as well
                 if plot_name not in zonal_skip:
 
-                    #Seasonal Averages
-                    mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                    oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
 
-                    # difference: each entry should be (lat, lon) or (plev, lat, lon)
-                    # dseasons[s] = mseasons[s] - oseasons[s]
-                    # difference will be calculated in plot_zonal_mean_and_save;
-                    # because we can let any pressure-level interpolation happen there
-                    # This could be re-visited for efficiency or improved code structure.
-
-                    print(f"log-p for {var}: {log_p}")
+                    #print(f"log-p for {var}: {log_p}")
                     print(f"filename for {var}: {plot_name}")
-                    print(f"category for {var}: {log_p}")
+                    #print(f"category for {var}: {cat}")
 
                     #Create new plot:
                     pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
                                                     [syear_baseline,eyear_baseline],
-                                                    mseasons[s], oseasons[s], has_lev, log_p=log_p, obs=adfobj.compare_obs, **vres)
+                                                    mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
 
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, var_name, case_name, season=s, plot_type="Zonal", category=cat)
+                    adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
 
-                #Look for variables with vertical levels and create log-pressure plots as well
+                #Check if variable has vertical levels and create log-pressure plots as well
                 if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
                     #Seasonal Averages
-                    mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                    oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                    #mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
+                    #oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
 
                     pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
