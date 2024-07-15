@@ -129,7 +129,7 @@ class AdfData:
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_reference_dataset(fils)
+        return self.load_dataset(fils)
 
 
     def load_reference_regrid_da(self, case, field):
