@@ -164,14 +164,16 @@ def tape_recorder(adfobj):
         # Search for files
         ts_loc = Path(runs_LT2[key][0])
         hist_str = runs_LT2[key][1]
-        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        dat = pf.load_dataset(fils)
+        fils= sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
+        dat = adfobj.data.load_timeseries_dataset(fils)
+
         if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
             adfobj.debug_log(dmsg)
             continue
-        dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        #Grab time slice based on requested years (if applicable)
+        dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
@@ -189,8 +191,6 @@ def tape_recorder(adfobj):
         #End tape recorder plotting script:
         return
 
-    print("\nalldat_concat_LT:",alldat_concat_LT.mean(),"\n")
-
     fig = plt.figure(figsize=(16,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
@@ -205,8 +205,6 @@ def tape_recorder(adfobj):
     ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
                       'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
                       taxis='month',climo_yrs="1980-2020")
-
-
 
     #Loop over case(s) and start count at 2 to account for MLS and ERA5 plots above
     count=2
@@ -348,17 +346,6 @@ def precip_cmap(n, nowhite=False):
     mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap', colors)
 
     return mymap
-
-#########
-
-def fixcesmtime(dat,syear,eyear):
-    """
-    Fix the CESM timestamp with a simple set of dates
-    """
-    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
-    dat = dat.assign_coords({"time":timefix})
-
-    return dat
 
 #########
 
