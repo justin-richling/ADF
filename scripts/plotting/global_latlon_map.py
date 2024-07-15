@@ -159,11 +159,12 @@ def global_latlon_map(adfobj):
         # load reference data (observational or baseline)
         #ref_case_label
         #if adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
 
-        
+        odata = adfobj.data.load_reference_regrid_da(base_name, var)
         odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_labels[var], var)
         if odata is None:
-            dmsg = f"No regridded test file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
+            dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
             adfobj.debug_log(dmsg)
             continue
         o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
