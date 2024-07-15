@@ -216,11 +216,10 @@ def zonal_mean(adfobj):
                 #       Merging would make overall timing better because looping twice will double I/O steps.
                 #
 
-                cat = None
-                log_p = False
+                
                 if has_lev:
                     log_p = True
-                    #plot_name_log = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
+                    plot_name_log = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
                     plot_name = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
                     var_name += "_logp"
                     cat = "Log-P"
@@ -233,6 +232,9 @@ def zonal_mean(adfobj):
                         continue
                 else:
                     plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                    plot_name_log = None
+                    cat = None
+                    log_p = False
 
                 
 
@@ -248,6 +250,10 @@ def zonal_mean(adfobj):
                     # because we can let any pressure-level interpolation happen there
                     # This could be re-visited for efficiency or improved code structure.
 
+                    print(f"log-p for {var}: {log_p}")
+                    print(f"filename for {var}: {plot_name}")
+                    print(f"category for {var}: {log_p}")
+
                     #Create new plot:
                     pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
@@ -256,6 +262,19 @@ def zonal_mean(adfobj):
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var_name, case_name, season=s, plot_type="Zonal", category=cat)
+
+                if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
+                    #Seasonal Averages
+                    #mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
+                    #oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+
+                    pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
+                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [syear_baseline,eyear_baseline],
+                                                        mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
+
+                    #Add plot to website (if enabled):
+                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
 
                     
 
