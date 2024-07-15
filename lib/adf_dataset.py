@@ -141,6 +141,7 @@ class AdfData:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
         return self.load_da(fils, field)
+        #return self.load_ref_da(fils, field)
 
 
     def load_climo_da(self, case, variablename):
@@ -261,6 +262,51 @@ class AdfData:
 
 
     def load_da(self, fils, variablename):
+
+        ds = self.load_dataset(fils)
+
+        if self.adf.compare_obs:
+            #ref_var_nam
+            var = self.ref_var_nam[variablename]
+        else:
+            var = variablename
+
+        da = (ds[var]).squeeze()
+
+
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        return da
+
+
+    """
+    def load_da(self, case, fils, variablename):
+
+        ds = self.load_dataset(fils)
+
+        if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
+            #ref_var_nam
+            var = self.ref_var_nam[variablename]
+        else:
+            var = variablename
+
+        da = (ds[var]).squeeze()
+
+
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        return da
+    
+    
+    """
+
+
+    """def load_ref_da(self, fils, variablename):
+        
         ds = self.load_dataset(fils)
         if ds is None:
             warnings.warn(f"ERROR: Load failed for {variablename}")
@@ -281,3 +327,4 @@ class AdfData:
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
         return da
+"""
