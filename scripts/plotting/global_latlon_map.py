@@ -162,7 +162,7 @@ def global_latlon_map(adfobj):
             base_name = adfobj.data.ref_case_label
             #print("base_name",base_name)
 
-            #odata = adfobj.data.load_reference_regrid_da(base_name, var)
+            odata = adfobj.data.load_reference_regrid_da(base_name, var)
         else:
             base_name = adfobj.data.ref_labels[var]
             print("base_name",base_name)
