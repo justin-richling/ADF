@@ -211,7 +211,13 @@ class AdfData:
         return xr.decode_cf(ds)
 
     def get_ref_regrid_file(self, case, field):
-        model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+        if self.adf.compare_obs:
+            #dclimo_loc = var_obs_dict[var]["obs_file"]
+            fil = self.ref_var_loc.get(field, None)
+            model_rg_loc = Path(fil)
+        else:
+            model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+        print("model_rg_loc: ",model_rg_loc)
         return sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
     
 
