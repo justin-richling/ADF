@@ -268,9 +268,11 @@ class AdfData:
         if self.compare_obs:
             #ref_var_nam
             var = self.ref_var_nam[variablename]
-            da = (ds[var]).squeeze()
+            #da = (ds[var]).squeeze()
         else:
-            da = (ds[variablename]).squeeze()
+            var = variablename
+            
+        da = (ds[var]).squeeze()
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
