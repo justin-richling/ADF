@@ -271,7 +271,8 @@ class AdfData:
             #da = (ds[var]).squeeze()
         else:
             var = variablename
-            
+        print(fils)
+        print(ds.variables)    
         da = (ds[var]).squeeze()
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
