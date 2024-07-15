@@ -218,7 +218,7 @@ class AdfData:
         else:
             model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
             fils = model_rg_loc.glob(f"{case}_{field}_*.nc")
-        print("model_rg_loc: ",model_rg_loc)
+        #print("model_rg_loc: ",model_rg_loc)
         return sorted(fils)
     
 
