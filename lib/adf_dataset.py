@@ -269,7 +269,7 @@ class AdfData:
             var = variablename
 
         print("case", case)
-        print("var: ",variablename,"\nfils: ",fils)
+        print("var: ",var,"\nfils: ",fils)
 
         da = (ds[var]).squeeze()
         if variablename in self.adf.variable_defaults:
