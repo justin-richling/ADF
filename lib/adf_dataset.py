@@ -214,12 +214,12 @@ class AdfData:
         if self.adf.compare_obs:
             #dclimo_loc = var_obs_dict[var]["obs_file"]
             obs_loc = self.ref_var_loc.get(field, None)
-            fils = Path(obs_loc)#.glob(f"{case}_{field}_*.nc")
+            fils = obs_loc#.glob(f"{case}_{field}_*.nc")
         else:
             model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
-            fils = model_rg_loc.glob(f"{case}_{field}_*.nc")
+            fils = sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
         #print("model_rg_loc: ",model_rg_loc)
-        return sorted(fils)
+        return fils
     
 
     def get_regrid_file(self, case, field):
