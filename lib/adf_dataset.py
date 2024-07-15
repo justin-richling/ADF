@@ -65,6 +65,7 @@ class AdfData:
         """Set attributes for reference (aka baseline) data location, names, and variables."""
         if self.adf.compare_obs:
             self.ref_var_loc = {v: self.adf.var_obs_dict[v]['obs_file'] for v in self.adf.var_obs_dict}
+            print("waaaay up top:",self.ref_var_loc)
             self.ref_labels = {v: self.adf.var_obs_dict[v]['obs_name'] for v in self.adf.var_obs_dict}
             self.ref_var_nam = {v: self.adf.var_obs_dict[v]['obs_var'] for v in self.adf.var_obs_dict}
             if not self.adf.var_obs_dict:
@@ -92,6 +93,7 @@ class AdfData:
         """Return a list of files to be used as reference (aka baseline) for variable var."""
         if self.adf.compare_obs:
             fils = self.ref_var_loc.get(var, None)
+            print("var: ",var,"\nfils: ",fils)
             return [fils] if fils is not None else None
         ref_loc = self.adf.get_baseline_info("cam_climo_loc")
         # NOTE: originally had this looking for *_baseline.nc
