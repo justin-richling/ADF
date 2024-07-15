@@ -161,6 +161,9 @@ class AdfInfo(AdfConfig):
             #that check this variable won't crash:
             self.__cam_bl_climo_info = None
 
+            # Set baseline hist string object to None
+            self.__base_hist_str = None
+
             #Also set data name for use below:
             data_name = "Obs"
             base_nickname = "Obs"
@@ -188,8 +191,6 @@ class AdfInfo(AdfConfig):
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
-            # Set to None in case this is a run vs obs
-            self.__base_hist_str = None
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
