@@ -261,7 +261,7 @@ class AdfData:
         return ds
 
 
-    def load_da(self, fils, variablename):
+    """def load_da(self, fils, variablename):
 
         ds = self.load_dataset(fils)
 
@@ -278,10 +278,10 @@ class AdfData:
             vres = self.adf.variable_defaults[variablename]
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
-        return da
+        return da"""
 
 
-    """
+    
     def load_da(self, case, fils, variablename):
 
         ds = self.load_dataset(fils)
@@ -302,7 +302,7 @@ class AdfData:
         return da
     
     
-    """
+    
 
 
     """def load_ref_da(self, fils, variablename):
