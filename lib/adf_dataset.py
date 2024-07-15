@@ -91,10 +91,8 @@ class AdfData:
 
     def get_reference_climo_file(self, var):
         """Return a list of files to be used as reference (aka baseline) for variable var."""
-        print("HERE????")
         if self.adf.compare_obs:
             fils = self.ref_var_loc.get(var, None)
-            print("var: ",var,"\nfils: ",fils)
             return [fils] if fils is not None else None
         ref_loc = self.adf.get_baseline_info("cam_climo_loc")
         # NOTE: originally had this looking for *_baseline.nc
@@ -221,6 +219,7 @@ class AdfData:
     
     def load_regrid_dataset(self, case, field):
         fils = self.get_regrid_file(case, field)
+        print("var: ",field,"\nfils: ",fils)
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
