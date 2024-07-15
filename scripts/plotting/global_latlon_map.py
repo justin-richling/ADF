@@ -125,7 +125,7 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    print("here beginning?")
+
     # probably want to do this one variable at a time:
     for var in var_list:
         if var not in adfobj.data.ref_var_nam:
