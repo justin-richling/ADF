@@ -158,12 +158,15 @@ def global_latlon_map(adfobj):
 
         # load reference data (observational or baseline)
         #ref_case_label
-        #if adfobj.compare_obs:
-        base_name = adfobj.data.ref_case_label
-        print("base_name",base_name)
+        if not adfobj.compare_obs:
+            base_name = adfobj.data.ref_case_label
+            #print("base_name",base_name)
 
-        odata = adfobj.data.load_reference_regrid_da(base_name, var)
-        #odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_labels[var], var)
+            #odata = adfobj.data.load_reference_regrid_da(base_name, var)
+        else:
+            base_name = adfobj.data.ref_labels[var]
+            print("base_name",base_name)
+            odata = adfobj.data.load_reference_regrid_da(base_name, var)
         if odata is None:
             dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
             adfobj.debug_log(dmsg)
