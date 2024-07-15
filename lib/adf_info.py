@@ -188,6 +188,8 @@ class AdfInfo(AdfConfig):
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
+            # Set to None in case this is a run vs obs
+            self.__base_hist_str = None
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
