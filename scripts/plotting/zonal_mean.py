@@ -141,8 +141,6 @@ def zonal_mean(adfobj):
     #
     #Loop over variables:
     for var in var_list:
-        #HTML object variable name
-        var_name = f"{var}"
 
         if var not in adfobj.data.ref_var_nam:
             dmsg = f"No obs found for variable `{var}`, zonal mean plotting skipped."
@@ -171,6 +169,8 @@ def zonal_mean(adfobj):
             dmsg = f"No regridded baseline file for {adfobj.data.ref_case_label} for variable `{var}`, zonal mean plotting skipped."
             adfobj.debug_log(dmsg)
             continue
+
+        #Check zonal mean dimensions
         has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
 
         #Loop over model cases:
