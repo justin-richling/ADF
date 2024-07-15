@@ -162,7 +162,19 @@ def zonal_mean(adfobj):
         #End if
 
         # load reference data (observational or baseline)
-        odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
+        #odata = adfobj.data.load_reference_regrid_da(adfobj.data.ref_case_label, var)
+
+        # load reference data (observational or baseline)
+        #ref_case_label
+        if not adfobj.compare_obs:
+            base_name = adfobj.data.ref_case_label
+            #print("base_name",base_name)
+
+            #odata = adfobj.data.load_reference_regrid_da(base_name, var)
+        else:
+            base_name = adfobj.data.ref_labels[var]
+            print("base_name",base_name)
+            odata = adfobj.data.load_reference_regrid_da(base_name, var)
 
         #Check if regridded file exists, if not skip zonal plot for this var
         if odata is None:
