@@ -91,6 +91,7 @@ class AdfData:
 
     def get_reference_climo_file(self, var):
         """Return a list of files to be used as reference (aka baseline) for variable var."""
+        print("HERE????")
         if self.adf.compare_obs:
             fils = self.ref_var_loc.get(var, None)
             print("var: ",var,"\nfils: ",fils)
