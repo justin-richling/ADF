@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from pathlib import Path
 import xarray as xr
 
@@ -264,7 +265,12 @@ class AdfData:
         if ds is None:
             warnings.warn(f"ERROR: Load failed for {variablename}")
             return None
-        da = (ds[variablename]).squeeze()
+        if self.compare_obs:
+            #ref_var_nam
+            var = self.ref_var_nam[variablename]
+            da = (ds[var]).squeeze()
+        else:
+            da = (ds[variablename]).squeeze()
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
