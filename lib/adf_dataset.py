@@ -260,22 +260,22 @@ class AdfData:
 
 
     
-    def load_da(self, case, fils, variablename):
+    def load_da(self, fils, variablename):
 
         ds = self.load_dataset(fils)
-        if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
+        """if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
             #ref_var_nam
             var = self.ref_var_nam[variablename]
         else:
-            var = variablename
+            var = variablename"""
 
-        print("case", case)
-        print("var: ",var,"\nfils: ",fils)
+        #print("case", case)
+        print("var: ",variablename,"\nfils: ",fils)
 
-        da = (ds[var]).squeeze()
+        da = (ds[variablename]).squeeze()
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
-            print(case,variablename,vres.get("scale_factor",1),vres.get("add_offset", 0))
+            #print(case,variablename,vres.get("scale_factor",1),vres.get("add_offset", 0))
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
         return da
