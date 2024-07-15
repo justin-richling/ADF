@@ -274,6 +274,7 @@ class AdfData:
         da = (ds[var]).squeeze()
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
+            print(case,variablename,vres.get("scale_factor",1),vres.get("add_offset", 0))
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
         return da
