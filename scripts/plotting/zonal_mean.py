@@ -297,6 +297,9 @@ def zonal_mean(adfobj):
                     #
                     plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
 
+                    print("mdata.shape",mdata.shape)
+                    print("odata.shape",odata.shape)
+
                     if plot_name not in zonal_skip:
 
                         #Seasonal Averages
