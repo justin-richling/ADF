@@ -265,7 +265,7 @@ class AdfData:
         if ds is None:
             warnings.warn(f"ERROR: Load failed for {variablename}")
             return None
-        if self.compare_obs:
+        if self.adf.compare_obs:
             #ref_var_nam
             var = self.ref_var_nam[variablename]
             #da = (ds[var]).squeeze()
