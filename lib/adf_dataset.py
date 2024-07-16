@@ -270,9 +270,9 @@ class AdfData:
             var = variablename"""
 
         #print("case", case)
-        print("var: ",var,"\nfils: ",fils)
+        print("var: ",variablename,"\nfils: ",fils)
 
-        da = (ds[var]).squeeze()
+        da = (ds[variablename]).squeeze()
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
