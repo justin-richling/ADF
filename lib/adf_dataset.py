@@ -178,6 +178,14 @@ class AdfData:
             return None
         return self.load_dataset(fils)
 
+    def load_obs_climo_dataset(self, variablename):
+        """Return Dataset for obervation climo of variablename"""
+        fils = self.get_reference_climo_file(variablename)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find any reference climo files for variable: {variablename}. Will try to skip.")
+            return None
+        return self.load_dataset(fils)
+
     #----------------
 
 
@@ -253,12 +261,6 @@ class AdfData:
             warnings.warn(f"invalid data on load_dataset")
         return ds
 
-    def load_obs_climo_dataset(self, var):
-        fils = self.get_reference_climo_file(var)
-        if not fils:
-            warnings.warn(f"ERROR: Did not find any reference files for variable: {var}. Will try to skip.")
-            return None
-        return self.load_dataset(fils)
 
     # Load DataArray
     """def load_da(self, case, fils, variablename):
