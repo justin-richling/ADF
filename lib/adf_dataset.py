@@ -179,7 +179,7 @@ class AdfData:
         return self.load_dataset(fils)
 
     def load_obs_climo_dataset(self, variablename):
-        """Return Dataset for obervation climo of variablename"""
+        """Return Dataset for observation climo of variablename"""
         fils = self.get_reference_climo_file(variablename)
         if not fils:
             warnings.warn(f"ERROR: Did not find any reference climo files for variable: {variablename}. Will try to skip.")
