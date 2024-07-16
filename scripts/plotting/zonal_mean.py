@@ -253,9 +253,9 @@ def zonal_mean(adfobj):
                     if not has_lev_ref:
                         print(f"Error: expecting lev for both case: {has_lev} and ref: {has_lev_ref}")
                         continue
-                    if len(mdata['lev']) != len(odata['lev']):
-                        print(f"Error: zonal mean contour expects `lev` dim to have same size, got {len(mdata['lev'])} and {len(odata['lev'])}")
-                        continue
+                    #if len(mdata['lev']) != len(odata['lev']):
+                    #    print(f"Error: zonal mean contour expects `lev` dim to have same size, got {len(mdata['lev'])} and {len(odata['lev'])}")
+                    #   continue
                 #End if
 
                 #Create plots
