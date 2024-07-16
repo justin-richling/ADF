@@ -283,7 +283,7 @@ class AdfData:
 
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
-            if self.adf.compare_obs:
+            if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
                 scale_factor = vres.get("obs_scale_factor",1)
                 add_offset = vres.get("obs_add_offset", 0)
             else:
