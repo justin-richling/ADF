@@ -136,7 +136,7 @@ class AdfData:
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_da(fils, field)
+        return self.load_da(case, fils, field)
         #return self.load_reference_da(field)
         #return self.load_ref_da(fils, field)
 
@@ -144,7 +144,7 @@ class AdfData:
     def load_climo_da(self, case, variablename):
         """Return DataArray from climo file"""
         fils = self.get_climo_file(case, variablename)
-        return self.load_da(fils, variablename)
+        return self.load_da(case, fils, variablename)
 
 
     def load_climo_file(self, case, variablename):
@@ -238,7 +238,7 @@ class AdfData:
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_da(fils, field)
+        return self.load_da(case, fils, field)
 
 
     def load_dataset(self, fils):
@@ -259,14 +259,15 @@ class AdfData:
 
 
     
-    def load_da(self, fils, variablename):
+    def load_da(self, case, fils, variablename):
 
+        #ds = self.load_dataset(fils)
         ds = self.load_dataset(fils)
-        """if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
+        if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
             #ref_var_nam
             var = self.ref_var_nam[variablename]
         else:
-            var = variablename"""
+            var = variablename
 
         #print("case", case)
         print("var: ",variablename,"\nfils: ",fils)
