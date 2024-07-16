@@ -253,7 +253,7 @@ class AdfData:
             warnings.warn(f"invalid data on load_dataset")
         return ds
 
-    def load_obs_dataset(self, var):
+    def load_obs_climo_dataset(self, var):
         fils = self.get_reference_climo_file(var)
         if not fils:
             warnings.warn(f"ERROR: Did not find any reference files for variable: {var}. Will try to skip.")
@@ -275,7 +275,7 @@ class AdfData:
         #Check if case is baseline and if it is, check if comparing against obs
         if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
             #da = self.load_reference_dataset(variablename)[self.ref_var_nam[variablename]]
-            da = self.load_obs_dataset(variablename)[self.ref_var_nam[variablename]]
+            da = self.load_obs_climo_dataset(variablename)[self.ref_var_nam[variablename]]
         #Else, its either a test case, or baseline and NOT comparing against obs
         else:
             ds = self.load_dataset(fils)
