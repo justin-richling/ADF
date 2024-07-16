@@ -196,8 +196,8 @@ class AdfData:
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        #return self.load_da(case, fils, field)
-        return self.load_reference_da(case, fils, field)
+        return self.load_da(case, fils, field)
+        #eturn self.load_reference_da(case, fils, field)
 
     def get_ref_regrid_file(self, case, field):
         if self.adf.compare_obs:
@@ -261,7 +261,7 @@ class AdfData:
         return self.load_dataset(fils)
 
     # Load DataArray
-    def load_da(self, case, fils, variablename):
+    """def load_da(self, case, fils, variablename):
         ds = self.load_dataset(fils)
         da = (ds[variablename]).squeeze()
         if variablename in self.adf.variable_defaults:
@@ -269,9 +269,9 @@ class AdfData:
             da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
             print(case,variablename,vres.get("scale_factor",1),vres.get("add_offset", 0))
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
-        return da
+        return da"""
 
-    def load_reference_da(self, case, fils, variablename):
+    def load_da(self, case, fils, variablename):
         #Check if case is baseline and if it is, check if comparing against obs
         if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
             #da = self.load_reference_dataset(variablename)[self.ref_var_nam[variablename]]
@@ -293,6 +293,30 @@ class AdfData:
             da = da * scale_factor + add_offset
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
         return da
+
+    
+    """def load_reference_da(self, case, fils, variablename):
+        #Check if case is baseline and if it is, check if comparing against obs
+        if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
+            #da = self.load_reference_dataset(variablename)[self.ref_var_nam[variablename]]
+            da = self.load_obs_dataset(variablename)[self.ref_var_nam[variablename]]
+        #Else, its either a test case, or baseline and NOT comparing against obs
+        else:
+            ds = self.load_dataset(fils)
+            da = (ds[variablename]).squeeze()
+
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            if self.adf.compare_obs:
+                scale_factor = vres.get("obs_scale_factor",1)
+                add_offset = vres.get("obs_add_offset", 0)
+            else:
+                scale_factor = vres.get("scale_factor",1)
+                add_offset = vres.get("add_offset", 0)
+            print(case, variablename, scale_factor, add_offset)
+            da = da * scale_factor + add_offset
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        return da"""
 
 
 #End Script
