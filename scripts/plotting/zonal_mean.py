@@ -197,6 +197,9 @@ def zonal_mean(adfobj):
             # load re-gridded model files:
             mdata = adfobj.data.load_regrid_da(case_name, var)
 
+            print("mdata.shape",mdata.shape)
+            print("odata.shape",odata.shape)
+
             if mdata is None:
                 dmsg = f"No regridded test file for {case_name} for variable `{var}`, zonal mean plotting skipped."
                 adfobj.debug_log(dmsg)
