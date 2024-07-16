@@ -263,11 +263,11 @@ class AdfData:
     # Load DataArray
     def load_da(self, case, fils, variablename):
         ds = self.load_dataset(fils)
-        if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
+        """if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
             #ref_var_nam
             var = self.ref_var_nam[variablename]
         else:
-            var = variablename
+            var = variablename"""
 
         #print("case", case)
         print("var: ",var,"\nfils: ",fils)
