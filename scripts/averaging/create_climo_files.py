@@ -120,7 +120,7 @@ def create_climo_files(adf, clobber=False, search=None):
     for key,val in adf.calc_climos["test"].items():
         calc_climos.append(val)
 
-    calc_climos + [adf.calc_climos["baseline"]]
+    calc_climos = calc_climos + [adf.calc_climos["baseline"]]
     print(calc_climos,"\n")
 
     #Loop over CAM cases:
@@ -129,6 +129,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
         if not calc_climos[case_idx]:
+            print("Woohaa")
             continue
 
         #Notify user of model case being processed:
