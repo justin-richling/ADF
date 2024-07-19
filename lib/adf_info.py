@@ -402,7 +402,7 @@ class AdfInfo(AdfConfig):
 
         calc_test_climo = copy.copy(self.__calc_test_climo)
         calc_bl_climo = self.__calc_bl_climo
-        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}.items()
+        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
         self.__calc_climo_dict = calc_climo_dict
 
         #Loop over cases:
