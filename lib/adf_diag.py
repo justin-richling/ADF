@@ -1,4 +1,3 @@
-
 """
 Location of the "AdfDiag" object, which
 is used to store all relevant data and
@@ -347,26 +346,36 @@ class AdfDiag(AdfWeb):
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             cam_ts_done = [self.get_baseline_info("cam_ts_done")]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
+            ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
+            #Check if user wants to skip time series file creation
+            calc_cam_ts   = [self.get_baseline_info("calc_cam_ts")]
+
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
-
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
             cam_ts_done = self.get_cam_info("cam_ts_done")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc", required=True)
+            ts_dir = self.get_cam_info("cam_ts_loc")
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
-
-        # Notify user that script has started:
-
         # End if
+
+
+
+        #cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
+        if calc_cam_ts is not None:
+            for i,loc in enumerate(calc_cam_ts):
+                if loc is None:
+                    calc_cam_ts[i] = False
+        else:
+            calc_cam_ts = [False]*len(case_names)
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str_list = self.get_cam_info("hist_str")
@@ -377,12 +386,25 @@ class AdfDiag(AdfWeb):
         res = self.variable_defaults
 
         # Loop over cases:
+        no_msg = False
         for case_idx, case_name in enumerate(case_names):
+            # Notify user that script has started:
+            print(f"\n  Generating CAM time series files for '{case_name}'...")
             # Check if particular case should be processed:
-            if cam_ts_done[case_idx]:
-                emsg = " Configuration file indicates time series files have been pre-computed"
-                emsg += f" for case '{case_name}'.  Will rely on those files directly."
+
+            #Check whether the user needs to use time series files at all
+            #or are missing the time series files all together.
+            if not calc_cam_ts[case_idx]:
+                emsg = "\tConfiguration file indicates time series files don't need to be calculated."
                 print(emsg)
+                no_msg = True
+                continue
+
+            if cam_ts_done[case_idx]:
+                emsg = "\tConfiguration file indicates time series files have been pre-computed."
+                emsg += f" Will rely on those files directly."
+                print(emsg)
+                no_msg = True
                 continue
             # End if
 
@@ -400,7 +422,7 @@ class AdfDiag(AdfWeb):
                 self.end_diag_fail(emsg)
             # End if
 
-            # Check if history files actually exqist. If not then kill script:
+            # Check if history files actually exist. If not then kill script:
             hist_str_case = hist_str_list[case_idx]
             for hist_str in hist_str_case:
 
@@ -513,7 +535,7 @@ class AdfDiag(AdfWeb):
 
                 # Intitialize list for NCO commands
                 list_of_commands = []
-
+                vars_to_derive = []
                 # Create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
 
@@ -535,8 +557,8 @@ class AdfDiag(AdfWeb):
 
                         # Check if variable can be derived
                         diag_var_list, constit_dict = check_derive(self, res, var, case_name,
-                                                                   diag_var_list, constit_dict,
-                                                                   hist_file_ds, hist_files[0])
+                                                                    diag_var_list, constit_dict,
+                                                                    hist_file_ds, hist_files[0])
                         # Move to the next variable
                         continue
                     # End if
@@ -627,13 +649,16 @@ class AdfDiag(AdfWeb):
                 if constit_dict:
                     for der_var,constit_list in constit_dict.items():
                         derive_variable(self, case_name, der_var, res, ts_dir[case_idx], constit_list)
-
+            
             # End for hist_str
-
+        
         # End cases loop
 
         # Notify user that script has ended:
-        print("  ...CAM time series file generation has finished successfully.")
+        if no_msg:
+            print("  ...Moving on.")
+        else:
+            print("  ...CAM time series file generation has finished successfully.")
 
     #########
 
@@ -651,7 +676,8 @@ class AdfDiag(AdfWeb):
         """
 
         # Extract climatology calculation config options:
-        calc_climo = self.get_cam_info("calc_cam_climo")
+        #calc_climo = self.get_cam_info("calc_cam_climo")
+        calc_climo = self.calc_test_climo
 
         # Check if climo calculation config option is a list:
         if isinstance(calc_climo, list):
@@ -674,6 +700,9 @@ class AdfDiag(AdfWeb):
             # Just set to False:
             calc_bl_climo = False
         # End if
+
+        print("calc_climo",calc_climo)
+        print("calc_bl_climo",calc_bl_climo,"\n")
 
         # Check if a user wants any climatologies to be calculated:
         if calc_climo or calc_bl_climo:
@@ -702,8 +731,11 @@ class AdfDiag(AdfWeb):
         else:
             # If not, then notify user that climo file generation is skipped.
             print(
-                "\n  No climatology files were requested by user, so averaging will be skipped."
+                "\n  No climatology files were requested by user to be generated, so averaging will be skipped."
             )
+            print("   This either means:")
+            print("    Climo files exist and a relevent path has been included,")
+            print("    Or desired analysis doesn't require it.")
 
     #########
 
@@ -858,7 +890,8 @@ class AdfDiag(AdfWeb):
         eyears = self.climo_yrs["eyears"]
 
         # Timeseries locations:
-        cam_ts_loc = self.get_cam_info("cam_ts_loc")
+        #cam_ts_loc = self.get_cam_info("cam_ts_loc")
+        cam_ts_loc = self.test_ts_locs
 
         # set CVDP directory, recursively copy cvdp codebase to the CVDP directory
         if len(case_names) > 1:
@@ -1223,46 +1256,3 @@ class AdfDiag(AdfWeb):
                 # end for hist_str
             # end for var
         # end for case
-
-
-
-########
-
-#Helper Function(s)
-
-
-def _load_dataset(fils):
-    """
-    This method exists to get an xarray Dataset from input file information that can be passed into the plotting methods.
-
-    Parameters
-    ----------
-    fils : list
-        strings or paths to input file(s)
-
-    Returns
-    -------
-    xr.Dataset
-
-    Notes
-    -----
-    When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
-    """
-    import warnings  # use to warn user about missing files.
-
-    #Format warning messages:
-    def my_formatwarning(msg, *args, **kwargs):
-        """Issue `msg` as warning."""
-        return str(msg) + '\n'
-    warnings.formatwarning = my_formatwarning
-
-    if len(fils) == 0:
-        warnings.warn("Input file list is empty.")
-        return None
-    elif len(fils) > 1:
-        return xr.open_mfdataset(fils, combine='by_coords')
-    else:
-        return xr.open_dataset(fils[0])
-    #End if
-#End def
-########
