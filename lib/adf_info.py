@@ -695,10 +695,13 @@ class AdfInfo(AdfConfig):
         calc_bl_climo = self.__calc_bl_climo
 
         calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}.items()
+        self.calc_climo_dict = calc_climo_dict
+
+        #Make list of all entries, similarly how the ADF does in various scripts
         calc_climos = []
         for _,val in calc_climo_dict:
             calc_climos.append(val)
-
+        #The length of this list should always be the number of cases!
         calc_climos = calc_climos + [calc_bl_climo]
 
         return calc_climos
