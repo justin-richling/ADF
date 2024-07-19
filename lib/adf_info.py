@@ -204,6 +204,14 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
+            if baseline_ts_done is None:
+                baseline_ts_done = True
+
+            input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+
+
+            if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
+                self.__calc_bl_climo = False
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
@@ -351,9 +359,32 @@ class AdfInfo(AdfConfig):
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
+        if cam_ts_done is None:
+            cam_ts_done = [True]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            for i,case in enumerate(cam_ts_done):
+                if case is None:
+                    cam_ts_done[i] = True
 
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        if input_ts_locs is None:
+            input_ts_locs = [None]*len(case_names)
+
+        calc_test_climo = self.get_cam_info("calc_cam_climo")
+        if calc_test_climo is None:
+            calc_test_climo = [False]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            for i,case in enumerate(calc_test_climo):
+                if case is None:
+                    calc_test_climo[i] = True
+
+        self.__calc_test_climo = {}
+        for i in range(len(calc_test_climo)):
+            if (baseline_ts_done[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
+                self.__calc_test_climo[case_names[i]] = False
 
         #Loop over cases:
         syears_fixed = []
@@ -638,6 +669,15 @@ class AdfInfo(AdfConfig):
     def hist_string(self):
         """ Return the history string name to the user if requested."""
         return self.__hist_str
+
+    @property
+    def calc_climos(self):
+        """ Return the history string name to the user if requested."""
+
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+        calc_bl_climo = self.__calc_bl_climo
+
+        return {"test":calc_test_climo,"baseline":calc_bl_climo}
 
     #########
 
