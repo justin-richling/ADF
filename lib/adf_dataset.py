@@ -219,7 +219,7 @@ class AdfData:
         return sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))"""
 
     def get_ref_regrid_file(self, case, field):
-        print("AHHH",self.ref_var_loc)
+        print("AHHH",field)
         if self.adf.compare_obs:
             obs_loc = self.ref_var_loc.get(field, None)
             fils = [str(obs_loc)]
