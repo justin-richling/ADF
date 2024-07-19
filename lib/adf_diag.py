@@ -358,22 +358,29 @@ class AdfDiag(AdfWeb):
             calc_cam_ts = self.get_cam_info("calc_cam_ts")
             cam_ts_done = self.get_cam_info("cam_ts_done")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc")
-            overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            #ts_dir = self.get_cam_info("cam_ts_loc")
+            #overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+            
+            #Test case(s) input time series file locations
+            ts_dir = self.test_ts_locs
+
+            #Test case(s) output climo file locations
+            output_locs = self.test_climo_locs
+
+            #Test case(s) calculate climo files boolean
+            calc_climos = self.calc_test_climo
+
+            #Test case(s) overwrite climo files boolean
+            overwrite_ts     = self.overwrite_test_climo
+
+            #Extract simulation years:
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
+
+            #
             case_type_string="case"
         # End if
 
-
-
-        #cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
-        if calc_cam_ts is not None:
-            for i,loc in enumerate(calc_cam_ts):
-                if loc is None:
-                    calc_cam_ts[i] = False
-        else:
-            calc_cam_ts = [False]*len(case_names)
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         hist_str_list = self.get_cam_info("hist_str")
@@ -392,22 +399,18 @@ class AdfDiag(AdfWeb):
 
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
-            if not calc_cam_ts[case_idx]:
-                emsg = "\tConfiguration file indicates time series files don't need to be calculated."
+            if (not calc_cam_ts[case_idx]) and (not calc_climos[case_idx]):
+                emsg = "\tConfiguration file indicates time series files don't"
+                emsg += " need to be calculated."
                 print(emsg)
                 no_msg = True
                 continue
 
-            if cam_ts_done[case_idx]:
+            elif (cam_ts_done[case_idx]) or (not calc_cam_ts[case_idx] and (ts_dir[case_idx])):
                 emsg = "\tConfiguration file indicates time series files have been pre-computed."
                 emsg += f" Will rely on those files directly."
                 print(emsg)
                 no_msg = True
-
-
-
-
-
 
 
                 ts_case_dir = ts_dir[case_idx]
