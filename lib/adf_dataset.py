@@ -135,8 +135,8 @@ class AdfData:
 
 
     def load_reference_regrid_da(self, case, field):
-        if self.adf.compare_obs:
-            field = self.ref_var_nam[field]
+        #if self.adf.compare_obs:
+        #    field = self.ref_var_nam[field]
 
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
