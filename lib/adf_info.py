@@ -694,7 +694,14 @@ class AdfInfo(AdfConfig):
         calc_test_climo = copy.copy(self.__calc_test_climo)
         calc_bl_climo = self.__calc_bl_climo
 
-        return {"test":calc_test_climo,"baseline":calc_bl_climo}
+        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}.items()
+        calc_climos = []
+        for _,val in calc_climo_dict:
+            calc_climos.append(val)
+
+        calc_climos = calc_climos + [calc_bl_climo]
+
+        return calc_climos
 
     '''@property
     def calc_climos(self):

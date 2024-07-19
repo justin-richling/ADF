@@ -116,11 +116,13 @@ def create_climo_files(adf, clobber=False, search=None):
         return {"test":calc_test_climo,"baseline":calc_bl_climo}'''
 
     #adf_calc_climos = adf.calc_climos
-    calc_climos = []
+    """calc_climos = []
     for key,val in adf.calc_climos["test"].items():
         calc_climos.append(val)
 
-    calc_climos = calc_climos + [adf.calc_climos["baseline"]]
+    calc_climos = calc_climos + [adf.calc_climos["baseline"]]"""
+
+    calc_climos = adf.calc_climos
     print(calc_climos,"\n")
 
     #Loop over CAM cases:
