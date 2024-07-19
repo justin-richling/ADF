@@ -123,7 +123,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
-        if not calc_climos[case_idx]:
+        if not calc_climos[case_name]:
             continue
 
         #Notify user of model case being processed:
