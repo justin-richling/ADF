@@ -212,6 +212,8 @@ class AdfInfo(AdfConfig):
 
             if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
                 self.__calc_bl_climo = False
+            else:
+                self.__calc_bl_climo = True
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
