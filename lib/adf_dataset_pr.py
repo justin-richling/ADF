@@ -67,7 +67,7 @@ class AdfData:
         """Set attributes for reference (aka baseline) data location, names, and variables."""
         if self.adf.compare_obs:
             self.ref_var_loc = {v: self.adf.var_obs_dict[v]['obs_file'] for v in self.adf.var_obs_dict}
-            print(self.ref_var_loc)
+            print("AHHH",self.ref_var_loc)
             self.ref_labels = {v: self.adf.var_obs_dict[v]['obs_name'] for v in self.adf.var_obs_dict}
             self.ref_var_nam = {v: self.adf.var_obs_dict[v]['obs_var'] for v in self.adf.var_obs_dict}
             self.ref_case_label = "Obs"
