@@ -188,11 +188,15 @@ def create_climo_files(adf, clobber=False, search=None):
         with mp.Pool(processes=number_of_cpu) as p:
             result = p.starmap(process_variable, list_of_arguments)
 
+        if not adf.get_basic_info("compare_obs") and case_name == baseline_name:
+            adf.data.set_ref_var_loc()
+
     #End of model case loop
     #----------------------
 
     #Notify user that script has ended:
     print("  ...CAM climatologies have been calculated successfully.")
+
 
 
 #

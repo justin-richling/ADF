@@ -85,6 +85,12 @@ class AdfData:
                     #self.ref_var_nam[v] = v
                     #self.ref_labels[v] = self.adf.get_baseline_info("cam_case_name", required=True)
 
+    def set_ref_var_loc(self):
+        for v in self.adf.diag_var_list:
+            f = self.get_reference_climo_file(v)
+            self.ref_var_loc[v] = f
+
+
     def get_reference_climo_file(self, var):
         """Return a list of files to be used as reference (aka baseline) for variable var."""
         if self.adf.compare_obs:
@@ -259,6 +265,7 @@ class AdfData:
 
 
     def load_da(self, fils, variablename):
+        print("fils",fils)
         ds = self.load_dataset(fils)
         if ds is None:
             warnings.warn(f"ERROR: Load failed for {variablename}")
