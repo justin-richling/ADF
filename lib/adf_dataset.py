@@ -163,7 +163,7 @@ class AdfData:
 
         new_unit = vres.get("new_unit", 'none')
         fils = self.get_climo_file(case, variablename)
-        return self.load_da(fils, variablename, new_unit, add_offset, scale_factor)
+        return self.load_da(fils, variablename, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
 
     def load_climo_file(self, case, variablename):
@@ -244,7 +244,7 @@ class AdfData:
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_da(fils, field, new_unit, add_offset, scale_factor)
+        return self.load_da(fils, field, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
 
     # Reference case (baseline/obs)
@@ -301,7 +301,7 @@ class AdfData:
         print("load_reference_regrid_da fils",fils)
         if self.adf.compare_obs:
             field = self.ref_var_nam[field]
-        return self.load_da(fils, field, new_unit, add_offset, scale_factor)
+        return self.load_da(fils, field, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
     #----------------
 
