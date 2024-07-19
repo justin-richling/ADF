@@ -400,6 +400,11 @@ class AdfInfo(AdfConfig):
             else:
                 self.__calc_test_climo[case_names[i]] = True
 
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+        calc_bl_climo = self.__calc_bl_climo
+        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}.items()
+        self.__calc_climo_dict = calc_climo_dict
+
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
@@ -691,18 +696,18 @@ class AdfInfo(AdfConfig):
     def calc_climos(self):
         """ Return the history string name to the user if requested."""
 
-        calc_test_climo = copy.copy(self.__calc_test_climo)
+        """calc_test_climo = copy.copy(self.__calc_test_climo)
         calc_bl_climo = self.__calc_bl_climo
 
-        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}.items()
-        self.calc_climo_dict = calc_climo_dict
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}.items()
+        #self.calc_climo_dict = calc_climo_dict"""
 
         #Make list of all entries, similarly how the ADF does in various scripts
         calc_climos = []
-        for _,val in calc_climo_dict:
+        for _,val in self.__calc_climo_dict:
             calc_climos.append(val)
         #The length of this list should always be the number of cases!
-        calc_climos = calc_climos + [calc_bl_climo]
+        calc_climos = calc_climos + [self.__calc_bl_climo]
 
         return calc_climos
 
