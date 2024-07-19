@@ -199,11 +199,6 @@ class AdfData:
         return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_*.nc"))
     
     def load_regrid_dataset(self, case, field):
-        """
-        Return a data set to be used as reference (aka baseline) for variable field.
-        
-        NOTE: This is not currently being called anywhere
-        """
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
@@ -211,11 +206,6 @@ class AdfData:
         return self.load_dataset(fils)
     
     def load_regrid_da(self, case, field):
-        """
-        Return a data array to be used as reference (aka baseline) for variable field.
-        
-        NOTE: This is called in the plotting scripts
-        """
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
@@ -224,6 +214,24 @@ class AdfData:
 
 
     # Reference case (baseline/obs)
+    def load_reference_regrid_dataset(self, case, field):
+        fils = self.get_ref_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        return self.load_dataset(fils)
+
+    
+    def load_reference_regrid_da(self, case, field):
+        fils = self.get_ref_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        print("load_reference_regrid_da fils",fils)
+        if self.adf.compare_obs:
+            field = self.ref_var_nam[field]
+        return self.load_da(fils, field)
+
     def get_ref_regrid_file(self, case, field):
         print("AHHH",field)
         if self.adf.compare_obs:
@@ -235,34 +243,6 @@ class AdfData:
             fils = sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
         return fils
 
-
-    def load_reference_regrid_dataset(self, case, field):
-        """
-        Return a data set to be used as reference (aka baseline) for variable field.
-        
-        NOTE: This is not currently being called anywhere
-        """
-        fils = self.get_ref_regrid_file(case, field)
-        if not fils:
-            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
-            return None
-        return self.load_dataset(fils)
-
-    
-    def load_reference_regrid_da(self, case, field):
-        """
-        Return a data array to be used as reference (aka baseline) for variable field.
-        
-        NOTE: This is called in the plotting scripts
-        """
-        fils = self.get_ref_regrid_file(case, field)
-        if not fils:
-            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
-            return None
-        print("load_reference_regrid_da fils",fils)
-        if self.adf.compare_obs:
-            field = self.ref_var_nam[field]
-        return self.load_da(fils, field)
 
     #----------------
 
@@ -297,10 +277,7 @@ class AdfData:
         return self.load_dataset(fils)
 
 
-    #########
-
-    # Load DataArray
-    def load_da(self, fils, variablename, scale_offset=None):
+    def load_da(self, fils, variablename):
         print("fils",fils)
         ds = self.load_dataset(fils)
         if ds is None:
@@ -313,13 +290,9 @@ class AdfData:
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
         return da
 
-    def load_reference_da(self, fils, variablename):
-        #da = self.load_reference_dataset(variablename)[self.ref_var_nam[variablename]]
-        ds = self.load_dataset(fils)
-        if ds is None:
-            warnings.warn(f"ERROR: Load failed for {variablename}")
-            return None
-        da = (ds[variablename]).squeeze()
+
+    def load_reference_da(self, variablename):
+        da = self.load_reference_dataset(variablename)[self.ref_var_nam[variablename]]
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
             if self.adf.compare_obs:
@@ -332,7 +305,204 @@ class AdfData:
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
         return da
 
-    '''def load_reference_da(self, variablename):
+
+    '''def get_reference_climo_file(self, var):
+        """Return a list of files to be used as reference (aka baseline) for variable var."""
+        if self.adf.compare_obs:
+            fils = self.ref_var_loc.get(var, None)
+            return [fils] if fils is not None else None
+        ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        # NOTE: originally had this looking for *_baseline.nc
+        fils = sorted(Path(ref_loc).glob(f"{self.ref_case_label}_{var}_climo.nc"))
+        if fils:
+            return fils
+        return None'''
+
+    """def load_reference_dataset(self, var):
+        fils = self.get_reference_climo_file(var)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find any reference files for variable: {var}. Will try to skip.")
+            return None
+        return self.load_dataset(fils)
+
+    def load_reference_da(self, variablename):
+        da = self.load_reference_dataset(variablename)[self.ref_var_nam[variablename]]
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            if self.adf.compare_obs:
+                scale_factor = vres.get("obs_scale_factor",1)
+                add_offset = vres.get("obs_add_offset", 0)
+            else:
+                scale_factor = vres.get("scale_factor",1)
+                add_offset = vres.get("add_offset", 0)
+            da = da * scale_factor + add_offset
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        return da"""
+
+
+    '''def load_reference_regrid_dataset(self, case, field):
+        fils = self.get_ref_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        return self.load_dataset(fils)'''
+
+
+    '''def load_reference_regrid_da(self, case, field):
+        fils = self.get_ref_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        print("load_reference_regrid_da fils",fils)
+        if self.adf.compare_obs:
+            field = self.ref_var_nam[field]
+        return self.load_da(fils, field)'''
+
+
+    '''def load_climo_da(self, case, variablename):
+        """Return DataArray from climo file"""
+        fils = self.get_climo_file(case, variablename)
+        return self.load_da(fils, variablename)
+
+
+    def load_climo_file(self, case, variablename):
+        """Return Dataset for climo of variablename"""
+        fils = self.get_climo_file(case, variablename)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find climo file for variable: {variablename}. Will try to skip.")
+            return None
+        return self.load_dataset(fils)
+    
+
+    def get_climo_file(self, case, variablename):
+        """Retrieve the climo file path(s) for variablename for a specific case."""
+        a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
+        caseindex = (self.case_names).index(case) # the entry for specified case
+        model_cl_loc = Path(a[caseindex])
+        return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))'''
+
+    '''def get_timeseries_file(self, case, field):
+        ts_locs = self.adf.get_cam_info("cam_ts_loc", required=True) # list of paths (could be multiple cases)
+        caseindex = (self.case_names).index(case)
+        ts_loc = Path(ts_locs[caseindex])
+        ts_filenames = f'{case}.*.{field}.*nc'
+        ts_files = sorted(ts_loc.glob(ts_filenames))
+        return ts_files
+
+
+    def get_ref_timeseries_file(self, field):
+        if self.adf.compare_obs:
+            return None
+        else:
+            ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
+            ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
+            ts_files = sorted(ts_loc.glob(ts_filenames))
+            return ts_files
+
+
+    def load_timeseries_dataset(self, fils):
+        if (len(fils) == 0):
+            warnings.warn("Input file list is empty.")
+            return None
+        elif (len(fils) > 1):
+            ds = xr.open_mfdataset(fils, decode_times=False)
+        else:
+            sfil = str(fils[0])
+            if not Path(sfil).is_file():
+                warnings.warn(f"Expecting to find file: {sfil}")
+                return None
+            ds = xr.open_dataset(sfil, decode_times=False)
+        if ds is None:
+            warnings.warn(f"invalid data on load_dataset")
+        # assign time to midpoint of interval (even if it is already)
+        if 'time_bnds' in ds:
+            t = ds['time_bnds'].mean(dim='nbnd')
+            t.attrs = ds['time'].attrs
+            ds = ds.assign_coords({'time':t})
+        elif 'time_bounds' in ds:
+            t = ds['time_bounds'].mean(dim='nbnd')
+            t.attrs = ds['time'].attrs
+            ds = ds.assign_coords({'time':t})
+        else:
+            warnings.warn("Timeseries file does not have time bounds info.")
+        return xr.decode_cf(ds)'''
+
+
+    '''def get_ref_regrid_file(self, case, field):
+        print("AHHH",field)
+        if self.adf.compare_obs:
+            obs_loc = self.ref_var_loc.get(field, None)
+            fils = [str(obs_loc)]
+            print("get_ref_regrid_file fils", fils)
+        else:
+            model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+            fils = sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
+        return fils
+    
+
+    def get_regrid_file(self, case, field):
+        model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+        rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
+        return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_*.nc"))
+    
+    def load_regrid_dataset(self, case, field):
+        fils = self.get_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        return self.load_dataset(fils)
+    
+    def load_regrid_da(self, case, field):
+        fils = self.get_regrid_file(case, field)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
+            return None
+        return self.load_da(fils, field)'''
+
+
+
+
+
+
+    '''def load_dataset(self, fils):
+        if (len(fils) == 0):
+            warnings.warn("Input file list is empty.")
+            return None
+        elif (len(fils) > 1):
+            ds = xr.open_mfdataset(fils, combine='by_coords')
+        else:
+            sfil = str(fils[0])
+            if not Path(sfil).is_file():
+                warnings.warn(f"Expecting to find file: {sfil}")
+                return None
+            ds = xr.open_dataset(sfil)
+        if ds is None:
+            warnings.warn(f"invalid data on load_dataset")
+        return ds
+
+
+    def load_da(self, fils, variablename):
+        print("fils",fils)
+        ds = self.load_dataset(fils)
+        if ds is None:
+            warnings.warn(f"ERROR: Load failed for {variablename}")
+            return None
+        da = (ds[variablename]).squeeze()
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        return da
+
+
+    def load_reference_dataset(self, var):
+        fils = self.get_reference_climo_file(var)
+        if not fils:
+            warnings.warn(f"ERROR: Did not find any reference files for variable: {var}. Will try to skip.")
+            return None
+        return self.load_dataset(fils)
+
+    def load_reference_da(self, variablename):
         da = self.load_reference_dataset(variablename)[self.ref_var_nam[variablename]]
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
@@ -345,6 +515,3 @@ class AdfData:
             da = da * scale_factor + add_offset
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
         return da'''
-
-
-    
