@@ -678,13 +678,13 @@ class AdfDiag(AdfWeb):
 
         # Extract climatology calculation config options:
         #calc_climo = self.get_cam_info("calc_cam_climo")
-        calc_climo = self.calc_climos['test']
+        calc_climo = self.calc_climos
 
-        # Check if climo calculation config option is a list:
+        """# Check if climo calculation config option is a list:
         if isinstance(calc_climo, list):
             # If so, then check if any of the entries are "True":
             calc_climo = any(calc_climo)
-        # End if
+        # End if"""
 
         # Next check if a baseline simulation is being used
         # and no other model cases need climatologies calculated:
