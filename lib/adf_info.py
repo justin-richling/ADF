@@ -385,6 +385,9 @@ class AdfInfo(AdfConfig):
         for i in range(len(calc_test_climo)):
             if (baseline_ts_done[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
                 self.__calc_test_climo[case_names[i]] = False
+                #self.__calc_climo[i] = False
+            else:
+                self.__calc_test_climo[case_names[i]] = True
 
         #Loop over cases:
         syears_fixed = []
@@ -678,6 +681,16 @@ class AdfInfo(AdfConfig):
         calc_bl_climo = self.__calc_bl_climo
 
         return {"test":calc_test_climo,"baseline":calc_bl_climo}
+
+    '''@property
+    def calc_climos(self):
+        """ Return the history string name to the user if requested."""
+
+        calc_climo = copy.copy(self.__calc_climo)
+        #calc_bl_climo = self.__calc_bl_climo
+
+        #return {"test":calc_test_climo,"baseline":calc_bl_climo}
+        return calc_climo'''
 
     #########
 

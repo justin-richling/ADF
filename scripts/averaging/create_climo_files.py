@@ -106,6 +106,17 @@ def create_climo_files(adf, clobber=False, search=None):
     # -> slice('1991','1998') will get all of [1991,1998].
     # -> slice(None,None) will use all times.
 
+    '''@property
+    def calc_climos(self):
+        """ Return the history string name to the user if requested."""
+
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+        calc_bl_climo = self.__calc_bl_climo
+
+        return {"test":calc_test_climo,"baseline":calc_bl_climo}'''
+
+    calc_climos = adf.calc_climos
+    print(calc_climos,"\n")
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
