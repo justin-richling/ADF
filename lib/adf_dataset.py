@@ -59,9 +59,11 @@ class AdfData:
         self.ref_nickname = self.base_nickname
 
         # define reference data
-        self.set_reference() # specify "ref_labels" -> called "data_list" in zonal_mean (name of data source)
+        self.set_reference(init=True) # specify "ref_labels" -> called "data_list" in zonal_mean (name of data source)
 
-    def set_reference(self):
+    # Reference case setup (baseline/obs)
+    #------------------------------------
+    def set_reference(self, init=False):
         """Set attributes for reference (aka baseline) data location, names, and variables."""
         if self.adf.compare_obs:
             self.ref_var_loc = {v: self.adf.var_obs_dict[v]['obs_file'] for v in self.adf.var_obs_dict}
@@ -76,13 +78,14 @@ class AdfData:
             # when using a reference simulation, allow a "special" attribute with the case name:
             self.ref_case_label = self.adf.get_baseline_info("cam_case_name", required=True)
             for v in self.adf.diag_var_list:
+                self.ref_var_nam[v] = v
+                self.ref_labels[v] = self.adf.get_baseline_info("cam_case_name", required=True)
                 f = self.get_reference_climo_file(v)
                 if f is None:
-                    warnings.warn(f"\t WARNING: ADFData found no reference climo file for {v}")
+                    if not init:
+                        warnings.warn(f"\t WARNING: ADFData found no reference climo file for {v}")
                     continue
                 else:
-                    self.ref_var_loc[v] = f
-                    self.ref_var_nam[v] = v
                     self.ref_labels[v] = self.adf.get_baseline_info("cam_case_name", required=True)
 
     def get_reference_climo_file(self, var):
