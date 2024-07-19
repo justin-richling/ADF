@@ -704,7 +704,7 @@ class AdfInfo(AdfConfig):
 
         #Make list of all entries, similarly how the ADF does in various scripts
         calc_climos = []
-        for _,val in self.items():
+        for _,val in self.__calc_climo_dict.items():
             calc_climos.append(val)
         #The length of this list should always be the number of cases!
         calc_climos = calc_climos + [self.__calc_bl_climo]
