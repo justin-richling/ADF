@@ -365,6 +365,7 @@ class AdfDiag(AdfWeb):
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
+            hist_str_list = self.hist_string["test_hist_str"]
         # End if
 
 
