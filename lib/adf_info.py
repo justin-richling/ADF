@@ -707,7 +707,7 @@ class AdfInfo(AdfConfig):
         for _,val in self.__calc_climo_dict.items():
             calc_climos.append(val)
         #The length of this list should always be the number of cases!
-        calc_climos = calc_climos + [self.__calc_bl_climo]
+        #calc_climos = calc_climos + [self.__calc_bl_climo]
 
         return calc_climos
 
