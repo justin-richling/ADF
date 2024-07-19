@@ -383,7 +383,7 @@ class AdfInfo(AdfConfig):
 
         self.__calc_test_climo = {}
         for i in range(len(calc_test_climo)):
-            if (baseline_ts_done[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
+            if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
                 self.__calc_test_climo[case_names[i]] = False
                 #self.__calc_climo[i] = False
             else:
