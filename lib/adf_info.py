@@ -714,9 +714,7 @@ class AdfInfo(AdfConfig):
     @property
     def calc_climo_dict(self):
         """ Return the history string name to the user if requested."""
-
-        calc_climo_dict = copy.copy(self.__calc_climo_dict)
-        return calc_climo_dict
+        return self.__calc_climo_dict
 
     '''@property
     def calc_climos(self):
