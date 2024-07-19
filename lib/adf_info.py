@@ -221,6 +221,7 @@ class AdfInfo(AdfConfig):
                 baseline_hist_locs = None
 
                 #Grab baseline time series file location
+                print("HEEEREEERREERRR?")
                 input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
                 input_ts_loc = Path(input_ts_baseline)
 
