@@ -255,13 +255,22 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
+                #Check if user provided
+                if not baseline_hist_str:
+                    baseline_hist_str = ['cam.h0a']
+                else:
+                    #Make list if not already
+                    if not isinstance(baseline_hist_str, list):
+                        baseline_hist_str = [baseline_hist_str]
+                #Initialize baseline history string list
+                self.__base_hist_str = baseline_hist_str
+
+                #Grab first possible hist string, just looking for years of run
+                base_hist_str = baseline_hist_str[0]
                 
-                hist_str = baseline_hist_str[0]
-                print("hist_str",hist_str,"\n")
+                #hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
-                print("starting_location",starting_location,"\n")
-                file_list = sorted(starting_location.glob("*" + hist_str + ".*.nc"))
-                print("file_list",file_list,"\n")
+                file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
                 # Partition string to find exactly where h-number is
                 # This cuts the string before and after the `{hist_str}.` sub-string
                 # so there will always be three parts:
@@ -269,10 +278,10 @@ class AdfInfo(AdfConfig):
                 #Since the last part always includes the time range, grab that with last index (2)
                 #NOTE: this is based off the current CAM file name structure in the form:
                 #  $CASE.cam.h#.YYYY<other date info>.nc
-                base_climo_yrs = [int(str(i).partition(f"{hist_str}.")[2][0:4]) for i in file_list]
+                base_climo_yrs = [int(str(i).partition(f"{base_hist_str}.")[2][0:4]) for i in file_list]
                 base_climo_yrs = sorted(np.unique(base_climo_yrs))
 
-                print("base_climo_yrs",base_climo_yrs,"\n")
+                #print("base_climo_yrs",base_climo_yrs,"\n")
 
                 base_found_syr = int(base_climo_yrs[0])
                 base_found_eyr = int(base_climo_yrs[-1])
