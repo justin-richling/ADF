@@ -202,6 +202,7 @@ class AdfData:
 
 
     def load_reference_regrid_da(self, case, field):
+        print("AJBNNALKM)
         print(self.ref_var_loc)
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
