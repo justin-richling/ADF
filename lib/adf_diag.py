@@ -380,7 +380,6 @@ class AdfDiag(AdfWeb):
             calc_cam_ts = [False]*len(case_names)
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
-        hist_str_list = self.get_cam_info("hist_str")
         dmsg = f"reading from {hist_str_list} files"
         self.debug_log(dmsg)
 
