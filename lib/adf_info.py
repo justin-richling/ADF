@@ -699,13 +699,17 @@ class AdfInfo(AdfConfig):
         """calc_test_climo = copy.copy(self.__calc_test_climo)
         calc_bl_climo = self.__calc_bl_climo
 
-        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}.items()
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
         #self.calc_climo_dict = calc_climo_dict"""
 
         #Make list of all entries, similarly how the ADF does in various scripts
         calc_climos = []
-        for _,val in self.__calc_climo_dict.items():
-            calc_climos.append(val)
+        for key,val in self.__calc_climo_dict.items():
+            if key == "test":
+                for _,val2 in val.items():
+                    calc_climos.append(val2)
+            else: # baseline
+                calc_climos.append(val)
         #The length of this list should always be the number of cases!
         #calc_climos = calc_climos + [self.__calc_bl_climo]
 
