@@ -117,7 +117,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
     calc_climos = adf.calc_climos
     case_climos = []
-    for key,val in adf.calc_climos["test"]:
+    for key,val in adf.calc_climos["test"].items():
         case_climos.append(val)
 
     case_climos + [adf.calc_climos["base"]]
