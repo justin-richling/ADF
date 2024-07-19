@@ -204,9 +204,19 @@ class AdfData:
             warnings.warn("Timeseries file does not have time bounds info.")
         return xr.decode_cf(ds)
 
-    def get_ref_regrid_file(self, case, field):
+    """def get_ref_regrid_file(self, case, field):
         model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
-        return sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
+        return sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))"""
+
+    def get_ref_regrid_file(self, case, field):
+        print("AHHH",self.ref_var_loc)
+        if self.adf.compare_obs:
+            obs_loc = self.ref_var_loc.get(field, None)
+            fils = [str(obs_loc)]
+        else:
+            model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+            fils = sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
+        return fils
     
 
     def get_regrid_file(self, case, field):
