@@ -65,7 +65,6 @@ class AdfData:
         """Set attributes for reference (aka baseline) data location, names, and variables."""
         if self.adf.compare_obs:
             self.ref_var_loc = {v: self.adf.var_obs_dict[v]['obs_file'] for v in self.adf.var_obs_dict}
-            print(self.ref_var_loc)
             self.ref_labels = {v: self.adf.var_obs_dict[v]['obs_name'] for v in self.adf.var_obs_dict}
             self.ref_var_nam = {v: self.adf.var_obs_dict[v]['obs_var'] for v in self.adf.var_obs_dict}
             self.ref_case_label = "Obs"
@@ -83,10 +82,9 @@ class AdfData:
                 f = self.get_reference_climo_file(v)
                 if f:
                     self.ref_var_loc[v] = f
-                    #self.ref_var_nam[v] = v
-                    #self.ref_labels[v] = self.adf.get_baseline_info("cam_case_name", required=True)
 
     def set_ref_var_loc(self):
+        """Set """
         for v in self.adf.diag_var_list:
             f = self.get_reference_climo_file(v)
             self.ref_var_loc[v] = f
@@ -151,7 +149,7 @@ class AdfData:
     # Test case(s)
     def load_climo_da(self, case, variablename):
         """Return DataArray from climo file"""
-        if variablename in self.adf.variable_defaults:
+        """if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
             if self.adf.compare_obs:
                 scale_factor = vres.get("obs_scale_factor",1)
@@ -161,7 +159,10 @@ class AdfData:
                 add_offset = vres.get("add_offset", 0)
 
 
-        new_unit = vres.get("new_unit", 'none')
+        new_unit = vres.get("new_unit", 'none')"""
+
+        new_unit, add_offset, scale_factor = self.get_defaults(self, variablename)
+
         fils = self.get_climo_file(case, variablename)
         return self.load_da(fils, variablename, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
@@ -227,11 +228,14 @@ class AdfData:
         
         NOTE: This is called in the plotting scripts
         """
-        if field in self.adf.variable_defaults:
+        """if field in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[field]
             scale_factor = vres.get("scale_factor",1)
             add_offset = vres.get("add_offset", 0)
-        new_unit = vres.get("new_unit", 'none')
+        new_unit = vres.get("new_unit", 'none')"""
+
+        new_unit, add_offset, scale_factor = self.get_defaults(self, field)
+
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
@@ -241,7 +245,7 @@ class AdfData:
 
     # Reference case (baseline/obs)
     def get_ref_regrid_file(self, case, field):
-        """Return """
+        """Return list of reference regridded files"""
         if self.adf.compare_obs:
             obs_loc = self.ref_var_loc.get(field, None)
             fils = [str(obs_loc)]
@@ -271,7 +275,7 @@ class AdfData:
         
         NOTE: This is called in the plotting scripts
         """
-        if field in self.adf.variable_defaults:
+        """if field in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[field]
             if self.adf.compare_obs:
                 scale_factor = vres.get("obs_scale_factor",1)
@@ -279,13 +283,17 @@ class AdfData:
             else:
                 scale_factor = vres.get("scale_factor",1)
                 add_offset = vres.get("add_offset", 0)
-        new_unit = vres.get("new_unit", 'none')
+        new_unit = vres.get("new_unit", 'none')"""
+
+        new_unit, add_offset, scale_factor = self.get_defaults(self, field)
 
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
 
+        #Change the variable name from CAM standard to what is is 
+        # listed in variable defaults for this observation field
         if self.adf.compare_obs:
             field = self.ref_var_nam[field]
 
@@ -294,12 +302,41 @@ class AdfData:
     #----------------
 
 
+    def get_defaults(self, variablename):
+        """
+        Get variable defaults if applicable
+        
+           - This is to get any scale factors or off-sets and new units for plotting
+
+        Returns
+        -------
+           new_unit - str
+           add_offset - int/float
+           scale_factor - int/float
+        """
+        new_unit = 'none'
+        add_offset = 0
+        scale_factor = 1
+        res = self.adf.variable_defaults
+        if variablename in res:
+            vres = res[variablename]
+            if self.adf.compare_obs:
+                scale_factor = vres.get("obs_scale_factor",1)
+                add_offset = vres.get("obs_add_offset", 0)
+            else:
+                scale_factor = vres.get("scale_factor",1)
+                add_offset = vres.get("add_offset", 0)
+            new_unit = vres.get("new_unit", 'none')
+        return new_unit, add_offset, scale_factor
+
+
 
     # DataSet and DataArray load
     #---------------------------
 
     # Load DataSet
     def load_dataset(self, fils):
+        """Return """
         if (len(fils) == 0):
             warnings.warn("Input file list is empty.")
             return None
@@ -318,6 +355,7 @@ class AdfData:
 
     # Load DataArray
     def load_da(self, fils, variablename, **kwargs):
+        """Return """
         print("fils",fils)
         ds = self.load_dataset(fils)
         if ds is None:
@@ -326,8 +364,8 @@ class AdfData:
         da = (ds[variablename]).squeeze()
 
         da = da * kwargs["scale_factor"] + kwargs["add_offset"]
-        if kwargs["new_unit"]:
-            da.attrs['units'] = kwargs["new_unit"]#vres.get("new_unit", da.attrs.get('units', 'none'))
+        if kwargs["new_unit"] != 'none':
+            da.attrs['units'] = kwargs["new_unit"]
         return da
 
 
