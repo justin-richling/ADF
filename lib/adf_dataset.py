@@ -161,7 +161,7 @@ class AdfData:
 
         new_unit = vres.get("new_unit", 'none')"""
 
-        new_unit, add_offset, scale_factor = self.get_defaults(variablename)
+        new_unit, add_offset, scale_factor = self.get_defaults(case, variablename)
 
         fils = self.get_climo_file(case, variablename)
         return self.load_da(fils, variablename, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
@@ -234,7 +234,7 @@ class AdfData:
             add_offset = vres.get("add_offset", 0)
         new_unit = vres.get("new_unit", 'none')"""
 
-        new_unit, add_offset, scale_factor = self.get_defaults(field)
+        new_unit, add_offset, scale_factor = self.get_defaults(case, field)
 
         fils = self.get_regrid_file(case, field)
         if not fils:
@@ -249,7 +249,6 @@ class AdfData:
         if self.adf.compare_obs:
             obs_loc = self.ref_var_loc.get(field, None)
             fils = [str(obs_loc)]
-            print("get_ref_regrid_file fils", fils)
         else:
             model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
             fils = sorted(model_rg_loc.glob(f"{case}_{field}_*.nc"))
@@ -285,7 +284,7 @@ class AdfData:
                 add_offset = vres.get("add_offset", 0)
         new_unit = vres.get("new_unit", 'none')"""
 
-        new_unit, add_offset, scale_factor = self.get_defaults(field)
+        new_unit, add_offset, scale_factor = self.get_defaults(case, field)
 
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
