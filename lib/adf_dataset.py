@@ -356,7 +356,6 @@ class AdfData:
     # Load DataArray
     def load_da(self, fils, variablename, **kwargs):
         """Return """
-        print("fils",fils)
         ds = self.load_dataset(fils)
         if ds is None:
             warnings.warn(f"ERROR: Load failed for {variablename}")
