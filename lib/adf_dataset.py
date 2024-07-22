@@ -301,6 +301,8 @@ class AdfData:
         print("load_reference_regrid_da fils",fils)
         if self.adf.compare_obs:
             field = self.ref_var_nam[field]
+        print("scale_factor:",case,scale_factor)
+        print("offset:",case,add_offset)
         return self.load_da(fils, field, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
     #----------------
