@@ -225,8 +225,10 @@ class AdfInfo(AdfConfig):
             #Check if user provided
             if not baseline_hist_str:
                 if not baseline_hist_locs:
+                    print("no baseline_hist_str and no baseline_hist_locs")
                     baseline_hist_str = [None]
                 else:
+                    print("no baseline_hist_str and baseline_hist_locs")
                     baseline_hist_str = ['cam.h0a']
             else:
                 #Make list if not already
@@ -234,7 +236,7 @@ class AdfInfo(AdfConfig):
                     baseline_hist_str = [baseline_hist_str]
 
             self.__base_hist_str = baseline_hist_str           
-
+            print("self.__base_hist_str: ",self.__base_hist_str)
 
             #if not input_ts_baseline:
             #    dmg = "time series generation"
