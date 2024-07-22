@@ -259,7 +259,7 @@ class AdfInfo(AdfConfig):
             #if baseline_ts_done:
             #if baseline_ts:
             if (baseline_ts_done) and (input_ts_baseline):
-                baseline_hist_locs = [None]
+                #baseline_hist_locs = [None]
 
                 #Grab baseline time series file location
                 #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
@@ -299,6 +299,9 @@ class AdfInfo(AdfConfig):
                     print(msg)
                     eyear_baseline = found_eyear_baseline
             # End if
+
+            if not baseline_hist_locs:
+                baseline_hist_locs = [None]
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
