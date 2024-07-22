@@ -72,7 +72,7 @@ def create_climo_files(adf, clobber=False, search=None):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
-    #calc_climos   = adf.get_cam_info("calc_cam_climo")
+    calc_climos   = adf.get_cam_info("calc_cam_climo")
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
     #Extract simulation years:
@@ -81,10 +81,10 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
-    #if not calc_climos:
-    #    calc_climos = [None]*len(case_names)
+    if not calc_climos:
+        calc_climos = [False]*len(case_names)
     if not overwrite:
-        overwrite = [None]*len(case_names)
+        overwrite = [False]*len(case_names)
     #End if
 
     #Check if a baseline simulation is also being used:
@@ -93,7 +93,7 @@ def create_climo_files(adf, clobber=False, search=None):
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
         output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
-        #calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
+        calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
         #Extract baseline years:
@@ -104,7 +104,7 @@ def create_climo_files(adf, clobber=False, search=None):
         case_names.append(baseline_name)
         input_ts_locs.append(input_ts_baseline)
         output_locs.append(output_bl_loc)
-        #calc_climos.append(calc_bl_climos)
+        calc_climos.append(calc_bl_climos)
         overwrite.append(ovr_bl)
         start_year.append(bl_syr)
         end_year.append(bl_eyr)
@@ -116,7 +116,7 @@ def create_climo_files(adf, clobber=False, search=None):
     # -> slice(None,None) will use all times.
 
 
-    calc_climos = adf.calc_climos
+    #calc_climos = adf.calc_climos
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
