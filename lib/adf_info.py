@@ -216,6 +216,9 @@ class AdfInfo(AdfConfig):
                 if not input_ts_baseline:
                     dmg = "time series generation"
                     dmg = f"\tConfig indicates time series files for '{data_name}' are done but missing file location"
+                    self.debug_log(dmg)
+                    print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
+                    print("  - The climo years specified in the config file cannot be verified!")
                     pass
                 input_ts_loc = Path(input_ts_baseline)
 
@@ -418,6 +421,17 @@ class AdfInfo(AdfConfig):
             #Check if time series files exist, if so don't rely on climo years
             if cam_ts_done[case_idx]:
                 cam_hist_locs[case_idx] = None
+
+                input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+                #input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
+                input_ts_case = input_ts_locs[case_idx]
+                if not input_ts_case:
+                    dmg = "time series generation"
+                    dmg = f"\tConfig indicates time series files for '{case_name}' are done but missing file location"
+                    self.debug_log(dmg)
+                    print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{case_name}'.")
+                    print("  - The climo years specified in the config file cannot be verified!")
+                    pass
 
                 #Grab case time series file location
                 input_ts_loc = Path(input_ts_locs[case_idx])
