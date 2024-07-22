@@ -194,6 +194,16 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
+            if baseline_ts_done is None:
+                baseline_ts_done = True
+
+            input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+
+
+            if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
+                self.__calc_bl_climo = False
+            else:
+                self.__calc_bl_climo = True
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
@@ -344,6 +354,7 @@ class AdfInfo(AdfConfig):
 
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
+        #cam_hist_str = self.__hist_str
 
         if not cam_hist_str:
             hist_str = [['cam.h0a']]*self.__num_cases
@@ -356,9 +367,40 @@ class AdfInfo(AdfConfig):
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
+        if cam_ts_done is None:
+            cam_ts_done = [True]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            for i,case in enumerate(cam_ts_done):
+                if case is None:
+                    cam_ts_done[i] = True
 
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        if input_ts_locs is None:
+            input_ts_locs = [None]*len(case_names)
+
+        calc_test_climo = self.get_cam_info("calc_cam_climo")
+        if calc_test_climo is None:
+            calc_test_climo = [False]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            for i,case in enumerate(calc_test_climo):
+                if case is None:
+                    calc_test_climo[i] = True
+
+        self.__calc_test_climo = {}
+        for i in range(len(calc_test_climo)):
+            if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
+                self.__calc_test_climo[case_names[i]] = False
+                #self.__calc_climo[i] = False
+            else:
+                self.__calc_test_climo[case_names[i]] = True
+
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+        calc_bl_climo = self.__calc_bl_climo
+        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
+        self.__calc_climo_dict = calc_climo_dict
 
         #Loop over cases:
         syears_fixed = []
@@ -653,6 +695,44 @@ class AdfInfo(AdfConfig):
         base_hist_strs = copy.copy(self.__base_hist_str)
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
+
+    @property
+    def calc_climos(self):
+        """ Return the history string name to the user if requested."""
+
+        """calc_test_climo = copy.copy(self.__calc_test_climo)
+        calc_bl_climo = self.__calc_bl_climo
+
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
+        #self.calc_climo_dict = calc_climo_dict"""
+
+        #Make list of all entries, similarly how the ADF does in various scripts
+        calc_climos = []
+        for key,val in self.__calc_climo_dict.items():
+            if key == "test":
+                for _,val2 in val.items():
+                    calc_climos.append(val2)
+            else: # baseline
+                calc_climos.append(val)
+        #The length of this list should always be the number of cases!
+        #calc_climos = calc_climos + [self.__calc_bl_climo]
+
+        return calc_climos
+
+    @property
+    def calc_climo_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__calc_climo_dict
+
+    '''@property
+    def calc_climos(self):
+        """ Return the history string name to the user if requested."""
+
+        calc_climo = copy.copy(self.__calc_climo)
+        #calc_bl_climo = self.__calc_bl_climo
+
+        #return {"test":calc_test_climo,"baseline":calc_bl_climo}
+        return calc_climo'''
 
     #########
 
