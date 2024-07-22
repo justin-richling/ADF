@@ -230,12 +230,8 @@ class AdfData:
 
         if field in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[field]
-            if self.adf.compare_obs:
-                scale_factor = vres.get("obs_scale_factor",1)
-                add_offset = vres.get("obs_add_offset", 0)
-            else:
-                scale_factor = vres.get("scale_factor",1)
-                add_offset = vres.get("add_offset", 0)
+            scale_factor = vres.get("scale_factor",1)
+            add_offset = vres.get("add_offset", 0)
 
 
         new_unit = vres.get("new_unit", 'none')
@@ -244,6 +240,8 @@ class AdfData:
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
+        print("scale_factor:",case,scale_factor)
+        print("offset:",case,add_offset)
         return self.load_da(fils, field, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
 
