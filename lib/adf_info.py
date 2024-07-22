@@ -440,10 +440,10 @@ class AdfInfo(AdfConfig):
             else:
                 self.__calc_test_climo[case_names[i]] = True
 
-        calc_test_climo = copy.copy(self.__calc_test_climo)
-        calc_bl_climo = self.__calc_bl_climo
-        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
-        self.__calc_climo_dict = calc_climo_dict
+        #calc_test_climo = copy.copy(self.__calc_test_climo)
+        #calc_bl_climo = self.__calc_bl_climo
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
+        #self.__calc_climo_dict = calc_climo_dict
 
         #Loop over cases:
         syears_fixed = []
@@ -764,7 +764,7 @@ class AdfInfo(AdfConfig):
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
 
-    @property
+    '''@property
     def calc_climos(self):
         """ Return the history string name to the user if requested."""
 
@@ -790,7 +790,7 @@ class AdfInfo(AdfConfig):
     @property
     def calc_climo_dict(self):
         """ Return the history string name to the user if requested."""
-        return self.__calc_climo_dict
+        return self.__calc_climo_dict'''
 
     '''@property
     def calc_climos(self):
