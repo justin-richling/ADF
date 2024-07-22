@@ -301,7 +301,7 @@ class AdfData:
     #----------------
 
 
-    def get_defaults(self, variablename):
+    def get_defaults(self, case, variablename):
         """
         Get variable defaults if applicable
         
