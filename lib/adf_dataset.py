@@ -161,7 +161,7 @@ class AdfData:
 
         new_unit = vres.get("new_unit", 'none')"""
 
-        new_unit, add_offset, scale_factor = self.get_defaults(self, variablename)
+        new_unit, add_offset, scale_factor = self.get_defaults(variablename)
 
         fils = self.get_climo_file(case, variablename)
         return self.load_da(fils, variablename, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
@@ -234,7 +234,7 @@ class AdfData:
             add_offset = vres.get("add_offset", 0)
         new_unit = vres.get("new_unit", 'none')"""
 
-        new_unit, add_offset, scale_factor = self.get_defaults(self, field)
+        new_unit, add_offset, scale_factor = self.get_defaults(field)
 
         fils = self.get_regrid_file(case, field)
         if not fils:
@@ -285,7 +285,7 @@ class AdfData:
                 add_offset = vres.get("add_offset", 0)
         new_unit = vres.get("new_unit", 'none')"""
 
-        new_unit, add_offset, scale_factor = self.get_defaults(self, field)
+        new_unit, add_offset, scale_factor = self.get_defaults(field)
 
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
