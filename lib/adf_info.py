@@ -211,7 +211,12 @@ class AdfInfo(AdfConfig):
                 baseline_hist_locs = None
 
                 #Grab baseline time series file location
-                input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
+                input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+                #input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
+                if not input_ts_baseline:
+                    dmg = "time series generation"
+                    dmg = f"\tConfig indicates time series files for '{data_name}' are done but missing file location"
+                    pass
                 input_ts_loc = Path(input_ts_baseline)
 
                 #Get years from pre-made timeseries file(s)
