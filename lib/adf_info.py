@@ -222,6 +222,17 @@ class AdfInfo(AdfConfig):
                 print("baseline ts done and has direcotry")
             """
 
+            #Check if user provided
+            if not baseline_hist_str:
+                if baseline_hist_locs:
+                    baseline_hist_str = [None]
+                else:
+                    baseline_hist_str = ['cam.h0a']
+            else:
+                #Make list if not already
+                if not isinstance(baseline_hist_str, list):
+                    baseline_hist_str = [baseline_hist_str]
+
             
 
 
@@ -289,13 +300,6 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
-                #Check if user provided
-                if not baseline_hist_str:
-                    baseline_hist_str = ['cam.h0a']
-                else:
-                    #Make list if not already
-                    if not isinstance(baseline_hist_str, list):
-                        baseline_hist_str = [baseline_hist_str]
                 #Initialize baseline history string list
                 self.__base_hist_str = baseline_hist_str
 
