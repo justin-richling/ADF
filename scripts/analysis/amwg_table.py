@@ -131,8 +131,8 @@ def amwg_table(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     
-    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
-    input_ts_locs = adf.test_ts_locs
+    input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    #input_ts_locs = adf.test_ts_locs
     ts_locs = {}
     if not input_ts_locs:
         #ts_locs = [None]
