@@ -312,7 +312,7 @@ class AdfData:
             warnings.warn(f"ERROR: Load failed for {variablename}")
             return None
         da = (ds[variablename]).squeeze()
-        print("ds[variablename].units",ds[variablename].units,"\n")
+        #print("ds[variablename].units",ds[variablename].units,"\n")
         #print('kwargs["new_unit"]',kwargs["new_unit"],"\n")
         #da.attrs['units'] = kwargs["units"]
         #da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
