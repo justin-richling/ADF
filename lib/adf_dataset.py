@@ -284,26 +284,6 @@ class AdfData:
             warnings.warn(f"invalid data on load_dataset")
         return ds
 
-
-
-
-
-    """def load_da(self, fils, variablename):
-        ds = self.load_dataset(fils)
-        if ds is None:
-            warnings.warn(f"ERROR: Load failed for {variablename}")
-            return None
-        da = (ds[variablename]).squeeze()
-        if variablename in self.adf.variable_defaults:
-            vres = self.adf.variable_defaults[variablename]
-            da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
-        return da"""
-
-
-
-
-
     # Load DataArray
     def load_da(self, fils, variablename, **kwargs):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
@@ -312,10 +292,6 @@ class AdfData:
             warnings.warn(f"ERROR: Load failed for {variablename}")
             return None
         da = (ds[variablename]).squeeze()
-        #print("ds[variablename].units",ds[variablename].units,"\n")
-        #print('kwargs["new_unit"]',kwargs["new_unit"],"\n")
-        #da.attrs['units'] = kwargs["units"]
-        #da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
 
         da = da * kwargs["scale_factor"] + kwargs["add_offset"]
         """if kwargs["new_unit"] != 'none':
