@@ -290,6 +290,7 @@ class AdfData:
             return None
         da = (ds[variablename]).squeeze()
         print("ds[variablename].units",ds[variablename].units,"\n")
+        print('kwargs["new_unit"]',kwargs["new_unit"],"\n")
 
         da = da * kwargs["scale_factor"] + kwargs["add_offset"]
         if kwargs["new_unit"] != 'none':
