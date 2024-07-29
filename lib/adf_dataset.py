@@ -243,7 +243,8 @@ class AdfData:
     
     def load_reference_regrid_da(self, case, field):
         """Return a data array to be used as reference (aka baseline) for variable field."""
-        new_unit, add_offset, scale_factor = self.get_defaults(case, field)
+        add_offset, scale_factor = self.get_defaults(case, field)
+        #new_unit, add_offset, scale_factor = self.get_defaults(case, field)
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
@@ -281,6 +282,25 @@ class AdfData:
         return ds
 
 
+
+
+
+    """def load_da(self, fils, variablename):
+        ds = self.load_dataset(fils)
+        if ds is None:
+            warnings.warn(f"ERROR: Load failed for {variablename}")
+            return None
+        da = (ds[variablename]).squeeze()
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            da = da * vres.get("scale_factor",1) + vres.get("add_offset", 0)
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        return da"""
+
+
+
+
+
     # Load DataArray
     def load_da(self, fils, variablename, **kwargs):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
@@ -290,8 +310,9 @@ class AdfData:
             return None
         da = (ds[variablename]).squeeze()
         print("ds[variablename].units",ds[variablename].units,"\n")
-        print('kwargs["new_unit"]',kwargs["new_unit"],"\n")
-        da.attrs['units'] = kwargs["units"]
+        #print('kwargs["new_unit"]',kwargs["new_unit"],"\n")
+        #da.attrs['units'] = kwargs["units"]
+        #da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
 
         da = da * kwargs["scale_factor"] + kwargs["add_offset"]
         """if kwargs["new_unit"] != 'none':
@@ -299,10 +320,15 @@ class AdfData:
         else:
             da.attrs['units'] = da.attrs.get('units', 'none')"""
 
-        if kwargs["new_unit"] != 'none':
+        """if kwargs["new_unit"] != 'none':
             da.attrs['units'] = kwargs["new_unit"]
         else:
-            da.attrs['units'] = da.attrs.get('units', 'none')
+            da.attrs['units'] = da.attrs.get('units', 'none')"""
+
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        #da = da * kwargs["scale_factor"] + kwargs["add_offset"]
         return da
 
     # Get vairable defaults, if applicable
@@ -318,7 +344,7 @@ class AdfData:
            add_offset - int/float
            scale_factor - int/float
         """
-        new_unit = 'none'
+        #new_unit = 'none'
         add_offset = 0
         scale_factor = 1
         res = self.adf.variable_defaults
@@ -330,9 +356,11 @@ class AdfData:
             else:
                 scale_factor = vres.get("scale_factor",1)
                 add_offset = vres.get("add_offset", 0)
-            new_unit = vres.get("new_unit", 'none')
-        return new_unit, add_offset, scale_factor
-
+            #new_unit = vres.get("new_unit", 'none')
+            #da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+            #new_unit = vres.get("new_unit", da.attrs.get('units', 'none'))
+        #return new_unit, add_offset, scale_factor
+        return add_offset, scale_factor
     #------------------
 
 
