@@ -252,6 +252,8 @@ class AdfData:
         # listed in variable defaults for this observation field
         if self.adf.compare_obs:
             field = self.ref_var_nam[field]
+        print("field",field)
+        print("fils",fils,"\n")
         return self.load_da(fils, field, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
     #------------------
