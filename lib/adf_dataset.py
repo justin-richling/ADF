@@ -291,8 +291,14 @@ class AdfData:
         da = (ds[variablename]).squeeze()
         print("ds[variablename].units",ds[variablename].units,"\n")
         print('kwargs["new_unit"]',kwargs["new_unit"],"\n")
+        da.attrs['units'] = kwargs["units"]
 
         da = da * kwargs["scale_factor"] + kwargs["add_offset"]
+        """if kwargs["new_unit"] != 'none':
+            da.attrs['units'] = kwargs["new_unit"]
+        else:
+            da.attrs['units'] = da.attrs.get('units', 'none')"""
+
         if kwargs["new_unit"] != 'none':
             da.attrs['units'] = kwargs["new_unit"]
         else:
