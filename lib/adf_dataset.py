@@ -331,6 +331,8 @@ class AdfData:
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        else:
+            da.attrs['units'] = 'none'
         #da = da * kwargs["scale_factor"] + kwargs["add_offset"]
         return da
 
