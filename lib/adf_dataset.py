@@ -287,7 +287,7 @@ class AdfData:
             warnings.warn(f"ERROR: Load failed for {variablename}")
             return None
         da = (ds[variablename]).squeeze()
-        print("ds.units",ds.units,"\n")
+        print("ds[variablename].units",ds[variablename].units,"\n")
 
         da = da * kwargs["scale_factor"] + kwargs["add_offset"]
         if kwargs["new_unit"] != 'none':
