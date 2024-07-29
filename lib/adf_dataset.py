@@ -296,7 +296,8 @@ class AdfData:
         if kwargs["new_unit"] != 'none':
             da.attrs['units'] = kwargs["new_unit"]
         #else:
-        #    da.attrs['units'] = kwargs["new_unit"]
+            #da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+            #da.attrs['units'] = kwargs["new_unit"]
         return da
 
     # Get vairable defaults, if applicable
@@ -324,7 +325,7 @@ class AdfData:
             else:
                 scale_factor = vres.get("scale_factor",1)
                 add_offset = vres.get("add_offset", 0)
-            new_unit = vres.get("new_unit", 'none')
+            new_unit = vres.get("units", 'none')
         return new_unit, add_offset, scale_factor
 
     #------------------
