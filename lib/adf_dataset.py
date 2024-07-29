@@ -212,12 +212,14 @@ class AdfData:
     
     def load_regrid_da(self, case, field):
         """Return a data array to be used as reference (aka baseline) for variable field."""
-        new_unit, add_offset, scale_factor = self.get_defaults(case, field)
+        add_offset, scale_factor = self.get_defaults(case, field)
+        #new_unit, add_offset, scale_factor = self.get_defaults(case, field)
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"ERROR: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_da(fils, field, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor)
+        #return self.load_da(fils, field, new_unit=new_unit, add_offset=add_offset, scale_factor=scale_factor)
 
 
     # Reference case (baseline/obs)
