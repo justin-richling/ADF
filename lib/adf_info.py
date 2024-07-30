@@ -444,6 +444,8 @@ class AdfInfo(AdfConfig):
                     calc_test_climo[i] = True
 
         self.__calc_test_climo = {}
+        
+        #Add check for obs!!!
         for i in range(len(calc_test_climo)):
             if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
                 self.__calc_test_climo[case_names[i]] = False
