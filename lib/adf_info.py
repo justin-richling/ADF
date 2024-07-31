@@ -392,7 +392,7 @@ class AdfInfo(AdfConfig):
 
         #self.__calc_test_climo = {}
         self.__test_ts_done = {}
-        for i,cam_ts in enumerate(len(cam_ts_done)):
+        for i,cam_ts in enumerate(cam_ts_done):
             self.__test_ts_done[case_names[i]] = cam_ts
 
         test_ts_done = copy.copy(self.__test_ts_done)
