@@ -375,24 +375,40 @@ class AdfInfo(AdfConfig):
             cam_ts_done = [True]*len(case_names)
         else:
             #Check if any time series files are pre-made
-            for i,case in enumerate(cam_ts_done):
-                if case is None:
-                    cam_ts_done[i] = True
+            if len(cam_ts_done) == len(case_names):
+                for i,case in enumerate(cam_ts_done):
+                    if case is None:
+                        cam_ts_done[i] = True
+            else:
+                print()
 
         #Grab case time series file location(s)
-        input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        input_ts_locs = self.get_cam_info("cam_ts_loc")
         if input_ts_locs is None:
             input_ts_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(input_ts_locs) == len(case_names):
+                for i,case in enumerate(input_ts_locs):
+                    if case is None:
+                        input_ts_locs[i] = None
+            else:
+                print()
 
         calc_test_climo = self.get_cam_info("calc_cam_climo")
         if calc_test_climo is None:
             calc_test_climo = [False]*len(case_names)
         else:
             #Check if any time series files are pre-made
-            for i,case in enumerate(calc_test_climo):
-                if case is None:
-                    calc_test_climo[i] = True
+            if len(input_ts_locs) == len(case_names):
+                for i,case in enumerate(calc_test_climo):
+                    if case is None:
+                        calc_test_climo[i] = True
+            else:
+                print()
 
+        #Add check for obs!!!
         self.__calc_test_climo = {}
         for i in range(len(calc_test_climo)):
             if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
@@ -409,13 +425,15 @@ class AdfInfo(AdfConfig):
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
+        ts_done = {}
         for case_idx, case_name in enumerate(case_names):
 
             syear = syears[case_idx]
             eyear = eyears[case_idx]
 
             #Check if time series files exist, if so don't rely on climo years
-            if cam_ts_done[case_idx]:
+            #if cam_ts_done[case_idx]:
+            if ts_done[case_name]:
                 cam_hist_locs[case_idx] = None
 
                 #Grab case time series file location
@@ -721,15 +739,7 @@ class AdfInfo(AdfConfig):
         """ Return the history string name to the user if requested."""
         return self.__calc_climo_dict
 
-    '''@property
-    def calc_climos(self):
-        """ Return the history string name to the user if requested."""
 
-        calc_climo = copy.copy(self.__calc_climo)
-        #calc_bl_climo = self.__calc_bl_climo
-
-        #return {"test":calc_test_climo,"baseline":calc_bl_climo}
-        return calc_climo'''
 
     #########
 
