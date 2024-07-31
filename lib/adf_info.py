@@ -432,8 +432,8 @@ class AdfInfo(AdfConfig):
             eyear = eyears[case_idx]
 
             #Check if time series files exist, if so don't rely on climo years
-            #if cam_ts_done[case_idx]:
-            if ts_done[case_name]:
+            if cam_ts_done[case_idx]:
+            #if ts_done[case_name]:
                 cam_hist_locs[case_idx] = None
 
                 #Grab case time series file location
