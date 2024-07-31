@@ -162,6 +162,7 @@ class AdfInfo(AdfConfig):
 
         self.__base_hist_str = ""
         self.__baseline_ts_done = None
+        self.__calc_bl_climo = True
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
