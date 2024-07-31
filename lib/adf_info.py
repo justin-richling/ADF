@@ -211,7 +211,7 @@ class AdfInfo(AdfConfig):
             print("baseline_ts_done",baseline_ts_done,"\n")
             if baseline_ts_done is None:
                 baseline_ts_done = True
-            self.__baseline_ts_done = baseline_ts_done
+            self.__baseline_ts_done = {data_name:baseline_ts_done}
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
 
