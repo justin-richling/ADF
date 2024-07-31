@@ -1,3 +1,4 @@
+
 """
 Information/Parameter (Info) class for
 the Atmospheric Diagnostics Framework (ADF).
@@ -110,6 +111,8 @@ class AdfInfo(AdfConfig):
 
         #Loop over all items in config dict:
         for conf_var, conf_val in self.__cam_climo_info.items():
+            print("conf_var", conf_var)
+            print("conf_val", conf_val,"\n")
             # Hist_str can be a list for each case, so set it as a nested list here
             if "hist_str" in conf_var:
                 self.hist_str_to_list(conf_var, conf_val)
@@ -122,9 +125,17 @@ class AdfInfo(AdfConfig):
             else:
                 #If not a list, then convert it to one:
                 self.__cam_climo_info[conf_var] = [conf_val]
-            #End if
-        #End for
-        #-------------------------------------------
+            # End if
+        # End for
+        # -------------------------------------------
+
+        #Read hist_str (component.hist_num) from the yaml file, or set to default
+        hist_str = self.__cam_climo_info['hist_str']
+        #If hist_str is not present, then default to 'cam.h0':
+        if not hist_str:
+            hist_str = [['cam.h0']]*self.__num_cases
+        #End if
+        self.__hist_str = hist_str
 
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
@@ -161,9 +172,6 @@ class AdfInfo(AdfConfig):
             #that check this variable won't crash:
             self.__cam_bl_climo_info = None
 
-            # Set baseline hist string object to None
-            self.__base_hist_str = None
-
             #Also set data name for use below:
             data_name = "Obs"
             base_nickname = "Obs"
@@ -188,11 +196,11 @@ class AdfInfo(AdfConfig):
 
             #Get climo years for verification or assignment if missing
             baseline_hist_locs = self.get_baseline_info('cam_hist_loc')
-            #if not baseline_hist_locs:
-            #    baseline_hist_locs = None
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
+            if not isinstance(conf_val, list):
+                baseline_hist_str = [baseline_hist_str]
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
@@ -202,77 +210,23 @@ class AdfInfo(AdfConfig):
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
 
-
-
-            """if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
-                self.__calc_bl_climo = True
-            else:
+            if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
                 self.__calc_bl_climo = False
-
-
-            baseline_ts = False
-            if (baseline_ts_done) and (not input_ts_baseline):
-                if (self.get_baseline_info("calc_cam_climo")):
-                    self.__calc_bl_climo = True
-                else:
-                    self.__calc_bl_climo = False
             else:
-                baseline_ts = True
                 self.__calc_bl_climo = True
-                print("baseline ts done and has direcotry")
-            """
-
-            #Check if user provided
-            if not baseline_hist_str:
-                if not baseline_hist_locs:
-                    print("no baseline_hist_str and no baseline_hist_locs")
-                    baseline_hist_str = [None]
-                else:
-                    print("no baseline_hist_str and baseline_hist_locs")
-                    baseline_hist_str = ['cam.h0a']
-            else:
-                #Make list if not already
-                if not isinstance(baseline_hist_str, list):
-                    baseline_hist_str = [baseline_hist_str]
-
-            self.__base_hist_str = baseline_hist_str           
-            print("self.__base_hist_str: ",self.__base_hist_str)
-
-            #if not input_ts_baseline:
-            #    dmg = "time series generation"
-            #    dmg = f"\tConfig indicates time series files for '{data_name}' are done but missing file location"
-            #    self.debug_log(dmg)
-            #    print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
-            #    print("  - The climo years specified in the config file cannot be verified!")
-            #    pass
-            
-            if (baseline_ts_done) and (not input_ts_baseline):
-                dmg = "time series generation"
-                dmg = f"\tConfig indicates time series files for '{data_name}' are done but missing file location"
-                self.debug_log(dmg)
-                print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
-                print("  - The climo years specified in the config file cannot be verified!")
-
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
-            #if baseline_ts_done:
-            #if baseline_ts:
-            if (baseline_ts_done) and (input_ts_baseline):
-                #baseline_hist_locs = [None]
+            if baseline_ts_done:
+                baseline_hist_locs = None
 
                 #Grab baseline time series file location
-                #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-                #input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
-                
-                
-                
-                
+                print("HEEEREEERREERRR?")
+                input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
                 input_ts_loc = Path(input_ts_baseline)
 
                 #Get years from pre-made timeseries file(s)
-                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(
-                    input_ts_loc, data_name)
+                found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)
                 found_yr_range = np.arange(found_syear_baseline,found_eyear_baseline,1)
 
                 #History file path isn't needed if user is running ADF directly on time series.
@@ -300,16 +254,22 @@ class AdfInfo(AdfConfig):
                     eyear_baseline = found_eyear_baseline
             # End if
 
-            if not baseline_hist_locs:
-                baseline_hist_locs = [None]
-
             # Check if history file path exists:
             if any(baseline_hist_locs):
+                #Check if user provided
+                if not baseline_hist_str:
+                    baseline_hist_str = ['cam.h0a']
+                else:
+                    #Make list if not already
+                    if not isinstance(baseline_hist_str, list):
+                        baseline_hist_str = [baseline_hist_str]
                 #Initialize baseline history string list
-                #self.__base_hist_str = baseline_hist_str
+                self.__base_hist_str = baseline_hist_str
 
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
+                
+                #hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
                 # Partition string to find exactly where h-number is
@@ -321,6 +281,8 @@ class AdfInfo(AdfConfig):
                 #  $CASE.cam.h#.YYYY<other date info>.nc
                 base_climo_yrs = [int(str(i).partition(f"{base_hist_str}.")[2][0:4]) for i in file_list]
                 base_climo_yrs = sorted(np.unique(base_climo_yrs))
+
+                #print("base_climo_yrs",base_climo_yrs,"\n")
 
                 base_found_syr = int(base_climo_yrs[0])
                 base_found_eyr = int(base_climo_yrs[-1])
@@ -403,21 +365,9 @@ class AdfInfo(AdfConfig):
 
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
-        if cam_hist_locs is None:
-            cam_hist_locs = [None]*len(case_names)
 
-        #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
-        cam_hist_str = self.__cam_climo_info.get('hist_str', None)
-        #cam_hist_str = self.__hist_str
-
-        if not cam_hist_str:
-            hist_str = [['cam.h0a']]*self.__num_cases
-        else:
-            hist_str = cam_hist_str
-        #End if
-
-        #Initialize CAM history string nested list
-        self.__hist_str = hist_str
+        # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
+        cam_hist_str = self.__hist_str
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
@@ -425,27 +375,41 @@ class AdfInfo(AdfConfig):
             cam_ts_done = [True]*len(case_names)
         else:
             #Check if any time series files are pre-made
-            for i,case in enumerate(cam_ts_done):
-                if case is None:
-                    cam_ts_done[i] = True
+            if len(cam_ts_done) == len(case_names):
+                for i,case in enumerate(cam_ts_done):
+                    if case is None:
+                        cam_ts_done[i] = True
+            else:
+                print()
 
         #Grab case time series file location(s)
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
         if input_ts_locs is None:
             input_ts_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(input_ts_locs) == len(case_names):
+                for i,case in enumerate(input_ts_locs):
+                    if case is None:
+                        input_ts_locs[i] = None
+            else:
+                print()
 
         calc_test_climo = self.get_cam_info("calc_cam_climo")
         if calc_test_climo is None:
             calc_test_climo = [False]*len(case_names)
         else:
             #Check if any time series files are pre-made
-            for i,case in enumerate(calc_test_climo):
-                if case is None:
-                    calc_test_climo[i] = True
+            if len(input_ts_locs) == len(case_names):
+                for i,case in enumerate(calc_test_climo):
+                    if case is None:
+                        calc_test_climo[i] = True
+            else:
+                print()
 
-        self.__calc_test_climo = {}
-        
         #Add check for obs!!!
+        self.__calc_test_climo = {}
         for i in range(len(calc_test_climo)):
             if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
                 self.__calc_test_climo[case_names[i]] = False
@@ -453,47 +417,24 @@ class AdfInfo(AdfConfig):
             else:
                 self.__calc_test_climo[case_names[i]] = True
 
-        #calc_test_climo = copy.copy(self.__calc_test_climo)
-        #calc_bl_climo = self.__calc_bl_climo
-        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
-        #self.__calc_climo_dict = calc_climo_dict
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+        calc_bl_climo = self.__calc_bl_climo
+        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
+        self.__calc_climo_dict = calc_climo_dict
 
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
+        ts_done = {}
         for case_idx, case_name in enumerate(case_names):
 
             syear = syears[case_idx]
             eyear = eyears[case_idx]
 
-            #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-            #input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
-            input_ts_case = input_ts_locs[case_idx]
-            #if not input_ts_case:
-            #if (baseline_ts_done) and (not input_ts_baseline):
-            if (cam_ts_done[case_idx]) and (not input_ts_case):
-                dmg = "time series generation"
-                dmg = f"\tConfig indicates time series files for '{case_name}' are done but missing file location"
-                self.debug_log(dmg)
-                print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{case_name}'.")
-                print("  - The climo years specified in the config file cannot be verified!")
-                pass
-
             #Check if time series files exist, if so don't rely on climo years
             #if cam_ts_done[case_idx]:
-            if (cam_ts_done[case_idx]) and (input_ts_case):
+            if ts_done[case_name]:
                 cam_hist_locs[case_idx] = None
-
-                """input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-                #input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
-                input_ts_case = input_ts_locs[case_idx]
-                if not input_ts_case:
-                    dmg = "time series generation"
-                    dmg = f"\tConfig indicates time series files for '{case_name}' are done but missing file location"
-                    self.debug_log(dmg)
-                    print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{case_name}'.")
-                    print("  - The climo years specified in the config file cannot be verified!")
-                    pass"""
 
                 #Grab case time series file location
                 input_ts_loc = Path(input_ts_locs[case_idx])
@@ -529,9 +470,8 @@ class AdfInfo(AdfConfig):
             #End if
 
             #Check if history file path exists:
-            hist_str_case = hist_str[case_idx]
+            hist_str_case = cam_hist_str[case_idx]
             if any(cam_hist_locs):
-                #Grab first possible hist string, just looking for years of run
                 hist_str = hist_str_case[0]
 
                 #Get climo years for verification or assignment if missing
@@ -587,8 +527,7 @@ class AdfInfo(AdfConfig):
 
             #Set the final directory name and save it to plot_location:
             direc_name = f"{case_name}_vs_{data_name}"
-            plot_loc = os.path.join(plot_dir, direc_name)
-            self.__plot_location.append(plot_loc)
+            self.__plot_location.append(os.path.join(plot_dir, direc_name))
 
             #If first iteration, then save directory name for use by baseline:
             first_case_dir = ''
@@ -596,11 +535,6 @@ class AdfInfo(AdfConfig):
                 first_case_dir = direc_name
             #End if
 
-            #Go ahead and make the diag plot location if it doesn't exist already
-            diag_location = Path(plot_loc)
-            if not diag_location.is_dir():
-                print(f"\t    {diag_location} not found, making new directory")
-                diag_location.mkdir(parents=True)
         #End for
 
         self.__syears = syears_fixed
@@ -777,7 +711,7 @@ class AdfInfo(AdfConfig):
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
 
-    '''@property
+    @property
     def calc_climos(self):
         """ Return the history string name to the user if requested."""
 
@@ -803,17 +737,9 @@ class AdfInfo(AdfConfig):
     @property
     def calc_climo_dict(self):
         """ Return the history string name to the user if requested."""
-        return self.__calc_climo_dict'''
+        return self.__calc_climo_dict
 
-    '''@property
-    def calc_climos(self):
-        """ Return the history string name to the user if requested."""
 
-        calc_climo = copy.copy(self.__calc_climo)
-        #calc_bl_climo = self.__calc_bl_climo
-
-        #return {"test":calc_test_climo,"baseline":calc_bl_climo}
-        return calc_climo'''
 
     #########
 
@@ -937,17 +863,10 @@ class AdfInfo(AdfConfig):
             errmsg = f"Time series directory '{input_ts_loc}' not found.  Script is exiting."
             raise AdfError(errmsg)
 
-        # Search for first available variable in var_list to get a time series file to read
+        # Search for first variable in var_list to get a time series file to read
         # NOTE: it is assumed all the variables have the same dates!
         # Also, it is assumed that only h0 files should be climo-ed.
-        for var in var_list:
-            ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
-            if ts_files:
-                break
-            else:
-                logmsg = "get years for time series:"
-                logmsg = f"\tVar '{var}' not in dataset, skip to next to try and find climo years..."
-                self.debug_log(logmsg)
+        ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var_list[0]}.*nc"))
 
         #Read in file(s)
         if len(ts_files) == 1:
@@ -957,19 +876,10 @@ class AdfInfo(AdfConfig):
 
         #Average time dimension over time bounds, if bounds exist:
         if 'time_bnds' in cam_ts_data:
-            time_bounds_name = 'time_bnds'
-        elif 'time_bounds' in cam_ts_data:
-            time_bounds_name = 'time_bounds'
-        else:
-            time_bounds_name = None
-
-        if time_bounds_name:
             time = cam_ts_data['time']
             #NOTE: force `load` here b/c if dask & time is cftime,
             #throws a NotImplementedError:
-
-            time = xr.DataArray(cam_ts_data[time_bounds_name].load().mean(dim='nbnd').values,
-                                dims=time.dims, attrs=time.attrs)
+            time = xr.DataArray(cam_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
             cam_ts_data['time'] = time
             cam_ts_data.assign_coords(time=time)
             cam_ts_data = xr.decode_cf(cam_ts_data)
