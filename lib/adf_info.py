@@ -389,7 +389,13 @@ class AdfInfo(AdfConfig):
                         cam_ts_done[i] = True
             else:
                 print()
-        test_ts_done = copy.copy(cam_ts_done)
+
+        #self.__calc_test_climo = {}
+        self.__test_ts_done = {}
+        for i,cam_ts in enumerate(len(cam_ts_done)):
+            self.__test_ts_done[case_names[i]] = cam_ts
+
+        test_ts_done = copy.copy(self.__test_ts_done)
         bl_ts_done = self.__baseline_ts_done
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
         self.__ts_done_dict = ts_done_dict
@@ -759,7 +765,7 @@ class AdfInfo(AdfConfig):
         ts_done = []
         for key,val in self.__ts_done_dict.items():
             if key == "test":
-                for val2 in val:
+                for _,val2 in val.items():
                     ts_done.append(val2)
             else: # baseline
                 ts_done.append(val)
