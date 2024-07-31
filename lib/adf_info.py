@@ -162,6 +162,8 @@ class AdfInfo(AdfConfig):
             #End for
         #End if
 
+        self.__base_hist_str = ""
+
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
 
