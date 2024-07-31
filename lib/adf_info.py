@@ -161,6 +161,7 @@ class AdfInfo(AdfConfig):
         #End if
 
         self.__base_hist_str = ""
+        self.__baseline_ts_done = None
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
@@ -392,7 +393,10 @@ class AdfInfo(AdfConfig):
             self.__test_ts_done[case_names[i]] = cam_ts
 
         test_ts_done = copy.copy(self.__test_ts_done)
-        bl_ts_done = self.__baseline_ts_done
+        if self.__baseline_ts_done:
+            bl_ts_done = self.__baseline_ts_done
+        else:
+            bl_ts_done = True
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
         self.__ts_done_dict = ts_done_dict
 
