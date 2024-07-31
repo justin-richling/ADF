@@ -436,7 +436,11 @@ class AdfInfo(AdfConfig):
                 self.__calc_test_climo[case_names[i]] = True
 
         calc_test_climo = copy.copy(self.__calc_test_climo)
-        calc_bl_climo = self.__calc_bl_climo
+        #calc_bl_climo = self.__calc_bl_climo
+        if self.__calc_bl_climo:
+            calc_bl_climo = self.__calc_bl_climo
+        else:
+            calc_bl_climo = True
         calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
         self.__calc_climo_dict = calc_climo_dict
 
