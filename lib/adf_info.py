@@ -730,12 +730,6 @@ class AdfInfo(AdfConfig):
     def calc_climos(self):
         """ Return the history string name to the user if requested."""
 
-        """calc_test_climo = copy.copy(self.__calc_test_climo)
-        calc_bl_climo = self.__calc_bl_climo
-
-        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
-        #self.calc_climo_dict = calc_climo_dict"""
-
         #Make list of all entries, similarly how the ADF does in various scripts
         calc_climos = []
         for key,val in self.__calc_climo_dict.items():
@@ -765,7 +759,7 @@ class AdfInfo(AdfConfig):
         ts_done = []
         for key,val in self.__ts_done_dict.items():
             if key == "test":
-                for _,val2 in val.items():
+                for val2 in val:
                     ts_done.append(val2)
             else: # baseline
                 ts_done.append(val)
@@ -776,7 +770,6 @@ class AdfInfo(AdfConfig):
         """ Return the history string name to the user if requested."""
         return self.__ts_done_dict
 
-    #self.__ts_done_dict = ts_done_dict
 
 
 
