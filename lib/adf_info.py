@@ -196,6 +196,8 @@ class AdfInfo(AdfConfig):
 
             #Get climo years for verification or assignment if missing
             baseline_hist_locs = self.get_baseline_info('cam_hist_loc')
+            if baseline_hist_locs is None:
+                baseline_hist_locs = [None]
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
@@ -206,7 +208,7 @@ class AdfInfo(AdfConfig):
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
             print("baseline_ts_done",baseline_ts_done,"\n")
             if baseline_ts_done is None:
-                baseline_ts_done = False
+                baseline_ts_done = True
 
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
