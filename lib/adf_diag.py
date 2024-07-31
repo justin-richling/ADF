@@ -346,7 +346,8 @@ class AdfDiag(AdfWeb):
             # Use baseline settings, while converting them all
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
-            cam_ts_done = [self.get_baseline_info("cam_ts_done")]
+            #cam_ts_done = [self.get_baseline_info("cam_ts_done")]
+            cam_ts_done = [self.ts_done["baseline"]]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
@@ -358,7 +359,8 @@ class AdfDiag(AdfWeb):
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
-            cam_ts_done = self.get_cam_info("cam_ts_done")
+            #cam_ts_done = self.get_cam_info("cam_ts_done")
+            cam_ts_done = self.ts_done["test"]
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
             ts_dir = self.get_cam_info("cam_ts_loc")
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")

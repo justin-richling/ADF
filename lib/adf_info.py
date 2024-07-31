@@ -211,7 +211,7 @@ class AdfInfo(AdfConfig):
             print("baseline_ts_done",baseline_ts_done,"\n")
             if baseline_ts_done is None:
                 baseline_ts_done = True
-
+            self.__baseline_ts_done = baseline_ts_done
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
 
@@ -389,6 +389,10 @@ class AdfInfo(AdfConfig):
                         cam_ts_done[i] = True
             else:
                 print()
+        test_ts_done = copy.copy(cam_ts_done)
+        bl_ts_done = self.__baseline_ts_done
+        ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
+        self.__ts_done_dict = ts_done_dict
 
         #Grab case time series file location(s)
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
@@ -749,6 +753,30 @@ class AdfInfo(AdfConfig):
     def calc_climo_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__calc_climo_dict
+
+
+
+
+    @property
+    def ts_done(self):
+        """ Return the history string name to the user if requested."""
+
+        #Make list of all entries, similarly how the ADF does in various scripts
+        ts_done = []
+        for key,val in self.__ts_done_dict.items():
+            if key == "test":
+                for _,val2 in val.items():
+                    ts_done.append(val2)
+            else: # baseline
+                ts_done.append(val)
+        return ts_done
+
+    @property
+    def ts_done_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__ts_done_dict
+
+    #self.__ts_done_dict = ts_done_dict
 
 
 
