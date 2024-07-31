@@ -181,6 +181,8 @@ class AdfInfo(AdfConfig):
             #Set the baseline years to empty strings:
             syear_baseline = ""
             eyear_baseline = ""
+
+            input_ts_baseline = None
         else:
             #If not, then assume a CAM vs CAM run and add CAM baseline climatology info to object:
             self.__cam_bl_climo_info = self.read_config_var('diag_cam_baseline_climo',
