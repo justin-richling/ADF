@@ -382,7 +382,7 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
-            if cam_ts_done[case_name]:
+            if cam_ts_done[case_idx]:
                 emsg = "\tConfiguration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
