@@ -346,6 +346,7 @@ class AdfInfo(AdfConfig):
 
         #Plot directory:
         plot_dir = self.get_basic_info('cam_diag_plot_loc', required=True)
+        print("plot_dir",plot_dir)
 
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
