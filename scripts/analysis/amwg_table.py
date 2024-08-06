@@ -272,22 +272,29 @@ def amwg_table(adf):
         print(f"Making AMWG table for case'{case_name}'")
 
 
-        if use_ts[case_name]:
+        '''if use_ts[case_name]:
             print()
             is_climo = False
         else:
             print(f"User supplied case '{case_name}' climo files, will make only global mean for each variable. Thanks and have a nice day.")
-            is_climo = True
+            is_climo = True'''
 
-        print("\nis_climo:",is_climo,"\n")
+
+        if ts_locs[case_name]:
+            use_climo = False
+        else:
+            print(f"User supplied case '{case_name}' climo files, will make only global mean for each variable. Thanks and have a nice day.")
+            use_climo = True
+
+        print("\ncase:",case_name,"  is_climo:",use_climo,"\n")
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
 
         #Generate input file path:
-        if not is_climo:
+        if not use_climo:
             input_location = Path(ts_locs[case_name])
-        if is_climo:
+        if use_climo:
             input_location = Path(climo_locs[case_name])
         #print("input_location",input_location,"\n")
 
@@ -324,7 +331,7 @@ def amwg_table(adf):
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
 
-            if is_climo:
+            if use_climo:
                 #Create list of climo files present for variable:
                 filenames = f'{case_name}_{var}_climo.nc'
             else:
@@ -354,7 +361,7 @@ def amwg_table(adf):
             ds = pf.load_dataset(files)
             data = ds[var]
 
-            if not is_climo:
+            if not use_climo:
                 data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
 
             #Extract units string, if available:
