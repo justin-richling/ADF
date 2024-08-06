@@ -150,7 +150,7 @@ def amwg_table(adf):
 
 
     #Check if user wants to skip time series file creation
-    #calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
+    calc_cam_ts   = adf.ts_done_dict['test']
     #calc_cam_ts   = adf.calc_test_ts
     calc_cam_climo   = adf.get_cam_info("calc_cam_climo")
     use_ts = {}
@@ -189,6 +189,10 @@ def amwg_table(adf):
             else:
                 climo_locs[case] = None
 
+
+    # Baseline Case
+    #--------------
+
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
@@ -215,7 +219,7 @@ def amwg_table(adf):
         #End if
 
         #Check if premade climo files were supplied        
-        calc_baseline_ts   = adf.get_baseline_info("calc_cam_ts")
+        calc_baseline_ts   = adf.ts_done_dict['baseline']
         if calc_baseline_ts:
             use_ts[baseline_name] = calc_baseline_ts
         else:
@@ -268,20 +272,6 @@ def amwg_table(adf):
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
         print(f"Making AMWG table for case'{case_name}'")
-
-        #ts_locs = {}
-        if not input_ts_locs:
-            #ts_locs = [None]
-            #for case in case_names:
-            ts_locs = None
-        else:
-            #ts_locs = {}
-            for i,case in enumerate(case_names):
-                if input_ts_locs[i]:
-                    #print()
-                    ts_locs = input_ts_locs[i]
-                else:
-                    ts_locs = None
 
 
         if use_ts[case_name]:
