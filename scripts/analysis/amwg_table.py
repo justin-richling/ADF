@@ -247,9 +247,9 @@ def amwg_table(adf):
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
-    print("ts_locs",ts_locs)
-    print("climo_locs",climo_locs)
-    print("use_ts",use_ts,"\n")
+    #print("ts_locs",ts_locs)
+    #print("climo_locs",climo_locs)
+    #print("use_ts",use_ts,"\n")
 
     #-----------------------------------------
 
