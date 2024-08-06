@@ -765,6 +765,37 @@ class AdfInfo(AdfConfig):
 
 
 
+
+
+    '''@property
+    def calc_ts(self):
+        """ Return the history string name to the user if requested."""
+
+        #Make list of all entries, similarly how the ADF does in various scripts
+        calc_ts = []
+        for key,val in self.__calc_ts_dict.items():
+            if key == "test":
+                for _,val2 in val.items():
+                    calc_ts.append(val2)
+            else: # baseline
+                calc_ts.append(val)
+        #The length of this list should always be the number of cases!
+        #calc_climos = calc_climos + [self.__calc_bl_climo]
+
+        return calc_ts
+
+    @property
+    def calc_ts_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__calc_ts_dict
+    '''
+
+
+
+
+
+
+
     @property
     def ts_done(self):
         """ Return the history string name to the user if requested."""

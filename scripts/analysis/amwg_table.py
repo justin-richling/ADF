@@ -157,17 +157,15 @@ def amwg_table(adf):
     #if 
 
 
-
+    print(calc_cam_ts)
 
     if not calc_cam_ts:
-        #use_ts = [None]
         for case in case_names:
             use_ts[case] = False
     else:
-        #use_ts = {}
         for i,case in enumerate(case_names):
             if calc_cam_ts[case]:
-                #print()
+                print()
                 use_ts[case] = calc_cam_ts[case]
             else:
                 use_ts[case] = False
@@ -278,7 +276,7 @@ def amwg_table(adf):
             print()
             is_climo = False
         else:
-            print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
+            print(f"User supplied case '{case_name}' climo files, will make only global mean for each variable. Thanks and have a nice day.")
             is_climo = True
 
         print("\nis_climo:",is_climo,"\n")
