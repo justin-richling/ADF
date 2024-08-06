@@ -82,9 +82,9 @@ def create_climo_files(adf, clobber=False, search=None):
     #If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
     if not calc_climos:
-        calc_climos = [None]*len(case_names)
+        calc_climos = [False]*len(case_names)
     if not overwrite:
-        overwrite = [None]*len(case_names)
+        overwrite = [False]*len(case_names)
     #End if
 
     #Check if a baseline simulation is also being used:
@@ -114,7 +114,6 @@ def create_climo_files(adf, clobber=False, search=None):
     # -> using only years takes from the beginning of first year to end of second year.
     # -> slice('1991','1998') will get all of [1991,1998].
     # -> slice(None,None) will use all times.
-
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
