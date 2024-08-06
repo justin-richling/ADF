@@ -166,9 +166,9 @@ def amwg_table(adf):
     else:
         #use_ts = {}
         for i,case in enumerate(case_names):
-            if calc_cam_ts[i]:
+            if calc_cam_ts[case]:
                 #print()
-                use_ts[case] = calc_cam_ts[i]
+                use_ts[case] = calc_cam_ts[case]
             else:
                 use_ts[case] = False
 
