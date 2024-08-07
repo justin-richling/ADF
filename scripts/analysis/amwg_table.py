@@ -271,15 +271,6 @@ def amwg_table(adf):
     for case_idx, case_name in enumerate(case_names):
         print(f"Making AMWG table for case'{case_name}'")
 
-
-        '''if use_ts[case_name]:
-            print()
-            is_climo = False
-        else:
-            print(f"User supplied case '{case_name}' climo files, will make only global mean for each variable. Thanks and have a nice day.")
-            is_climo = True'''
-
-
         if ts_locs[case_name]:
             use_climo = False
         else:
