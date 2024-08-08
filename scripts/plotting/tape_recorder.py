@@ -78,8 +78,13 @@ def tape_recorder(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
         case_names = case_names + [data_name]
         
-        data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
-        case_ts_locs = case_ts_locs+[data_ts_loc]
+        data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
+        if data_ts_loc is None:
+            print("\tWARNING: No time series location found for baseline case")
+            #case_ts_locs = ""
+        else:
+            case_ts_locs = case_ts_locs+[data_ts_loc]
+        print("case_ts_locs",case_ts_locs)
 
         base_nickname = adfobj.case_nicknames['base_nickname']
         test_nicknames = test_nicknames+[base_nickname]
