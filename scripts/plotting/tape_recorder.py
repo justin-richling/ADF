@@ -42,10 +42,14 @@ def tape_recorder(adfobj):
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
     if case_ts_locs is None:
-        print("\tWARNING: No time series locations found for test cases")
+        print("\tNo time series locations found for any test cases")
         case_ts_locs = []
         #return
         #exit
+    else:
+        for i,case_ts_loc in enumerate(case_ts_locs):
+            if case_ts_loc is None:
+                print(f"Case '{case_names[i]}' is missing time series location, skipping case boi! case_ts_loc: {case_ts_loc}")
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
@@ -80,7 +84,7 @@ def tape_recorder(adfobj):
         
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         if data_ts_loc is None:
-            print("\tWARNING: No time series location found for baseline case")
+            print("\tNo time series location found for baseline case")
             #case_ts_locs = ""
         else:
             case_ts_locs = case_ts_locs+[data_ts_loc]
