@@ -3,6 +3,7 @@ import xarray as xr
 import sys
 from pathlib import Path
 from datetime import datetime
+import itertools
 
 import warnings  # use to warn user about missing files.
 
@@ -263,14 +264,17 @@ def list_files(directory,start_year,end_year,h_case):
     all_filenames = []
     for i in yrs:
         all_filenames.append(sorted(Path(directory).glob(f'*.{h_case}.{i}-*')))
-    all_filenames = sorted(all_filenames[0])
+    #all_filenames = sorted(all_filenames)
+    # Flattening the list of lists
+    #filenames = [file for sublist in all_filenames for file in sublist]
+    filenames = list(itertools.chain.from_iterable(sorted(all_filenames)))
 
-    print("all_filenames",all_filenames,"\n\n")
+    print("filenames",filenames,"\n\n")
 
-    if len(all_filenames)==0 : sys.exit(" Directory has no outputs ")
+    if len(filenames)==0 : sys.exit(" Directory has no outputs ")
 
-    return all_filenames
-
+    return filenames
+#####
 
 
 def Get_files(data_dir,start_year,end_year,h_case,**kwargs):
@@ -343,6 +347,8 @@ def Get_files(data_dir,start_year,end_year,h_case,**kwargs):
     Lons = lon
 
     return files,Lats,Lons,areas
+#####
+
 
 def set_dic_SE(ListVars):
 
@@ -406,6 +412,7 @@ def set_dic_SE(ListVars):
                    'soa5_a2'+ext1_SE:1}
 
     return dic_SE
+#####
 
 def fill_dic_SE(dic_SE, variables, ListVars):
     # Here, we deal with conversion factors for different components
@@ -453,28 +460,45 @@ def fill_dic_SE(dic_SE, variables, ListVars):
             # conversion: Mw*rho*delP*1e3/Avo/gr
             # rho and delP will be applied when reading the files in SEbudget function.
 
-            # for AOD and DAOD:
-            if 'AOD' in var:
-                if key in ListVars:
 
-                    dic_SE[var+'_AOD'][key+ext1_SE]=1 
+            if 0==1:
+                print("huh, broke mathematics...")
+            else:
+
+                # for AOD and DAOD:
+                if 'AOD' in var:
+                    if key in ListVars:
+
+                        dic_SE[var+'_AOD'][key+ext1_SE]=1 
+                    else:
+                        dic_SE[var+'_AOD']['PS'+ext1_SE]=0. 
+
+                    continue # AOD doesn't need any other budget calculations
+
+                # for CHML and CHMP:
+                # original unit : [molec/cm3/s]
+                # following Tilmes code to convert to [kg/m2/s]
+                # conversion: Mw*rho*delP*1e3/Avo/gr
+                # rho and delP will be applied when reading the files in SEbudget function.
+                if key=='O3'+ext1_SE:
+                    # for O3, we should not include fast cycling reactions
+                    # As a result, we use below diagnostics in the model if available. If not, we use CHML and CHMP
+                    if ((key+'_Loss' in ListVars) & (key+'_Prod' in ListVars)) :
+                        dic_SE[var+'_CHML'][key+'_Loss'+ext1_SE]=MW[var]*1e3/AVO/gr
+                        dic_SE[var+'_CHMP'][key+'_Prod'+ext1_SE]=MW[var]*1e3/AVO/gr
+                    else:
+                        if key+'_CHML' in ListVars:
+                            dic_SE[var+'_CHML'][key+'_CHML'+ext1_SE]=MW[var]*1e3/AVO/gr
+                        else:
+                            dic_SE[var+'_CHML']['U'+ext1_SE]=0
+
+                        if key+'_CHMP' in ListVars:
+                            dic_SE[var+'_CHMP'][key+'_CHMP'+ext1_SE]=MW[var]*1e3/AVO/gr
+                        else:
+                            dic_SE[var+'_CHMP']['U'+ext1_SE]=0
+
                 else:
-                    dic_SE[var+'_AOD']['PS'+ext1_SE]=0. 
 
-                continue # AOD doesn't need any other budget calculations
-
-            # for CHML and CHMP:
-            # original unit : [molec/cm3/s]
-            # following Tilmes code to convert to [kg/m2/s]
-            # conversion: Mw*rho*delP*1e3/Avo/gr
-            # rho and delP will be applied when reading the files in SEbudget function.
-            if key=='O3'+ext1_SE:
-                # for O3, we should not include fast cycling reactions
-                # As a result, we use below diagnostics in the model if available. If not, we use CHML and CHMP
-                if ((key+'_Loss' in ListVars) & (key+'_Prod' in ListVars)) :
-                    dic_SE[var+'_CHML'][key+'_Loss'+ext1_SE]=MW[var]*1e3/AVO/gr
-                    dic_SE[var+'_CHMP'][key+'_Prod'+ext1_SE]=MW[var]*1e3/AVO/gr
-                else:
                     if key+'_CHML' in ListVars:
                         dic_SE[var+'_CHML'][key+'_CHML'+ext1_SE]=MW[var]*1e3/AVO/gr
                     else:
@@ -485,184 +509,175 @@ def fill_dic_SE(dic_SE, variables, ListVars):
                     else:
                         dic_SE[var+'_CHMP']['U'+ext1_SE]=0
 
-            else:
-                if key+'_CHML' in ListVars:
-                    dic_SE[var+'_CHML'][key+'_CHML'+ext1_SE]=MW[var]*1e3/AVO/gr
-                else:
-                    dic_SE[var+'_CHML']['U'+ext1_SE]=0
 
-                if key+'_CHMP' in ListVars:
-                    dic_SE[var+'_CHMP'][key+'_CHMP'+ext1_SE]=MW[var]*1e3/AVO/gr
-                else:
-                    dic_SE[var+'_CHMP']['U'+ext1_SE]=0
-
-
-            # for SF:
-            # original unit: [kg/m2/s]
-            if 'SF'+key in ListVars:
-                if var=='SO4':
-
-                    dic_SE[var+'_SF']['SF'+key+ext1_SE]=32.066/115.11
-                else:
-                    dic_SE[var+'_SF']['SF'+key+ext1_SE]=1
-            elif key+'SF' in ListVars:
-                dic_SE[var+'_SF'][key+ext1_SE+'SF']=1
-            else:
-                dic_SE[var+'_SF']['PS'+ext1_SE]=0.
-
-
-            # for CLXF:
-            # original unit: [molec/cm2/s]
-            # conversion: Mw*10/Avo
-            if key+'_CLXF' in ListVars:
-                dic_SE[var+'_CLXF'][key+'_CLXF'+ext1_SE]=MW[var]*10/AVO  # convert [molec/cm2/s] to [kg/m2/s]
-            else:
-                dic_SE[var+'_CLXF']['PS'+ext1_SE]=0.
-
-
-            if var in AEROSOLS:
-                # for each species:
-                # original unit : [kg/kg]  in dry air
-                # convert to [kg/m2]
-                # conversion: delP/gr
-                # delP will be applied when reading the files in SEbudget function.
-                if key in ListVars:
-                    if var=='SO4': # For SO4, we report all the budget calculation for Sulfur.
-                        dic_SE[var+'_BURDEN'][key+ext1_SE]=(32.066/115.11)/gr
-                    else:
-                        dic_SE[var+'_BURDEN'][key+ext1_SE]=1/gr
-
-                else:
-                    dic_SE[var+'_BURDEN']['U'+ext1_SE]=0
-
-
-                # for DDF:
+                # for SF:
                 # original unit: [kg/m2/s]
-                if key+'DDF' in ListVars:
+                if 'SF'+key in ListVars:
                     if var=='SO4':
-                        dic_SE[var+'_DDF'][key+ext1_SE+'DDF']=32.066/115.11
+
+                        dic_SE[var+'_SF']['SF'+key+ext1_SE]=32.066/115.11
                     else:
-                        dic_SE[var+'_DDF'][key+ext1_SE+'DDF']=1
-
+                        dic_SE[var+'_SF']['SF'+key+ext1_SE]=1
+                elif key+'SF' in ListVars:
+                    dic_SE[var+'_SF'][key+ext1_SE+'SF']=1
                 else:
-                    dic_SE[var+'_DDF']['PS'+ext1_SE]=0.
+                    dic_SE[var+'_SF']['PS'+ext1_SE]=0.
 
 
-                # for SFWET:
-                # original unit: [kg/m2/s]
-                if key+'SFWET' in ListVars:
-                    if var=='SO4':
-                        dic_SE[var+'_WDF'][key+ext1_SE+'SFWET']=32.066/115.11
+                # for CLXF:
+                # original unit: [molec/cm2/s]
+                # conversion: Mw*10/Avo
+                if key+'_CLXF' in ListVars:
+                    dic_SE[var+'_CLXF'][key+'_CLXF'+ext1_SE]=MW[var]*10/AVO  # convert [molec/cm2/s] to [kg/m2/s]
+                else:
+                    dic_SE[var+'_CLXF']['PS'+ext1_SE]=0.
+
+
+                if var in AEROSOLS:
+                    # for each species:
+                    # original unit : [kg/kg]  in dry air
+                    # convert to [kg/m2]
+                    # conversion: delP/gr
+                    # delP will be applied when reading the files in SEbudget function.
+                    if key in ListVars:
+                        if var=='SO4': # For SO4, we report all the budget calculation for Sulfur.
+                            dic_SE[var+'_BURDEN'][key+ext1_SE]=(32.066/115.11)/gr
+                        else:
+                            dic_SE[var+'_BURDEN'][key+ext1_SE]=1/gr
+
                     else:
-                        dic_SE[var+'_WDF'][key+ext1_SE+'SFWET']=1
-
-                else:
-                    dic_SE[var+'_WDF']['PS'+ext1_SE]=0.
+                        dic_SE[var+'_BURDEN']['U'+ext1_SE]=0
 
 
-                # for sfgaex1:
-                # original unit: [kg/m2/s]
-                if key+'_sfgaex1' in ListVars:
-                    if var=='SO4':
-                        dic_SE[var+'_GAEX'][key+ext1_SE+'_sfgaex1']=32.066/115.11
-                    else:
-                        dic_SE[var+'_GAEX'][key+ext1_SE+'_sfgaex1']=1
-
-                else:
-                    dic_SE[var+'_GAEX']['PS'+ext1_SE]=0.
-
-
-                # for DDF in cloud water:
-                # original unit: [kg/m2/s]
-                cloud_key=key[:-2]+'c'+key[-1]
-                if cloud_key+ext1_SE+'DDF' in ListVars:
-                    if var=='SO4':
-                        dic_SE[var+'_DDFC'][cloud_key+ext1_SE+'DDF']=32.066/115.11
-                    else:
-                        dic_SE[var+'_DDFC'][cloud_key+ext1_SE+'DDF']=1
-                else:
-                    dic_SE[var+'_DDFC']['PS'+ext1_SE]=0.
-
-
-                # for SFWET in cloud water:
-                # original unit: [kg/m2/s]
-                if cloud_key+ext1_SE+'SFWET' in ListVars:
-                    if var=='SO4':
-                        dic_SE[var+'_WDFC'][cloud_key+ext1_SE+'SFWET']=32.066/115.11
-                    else:
-                        dic_SE[var+'_WDFC'][cloud_key+ext1_SE+'SFWET']=1
-                else:
-                    dic_SE[var+'_WDFC']['PS'+ext1_SE]=0.
-
-
-                if var=='SO4':
-                    # for Nucleation :
+                    # for DDF:
                     # original unit: [kg/m2/s]
-                    if key+ext1_SE+'_sfnnuc1' in ListVars:
-                        dic_SE[var+'_NUCL'][key+ext1_SE+'_sfnnuc1']=32.066/115.11
+                    if key+'DDF' in ListVars:
+                        if var=='SO4':
+                            dic_SE[var+'_DDF'][key+ext1_SE+'DDF']=32.066/115.11
+                        else:
+                            dic_SE[var+'_DDF'][key+ext1_SE+'DDF']=1
+
                     else:
-                        dic_SE[var+'_NUCL']['PS'+ext1_SE]=0.
+                        dic_SE[var+'_DDF']['PS'+ext1_SE]=0.
 
 
-                    # for Aqueous phase :
+                    # for SFWET:
                     # original unit: [kg/m2/s]
+                    if key+'SFWET' in ListVars:
+                        if var=='SO4':
+                            dic_SE[var+'_WDF'][key+ext1_SE+'SFWET']=32.066/115.11
+                        else:
+                            dic_SE[var+'_WDF'][key+ext1_SE+'SFWET']=1
 
-                    if (('AQSO4_H2O2'+ext1_SE in ListVars) & ('AQSO4_O3'+ext1_SE in ListVars)) :
-                            dic_SE[var+'_AQS']['AQSO4_H2O2'+ext1_SE]=32.066/115.11
-                            dic_SE[var+'_AQS']['AQSO4_O3'+ext1_SE]=32.066/115.11
                     else:
+                        dic_SE[var+'_WDF']['PS'+ext1_SE]=0.
+
+
+                    # for sfgaex1:
+                    # original unit: [kg/m2/s]
+                    if key+'_sfgaex1' in ListVars:
+                        if var=='SO4':
+                            dic_SE[var+'_GAEX'][key+ext1_SE+'_sfgaex1']=32.066/115.11
+                        else:
+                            dic_SE[var+'_GAEX'][key+ext1_SE+'_sfgaex1']=1
+
+                    else:
+                        dic_SE[var+'_GAEX']['PS'+ext1_SE]=0.
+
+
+                    # for DDF in cloud water:
+                    # original unit: [kg/m2/s]
+                    cloud_key=key[:-2]+'c'+key[-1]
+                    if cloud_key+ext1_SE+'DDF' in ListVars:
+                        if var=='SO4':
+                            dic_SE[var+'_DDFC'][cloud_key+ext1_SE+'DDF']=32.066/115.11
+                        else:
+                            dic_SE[var+'_DDFC'][cloud_key+ext1_SE+'DDF']=1
+                    else:
+                        dic_SE[var+'_DDFC']['PS'+ext1_SE]=0.
+
+
+                    # for SFWET in cloud water:
+                    # original unit: [kg/m2/s]
+                    if cloud_key+ext1_SE+'SFWET' in ListVars:
+                        if var=='SO4':
+                            dic_SE[var+'_WDFC'][cloud_key+ext1_SE+'SFWET']=32.066/115.11
+                        else:
+                            dic_SE[var+'_WDFC'][cloud_key+ext1_SE+'SFWET']=1
+                    else:
+                        dic_SE[var+'_WDFC']['PS'+ext1_SE]=0.
+
+
+                    if var=='SO4':
+                        # for Nucleation :
                         # original unit: [kg/m2/s]
-                        if cloud_key+'AQSO4'+ext1_SE in ListVars:
-                            dic_SE[var+'_AQS'][cloud_key+'AQSO4'+ext1_SE]=32.066/115.11
+                        if key+ext1_SE+'_sfnnuc1' in ListVars:
+                            dic_SE[var+'_NUCL'][key+ext1_SE+'_sfnnuc1']=32.066/115.11
                         else:
-                            dic_SE[var+'_AQS']['PS'+ext1_SE]=0.
+                            dic_SE[var+'_NUCL']['PS'+ext1_SE]=0.
 
-                        if cloud_key+'AQH2SO4'+ext1_SE in ListVars:
-                            dic_SE[var+'_AQS'][cloud_key+'AQH2SO4'+ext1_SE]=32.066/115.11
+
+                        # for Aqueous phase :
+                        # original unit: [kg/m2/s]
+
+                        if (('AQSO4_H2O2'+ext1_SE in ListVars) & ('AQSO4_O3'+ext1_SE in ListVars)) :
+                                dic_SE[var+'_AQS']['AQSO4_H2O2'+ext1_SE]=32.066/115.11
+                                dic_SE[var+'_AQS']['AQSO4_O3'+ext1_SE]=32.066/115.11
                         else:
-                            dic_SE[var+'_AQS']['PS'+ext1_SE]=0.
+                            # original unit: [kg/m2/s]
+                            if cloud_key+'AQSO4'+ext1_SE in ListVars:
+                                dic_SE[var+'_AQS'][cloud_key+'AQSO4'+ext1_SE]=32.066/115.11
+                            else:
+                                dic_SE[var+'_AQS']['PS'+ext1_SE]=0.
 
-            else:
-                # for each species:
-                # original unit : [mole/mole]  in dry air
-                # convert to [kg/m2]
-                # conversion: Mw*delP/Mwair/gr     Mwair=28.97 gr/mole
-                # delP will be applied when reading the files in SEbudget function.
-                if key in ListVars:
-                    dic_SE[var+'_BURDEN'][key+ext1_SE]=MW[var]/Mwair/gr
-                else:
-                    dic_SE[var+'_BURDEN']['U'+ext1_SE]=0
+                            if cloud_key+'AQH2SO4'+ext1_SE in ListVars:
+                                dic_SE[var+'_AQS'][cloud_key+'AQH2SO4'+ext1_SE]=32.066/115.11
+                            else:
+                                dic_SE[var+'_AQS']['PS'+ext1_SE]=0.
 
-                # for DF:
-                # original unit: [kg/m2/s]
-                if 'DF_'+key in ListVars:
-                    dic_SE[var+'_DDF']['DF_'+key+ext1_SE]=1
                 else:
-                    dic_SE[var+'_DDF']['PS'+ext1_SE]=0.
+                    # for each species:
+                    # original unit : [mole/mole]  in dry air
+                    # convert to [kg/m2]
+                    # conversion: Mw*delP/Mwair/gr     Mwair=28.97 gr/mole
+                    # delP will be applied when reading the files in SEbudget function.
+                    if key in ListVars:
+                        dic_SE[var+'_BURDEN'][key+ext1_SE]=MW[var]/Mwair/gr
+                    else:
+                        dic_SE[var+'_BURDEN']['U'+ext1_SE]=0
 
-                # for WD:
-                # original unit: [kg/m2/s]
-                if 'WD_'+key in ListVars:
-                    dic_SE[var+'_WDF']['WD_'+key+ext1_SE]=1
-                else:
-                    dic_SE[var+'_WDF']['PS'+ext1_SE]=0.
+                    # for DF:
+                    # original unit: [kg/m2/s]
+                    if 'DF_'+key in ListVars:
+                        dic_SE[var+'_DDF']['DF_'+key+ext1_SE]=1
+                    else:
+                        dic_SE[var+'_DDF']['PS'+ext1_SE]=0.
 
-                # for Chem tendency:
-                # original unit: [kg/s]
-                # conversion: not needed
-                if 'D'+key+'CHM' in ListVars:
-                    dic_SE[var+'_TEND']['D'+key+'CHM'+ext1_SE]=1  # convert [kg/s] to [kg/s]
-                else:
-                    dic_SE[var+'_TEND']['U'+ext1_SE]=0
+                    # for WD:
+                    # original unit: [kg/m2/s]
+                    if 'WD_'+key in ListVars:
+                        dic_SE[var+'_WDF']['WD_'+key+ext1_SE]=1
+                    else:
+                        dic_SE[var+'_WDF']['PS'+ext1_SE]=0.
 
-                # for Lightning NO production: (always in gas)
-                # original unit: [Tg N/Yr]
-                # conversion: not needed
-                if 'LNO_COL_PROD' in ListVars:
-                    dic_SE[var+'_LNO']['LNO_COL_PROD'+ext1_SE]=1  # convert [Tg N/yr] to [Tg N /yr]
-                else:
-                    dic_SE[var+'_LNO']['PS'+ext1_SE]=0
+                    # for Chem tendency:
+                    # original unit: [kg/s]
+                    # conversion: not needed
+                    if 'D'+key+'CHM' in ListVars:
+                        dic_SE[var+'_TEND']['D'+key+'CHM'+ext1_SE]=1  # convert [kg/s] to [kg/s]
+                    else:
+                        dic_SE[var+'_TEND']['U'+ext1_SE]=0
+
+                    # for Lightning NO production: (always in gas)
+                    # original unit: [Tg N/Yr]
+                    # conversion: not needed
+                    if 'LNO_COL_PROD' in ListVars:
+                        dic_SE[var+'_LNO']['LNO_COL_PROD'+ext1_SE]=1  # convert [Tg N/yr] to [Tg N /yr]
+                    else:
+                        dic_SE[var+'_LNO']['PS'+ext1_SE]=0
     return dic_SE
+#####
+
 
 def make_Dic_scn_var_comp(variables, data_dir, dic_SE):
     """
@@ -750,7 +765,9 @@ def make_Dic_scn_var_comp(variables, data_dir, dic_SE):
     print("missing_vars_tot: ",missing_vars_tot,"\n")
     print("needed_vars_tot: ",needed_vars_tot,"\n")
 
-    return Dic_crit,Dic_scn_var_comp#,components
+    return Dic_crit,Dic_scn_var_comp
+#####
+
 
 def SEbudget(dic_SE,data_dir,files,var,**kwargs):
 
@@ -866,7 +883,7 @@ def SEbudget(dic_SE,data_dir,files,var,**kwargs):
     all_data=np.nanmean(all_data,axis=0)
 
     return all_data,missing_vars,needed_vars
-
+#####
 
 
 def SEbudget_dask(dic_SE,data_dir,files,var,**kwargs):
@@ -994,6 +1011,8 @@ def SEbudget_dask(dic_SE,data_dir,files,var,**kwargs):
     all_data=np.nanmean(data,axis=0)
 
     return all_data,missing_vars,needed_vars
+#####
+
 
 def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
 
@@ -1019,14 +1038,14 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
         spc_sf = Dic_scn_var_comp[current_var][current_var+'_SF']
         tmp_sf = spc_sf
         sf = np.ma.masked_where(inside==False,tmp_sf*area)  #convert Kg/m2/s to Tg/yr
-        SF = np.ma.sum(sf*duration*1e-9)/num_yrs[0]
+        SF = np.ma.sum(sf*duration*1e-9)/num_yrs[case]
         chem_dict[case][f"{current_var}_EMIS (Tg{specifier}/yr)"] = np.round(SF,5)
 
         # Elevated Emissions
         spc_clxf = Dic_scn_var_comp[current_var][current_var+'_CLXF']
         tmp_clxf = spc_clxf
         clxf = np.ma.masked_where(inside==False,tmp_clxf*area)  #convert Kg/m2/s to Tg/yr
-        CLXF = np.ma.sum(clxf*duration*1e-9)/num_yrs[0]
+        CLXF = np.ma.sum(clxf*duration*1e-9)/num_yrs[case]
         chem_dict[case][f"{current_var}_EMIS_elevated (Tg{specifier}/yr)"] = np.round(CLXF,5)
 
         # Burden
@@ -1042,7 +1061,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
         spc_chml = np.where(np.isnan(trop),np.nan,spc_chml)
         tmp_chml = np.nansum(spc_chml*area,axis=0)
         chml = np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
-        CHML = np.ma.sum(chml*duration*1e-9)/num_yrs[0]
+        CHML = np.ma.sum(chml*duration*1e-9)/num_yrs[case]
         chem_dict[case][f"{current_var}_CHEM_LOSS (Tg{specifier}/yr)"] = np.round(CHML,5)
 
         # Chemical Production
@@ -1054,7 +1073,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
             spc_chmp = np.where(np.isnan(trop),np.nan,spc_chmp)
             tmp_chmp = np.nansum(spc_chmp*area,axis=0)
             chmp = np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
-            CHMP = np.ma.sum(chmp*duration*1e-9)/num_yrs[0]
+            CHMP = np.ma.sum(chmp*duration*1e-9)/num_yrs[case]
             chem_dict[case][f"{current_var}_CHEM_PROD (Tg{specifier}/yr)"] = np.round(CHMP,5)
 
 
@@ -1066,7 +1085,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
             spc_ddf = spc_ddfa +spc_ddfc
             tmp_ddf = spc_ddf
             ddf = np.ma.masked_where(inside==False,tmp_ddf*area)  #convert Kg/m2/s to Tg/yr
-            DDF = np.ma.sum(ddf*duration*1e-9)/num_yrs[0]
+            DDF = np.ma.sum(ddf*duration*1e-9)/num_yrs[case]
             chem_dict[case][f"{current_var}_DRYDEP (Tg{specifier}/yr)"] = np.round(DDF,5)
 
             # Wet deposition
@@ -1075,7 +1094,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
             spc_wdf = spc_wdfa +spc_wdfc
             tmp_wdf = spc_wdf
             wdf = np.ma.masked_where(inside==False,tmp_wdf*area)  #convert Kg/m2/s to Tg/yr
-            WDF = np.ma.sum(wdf*duration*1e-9)/num_yrs[0]
+            WDF = np.ma.sum(wdf*duration*1e-9)/num_yrs[case]
             chem_dict[case][f"{current_var}_WETDEP (Tg{specifier}/yr)"] = np.round(WDF,5)
 
             if current_var in ["SOA",'SO4']:
@@ -1083,11 +1102,11 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
                 spc_gaex = Dic_scn_var_comp[current_var][current_var+'_GAEX']
                 tmp_gaex = spc_gaex
                 gaex = np.ma.masked_where(inside==False,tmp_gaex*area)  #convert Kg/m2/s to Tg/yr
-                GAEX = np.ma.sum(gaex*duration*1e-9)/num_yrs[0]
+                GAEX = np.ma.sum(gaex*duration*1e-9)/num_yrs[case]
                 chem_dict[case][f"{current_var}_GAEX (Tg{specifier}/yr)"] = np.round(GAEX,5)
 
             # LifeTime = Burden/(loss+deposition)
-            LT = BURDEN/(CHML+DDF-WDF)* duration/86400/num_yrs[0] # days
+            LT = BURDEN/(CHML+DDF-WDF)* duration/86400/num_yrs[case] # days
             chem_dict[case][f"{current_var}_LIFETIME (days)"] = np.round(LT,5)
 
             if current_var == 'SO4':
@@ -1095,14 +1114,14 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
                 spc_aqs = Dic_scn_var_comp[current_var][current_var+'_AQS']
                 tmp_aqs = spc_aqs
                 aqs = np.ma.masked_where(inside==False,tmp_aqs*area)  #convert Kg/m2/s to Tg/yr
-                AQS = np.ma.sum(aqs*duration*1e-9)/num_yrs[0]
+                AQS = np.ma.sum(aqs*duration*1e-9)/num_yrs[case]
                 chem_dict[case][f"{current_var}_AQUEOUS (Tg{specifier}/yr)"] = np.round(AQS,5)
 
                 # Nucleation
                 spc_nucl = Dic_scn_var_comp[current_var][current_var+'_NUCL']
                 tmp_nucl = spc_nucl
                 nucl = np.ma.masked_where(inside==False,tmp_nucl*area)  #convert Kg/m2/s to Tg/yr
-                NUCL = np.ma.sum(nucl*duration*1e-9)/num_yrs[0]
+                NUCL = np.ma.sum(nucl*duration*1e-9)/num_yrs[case]
                 chem_dict[case][f"{current_var}_NUCLEATION (Tg{specifier}/yr)"] = np.round(NUCL,5)
 
         else:
@@ -1111,7 +1130,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
             spc_ddf = Dic_scn_var_comp[current_var][current_var+'_DDF']
             tmp_ddf = spc_ddf
             ddf = np.ma.masked_where(inside==False,tmp_ddf*area)  #convert Kg/m2/s to Tg/yr
-            DDF = np.ma.sum(ddf*duration*1e-9)/num_yrs[0]
+            DDF = np.ma.sum(ddf*duration*1e-9)/num_yrs[case]
             chem_dict[case][f"{current_var}_DRYDEP (Tg/yr)"] = np.round(DDF,5)
 
             # Wet Deposition Flux
@@ -1119,7 +1138,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
             spc_wdf = Dic_scn_var_comp[current_var][current_var+'_WDF']
             tmp_wdf = spc_wdf
             wdf = np.ma.masked_where(inside==False,tmp_wdf*area)  #convert Kg/m2/s to Tg/yr
-            WDF = -1*np.ma.sum(wdf*duration*1e-9)/num_yrs[0]
+            WDF = -1*np.ma.sum(wdf*duration*1e-9)/num_yrs[case]
             chem_dict[case][f"{current_var}_WETDEP (Tg/yr)"] = np.round(WDF,5)
 
             # Total Deposition
@@ -1134,7 +1153,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
             else:
                 if (CHML+DDF-WDF) > 0:
                     if CHML != 0:
-                        LT = BURDEN/(CHML+DDF-WDF)*duration/86400/num_yrs[0] # days
+                        LT = BURDEN/(CHML+DDF-WDF)*duration/86400/num_yrs[case] # days
                         chem_dict[case][f"{current_var}_LIFETIME (days)"] = np.round(LT,5)
                     else:
                         # do not report lifetime if chemical loss (for gases) is not included in the model outputs
@@ -1148,7 +1167,7 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
             spc_tnd = np.where(np.isnan(trop),np.nan,spc_tnd)
             tmp_tnd = np.nansum(spc_tnd,axis=0)
             tnd = np.ma.masked_where(inside==False,tmp_tnd)  #convert Kg/s to Tg/yr
-            TND = np.ma.sum(tnd*duration*1e-9)/num_yrs[0]
+            TND = np.ma.sum(tnd*duration*1e-9)/num_yrs[case]
             chem_dict[case][f"{current_var}_TEND (Tg/yr)"] = np.round(TND,5)
 
 
@@ -1167,40 +1186,39 @@ def calc_budget_data(case, current_var, Dic_scn_var_comp, area):
                 chem_dict[case][f"{current_var}_LNO (Tg N/yr)"] = np.round(LNO,5)
 
     return chem_dict
+#####
 
-def make_table(vars,chem_type,Dic_scn_var_comp,areas):
+
+def make_table(vars, chem_type, Dic_scn_var_comp, areas, case_names):
     # Initialize an empty dictionary to store DataFrames
     dfs = {}
 
-    for idx, case in enumerate(case_names):
-        # Create an empty DataFrame for the current case
-        table_df = pd.DataFrame(columns=['variable', case])
-
-        #for current_var in AEROSOL_VARIABLES:
+    for case in case_names:
+        # Collect row data in a list of dictionaries
+        rows = []
         for current_var in vars:
-
             chem_dict = calc_budget_data(case, current_var, Dic_scn_var_comp[case], areas[case])
 
-            rows = []
-            for key, vals in chem_dict[case].items():
-                # Don't include any variables with 0 value
-                if vals == 0.:
-                    msg = "chem/aerosol tables:"
-                    msg += f"\n\t - Variable '{var}' has value of 0, will not add to table"
+            for key, val in chem_dict[case].items():
+                if val != 0:  # Skip variables with a value of 0
+                    rows.append({'variable': key, case: np.round(val, 3)})
+                else:
+                    msg = f"chem/aerosol tables:"
+                    msg += f"\n\t - Variable '{key}' has value of 0, will not add to table"
                     adf.debug_log(msg)
-                    continue
 
-                # Collect row data in a list of dictionaries
-                rows.append({'variable': key, case: np.round(vals, 3)})
-
-            # Create a temporary DataFrame for the current set of rows and concatenate it to the main DataFrame
-            temp_df = pd.DataFrame(rows)
-            table_df = pd.concat([table_df, temp_df], ignore_index=True)
+        # Create the DataFrame for the current case
+        table_df = pd.DataFrame(rows)
 
         if chem_type == 'gases':
-            # Replace the compound names in the DataFrame
-            table_df = table_df.replace({'MTERP': 'Monoterpene', 'CH3OH': 'Methanol',
-                                         'CH3COCH3': 'Acetone', 'O3_LNO': 'LNOx_PROD'}, regex=True)
+            # Replace compound names directly in the DataFrame
+            replacements = {
+                'MTERP': 'Monoterpene',
+                'CH3OH': 'Methanol',
+                'CH3COCH3': 'Acetone',
+                'O3_LNO': 'LNOx_PROD'
+            }
+            table_df['variable'] = table_df['variable'].replace(replacements)
 
         # Store the DataFrame in the dictionary
         dfs[case] = table_df
@@ -1213,4 +1231,6 @@ def make_table(vars,chem_type,Dic_scn_var_comp,areas):
 
     # Optional: Save the result to a new CSV file
     merged_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
+
+    return merged_df
 #####
