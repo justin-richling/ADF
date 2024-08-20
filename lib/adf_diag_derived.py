@@ -94,10 +94,10 @@ for root, dirs, files in os.walk(_DIAG_SCRIPTS_PATH):
 
 # +++++++++++++++++++++++++++++
 
-# Finally, import needed ADF modules:
+# Finally, import needed ADF module:
 from adf_web import AdfWeb
-from adf_dataset import AdfData
 from adf_derive import check_derive, derive_variable
+
 
 #################
 # Helper functions
@@ -176,9 +176,6 @@ class AdfDiag(AdfWeb):
 
         # Add plotting script names:
         self.__plotting_scripts = self.read_config_var("plotting_scripts")
-
-        # Provide convenience functions for data handling:
-        self.data = AdfData(self)
 
     # Create property needed to return "plotting_scripts" variable to user:
     @property
@@ -349,19 +346,22 @@ class AdfDiag(AdfWeb):
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             cam_ts_done = [self.get_baseline_info("cam_ts_done")]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
+            ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
+            #Check if user wants to skip time series file creation
+            calc_cam_ts   = [self.get_baseline_info("calc_cam_ts")]
+
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
             hist_str_list = [self.hist_string["base_hist_str"]]
-
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
+            calc_cam_ts = self.get_cam_info("calc_cam_ts")
             cam_ts_done = self.get_cam_info("cam_ts_done")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc", required=True)
+            ts_dir = self.get_cam_info("cam_ts_loc")
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
@@ -369,6 +369,15 @@ class AdfDiag(AdfWeb):
             hist_str_list = self.hist_string["test_hist_str"]
         # End if
 
+
+
+        #cam_climo_loc   = adf.get_cam_info("cam_climo_loc")
+        if calc_cam_ts is not None:
+            for i,loc in enumerate(calc_cam_ts):
+                if loc is None:
+                    calc_cam_ts[i] = False
+        else:
+            calc_cam_ts = [False]*len(case_names)
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         dmsg = f"reading from {hist_str_list} files"
@@ -378,15 +387,25 @@ class AdfDiag(AdfWeb):
         res = self.variable_defaults
 
         # Loop over cases:
+        no_msg = False
         for case_idx, case_name in enumerate(case_names):
             # Notify user that script has started:
             print(f"\n  Generating CAM time series files for '{case_name}'...")
-
             # Check if particular case should be processed:
+
+            #Check whether the user needs to use time series files at all
+            #or are missing the time series files all together.
+            """if not calc_cam_ts[case_idx]:
+                emsg = "\tConfiguration file indicates time series files don't need to be calculated."
+                print(emsg)
+                no_msg = True
+                continue"""
+
             if cam_ts_done[case_idx]:
                 emsg = "\tConfiguration file indicates time series files have been pre-computed."
                 emsg += f" Will rely on those files directly."
                 print(emsg)
+                no_msg = True
                 continue
             # End if
 
@@ -443,6 +462,7 @@ class AdfDiag(AdfWeb):
                 # Note: could use `open_mfdataset`, but that can become very slow;
                 #      This approach effectively assumes that all files contain the same variables.
 
+
                 # Check what kind of vertical coordinate (if any) is being used for this model run:
                 # ------------------------
                 if "lev" in hist_file_ds:
@@ -489,8 +509,8 @@ class AdfDiag(AdfWeb):
                             print(wmsg)
 
                             vert_coord_type = None
-                    # End if (long name)
-                # End if (vert_coord)
+                        # End if (long name)
+                    # End if (vert_coord)
                 else:
                     # No level dimension found, so assume there is no vertical coordinate:
                     vert_coord_type = None
@@ -623,21 +643,23 @@ class AdfDiag(AdfWeb):
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_commands)
                 # End with
-                
+
                 # Finally, run through the derived variables if applicable
                 #NOTE: this has to happen after the variable loop because the constituent
                 #      time series files have to be made before using in derivation
                 if constit_dict:
                     for der_var,constit_list in constit_dict.items():
                         derive_variable(self, case_name, der_var, res, ts_dir[case_idx], constit_list)
-
-                
-                # End with
+            
             # End for hist_str
+        
         # End cases loop
 
         # Notify user that script has ended:
-        print("  ...CAM time series file generation has finished successfully.")
+        if no_msg:
+            print("  ...Moving on.")
+        else:
+            print("  ...CAM time series file generation has finished successfully.")
 
     #########
 
@@ -655,15 +677,16 @@ class AdfDiag(AdfWeb):
         """
 
         # Extract climatology calculation config options:
-        calc_climo = self.get_cam_info("calc_cam_climo")
+        #calc_climo = self.get_cam_info("calc_cam_climo")
+        #calc_climo = self.calc_climos
 
-        # Check if climo calculation config option is a list:
+        """# Check if climo calculation config option is a list:
         if isinstance(calc_climo, list):
             # If so, then check if any of the entries are "True":
             calc_climo = any(calc_climo)
-        # End if
+        # End if"""
 
-        # Next check if a baseline simulation is being used
+        """# Next check if a baseline simulation is being used
         # and no other model cases need climatologies calculated:
         if not self.compare_obs and not calc_climo:
             calc_bl_climo = self.get_baseline_info("calc_cam_climo")
@@ -677,7 +700,13 @@ class AdfDiag(AdfWeb):
         else:
             # Just set to False:
             calc_bl_climo = False
-        # End if
+        # End if"""
+
+        calc_climo = self.calc_climo_dict["test"]
+        calc_bl_climo = self.calc_climo_dict["baseline"]
+
+        print("calc_climo",calc_climo)
+        print("calc_bl_climo",calc_bl_climo,"\n")
 
         # Check if a user wants any climatologies to be calculated:
         if calc_climo or calc_bl_climo:
@@ -706,8 +735,11 @@ class AdfDiag(AdfWeb):
         else:
             # If not, then notify user that climo file generation is skipped.
             print(
-                "\n  No climatology files were requested by user, so averaging will be skipped."
+                "\n  No climatology files were requested by user to be generated, so averaging will be skipped."
             )
+            print("   This either means:")
+            print("    Climo files exist and a relevent path has been included,")
+            print("    Or desired analysis doesn't require it.")
 
     #########
 
@@ -862,7 +894,8 @@ class AdfDiag(AdfWeb):
         eyears = self.climo_yrs["eyears"]
 
         # Timeseries locations:
-        cam_ts_loc = self.get_cam_info("cam_ts_loc")
+        #cam_ts_loc = self.get_cam_info("cam_ts_loc")
+        cam_ts_loc = self.test_ts_locs
 
         # set CVDP directory, recursively copy cvdp codebase to the CVDP directory
         if len(case_names) > 1:
@@ -879,12 +912,6 @@ class AdfDiag(AdfWeb):
                 self.get_cvdp_info("cvdp_codebase_loc", required=True), cvdp_dir
             )
         # End if
-
-        # intialize objects that might not be declared later
-        case_name_baseline = None
-        baseline_ts_loc = None
-        syears_baseline = None
-        eyears_baseline = None
 
         # check to see if there is a CAM baseline case. If there is, read in relevant information.
         if not self.get_basic_info("compare_obs"):
@@ -1021,6 +1048,7 @@ class AdfDiag(AdfWeb):
 
         """
 
+
         copy_files_only = False  # True (copy files but don't run), False (copy files and run MDTF)
         # Note that the MDTF variable test_mode (set in the mdtf_info of the yaml file)
         # has a different meaning: Data is fetched but PODs are not run.
@@ -1064,6 +1092,7 @@ class AdfDiag(AdfWeb):
         for var in ["WORKING_DIR", "OUTPUT_DIR"]:
             if mdtf_info[var] == "default":
                 mdtf_info[var] = plot_path
+
 
         #
         # Write the input settings json file
