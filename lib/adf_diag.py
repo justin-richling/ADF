@@ -516,7 +516,7 @@ class AdfDiag(AdfWeb):
 
                 # Intitialize list for NCO commands
                 list_of_commands = []
-                vars_to_derive = []
+
                 # Create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
 
@@ -537,6 +537,9 @@ class AdfDiag(AdfWeb):
                         print(f"\t     {var} not in history file, will try to derive if possible")
 
                         # Check if variable can be derived
+                        #NOTE: the diag_var_list will need to be updated each time
+                        #      to add all constituents to diagnostics variable list
+                        #      for time series creation
                         diag_var_list, constit_dict = check_derive(self, res, var, case_name,
                                                                     diag_var_list, constit_dict,
                                                                     hist_file_ds, hist_files[0])
@@ -628,7 +631,7 @@ class AdfDiag(AdfWeb):
                 #NOTE: this has to happen after the variable loop because the constituent
                 #      time series files have to be made before using in derivation
                 if constit_dict:
-                    for der_var,constit_list in constit_dict.items():
+                    for der_var, constit_list in constit_dict.items():
                         derive_variable(self, case_name, der_var, res, ts_dir[case_idx], constit_list)
 
                 
