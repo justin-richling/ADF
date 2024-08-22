@@ -468,6 +468,7 @@ def fill_dic_SE(dic_SE, variables, ListVars):
                 # for AOD and DAOD:
                 if 'AOD' in var:
                     if key in ListVars:
+
                         dic_SE[var+'_AOD'][key+ext1_SE]=1 
                     else:
                         dic_SE[var+'_AOD']['PS'+ext1_SE]=0. 
