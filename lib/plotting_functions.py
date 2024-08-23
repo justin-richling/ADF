@@ -1167,7 +1167,16 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     if kwargs["save_plot_data"]:
         # Combine along a new dimension called 'time'
-        combined = xr.concat([mwrap, owrap, dwrap], dim='time')
+        # Convert masked arrays to xarray DataArrays
+        data_array1 = xr.DataArray(mdlfld, dims=("lat", "lon"), name="test")
+        data_array2 = xr.DataArray(obsfld, dims=("lat", "lon"), name="ref")
+        data_array3 = xr.DataArray(diffld, dims=("lat", "lon"), name="diff")
+        combined = xr.Dataset({
+            "test": data_array1,
+            "ref": data_array2,
+            "diff": data_array3
+        })
+        #combined = xr.concat([mwrap, owrap, dwrap], dim='time')
         kwargs["adfobj"].data.save_to_nc(combined, kwargs["plot_name"].replace(kwargs["plot_type"],"nc"), attrs=kwargs["mdata.attrs"])
     if not kwargs["make_plots"]:
         print("I guess our plots aren't desired, will not make plot boi!")
