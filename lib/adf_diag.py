@@ -521,6 +521,18 @@ class AdfDiag(AdfWeb):
                 diag_var_list = self.diag_var_list
                 print("PRE-LOOP diag_var_list",diag_var_list,"\n")
 
+                """# Always make sure PMID is made if aerosols are desired in config file
+                # Since there's no requirement for `aerosol_zonal_list`, allow it to be absent:
+                azl = res.get("aerosol_zonal_list", [])
+                if azl:
+                    if "PMID" not in diag_var_list:
+                        if any(item in azl for item in diag_var_list):
+                            diag_var_list += ["PMID"]
+                    if "T" not in diag_var_list:
+                        if any(item in azl for item in diag_var_list):
+                            diag_var_list += ["T"]
+                #End aerosol calcs"""
+
                 # Intitialize dictionary for derived variables, if appplicable
                 constit_dict = {}
 
