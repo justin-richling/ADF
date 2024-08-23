@@ -1165,6 +1165,13 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
 
+    if kwargs["yeah"]:
+        # Combine along a new dimension called 'time'
+        combined = xr.concat([mwrap, owrap, dwrap], dim='time')
+        kwargs["adfobj"].data.save_to_nc(combined, kwargs["plot_name"].replace(kwargs["plot_type"],"nc"), attrs=kwargs["mdata.attrs"])
+    if not kwargs["make_plots"]:
+        print("I guess our plots aren't desired, will not make plot boi!")
+        return
     # We should think about how to do plot customization and defaults.
     # Here I'll just pop off a few custom ones, and then pass the rest into mpl.
     if 'tiString' in kwargs:

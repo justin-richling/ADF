@@ -112,6 +112,11 @@ def global_latlon_map(adfobj):
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
     #-----------------------------------------
 
+    #yeah = True
+    yeah = adfobj.get_basic_info('save_plot_data')
+    make_plots = adfobj.get_basic_info('make_plots')
+    wowsa = {"save_plot_data":yeah,"make_plots":make_plots,"adfobj":adfobj,"plot_name":plot_name,"plot_type":plot_type}
+
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
     pres_levs = adfobj.get_basic_info("plot_press_levels")
@@ -191,6 +196,7 @@ def global_latlon_map(adfobj):
 
             #Load re-gridded model files:
             mdata = adfobj.data.load_regrid_da(case_name, var)
+            wowsa["mdata.attrs"] = mdata.attrs
 
             #Skip this variable/case if the regridded climo file doesn't exist:
             if mdata is None:
@@ -291,16 +297,20 @@ def global_latlon_map(adfobj):
 
                         # difference: each entry should be (lat, lon)
                         dseasons[s] = mseasons[s] - oseasons[s]
-
                         pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
-                                                [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                [syear_baseline,eyear_baseline],
-                                                mseasons[s].sel(lev=pres), oseasons[s].sel(lev=pres), dseasons[s].sel(lev=pres),
-                                                obs=adfobj.compare_obs, **vres)
+                                                    [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                    [syear_baseline,eyear_baseline],
+                                                    mseasons[s].sel(lev=pres), oseasons[s].sel(lev=pres), dseasons[s].sel(lev=pres),
+                                                    obs=adfobj.compare_obs, **vres, **wowsa)
 
                         #Add plot to website (if enabled):
                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
                                                 season=s, plot_type="LatLon")
+                        #if yeah:
+                        #    # Combine along a new dimension called 'time'
+                        #    diff = mseasons[s]-oseasons[s]
+                        #    combined = xr.concat([mseasons[s], oseasons[s], dseasons[s]], dim='time')
+                        #    adfobj.data.save_to_nc(combined, plot_name.replace(plot_type,"nc"), attrs=mdata.attrs)
                     #End for (seasons)
                 #End for (pressure levels)
             #End if (plotting pressure levels)
