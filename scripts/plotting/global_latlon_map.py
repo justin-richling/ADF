@@ -263,7 +263,7 @@ def global_latlon_map(adfobj):
                                             [syear_cases[case_idx],eyear_cases[case_idx]],
                                             [syear_baseline,eyear_baseline],
                                             mseasons[s], oseasons[s], dseasons[s],
-                                            obs=adfobj.compare_obs, **vres)
+                                            obs=adfobj.compare_obs, **vres, **wowsa)
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
