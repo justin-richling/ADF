@@ -266,7 +266,8 @@ def global_latlon_map(adfobj):
                                             obs=adfobj.compare_obs, **vres, **wowsa)
 
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, var, case_name, category=web_category,
+                    if make_plots:
+                        adfobj.add_website_data(plot_name, var, case_name, category=web_category,
                                             season=s, plot_type="LatLon")
 
             else: # => pres_levs has values, & we already checked that lev is in mdata (has_lev)
@@ -305,7 +306,8 @@ def global_latlon_map(adfobj):
                                                     obs=adfobj.compare_obs, **vres, **wowsa)
 
                         #Add plot to website (if enabled):
-                        adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
+                        if make_plots:
+                            adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
                                                 season=s, plot_type="LatLon")
                         #if yeah:
                         #    # Combine along a new dimension called 'time'
