@@ -1989,10 +1989,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
     else:
         line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
-                        color="#1f77b4") # #1f77b4 -> matplotlib standard blue
-
+                        color="#1f77b4", loc='left') # #1f77b4 -> matplotlib standard blue
+        base_title = "$\mathbf{Baseline}:$"+f"{base_nickname} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
         line2 = Line2D([0], [0], label=base_title,
-                        color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
+                        color="#ff7f0e", loc='left') # #ff7f0e -> matplotlib standard orange
 
         azm = zonal_mean_xr(adata)
         bzm = zonal_mean_xr(bdata)
