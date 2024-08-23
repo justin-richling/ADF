@@ -1177,7 +1177,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             "diff": data_array3
         })
         #combined = xr.concat([mwrap, owrap, dwrap], dim='time')
-        kwargs["adfobj"].data.save_to_nc(combined, kwargs["plot_name"].replace(kwargs["plot_type"],"nc"), attrs=kwargs["mdata.attrs"])
+        nc_name = str(kwargs["plot_name"]).replace(kwargs["plot_type"],"nc")
+        kwargs["adfobj"].data.save_to_nc(combined, nc_name, attrs=kwargs["mdata.attrs"])
     if not kwargs["make_plots"]:
         print("I guess our plots aren't desired, will not make plot boi!")
         return
