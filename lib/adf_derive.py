@@ -131,7 +131,7 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
         # Add variable and constituent list to dictionary
         constit_dict[var] = constit_list
 
-        # Aadd constituents to ADF diag variable list for time series generation
+        # Add constituents to ADF diag variable list for time series generation
         for constit in constit_list:
             if constit not in diag_var_list:
                 diag_var_list.append(constit)
@@ -142,7 +142,8 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
         self.debug_log(exit_msg)
     # End if
 
-    return diag_var_list, constit_dict
+    #return diag_var_list, constit_dict
+    return constit_dict
 
 ########
 
