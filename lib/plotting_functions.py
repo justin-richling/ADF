@@ -1180,8 +1180,21 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         combined.attrs = attrs
         #combined = xr.concat([mwrap, owrap, dwrap], dim='time')
         nc_name = str(kwargs["plot_name"]).replace(kwargs["plot_type"],"nc")
+        print("\n",nc_name,"\n")
         print('kwargs["mdata.attrs"]',kwargs["mdata.attrs"])
-        kwargs["adfobj"].data.save_to_nc(tosave=combined, outname=nc_name)
+        #kwargs["adfobj"].data.save_to_nc(tosave=combined, outname=nc_name)
+        if isinstance(combined, xr.Dataset):
+            enc_dv = {xname: {'_FillValue': None} for xname in combined.data_vars}
+        else:
+            enc_dv = {}
+        #End if
+        enc_c = {xname: {'_FillValue': None} for xname in combined.coords}
+        enc = {**enc_c, **enc_dv}
+        if attrs is not None:
+            combined.attrs = attrs
+        #if proc is not None:
+        #    combined.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+        combined.to_netcdf(nc_name, format='NETCDF4', encoding=enc)
     if not kwargs["make_plots"]:
         print("I guess our plots aren't desired, will not make plot boi!")
         return
