@@ -115,7 +115,7 @@ def global_latlon_map(adfobj):
     #yeah = True
     yeah = adfobj.get_basic_info('save_plot_data')
     make_plots = adfobj.get_basic_info('make_plots')
-    wowsa = {"save_plot_data":yeah,"make_plots":make_plots,"adfobj":adfobj,"plot_name":plot_name,"plot_type":plot_type}
+    wowsa = {"save_plot_data":yeah,"make_plots":make_plots,"adfobj":adfobj,"plot_type":plot_type}
 
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
@@ -243,6 +243,7 @@ def global_latlon_map(adfobj):
                 #Loop over season dictionary:
                 for s in seasons:
                     plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+                    wowsa["plot_name"] = plot_name
                     if doplot[plot_name] is None:
                         continue
 
