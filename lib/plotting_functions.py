@@ -1165,7 +1165,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
 
-    if kwargs["yeah"]:
+    if kwargs["save_plot_data"]:
         # Combine along a new dimension called 'time'
         combined = xr.concat([mwrap, owrap, dwrap], dim='time')
         kwargs["adfobj"].data.save_to_nc(combined, kwargs["plot_name"].replace(kwargs["plot_type"],"nc"), attrs=kwargs["mdata.attrs"])
