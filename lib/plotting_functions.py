@@ -1168,9 +1168,9 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     if kwargs["save_plot_data"]:
         # Combine along a new dimension called 'time'
         # Convert masked arrays to xarray DataArrays
-        data_array1 = xr.DataArray(mdlfld, dims=("lat", "lon"), name="test")
-        data_array2 = xr.DataArray(obsfld, dims=("lat", "lon"), name="ref")
-        data_array3 = xr.DataArray(diffld, dims=("lat", "lon"), name="diff")
+        data_array1 = xr.DataArray(wrap_fields[0], dims=("lat", "lon"), name="test")
+        data_array2 = xr.DataArray(wrap_fields[1], dims=("lat", "lon"), name="ref")
+        data_array3 = xr.DataArray(wrap_fields[2], dims=("lat", "lon"), name="diff")
         combined = xr.Dataset({
             "test": data_array1,
             "ref": data_array2,
@@ -1178,7 +1178,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         })
         #combined = xr.concat([mwrap, owrap, dwrap], dim='time')
         nc_name = str(kwargs["plot_name"]).replace(kwargs["plot_type"],"nc")
-        kwargs["adfobj"].data.save_to_nc(combined, nc_name, attrs=kwargs["mdata.attrs"])
+        kwargs["adfobj"].data.save_to_nc(tosave=combined, outname=nc_name, attrs=kwargs["mdata.attrs"])
     if not kwargs["make_plots"]:
         print("I guess our plots aren't desired, will not make plot boi!")
         return
