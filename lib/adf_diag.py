@@ -519,12 +519,14 @@ class AdfDiag(AdfWeb):
 
                 # Create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
+                print("PRE-LOOP diag_var_list",diag_var_list,"\n")
 
                 # Intitialize dictionary for derived variables, if appplicable
                 constit_dict = {}
 
                 # Loop over CAM history variables:
                 for var in diag_var_list:
+                    print("IN-LOOP diag_var_list",diag_var_list)
                     # Notify user of new time series file:
                     print(f"\t - time series for {var}")
 
@@ -621,6 +623,7 @@ class AdfDiag(AdfWeb):
                     list_of_commands.append(cmd)
 
                 # End variable loop
+                print("POST-LOOP diag_var_list",diag_var_list,"\n")
 
                 # Now run the "ncrcat" subprocesses in parallel:
                 with mp.Pool(processes=self.num_procs) as mpool:
