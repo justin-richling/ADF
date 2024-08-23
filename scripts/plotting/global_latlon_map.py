@@ -258,7 +258,7 @@ def global_latlon_map(adfobj):
 
                     # difference: each entry should be (lat, lon)
                     dseasons[s] = mseasons[s] - oseasons[s]
-                    print("\n",dseasons[s],"\n")
+
                     pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                             [syear_cases[case_idx],eyear_cases[case_idx]],
                                             [syear_baseline,eyear_baseline],
