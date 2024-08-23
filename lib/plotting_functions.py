@@ -2013,6 +2013,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
         ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
 
+        fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
+
         for a in ax:
             try:
                 a.label_outer()
