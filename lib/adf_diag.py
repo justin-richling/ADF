@@ -526,7 +526,7 @@ class AdfDiag(AdfWeb):
 
                 # Loop over CAM history variables:
                 for var in diag_var_list:
-                    print("IN-LOOP diag_var_list",diag_var_list)
+                    
                     # Notify user of new time series file:
                     print(f"\t - time series for {var}")
 
@@ -545,6 +545,7 @@ class AdfDiag(AdfWeb):
                         constit_dict = check_derive(self, res, var, case_name,
                                                                     diag_var_list, constit_dict,
                                                                     hist_file_ds, hist_files[0])
+                        print("IN-LOOP diag_var_list",diag_var_list)
                         # Move to the next variable
                         continue
                     # End if
