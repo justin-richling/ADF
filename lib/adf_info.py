@@ -218,7 +218,7 @@ class AdfInfo(AdfConfig):
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
             if input_ts_baseline is None:
                 input_ts_baseline = ''
-            self.__input_ts_baseline = {data_name:input_ts_baseline}
+            self.__input_ts_baseline = input_ts_baseline
 
 
 
@@ -440,7 +440,7 @@ class AdfInfo(AdfConfig):
         #ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
         test_ts_locs[data_name] = bl_ts_loc
         self.__ts_locs_dict = test_ts_locs#ts_locs_dict
-        print("DFDF",self.__ts_locs_dict,"\n")
+        print("WHAT?",self.__ts_locs_dict,"\n")
         ##################################################################
 
 
