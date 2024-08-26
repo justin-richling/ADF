@@ -408,6 +408,7 @@ class AdfInfo(AdfConfig):
         else:
             bl_ts_done = True
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
+
         self.__ts_done_dict = ts_done_dict
         ##################################################################
 
@@ -439,6 +440,7 @@ class AdfInfo(AdfConfig):
         #ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
         test_ts_locs[data_name] = bl_ts_loc
         self.__ts_locs_dict = test_ts_locs#ts_locs_dict
+        print("DFDF",self.__ts_locs_dict,"\n")
         ##################################################################
 
 
