@@ -214,7 +214,12 @@ class AdfInfo(AdfConfig):
             if baseline_ts_done is None:
                 baseline_ts_done = True
             self.__baseline_ts_done = {data_name:baseline_ts_done}
+            
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+            if input_ts_baseline is None:
+                input_ts_baseline = ''
+            self.__input_ts_baseline = {data_name:input_ts_baseline}
+
 
 
             if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
@@ -420,6 +425,19 @@ class AdfInfo(AdfConfig):
                         input_ts_locs[i] = None
             else:
                 print()
+
+        #Add check for obs!!!        
+        self.__test_ts_locs = {}
+        for i,cam_ts in enumerate(input_ts_locs):
+            self.__test_ts_locs[case_names[i]] = cam_ts
+
+        test_ts_locs = copy.copy(self.__test_ts_locs)
+        if self.__input_ts_baseline:
+            bl_ts_loc = self.__input_ts_baseline
+        else:
+            bl_ts_loc = None
+        ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
+        self.__ts_locs_dict = ts_locs_dict
         ##################################################################
 
 
@@ -437,15 +455,7 @@ class AdfInfo(AdfConfig):
             else:
                 print()
 
-        #Add check for obs!!!
-        """self.__calc_test_climo = {}
-        for i in range(len(calc_test_climo)):
-            #if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
-            if (input_ts_locs[i]) and (not calc_test_climo[i]):
-                self.__calc_test_climo[case_names[i]] = False
-            else:
-                self.__calc_test_climo[case_names[i]] = True"""
-        
+        #Add check for obs!!!        
         self.__calc_test_climo = {}
         for i,cam_ts in enumerate(calc_test_climo):
             self.__calc_test_climo[case_names[i]] = cam_ts
@@ -799,7 +809,10 @@ class AdfInfo(AdfConfig):
         """ Return the history string name to the user if requested."""
         return self.__ts_done_dict
 
-
+    @property
+    def ts_locs_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__ts_locs_dict
 
 
     #########

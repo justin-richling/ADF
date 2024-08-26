@@ -70,7 +70,8 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    input_ts_locs = adf.ts_locs_dict
     output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
     #calc_climos   = adf.get_cam_info("calc_cam_climo")
     calc_climos   = adf.calc_climo_dict
@@ -92,7 +93,7 @@ def create_climo_files(adf, clobber=False, search=None):
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+        #input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
         output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
         #calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
@@ -103,7 +104,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Append to case lists:
         case_names.append(baseline_name)
-        input_ts_locs.append(input_ts_baseline)
+        #input_ts_locs.append(input_ts_baseline)
         output_locs.append(output_bl_loc)
         #calc_climos.append(calc_bl_climos)
         overwrite.append(ovr_bl)
@@ -128,7 +129,7 @@ def create_climo_files(adf, clobber=False, search=None):
         print(f"\t Calculating climatologies for case '{case_name}' :")
 
         #Create "Path" objects:
-        input_location  = Path(input_ts_locs[case_idx])
+        input_location  = Path(input_ts_locs[case_name])
         output_location = Path(output_locs[case_idx])
 
         #Whether to overwrite existing climo files
@@ -136,7 +137,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
+            errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
             raise AdfError(errmsg)
 
         #Check if climo directory exists, and if not, then create it:
