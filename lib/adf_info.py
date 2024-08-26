@@ -466,8 +466,9 @@ class AdfInfo(AdfConfig):
             calc_bl_climo = self.__calc_bl_climo
         else:
             calc_bl_climo = True
-        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
-        self.__calc_climo_dict = calc_climo_dict
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
+        calc_test_climo[data_name] = calc_bl_climo
+        self.__calc_climo_dict = calc_test_climo#calc_climo_dict
         ##################################################################
 
 
