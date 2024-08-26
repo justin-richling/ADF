@@ -469,6 +469,7 @@ class AdfInfo(AdfConfig):
         #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
         calc_test_climo[data_name] = calc_bl_climo
         self.__calc_climo_dict = calc_test_climo#calc_climo_dict
+        print("DFDF",self.__calc_climo_dict,"\n")
         ##################################################################
 
 
