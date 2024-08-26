@@ -337,7 +337,7 @@ class AdfInfo(AdfConfig):
             eyear_baseline = int(eyear_baseline)
 
             #Update baseline case name:
-            data_name += f"_{syear_baseline}_{eyear_baseline}"
+            dir_data_name = f"{data_name}_{syear_baseline}_{eyear_baseline}"
         #End if (compare_obs)
 
         #Initialize case nicknames:
@@ -575,10 +575,10 @@ class AdfInfo(AdfConfig):
             eyears_fixed.append(eyear)
 
             #Update case name with provided/found years:
-            case_name += f"_{syear}_{eyear}"
+            dir_case_name = f"{case_name}_{syear}_{eyear}"
 
             #Set the final directory name and save it to plot_location:
-            direc_name = f"{case_name}_vs_{data_name}"
+            direc_name = f"{dir_case_name}_vs_{dir_data_name}"
             self.__plot_location.append(os.path.join(plot_dir, direc_name))
 
             #If first iteration, then save directory name for use by baseline:
