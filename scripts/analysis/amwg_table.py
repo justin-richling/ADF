@@ -131,7 +131,8 @@ def amwg_table(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     
-    input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    ts_locs = adf.ts_locs_dict
+    '''input_ts_locs = adf.get_cam_info("cam_ts_loc")
     #input_ts_locs = adf.test_ts_locs
     ts_locs = {}
     if not input_ts_locs:
@@ -145,7 +146,7 @@ def amwg_table(adf):
                 #print()
                 ts_locs[case] = input_ts_locs[i]
             else:
-                ts_locs[case] = None
+                ts_locs[case] = None'''
 
 
 
@@ -206,13 +207,13 @@ def amwg_table(adf):
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         case_names.append(baseline_name)
 
-        #Check if time series location was provided (premade climo files were supplied?)
+        '''#Check if time series location was provided (premade climo files were supplied?)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
         if input_ts_baseline:
             ts_locs[baseline_name] = input_ts_baseline
         else:
             ts_locs[baseline_name] = None
-        #End if
+        #End if'''
 
         #Check if premade climo files were supplied        
         calc_baseline_ts   = adf.ts_done_dict['baseline']
