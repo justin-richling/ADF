@@ -436,8 +436,9 @@ class AdfInfo(AdfConfig):
             bl_ts_loc = self.__input_ts_baseline
         else:
             bl_ts_loc = None
-        ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
-        self.__ts_locs_dict = ts_locs_dict
+        #ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
+        test_ts_locs[data_name] = bl_ts_loc
+        self.__ts_locs_dict = test_ts_locs#ts_locs_dict
         ##################################################################
 
 
@@ -448,7 +449,7 @@ class AdfInfo(AdfConfig):
             calc_test_climo = [False]*len(case_names)
         else:
             #Check if any time series files are pre-made
-            if len(input_ts_locs) == len(case_names):
+            if len(calc_test_climo) == len(case_names):
                 for i,case in enumerate(calc_test_climo):
                     if case is None:
                         calc_test_climo[i] = True
