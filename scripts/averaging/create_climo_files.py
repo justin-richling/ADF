@@ -72,7 +72,8 @@ def create_climo_files(adf, clobber=False, search=None):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
-    calc_climos   = adf.get_cam_info("calc_cam_climo")
+    #calc_climos   = adf.get_cam_info("calc_cam_climo")
+    calc_climos   = adf.calc_climo_dict
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
     #Extract simulation years:
@@ -81,8 +82,8 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
-    if not calc_climos:
-        calc_climos = [False]*len(case_names)
+    #if not calc_climos:
+    #    calc_climos = [False]*len(case_names)
     if not overwrite:
         overwrite = [False]*len(case_names)
     #End if
@@ -93,7 +94,7 @@ def create_climo_files(adf, clobber=False, search=None):
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
         output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
-        calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
+        #calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
         #Extract baseline years:
@@ -104,7 +105,7 @@ def create_climo_files(adf, clobber=False, search=None):
         case_names.append(baseline_name)
         input_ts_locs.append(input_ts_baseline)
         output_locs.append(output_bl_loc)
-        calc_climos.append(calc_bl_climos)
+        #calc_climos.append(calc_bl_climos)
         overwrite.append(ovr_bl)
         start_year.append(bl_syr)
         end_year.append(bl_eyr)
@@ -120,7 +121,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
-        if not calc_climos[case_idx]:
+        if not calc_climos[case_name]:
             continue
 
         #Notify user of model case being processed:

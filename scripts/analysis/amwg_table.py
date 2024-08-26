@@ -175,11 +175,9 @@ def amwg_table(adf):
     #input_climo_locs = adf.test_climo_locs
     climo_locs = {}
     if not input_climo_locs:
-        #climo_locs = [None]
         for case in case_names:
             climo_locs[case] = None
     else:
-        #climo_locs = {}
         for i,case in enumerate(case_names):
             if input_climo_locs[i]:
                 #print()

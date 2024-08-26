@@ -377,7 +377,9 @@ class AdfInfo(AdfConfig):
         # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
         cam_hist_str = self.__hist_str
 
+        
         #Check if using pre-made ts files
+        ##################################################################
         cam_ts_done   = self.get_cam_info("cam_ts_done")
         if cam_ts_done is None:
             cam_ts_done = [True]*len(case_names)
@@ -402,8 +404,10 @@ class AdfInfo(AdfConfig):
             bl_ts_done = True
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
         self.__ts_done_dict = ts_done_dict
+        ##################################################################
 
         #Grab case time series file location(s)
+        ##################################################################
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
         if input_ts_locs is None:
@@ -416,7 +420,11 @@ class AdfInfo(AdfConfig):
                         input_ts_locs[i] = None
             else:
                 print()
+        ##################################################################
 
+
+        #Check if climatology files need to be calculated
+        ##################################################################
         calc_test_climo = self.get_cam_info("calc_cam_climo")
         if calc_test_climo is None:
             calc_test_climo = [False]*len(case_names)
@@ -430,14 +438,17 @@ class AdfInfo(AdfConfig):
                 print()
 
         #Add check for obs!!!
-        self.__calc_test_climo = {}
+        """self.__calc_test_climo = {}
         for i in range(len(calc_test_climo)):
             #if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
             if (input_ts_locs[i]) and (not calc_test_climo[i]):
                 self.__calc_test_climo[case_names[i]] = False
-                #self.__calc_climo[i] = False
             else:
-                self.__calc_test_climo[case_names[i]] = True
+                self.__calc_test_climo[case_names[i]] = True"""
+        
+        self.__calc_test_climo = {}
+        for i,cam_ts in enumerate(calc_test_climo):
+            self.__calc_test_climo[case_names[i]] = cam_ts
 
         calc_test_climo = copy.copy(self.__calc_test_climo)
         #calc_bl_climo = self.__calc_bl_climo
@@ -447,6 +458,8 @@ class AdfInfo(AdfConfig):
             calc_bl_climo = True
         calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
         self.__calc_climo_dict = calc_climo_dict
+        ##################################################################
+
 
         #Loop over cases:
         syears_fixed = []
@@ -740,6 +753,7 @@ class AdfInfo(AdfConfig):
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
 
+    '''
     @property
     def calc_climos(self):
         """ Return the history string name to the user if requested."""
@@ -756,6 +770,7 @@ class AdfInfo(AdfConfig):
         #calc_climos = calc_climos + [self.__calc_bl_climo]
 
         return calc_climos
+    '''
 
     @property
     def calc_climo_dict(self):
@@ -763,39 +778,7 @@ class AdfInfo(AdfConfig):
         return self.__calc_climo_dict
 
 
-
-
-
-
-    '''@property
-    def calc_ts(self):
-        """ Return the history string name to the user if requested."""
-
-        #Make list of all entries, similarly how the ADF does in various scripts
-        calc_ts = []
-        for key,val in self.__calc_ts_dict.items():
-            if key == "test":
-                for _,val2 in val.items():
-                    calc_ts.append(val2)
-            else: # baseline
-                calc_ts.append(val)
-        #The length of this list should always be the number of cases!
-        #calc_climos = calc_climos + [self.__calc_bl_climo]
-
-        return calc_ts
-
-    @property
-    def calc_ts_dict(self):
-        """ Return the history string name to the user if requested."""
-        return self.__calc_ts_dict
     '''
-
-
-
-
-
-
-
     @property
     def ts_done(self):
         """ Return the history string name to the user if requested."""
@@ -809,6 +792,7 @@ class AdfInfo(AdfConfig):
             else: # baseline
                 ts_done.append(val)
         return ts_done
+    '''
 
     @property
     def ts_done_dict(self):
