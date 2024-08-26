@@ -1168,9 +1168,9 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     if kwargs["save_plot_data"]:
         # Combine along a new dimension called 'time'
         # Convert masked arrays to xarray DataArrays
-        data_array1 = xr.DataArray(mwrap, dims=("lat", "lon"), coords={"lat": lats, "lon": lons},name="test")
-        data_array2 = xr.DataArray(owrap, dims=("lat", "lon"), coords={"lat": lats, "lon": lons},name="ref")
-        data_array3 = xr.DataArray(dwrap, dims=("lat", "lon"), coords={"lat": lats, "lon": lons},name="diff")
+        data_array1 = xr.DataArray(mwrap, dims=("lat", "lon"), coords={"lat": lat, "lon": lon},name="test")
+        data_array2 = xr.DataArray(owrap, dims=("lat", "lon"), coords={"lat": lat, "lon": lon},name="ref")
+        data_array3 = xr.DataArray(dwrap, dims=("lat", "lon"), coords={"lat": lat, "lon": lon},name="diff")
         combined = xr.Dataset({
             "test": data_array1,
             "ref": data_array2,
