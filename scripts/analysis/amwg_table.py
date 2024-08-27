@@ -311,8 +311,9 @@ def amwg_table(adf):
         
         
         #Make and save the table to CSV file. Keep track of the file too for comparison table
-        #csv_list = make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list, premade_climo=is_climo)
-
+        make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file,
+                                use_ts,syear_cases[case_idx],eyear_cases[case_idx])
+        '''
         #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
         ocn_frc_da = None
@@ -464,7 +465,7 @@ def amwg_table(adf):
         except FileNotFoundError:
             print(f"\n\tAMWG table for '{case_name}' not created.\n")
         #End try/except
-
+        '''
         #Keep track of case csv files for comparison table check later
         csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
 
@@ -496,7 +497,8 @@ def amwg_table(adf):
 # Helper functions
 ##################
 
-def make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file, output_location, csv_list, premade_climo=False):
+def make_table(adf, var_list, case_name, input_location, var_defaults,
+                output_csv_file, use_ts, start_year,end_year):
     #Create/reset new variable that potentially stores the re-gridded
     #ocean fraction xarray data-array:
     ocn_frc_da = None
@@ -507,12 +509,12 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
         #Notify users of variable being added to table:
         print(f"\t - Variable '{var}' being added to table")
 
-        if premade_climo:
-            #Create list of climo files present for variable:
-            filenames = f'{case_name}_{var}_climo.nc'
-        else:
+        if use_ts:
             #Create list of time series files present for variable:
             filenames = f'{case_name}.*.{var}.*nc'
+        else:
+            #Create list of climo files present for variable:
+            filenames = f'{case_name}_{var}_climo.nc'
         files = sorted(input_location.glob(filenames))
         #print(f"TABLES for {case_name}")
         #print("input_location",input_location)
@@ -536,8 +538,6 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
         #Load model variable data from file:
         ds = pf.load_dataset(files)
         data = ds[var]
-
-        data = fixcesmtime(data,start_years[idx],end_years[idx])
 
         #Extract units string, if available:
         if hasattr(data, 'units'):
@@ -593,7 +593,8 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
             # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
             data = pf.spatial_average(data)  # changes data "in place"
 
-        if premade_climo:
+        if not use_ts:
+            #data = fixcesmtime(data,start_year,end_year)
             data = pf.seasonal_mean(data, season="ANN", is_climo=True)
             #Conditional Formatting depending on type of float
             if np.abs(data) < 1:
@@ -657,8 +658,8 @@ def make_table(adf, var_list, case_name, input_location, var_defaults, output_cs
     #End try/except
 
     #Keep track of case csv files for comparison table check later
-    csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
-    return csv_list
+    #csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
+    #return csv_list
 
 
 def fixcesmtime(dat,syear,eyear):
