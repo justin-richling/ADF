@@ -312,7 +312,7 @@ def amwg_table(adf):
         
         #Make and save the table to CSV file. Keep track of the file too for comparison table
         make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file,
-                                output_location, use_ts,syear_cases[case_idx],eyear_cases[case_idx])
+                                use_ts,syear_cases[case_idx],eyear_cases[case_idx])
         '''
         #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
@@ -498,7 +498,7 @@ def amwg_table(adf):
 ##################
 
 def make_table(adf, var_list, case_name, input_location, var_defaults,
-                output_csv_file, output_location, use_ts, start_year,end_year):
+                output_csv_file, use_ts, start_year,end_year):
     #Create/reset new variable that potentially stores the re-gridded
     #ocean fraction xarray data-array:
     ocn_frc_da = None
