@@ -71,8 +71,8 @@ def create_climo_files(adf, clobber=False, search=None):
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.ts_locs_dict
-    output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
-    #output_locs   = adf.climo_output_dict
+    #output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
+    output_locs   = adf.climo_output_dict
     calc_climos   = adf.calc_climo_dict
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
@@ -90,7 +90,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         #input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
-        output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
+        #output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
         #calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
@@ -101,7 +101,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Append to case lists:
         case_names.append(baseline_name)
         #input_ts_locs.append(input_ts_baseline)
-        output_locs.append(output_bl_loc)
+        #output_locs.append(output_bl_loc)
         #calc_climos.append(calc_bl_climos)
         overwrite.append(ovr_bl)
         start_year.append(bl_syr)
@@ -126,7 +126,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Create "Path" objects:
         input_location  = Path(input_ts_locs[case_name])
-        output_location = Path(output_locs[case_idx])
+        output_location = Path(output_locs[case_name])
 
         #Whether to overwrite existing climo files
         clobber = overwrite[case_idx]
