@@ -182,8 +182,7 @@ class AdfInfo(AdfConfig):
             syear_baseline = ""
             eyear_baseline = ""
 
-            #input_ts_baseline = [None]
-            self.__input_ts_baseline = None
+            input_ts_baseline = [None]
         else:
             #If not, then assume a CAM vs CAM run and add CAM baseline climatology info to object:
             self.__cam_bl_climo_info = self.read_config_var('diag_cam_baseline_climo',
@@ -438,8 +437,10 @@ class AdfInfo(AdfConfig):
             bl_ts_loc = self.__input_ts_baseline
         else:
             bl_ts_loc = None
+        #ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
         test_ts_locs[data_name] = bl_ts_loc
-        self.__ts_locs_dict = test_ts_locs
+        self.__ts_locs_dict = test_ts_locs#ts_locs_dict
+        print("WHAT?",self.__ts_locs_dict,"\n")
         ##################################################################
 
 
@@ -468,8 +469,10 @@ class AdfInfo(AdfConfig):
             calc_bl_climo = self.__calc_bl_climo
         else:
             calc_bl_climo = True
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
         calc_test_climo[data_name] = calc_bl_climo
-        self.__calc_climo_dict = calc_test_climo
+        self.__calc_climo_dict = calc_test_climo#calc_climo_dict
+        print("DFDF",self.__calc_climo_dict,"\n")
         ##################################################################
 
 
@@ -501,6 +504,7 @@ class AdfInfo(AdfConfig):
             output_bl_loc = None
         test_climo_locs[data_name] = output_bl_loc
         self.__climo_output_dict = test_climo_locs
+        print("HUH?",self.__climo_output_dict,"\n")
         ##################################################################
 
 
@@ -796,8 +800,25 @@ class AdfInfo(AdfConfig):
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
 
-    # Set dictionaries for cleaned paths and booleans from config file
-    # This will eliminate the need to check existance in individual scripts
+    '''
+    @property
+    def calc_climos(self):
+        """ Return the history string name to the user if requested."""
+
+        #Make list of all entries, similarly how the ADF does in various scripts
+        calc_climos = []
+        for key,val in self.__calc_climo_dict.items():
+            if key == "test":
+                for _,val2 in val.items():
+                    calc_climos.append(val2)
+            else: # baseline
+                calc_climos.append(val)
+        #The length of this list should always be the number of cases!
+        #calc_climos = calc_climos + [self.__calc_bl_climo]
+
+        return calc_climos
+    '''
+
     @property
     def calc_climo_dict(self):
         """ Return the history string name to the user if requested."""
@@ -807,6 +828,23 @@ class AdfInfo(AdfConfig):
     def climo_output_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__climo_output_dict
+
+
+    '''
+    @property
+    def ts_done(self):
+        """ Return the history string name to the user if requested."""
+
+        #Make list of all entries, similarly how the ADF does in various scripts
+        ts_done = []
+        for key,val in self.__ts_done_dict.items():
+            if key == "test":
+                for _,val2 in val.items():
+                    ts_done.append(val2)
+            else: # baseline
+                ts_done.append(val)
+        return ts_done
+    '''
 
     @property
     def ts_done_dict(self):

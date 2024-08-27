@@ -153,7 +153,7 @@ def amwg_table(adf):
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.ts_done_dict['test']
     #calc_cam_ts   = adf.calc_test_ts
-    calc_cam_climo   = adf.get_cam_info("calc_cam_climo")
+    #calc_cam_climo   = adf.get_cam_info("calc_cam_climo")
     use_ts = {}
     #if 
 
