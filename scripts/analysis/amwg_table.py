@@ -594,7 +594,7 @@ def make_table(adf, var_list, case_name, input_location, var_defaults,
             data = pf.spatial_average(data)  # changes data "in place"
 
         if not use_ts:
-            #data = fixcesmtime(data,start_year,end_year)
+            data = fixcesmtime(data)
             data = pf.seasonal_mean(data, season="ANN", is_climo=True)
             #Conditional Formatting depending on type of float
             if np.abs(data) < 1:
@@ -662,7 +662,7 @@ def make_table(adf, var_list, case_name, input_location, var_defaults,
     #return csv_list
 
 
-def fixcesmtime(dat,syear,eyear):
+def fixcesmtime(dat):
     """
     Fix the CESM timestamp with a simple set of dates
     """
