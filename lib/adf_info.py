@@ -476,6 +476,38 @@ class AdfInfo(AdfConfig):
         ##################################################################
 
 
+        
+        #Grab case climatology file location(s)
+        ##################################################################
+        output_locs   = self.get_cam_info("cam_climo_loc")
+        if output_locs is None:
+            output_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(output_locs) == len(case_names):
+                for i,case in enumerate(output_locs):
+                    if case is None:
+                        output_locs[i] = None
+            else:
+                print()
+
+        #Add check for obs!!!        
+        self.__test_climo_locs = {}
+        for i,cam_ts in enumerate(output_locs):
+            self.__test_climo_locs[case_names[i]] = cam_ts
+
+        test_climo_locs = copy.copy(self.__test_climo_locs)
+        if self.__input_ts_baseline:
+            bl_ts_loc = self.__input_ts_baseline
+            output_bl_loc = self.get_baseline_info("cam_climo_loc")
+        else:
+            output_bl_loc = None
+        test_climo_locs[data_name] = output_bl_loc
+        self.__climo_output_dict = test_climo_locs
+        print("HUH?",self.__climo_output_dict,"\n")
+        ##################################################################
+
+
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
@@ -791,6 +823,11 @@ class AdfInfo(AdfConfig):
     def calc_climo_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__calc_climo_dict
+
+    @property
+    def climo_output_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__climo_output_dict
 
 
     '''
