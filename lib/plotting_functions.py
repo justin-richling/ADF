@@ -482,6 +482,7 @@ def annual_mean(data, whole_years=False, time_name='time'):
     if whole_years:
         first_january = np.argwhere((data.time.dt.month == 1).values)[0].item()
         last_december = np.argwhere((data.time.dt.month == 12).values)[-1].item()
+        print("ahh",first_january,last_december,"\n")
         data_to_avg = data.isel(time=slice(first_january,last_december+1)) # PLUS 1 BECAUSE SLICE DOES NOT INCLUDE END POINT
     else:
         data_to_avg = data
