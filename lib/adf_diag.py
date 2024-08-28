@@ -341,6 +341,8 @@ class AdfDiag(AdfWeb):
 
         print("\n  Generating CAM time series files...")
 
+        run_years = self.climo_yrs
+
         # Check if baseline time-series files are being created:
         if baseline:
             # Use baseline settings, while converting them all
@@ -350,8 +352,8 @@ class AdfDiag(AdfWeb):
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             ts_dir = [self.get_baseline_info("cam_ts_loc")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
-            start_years = [self.climo_yrs["syear_baseline"]]
-            end_years = [self.climo_yrs["eyear_baseline"]]
+            #start_years = [self.climo_yrs["syear_baseline"]]
+            #end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
             hist_str_list = [self.hist_string["base_hist_str"]]
 
@@ -362,8 +364,10 @@ class AdfDiag(AdfWeb):
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
             ts_dir = self.get_cam_info("cam_ts_loc")
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
-            start_years = self.climo_yrs["syears"]
-            end_years = self.climo_yrs["eyears"]
+            #start_years = self.climo_yrs["syears"]
+            #end_years = self.climo_yrs["eyears"]
+            #start_year = run_years[case_name]["start_year"]
+            #end_year = run_years[case_name]["end_year"]
             case_type_string="case"
             hist_str_list = self.hist_string["test_hist_str"]
         # End if
@@ -386,8 +390,12 @@ class AdfDiag(AdfWeb):
             # End if
 
             # Extract start and end year values:
-            start_year = start_years[case_idx]
-            end_year = end_years[case_idx]
+            #start_year = start_years[case_idx]
+            #end_year = end_years[case_idx]
+
+            run_years
+            start_year = run_years[case_name]["end_year"]
+            end_year = run_years[case_name]["end_year"]
 
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
