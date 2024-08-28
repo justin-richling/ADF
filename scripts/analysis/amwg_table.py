@@ -133,6 +133,7 @@ def amwg_table(adf):
     
     ts_locs = adf.ts_locs_dict
     climo_locs = adf.climo_locs_dict
+    print("climo_locs",climo_locs,"\n")
 
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.ts_done_dict['test']
