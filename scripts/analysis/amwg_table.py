@@ -251,6 +251,7 @@ def make_table(adf, var_list, case_name, input_location, var_defaults,
             #Create list of climo files present for variable:
             filenames = f'{case_name}_{var}_climo.nc'
         files = sorted(input_location.glob(filenames))
+        print("files",files,"\n\n")
 
         # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
         if not files:
