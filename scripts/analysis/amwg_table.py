@@ -164,7 +164,7 @@ def amwg_table(adf):
         else:
             ts_locs[baseline_name] = None
         #End if'''
-
+        '''
         #Check if premade climo files were supplied        
         calc_baseline_ts   = adf.ts_done_dict['baseline']
         if calc_baseline_ts:
@@ -180,6 +180,7 @@ def amwg_table(adf):
         else:
             climo_locs[baseline_name] = None
         #End if
+        '''
 
 
 
