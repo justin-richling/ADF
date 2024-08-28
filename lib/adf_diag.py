@@ -942,10 +942,10 @@ class AdfDiag(AdfWeb):
         case_names = self.get_cam_info("cam_case_name", required=True)
 
         # Start years (not currently required):
-        syears = self.climo_yrs["syears"]
+        #syears = self.climo_yrs["syears"]
 
         # End year (not currently rquired):
-        eyears = self.climo_yrs["eyears"]
+        #eyears = self.climo_yrs["eyears"]
         #Grab case years
         run_years = self.climo_yrs
 
