@@ -185,6 +185,7 @@ class AdfInfo(AdfConfig):
 
             #input_ts_baseline = [None]
             self.__input_ts_baseline = None
+            self.__input_climo_baseline = None
         else:
             #If not, then assume a CAM vs CAM run and add CAM baseline climatology info to object:
             self.__cam_bl_climo_info = self.read_config_var('diag_cam_baseline_climo',
@@ -221,6 +222,11 @@ class AdfInfo(AdfConfig):
             if input_ts_baseline is None:
                 input_ts_baseline = ''
             self.__input_ts_baseline = input_ts_baseline
+
+            input_climo_baseline = self.get_baseline_info("cam_climo_loc")
+            if input_climo_baseline is None:
+                input_climo_baseline = ''
+            self.__input_climo_baseline = input_climo_baseline
 
 
 
@@ -495,12 +501,12 @@ class AdfInfo(AdfConfig):
             self.__test_climo_locs[case_names[i]] = cam_ts
 
         test_climo_locs = copy.copy(self.__test_climo_locs)
-        if self.__input_ts_baseline:
-            bl_ts_loc = self.__input_ts_baseline
-            output_bl_loc = self.get_baseline_info("cam_climo_loc")
+        if self.__input_climo_baseline:
+            bl_climo_loc = self.__input_climo_baseline
+            #output_bl_loc = self.get_baseline_info("cam_climo_loc")
         else:
-            output_bl_loc = None
-        test_climo_locs[data_name] = output_bl_loc
+            bl_climo_loc = None
+        test_climo_locs[data_name] = bl_climo_loc
         self.__climo_loc_dict = test_climo_locs
         ##################################################################
 
