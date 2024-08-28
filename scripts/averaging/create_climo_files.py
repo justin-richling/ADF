@@ -77,8 +77,8 @@ def create_climo_files(adf, clobber=False, search=None):
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
     run_years = adf.climo_yrs
-    start_year = run_years[case_name]["start_year"]
-    end_year = run_years[case_name]["end_year"]
+    #start_year = run_years[case_name]["start_year"]
+    #end_year = run_years[case_name]["end_year"]
 
     #Extract simulation years:
     #start_year = adf.climo_yrs["syears"]
