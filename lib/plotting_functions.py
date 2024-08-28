@@ -485,6 +485,7 @@ def annual_mean(data, whole_years=False, time_name='time'):
         data_to_avg = data.isel(time=slice(first_january,last_december+1)) # PLUS 1 BECAUSE SLICE DOES NOT INCLUDE END POINT
     else:
         data_to_avg = data
+    print("data_to_avg",data_to_avg,"\n")
     date_range_string = f"{data_to_avg['time'][0]} -- {data_to_avg['time'][-1]}"
 
     # this provides the normalized monthly weights in each year
