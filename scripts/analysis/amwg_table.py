@@ -132,33 +132,11 @@ def amwg_table(adf):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     
     ts_locs = adf.ts_locs_dict
-    '''input_ts_locs = adf.get_cam_info("cam_ts_loc")
-    #input_ts_locs = adf.test_ts_locs
-    ts_locs = {}
-    if not input_ts_locs:
-        #ts_locs = [None]
-        for case in case_names:
-            ts_locs[case] = None
-    else:
-        #ts_locs = {}
-        for i,case in enumerate(case_names):
-            if input_ts_locs[i]:
-                #print()
-                ts_locs[case] = input_ts_locs[i]
-            else:
-                ts_locs[case] = None'''
-
-
+    climo_locs = adf.climo_locs_dict
 
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.ts_done_dict['test']
-    #calc_cam_ts   = adf.calc_test_ts
-    #calc_cam_climo   = adf.get_cam_info("calc_cam_climo")
     use_ts = {}
-    #if 
-
-
-    print(calc_cam_ts)
 
     if not calc_cam_ts:
         for case in case_names:
@@ -170,22 +148,6 @@ def amwg_table(adf):
                 use_ts[case] = calc_cam_ts[case]
             else:
                 use_ts[case] = False
-
-    
-    input_climo_locs = adf.get_cam_info("cam_climo_loc")
-    #input_climo_locs = adf.test_climo_locs
-    climo_locs = {}
-    if not input_climo_locs:
-        for case in case_names:
-            climo_locs[case] = None
-    else:
-        for i,case in enumerate(case_names):
-            if input_climo_locs[i]:
-                #print()
-                climo_locs[case] = input_climo_locs[i]
-            else:
-                climo_locs[case] = None
-
 
     # Baseline Case
     #--------------

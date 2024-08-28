@@ -501,7 +501,7 @@ class AdfInfo(AdfConfig):
         else:
             output_bl_loc = None
         test_climo_locs[data_name] = output_bl_loc
-        self.__climo_output_dict = test_climo_locs
+        self.__climo_loc_dict = test_climo_locs
         ##################################################################
 
 
@@ -803,11 +803,11 @@ class AdfInfo(AdfConfig):
     def calc_climo_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__calc_climo_dict
-
+    
     @property
-    def climo_output_dict(self):
+    def climo_locs_dict(self):
         """ Return the history string name to the user if requested."""
-        return self.__climo_output_dict
+        return self.__climo_loc_dict
 
     @property
     def ts_done_dict(self):
@@ -818,8 +818,6 @@ class AdfInfo(AdfConfig):
     def ts_locs_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__ts_locs_dict
-
-
     #########
 
     #Utility function to access expanded 'diag_basic_info' variables:
