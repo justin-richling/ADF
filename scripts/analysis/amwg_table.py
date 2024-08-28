@@ -136,18 +136,6 @@ def amwg_table(adf):
 
     #Check if user wants to skip time series file creation
     calc_cam_ts   = adf.ts_done_dict['test']
-    use_ts = {}
-
-    if not calc_cam_ts:
-        for case in case_names:
-            use_ts[case] = False
-    else:
-        for i,case in enumerate(case_names):
-            if calc_cam_ts[case]:
-                print()
-                use_ts[case] = calc_cam_ts[case]
-            else:
-                use_ts[case] = False
 
     # Baseline Case
     #--------------
@@ -232,12 +220,15 @@ def amwg_table(adf):
     for case_idx, case_name in enumerate(case_names):
         print(f"Making AMWG table for case'{case_name}'")
 
+        #if calc_cam_ts[case]:
+        #    use_ts[case] = calc_cam_ts[case]
+        #else:
+        #    use_ts[case] = False
+
         if ts_locs[case_name]:
-            #use_climo = False
             use_ts = True
         else:
             print(f"User supplied case '{case_name}' climo files, will make only global mean for variables.")
-            #use_climo = True
             use_ts = False
 
         print("\ncase:",case_name,"  use_ts:",use_ts,"\n")
@@ -250,12 +241,14 @@ def amwg_table(adf):
             input_location = Path(ts_locs[case_name])
         else:
             input_location = Path(climo_locs[case_name])
-        #print("input_location",input_location,"\n")
+        print("input_location",input_location,"\n")
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
-            raise AdfError(errmsg)
+            #errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
+            #raise AdfError(errmsg)
+            errmsg = f"\tTime series directory '{input_location}' not found."
+            print(errmsg)
         #Write to debug log if enabled:
         adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
         #Check if analysis directory exists, and if not, then create it:
