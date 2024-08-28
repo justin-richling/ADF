@@ -90,12 +90,9 @@ def global_latlon_map(adfobj):
     plot_locations = adfobj.plot_location
 
     #Grab case years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
-
-    #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    run_years = adfobj.climo_yrs
+    #start_year = run_years[case_name]["start_year"]
+    #end_year = run_years[case_name]["end_year"]
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -161,6 +158,8 @@ def global_latlon_map(adfobj):
             base_name = adfobj.data.ref_case_label
         else:
             base_name = adfobj.data.ref_labels[var]
+        syear_baseline = run_years[base_name]["start_year"]
+        eyear_baseline = run_years[base_name]["end_year"]
 
         # Gather reference variable data
         odata = adfobj.data.load_reference_regrid_da(base_name, var)
@@ -177,6 +176,9 @@ def global_latlon_map(adfobj):
 
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
+            #run_years = adfobj.climo_yrs
+            start_year = run_years[case_name]["start_year"]
+            end_year = run_years[case_name]["end_year"]
 
             #Set case nickname:
             case_nickname = adfobj.data.test_nicknames[case_idx]
@@ -253,7 +255,7 @@ def global_latlon_map(adfobj):
                     dseasons[s] = mseasons[s] - oseasons[s]
 
                     pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
-                                            [syear_cases[case_idx],eyear_cases[case_idx]],
+                                            [start_year,end_year],
                                             [syear_baseline,eyear_baseline],
                                             mseasons[s], oseasons[s], dseasons[s],
                                             obs=adfobj.compare_obs, **vres)
@@ -293,7 +295,7 @@ def global_latlon_map(adfobj):
                         dseasons[s] = mseasons[s] - oseasons[s]
 
                         pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
-                                                [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                [start_year,end_year],
                                                 [syear_baseline,eyear_baseline],
                                                 mseasons[s].sel(lev=pres), oseasons[s].sel(lev=pres), dseasons[s].sel(lev=pres),
                                                 obs=adfobj.compare_obs, **vres)

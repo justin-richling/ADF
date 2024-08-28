@@ -163,6 +163,7 @@ class AdfInfo(AdfConfig):
         self.__base_hist_str = ""
         self.__baseline_ts_done = None
         self.__calc_bl_climo = True
+        run_years_dict = {}
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
@@ -353,8 +354,9 @@ class AdfInfo(AdfConfig):
         self.__base_nickname = base_nickname
 
         #Save starting and ending years as object variables:
-        self.__syear_baseline = syear_baseline
-        self.__eyear_baseline = eyear_baseline
+        #self.__syear_baseline = syear_baseline
+        #self.__eyear_baseline = eyear_baseline
+        run_years_dict[data_name] = {"start_year":syear_baseline,"end_year":eyear_baseline}
 
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
@@ -608,8 +610,9 @@ class AdfInfo(AdfConfig):
             #Update climo year lists in case anything changed
             syear = int(syear)
             eyear = int(eyear)
-            syears_fixed.append(syear)
-            eyears_fixed.append(eyear)
+            run_years_dict[case_name] = {"start_year":syear,"end_year":eyear}
+            #syears_fixed.append(syear)
+            #eyears_fixed.append(eyear)
 
             #Update case name with provided/found years:
             dir_case_name = f"{case_name}_{syear}_{eyear}"
@@ -626,8 +629,10 @@ class AdfInfo(AdfConfig):
 
         #End for
 
-        self.__syears = syears_fixed
-        self.__eyears = eyears_fixed
+        #self.__syears = syears_fixed
+        #self.__eyears = eyears_fixed
+
+        self.__run_years_dict = run_years_dict
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
@@ -771,13 +776,19 @@ class AdfInfo(AdfConfig):
         return copy.copy(self.__plot_location)
 
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
-    @property
+    '''@property
     def climo_yrs(self):
         """Return the "syear" and "eyear" integer values to the user if requested."""
         syears = copy.copy(self.__syears) #Send copies so a script doesn't modify the original
         eyears = copy.copy(self.__eyears)
         return {"syears":syears,"eyears":eyears,
-                "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
+                "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}'''
+    @property
+    def climo_yrs(self):
+        """Return the "syear" and "eyear" integer values to the user if requested."""
+        #syears = copy.copy(self.__syears) #Send copies so a script doesn't modify the original
+        #eyears = copy.copy(self.__eyears)
+        return self.__run_years_dict
 
 
     # Create property needed to return the case nicknames to user:

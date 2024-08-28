@@ -62,8 +62,9 @@ def global_latlon_vect_map(adfobj):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
     #Grab case years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    run_years = adfobj.climo_yrs
+    #start_year = run_years[case_name]["start_year"]
+    #end_year = run_years[case_name]["end_year"]
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -72,6 +73,7 @@ def global_latlon_vect_map(adfobj):
     if adfobj.get_basic_info("compare_obs"):
         #Set obs call for observation details for plot titles
         obs = True
+        data_name = "Obs"
 
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
@@ -89,8 +91,8 @@ def global_latlon_vect_map(adfobj):
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    syear_baseline = run_years[data_name]["start_year"]
+    eyear_baseline = run_years[data_name]["end_year"]
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
@@ -261,6 +263,8 @@ def global_latlon_vect_map(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+                start_year = run_years[case_name]["start_year"]
+                end_year = run_years[case_name]["end_year"]
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
@@ -409,7 +413,7 @@ def global_latlon_vect_map(adfobj):
                                 #   *Any other entries will be ignored.
                                 # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
                                 pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
-                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [start_year, end_year],
                                                         [syear_baseline,eyear_baseline],lv,
                                                         umseasons[s], vmseasons[s],
                                                         uoseasons[s], voseasons[s],
@@ -463,7 +467,7 @@ def global_latlon_vect_map(adfobj):
                             #   *Any other entries will be ignored.
                             # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
                             pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
-                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                      [start_year, end_year],
                                                       [syear_baseline,eyear_baseline], None,
                                                       umseasons[s], vmseasons[s],
                                                       uoseasons[s], voseasons[s],

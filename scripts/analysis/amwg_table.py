@@ -135,64 +135,11 @@ def amwg_table(adf):
     climo_locs = adf.climo_locs_dict
     print("climo_locs",climo_locs,"\n")
 
-    #Check if user wants to skip time series file creation
-    calc_cam_ts   = adf.ts_done_dict['test']
-
-    # Baseline Case
-    #--------------
-
-    #Grab case years
-    syear_cases = adf.climo_yrs["syears"]
-    eyear_cases = adf.climo_yrs["eyears"]
-
-    #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adf.climo_yrs["syear_baseline"]
-    eyear_baseline = adf.climo_yrs["eyear_baseline"]
-
-    syear_cases.append(syear_baseline)
-    eyear_cases.append(eyear_baseline)
-
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         case_names.append(baseline_name)
-
-        '''#Check if time series location was provided (premade climo files were supplied?)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
-        if input_ts_baseline:
-            ts_locs[baseline_name] = input_ts_baseline
-        else:
-            ts_locs[baseline_name] = None
-        #End if'''
-        '''
-        #Check if premade climo files were supplied        
-        calc_baseline_ts   = adf.ts_done_dict['baseline']
-        if calc_baseline_ts:
-            use_ts[baseline_name] = calc_baseline_ts
-        else:
-            use_ts[baseline_name] = False
-        #End if
-
-        #Check if climo location was provided (premade climo files were supplied?)
-        input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
-        if input_base_climo_loc:
-            climo_locs[baseline_name] = input_base_climo_loc
-        else:
-            climo_locs[baseline_name] = None
-        #End if
-        '''
-
-
-
-
-        #input_base_climo_loc = adf.get_baseline_info("cam_climo_loc")
-        #if not input_climo_locs:
-        #    input_climo_locs = [None]
-        #    if input_base_climo_loc:
-        #        input_climo_locs.append(input_base_climo_loc)
-        #    else:
-        #        input_climo_locs.append(None)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
@@ -206,26 +153,11 @@ def amwg_table(adf):
 
     #-----------------------------------------
 
-    #Check if user wants to skip time series file creation
-    #calc_cam_ts   = adf.get_cam_info("calc_cam_ts")
-    #if not isinstance(calc_cam_ts, list):
-    #    # If so, then check if any of the entries are "True":
-    #    calc_cam_ts = list(calc_cam_ts)
-    # End if
-
-    #if calc_cam_ts is None:
-    #    calc_cam_ts = [False]*len(case_names)
-
     #Loop over CAM cases:
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
         print(f"Making AMWG table for case'{case_name}'")
-
-        #if calc_cam_ts[case]:
-        #    use_ts[case] = calc_cam_ts[case]
-        #else:
-        #    use_ts[case] = False
 
         if ts_locs[case_name]:
             use_ts = True
@@ -243,7 +175,6 @@ def amwg_table(adf):
             input_location = Path(ts_locs[case_name])
         else:
             input_location = Path(climo_locs[case_name])
-        print("input_location",input_location,"\n")
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
@@ -268,7 +199,7 @@ def amwg_table(adf):
         
         #Make and save the table to CSV file. Keep track of the file too for comparison table
         make_table(adf, var_list, case_name, input_location, var_defaults, output_csv_file,
-                                use_ts,syear_cases[case_idx],eyear_cases[case_idx])
+                                use_ts)
 
         #Keep track of case csv files for comparison table check later
         csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
@@ -302,7 +233,7 @@ def amwg_table(adf):
 ##################
 
 def make_table(adf, var_list, case_name, input_location, var_defaults,
-                output_csv_file, use_ts, start_year,end_year):
+                output_csv_file, use_ts):
     #Create/reset new variable that potentially stores the re-gridded
     #ocean fraction xarray data-array:
     ocn_frc_da = None

@@ -76,9 +76,13 @@ def create_climo_files(adf, clobber=False, search=None):
     calc_climos   = adf.calc_climo_dict
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
+    run_years = adf.climo_yrs
+    start_year = run_years[case_name]["start_year"]
+    end_year = run_years[case_name]["end_year"]
+
     #Extract simulation years:
-    start_year = adf.climo_yrs["syears"]
-    end_year   = adf.climo_yrs["eyears"]
+    #start_year = adf.climo_yrs["syears"]
+    #end_year   = adf.climo_yrs["eyears"]
 
     #If variables weren't provided in config file, then make them a list
     if not overwrite:
@@ -95,8 +99,8 @@ def create_climo_files(adf, clobber=False, search=None):
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
         #Extract baseline years:
-        bl_syr = adf.climo_yrs["syear_baseline"]
-        bl_eyr = adf.climo_yrs["eyear_baseline"]
+        #bl_syr = adf.climo_yrs["syear_baseline"]
+        #bl_eyr = adf.climo_yrs["eyear_baseline"]
 
         #Append to case lists:
         case_names.append(baseline_name)
@@ -104,8 +108,8 @@ def create_climo_files(adf, clobber=False, search=None):
         #output_locs.append(output_bl_loc)
         #calc_climos.append(calc_bl_climos)
         overwrite.append(ovr_bl)
-        start_year.append(bl_syr)
-        end_year.append(bl_eyr)
+        #start_year.append(bl_syr)
+        #end_year.append(bl_eyr)
     #-----------------------------------------
 
     # Check whether averaging interval is supplied
@@ -146,7 +150,10 @@ def create_climo_files(adf, clobber=False, search=None):
             search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
 
         #Check model year bounds:
-        syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
+        #syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
+        start_year = run_years[case_name]["start_year"]
+        end_year = run_years[case_name]["end_year"]
+        syr, eyr = check_averaging_interval(start_year, end_year)
 
         #Loop over CAM output variables:
         list_of_arguments = []

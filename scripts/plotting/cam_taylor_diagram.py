@@ -52,8 +52,12 @@ def cam_taylor_diagram(adfobj):
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
 
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    run_years = adfobj.climo_yrs
+    #start_year = run_years[case_name]["start_year"]
+    #end_year = run_years[case_name]["end_year"]
+
+    #syear_cases = adfobj.climo_yrs["syears"]
+    #eyear_cases = adfobj.climo_yrs["eyears"]
 
     case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
 
@@ -94,8 +98,8 @@ def cam_taylor_diagram(adfobj):
     #End if
 
     #Extract baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    #syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    #eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -169,6 +173,10 @@ def cam_taylor_diagram(adfobj):
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
                 result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
+
+        syear_baseline = run_years[data_name]["start_year"]
+        eyear_baseline = run_years[data_name]["end_year"]
+
         #
         # -- PLOTTING (one per season) --
         #
@@ -178,7 +186,7 @@ def cam_taylor_diagram(adfobj):
         for i, case in enumerate(case_names):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
 
-        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
+        ax = taylor_plot_finalize(ax, case_names, test_nicknames, case_colors, run_years, needs_bias_labels=True)
         # add text with variable names:
         txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
         fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
@@ -558,7 +566,7 @@ def plot_taylor_data(wks, df, **kwargs):
     return wks
 
 
-def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cases, needs_bias_labels=True):
+def taylor_plot_finalize(wks, case_names, test_nicknames, casecolors, run_years, needs_bias_labels=True):
     """Apply final formatting to a Taylor diagram.
         wks -> Axes object that has passed through taylor_plot_setup and plot_taylor_data
         casenames -> list of case names for the legend
@@ -572,9 +580,10 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
     wks.text(0.052, 0.08, "Cases:",
             color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)
     n = 0
-    for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
-
-            wks.text(0.052, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+    for case_idx, (s, c) in enumerate(zip(case_names, casecolors)):
+            syear = run_years[s]["start_year"]
+            eyear = run_years[set]["end_year"]
+            wks.text(0.052, bottom_of_text + n*height_of_lines, f"{test_nicknames[case_idx]}  yrs: {syear}-{eyear}",
             color=c, ha='left', va='bottom', transform=wks.transAxes, fontsize=10)
             n += 1
     # BIAS LEGEND

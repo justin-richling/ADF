@@ -25,9 +25,8 @@ def create_TEM_files(adf):
     #Grab h4 history files locations
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
 
-    #Extract test case years
-    start_years   = adf.climo_yrs["syears"]
-    end_years     = adf.climo_yrs["eyears"]
+    #Extract case years
+    run_years = adf.climo_yrs
 
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
 
@@ -185,8 +184,10 @@ def create_TEM_files(adf):
         print(f"\t Processing TEM for case '{case_name}' :")
 
         #Extract start and end year values:
-        start_year = start_years[case_idx]
-        end_year   = end_years[case_idx]
+        #start_year = start_years[case_idx]
+        #end_year   = end_years[case_idx]
+        start_year = run_years[case_name]["start_year"]
+        end_year = run_years[case_name]["end_year"]
 
         #Create path object for the CAM history file(s) location:
         starting_location = Path(cam_hist_locs[case_idx])

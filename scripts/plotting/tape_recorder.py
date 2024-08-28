@@ -37,7 +37,7 @@ def tape_recorder(adfobj):
     plot_loc = Path(plot_location[0])
 
     #Grab test case name(s)
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
@@ -49,7 +49,7 @@ def tape_recorder(adfobj):
     else:
         for i,case_ts_loc in enumerate(case_ts_locs):
             if case_ts_loc is None:
-                print(f"Case '{case_names[i]}' is missing time series location, skipping case boi! case_ts_loc: {case_ts_loc}")
+                print(f"Case '{test_case_names[i]}' is missing time series location, skipping case boi! case_ts_loc: {case_ts_loc}")
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
@@ -65,9 +65,12 @@ def tape_recorder(adfobj):
                case_hist_strs.append(string)
                break
 
-    #Grab test case climo years
-    start_years = adfobj.climo_yrs["syears"]
-    end_years = adfobj.climo_yrs["eyears"]
+    #Grab case climo years
+    run_years = adfobj.climo_yrs
+    #start_year = run_years[case_name]["start_year"]
+    #end_year = run_years[case_name]["end_year"]
+    #syear_baseline = run_years[data_name]["start_year"]
+    #eyear_baseline = run_years[data_name]["end_year"]
 
     #Grab test case nickname(s)
     test_nicknames = adfobj.case_nicknames['test_nicknames']
@@ -80,7 +83,7 @@ def tape_recorder(adfobj):
 
         #Append all baseline objects to test case lists
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
-        case_names = case_names + [data_name]
+        case_names = test_case_names + [data_name]
         
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         if data_ts_loc is None:
@@ -93,10 +96,10 @@ def tape_recorder(adfobj):
         base_nickname = adfobj.case_nicknames['base_nickname']
         test_nicknames = test_nicknames+[base_nickname]
 
-        data_start_year = adfobj.climo_yrs["syear_baseline"]
-        data_end_year = adfobj.climo_yrs["eyear_baseline"]
-        start_years = start_years+[data_start_year]
-        end_years = end_years+[data_end_year]
+        #data_start_year = adfobj.climo_yrs["syear_baseline"]
+        #data_end_year = adfobj.climo_yrs["eyear_baseline"]
+        #start_years = start_years+[data_start_year]
+        #end_years = end_years+[data_end_year]
 
         #Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
@@ -105,7 +108,11 @@ def tape_recorder(adfobj):
         hist_strs = case_hist_strs + base_hist_strs
     else:
         hist_strs = case_hist_strs
+        data_name = "Obs"
     #End if
+
+    syear_baseline = run_years[data_name]["start_year"]
+    eyear_baseline = run_years[data_name]["end_year"]
 
     if not case_ts_locs:
         exitmsg = "WARNING: No time series files in any case directory."
@@ -193,6 +200,9 @@ def tape_recorder(adfobj):
     runname_LT=[]
     count=2
     for idx,key in enumerate(test_nicknames):
+        start_year = run_years[test_case_names[idx]]["start_year"]
+        end_year = run_years[test_case_names[idx]]["end_year"]
+
         # Search for files
         ts_loc = Path(case_ts_locs[idx])
         hist_str = hist_strs[idx]
@@ -206,14 +216,14 @@ def tape_recorder(adfobj):
             continue
 
         #Grab time slice based on requested years (if applicable)
-        dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
+        dat = dat.sel(time=slice(str(start_year).zfill(4),str(end_year).zfill(4)))
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         ax = plot_pre_mon(fig, dat_mon,
                           plot_step, plot_min, plot_max, key,
                           x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                          taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+                          taxis='month',climo_yrs=f"{start_year}-{end_year}")
         count=count+1
         runname_LT.append(key)
 

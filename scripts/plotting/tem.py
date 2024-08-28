@@ -40,17 +40,22 @@ def tem(adf):
         plot_location.mkdir(parents=True)
 
     #CAM simulation variables (this is always assumed to be a list):
-    case_names = adf.get_cam_info("cam_case_name", required=True)
+    test_case_names = adf.get_cam_info("cam_case_name", required=True)
 
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
 
     #Extract test case years
-    syear_cases = adf.climo_yrs["syears"]
-    eyear_cases = adf.climo_yrs["eyears"]
+    #syear_cases = adf.climo_yrs["syears"]
+    #eyear_cases = adf.climo_yrs["eyears"]
 
     #Extract baseline years (which may be empty strings if using Obs):
-    syear_baseline = adf.climo_yrs["syear_baseline"]
-    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+    #syear_baseline = adf.climo_yrs["syear_baseline"]
+    #eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+    #Grab case years
+    run_years = adf.climo_yrs
+    #start_year = run_years[case_name]["start_year"]
+    #end_year = run_years[case_name]["end_year"]
 
     #Grab all case nickname(s)
     test_nicknames = adf.case_nicknames["test_nicknames"]
@@ -110,11 +115,19 @@ def tem(adf):
     #Check if comparing against obs
     if adf.compare_obs:
         obs = True
+        base_name = "Obs"
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = run_years[base_name]["start_year"]
+        eyear_baseline = run_years[base_name]["end_year"]
+
         #Set TEM file for observations
         base_file_name = 'Obs.TEMdiag.nc'
         input_loc_idx = Path(tem_locs[0])
     else:
         base_name = adf.get_baseline_info("cam_case_name", required=True)
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = run_years[base_name]["start_year"]
+        eyear_baseline = run_years[base_name]["end_year"]
         
         #If path not specified, skip TEM calculation?
         if tem_base_loc is None:
@@ -164,11 +177,13 @@ def tem(adf):
                                 facecolor='w', edgecolor='k')
 
         #Loop over model cases:
-        for idx,case_name in enumerate(case_names):
+        for idx,case_name in enumerate(test_case_names):
+            start_year = run_years[case_name]["start_year"]
+            end_year = run_years[case_name]["end_year"]
 
             #Extract start and end year values:
-            start_year = syear_cases[idx]
-            end_year   = eyear_cases[idx]
+            #start_year = syear_cases[idx]
+            #end_year   = eyear_cases[idx]
 
             #Open the TEM file
             output_loc_idx = tem_locs[idx]
@@ -182,7 +197,7 @@ def tem(adf):
                 print(f"\t'{case_file_name}' does not exist. TEM plots will be skipped.")
                 return
 
-            climo_yrs = {"test":[syear_cases[idx], eyear_cases[idx]],
+            climo_yrs = {"test":[start_year, end_year],
                          "base":[syear_baseline, eyear_baseline]}
 
             #Setup and plot the sub-plots
