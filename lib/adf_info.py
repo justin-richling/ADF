@@ -176,6 +176,7 @@ class AdfInfo(AdfConfig):
 
             #Also set data name for use below:
             dir_data_name = "Obs"
+            data_name = "Obs"
             base_nickname = "Obs"
 
             #Set the baseline years to empty strings:
