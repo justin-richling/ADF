@@ -175,7 +175,7 @@ class AdfInfo(AdfConfig):
             self.__cam_bl_climo_info = None
 
             #Also set data name for use below:
-            data_name = "Obs"
+            dir_data_name = "Obs"
             base_nickname = "Obs"
 
             #Set the baseline years to empty strings:
