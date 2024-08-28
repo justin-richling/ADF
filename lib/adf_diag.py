@@ -848,6 +848,9 @@ class AdfDiag(AdfWeb):
             return
         # End if
 
+        #Grab case years
+        run_years = self.climo_yrs
+
         # Set "data_name" variable, which depends on "compare_obs":
         if self.compare_obs:
             data_name = "obs"
@@ -856,8 +859,11 @@ class AdfDiag(AdfWeb):
             data_name = self.get_baseline_info("cam_case_name", required=True)
 
             # Attempt to grab baseline start_years (not currently required):
-            syear_baseline = self.climo_yrs["syear_baseline"]
-            eyear_baseline = self.climo_yrs["eyear_baseline"]
+            #syear_baseline = self.climo_yrs["syear_baseline"]
+            #eyear_baseline = self.climo_yrs["eyear_baseline"]
+
+            syear_baseline = run_years[data_name]["start_year"]
+            eyear_baseline = run_years[data_name]["end_year"]
 
             # If years exist, then add them to the data_name string:
             if syear_baseline and eyear_baseline:
@@ -898,6 +904,9 @@ class AdfDiag(AdfWeb):
             return
         # End if
 
+        #Grab case years
+        run_years = self.climo_yrs
+
         # Set "data_name" variable, which depends on "compare_obs":
         if self.compare_obs:
             data_name = "obs"
@@ -906,8 +915,8 @@ class AdfDiag(AdfWeb):
             data_name = self.get_baseline_info("cam_case_name", required=True)
 
             # Attempt to grab baseline start_years (not currently required):
-            syear_baseline = self.climo_yrs["syear_baseline"]
-            eyear_baseline = self.climo_yrs["eyear_baseline"]
+            syear_baseline = run_years[data_name]["start_year"]
+            eyear_baseline = run_years[data_name]["end_year"]
 
             # If years exist, then add them to the data_name string:
             if syear_baseline and eyear_baseline:
@@ -937,6 +946,8 @@ class AdfDiag(AdfWeb):
 
         # End year (not currently rquired):
         eyears = self.climo_yrs["eyears"]
+        #Grab case years
+        run_years = self.climo_yrs
 
         # Timeseries locations:
         cam_ts_loc = self.get_cam_info("cam_ts_loc")
@@ -960,19 +971,19 @@ class AdfDiag(AdfWeb):
         # intialize objects that might not be declared later
         case_name_baseline = None
         baseline_ts_loc = None
-        syears_baseline = None
-        eyears_baseline = None
+        syear_baseline = None
+        eyear_baseline = None
 
         # check to see if there is a CAM baseline case. If there is, read in relevant information.
         if not self.get_basic_info("compare_obs"):
             case_name_baseline = self.get_baseline_info("cam_case_name")
-            syears_baseline = self.climo_yrs["syear_baseline"]
-            eyears_baseline = self.climo_yrs["eyear_baseline"]
             baseline_ts_loc = self.get_baseline_info("cam_ts_loc")
+            syear_baseline = run_years[case_name_baseline]["start_year"]
+            eyear_baseline = run_years[case_name_baseline]["end_year"]
         else:
             case_name_baseline = ''
-            syears_baseline = 0
-            eyears_baseline = 0
+            syear_baseline = 0
+            eyear_baseline = 0
             baseline_ts_loc = ''
         # End if
 
@@ -985,9 +996,9 @@ class AdfDiag(AdfWeb):
                 str(cam_ts_loc[case_idx]),
                 os.sep,
                 " | ",
-                str(syears[case_idx]),
+                str(run_years[case_name]["start_year"]),
                 " | ",
-                str(eyears[case_idx]),
+                str(run_years[case_name]["end_year"]),
             ]
             row_list.append("".join(row))
         # End for
@@ -1006,9 +1017,9 @@ class AdfDiag(AdfWeb):
                     str(baseline_ts_loc),
                     os.sep,
                     " | ",
-                    str(syears_baseline),
+                    str(syear_baseline),
                     " | ",
-                    str(eyears_baseline),
+                    str(eyear_baseline),
                 ]
                 rowtextb = "".join(rowb)
                 fnml.write(rowtextb)
@@ -1242,15 +1253,20 @@ class AdfDiag(AdfWeb):
 
         # Casenames, paths and start/end years come through the ADF
         case_names = self.get_cam_info("cam_case_name", required=True)
-        start_years = self.climo_yrs["syears"]
-        end_years = self.climo_yrs["eyears"]
+
+        #Grab case years
+        run_years = self.climo_yrs
+        #start_years = self.climo_yrs["syears"]
+        #end_years = self.climo_yrs["eyears"]
 
         case_list_all = []
         for icase, case in enumerate(case_names):
             case_list_values = [
                 case,
-                start_years[icase],
-                end_years[icase],
+                #start_years[icase],
+                #end_years[icase],
+                run_years[case]["start_year"],
+                run_years[case]["end_year"],
                 "CESM",
                 "CESM",
             ]
