@@ -375,12 +375,11 @@ class AdfWeb(AdfObs):
 
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
-
+            #Grab baseline years (which may be empty strings if using Obs):
+            syear_baseline = run_years[data_name]["start_year"]
+            eyear_baseline = run_years[data_name]["end_year"]
             baseline_yrs=f"{syear_baseline} - {eyear_baseline}"
         #End if
-        #Grab baseline years (which may be empty strings if using Obs):
-        syear_baseline = run_years[data_name]["start_year"]
-        eyear_baseline = run_years[data_name]["end_year"]
 
         #Set climo years format for html file headers
         case_yrs=f"{start_year} - {end_year}"
