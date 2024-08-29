@@ -393,7 +393,7 @@ class AdfDiag(AdfWeb):
             #start_year = start_years[case_idx]
             #end_year = end_years[case_idx]
 
-            start_year = run_years[case_name]["end_year"]
+            start_year = run_years[case_name]["start_year"]
             end_year = run_years[case_name]["end_year"]
             print(start_year, end_year)
 
