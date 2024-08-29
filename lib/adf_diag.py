@@ -554,7 +554,7 @@ class AdfDiag(AdfWeb):
                         #NOTE: the diag_var_list will need to be updated each time
                         #      to add all constituents to diagnostics variable list
                         #      for time series creation
-                        constit_dict = check_derive(self, res, var, case_name,
+                        diag_var_list, constit_dict = check_derive(self, res, var, case_name,
                                                                     diag_var_list, constit_dict,
                                                                     hist_file_ds, hist_files[0])
                         print("IN-LOOP diag_var_list",diag_var_list)

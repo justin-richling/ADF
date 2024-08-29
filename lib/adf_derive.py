@@ -86,8 +86,7 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
         #    print(exit_msg)
         print(exit_msg)
         self.debug_log(exit_msg)
-        return constit_dict
-        #return diag_var_list, constit_dict
+        return diag_var_list, constit_dict
 
     # Check first if variable is potentially part of a CAM-CHEM run
     if "derivable_from_cam_chem" in vres:
@@ -143,8 +142,7 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
         self.debug_log(exit_msg)
     # End if
 
-    #return diag_var_list, constit_dict
-    return constit_dict
+    return diag_var_list, constit_dict
 
 ########
 
