@@ -269,7 +269,8 @@ def make_table(adf, var_list, case_name, input_location, var_defaults,
         #End if
 
         #Load model variable data from file:
-        ds = pf.load_dataset(files)
+        #ds = pf.load_dataset(files)
+        ds = adf.data.load_timeseries_dataset
         data = ds[var]
 
         #Extract units string, if available:
