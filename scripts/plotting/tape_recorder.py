@@ -200,8 +200,8 @@ def tape_recorder(adfobj):
     runname_LT=[]
     count=2
     for idx,key in enumerate(test_nicknames):
-        start_year = run_years[test_case_names[idx]]["start_year"]
-        end_year = run_years[test_case_names[idx]]["end_year"]
+        start_year = run_years[case_names[idx]]["start_year"]
+        end_year = run_years[case_names[idx]]["end_year"]
 
         # Search for files
         ts_loc = Path(case_ts_locs[idx])
