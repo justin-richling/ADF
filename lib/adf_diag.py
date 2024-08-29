@@ -395,6 +395,7 @@ class AdfDiag(AdfWeb):
 
             start_year = run_years[case_name]["end_year"]
             end_year = run_years[case_name]["end_year"]
+            print(start_year, end_year)
 
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
