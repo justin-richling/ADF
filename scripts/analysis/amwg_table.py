@@ -326,8 +326,9 @@ def make_table(adf, var_list, case_name, input_location, var_defaults,
             # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
             data = pf.spatial_average(data)  # changes data "in place"
 
+        # Fix time bounds just in case...
+        data = fixcesmtime(data)
         if not use_ts:
-            data = fixcesmtime(data)
             data = pf.seasonal_mean(data, season="ANN", is_climo=True)
             #Conditional Formatting depending on type of float
             if np.abs(data) < 1:
