@@ -55,10 +55,6 @@ def zonal_mean(adfobj):
     #start_year = run_years[case_name]["start_year"]
     #end_year = run_years[case_name]["end_year"]
 
-    #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
-
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
