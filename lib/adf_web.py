@@ -360,12 +360,13 @@ class AdfWeb(AdfObs):
         case_names = self.get_cam_info('cam_case_name', required=True)
 
         #Grab case climo years
-        syear_cases = self.climo_yrs["syears"]
-        eyear_cases = self.climo_yrs["eyears"]
-
-        #Grab baseline years (which may be empty strings if using Obs):
-        syear_baseline = self.climo_yrs["syear_baseline"]
-        eyear_baseline = self.climo_yrs["eyear_baseline"]
+        run_years = self.climo_yrs
+        start_year = run_years[case_names[0]]["start_year"]
+        end_year = run_years[case_names[0]]["end_year"]
+        
+        
+        #syear_cases = self.climo_yrs["syears"]
+        #eyear_cases = self.climo_yrs["eyears"]
 
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
@@ -377,9 +378,12 @@ class AdfWeb(AdfObs):
 
             baseline_yrs=f"{syear_baseline} - {eyear_baseline}"
         #End if
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = run_years[data_name]["start_year"]
+        eyear_baseline = run_years[data_name]["end_year"]
 
         #Set climo years format for html file headers
-        case_yrs=f"{syear_cases[0]} - {eyear_cases[0]}"
+        case_yrs=f"{start_year} - {end_year}"
 
         #Extract variable defaults dictionary (for categories):
         var_defaults_dict = self.variable_defaults
