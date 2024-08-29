@@ -51,8 +51,9 @@ def zonal_mean(adfobj):
     plot_locations = adfobj.plot_location
 
     #Grab case years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    run_years = adfobj.climo_yrs
+    #start_year = run_years[case_name]["start_year"]
+    #end_year = run_years[case_name]["end_year"]
 
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
@@ -165,6 +166,8 @@ def zonal_mean(adfobj):
             base_name = adfobj.data.ref_case_label
         else:
             base_name = adfobj.data.ref_labels[var]
+        syear_baseline = run_years[base_name]["start_year"]
+        eyear_baseline = run_years[base_name]["end_year"]
 
         # Gather reference variable data
         odata = adfobj.data.load_reference_regrid_da(base_name, var)
@@ -180,6 +183,8 @@ def zonal_mean(adfobj):
 
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
+            start_year = run_years[case_name]["start_year"]
+            end_year = run_years[case_name]["end_year"]
 
             #Set case nickname:
             case_nickname = adfobj.data.test_nicknames[case_idx]
@@ -250,7 +255,7 @@ def zonal_mean(adfobj):
 
                     #Create new plot:
                     pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
-                                                    [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                    [start_year, end_year],
                                                     [syear_baseline,eyear_baseline],
                                                     mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
 
@@ -262,7 +267,7 @@ def zonal_mean(adfobj):
                 if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
 
                     pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
-                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [start_year, end_year],
                                                         [syear_baseline,eyear_baseline],
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
 
