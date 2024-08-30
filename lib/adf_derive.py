@@ -194,13 +194,15 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
 
     else:
         # Open a new dataset with all the constituent files/variables
-        #ds = _load_dataset(constit_files)
         ds = self.data.load_dataset(constit_files)
         if not ds:
             dmsg = f"derived time series for {case_name}:"
             dmsg += f"\n\tNo files to open."
             self.debug_log(dmsg)
             return
+
+        # Grab attributes from first constituent file to be used in derived variable
+        attrs = ds[constit_list[0]].attrs
 
         # create new file name for derived variable
         derived_file = constit_files[0].replace(constit_list[0], var)
@@ -235,7 +237,6 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
         azl = res.get("aerosol_zonal_list", [])
         if var in azl:
             # Check if PMID is in file:
-            #ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
             ds_pmid = self.data.load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
             if not ds_pmid:
                 errmsg = "Missing necessary files for dry air density (rho) "
@@ -247,7 +248,6 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
                 self.debug_log(dmsg)
 
             # Check if T is in file:
-            #ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
             ds_t = self.data.load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
             if not ds_t:
                 errmsg = "Missing necessary files for dry air density (rho) "
@@ -270,44 +270,8 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
         #Drop all constituents from final saved dataset
         #These are not necessary because they have their own time series files
         ds_final = ds.drop_vars(constit_list)
+        # Copy attributes from constituent file to derived variable
+        ds_final[var].attrs = attrs
         ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
 
-########
-
-#Helper Function(s)
-def _load_dataset(fils):
-    """
-    This method exists to get an xarray Dataset from input file information that
-    can be passed into the plotting methods.
-
-    Parameters
-    ----------
-    fils : list
-        strings or paths to input file(s)
-
-    Returns
-    -------
-    xr.Dataset
-
-    Notes
-    -----
-    When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
-    """
-    import warnings  # use to warn user about missing files.
-
-    #Format warning messages:
-    def my_formatwarning(msg, *args, **kwargs):
-        """Issue `msg` as warning."""
-        return str(msg) + '\n'
-    warnings.formatwarning = my_formatwarning
-
-    if len(fils) == 0:
-        warnings.warn("Input file list is empty.")
-        return None
-    if len(fils) > 1:
-        return xr.open_mfdataset(fils, combine='by_coords')
-    else:
-        return xr.open_dataset(fils[0])
-    #End if
-#End def
 ########
