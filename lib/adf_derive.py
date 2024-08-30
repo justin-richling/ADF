@@ -17,22 +17,23 @@ def check_derive(self, res, var, case_name, diag_var_list, constit_dict, hist_fi
 
     Arguments
     ---------
-        self: self object?
-            - 
+        self: AdfDiag
+            - ADF object
         res: dict
-            - 
+            - variable defaults dictionary from yaml file
         var: str
-            - 
+            - derived variable name
         case_name: str
-            - 
+            - model case
         diag_var_list: list
-            - 
+            - list of variables for diagnostics
+            NOTE: this is user supplied, but gets modified here for constituents
         constit_dict: dict
-            - 
+            - dictionary of derived variables as keys and list of constituents as values
         hist_file_ds: xarray.DataSet
-            - 
+            - history file dataset for checking if constituents are available
         hist0: str
-            - 
+            - history number for case
     
     Returns
     -------
@@ -193,7 +194,8 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
 
     else:
         # Open a new dataset with all the constituent files/variables
-        ds = _load_dataset(constit_files)
+        #ds = _load_dataset(constit_files)
+        ds = self.data.load_dataset(constit_files)
         if not ds:
             dmsg = f"derived time series for {case_name}:"
             dmsg += f"\n\tNo files to open."
@@ -233,7 +235,8 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
         azl = res.get("aerosol_zonal_list", [])
         if var in azl:
             # Check if PMID is in file:
-            ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
+            #ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
+            ds_pmid = self.data.load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
             if not ds_pmid:
                 errmsg = "Missing necessary files for dry air density (rho) "
                 errmsg += "calculation.\nPlease make sure 'PMID' is in the CAM "
@@ -244,7 +247,8 @@ def derive_variable(self, case_name, var, res=None, ts_dir=None,
                 self.debug_log(dmsg)
 
             # Check if T is in file:
-            ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
+            #ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
+            ds_t = self.data.load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
             if not ds_t:
                 errmsg = "Missing necessary files for dry air density (rho) "
                 errmsg += "calculation.\nPlease make sure 'T' is in the CAM "
