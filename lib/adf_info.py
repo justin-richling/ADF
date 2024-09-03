@@ -760,31 +760,31 @@ class AdfInfo(AdfConfig):
     @property
     def calc_test_climo(self):
         """Return the "num_procs" logical to the user if requested."""
-        return self.__calc_test_climo
+        return copy.copy(self.__calc_test_climo)
     
     # Create property needed to return "num_procs" to user:
     @property
     def test_ts_locs(self):
         """Return the "num_procs" logical to the user if requested."""
-        return self.__test_ts_locs
+        return copy.copy(self.__test_ts_locs)
 
     # Create property needed to return "num_procs" to user:
     @property
     def test_ts_done(self):
         """Return the "num_procs" logical to the user if requested."""
-        return self.__test_ts_done
+        return copy.copy(self.__test_ts_done)
 
     # Create property needed to return "num_procs" to user:
     @property
     def test_hist_locs(self):
         """Return the "num_procs" logical to the user if requested."""
-        return self.__test_hist_locs
+        return copy.copy(self.__test_hist_locs)
 
     # Create property needed to return "num_procs" to user:
     @property
     def test_climo_locs(self):
         """Return the "num_procs" logical to the user if requested."""
-        return self.__input_climo_locs
+        return copy.copy(self.__input_climo_locs)
 
 
 
