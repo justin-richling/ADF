@@ -174,6 +174,8 @@ def amwg_table(adf):
         else:
             input_location = Path(input_climo_locs[case_idx])
 
+        print("case",case_name,"\ninput_location:",input_location,"\n")
+
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
             errmsg = f"\tInput directory '{input_location}' not found, skipping this case..."
