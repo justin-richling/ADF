@@ -214,7 +214,7 @@ class AdfInfo(AdfConfig):
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if (baseline_ts_done) and (input_ts_baseline):
-                baseline_hist_locs = None
+                baseline_hist_locs = [None]
 
                 input_ts_loc = Path(input_ts_baseline)
 
@@ -246,8 +246,8 @@ class AdfInfo(AdfConfig):
                     msg += f"{data_name}, using first found year: {found_eyear_baseline}\n"
                     print(msg)
                     eyear_baseline = found_eyear_baseline
-            else:
-                baseline_hist_locs = None
+            #else:
+            #    baseline_hist_locs = None
             # End if
 
             # Check if history file path exists:
