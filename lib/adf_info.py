@@ -378,13 +378,13 @@ class AdfInfo(AdfConfig):
         ##################################################################
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
         if cam_hist_locs is None:
-            cam_hist_locs = [True]*len(case_names)
+            cam_hist_locs = [None]*len(case_names)
         else:
             # Check if any time series files are pre-made
             if len(cam_hist_locs) == len(case_names):
                 for i,case_done in enumerate(cam_hist_locs):
                     if case_done is None:
-                        cam_hist_locs[i] = True
+                        cam_hist_locs[i] = None
             else:
                 # Exit message!
                 print("Incorrect number of entries for 'cam_hist_loc' for test case(s)")
