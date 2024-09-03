@@ -115,6 +115,7 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
+    print(case_loc)
     print(ncases)
     print(case_names,"\n")
     casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
