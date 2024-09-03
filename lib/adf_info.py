@@ -364,7 +364,7 @@ class AdfInfo(AdfConfig):
                 # Exit message!
                 print("Incorrect number of entries for 'hist_str' for test case(s)")
         #Initialize CAM history string nested list
-        self.__hist_str = hist_str
+        self.__hist_str = cam_hist_str
 
 
         # Check test history locations
