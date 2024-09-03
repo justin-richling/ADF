@@ -109,6 +109,8 @@ def qbo(adfobj):
             case_loc = case_loc+[base_loc]
             case_names.append(base_name)
     #End if
+    print(ncases)
+    print(case_names,"\n")
 
     #----Read in the OBS (ERA5, 5S-5N average already
     obs = xr.open_dataset(obsdir+"/U_ERA5_5S_5N_1979_2019.nc").U_5S_5N
