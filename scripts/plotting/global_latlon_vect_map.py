@@ -233,7 +233,7 @@ def global_latlon_vect_map(adfobj):
                 sfil = str(uoclim_fils[0])
                 uoclim_ds = xr.open_dataset(sfil)
             else:
-                print("\t ERROR: Did not find any oclim_fils. Will try to skip.")
+                print("\t ERROR: Did not find any regridded climo files. Will try to skip.")
                 print(f"\t INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"\t INFO: The glob is: {data_src}_{data_var[0]}_*.nc")
                 continue
@@ -245,7 +245,7 @@ def global_latlon_vect_map(adfobj):
                 sfil = str(voclim_fils[0])
                 voclim_ds = xr.open_dataset(sfil)
             else:
-                print("\t ERROR: Did not find any oclim_fils. Will try to skip.")
+                print("\t ERROR: Did not find any regridded climo files. Will try to skip.")
                 print(f"\t INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"\t INFO: The glob is: {data_src}_{data_var[1]}_*.nc")
                 continue

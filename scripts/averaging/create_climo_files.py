@@ -70,9 +70,12 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
-    calc_climos   = adf.get_cam_info("calc_cam_climo")
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc")
+    input_ts_locs = adf.test_ts_locs
+    #output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
+    output_locs   = adf.test_climo_locs
+    #calc_climos   = adf.get_cam_info("calc_cam_climo")
+    calc_climos   = adf.calc_test_climo
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
     #Extract simulation years:
@@ -81,10 +84,8 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
-    if not calc_climos:
-        calc_climos = [None]*len(case_names)
     if not overwrite:
-        overwrite = [None]*len(case_names)
+        overwrite = [False]*len(case_names)
     #End if
 
     #Check if a baseline simulation is also being used:
@@ -136,7 +137,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
+            errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
             raise AdfError(errmsg)
 
         #Check if climo directory exists, and if not, then create it:

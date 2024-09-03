@@ -34,9 +34,19 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
-    base_name = adfobj.get_baseline_info('cam_case_name')
-    base_loc = adfobj.get_baseline_info('cam_ts_loc')
+    #case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
+    case_loc = adfobj.test_ts_locs
+    if case_loc is None:
+        print("\tNo time series locations found for any test cases")
+        case_loc = []
+        #return
+        #exit
+    else:
+        for i,case_ts_loc in enumerate(case_loc):
+            if case_ts_loc is None:
+                print(f"Case '{case_names[i]}' is missing time series location, skipping case.")
+                print(f" case_ts_loc: {case_ts_loc}")
+
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
     plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
@@ -90,8 +100,14 @@ def qbo(adfobj):
 
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
-        case_loc.append(base_loc)
-        case_names.append(base_name)
+        base_name = adfobj.get_baseline_info('cam_case_name')
+
+        base_loc = adfobj.get_baseline_info('cam_ts_loc')
+        if base_loc is None:
+            print("\tNo time series location found for baseline case")
+        else:
+            case_loc = case_loc+[base_loc]
+            case_names.append(base_name)
     #End if
 
     #----Read in the OBS (ERA5, 5S-5N average already

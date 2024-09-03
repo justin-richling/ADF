@@ -164,7 +164,7 @@ def polar_map(adfobj):
            
             oclim_ds = pf.load_dataset(oclim_fils)
             if oclim_ds is None:
-                print("WARNING: Did not find any oclim_fils. Will try to skip.")
+                print("WARNING: Did not find any regridded climo files. Will try to skip.")
                 print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"INFO: The glob is: {data_src}_{var}_*.nc")
                 continue

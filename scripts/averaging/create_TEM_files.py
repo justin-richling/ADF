@@ -8,7 +8,7 @@ from glob import glob
 from itertools import chain
 
 
-def create_TEM_files(adf):
+def create_TEM_files(adfobj):
     """
     Calculate the TEM variables and create new netCDF files
 
@@ -19,19 +19,20 @@ def create_TEM_files(adf):
 
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
-    base_name     = adf.get_baseline_info("cam_case_name")
+    case_names    = adfobj.get_cam_info("cam_case_name", required=True)
+    base_name     = adfobj.get_baseline_info("cam_case_name")
 
     #Grab h4 history files locations
-    cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    #cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    cam_hist_locs = adfobj.test_hist_locs
 
     #Extract test case years
-    start_years   = adf.climo_yrs["syears"]
-    end_years     = adf.climo_yrs["eyears"]
+    start_years   = adfobj.climo_yrs["syears"]
+    end_years     = adfobj.climo_yrs["eyears"]
 
-    res = adf.variable_defaults # will be dict of variable-specific plot preferences
+    res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
 
-    if "qbo" in adf.plotting_scripts:
+    if "qbo" in adfobj.plotting_scripts:
         var_list = ['uzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
     else:
@@ -42,8 +43,8 @@ def create_TEM_files(adf):
     #Grab TEM diagnostics options
     #----------------------------
     #Extract TEM file save locations
-    tem_base_loc = adf.get_baseline_info("cam_tem_loc")
-    tem_case_locs = adf.get_cam_info("cam_tem_loc")
+    tem_base_loc = adfobj.get_baseline_info("cam_tem_loc")
+    tem_case_locs = adfobj.get_cam_info("cam_tem_loc")
 
     #If path not specified, skip TEM calculation?
     if tem_case_locs is None:
@@ -61,12 +62,12 @@ def create_TEM_files(adf):
         #End for
 
     #Set default to h4
-    hist_nums = adf.get_cam_info("tem_hist_str")
+    hist_nums = adfobj.get_cam_info("tem_hist_str")
     if hist_nums is None:
         hist_nums = ["h4"]*len(case_names)
 
     #Get test case(s) tem over-write boolean and force to list if not by default
-    overwrite_tem_cases = adf.get_cam_info("overwrite_tem")
+    overwrite_tem_cases = adfobj.get_cam_info("overwrite_tem")
 
     #If overwrite argument is missing, then default to False:
     if overwrite_tem_cases is None:
@@ -77,8 +78,8 @@ def create_TEM_files(adf):
     if not isinstance(overwrite_tem_cases, list): overwrite_tem_cases = [overwrite_tem_cases]
 
     #Check if comparing to observations
-    if adf.get_basic_info("compare_obs"):
-        var_obs_dict = adf.var_obs_dict
+    if adfobj.get_basic_info("compare_obs"):
+        var_obs_dict = adfobj.var_obs_dict
 
         #If dictionary is empty, then there are no observations, so quit here:
         if not var_obs_dict:
@@ -110,7 +111,7 @@ def create_TEM_files(adf):
                 #Gather from variable defaults file
                 obs_file_path = Path(res[var]["obs_file"])
                 if not obs_file_path.is_file():
-                    obs_data_loc = adf.get_basic_info("obs_data_loc")
+                    obs_data_loc = adfobj.get_basic_info("obs_data_loc")
                     obs_file_path = Path(obs_data_loc)/obs_file_path
 
                 #It's likely multiple TEM vars will come from one file, so check
@@ -148,16 +149,16 @@ def create_TEM_files(adf):
 
     else:
         if tem_base_loc:
-            cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
+            cam_hist_locs.append(adfobj.get_baseline_info("cam_hist_loc", required=True))
 
             #Set default to h4
-            hist_num = adf.get_baseline_info("tem_hist_str")
+            hist_num = adfobj.get_baseline_info("tem_hist_str")
             if hist_num is None:
                 hist_num = "h4"
 
             #Extract baseline years (which may be empty strings if using Obs):
-            syear_baseline = adf.climo_yrs["syear_baseline"]
-            eyear_baseline = adf.climo_yrs["eyear_baseline"]
+            syear_baseline = adfobj.climo_yrs["syear_baseline"]
+            eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
             case_names.append(base_name)
             start_years.append(syear_baseline)
@@ -171,7 +172,7 @@ def create_TEM_files(adf):
             #End if
 
             tem_locs.append(tem_base_loc)
-            overwrite_tem_cases.append(adf.get_baseline_info("overwrite_tem", False))
+            overwrite_tem_cases.append(adfobj.get_baseline_info("overwrite_tem", False))
 
             hist_nums.append(hist_num)
         else:
@@ -203,7 +204,7 @@ def create_TEM_files(adf):
         if not list(starting_location.glob(hist_str+'.*.nc')):
             emsg = f"No CAM history {hist_str} files found in '{starting_location}'."
             emsg += " Script is ending here."
-            adf.end_diag_fail(emsg)
+            adfobj.end_diag_fail(emsg)
         #End if
 
         #Get full path and file for file name

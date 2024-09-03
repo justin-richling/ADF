@@ -190,16 +190,23 @@ class AdfInfo(AdfConfig):
 
             #Get climo years for verification or assignment if missing
             baseline_hist_locs = self.get_baseline_info('cam_hist_loc')
+            if baseline_hist_locs is None:
+                baseline_hist_locs = [None]
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
+            if baseline_hist_str is None:
+                baseline_hist_str = [None]
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
+            if baseline_ts_done is None:
+                baseline_ts_done = [None]
+            
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
-            if baseline_ts_done:
+            if (baseline_ts_done) and (input_ts_baseline):
                 baseline_hist_locs = None
 
                 #Grab baseline time series file location
@@ -341,26 +348,113 @@ class AdfInfo(AdfConfig):
             eyears = [None]*len(case_names)
         #End if
 
-        #Extract cam history files location:
-        cam_hist_locs = self.get_cam_info('cam_hist_loc')
 
-        #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
+        # Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
+        ##################################################################
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
-
         if not cam_hist_str:
-            hist_str = [['cam.h0a']]*self.__num_cases
+            cam_hist_str = [['cam.h0a']]*self.__num_cases
         else:
-            hist_str = cam_hist_str
-        #End if
-
+            # Check if any time series files are pre-made
+            if len(cam_hist_str) == len(case_names):
+                for i,hist_num in enumerate(cam_hist_str):
+                    if hist_num is None:
+                        cam_hist_str[i] = [['cam.h0a']]
+            else:
+                # Exit message!
+                print("Incorrect number of entries for 'hist_str' for test case(s)")
         #Initialize CAM history string nested list
         self.__hist_str = hist_str
 
-        #Check if using pre-made ts files
-        cam_ts_done   = self.get_cam_info("cam_ts_done")
 
+        # Check test history locations
+        ##################################################################
+        cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        if cam_hist_locs is None:
+            cam_hist_locs = [True]*len(case_names)
+        else:
+            # Check if any time series files are pre-made
+            if len(cam_hist_locs) == len(case_names):
+                for i,case_done in enumerate(cam_hist_locs):
+                    if case_done is None:
+                        cam_hist_locs[i] = True
+            else:
+                # Exit message!
+                print("Incorrect number of entries for 'cam_hist_loc' for test case(s)")
+        #Initialize CAM history string nested list
+        self.__test_hist_locs = cam_hist_locs
+
+
+        # Check if using pre-made ts files
+        ##################################################################
+        cam_ts_done   = self.get_cam_info("cam_ts_done")
+        if cam_ts_done is None:
+            cam_ts_done = [True]*len(case_names)
+        else:
+            # Check if any time series files are pre-made
+            if len(cam_ts_done) == len(case_names):
+                for i,case_done in enumerate(cam_ts_done):
+                    if case_done is None:
+                        cam_ts_done[i] = True
+            else:
+                # Exit message!
+                print("Incorrect number of entries for 'cam_ts_done' for test case(s)")
+        #Initialize CAM history string nested list
+        self.__test_ts_done = cam_ts_done
+
+        
         #Grab case time series file location(s)
-        input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        ##################################################################
+        input_ts_locs = self.get_cam_info("cam_ts_loc")
+        if input_ts_locs is None:
+            input_ts_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(input_ts_locs) == len(case_names):
+                for i,case in enumerate(input_ts_locs):
+                    if case is None:
+                        input_ts_locs[i] = None
+            else:
+                print("Incorrect number of entries for 'cam_ts_loc' for test case(s)")
+        #Initialize CAM history string nested list
+        self.__test_ts_locs = input_ts_locs
+
+
+        #Check if climatology files need to be calculated
+        ##################################################################
+        calc_test_climo = self.get_cam_info("calc_cam_climo")
+        if calc_test_climo is None:
+            calc_test_climo = [False]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(calc_test_climo) == len(case_names):
+                for i,case in enumerate(calc_test_climo):
+                    if case is None:
+                        calc_test_climo[i] = True
+            else:
+                print("Incorrect number of entries for 'calc_cam_climo' for test case(s)")
+        #Initialize CAM history string nested list
+        self.__calc_test_climo = calc_test_climo
+
+
+        #Grab case climatology file location(s)
+        ##################################################################
+        input_climo_locs = self.get_cam_info("cam_climo_loc")
+        if input_climo_locs is None:
+            input_climo_locs = [False]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(input_climo_locs) == len(case_names):
+                for i,case in enumerate(input_climo_locs):
+                    if case is None:
+                        input_climo_locs[i] = True
+            else:
+                print("Incorrect number of entries for 'cam_climo_loc' for test case(s)")
+        #Initialize CAM history string nested list
+        self.__input_climo_locs = input_climo_locs
+
+
+
 
         #Loop over cases:
         syears_fixed = []
@@ -371,7 +465,7 @@ class AdfInfo(AdfConfig):
             eyear = eyears[case_idx]
 
             #Check if time series files exist, if so don't rely on climo years
-            if cam_ts_done[case_idx]:
+            if (cam_ts_done[case_idx]) and (input_ts_locs[case_idx]):
                 cam_hist_locs[case_idx] = None
 
                 #Grab case time series file location
@@ -659,6 +753,40 @@ class AdfInfo(AdfConfig):
             base_hist_strs = ""
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
+
+
+
+    # Create property needed to return "num_procs" to user:
+    @property
+    def calc_test_climo(self):
+        """Return the "num_procs" logical to the user if requested."""
+        return self.__calc_test_climo
+    
+    # Create property needed to return "num_procs" to user:
+    @property
+    def test_ts_locs(self):
+        """Return the "num_procs" logical to the user if requested."""
+        return self.__test_ts_locs
+
+    # Create property needed to return "num_procs" to user:
+    @property
+    def test_ts_done(self):
+        """Return the "num_procs" logical to the user if requested."""
+        return self.__test_ts_done
+
+    # Create property needed to return "num_procs" to user:
+    @property
+    def test_hist_locs(self):
+        """Return the "num_procs" logical to the user if requested."""
+        return self.__test_hist_locs
+
+    # Create property needed to return "num_procs" to user:
+    @property
+    def test_climo_locs(self):
+        """Return the "num_procs" logical to the user if requested."""
+        self.__input_climo_locs
+
+
 
     #########
 

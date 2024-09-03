@@ -34,11 +34,6 @@ def tem(adf):
     #all generated plots and tables for each case:
     plot_location = Path(adf.plot_location[0])
 
-    #Check if plot output directory exists, and if not, then create it:
-    if not plot_location.is_dir():
-        print(f"    {plot_location} not found, making new directory")
-        plot_location.mkdir(parents=True)
-
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adf.get_cam_info("cam_case_name", required=True)
 

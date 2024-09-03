@@ -130,16 +130,20 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    input_ts_locs = adf.test_ts_locs
+    input_climo_locs = adf.test_climo_locs
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")
+        input_climo_baseline = adf.get_baseline_info("cam_climo_loc")
 
         case_names.append(baseline_name)
         input_ts_locs.append(input_ts_baseline)
+        input_climo_locs.append(input_climo_baseline)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
@@ -153,17 +157,28 @@ def amwg_table(adf):
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
+        print(f"Making AMWG table for case'{case_name}'")
+
+        if input_ts_locs[case_name]:
+            use_ts = True
+        else:
+            print(f"User supplied case '{case_name}' climo files, will make only global mean for variables.")
+            use_ts = False
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
 
         #Generate input file path:
-        input_location = Path(input_ts_locs[case_idx])
+        if use_ts:
+            input_location = Path(input_ts_locs[case_idx])
+        else:
+            input_location = Path(input_climo_locs[case_idx])
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
-            raise AdfError(errmsg)
+            errmsg = f"\tInput directory '{input_location}' not found, skipping this case..."
+            print(errmsg)
+            continue
         #Write to debug log if enabled:
         adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
 

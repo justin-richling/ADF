@@ -55,7 +55,8 @@ def cam_taylor_diagram(adfobj):
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
-    case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
+    #case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
+    case_climo_loc = adfobj.test_climo_locs
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location

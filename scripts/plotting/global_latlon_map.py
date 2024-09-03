@@ -166,7 +166,7 @@ def global_latlon_map(adfobj):
         odata = adfobj.data.load_reference_regrid_da(base_name, var)
 
         if odata is None:
-            dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
+            dmsg = f"No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
             adfobj.debug_log(dmsg)
             continue
 
