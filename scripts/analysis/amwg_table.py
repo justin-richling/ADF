@@ -281,6 +281,24 @@ def amwg_table(adf):
 
             # In order to get correct statistics, average to annual or seasonal
             data = pf.annual_mean(data, whole_years=True, time_name='time')
+            # Fix time bounds just in case...
+            data = fixcesmtime(data)
+            if not use_ts:
+                data = pf.seasonal_mean(data, season="ANN", is_climo=True)
+                #Conditional Formatting depending on type of float
+                if np.abs(data) < 1:
+                    formatter = ".3g"
+                else:
+                    formatter = ".3f"
+                mean_final = f'{data:{formatter}}'
+
+                # create a dataframe:
+                cols = ['variable', 'unit', 'mean']
+                row_values = [var, unit_str] + [mean_final]
+
+            else:
+                # In order to get correct statistics, average to annual or seasonal
+                data = pf.annual_mean(data, whole_years=True, time_name='time')
 
             # create a dataframe:
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
@@ -412,5 +430,23 @@ def _df_comp_table(adf, output_location, case_names):
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
 
+
+def fixcesmtime(dat):
+    """
+    Fix the CESM timestamp with a simple set of dates
+    """
+    #timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
+    #dat = dat.assign_coords({"time":timefix})
+
+    if 'time_bnds' in dat:
+        t = dat['time_bnds'].mean(dim='nbnd')
+        t.attrs = dat['time'].attrs
+        dat = dat.assign_coords({'time':t})
+    elif 'time_bounds' in dat:
+        t = dat['time_bounds'].mean(dim='nbnd')
+        t.attrs = dat['time'].attrs
+        dat = dat.assign_coords({'time':t})
+
+    return dat
 ##############
 #END OF SCRIPT
