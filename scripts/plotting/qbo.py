@@ -50,10 +50,6 @@ def qbo(adfobj):
                 print(f"Case '{case_names[i]}' is missing time series location, skipping case.")
                 print(f" case_ts_loc: {case_ts_loc}")
 
-    for i in case_loc:
-        print(i)
-    print()
-
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
     plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
