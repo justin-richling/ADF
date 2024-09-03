@@ -784,7 +784,7 @@ class AdfInfo(AdfConfig):
     @property
     def test_climo_locs(self):
         """Return the "num_procs" logical to the user if requested."""
-        self.__input_climo_locs
+        return self.__input_climo_locs
 
 
 
