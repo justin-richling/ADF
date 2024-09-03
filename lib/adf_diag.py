@@ -399,7 +399,10 @@ class AdfDiag(AdfWeb):
             end_year = end_years[case_idx]
 
             # Create path object for the CAM history file(s) location:
-            starting_location = Path(cam_hist_locs[case_idx])
+            if cam_hist_locs[case_idx]:
+                starting_location = Path(cam_hist_locs[case_idx])
+            else:
+                continue
 
             # Check that path actually exists:
             if not starting_location.is_dir():
