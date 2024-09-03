@@ -190,23 +190,25 @@ class AdfInfo(AdfConfig):
 
             #Get climo years for verification or assignment if missing
             baseline_hist_locs = self.get_baseline_info('cam_hist_loc')
-            if baseline_hist_locs is None:
-                baseline_hist_locs = [None]
+            #if baseline_hist_locs is None:
+            #    baseline_hist_locs = [None]
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
-            if baseline_hist_str is None:
-                baseline_hist_str = [None]
+            #if baseline_hist_str is None:
+            #    baseline_hist_str = [None]
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
-            if baseline_ts_done is None:
-                baseline_ts_done = [None]
+            #if baseline_ts_done is None:
+            #    baseline_ts_done = [None]
 
             #Grab baseline time series file location
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-            if input_ts_baseline is None:
-                input_ts_baseline = [None]
+            #if input_ts_baseline is None:
+            #    input_ts_baseline = [None]
+
+            #print(baseline_ts_done,input_ts_baseline)
             
 
             #Check if time series files already exist,
