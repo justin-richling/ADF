@@ -351,20 +351,20 @@ class AdfInfo(AdfConfig):
 
         # Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         ##################################################################
-        cam_hist_str = self.__cam_climo_info.get('hist_str', None)
-        if not cam_hist_str:
-            cam_hist_str = [['cam.h0a']]*self.__num_cases
+        hist_str = self.__cam_climo_info.get('hist_str', None)
+        if not hist_str:
+            hist_str = [['cam.h0a']]*self.__num_cases
         else:
             # Check if any time series files are pre-made
-            if len(cam_hist_str) == len(case_names):
-                for i,hist_num in enumerate(cam_hist_str):
+            if len(hist_str) == len(case_names):
+                for i,hist_num in enumerate(hist_str):
                     if hist_num is None:
-                        cam_hist_str[i] = [['cam.h0a']]
+                        hist_str[i] = [['cam.h0a']]
             else:
                 # Exit message!
                 print("Incorrect number of entries for 'hist_str' for test case(s)")
         #Initialize CAM history string nested list
-        self.__hist_str = cam_hist_str
+        self.__hist_str = hist_str
 
 
         # Check test history locations
