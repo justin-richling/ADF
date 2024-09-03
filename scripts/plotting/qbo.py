@@ -36,6 +36,9 @@ def qbo(adfobj):
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
     #case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
     case_loc = adfobj.test_ts_locs
+    for i in case_loc:
+        print(i)
+    print()
     if case_loc is None:
         print("\tNo time series locations found for any test cases")
         case_loc = []
@@ -119,9 +122,9 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
-    print(case_loc)
+    #print(case_loc)
     print(ncases)
-    print(case_names,"\n")
+    #print(case_names,"\n")
     casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
