@@ -246,6 +246,8 @@ class AdfInfo(AdfConfig):
                     msg += f"{data_name}, using first found year: {found_eyear_baseline}\n"
                     print(msg)
                     eyear_baseline = found_eyear_baseline
+            else:
+                baseline_hist_locs = None
             # End if
 
             # Check if history file path exists:
