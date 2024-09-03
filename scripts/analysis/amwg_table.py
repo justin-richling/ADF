@@ -280,7 +280,7 @@ def amwg_table(adf):
                 data = pf.spatial_average(data)  # changes data "in place"
 
             # In order to get correct statistics, average to annual or seasonal
-            data = pf.annual_mean(data, whole_years=True, time_name='time')
+            #data = pf.annual_mean(data, whole_years=True, time_name='time')
             # Fix time bounds just in case...
             data = fixcesmtime(data)
             if not use_ts:
@@ -300,13 +300,13 @@ def amwg_table(adf):
                 # In order to get correct statistics, average to annual or seasonal
                 data = pf.annual_mean(data, whole_years=True, time_name='time')
 
-            # create a dataframe:
-            cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
-                    'standard error', '95% CI', 'trend', 'trend p-value']
+                # create a dataframe:
+                cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
+                        'standard error', '95% CI', 'trend', 'trend p-value']
 
-            # These get written to our output file:
-            stats_list = _get_row_vals(data)
-            row_values = [var, unit_str] + stats_list
+                # These get written to our output file:
+                stats_list = _get_row_vals(data)
+                row_values = [var, unit_str] + stats_list
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
