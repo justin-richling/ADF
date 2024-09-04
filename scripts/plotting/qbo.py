@@ -34,28 +34,33 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    #Grab test case climo years
+    start_years = adfobj.climo_yrs["syears"]
+    end_years = adfobj.climo_yrs["eyears"]
+
     #case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
-    case_loc = adfobj.test_ts_locs
-    for i in case_loc:
-        print(i)
-    print()
-    if case_loc is None:
+    case_ts_locs = adfobj.test_ts_locs
+    if all(item is None for item in case_ts_locs):
         print("\tNo time series locations found for any test cases")
-        case_loc = []
-        #return
-        #exit
+        case_ts_locs = []
     else:
-        for i,case_ts_loc in enumerate(case_loc):
+        for i,case_ts_loc in enumerate(case_ts_locs):
             if case_ts_loc is None:
                 print(f"Case '{case_names[i]}' is missing time series location, skipping case.")
-                print(f" case_ts_loc: {case_ts_loc}")
+                print(f"case_ts_loc: {case_ts_loc}")
+                case_ts_locs.pop(i)
+                case_names.pop(i)
+                start_years.pop(i)
+                end_years.pop(i)
+                test_nicknames.pop(i)
 
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
     plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
 
-    #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 

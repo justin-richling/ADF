@@ -38,19 +38,28 @@ def tape_recorder(adfobj):
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    #Grab test case climo years
+    start_years = adfobj.climo_yrs["syears"]
+    end_years = adfobj.climo_yrs["eyears"]
+
+    #Grab test case nickname(s)
+    test_nicknames = adfobj.case_nicknames['test_nicknames']
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.test_ts_locs
-    if case_ts_locs is None:
+    if all(item is None for item in case_ts_locs):
         print("\tNo time series locations found for any test cases")
         case_ts_locs = []
-        #return
-        #exit
     else:
         for i,case_ts_loc in enumerate(case_ts_locs):
             if case_ts_loc is None:
                 print(f"Case '{case_names[i]}' is missing time series location, skipping case.")
                 print(f"case_ts_loc: {case_ts_loc}")
+                case_ts_locs.pop(i)
+                case_names.pop(i)
+                start_years.pop(i)
+                end_years.pop(i)
+                test_nicknames.pop(i)
 
     print("case_ts_locs",case_ts_locs,"\n")
 
@@ -68,13 +77,6 @@ def tape_recorder(adfobj):
                case_hist_strs.append(string)
                break
 
-    #Grab test case climo years
-    start_years = adfobj.climo_yrs["syears"]
-    end_years = adfobj.climo_yrs["eyears"]
-
-    #Grab test case nickname(s)
-    test_nicknames = adfobj.case_nicknames['test_nicknames']
-
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -85,14 +87,12 @@ def tape_recorder(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
         case_names = case_names + [data_name]
         
-        #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         if data_ts_loc is None:
             print("\tNo time series location found for baseline case")
             #case_ts_locs = ""
         else:
             case_ts_locs = case_ts_locs+[data_ts_loc]
-        #case_ts_locs = case_ts_locs+[data_ts_loc]
 
         base_nickname = adfobj.case_nicknames['base_nickname']
         test_nicknames = test_nicknames+[base_nickname]
