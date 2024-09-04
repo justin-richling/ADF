@@ -1320,7 +1320,7 @@ class AdfDiag(AdfWeb):
         """
         cam_ts_loc = self.get_cam_info("cam_ts_loc", required=True)
         print("WAKA WAKA\n")
-        self.expand_references({"cam_ts_loc": cam_ts_loc})
+        self.expand_references({"cam_ts_loc": cam_ts_loc},"6")
         if verbose > 1:
             print(f"\t Using timeseries files from {cam_ts_loc[0]}")
 

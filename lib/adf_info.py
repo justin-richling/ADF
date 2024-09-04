@@ -71,21 +71,21 @@ class AdfInfo(AdfConfig):
         self.__basic_info = self.read_config_var('diag_basic_info', required=True)
 
         #Expand basic info variable strings:
-        self.expand_references(self.__basic_info)
+        self.expand_references(self.__basic_info,"1")
 
         #Add CAM climatology info to object:
         self.__cam_climo_info = self.read_config_var('diag_cam_climo', required=True)
         print("\nadf_info: self.__cam_climo_info",self.__cam_climo_info,"\n")
 
         #Expand CAM climo info variable strings:
-        self.expand_references(self.__cam_climo_info)
+        self.expand_references(self.__cam_climo_info,"2")
 
         # Add CVDP info to object:
         self.__cvdp_info = self.read_config_var("diag_cvdp_info")
 
         # Expand CVDP climo info variable strings:
         if self.__cvdp_info is not None:
-            self.expand_references(self.__cvdp_info)
+            self.expand_references(self.__cvdp_info,"3")
         # End if
 
         # Add MDTF info to object:
@@ -180,7 +180,7 @@ class AdfInfo(AdfConfig):
                                                             required=True)
 
             #Expand CAM baseline climo info variable strings:
-            self.expand_references(self.__cam_bl_climo_info)
+            self.expand_references(self.__cam_bl_climo_info,"4")
 
             #Set data name to baseline case name:
             data_name = self.get_baseline_info('cam_case_name', required=True)
