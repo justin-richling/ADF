@@ -367,7 +367,7 @@ class AdfDiag(AdfWeb):
             hist_str_list = self.hist_string["test_hist_str"]
         print("hist_str_list",hist_str_list,'\n"')
         # Notify user that script has started:
-        print(f"\n  Writing time series files to {ts_dir}")
+
 
         # End if
 
@@ -387,6 +387,8 @@ class AdfDiag(AdfWeb):
                 print(emsg)
                 continue
             # End if
+
+            print(f"\n  Writing time series files to {ts_dir[case_idx]}")
 
             # Extract start and end year values:
             start_year = start_years[case_idx]
