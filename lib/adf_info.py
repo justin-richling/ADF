@@ -349,6 +349,13 @@ class AdfInfo(AdfConfig):
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
         print("WAAAAAHHHHHOOOOOOO: ",[['cam.h0a']]*self.__num_cases,"\n")
 
+        cam_hist_str = []
+        if len(case_names) > 1:
+            cam_sub_hist_str = []
+            for i in cam_hist_str[0]:
+                cam_sub_hist_str.append(i)
+            cam_hist_str.append(cam_sub_hist_str)
+
         if len(case_names) > 1:
             print("cam_hist_str",cam_hist_str,"\n")
         if not cam_hist_str:
