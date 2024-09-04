@@ -347,16 +347,14 @@ def amwg_table(adf):
 
     # Copy the file to all individual directories
     if len(test_case_names) > 1:
-        print("HAIHN:",Path(output_locs[-1]),baseline_name)
         base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
         for i,case in enumerate(test_case_names):
-            print("adsfsdfsdfsdfsdfsdfsdfds",i,output_locs[i])
             # Define the source and destination file paths
-            destination_file = sorted(Path(output_locs[i]).glob(f"amwg_table_{case}.csv"))
-            print("WHY ISNT IT COPYING??????",base_csv[0], destination_file[0])
-            shutil.copy(base_csv[0], destination_file[0])
+            destination_file = sorted(Path(output_locs[i]))
+            #print("WHY ISNT IT COPYING??????",base_csv[0], destination_file[0],"\n")
+            shutil.copy(base_csv[0], output_locs[i])
         #base_csv = Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv")
-        base_csv.unlink(base_csv[0])
+        base_csv.unlink()
 
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
