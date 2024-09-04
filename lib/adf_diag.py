@@ -365,7 +365,7 @@ class AdfDiag(AdfWeb):
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
             hist_str_list = self.hist_string["test_hist_str"]
-
+        print("hist_str_list",hist_str_list,'\n"')
         # Notify user that script has started:
         print(f"\n  Writing time series files to {ts_dir}")
 
