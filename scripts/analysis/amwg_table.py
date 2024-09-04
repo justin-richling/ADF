@@ -126,7 +126,8 @@ def amwg_table(adf):
     print("output_locs",output_locs)
 
     #CAM simulation variables (these quantities are always lists):
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
+    test_case_names    = adf.get_cam_info("cam_case_name", required=True)
+    case_names = test_case_names
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
     #Check if a baseline simulation is also being used:
@@ -315,7 +316,7 @@ def amwg_table(adf):
 
     #Start case comparison tables
     #----------------------------
-    #Check if observations are being compared to, if so skip table comparison...
+    """#Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
         if len(csv_list) != len(case_names):
@@ -329,7 +330,38 @@ def amwg_table(adf):
         #End if
     else:
         print(" No comparison table will be generated due to running against obs.")
+    #End if"""
+
+    #Check if observations are being compared to, if so skip table comparison...
+    if not adf.get_basic_info("compare_obs"):
+        #Check if all tables were created to compare against, if not, skip table comparison...
+        if len(csv_list) != len(case_names):
+            print("\tNot enough cases to compare, skipping comparison table...")
+        else:
+            if len(test_case_names) == 1:
+                #Create comparison table for both cases
+                print("\n  Making comparison table...")
+                _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
+                print("  ... Comparison table has been generated successfully")
+
+            if len(test_case_names) > 1:
+                print("\n  Making comparison table for multiple cases...")
+                _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames)
+                print("\n  Making comparison table for each case...")
+                for idx,case in enumerate(case_names[0:-1]):
+                    _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
+                print("  ... Multi-case comparison table has been generated successfully")
+        #End if
+    else:
+        print(" No comparison table will be generated due to running against obs.")
     #End if
+
+
+
+
+
+
+    
 
     #Notify user that script has ended:
     print("  ...AMWG variable table(s) have been generated successfully.")
