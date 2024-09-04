@@ -403,6 +403,7 @@ class AdfDiag(AdfWeb):
             # End if
 
             # Check if history files actually exqist. If not then kill script:
+            print("case_idx",case_idx,"\n")
             hist_str_case = hist_str_list[case_idx]
             for hist_str in hist_str_case:
 
