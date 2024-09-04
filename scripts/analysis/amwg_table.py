@@ -127,7 +127,7 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     test_case_names    = adf.get_cam_info("cam_case_name", required=True)
-    case_names = test_case_names
+    case_names = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     test_nicknames = adf.case_nicknames["test_nicknames"]
     base_nickname = adf.case_nicknames["base_nickname"]
