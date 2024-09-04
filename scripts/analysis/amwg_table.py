@@ -347,7 +347,7 @@ def amwg_table(adf):
         for i,case in enumerate(test_case_names):
             # Define the source and destination file paths
             destination_file = Path(output_locs[i]).glob(f"amwg_table_{case}.csv")
-            shutil.copy(base_csv, destination_file)
+            shutil.copy(str(base_csv), str(destination_file))
         #base_csv = Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv")
         base_csv.unlink(base_csv)
 
