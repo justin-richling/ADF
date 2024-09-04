@@ -75,6 +75,7 @@ class AdfInfo(AdfConfig):
 
         #Add CAM climatology info to object:
         self.__cam_climo_info = self.read_config_var('diag_cam_climo', required=True)
+        print("\nadf_info: self.__cam_climo_info",self.__cam_climo_info,"\n")
 
         #Expand CAM climo info variable strings:
         self.expand_references(self.__cam_climo_info)
