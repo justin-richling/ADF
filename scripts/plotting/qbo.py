@@ -29,16 +29,29 @@ def qbo(adfobj):
     Isla Simpson (islas@ucar.edu) 22nd March 2022
 
     """
-    #Notify user that script has started:
+    # Notify user that script has started:
     print("\n  Generating qbo plots...")
 
-    #Extract relevant info from the ADF:
+    # Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    #Grab all case nickname(s)
+
+    # Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
-    #Grab test case climo years
+
+    # Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
     end_years = adfobj.climo_yrs["eyears"]
+
+    # Get observations directory
+    obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
+    
+    # Plot details
+    plot_locations = adfobj.plot_location
+    plot_type = adfobj.plot_type
+ 
+    # Check if existing plots need to be redone
+    redo_plot = adfobj.get_basic_info('redo_plot')
+    print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
     #case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
     case_ts_locs = adfobj.test_ts_locs
@@ -56,15 +69,10 @@ def qbo(adfobj):
                 end_years.pop(i)
                 test_nicknames.pop(i)
 
-    obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
-    plot_locations = adfobj.plot_location
-    plot_type = adfobj.get_basic_info('plot_type')
-
-
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 
-    #Check if model vs model run, and if so, append baseline to case lists:
+    # Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
         base_name = adfobj.get_baseline_info('cam_case_name')
 
@@ -74,8 +82,9 @@ def qbo(adfobj):
         else:
             case_ts_locs = case_ts_locs+[base_ts_loc]
             case_names.append(base_name)
-    #End if
+    # End if
 
+    # Finally, check to see if any time series locations exist, if not exit script
     if not case_ts_locs:
         exitmsg = "WARNING: No time series files in any case directory."
         exitmsg += " No tape recorder plots will be made."
@@ -84,33 +93,24 @@ def qbo(adfobj):
         logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
         logmsg += f"\n None were found for any case. Please check the time series paths."
         adfobj.debug_log(logmsg)
-        #End tape recorder plotting script:
+        # End tape recorder plotting script:
         return
 
-    # check if existing plots need to be redone
-    redo_plot = adfobj.get_basic_info('redo_plot')
-    print(f"\t NOTE: redo_plot is set to {redo_plot}")
-
-    if not plot_type:
-        plot_type = 'png'
-    #End if
-
-    #Check if zonal wind ("U") variable is present.  If not then skip
-    #this script:
+    # Check if zonal wind ("U") variable is present.  If not then skip this script:
     if not ('U' in adfobj.diag_var_list):
         msg = "No zonal wind ('U') variable present"
         msg += " in 'diag_var_list', so QBO plots will"
         msg += " be skipped."
         print(msg)
         return
-    #End if
+    # End if
 
-    #Set path for QBO figures:
+    # Set path for QBO figures:
     plot_loc_ts  = Path(plot_locations[0]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
     plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
 
-    #Until a multi-case plot directory exists, let user know
-    #that the QBO plot will be kept in the first case directory:
+    # Until a multi-case plot directory exists, let user know
+    # that the QBO plot will be kept in the first case directory:
     print(f"\t QBO plots will be saved here: {plot_locations[0]}")
 
     # Check redo_plot. If set to True: remove old plots, if they already exist:
@@ -120,14 +120,14 @@ def qbo(adfobj):
         adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
         adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
 
-        #Continue to next iteration:
+        # Continue to next iteration:
         return
     elif (redo_plot):
         if plot_loc_ts.is_file():
             plot_loc_ts.unlink()
         if plot_loc_amp.is_file():
             plot_loc_amp.unlink()
-    #End if
+    # End if
 
 
     #----Read in the OBS (ERA5, 5S-5N average already

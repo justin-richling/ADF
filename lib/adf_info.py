@@ -338,6 +338,11 @@ class AdfInfo(AdfConfig):
         #Plot directory:
         plot_dir = self.get_basic_info('cam_diag_plot_loc', required=True)
 
+        # Plot type
+        # -- this should be set in basic_info_dict, but is not required
+        # -- So check for it, and default to png
+        self.__plot_type = self.__basic_info.get('plot_type', 'png')
+
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
@@ -727,6 +732,14 @@ class AdfInfo(AdfConfig):
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable:
         return copy.copy(self.__plot_location)
+
+    # Create property needed to return "plot_type" variable to user:
+    @property
+    def plot_type(self):
+        """Return a copy of the '__plot_type' string list to user if requested."""
+        #Note that a copy is needed in order to avoid having a script mistakenly
+        #modify this variable:
+        return copy.copy(self.__plot_type)
 
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property

@@ -102,10 +102,7 @@ def cam_taylor_diagram(adfobj):
     # or an empty dictionary if use_defaults was not specified in YAML.
 
     #Set plot file type:
-    # -- this should be set in basic_info_dict, but is not required
-    # -- So check for it, and default to png
-    basic_info_dict = adfobj.read_config_var("diag_basic_info")
-    plot_type = basic_info_dict.get('plot_type', 'png')
+    plot_type = adfobj.plot_type
     print(f"\t NOTE: Plot type is set to {plot_type}")
 
     #Check if existing plots need to be redone
