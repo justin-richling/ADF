@@ -52,6 +52,8 @@ def tape_recorder(adfobj):
                 print(f"Case '{case_names[i]}' is missing time series location, skipping case.")
                 print(f"case_ts_loc: {case_ts_loc}")
 
+    print("case_ts_locs",case_ts_locs,"\n")
+
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
 
