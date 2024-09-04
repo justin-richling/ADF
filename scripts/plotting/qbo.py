@@ -64,6 +64,29 @@ def qbo(adfobj):
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 
+    #Check if model vs model run, and if so, append baseline to case lists:
+    if not adfobj.compare_obs:
+        base_name = adfobj.get_baseline_info('cam_case_name')
+
+        base_ts_loc = adfobj.get_baseline_info('cam_ts_loc')
+        if base_ts_loc is None:
+            print("\tNo time series location found for baseline case")
+        else:
+            case_ts_locs = case_ts_locs+[base_ts_loc]
+            case_names.append(base_name)
+    #End if
+
+    if not case_ts_locs:
+        exitmsg = "WARNING: No time series files in any case directory."
+        exitmsg += " No tape recorder plots will be made."
+        print(exitmsg)
+        logmsg = "create tape recorder:"
+        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
+        logmsg += f"\n None were found for any case. Please check the time series paths."
+        adfobj.debug_log(logmsg)
+        #End tape recorder plotting script:
+        return
+
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
@@ -106,27 +129,16 @@ def qbo(adfobj):
             plot_loc_amp.unlink()
     #End if
 
-    #Check if model vs model run, and if so, append baseline to case lists:
-    if not adfobj.compare_obs:
-        base_name = adfobj.get_baseline_info('cam_case_name')
-
-        base_loc = adfobj.get_baseline_info('cam_ts_loc')
-        if base_loc is None:
-            print("\tNo time series location found for baseline case")
-        else:
-            case_loc = case_loc+[base_loc]
-            case_names.append(base_name)
-    #End if
 
     #----Read in the OBS (ERA5, 5S-5N average already
     obs = xr.open_dataset(obsdir+"/U_ERA5_5S_5N_1979_2019.nc").U_5S_5N
 
     #----Read in the case data and baseline
-    ncases = len(case_loc)
+    ncases = len(case_ts_locs)
     #print(case_loc)
     print(ncases)
     #print(case_names,"\n")
-    casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+    casedat = [pf.load_dataset(sorted(Path(case_ts_locs[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
