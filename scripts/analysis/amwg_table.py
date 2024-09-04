@@ -147,7 +147,8 @@ def amwg_table(adf):
     else:
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
-    print("output_locs",output_locs)
+    print("output_locs",output_locs,"\n")
+    print(output_locs[0] == output_locs[-1])
 
     #-----------------------------------------
 
