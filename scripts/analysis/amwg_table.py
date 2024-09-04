@@ -402,7 +402,43 @@ def _get_row_vals(data):
 
 #####
 
-def _df_comp_table(adf, output_location, case_name, base_name):
+def _df_comp_table(adf, output_location, base_output_location, case_names):
+    """
+    Function to build case vs baseline AMWG table
+    -----
+        - Read in table data and create side by side comparison table
+        - Write output to csv file and add to website
+    """
+
+    output_csv_file_comp = output_location / "amwg_table_comp.csv"
+
+    case = output_location/f"amwg_table_{case_names[0]}.csv"
+    baseline = base_output_location/f"amwg_table_{case_names[-1]}.csv"
+
+    #Read in test case and baseline dataframes:
+    df_case = pd.read_csv(case)
+    df_base = pd.read_csv(baseline)
+
+    #Create a merged dataframe that contains only the variables
+    #contained within both the test case and the baseline:
+    df_merge = pd.merge(df_case, df_base, how='inner', on=['variable'])
+
+    #Create the "comparison" dataframe:
+    df_comp = pd.DataFrame(dtype=object)
+    df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
+    df_comp['baseline'] = df_merge[['mean_y']]
+
+    diffs = df_comp['case'].values-df_comp['baseline'].values
+    df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
+
+    #Write the comparison dataframe to a new CSV file:
+    cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
+    df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
+
+    #Add comparison table dataframe to website (if enabled):
+    adf.add_website_data(df_comp, "case_comparison", case_names[0], plot_type="Tables")
+
+"""def _df_comp_table(adf, output_location, case_name, base_name):
     import pandas as pd
 
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
@@ -434,7 +470,7 @@ def _df_comp_table(adf, output_location, case_name, base_name):
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
-    adf.add_website_data(df_comp, "Case Comparison", case_name, plot_type="Tables")
+    adf.add_website_data(df_comp, "Case Comparison", case_name, plot_type="Tables")"""
 
 def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     """
