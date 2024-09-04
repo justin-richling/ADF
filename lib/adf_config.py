@@ -92,7 +92,7 @@ class AdfConfig(AdfBase):
 
             #Check if value is a string, integer, or another dict:
             if isinstance(value, (str, int)):
-                print("key: str/int",key)
+                #print("key: str/int",key)
 
                 #Check if sub dictionary is present:
                 if sub_dict:
@@ -104,7 +104,7 @@ class AdfConfig(AdfBase):
 
             #Check if value is a dictionary instead:
             elif isinstance(value, dict):
-                print("key: dict",key)
+                #print("key: dict",key)
                 #Currently this routine only handles one level of
                 #nested dictionaries, so throw an error if one has
                 #gone beyond that:
@@ -112,7 +112,7 @@ class AdfConfig(AdfBase):
                     ermsg = "ADF currently only allows for a single nested dict"
                     ermsg += f" in the config (YAML) file.\n  Variable '{value}' is nested too far."
                     self.end_diag_fail(ermsg)
-
+                print("key: dict - value",value)
                 #Apply routine to sub dictionary:
                 sub_config_search_dict = self.__create_search_dict(value,
                                                                  sub_dict = key)
