@@ -123,7 +123,7 @@ def amwg_table(adf):
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     output_locs = adf.plot_location
-    print("output_locs",output_locs)
+    print("output_locs",output_locs,"\n")
 
     #CAM simulation variables (these quantities are always lists):
     test_case_names    = adf.get_cam_info("cam_case_name", required=True)
