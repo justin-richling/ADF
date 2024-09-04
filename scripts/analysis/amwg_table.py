@@ -510,11 +510,13 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     cols_comp = ['variable', 'unit']
 
     #Read baseline case
-    baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
+    baseline = str(csv_locs[0])+f"/amwg_table_{case_names[-1]}.csv"
     df_base = pd.read_csv(baseline)
 
     #Read all test cases and add to table
     for i,val in enumerate(csv_locs[:-1]):
+        #baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
+        #df_base = pd.read_csv(baseline)
         case = str(val)+f"/amwg_table_{case_names[i]}.csv"
         df_case = pd.read_csv(case)
 
