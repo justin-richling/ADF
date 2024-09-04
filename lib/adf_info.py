@@ -361,8 +361,8 @@ class AdfInfo(AdfConfig):
         print("cam_hist_str_eh",cam_hist_str_eh,"\n")
         cam_hist_str = cam_hist_str_eh
 
-        if len(case_names) > 1:
-            print("cam_hist_str",cam_hist_str,"\n")
+        #if len(case_names) > 1:
+        #    print("cam_hist_str",cam_hist_str,"\n")
         if not cam_hist_str:
             hist_str = [['cam.h0a']]*self.__num_cases
         else:
