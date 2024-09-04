@@ -347,6 +347,7 @@ class AdfInfo(AdfConfig):
 
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
+        print("cam_hist_str",cam_hist_str,"\n")
         print("WAAAAAHHHHHOOOOOOO: ",[['cam.h0a']]*self.__num_cases,"\n")
 
         cam_hist_str = []
