@@ -250,6 +250,7 @@ class AdfConfig(AdfBase):
 
         #Loop through dictionary:
         for key, value in config_dict_copy.items():
+            print(f"HERE: {key, value}")
 
             #Skip non-strings (as they won't contain a keyword):
             if not isinstance(value, str):
