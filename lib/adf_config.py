@@ -88,7 +88,7 @@ class AdfConfig(AdfBase):
 
         #Loop over all top-level config variables:
         for key, value in config_dict.items():
-            print("key boi",key)
+            #print("key boi",key)
 
             #Check if value is a string, integer, or another dict:
             if isinstance(value, (str, int)):
@@ -103,6 +103,7 @@ class AdfConfig(AdfBase):
 
             #Check if value is a dictionary instead:
             elif isinstance(value, dict):
+                print("key boi",key)
                 #Currently this routine only handles one level of
                 #nested dictionaries, so throw an error if one has
                 #gone beyond that:
