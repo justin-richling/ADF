@@ -153,6 +153,7 @@ def amwg_table(adf):
     #Loop over CAM cases:
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
+    csv_locs = []
     case_output_locs = {}
     for case_idx, case_name in enumerate(case_names):
         #Notify user that script has started:
@@ -312,6 +313,7 @@ def amwg_table(adf):
         #Keep track of case csv files for comparison table check later
         #csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
         csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
+        csv_locs.append(output_location)
 
 
     #End of model case loop
@@ -349,7 +351,7 @@ def amwg_table(adf):
 
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
-                _df_multi_comp_table(adf, csv_list, case_names, nicknames)
+                _df_multi_comp_table(adf, csv_locs, case_names, nicknames)
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
                     _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
