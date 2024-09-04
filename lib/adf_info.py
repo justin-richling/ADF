@@ -353,7 +353,7 @@ class AdfInfo(AdfConfig):
         cam_hist_str_eh = []
         if len(case_names) > 1:
             cam_sub_hist_str = []
-            for i in cam_hist_str[0]:
+            for i in cam_hist_str:
                 cam_sub_hist_str.append(list(i))
             cam_hist_str_eh.append(cam_sub_hist_str)
 
