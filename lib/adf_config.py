@@ -104,7 +104,7 @@ class AdfConfig(AdfBase):
 
             #Check if value is a dictionary instead:
             elif isinstance(value, dict):
-                #print("key: dict",key)
+                print("key: dict",key)
                 #Currently this routine only handles one level of
                 #nested dictionaries, so throw an error if one has
                 #gone beyond that:
