@@ -337,6 +337,20 @@ def amwg_table(adf):
         print(" No comparison table will be generated due to running against obs.")
     #End if"""
 
+    import shutil
+
+    
+
+    # Copy the file to all individual directories
+    if len(test_case_names) > 1:
+        base_csv = Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv")
+        for i,case in enumerate(test_case_names):
+            # Define the source and destination file paths
+            destination_file = Path(output_locs[i]).glob(f"amwg_table_{case}.csv")
+            shutil.copy(base_csv, destination_file)
+        #base_csv = Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv")
+        base_csv.unlink(base_csv)
+
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
