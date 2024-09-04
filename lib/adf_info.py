@@ -355,10 +355,10 @@ class AdfInfo(AdfConfig):
             cam_hist_str_eh = []
             cam_sub_hist_str = []
             for i in cam_hist_str[0]:
-                print("asdadgfsdgdf",i)
+                print("asdadgfsdgdf",i,list(i))
                 #cam_sub_hist_str.append(i)
                 cam_hist_str_eh.append(list(i))
-
+        print("cam_hist_str_eh",cam_hist_str_eh,"\n")
         cam_hist_str = cam_hist_str_eh
 
         if len(case_names) > 1:
