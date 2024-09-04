@@ -347,19 +347,16 @@ class AdfInfo(AdfConfig):
 
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
-        print("cam_hist_str",cam_hist_str,"\n")
-        print("WAAAAAHHHHHOOOOOOO: ",[['cam.h0a']]*self.__num_cases,"\n")
-        print("cam_hist_str[0]",cam_hist_str[0],"\n")
         
+        # Check if this is multi-case and adjust appropriately
+        # NOTE: multi-case cannot support multiple hist strings for a given case!
+        #       - user cannot run multi-case ADF and MDTF at the same time
         if len(case_names) > 1:
             cam_hist_str_eh = []
-            cam_sub_hist_str = []
             for i in cam_hist_str[0]:
-                print("asdadgfsdgdf",i,list[i])
                 #cam_sub_hist_str.append(i)
                 cam_hist_str_eh.append([i])
-        print("cam_hist_str_eh",cam_hist_str_eh,"\n")
-        cam_hist_str = cam_hist_str_eh
+            cam_hist_str = cam_hist_str_eh
 
         #if len(case_names) > 1:
         #    print("cam_hist_str",cam_hist_str,"\n")
