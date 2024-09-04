@@ -62,7 +62,7 @@ class AdfConfig(AdfBase):
             #Load YAML file:
             self.__config_dict = yaml.load(nfil, Loader=yaml.SafeLoader)
         
-        print("WTF",self.__config_dict)
+        print("WTF",self.__config_dict,"\n")
 
         #Create search dictionary for variable expansion:
         self.__search_dict = self.__create_search_dict(self.__config_dict)
