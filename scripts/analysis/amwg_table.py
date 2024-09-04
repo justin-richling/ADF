@@ -350,7 +350,7 @@ def amwg_table(adf):
         base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
         for i,case in enumerate(test_case_names):
             # Define the source and destination file paths
-            destination_file = sorted(Path(output_locs[i]))
+            #destination_file = sorted(Path(output_locs[i]))
             #print("WHY ISNT IT COPYING??????",base_csv[0], destination_file[0],"\n")
             shutil.copy(base_csv[0], output_locs[i])
         #base_csv = Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv")
