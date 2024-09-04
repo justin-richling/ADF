@@ -92,6 +92,7 @@ class AdfConfig(AdfBase):
 
             #Check if value is a string, integer, or another dict:
             if isinstance(value, (str, int)):
+                print("key: str/int",key)
 
                 #Check if sub dictionary is present:
                 if sub_dict:
@@ -103,7 +104,7 @@ class AdfConfig(AdfBase):
 
             #Check if value is a dictionary instead:
             elif isinstance(value, dict):
-                print("key boi",key)
+                print("key: dict",key)
                 #Currently this routine only handles one level of
                 #nested dictionaries, so throw an error if one has
                 #gone beyond that:
