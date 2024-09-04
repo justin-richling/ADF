@@ -64,7 +64,8 @@ class AdfConfig(AdfBase):
         
         print("\nWTF",self.__config_dict,"\n")
         print(self.__config_dict.keys(),"\n")
-
+        # This ^^ has `diag_cam_climo` in it. Huh...
+        print(self.__config_dict.diag_cam_climo.cam_ts_loc,"????????\n")
         #Create search dictionary for variable expansion:
         self.__search_dict = self.__create_search_dict(self.__config_dict)
 
