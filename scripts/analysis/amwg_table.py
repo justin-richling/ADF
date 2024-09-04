@@ -161,7 +161,7 @@ def amwg_table(adf):
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
-        print("output_location",output_location)
+        print("output_location",output_location," ",case_idx)
 
         #Generate input file path:
         input_location = Path(input_ts_locs[case_idx])
