@@ -102,10 +102,6 @@ def amwg_table(adf):
     # VARIABLE-NAME, RUN VALUE, OBS VALUE, RUN-OBS, RMSE
     #----------------------
 
-    #Notify user that script has started:
-    print("\n  Calculating AMWG variable table...")
-
-
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     var_list     = adf.diag_var_list
@@ -127,6 +123,7 @@ def amwg_table(adf):
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     output_locs = adf.plot_location
+    print("output_locs",output_locs)
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
@@ -153,6 +150,8 @@ def amwg_table(adf):
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
+        #Notify user that script has started:
+        print(f"\n  Calculating AMWG variable table for {case_name}...")
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
