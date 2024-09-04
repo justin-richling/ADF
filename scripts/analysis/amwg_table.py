@@ -354,7 +354,7 @@ def amwg_table(adf):
             #print("WHY ISNT IT COPYING??????",base_csv[0], destination_file[0],"\n")
             shutil.copy(base_csv[0], output_locs[i])
         #base_csv = Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv")
-        base_csv.unlink()
+        base_csv[0].unlink()
 
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
