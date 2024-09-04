@@ -233,7 +233,7 @@ class AdfConfig(AdfBase):
 
     #########
 
-    def expand_references(self, config_dict):
+    def expand_references(self, config_dict,phrase):
 
         """
         Replace keyword (${var} or ${dict.var}) entries
@@ -244,7 +244,7 @@ class AdfConfig(AdfBase):
         Currently this function will always convert the
         referenced variable to a string.
         """
-
+        print("\nLOCATE:",phrase,"\n")
         #copy YAML config dictionary:
         config_dict_copy = copy.copy(config_dict)
 

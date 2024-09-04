@@ -92,7 +92,7 @@ class AdfInfo(AdfConfig):
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
 
         if self.__mdtf_info is not None:
-            self.expand_references(self.__mdtf_info)
+            self.expand_references(self.__mdtf_info,"\nWAKA WAKA WAKA WAKA\n")
         # End if
 
         # Check if inputs are of the correct type:
