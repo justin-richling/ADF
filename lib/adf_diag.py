@@ -406,12 +406,15 @@ class AdfDiag(AdfWeb):
 
             # Check if history files actually exqist. If not then kill script:
             print("case_idx",case_idx,"\n")
-            #hist_str_case = hist_str_list[case_idx]
-            hist_str_case_set = hist_str_list[0][0]
-            hist_str_case = list(hist_str_case_set.keys())[case_idx]
-            print("hist_str_case",hist_str_case,"\n")
-            hist_strs = hist_str_case_set[hist_str_case]
-            print("hist_strs",hist_strs,"\n")
+            if not baseline:
+                #hist_str_case = hist_str_list[case_idx]
+                hist_str_case_set = hist_str_list[0][0]
+                hist_str_case = list(hist_str_case_set.keys())[case_idx]
+                print("hist_str_case",hist_str_case,"\n")
+                hist_strs = hist_str_case_set[hist_str_case]
+                print("hist_strs",hist_strs,"\n")
+            else:
+                hist_strs = hist_str_list[0]
             for hist_str in hist_strs:
                 print("hist_str",hist_str,"\n")
                 """
