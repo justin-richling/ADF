@@ -364,9 +364,9 @@ class AdfInfo(AdfConfig):
         #if len(case_names) > 1:
         #    print("cam_hist_str",cam_hist_str,"\n")
         if not cam_hist_str:
-            hist_str = [['cam.h0a']]*self.__num_cases
+            hist_str_dict = [['cam.h0a']]*self.__num_cases
         else:
-            hist_str = cam_hist_str
+            hist_str_dict = cam_hist_str
         #End if
 
         #Initialize CAM history string nested list
@@ -425,7 +425,7 @@ class AdfInfo(AdfConfig):
             #End if
 
             #Check if history file path exists:
-            hist_str_case = hist_str[case_idx]
+            hist_str_case = hist_str_dict[case_idx]
             if any(cam_hist_locs):
                 #Grab first possible hist string, just looking for years of run
                 hist_strs = hist_str_case[0]
