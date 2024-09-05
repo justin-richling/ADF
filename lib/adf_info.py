@@ -348,6 +348,8 @@ class AdfInfo(AdfConfig):
 
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
+
+        print("cam_hist_str",cam_hist_str,"\n")
         
         # Check if this is multi-case and adjust appropriately
         # NOTE: multi-case cannot support multiple hist strings for a given case!
