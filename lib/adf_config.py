@@ -110,10 +110,10 @@ class AdfConfig(AdfBase):
                 #Currently this routine only handles one level of
                 #nested dictionaries, so throw an error if one has
                 #gone beyond that:
-                if sub_dict:
+                """if sub_dict:
                     ermsg = "ADF currently only allows for a single nested dict"
                     ermsg += f" in the config (YAML) file.\n  Variable '{value}' is nested too far."
-                    self.end_diag_fail(ermsg)
+                    self.end_diag_fail(ermsg)"""
                 print("key: dict - value",value,"\n")
                 #Apply routine to sub dictionary:
                 sub_config_search_dict = self.__create_search_dict(value,

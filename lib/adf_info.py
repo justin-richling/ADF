@@ -64,20 +64,20 @@ class AdfInfo(AdfConfig):
         Initalize ADF Info object.
         """
 
-        #Initialize Config attributes:
+        # Initialize Config attributes:
         super().__init__(config_file, debug=debug)
 
-        #Add basic diagnostic info to object:
+        # Add basic diagnostic info to object:
         self.__basic_info = self.read_config_var('diag_basic_info', required=True)
 
-        #Expand basic info variable strings:
+        # Expand basic info variable strings:
         self.expand_references(self.__basic_info,"diag_basic_info")
 
-        #Add CAM climatology info to object:
+        # Add CAM climatology info to object:
         self.__cam_climo_info = self.read_config_var('diag_cam_climo', required=True)
         print("\nadf_info: self.__cam_climo_info",self.__cam_climo_info,"\n")
 
-        #Expand CAM climo info variable strings:
+        # Expand CAM climo info variable strings:
         self.expand_references(self.__cam_climo_info,"diag_cam_climo")
 
         # Add CVDP info to object:
