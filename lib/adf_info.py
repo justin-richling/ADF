@@ -369,6 +369,8 @@ class AdfInfo(AdfConfig):
             hist_str_dict = cam_hist_str
         #End if
 
+        print("hist_str_dict",hist_str_dict,"\n")
+
         #Initialize CAM history string nested list
         self.__hist_str = hist_str_dict
 
