@@ -406,8 +406,19 @@ class AdfDiag(AdfWeb):
 
             # Check if history files actually exqist. If not then kill script:
             print("case_idx",case_idx,"\n")
-            hist_str_case = hist_str_list[case_idx]
+            #hist_str_case = hist_str_list[case_idx]
+            hist_str_case = hist_str_list[0]
             for hist_str in hist_str_case:
+                print("hist_str",hist_str,"\n")
+                """
+                hist_strs = hist_str_case[0]
+                print("hist_strs",hist_strs,"\n")
+
+                hist_str_case_1 = list(hist_strs.keys())[case_idx]
+                print("hist_str_case_1",hist_str_case_1,"\n")
+                hist_str = hist_strs[hist_str_case_1][0]
+                print("hist_str",hist_str,"\n")
+                """
 
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
