@@ -367,7 +367,7 @@ class AdfDiag(AdfWeb):
             hist_str_list = self.hist_string["test_hist_str"]
         print("hist_str_list",hist_str_list,'\n"')
         # Notify user that script has started:
-
+        print("baseline",baseline,"\n")
 
         # End if
 
@@ -406,6 +406,7 @@ class AdfDiag(AdfWeb):
 
             # Check if history files actually exqist. If not then kill script:
             print("case_idx",case_idx,"\n")
+            print("baseline",baseline,"\n")
             if not baseline:
                 #hist_str_case = hist_str_list[case_idx]
                 hist_str_case_set = hist_str_list[0][0]
