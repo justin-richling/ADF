@@ -409,6 +409,7 @@ class AdfDiag(AdfWeb):
             #hist_str_case = hist_str_list[case_idx]
             hist_str_case_set = hist_str_list[0][0]
             hist_str_case = list(hist_str_case_set.keys())[case_idx]
+            print("hist_str_case",hist_str_case,"\n")
             for hist_str in hist_str_case:
                 print("hist_str",hist_str,"\n")
                 """
