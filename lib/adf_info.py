@@ -427,7 +427,8 @@ class AdfInfo(AdfConfig):
             #End if
 
             #Check if history file path exists:
-            hist_str_case = hist_str_dict[case_idx]
+            hist_str_case = hist_str_dict[0]
+            print("hist_str_case",hist_str_case,"\n")
             if any(cam_hist_locs):
                 #Grab first possible hist string, just looking for years of run
                 hist_strs = hist_str_case[0]
