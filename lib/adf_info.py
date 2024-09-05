@@ -431,7 +431,9 @@ class AdfInfo(AdfConfig):
                 hist_strs = hist_str_case[0]
                 print("hist_strs",hist_strs,"\n")
 
-                hist_str = list(hist_strs.keys())[case_idx]
+                hist_str_case = list(hist_strs.keys())[case_idx]
+                print("hist_str_case",hist_str_case,"\n")
+                hist_str = hist_strs[hist_str_case]
                 print("hist_str",hist_str,"\n")
 
                 #Get climo years for verification or assignment if missing
