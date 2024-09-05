@@ -429,6 +429,7 @@ class AdfInfo(AdfConfig):
             if any(cam_hist_locs):
                 #Grab first possible hist string, just looking for years of run
                 hist_str = hist_str_case[0]
+                print("hist_str",hist_str,"\n")
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
