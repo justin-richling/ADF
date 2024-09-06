@@ -725,6 +725,8 @@ class AdfDiag(AdfWeb):
                     )
                     for file in hist_files:
                         cmd2 = f"ncatted -a user, global, a, c, {self.user} -a, history_files,global,a,c,{file} {ts_outfil_str}"
+                
+                print(cmd2,"\n")
                 # Run the ncrcat command
                 try:
                     sbp.run(cmd2, check=True)
