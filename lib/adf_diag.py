@@ -725,6 +725,7 @@ class AdfDiag(AdfWeb):
                     )
                     print("ts_outfil_str", ts_outfil_str)
                     print("ts_outfil_str type", type(ts_outfil_str))
+                    Path(ts_outfil_str).is_file()
                     ts_outfil_str = ts_outfil_str.replace("//","/")
                     print("ts_outfil_str", ts_outfil_str,"\n")
                     cmd2 = f"ncatted -a user,global,a,c,{self.user} {ts_outfil_str}"
