@@ -36,9 +36,6 @@ def regrid_and_vert_interp(adf):
 
     from pathlib import Path
 
-    # Get version from the package itself
-    print(f"adf version: {adf.__version__}")
-
     # regridding
     # Try just using the xarray method
     # import xesmf as xe  # This package is for regridding, and is just one potential solution.
