@@ -294,10 +294,12 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Finally, write re-gridded data to output file:
+                    # Convert the list to a string (join with commas or another separator)
+                    climatology_files_str = ', '.join(mclim_fils)
                     test_attrs_dict = {
                             "user": adf.user,
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
-                            #"climatology_files": mclim_fils,
+                            "climatology_files": climatology_files_str,
                         }
                     rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
@@ -365,11 +367,13 @@ def regrid_and_vert_interp(adf):
                             #End if
                         #End if
 
+                        # Convert the list to a string (join with commas or another separator)
+                        climatology_files_str = ', '.join(tclim_fils)
                         # Create a dictionary of attributes
                         base_attrs_dict = {
                             "user": adf.user,
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
-                            "climatology_files": tclim_fils,
+                            "climatology_files": climatology_files_str,
                         }
                         tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
 
