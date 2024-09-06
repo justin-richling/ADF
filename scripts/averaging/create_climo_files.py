@@ -232,7 +232,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     ts_files_str = [str(path.name) for path in ts_files]
     ts_files_str = ', '.join(ts_files_str)
     attrs_dict = {
-        "user": adf.user,
+        "adf_user": adf.user,
         "climo_yrs": f"{syr}-{eyr}",
         "time_series_files": ts_files_str,
     }

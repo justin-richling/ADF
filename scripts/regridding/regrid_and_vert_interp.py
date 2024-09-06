@@ -299,7 +299,7 @@ def regrid_and_vert_interp(adf):
                     climatology_files_str = [str(path) for path in mclim_fils]
                     climatology_files_str = ', '.join(climatology_files_str)
                     test_attrs_dict = {
-                            "user": adf.user,
+                            "adf_user": adf.user,
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
                             "climatology_files": climatology_files_str,
                         }
@@ -374,8 +374,9 @@ def regrid_and_vert_interp(adf):
                         climatology_files_str = ', '.join(climatology_files_str)
                         # Create a dictionary of attributes
                         base_attrs_dict = {
-                            "user": adf.user,
+                            "adf_user": adf.user,
                             "climo_yrs": base_climo_yrs_attr,
+                            "climo_yrs": f"{case_name}: {syear}-{eyear}",
                             "climatology_files": climatology_files_str,
                         }
                         tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
