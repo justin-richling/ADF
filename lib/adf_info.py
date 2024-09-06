@@ -68,6 +68,25 @@ class AdfInfo(AdfConfig):
         #Initialize Config attributes:
         super().__init__(config_file, debug=debug)
 
+        import requests
+
+        # Define the repository (owner/repo format)
+        repo = "NCAR/ADF"
+
+        # GitHub API URL for releases
+        url = f"https://api.github.com/repos/{repo}/releases/latest"
+
+        # Make a request to get the latest release
+        response = requests.get(url)
+        release_data = response.json()
+
+        # Extract the version tag
+        if "tag_name" in release_data:
+            version = release_data["tag_name"]
+            print(f"Latest release version: {version}")
+        else:
+            print("No release information found")
+
         #Add basic diagnostic info to object:
         self.__basic_info = self.read_config_var('diag_basic_info', required=True)
 
