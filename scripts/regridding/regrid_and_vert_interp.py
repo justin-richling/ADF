@@ -372,7 +372,7 @@ def regrid_and_vert_interp(adf):
                         # Create a dictionary of attributes
                         base_attrs_dict = {
                             "user": adf.user,
-                            "climo_yrs": f"{case_name}: {syear}-{eyear}",
+                            "climo_yrs": base_climo_yrs_attr,
                             "climatology_files": climatology_files_str,
                         }
                         tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
