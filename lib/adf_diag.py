@@ -716,7 +716,6 @@ class AdfDiag(AdfWeb):
                 #ncatted -a long_attr,global,a,c,"short_value1" input.nc
                 #ncatted -a long_attr,global,a,c,"short_value2" input.nc
 
-                print("cmd2",cmd2,"\n")
                 import subprocess as sbp
                 if var not in hist_file_var_list:
                     ts_outfil_str = (
