@@ -729,13 +729,21 @@ class AdfDiag(AdfWeb):
                 #ncatted -a long_attr,global,a,c,"short_value2" input.nc
 
                 print("cmd2",cmd2,"\n")
-                """import subprocess as sbp
+                import subprocess as sbp
+                if var not in hist_file_var_list:
+                    ts_outfil_str = (
+                        ts_dir[case_idx]
+                        + os.sep
+                        + ".".join([case_name, hist_str, var, time_string, "nc"])
+                    )
+                    for file in hist_files:
+                        cmd2 = f"ncatted -a user, global, a, c, {self.user} -a, history_files,global,a,c,{file} {ts_outfil_str}"
                 # Run the ncrcat command
                 try:
                     sbp.run(cmd2, check=True)
                     print("ncatted command executed successfully")
                 except sbp.CalledProcessError as e:
-                    print(f"ncatted failed: {e}")"""
+                    print(f"ncatted failed: {e}")
 
                 if vars_to_derive:
                     self.derive_variables(
