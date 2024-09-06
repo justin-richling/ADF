@@ -700,8 +700,6 @@ class AdfDiag(AdfWeb):
                         ["ncrcat", "-O", "-4", "-h", "--no_cll_mth", "-v", ncrcat_var_list]
                         + hist_files
                         + ["-o", ts_outfil_str]
-                        #+ ["&&", "ncatted", "-a", "user", "global", "a", "c", self.user, ts_outfil_str]
-                        #+ ["&&", "ncatted", "-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
                     )
 
                     cmd2 = f"ncatted -a user, global, a, c, {self.user} -a, history_files,global,a,c,{hist_files} {ts_outfil_str}"
@@ -719,12 +717,12 @@ class AdfDiag(AdfWeb):
                 # End with
 
                 print("cmd2",cmd2,"\n")
-                import subprocess
+                import subprocess as sbp
                 # Run the ncrcat command
                 try:
-                    subprocess.run(cmd2, check=True)
+                    sbp.run(cmd2, check=True)
                     print("ncatted command executed successfully")
-                except subprocess.CalledProcessError as e:
+                except sbp.CalledProcessError as e:
                     print(f"ncatted failed: {e}")
 
                 if vars_to_derive:
