@@ -704,10 +704,8 @@ class AdfDiag(AdfWeb):
                         #+ ["&&", "ncatted", "-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
                     )
 
-                    cmd2 = (
-                        ["ncatted", "-a", "user", "global", "a", "c", self.user,]
-                        + ["-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
-                    )
+                    cmd2 = f"ncatted -a user, global, a, c, {self.user} -a, history_files,global,a,c,{hist_files} {ts_outfil_str}"
+                    
 
                     # Add to command list for use in multi-processing pool:
                     list_of_commands.append(cmd)
