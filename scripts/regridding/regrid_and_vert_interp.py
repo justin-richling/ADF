@@ -655,9 +655,6 @@ def save_to_nc(tosave, outname, attrs=None, proc=None):
         xo.attrs = attrs
     if proc is not None:
         xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
-
-    #Add climo year range to metadata under 'climo_yrs'
-    xo = xo.assign_attrs(climo_yrs=f"{syr}-{eyr}")
     xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
 
 #####
