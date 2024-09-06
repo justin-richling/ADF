@@ -642,7 +642,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
 #####
 
-def save_to_nc(tosave, outname, attr_dict, attrs=None, proc=None):
+def save_to_nc(tosave, outname, attrs=None, proc=None):
     """Saves xarray variable to new netCDF file"""
 
     xo = tosave  # used to have more stuff here.
