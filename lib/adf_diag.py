@@ -709,7 +709,7 @@ class AdfDiag(AdfWeb):
 
                     # Add to command list for use in multi-processing pool:
                     list_of_commands.append(cmd)
-                    list_of_commands2.append(cmd2)
+                    #list_of_commands2.append(cmd2)
 
                 # End variable loop
 
@@ -717,6 +717,8 @@ class AdfDiag(AdfWeb):
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_commands)
                 # End with
+
+                print("cmd2",cmd2,"\n")
 
                 # Run the ncrcat command
                 try:
