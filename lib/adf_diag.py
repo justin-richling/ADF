@@ -716,7 +716,7 @@ class AdfDiag(AdfWeb):
                 #ncatted -a long_attr,global,a,c,"short_value1" input.nc
                 #ncatted -a long_attr,global,a,c,"short_value2" input.nc
 
-                import subprocess as sbp
+                """import subprocess as sbp
                 for i,var in enumerate(diag_var_list):
                     print(i)
                     ts_outfil_str = (
@@ -735,7 +735,7 @@ class AdfDiag(AdfWeb):
                     for file in hist_files:
                         print("file",file,"\n")
                         cmd2 = f"ncatted -a, history_files,global,a,c,{file} {ts_outfil_str}"
-                        sbp.run(cmd2, check=True)
+                        sbp.run(cmd2, check=True)"""
                 
                 """print(cmd2,"\n")
                 # Run the ncrcat command
