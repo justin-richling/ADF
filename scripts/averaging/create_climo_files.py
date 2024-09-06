@@ -230,10 +230,10 @@ def process_variable(ts_files, syr, eyr, output_file):
     #Add climo year range to metadata under 'climo_yrs'
     cam_climo_data = cam_climo_data.assign_attrs(climo_yrs=f"{syr}-{eyr}")
 
-    import os
+    import getpass
 
     # Get the current system user
-    current_user = os.getlogin()
+    current_user = getpass.getuser()
 
     print(f"The current system user is: {current_user}")
 
