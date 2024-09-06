@@ -147,6 +147,14 @@ def regrid_and_vert_interp(adf):
         ps_loc_dict = {}
         pmid_loc_dict = {}
 
+        #Get climo years for case
+        syear = syear_cases[case_idx]
+        eyear = eyear_cases[case_idx]
+
+        #Update attrs dict for current test case climo years
+        #attr_dict["test_climo_yrs"] = f"{syear}-{eyear}"
+        attr_dict["test_climo_yrs"] = f"{case_name}: {syear}-{eyear}"
+
         # probably want to do this one variable at a time:
         for var in var_list:
 
