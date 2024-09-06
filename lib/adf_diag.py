@@ -717,7 +717,7 @@ class AdfDiag(AdfWeb):
                 #ncatted -a long_attr,global,a,c,"short_value2" input.nc
 
                 import subprocess as sbp
-                for var in diag_var_list:
+                for i,var in enumerate(diag_var_list):
                     ts_outfil_str = (
                         ts_dir[case_idx]
                         + os.sep
@@ -728,8 +728,9 @@ class AdfDiag(AdfWeb):
                     #Path(ts_outfil_str).is_file()
                     ts_outfil_str = ts_outfil_str.replace("//","/")
                     print("ts_outfil_str", ts_outfil_str,"\n")
-                    cmd2 = f"ncatted -a user,global,a,c,{self.user} {ts_outfil_str}"
-                    sbp.run(cmd2, check=True)
+                    if i == 0:
+                        cmd2 = f"ncatted -a user,global,a,c,{self.user} {ts_outfil_str}"
+                        sbp.run(cmd2, check=True)
                     for file in hist_files:
                         print("file",file,"\n")
                         cmd2 = f"ncatted -a, history_files,global,a,c,{file} {ts_outfil_str}"
