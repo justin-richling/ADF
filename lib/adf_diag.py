@@ -719,7 +719,7 @@ class AdfDiag(AdfWeb):
                 # End with
 
                 print("cmd2",cmd2,"\n")
-
+                import subprocess
                 # Run the ncrcat command
                 try:
                     subprocess.run(cmd2, check=True)
