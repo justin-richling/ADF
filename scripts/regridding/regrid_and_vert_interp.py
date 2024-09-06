@@ -59,6 +59,10 @@ def regrid_and_vert_interp(adf):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
+    #Grab case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
+
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
     for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
@@ -91,6 +95,9 @@ def regrid_and_vert_interp(adf):
     #Regrid target variables (either obs or a baseline run):
     if adf.compare_obs:
 
+        #Set obs name to match baseline (non-obs)
+        target_list = ["Obs"]
+
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
 
@@ -107,6 +114,15 @@ def regrid_and_vert_interp(adf):
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
+
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adf.climo_yrs["syear_baseline"]
+    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+    #Set attributes dictionary for climo years to save in the file attributes
+    #attr_dict = {"test_climo_yrs": "",
+    #             "baseline_climo_yrs": f"{target_list[0]}: {syear_baseline}-{eyear_baseline}"}
+    base_climo_yrs_attr = f"{target_list[0]}: {syear_baseline}-{eyear_baseline}"
 
     #-----------------------------------------
 
@@ -136,6 +152,15 @@ def regrid_and_vert_interp(adf):
         #pressure and mid-level pressure fields:
         ps_loc_dict = {}
         pmid_loc_dict = {}
+
+        #Get climo years for case
+        syear = syear_cases[case_idx]
+        eyear = eyear_cases[case_idx]
+
+        #Update attrs dict for current test case climo years
+        #attr_dict["test_climo_yrs"] = f"{syear}-{eyear}"
+        #attr_dict["test_climo_yrs"] = f"{case_name}: {syear}-{eyear}"
+        test_climo_yrs_attr = f"{case_name}: {syear}-{eyear}"
 
         # probably want to do this one variable at a time:
         for var in var_list:
@@ -274,6 +299,7 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Finally, write re-gridded data to output file:
+                    rgdata_interp = rgdata_interp.assign_attrs(climo_yrs=test_climo_yrs_attr)
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
@@ -340,6 +366,8 @@ def regrid_and_vert_interp(adf):
                         #End if
 
                         #Write interpolated baseline climatology to file:
+                        #Add climo year range to metadata under 'climo_yrs'
+                        tgdata_interp = tgdata_interp.assign_attrs(climo_yrs=base_climo_yrs_attr)
                         save_to_nc(tgdata_interp, interp_bl_file)
                     #End if
                 else:
@@ -605,7 +633,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
 #####
 
-def save_to_nc(tosave, outname, attrs=None, proc=None):
+def save_to_nc(tosave, outname, attr_dict, attrs=None, proc=None):
     """Saves xarray variable to new netCDF file"""
 
     xo = tosave  # used to have more stuff here.
@@ -621,6 +649,9 @@ def save_to_nc(tosave, outname, attrs=None, proc=None):
         xo.attrs = attrs
     if proc is not None:
         xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+
+    #Add climo year range to metadata under 'climo_yrs'
+    xo = xo.assign_attrs(climo_yrs=f"{syr}-{eyr}")
     xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
 
 #####

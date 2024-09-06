@@ -227,6 +227,16 @@ def process_variable(ts_files, syr, eyr, output_file):
     enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
     enc    = {**enc_c, **enc_dv}
 
+    #Add climo year range to metadata under 'climo_yrs'
+    cam_climo_data = cam_climo_data.assign_attrs(climo_yrs=f"{syr}-{eyr}")
+
+    import os
+
+    # Get the current system user
+    current_user = os.getlogin()
+
+    print(f"The current system user is: {current_user}")
+
     #Output variable climatology to NetCDF-4 file:
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
     return 1  # All funcs return something. Could do error checking with this if needed.
