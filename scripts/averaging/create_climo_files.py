@@ -228,19 +228,15 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     enc    = {**enc_c, **enc_dv}
 
     # Create a dictionary of attributes
+    # Convert the list to a string (join with commas or another separator)
+    ts_files_str = [str(path) for path in ts_files]
+    ts_files_str = ', '.join(ts_files_str)
     attrs_dict = {
         "user": adf.user,
         "climo_yrs": f"{syr}-{eyr}",
-        #"time_series_files": [ts_files],
+        "time_series_files": ts_files_str,
     }
     cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
-
-    import getpass
-
-    # Get the current system user
-    current_user = getpass.getuser()
-
-    print(f"The current system user is: {current_user}")
 
     #Output variable climatology to NetCDF-4 file:
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
