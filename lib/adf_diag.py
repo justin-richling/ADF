@@ -704,9 +704,16 @@ class AdfDiag(AdfWeb):
                     # Convert the list to a string (join with commas or another separator)
                     hist_files_str = [str(path.name) for path in hist_files]
                     hist_files_str = ', '.join(hist_files_str)
-                    cmd2 = f"ncatted -a user, global, a, c, {self.user} -a, history_files,global,a,c,{hist_files_str} {ts_outfil_str}"
-                    
-
+                    #cmd2 = f"ncatted -a user, global, a, c, {self.user} -a, history_files,global,a,c,{hist_files_str} {ts_outfil_str}"
+                    for file in hist_files:
+                        cmd2 = f"ncatted -a user, global, a, c, {self.user} -a, history_files,global,a,c,{file} {ts_outfil_str}"
+                        import subprocess as sbp
+                        # Run the ncrcat command
+                        try:
+                            sbp.run(cmd2, check=True)
+                            print("ncatted command executed successfully")
+                        except sbp.CalledProcessError as e:
+                            print(f"ncatted failed: {e}")
                     # Add to command list for use in multi-processing pool:
                     list_of_commands.append(cmd)
                     #list_of_commands2.append(cmd2)
@@ -718,14 +725,17 @@ class AdfDiag(AdfWeb):
                     _ = mpool.map(call_ncrcat, list_of_commands)
                 # End with
 
+                #ncatted -a long_attr,global,a,c,"short_value1" input.nc
+                #ncatted -a long_attr,global,a,c,"short_value2" input.nc
+
                 print("cmd2",cmd2,"\n")
-                import subprocess as sbp
+                """import subprocess as sbp
                 # Run the ncrcat command
                 try:
                     sbp.run(cmd2, check=True)
                     print("ncatted command executed successfully")
                 except sbp.CalledProcessError as e:
-                    print(f"ncatted failed: {e}")
+                    print(f"ncatted failed: {e}")"""
 
                 if vars_to_derive:
                     self.derive_variables(
