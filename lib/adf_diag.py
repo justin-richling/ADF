@@ -724,6 +724,8 @@ class AdfDiag(AdfWeb):
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
                     )
                     print("ts_outfil_str", ts_outfil_str)
+                    ts_outfil_str = ts_outfil_str.replace("//","/")
+                    print("ts_outfil_str", ts_outfil_str,"\n")
                     cmd2 = f"ncatted -a user, global, a, c, {self.user} {ts_outfil_str}"
                     sbp.run(cmd2, check=True)
                     for file in hist_files:
