@@ -59,6 +59,10 @@ def regrid_and_vert_interp(adf):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
+    #Grab case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
+
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
     for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
