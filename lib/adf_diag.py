@@ -718,6 +718,7 @@ class AdfDiag(AdfWeb):
 
                 import subprocess as sbp
                 for i,var in enumerate(diag_var_list):
+                    print(i)
                     ts_outfil_str = (
                         ts_dir[case_idx]
                         + os.sep
