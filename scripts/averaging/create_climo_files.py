@@ -229,7 +229,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
 
     # Create a dictionary of attributes
     # Convert the list to a string (join with commas or another separator)
-    ts_files_str = [str(path.name) for path in ts_files]
+    ts_files_str = [str(path) for path in ts_files]
     ts_files_str = ', '.join(ts_files_str)
     attrs_dict = {
         "adf_user": adf.user,
