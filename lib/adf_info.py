@@ -92,6 +92,8 @@ class AdfInfo(AdfConfig):
 
         if self.__mdtf_info is not None:
             self.expand_references(self.__mdtf_info)
+            #if self.__mdtf_info ['mdtf_run']:
+            #    self.expand_references(self.__mdtf_info)
         # End if
 
         # Check if inputs are of the correct type:
@@ -346,15 +348,26 @@ class AdfInfo(AdfConfig):
 
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
+        print("cam_hist_str BEFORE",cam_hist_str)
+
+        # Check if this is multi-case and adjust appropriately
+        if len(case_names) > 1:
+            cam_hist_str_eh = []
+            for i in cam_hist_str[0]:
+                #cam_sub_hist_str.append(i)
+                cam_hist_str_eh.append([i])
+            cam_hist_str = cam_hist_str_eh
+
+        print("cam_hist_str AFTER",cam_hist_str,"\n")
 
         if not cam_hist_str:
-            hist_str = [['cam.h0a']]*self.__num_cases
+            hist_str_dict = [['cam.h0a']]*self.__num_cases
         else:
-            hist_str = cam_hist_str
+            hist_str_dict = cam_hist_str
         #End if
 
         #Initialize CAM history string nested list
-        self.__hist_str = hist_str
+        self.__hist_str = hist_str_dict
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
@@ -409,10 +422,18 @@ class AdfInfo(AdfConfig):
             #End if
 
             #Check if history file path exists:
-            hist_str_case = hist_str[case_idx]
+            #hist_str_case = hist_str[case_idx]
+            hist_str_case = hist_str_dict[0]
             if any(cam_hist_locs):
                 #Grab first possible hist string, just looking for years of run
-                hist_str = hist_str_case[0]
+                #hist_str = hist_str_case[0]
+                hist_strs = hist_str_case[0]
+                print("hist_strs",hist_strs,"\n")
+
+                hist_str_case_1 = list(hist_strs.keys())[case_idx]
+                print("hist_str_case_1",hist_str_case_1,"\n")
+                hist_str = hist_strs[hist_str_case_1][0]
+                print("hist_str",hist_str,"\n")
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])

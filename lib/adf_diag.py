@@ -388,6 +388,9 @@ class AdfDiag(AdfWeb):
                 continue
             # End if
 
+            # Notify user time series files are starting
+            print(f"\n  Writing time series files to {ts_dir[case_idx]}")
+
             # Extract start and end year values:
             start_year = start_years[case_idx]
             end_year = end_years[case_idx]
@@ -403,8 +406,18 @@ class AdfDiag(AdfWeb):
             # End if
 
             # Check if history files actually exqist. If not then kill script:
-            hist_str_case = hist_str_list[case_idx]
-            for hist_str in hist_str_case:
+            #hist_str_case = hist_str_list[case_idx]
+            if not baseline:
+                hist_str_multi_case = hist_str_list[0][0]
+                hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
+                print("hist_str_case",hist_str_case_idx,"\n")
+                hist_strs = hist_str_multi_case[hist_str_case_idx]
+                print("hist_strs",hist_strs,"\n")
+            else:
+                hist_strs = hist_str_list[0]
+
+            #for hist_str in hist_str_case:
+            for hist_str in hist_strs:
 
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
