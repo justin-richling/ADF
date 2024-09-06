@@ -297,7 +297,7 @@ def regrid_and_vert_interp(adf):
                     test_attrs_dict = {
                             "user": adf.user,
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
-                            "climatology_files": mclim_fils,
+                            #"climatology_files": mclim_fils,
                         }
                     rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
