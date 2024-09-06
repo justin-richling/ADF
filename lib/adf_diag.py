@@ -720,12 +720,12 @@ class AdfDiag(AdfWeb):
                     _ = mpool.map(call_ncrcat, list_of_commands)
                 # End with
 
-                # Now run the "ncatted" subprocesses in parallel:
-                with mp.Pool(processes=self.num_procs) as mpool:
-                    _ = mpool.map(call_ncatted, list_of_commands)
-                # End with
-
-                call_ncatted
+                # Run the ncrcat command
+                try:
+                    subprocess.run(cmd2, check=True)
+                    print("ncatted command executed successfully")
+                except subprocess.CalledProcessError as e:
+                    print(f"ncatted failed: {e}")
 
                 if vars_to_derive:
                     self.derive_variables(
