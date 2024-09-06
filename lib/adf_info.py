@@ -80,6 +80,8 @@ class AdfInfo(AdfConfig):
         response = requests.get(url)
         release_data = response.json()
 
+        print("release_data",release_data,"\n")
+
         # Extract the version tag
         if "tag_name" in release_data:
             version = release_data["tag_name"]
