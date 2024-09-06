@@ -705,7 +705,7 @@ class AdfDiag(AdfWeb):
                     )
 
                     cmd2 = (
-                        + ["ncatted", "-a", "user", "global", "a", "c", self.user,]
+                        ["ncatted", "-a", "user", "global", "a", "c", self.user,]
                         + ["-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
                     )
 
