@@ -295,7 +295,9 @@ def regrid_and_vert_interp(adf):
 
                     #Finally, write re-gridded data to output file:
                     # Convert the list to a string (join with commas or another separator)
-                    climatology_files_str = ', '.join(mclim_fils)
+                    # Convert the list of Path objects to a list of strings
+                    climatology_files_str = [str(path) for path in mclim_fils]
+                    climatology_files_str = ', '.join(climatology_files_str)
                     test_attrs_dict = {
                             "user": adf.user,
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
@@ -368,7 +370,8 @@ def regrid_and_vert_interp(adf):
                         #End if
 
                         # Convert the list to a string (join with commas or another separator)
-                        climatology_files_str = ', '.join(tclim_fils)
+                        climatology_files_str = [str(path) for path in tclim_fils]
+                        climatology_files_str = ', '.join(climatology_files_str)
                         # Create a dictionary of attributes
                         base_attrs_dict = {
                             "user": adf.user,
