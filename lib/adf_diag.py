@@ -716,14 +716,14 @@ class AdfDiag(AdfWeb):
                     _ = mpool.map(call_ncrcat, list_of_commands)
                 # End with
 
-                print("cmd2",cmd2,"\n")
+                '''print("cmd2",cmd2,"\n")
                 import subprocess as sbp
                 # Run the ncrcat command
                 try:
                     sbp.run(cmd2, check=True)
                     print("ncatted command executed successfully")
                 except sbp.CalledProcessError as e:
-                    print(f"ncatted failed: {e}")
+                    print(f"ncatted failed: {e}")'''
 
                 if vars_to_derive:
                     self.derive_variables(
