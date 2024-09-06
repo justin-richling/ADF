@@ -91,6 +91,9 @@ def regrid_and_vert_interp(adf):
     #Regrid target variables (either obs or a baseline run):
     if adf.compare_obs:
 
+        #Set obs name to match baseline (non-obs)
+        target_list = ["Obs"]
+
         #Extract variable-obs dictionary:
         var_obs_dict = adf.var_obs_dict
 
@@ -107,6 +110,13 @@ def regrid_and_vert_interp(adf):
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adf.climo_yrs["syear_baseline"]
+    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+    #Set attributes dictionary for climo years to save in the file attributes
+    attr_dict = {"test_climo_yrs": "",
+                 "baseline_climo_yrs": f"{target_list[0]}: {syear_baseline}-{eyear_baseline}"}
 
     #-----------------------------------------
 
