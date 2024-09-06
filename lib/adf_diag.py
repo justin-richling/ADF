@@ -337,6 +337,16 @@ class AdfDiag(AdfWeb):
             """
             return subprocess.run(cmd, shell=False)
 
+        global call_ncatted
+
+        def call_ncatted(cmd):
+            """this is an internal function to `create_time_series`
+            It just wraps the subprocess.call() function, so it can be
+            used with the multiprocessing Pool that is constructed below.
+            It is declared as global to avoid AttributeError.
+            """
+            return subprocess.run(cmd, shell=False)
+
         # End def
 
 
@@ -514,6 +524,7 @@ class AdfDiag(AdfWeb):
 
                 # Loop over CAM history variables:
                 list_of_commands = []
+                list_of_commands2 = []
                 vars_to_derive = []
                 # create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
@@ -693,20 +704,34 @@ class AdfDiag(AdfWeb):
                         + ["&&", "ncatted", "-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
                     )
 
+                    cmd2 = (
+                        + ["ncatted", "-a", "user", "global", "a", "c", self.user,]
+                        + ["-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
+                    )
+
                     # Add to command list for use in multi-processing pool:
                     list_of_commands.append(cmd)
+                    list_of_commands2.append(cmd2)
 
                 # End variable loop
 
                 # Now run the "ncrcat" subprocesses in parallel:
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_commands)
+                # End with
 
-                    if vars_to_derive:
-                        self.derive_variables(
-                            res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
-                            constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
-                        )
+                # Now run the "ncatted" subprocesses in parallel:
+                with mp.Pool(processes=self.num_procs) as mpool:
+                    _ = mpool.map(call_ncatted, list_of_commands)
+                # End with
+
+                call_ncatted
+
+                if vars_to_derive:
+                    self.derive_variables(
+                        res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
+                        constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
+                    )
                 # End with
             # End for hist_str
         # End cases loop
