@@ -231,7 +231,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     attrs_dict = {
         "user": adf.user,
         "climo_yrs": f"{syr}-{eyr}",
-        "time series files": ts_files,
+        "time_series_files": ts_files,
     }
     cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
 
