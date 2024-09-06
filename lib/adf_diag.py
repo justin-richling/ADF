@@ -700,13 +700,13 @@ class AdfDiag(AdfWeb):
                         ["ncrcat", "-O", "-4", "-h", "--no_cll_mth", "-v", ncrcat_var_list]
                         + hist_files
                         + ["-o", ts_outfil_str]
-                        + ["&&", "ncatted", "-a", "user", "global", "a", "c", self.user, ts_outfil_str]
-                        + ["&&", "ncatted", "-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
+                        #+ ["&&", "ncatted", "-a", "user", "global", "a", "c", self.user, ts_outfil_str]
+                        #+ ["&&", "ncatted", "-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
                     )
 
                     cmd2 = (
                         + ["ncatted", "-a", "user", "global", "a", "c", self.user,]
-                        #+ ["-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
+                        + ["-a", "history_files", "global", "a", "c", hist_files, ts_outfil_str]
                     )
 
                     # Add to command list for use in multi-processing pool:
