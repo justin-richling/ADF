@@ -724,6 +724,7 @@ class AdfDiag(AdfWeb):
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
                     )
                     print("ts_outfil_str", ts_outfil_str)
+                    print("ts_outfil_str type", type(ts_outfil_str))
                     ts_outfil_str = ts_outfil_str.replace("//","/")
                     print("ts_outfil_str", ts_outfil_str,"\n")
                     cmd2 = f"ncatted -a user,global,a,c,{self.user} {ts_outfil_str}"
