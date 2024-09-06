@@ -36,6 +36,9 @@ def regrid_and_vert_interp(adf):
 
     from pathlib import Path
 
+    # Get version from the package itself
+    print(f"adf version: {adf.__version__}")
+
     # regridding
     # Try just using the xarray method
     # import xesmf as xe  # This package is for regridding, and is just one potential solution.
@@ -156,11 +159,6 @@ def regrid_and_vert_interp(adf):
         #Get climo years for case
         syear = syear_cases[case_idx]
         eyear = eyear_cases[case_idx]
-
-        #Update attrs dict for current test case climo years
-        #attr_dict["test_climo_yrs"] = f"{syear}-{eyear}"
-        #attr_dict["test_climo_yrs"] = f"{case_name}: {syear}-{eyear}"
-        test_climo_yrs_attr = f"{case_name}: {syear}-{eyear}"
 
         # probably want to do this one variable at a time:
         for var in var_list:
@@ -299,7 +297,12 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Finally, write re-gridded data to output file:
-                    rgdata_interp = rgdata_interp.assign_attrs(climo_yrs=test_climo_yrs_attr)
+                    test_attrs_dict = {
+                            "user": adf.user,
+                            "climo_yrs": f"{case_name}: {syear}-{eyear}",
+                            "climatology files": mclim_fils,
+                        }
+                    rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
@@ -365,9 +368,15 @@ def regrid_and_vert_interp(adf):
                             #End if
                         #End if
 
+                        # Create a dictionary of attributes
+                        base_attrs_dict = {
+                            "user": adf.user,
+                            "climo_yrs": f"{case_name}: {syear}-{eyear}",
+                            "climatology files": tclim_fils,
+                        }
+                        tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
+
                         #Write interpolated baseline climatology to file:
-                        #Add climo year range to metadata under 'climo_yrs'
-                        tgdata_interp = tgdata_interp.assign_attrs(climo_yrs=base_climo_yrs_attr)
                         save_to_nc(tgdata_interp, interp_bl_file)
                     #End if
                 else:

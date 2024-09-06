@@ -178,7 +178,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 warnings.warn(errmsg)
                 continue
 
-            list_of_arguments.append((ts_files, syr, eyr, output_file))
+            list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
 
 
         #End of var_list loop
@@ -198,7 +198,7 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(ts_files, syr, eyr, output_file):
+def process_variable(adf, ts_files, syr, eyr, output_file):
     '''
     Compute and save the climatology file.
     '''
@@ -227,8 +227,13 @@ def process_variable(ts_files, syr, eyr, output_file):
     enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
     enc    = {**enc_c, **enc_dv}
 
-    #Add climo year range to metadata under 'climo_yrs'
-    cam_climo_data = cam_climo_data.assign_attrs(climo_yrs=f"{syr}-{eyr}")
+    # Create a dictionary of attributes
+    attrs_dict = {
+        "user": adf.user,
+        "climo_yrs": f"{syr}-{eyr}",
+        "time series files": ts_files,
+    }
+    cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
 
     import getpass
 
