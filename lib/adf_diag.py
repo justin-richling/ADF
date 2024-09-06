@@ -729,7 +729,7 @@ class AdfDiag(AdfWeb):
                     cmd2 = f"ncatted -a user, global, a, c, {self.user} {ts_outfil_str}"
                     sbp.run(cmd2, check=True)
                     for file in hist_files:
-                        print(file,"\n")
+                        print("file",file,"\n")
                         cmd2 = f"ncatted -a, history_files,global,a,c,{file} {ts_outfil_str}"
                         sbp.run(cmd2, check=True)
                 
