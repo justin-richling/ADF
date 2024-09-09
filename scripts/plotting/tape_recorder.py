@@ -44,6 +44,7 @@ def tape_recorder(adfobj):
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
+    print("cam_hist_strs",cam_hist_strs,"\n")
 
     # Filter the list to include only strings that are exactly in the possible h0 strings
     # - Search for either h0 or h0a
