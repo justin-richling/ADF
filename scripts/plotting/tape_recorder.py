@@ -65,6 +65,7 @@ def tape_recorder(adfobj):
                     case_hist_strs.append(string)
                     break
     else:
+        print("")
 
 
     #Grab test case climo years
