@@ -46,12 +46,7 @@ def tape_recorder(adfobj):
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
     print("cam_hist_strs",cam_hist_strs,"\n")
 
-    hist_str_multi_case = cam_hist_strs[0][0]
-    print("hist_str_multi_case",hist_str_multi_case,'\n"')
-    hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
-    print("hist_str_case",hist_str_case_idx,"\n")
-    hist_strs = hist_str_multi_case[hist_str_case_idx]
-    print("hist_strs",hist_strs,"\n")
+    
 
     # Filter the list to include only strings that are exactly in the possible h0 strings
     # - Search for either h0 or h0a
@@ -65,7 +60,18 @@ def tape_recorder(adfobj):
                     case_hist_strs.append(string)
                     break
     else:
-        print("")
+        hist_str_multi_case = cam_hist_strs[0][0]
+        print("hist_str_multi_case",hist_str_multi_case,'\n"')
+        for case_idx,_ in enumerate(case_names):
+            hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
+            print("hist_str_case",hist_str_case_idx,"\n")
+            hist_strs = hist_str_multi_case[hist_str_case_idx]
+            print("hist_strs",hist_strs,"\n")
+            # Check each possible h0 string
+            for string in hist_strs:
+                if string in substrings:
+                    case_hist_strs.append(string)
+                    break
 
 
     #Grab test case climo years
