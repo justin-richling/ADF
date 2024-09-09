@@ -573,6 +573,7 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
         casecolors -> list of colors for the cases
         needs_bias_labels -> Bool, if T make the legend for the bias-sized markers.
     """
+    """
     # CASE LEGEND -- Color-coded
     bottom_of_text = 0.05
 
@@ -585,6 +586,26 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
             wks.text(0.052, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
             color=c, ha='left', va='bottom', transform=wks.transAxes, fontsize=10)
             n += 1
+    """
+    # CASE LEGEND -- Color-coded
+    bottom_of_text = 0.05
+    height_of_lines = 0.03
+
+    case_pos = 0.75
+    wks.text(0.99, case_pos, "Cases:", va='top', transform=wks.transAxes, fontsize=10)
+
+    n = 0
+    if len(test_nicknames) > 1:
+        for case_idx, (s, c) in enumerate(zip([test_nicknames], [casecolors])):
+            text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases}-{eyear_cases}",
+                            color=c, va='top', transform=wks.transAxes, fontsize=10)
+            n += 1
+    else:
+        for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
+                text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+                                color=c, va='top', transform=wks.transAxes, fontsize=10)
+                n += 1
+
     # BIAS LEGEND
     if needs_bias_labels:
         # produce an info-box showing the markers/sizes based on bias
