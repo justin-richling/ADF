@@ -240,8 +240,9 @@ def tape_recorder(adfobj):
         x2_loc = x2[3]
 
     if len(runname_LT) <= 3:
-        y1_loc = y1[count]#-0.03
-        y2_loc = y1[count]#-0.02
+        print("here, right?")
+        y1_loc = y1[count]-0.00
+        y2_loc = y1[count]-0.01
 
     if len(runname_LT) > 3:
         y1_loc = y1[count]-0.03
