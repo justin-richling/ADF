@@ -414,7 +414,10 @@ class AdfDiag(AdfWeb):
                 hist_strs = hist_str_multi_case[hist_str_case_idx]
                 print("hist_strs",hist_strs,"\n")
             else:
-                hist_strs = hist_str_list[0]
+                if len(case_names) > 1:
+                    hist_strs = hist_str_list[0]
+                else:
+                    hist_strs = hist_str_list
 
             #for hist_str in hist_str_case:
             for hist_str in hist_strs:
