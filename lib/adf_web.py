@@ -728,6 +728,7 @@ class AdfWeb(AdfObs):
                     #if (main_site_path / case_name):
                     #Copy website directory to "main site" directory:
                     if not website_dir.is_dir():
+                        website_dir.mkdir(parents=True)
                         shutil.copytree(website_dir, main_site_path / case_name)
 
                     #Also add path to case_sites dictionary:
