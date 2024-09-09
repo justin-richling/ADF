@@ -724,18 +724,22 @@ class AdfWeb(AdfObs):
                 if case_name in self.__case_web_paths:
                     #Extract website directory:
                     website_dir = self.__case_web_paths[case_name]['website_dir']
+                    if website_dir:
 
-                    #Copy website directory to "main site" directory:
-                    shutil.copytree(website_dir, main_site_path / case_name)
+                        #if (main_site_path / case_name):
+                        #Copy website directory to "main site" directory:
+                        shutil.copytree(website_dir, main_site_path / case_name)
+
+                        #Also make sure CSS template files have been copied over:
+                        if not main_templates_path.is_dir():
+                            css_files_dir = self.__case_web_paths[case_name]['css_files_dir']
+                            shutil.copytree(css_files_dir, main_site_path / "templates")
+                        #End if
 
                     #Also add path to case_sites dictionary:
                     case_sites[case_name] = os.path.join(os.curdir, case_name, "index.html")
 
-                    #Also make sure CSS template files have been copied over:
-                    if not main_templates_path.is_dir():
-                        css_files_dir = self.__case_web_paths[case_name]['css_files_dir']
-                        shutil.copytree(css_files_dir, main_site_path / "templates")
-                    #End if
+                    
                 #End if
             #End for (model case loop)
 
