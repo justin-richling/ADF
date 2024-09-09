@@ -724,7 +724,8 @@ class AdfWeb(AdfObs):
                 if case_name in self.__case_web_paths:
                     #Extract website directory:
                     website_dir = self.__case_web_paths[case_name]['website_dir']
-                    if website_dir:
+                    print("website_dir",website_dir,"\n")
+                    if website_dir.is_dir():
 
                         #if (main_site_path / case_name):
                         #Copy website directory to "main site" directory:
