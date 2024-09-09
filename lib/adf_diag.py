@@ -444,6 +444,8 @@ class AdfDiag(AdfWeb):
                 # Create ordered list of CAM history files:
                 hist_files = sorted(files_list)
 
+                print("hist_files",hist_files,"\n")
+
                 # Open an xarray dataset from the first model history file:
                 hist_file_ds = xr.open_dataset(
                     hist_files[0], decode_cf=False, decode_times=False
