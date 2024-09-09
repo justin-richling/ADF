@@ -73,7 +73,7 @@ def tape_recorder(adfobj):
                     case_hist_strs.append(string)
                     break
 
-
+    print("case_hist_strs",case_hist_strs,len(case_hist_strs),"\n")
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
     end_years = adfobj.climo_yrs["eyears"]
