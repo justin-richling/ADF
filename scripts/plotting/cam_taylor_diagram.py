@@ -577,7 +577,7 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
     bottom_of_text = 0.05
 
     height_of_lines = 0.03
-    wks.text(0.052, 0.08+.005*len(test_nicknames), "Cases:",
+    wks.text(0.052, 0.0725+(.0075)*len(test_nicknames), "Cases:",
             color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)
     n = 0
     for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
