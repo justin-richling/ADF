@@ -409,15 +409,15 @@ class AdfDiag(AdfWeb):
             #hist_str_case = hist_str_list[case_idx]
             if not baseline:
                 hist_str_multi_case = hist_str_list[0][0]
-                hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
-                print("hist_str_case",hist_str_case_idx,"\n")
-                hist_strs = hist_str_multi_case[hist_str_case_idx]
-                print("hist_strs",hist_strs,"\n")
-            else:
                 if len(case_names) > 1:
-                    hist_strs = hist_str_list[0]
+                    hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
+                    print("hist_str_case",hist_str_case_idx,"\n")
+                    hist_strs = hist_str_multi_case[hist_str_case_idx]
                 else:
                     hist_strs = [hist_str_list]
+                print("hist_strs",hist_strs,"\n")
+            else:
+                print("hist_strs",hist_strs,"\n")
             print("hist_strs AFTER",hist_strs,"\n")
 
             #for hist_str in hist_str_case:
