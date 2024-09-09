@@ -57,7 +57,7 @@ def cam_taylor_diagram(adfobj):
 
     case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
 
-    # ADF variable which contains the output path for plots and tables:
+    """# ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
     if not plot_location:
         plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
@@ -74,7 +74,15 @@ def cam_taylor_diagram(adfobj):
             print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
             plot_loc = Path(plot_location[0])
     else:
-        plot_loc = Path(plot_location)
+        plot_loc = Path(plot_location)"""
+
+    
+    #Special ADF variable which contains the output paths for plots:
+    if len(case_names) == 1:
+        plot_location = adfobj.plot_location
+        plot_loc = Path(plot_location[0])
+    else:
+        plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -569,7 +577,7 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
     bottom_of_text = 0.05
 
     height_of_lines = 0.03
-    wks.text(0.052, 0.08, "Cases:",
+    wks.text(0.052, 0.08+.005*len(test_nicknames), "Cases:",
             color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)
     n = 0
     for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
