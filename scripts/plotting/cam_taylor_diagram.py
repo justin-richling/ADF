@@ -588,7 +588,6 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
             n += 1
     """
     # CASE LEGEND -- Color-coded
-    bottom_of_text = 0.05
     height_of_lines = 0.03
 
     case_pos = 0.75
@@ -611,7 +610,10 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
 
     n = 0
     for case_idx,c in enumerate(casecolors):
-        text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{test_nicknames[case_idx]}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+        case = test_nicknames[case_idx]
+        syear = syear_cases[case_idx]
+        eyear = eyear_cases[case_idx]
+        text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{case}  yrs: {syear}-{eyear}",
                             color=c, va='top', transform=wks.transAxes, fontsize=10)
         n += 1
 
