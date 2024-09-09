@@ -351,19 +351,15 @@ class AdfInfo(AdfConfig):
         print("cam_hist_str BEFORE",cam_hist_str)
 
         # Check if this is multi-case and adjust appropriately
-        """if len(case_names) > 1:
+        if len(case_names) > 1:
             cam_hist_str_eh = []
             for i in cam_hist_str[0]:
                 #cam_sub_hist_str.append(i)
                 cam_hist_str_eh.append([i])
-            cam_hist_str = cam_hist_str_eh"""
+            cam_hist_str = cam_hist_str_eh
 
 
-        cam_hist_str_eh = []
-        for i in cam_hist_str[0]:
-            #cam_sub_hist_str.append(i)
-            cam_hist_str_eh.append([i])
-        cam_hist_str = cam_hist_str_eh
+
 
         print("cam_hist_str AFTER",cam_hist_str,"\n")
 
@@ -439,7 +435,10 @@ class AdfInfo(AdfConfig):
 
                 hist_str_case_1 = list(hist_strs.keys())[case_idx]
                 print("hist_str_case_1",hist_str_case_1,"\n")
-                hist_str = hist_strs[hist_str_case_1][0]
+                if len(case_names) > 1:
+                    hist_str = hist_strs[hist_str_case_1][0]
+                else:
+                    hist_str = hist_strs[hist_str_case_1]
                 print("hist_str",hist_str,"\n")
 
                 #Get climo years for verification or assignment if missing
