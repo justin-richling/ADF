@@ -596,8 +596,10 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
 
     n = 0
     if len(test_nicknames) > 1:
-        for case_idx, (s, c) in enumerate(zip([test_nicknames], [casecolors])):
-            text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases}-{eyear_cases}",
+        #for case_idx, (s, c) in enumerate(zip([test_nicknames], [casecolors])):
+        for case_idx,c in enumerate(casecolors):
+            print(c)
+            text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{test_nicknames[case_idx]}  yrs: {syear_cases}-{eyear_cases}",
                             color=c, va='top', transform=wks.transAxes, fontsize=10)
             n += 1
     else:
