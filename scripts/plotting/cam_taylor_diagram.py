@@ -594,7 +594,7 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
     case_pos = 0.75
     wks.text(0.99, case_pos, "Cases:", va='top', transform=wks.transAxes, fontsize=10)
 
-    n = 0
+    """n = 0
     if len(test_nicknames) > 1:
         #for case_idx, (s, c) in enumerate(zip([test_nicknames], [casecolors])):
         for case_idx,c in enumerate(casecolors):
@@ -606,7 +606,14 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
         for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
                 text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
                                 color=c, va='top', transform=wks.transAxes, fontsize=10)
-                n += 1
+                n += 1"""
+
+
+    n = 0
+    for case_idx,c in enumerate(casecolors):
+        text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{test_nicknames[case_idx]}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+                            color=c, va='top', transform=wks.transAxes, fontsize=10)
+        n += 1
 
     # BIAS LEGEND
     if needs_bias_labels:
