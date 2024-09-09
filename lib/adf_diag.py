@@ -418,6 +418,7 @@ class AdfDiag(AdfWeb):
                     hist_strs = hist_str_list[0]
                 else:
                     hist_strs = [hist_str_list]
+            print("hist_strs AFTER",hist_strs,"\n")
 
             #for hist_str in hist_str_case:
             for hist_str in hist_strs:
