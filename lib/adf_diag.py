@@ -414,7 +414,7 @@ class AdfDiag(AdfWeb):
                     print("hist_str_case",hist_str_case_idx,"\n")
                     hist_strs = hist_str_multi_case[hist_str_case_idx]
                 else:
-                    hist_strs = [hist_str_list]
+                    hist_strs = hist_str_multi_case
                 print("hist_strs",hist_strs,"\n")
             else:
                 print("BASELINE hist_strs",hist_strs,"\n")
