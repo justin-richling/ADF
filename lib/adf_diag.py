@@ -417,7 +417,7 @@ class AdfDiag(AdfWeb):
                 if len(case_names) > 1:
                     hist_strs = hist_str_list[0]
                 else:
-                    hist_strs = hist_str_list
+                    hist_strs = [hist_str_list]
 
             #for hist_str in hist_str_case:
             for hist_str in hist_strs:
