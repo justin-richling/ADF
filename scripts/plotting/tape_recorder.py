@@ -32,21 +32,21 @@ def tape_recorder(adfobj):
     #Notify user that script has started:
     print("\n  Generating tape recorder plots...")
 
-    #Special ADF variable which contains the output paths for plots:
-    plot_location = adfobj.plot_location
-    plot_loc = Path(plot_location[0])
-
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
+
+    #Special ADF variable which contains the output paths for plots:
+    if len(case_names) == 1:
+        plot_location = adfobj.plot_location
+        plot_loc = Path(plot_location[0])
+    else:
+        plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
-    print("cam_hist_strs",cam_hist_strs,"\n")
-
-    
 
     # Filter the list to include only strings that are exactly in the possible h0 strings
     # - Search for either h0 or h0a
@@ -61,12 +61,9 @@ def tape_recorder(adfobj):
                     break
     else:
         hist_str_multi_case = cam_hist_strs[0][0]
-        print("hist_str_multi_case",hist_str_multi_case,'\n"')
         for case_idx,_ in enumerate(case_names):
             hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
-            print("hist_str_case",hist_str_case_idx,"\n")
             hist_strs = hist_str_multi_case[hist_str_case_idx]
-            print("hist_strs",hist_strs,"\n")
             # Check each possible h0 string
             for string in hist_strs:
                 if string in substrings:
@@ -74,6 +71,7 @@ def tape_recorder(adfobj):
                     break
 
     print("case_hist_strs",case_hist_strs,len(case_hist_strs),"\n")
+
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
     end_years = adfobj.climo_yrs["eyears"]

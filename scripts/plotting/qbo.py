@@ -38,7 +38,13 @@ def qbo(adfobj):
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
-    plot_locations = adfobj.plot_location
+    #plot_locations = adfobj.plot_location
+    #Special ADF variable which contains the output paths for plots:
+    if len(case_names) == 1:
+        plot_location = adfobj.plot_location
+        plot_loc = Path(plot_location[0])
+    else:
+        plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
     plot_type = adfobj.get_basic_info('plot_type')
 
     #Grab all case nickname(s)
@@ -65,12 +71,12 @@ def qbo(adfobj):
     #End if
 
     #Set path for QBO figures:
-    plot_loc_ts  = Path(plot_locations[0]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
-    plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
+    plot_loc_ts  = Path(plot_loc) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
+    plot_loc_amp = Path(plot_loc) / f'QBO_Amplitude_Special_Mean.{plot_type}'
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:
-    print(f"\t QBO plots will be saved here: {plot_locations[0]}")
+    print(f"\t QBO plots will be saved here: {plot_loc}")
 
     # Check redo_plot. If set to True: remove old plots, if they already exist:
     if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
