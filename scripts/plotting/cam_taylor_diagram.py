@@ -429,7 +429,7 @@ def _retrieve(adfobj, variable, casename, location, time_string, return_dataset=
             da = ds[variable]
     else:
         func = get_derive_func(variable)
-        da = func(adfobj, casename, location)  # these ONLY return DataArray
+        da = func(adfobj, casename, location, time_string)  # these ONLY return DataArray
         if return_dataset:
             da = da.to_dataset(name=variable)
     return da
