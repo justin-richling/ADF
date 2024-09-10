@@ -228,6 +228,8 @@ def regrid_and_vert_interp(adf):
                         #Combine all cam files together into a single data set:
                         mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
                     elif len(mclim_fils) == 0:
+                        print("mclimo_loc",mclimo_loc,"\n")
+                        print("mclimo files??",f"{case_name}_{var}_climo_{time_string}.nc","\n")
                         wmsg = f"\t - Unable to find climo file for '{var}'."
                         wmsg += " Continuing to next variable."
                         print(wmsg)
