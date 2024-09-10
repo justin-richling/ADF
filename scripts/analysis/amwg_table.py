@@ -132,6 +132,10 @@ def amwg_table(adf):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
+    #Extract simulation years:
+    start_years = adf.climo_yrs["syears"]
+    end_years   = adf.climo_yrs["eyears"]
+
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
@@ -143,6 +147,9 @@ def amwg_table(adf):
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
+
+        start_years += [adf.climo_yrs["syear_baseline"]]
+        end_years += [adf.climo_yrs["eyear_baseline"]]
     else:
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
@@ -153,6 +160,9 @@ def amwg_table(adf):
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
+        start_year = start_years[case_idx]
+        end_year = end_years[case_idx]
+        time_string = f"{str(start_year).zfill(4)}01-{str(end_year).zfill(4)}12"
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
@@ -186,7 +196,7 @@ def amwg_table(adf):
             print(f"\t - Variable '{var}' being added to table")
 
             #Create list of time series files present for variable:
-            ts_filenames = f'{case_name}.*.{var}.*nc'
+            ts_filenames = f'{case_name}.*.{var}.*{time_string}.nc'
             ts_files = sorted(input_location.glob(ts_filenames))
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
