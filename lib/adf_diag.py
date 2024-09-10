@@ -703,8 +703,18 @@ class AdfDiag(AdfWeb):
                     )
 
                     # Example ncatted command (you can modify it with the specific attribute changes you need)
-                    cmd_ncatted = ["ncatted", "-O", "-a", f"adf_user,global,a,c,{self.user}", ts_outfil_str]
-                    #cmd2 = f"ncatted -a user,global,a,c,{self.user} {ts_outfil_str}"
+                    #cmd_ncatted = ["ncatted", "-O", "-a", f"adf_user,global,a,c,{self.user}", ts_outfil_str]
+                    # Step 1: Concatenate the list of historical files into a single string
+                    hist_files_str = ', '.join(hist_files)
+
+                    # Step 2: Create the ncatted command to add both global attributes
+                    cmd_ncatted = [
+                        "ncatted", "-O", "-h",
+                        "-a", "hist_file_list,global,a,c," + f'"{hist_files_str}"',
+                        "-a", "user,global,a,c," + f'"{self.user}"',
+                        ts_outfil_str
+                    ]
+
 
 
                     # Add to command list for use in multi-processing pool:
