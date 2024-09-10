@@ -115,7 +115,7 @@ def regrid_and_vert_interp(adf):
         #Extract baseline years:
         bl_syr = adf.climo_yrs["syear_baseline"]
         bl_eyr = adf.climo_yrs["eyear_baseline"]
-        bl_time_string = f"{bl_syr}01-{bl_eyr}12"
+        bl_time_string = f"{bl_syr.zfill(4)}01-{bl_eyr.zfill(4)}12"
     #End if
 
     
@@ -144,7 +144,7 @@ def regrid_and_vert_interp(adf):
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
 
-        time_string = f"{start_year[case_idx]}01-{end_year[case_idx]}12"
+        time_string = f"{start_year[case_idx].zfill(4)}01-{end_year[case_idx].zfill(4)}12"
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
