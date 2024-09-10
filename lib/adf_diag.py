@@ -702,9 +702,14 @@ class AdfDiag(AdfWeb):
                         + ["-o", ts_outfil_str]
                     )
 
+                    # Example ncatted command (you can modify it with the specific attribute changes you need)
+                    cmd_ncatted = ["ncatted", "-O", "-a", f"adf_user,global,a,c,{self.user}", ts_outfil_str]
+                    #cmd2 = f"ncatted -a user,global,a,c,{self.user} {ts_outfil_str}"
+
+
                     # Add to command list for use in multi-processing pool:
                     list_of_commands.append(cmd)
-                    #list_of_commands2.append(cmd2)
+                    list_of_commands2.append(cmd_ncatted)
 
                 # End variable loop
 
