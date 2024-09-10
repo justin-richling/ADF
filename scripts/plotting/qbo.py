@@ -51,8 +51,8 @@ def qbo(adfobj):
     end_years = adfobj.climo_yrs["eyears"]
     time_strings = []
     for case_idx,_ in enumerate(case_names):
-        syear = str(start_years[[case_idx]]).zfill(4)
-        eyear = str(end_years[[case_idx]]).zfill(4)
+        syear = str(start_years[case_idx]).zfill(4)
+        eyear = str(end_years[case_idx]).zfill(4)
         time_strings.append(f"{syear}01-{eyear}12")
     data_start_year = str(adfobj.climo_yrs["syear_baseline"]).zfill(4)
     data_end_year = str(adfobj.climo_yrs["eyear_baseline"]).zfill(4)
