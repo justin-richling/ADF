@@ -96,6 +96,7 @@ def cam_taylor_diagram(adfobj):
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    bl_time_string = f"{syear_baseline.zfill(4)}01-{eyear_baseline.zfill(4)}12"
 
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -163,9 +164,12 @@ def cam_taylor_diagram(adfobj):
         # LOOP OVER VARIABLES
         #
         for v in var_list:
-            base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
+            base_x = _retrieve(adfobj, v, data_name, data_loc, bl_time_string) # get the baseline field
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
-                case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber])
+                syear = syear_cases[casenumber]
+                eyear = eyear_cases[casenumber]
+                time_string = f"{syear.zfill(4)}01-{eyear.zfill(4)}12"
+                case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber], time_string)
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
                 result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
@@ -313,11 +317,11 @@ def get_surface_pressure(dset, casename, location):
     #Return values:
     return ps
 
-def get_var_at_plev(adf, casename, location, variable, plev):
+def get_var_at_plev(adf, casename, location, variable, plev, time_string):
     """
     Get `variable` from the data and then interpolate it to isobaric level `plev` (units of hPa).
     """
-    dset = _retrieve(adf, variable, casename, location, return_dataset=True)
+    dset = _retrieve(adf, variable, casename, location, time_string, return_dataset=True)
 
     # Try and extract surface pressure:
     ps = get_surface_pressure(dset, casename, location)
@@ -328,8 +332,8 @@ def get_var_at_plev(adf, casename, location, variable, plev):
     return vplev
 
 
-def get_u_at_plev(adf, casename, location):
-    return get_var_at_plev(adf, casename, location, "U", 300)
+def get_u_at_plev(adf, casename, location, time_string):
+    return get_var_at_plev(adf, casename, location, "U", 300, time_string)
 
 
 def get_vertical_average(adf, casename, location, varname):
@@ -401,7 +405,7 @@ def get_derive_func(fld):
     return funcs[fld]
 
 
-def _retrieve(adfobj, variable, casename, location, return_dataset=False):
+def _retrieve(adfobj, variable, casename, location, time_string, return_dataset=False):
     """Custom function that retrieves a variable. Returns the variable as a DataArray.
     kwarg:
     return_dataset -> if true, return the dataset object, otherwise return the DataArray
@@ -412,7 +416,7 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
     v_to_derive = ['TropicalLandPrecip', 'TropicalOceanPrecip', 'EquatorialPacificStress',
                 'U300', 'ColumnRelativeHumidity', 'ColumnTemperature', 'Land2mTemperature']
     if variable not in v_to_derive:
-        fils = sorted(Path(location).glob(f"{casename}*_{variable}_*.nc"))
+        fils = sorted(Path(location).glob(f"{casename}*_{variable}_*{time_string}.nc"))
         if len(fils) == 0:
             raise ValueError(f"something went wrong for variable: {variable}")
         elif len(fils) > 1:
