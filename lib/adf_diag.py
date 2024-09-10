@@ -525,6 +525,7 @@ class AdfDiag(AdfWeb):
                 # Loop over CAM history variables:
                 list_of_commands = []
                 list_of_commands2 = []
+                list_of_commands3 = []
                 vars_to_derive = []
                 # create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
@@ -715,11 +716,17 @@ class AdfDiag(AdfWeb):
                         ts_outfil_str
                     ]
 
-
+                    # Step 3: Create the ncatted command to remove the history attribute
+                    cmd_remove_history = [
+                        "ncatted", "-O", "-h",
+                        "-a", "history,global,d,,",
+                        ts_outfil_str
+                    ]
 
                     # Add to command list for use in multi-processing pool:
                     list_of_commands.append(cmd)
                     list_of_commands2.append(cmd_ncatted)
+                    list_of_commands3.append(cmd_remove_history)
 
                 # End variable loop
 
@@ -731,6 +738,10 @@ class AdfDiag(AdfWeb):
                 # Run ncatted commands after ncrcat is done
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_commands2)
+
+                # Run ncatted command to remove history attribute after the global attributes are set
+                with mp.Pool(processes=self.num_procs) as mpool:
+                    _ = mpool.map(call_ncrcat, list_of_commands3)
 
                 #ncatted -a long_attr,global,a,c,"short_value1" input.nc
                 #ncatted -a long_attr,global,a,c,"short_value2" input.nc
