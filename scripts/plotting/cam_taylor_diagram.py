@@ -267,11 +267,11 @@ def get_prect(casename, location, time_string, **kwargs):
     return prect
 
 
-def get_tropical_land_precip(adf, casename, location, **kwargs):
+def get_tropical_land_precip(adf, casename, location, time_string, **kwargs):
     landfrac = find_landmask(adf, casename, location)
     if landfrac is None:
         raise ValueError("\t No landfrac returned")
-    prect = get_prect(casename, location)
+    prect = get_prect(casename, location, time_string)
     # mask to only keep land locations
     prect = xr.DataArray(np.where(landfrac >= .95, prect, np.nan),
                          dims=prect.dims,
