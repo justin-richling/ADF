@@ -352,12 +352,12 @@ def get_vertical_average(adf, casename, location, varname):
     return vertical_average(ds[varname], ps, ds['hyam'], ds['hybm'])
 
 
-def get_virh(adf, casename, location, **kwargs):
+def get_virh(adf, casename, location, time_string, **kwargs):
     '''Calculate vertically averaged relative humidity.'''
     return get_vertical_average(adf, casename, location, "RELHUM")
 
 
-def get_vit(adf, casename, location, **kwargs):
+def get_vit(adf, casename, location, time_string, **kwargs):
     '''Calculate vertically averaged temperature.'''
     return get_vertical_average(adf, casename, location, "T")
 
