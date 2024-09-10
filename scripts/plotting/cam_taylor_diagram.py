@@ -96,7 +96,7 @@ def cam_taylor_diagram(adfobj):
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
-    bl_time_string = f"{str(syear_baseline.zfill(4))}01-{str(eyear_baseline.zfill(4))}12"
+    bl_time_string = f"{str(syear_baseline).zfill(4)}01-{str(eyear_baseline).zfill(4)}12"
 
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
