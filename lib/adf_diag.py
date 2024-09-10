@@ -710,8 +710,8 @@ class AdfDiag(AdfWeb):
                     # Step 2: Create the ncatted command to add both global attributes
                     cmd_ncatted = [
                         "ncatted", "-O", "-h",
+                        "-a", "adf_user,global,a,c," + f'"{self.user}"',
                         "-a", "hist_file_list,global,a,c," + f'"{hist_files_str}"',
-                        "-a", "user,global,a,c," + f'"{self.user}"',
                         ts_outfil_str
                     ]
 
