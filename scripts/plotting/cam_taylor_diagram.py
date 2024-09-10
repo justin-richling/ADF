@@ -96,7 +96,7 @@ def cam_taylor_diagram(adfobj):
     #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
-    bl_time_string = f"{syear_baseline.zfill(4)}01-{eyear_baseline.zfill(4)}12"
+    bl_time_string = f"{str(syear_baseline.zfill(4))}01-{str(eyear_baseline.zfill(4))}12"
 
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -166,8 +166,8 @@ def cam_taylor_diagram(adfobj):
         for v in var_list:
             base_x = _retrieve(adfobj, v, data_name, data_loc, bl_time_string) # get the baseline field
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
-                syear = syear_cases[casenumber]
-                eyear = eyear_cases[casenumber]
+                syear = str(syear_cases[casenumber])
+                eyear = str(eyear_cases[casenumber])
                 time_string = f"{syear.zfill(4)}01-{eyear.zfill(4)}12"
                 case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber], time_string)
                 # ASSUMING `time` is 1-12, get the current season:
