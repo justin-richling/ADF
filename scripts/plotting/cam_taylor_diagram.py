@@ -362,9 +362,9 @@ def get_vit(adf, casename, location, **kwargs):
     return get_vertical_average(adf, casename, location, "T")
 
 
-def get_landt2m(adf, casename, location, **kwargs):
+def get_landt2m(adf, casename, location, time_string, **kwargs):
     """Gets TREFHT (T_2m) and removes non-land points."""
-    fils = sorted(Path(location).glob(f"{casename}*_TREFHT_*.nc"))
+    fils = sorted(Path(location).glob(f"{casename}*_TREFHT_*.{time_string}nc"))
     if len(fils) == 0:
         raise IOError(f"TREFHT could not be found in the files.")
     elif len(fils) > 1:
@@ -379,9 +379,9 @@ def get_landt2m(adf, casename, location, **kwargs):
     return t
 
 
-def get_eqpactaux(adf, casename, location, **kwargs):
+def get_eqpactaux(adf, casename, location, time_string, **kwargs):
     """Gets zonal surface wind stress 5S to 5N."""
-    fils = sorted(Path(location).glob(f"{casename}*_TAUX_*.nc"))
+    fils = sorted(Path(location).glob(f"{casename}*_TAUX_*{time_string}.nc"))
     if len(fils) == 0:
         raise IOError(f"TAUX could not be found in the files.")
     elif len(fils) > 1:
