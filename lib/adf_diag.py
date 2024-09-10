@@ -449,7 +449,7 @@ class AdfDiag(AdfWeb):
                 # Create ordered list of CAM history files:
                 hist_files = sorted(files_list)
 
-                print("hist_files",hist_files,"\n")
+                print("hist_files",hist_files[0],hist_files[-1],"\n")
 
                 # Open an xarray dataset from the first model history file:
                 hist_file_ds = xr.open_dataset(
@@ -661,6 +661,20 @@ class AdfDiag(AdfWeb):
                         if not overwrite_ts[case_idx]:
                             # If not, then simply skip this variable:
                             continue
+
+                    """
+                    # Check if clobber is true for file
+                    overwrite = False
+                    if Path(derived_file).is_file():
+                        if overwrite:
+                            Path(derived_file).unlink()
+                        else:
+                            msg = f"[{__name__}] Warning: '{var}' file was found "
+                            msg += "and overwrite is False. Will use existing file."
+                            print(msg)
+                            continue
+
+                    """
 
                     # Variable list starts with just the variable
                     ncrcat_var_list = f"{var}"
@@ -1168,6 +1182,8 @@ class AdfDiag(AdfWeb):
                 # create new file name for derived variable
                 derived_file = constit_files[0].replace(constit_list[0], var)
 
+                print("derived_file",derived_file)
+                print("constit_list[0]",constit_list[0],"\n")
                 # Check if clobber is true for file
                 if Path(derived_file).is_file():
                     if overwrite:
