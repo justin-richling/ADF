@@ -532,6 +532,8 @@ class AdfDiag(AdfWeb):
                     time_string_finish = last_file_split[-1].replace("-", "")
                 time_string = "-".join([time_string_start, time_string_finish])
 
+                print("time_string",time_string,"\n")
+
                 # Loop over CAM history variables:
                 list_of_commands = []
                 vars_to_derive = []
@@ -1141,6 +1143,7 @@ class AdfDiag(AdfWeb):
 
             # Grab all required time series files for derived variable
             constit_files = []
+            # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
             for constit in constit_list:
                 # Check if the constituent file is present, if so add it to list
                 if hist_str:
