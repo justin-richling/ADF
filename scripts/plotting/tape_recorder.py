@@ -182,7 +182,12 @@ def tape_recorder(adfobj):
         # Search for files
         ts_loc = Path(case_ts_locs[idx])
         hist_str = hist_strs[idx]
-        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
+
+        syear = str(start_years[idx]).zfill(4)
+        eyear = str(end_years[idx]).zfill(4)
+        time_string = f"{syear}01-{eyear}12"
+
+        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*{time_string}.nc'))
         dat = adfobj.data.load_timeseries_dataset(fils)
 
         if not dat:
