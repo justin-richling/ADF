@@ -46,6 +46,18 @@ def qbo(adfobj):
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 
+    #Grab case climo years
+    start_years = adfobj.climo_yrs["syears"]
+    end_years = adfobj.climo_yrs["eyears"]
+    time_strings = []
+    for case_idx,_ in enumerate(case_names):
+        syear = str(start_years[[case_idx]]).zfill(4)
+        eyear = str(end_years[[case_idx]]).zfill(4)
+        time_strings.append(f"{syear}01-{eyear}12")
+    data_start_year = str(adfobj.climo_yrs["syear_baseline"]).zfill(4)
+    data_end_year = str(adfobj.climo_yrs["eyear_baseline"]).zfill(4)
+    bl_time_string = f"{data_start_year}01-{data_end_year}12"
+
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
@@ -92,6 +104,7 @@ def qbo(adfobj):
     if not adfobj.compare_obs:
         case_loc.append(base_loc)
         case_names.append(base_name)
+        time_strings.append(bl_time_string)
     #End if
 
     #----Read in the OBS (ERA5, 5S-5N average already
@@ -99,7 +112,7 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
-    casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+    casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*{time_strings[i]}.nc"))) for i in range(0,ncases,1)]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
