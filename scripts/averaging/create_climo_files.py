@@ -146,10 +146,11 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Time series file search
         if search is None:
-            search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
+            search = "{CASE}*{HIST_STR}*.{VARIABLE}.*{DATES}.nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
 
         #Check model year bounds:
         syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
+        time_string = f"{syr}01-{eyr}12"
 
         #Loop over CAM output variables:
         list_of_arguments = []
@@ -157,7 +158,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
             # Create name of climatology output file (which includes the full path)
             # and check whether it is there (don't do computation if we don't want to overwrite):
-            output_file = output_location / f"{case_name}_{var}_climo.nc"
+            output_file = output_location / f"{case_name}_{var}_climo_{time_string}.nc"
             if (not clobber) and (output_file.is_file()):
                 print(f"\t    INFO: Found climo file and clobber is False, so skipping {var} and moving to next variable.")
                 continue
@@ -166,7 +167,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
             #Create list of time series files present for variable:
             # Note that we hard-code for h0 because we only want to make climos of monthly output
-            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var)
+            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var, DATES=time_string)
             ts_files = sorted(list(input_location.glob(ts_filenames)))
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
