@@ -701,7 +701,7 @@ class AdfDiag(AdfWeb):
                     _ = mpool.map(call_ncrcat, list_of_commands)
 
                     if vars_to_derive:
-                        self.derive_variables(
+                        self.derive_variables(time_string,
                             res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
                             constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
                         )
@@ -1085,7 +1085,7 @@ class AdfDiag(AdfWeb):
 
     #########
 
-    def derive_variables(self, res=None, hist_str=None, vars_to_derive=None, ts_dir=None,
+    def derive_variables(self, time_string, res=None, hist_str=None, vars_to_derive=None, ts_dir=None,
                          constit_dict=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
@@ -1110,9 +1110,9 @@ class AdfDiag(AdfWeb):
             for constit in constit_list:
                 # Check if the constituent file is present, if so add it to list
                 if hist_str:
-                    const_glob_str = f"*{hist_str}*.{constit}.*.nc"
+                    const_glob_str = f"*{hist_str}*.{constit}.*{time_string}.nc"
                 else:
-                    const_glob_str = f"*.{constit}.*.nc"
+                    const_glob_str = f"*.{constit}.*{time_string}.nc"
                 # end if
                 if glob.glob(os.path.join(ts_dir, const_glob_str)):
                     constit_files.append(glob.glob(os.path.join(ts_dir, const_glob_str ))[0])
