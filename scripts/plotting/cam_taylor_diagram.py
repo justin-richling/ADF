@@ -362,7 +362,7 @@ def get_vit(adf, casename, location, **kwargs):
     return get_vertical_average(adf, casename, location, "T")
 
 
-def get_landt2m(adf, casename, location):
+def get_landt2m(adf, casename, location, **kwargs):
     """Gets TREFHT (T_2m) and removes non-land points."""
     fils = sorted(Path(location).glob(f"{casename}*_TREFHT_*.nc"))
     if len(fils) == 0:
@@ -379,7 +379,7 @@ def get_landt2m(adf, casename, location):
     return t
 
 
-def get_eqpactaux(adf, casename, location):
+def get_eqpactaux(adf, casename, location, **kwargs):
     """Gets zonal surface wind stress 5S to 5N."""
     fils = sorted(Path(location).glob(f"{casename}*_TAUX_*.nc"))
     if len(fils) == 0:
