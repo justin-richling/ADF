@@ -244,13 +244,13 @@ def find_landmask(adf, casename, location):
             raise IOError(f"Checked {k} files, but did not find LANDFRAC in any of them.")
     # should not reach past the `if` statement without returning landfrac or raising exception.
 
-def get_prect(casename, location, **kwargs):
+def get_prect(casename, location, time_string, **kwargs):
     # look for prect first:
-    fils = sorted(Path(location).glob(f"{casename}*_PRECT_*.nc"))
+    fils = sorted(Path(location).glob(f"{casename}*_PRECT_*{time_string}.nc"))
     if len(fils) == 0:
         print("\t Need to derive PRECT = PRECC + PRECL")
-        fils1 = sorted(Path(location).glob(f"{casename}*_PRECC_*.nc"))
-        fils2 = sorted(Path(location).glob(f"{casename}*_PRECL_*.nc"))
+        fils1 = sorted(Path(location).glob(f"{casename}*_PRECC_*{time_string}.nc"))
+        fils2 = sorted(Path(location).glob(f"{casename}*_PRECL_*{time_string}.nc"))
         if (len(fils1) == 0) or (len(fils2) == 0):
             raise IOError("Could not find PRECC or PRECL")
         else:
@@ -280,11 +280,11 @@ def get_tropical_land_precip(adf, casename, location, **kwargs):
     return prect.sel(lat=slice(-30,30))
 
 
-def get_tropical_ocean_precip(adf, casename, location, **kwargs):
+def get_tropical_ocean_precip(adf, casename, location, time_string, **kwargs):
     landfrac = find_landmask(adf, casename, location)
     if landfrac is None:
         raise ValueError("No landfrac returned")
-    prect = get_prect(casename, location)
+    prect = get_prect(casename, location, time_string)
     # mask to only keep ocean locations
     prect = xr.DataArray(np.where(landfrac <= 0.05, prect, np.nan),
                          dims=prect.dims,
