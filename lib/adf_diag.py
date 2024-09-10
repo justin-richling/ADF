@@ -718,6 +718,10 @@ class AdfDiag(AdfWeb):
                     _ = mpool.map(call_ncrcat, list_of_commands)
                 # End with
 
+                # Run ncatted commands after ncrcat is done
+                with mp.Pool(processes=self.num_procs) as mpool:
+                    _ = mpool.map(call_ncrcat, list_of_commands2)
+
                 #ncatted -a long_attr,global,a,c,"short_value1" input.nc
                 #ncatted -a long_attr,global,a,c,"short_value2" input.nc
 
