@@ -59,6 +59,10 @@ def regrid_and_vert_interp(adf):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
 
+    #Extract simulation years:
+    start_year = adf.climo_yrs["syears"]
+    end_year   = adf.climo_yrs["eyears"]
+
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
     for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
@@ -101,12 +105,20 @@ def regrid_and_vert_interp(adf):
             return
         #End if
 
+        bl_time_string = ""
+
     else:
 
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
+        #Extract baseline years:
+        bl_syr = adf.climo_yrs["syear_baseline"]
+        bl_eyr = adf.climo_yrs["eyear_baseline"]
+        bl_time_string = f"{bl_syr}01-{bl_eyr}12"
     #End if
+
+    
 
     #-----------------------------------------
 
@@ -131,6 +143,8 @@ def regrid_and_vert_interp(adf):
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
+
+        time_string = f"{start_year[case_idx]}01-{end_year[case_idx]}12"
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
@@ -166,7 +180,7 @@ def regrid_and_vert_interp(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
+                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded_{time_string}.nc'
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
@@ -190,7 +204,7 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo_*{bl_time_string}.nc"))
                     #End if
 
                     #Write to debug log if enabled:
@@ -208,7 +222,7 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Generate CAM climatology (climo) file list:
-                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*{time_string}.nc"))
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
@@ -281,15 +295,15 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline_*{bl_time_string}.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
                         #Look for a baseline climo file for surface pressure (PS):
-                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
+                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo_{bl_time_string}.nc'
 
                         #Also look for a baseline climo file for mid-level pressure (PMID):
-                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
+                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo_{bl_time_string}.nc'
 
                         #Create new keyword arguments dictionary for regridding function:
                         regrid_kwargs = {}
