@@ -710,7 +710,7 @@ class AdfDiag(AdfWeb):
                     #3parent
                     #hist_locs = []
                     #for f in hist_files:
-                    hist_locs_str = ', '.join(str(f.name) for f in cam_hist_locs)
+                    hist_locs_str = ', '.join(str(loc) for loc in cam_hist_locs)
 
                     # Step 2: Create the ncatted command to add both global attributes
                     cmd_ncatted = [
