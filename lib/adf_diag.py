@@ -381,8 +381,6 @@ class AdfDiag(AdfWeb):
 
         # End if
 
-        print("cam_hist_locs",cam_hist_locs)
-
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         dmsg = f"reading from {hist_str_list} files"
         self.debug_log(dmsg)
@@ -712,12 +710,13 @@ class AdfDiag(AdfWeb):
                     #3parent
                     #hist_locs = []
                     #for f in hist_files:
+                    hist_locs_str = ', '.join(str(f.name) for f in cam_hist_locs)
 
                     # Step 2: Create the ncatted command to add both global attributes
                     cmd_ncatted = [
                         "ncatted", "-O",
                         "-a", "adf_user,global,a,c," + f"{self.user}",
-                        "-a", "hist_file_locs,global,a,c," + f"{hist_files_str}",
+                        "-a", "hist_file_locs,global,a,c," + f"{hist_locs_str}",
                         "-a", "hist_file_list,global,a,c," + f"{hist_files_str}",
                         ts_outfil_str
                     ]
