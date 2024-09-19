@@ -1894,6 +1894,9 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         "diff_contour_range must have exactly three entries: min, max, step"
 
         levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        contains_string = any(isinstance(item, str) for item in levelsdiff)
+        if contains_string:
+            levelsdiff = [float(item) for item in levelsdiff]
     else:
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))
