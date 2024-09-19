@@ -2856,7 +2856,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         plt.yscale("log")
         ax.set_ylim(300,1)
         ax.set_yticks([300,100,30,10])
-        ax.set_xticks(np.arange(0,12,2),rotation=40)
+        ax.set_xticks(np.arange(0,12,2))#,rotation=40
         ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40,fontsize=8)
         if idx > 0:
             plt.yticks([])
@@ -3048,7 +3048,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
         ax[idx].axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
 
         #Format the x-axis
-        ax[idx].set_xticks(np.arange(0,25,3),rotation=40)
+        ax[idx].set_xticks(np.arange(0,25,3))#,rotation=40
         ax[idx].set_xticklabels(ahh+ahh+["Jan"],rotation=40)
 
         #Set title
@@ -3170,7 +3170,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     ax[idx].axhline(0, color='grey', linestyle='-',zorder=200,alpha=0.7)
 
     #Format the x-axis
-    ax[idx].set_xticks(np.arange(0,25,3),rotation=40)
+    ax[idx].set_xticks(np.arange(0,25,3))#,rotation=40
     ax[idx].set_xticklabels(ahh+ahh+["Jan"],rotation=40)
 
     #Set title
