@@ -1832,6 +1832,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if 'contour_levels' in kwargs:
         levels1 = kwargs['contour_levels']
+        print("\nlevels1",levels1,"\n")
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
