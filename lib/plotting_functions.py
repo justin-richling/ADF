@@ -1898,6 +1898,8 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         if contains_string:
             levelsdiff_convert = [float(item) for item in kwargs['diff_contour_range']]
 
+        print("levelsdiff_convert",levelsdiff_convert)
+
         levelsdiff = np.arange(levelsdiff_convert)
     else:
         # set a symmetric color bar for diff:
