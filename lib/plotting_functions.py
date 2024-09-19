@@ -1900,7 +1900,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
         print("levelsdiff_convert",levelsdiff_convert)
 
-        levelsdiff = np.arange(levelsdiff_convert)
+        levelsdiff = np.arange(*levelsdiff_convert)
     else:
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))
