@@ -124,7 +124,7 @@ def seasonal_cycle(adfobj):
     saber_filename = "SABER_monthly_2002-2014.nc"
     saber_file = adf_obs_loc / saber_filename
     #merra_filename = seas_cyc_res['merra2_file']
-    merra_filename = "MERRA2_met_FAKESIES.nc"
+    #merra_filename = "MERRA2_met_FAKESIES.nc"
     merra_file = adf_obs_loc / merra_filename
 
 
