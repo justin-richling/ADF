@@ -1886,6 +1886,9 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if "diff_contour_levels" in kwargs:
         levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+        contains_string = any(isinstance(item, str) for item in levelsdiff)
+        if contains_string:
+            levelsdiff = [float(item) for item in levelsdiff]
     elif "diff_contour_range" in kwargs:
         assert len(kwargs['diff_contour_range']) == 3, \
         "diff_contour_range must have exactly three entries: min, max, step"
