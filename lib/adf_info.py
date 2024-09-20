@@ -425,13 +425,16 @@ class AdfInfo(AdfConfig):
                 #Grab first possible hist string, just looking for years of run
                 hist_strs = hist_str_case[0]
 
-                if len(case_names) > 1:
+                if (len(case_names) > 1) or (isinstance(hist_strs, dict)):
                     hist_str_case_1 = list(hist_strs.keys())[case_idx]
                     print("hist_str_case_1",hist_str_case_1,"\n")
                     hist_str = hist_strs[hist_str_case_1][0]
                 else:
+                    #if isinstance(hist_strs, dict):
+                    #    hist_str = hist_strs
                     hist_str = hist_strs
                 print("hist_str",hist_str,"\n")
+
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
