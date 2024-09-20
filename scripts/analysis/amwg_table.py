@@ -1,6 +1,7 @@
 import numpy as np
 import xarray as xr
 import sys
+import shutil
 from pathlib import Path
 import warnings  # use to warn user about missing files.
 
