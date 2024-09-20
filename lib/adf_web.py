@@ -782,7 +782,8 @@ class AdfWeb(AdfObs):
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
-                                       "multi": multi_layout}
+                                       "multi": multi_layout,
+                                       "non_seasons": non_seasons[web_data.plot_type]}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
 
