@@ -2496,7 +2496,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                                     img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
                                                     cmap=cmap, norm=normdiff,
-                                                    transform=proj))
+                                                    transform=ccrs.PlateCarree()))
 
                                     #Set individual plot titles (case name/nickname)
                                     titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))

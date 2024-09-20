@@ -1130,7 +1130,7 @@ class AdfWeb(AdfObs):
                         plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
                         mean_ptype_plot_page = img_pages_dir / plot_page
 
-                        if not mean_ptype_plot_page.exists():
+                        """if not mean_ptype_plot_page.exists():
 
                             #Remove key from main dictionary for this html page
                             templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
@@ -1146,7 +1146,7 @@ class AdfWeb(AdfObs):
                                 ofil.write(plot_page_rndr)
                             #End with
                         #End if (mean_ptype_plot_page exists)
-
+                        """
                         multi_mean = f"multi_case_mean_diag_{ptype}.html"
                         mean_ptype_file = main_site_img_path / multi_mean
                         if not mean_ptype_file.exists():
