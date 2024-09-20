@@ -59,6 +59,7 @@ class _WebData:
                  plot_ext = None,
                  category = None,
                  season = None,
+                 non_season = False,
                  plot_type = "Special",
                  data_frame = False,
                  html_file  = None,
@@ -71,6 +72,7 @@ class _WebData:
         self.case       = case_name
         self.category   = category
         self.season     = season
+        self.non_season = non_season
         self.plot_type  = plot_type
         self.plot_ext   = plot_ext
         self.data_frame = data_frame
@@ -185,6 +187,7 @@ class AdfWeb(AdfObs):
                          plot_ext = None,
                          category = None,
                          season = None,
+                         non_season = False,
                          plot_type = "Special",
                          multi_case=False):
 
@@ -205,6 +208,10 @@ class AdfWeb(AdfObs):
                       then it will default to "No category yet".
         season     -> What the season is for the plot.  If not provided it will assume the
                       plot does not need any seasonal seperation.
+
+        non_season -> Are the plots NOT divided up by seaons, ANN, DJF, MAM, JJA, or SON?
+                      - QBO is displayed as QBOts and QBOamp in the season argument above
+
         plot_type  -> Type of plot.  If not provided then plot type will be "Special".
 
         multi_case -> Logical which indicates whether the image or dataframe can contain
@@ -295,6 +302,7 @@ class AdfWeb(AdfObs):
         web_data = _WebData(web_data, web_name, case_name, plot_ext,
                             category = category,
                             season = season,
+                            non_season = non_season,
                             plot_type = plot_type,
                             data_frame = data_frame,
                             html_file = html_file,
@@ -462,6 +470,8 @@ class AdfWeb(AdfObs):
         multi_mean_html_info = OrderedDict()
         #Use this for multi-case with multi-plots
         multi_plot_html_info = OrderedDict()
+
+        non_seasons = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -643,6 +653,17 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
+        #Initialize Ordered Dictionary for non season kwarg:
+        if ptype not in non_seasons:
+            non_seasons[ptype] = OrderedDict()
+        #End if
+        if category not in non_seasons[ptype]:
+            non_seasons[ptype][category] = OrderedDict()
+        #End if
+        if var not in non_seasons[ptype][category]:
+            non_seasons[ptype][category][var] = non_seasons
+        #End if
+
         #Loop over all web data objects again:
         #NOTE: This will be for non multi-case diagnostics
         for idx,web_data in enumerate(self.__website_data):
@@ -682,7 +703,8 @@ class AdfWeb(AdfObs):
                                   "table_html": table_html,
                                   "multi_head": False,
                                   "multi": multi_layout,
-                                  "case_sites": case_sites}
+                                  "case_sites": case_sites,
+                                  "non_seasons": non_seasons[web_data.plot_type]}
 
                 table_tmpl = jinenv.get_template('template_table.html')
 
@@ -761,7 +783,8 @@ class AdfWeb(AdfObs):
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
-                                       "multi": multi_layout}
+                                       "multi": multi_layout,
+                                  "non_seasons": non_seasons[web_data.plot_type]}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
 
