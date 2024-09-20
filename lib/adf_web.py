@@ -713,7 +713,9 @@ class AdfWeb(AdfObs):
 
 
             # External packages that can be run through ADF
+            
             avail_external_packages = {'MDTF':'mdtf_html_path', 'CVDP':'cvdp_html_path'}
+            print("self.external_package_links:",self.external_package_links)
             
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
