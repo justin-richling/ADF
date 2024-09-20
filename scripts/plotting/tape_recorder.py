@@ -32,15 +32,15 @@ def tape_recorder(adfobj):
     #Notify user that script has started:
     print("\n  Generating tape recorder plots...")
 
+    #Grab test case name(s)
+    case_names = adfobj.get_cam_info('cam_case_name', required=True)
+
     #Special ADF variable which contains the output paths for plots:
     if len(case_names) == 1:
         plot_location = adfobj.plot_location
         plot_loc = Path(plot_location[0])
     else:
         plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
-
-    #Grab test case name(s)
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
