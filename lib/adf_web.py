@@ -165,7 +165,8 @@ class AdfWeb(AdfObs):
                                                 'img_pages_dir': img_pages_dir,
                                                 'assets_dir': assets_dir,
                                                 'table_pages_dir': table_pages_dir,
-                                                'css_files_dir': css_files_dir}
+                                                'css_files_dir': css_files_dir,
+                                                'mdtf_dir': mdtf_path}
 
 
 
@@ -693,6 +694,9 @@ class AdfWeb(AdfObs):
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
+            mdtf_index_html_file = \
+                self.__case_web_paths[web_data.case]['mdtf_path'] / "index.html"
+
             #Re-et plot types list:
             if web_data.case == 'multi-case':
                 plot_types = multi_plot_type_html
@@ -714,6 +718,7 @@ class AdfWeb(AdfObs):
             # External packages that can be run through ADF
             
             avail_external_packages = {'MDTF':'mdtf_html_path', 'CVDP':'cvdp_html_path'}
+            self.external_package_links['MDTF'] = mdtf_index_html_file
             print("self.external_package_links:",self.external_package_links)
             
             #Construct index.html
