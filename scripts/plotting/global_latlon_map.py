@@ -283,13 +283,13 @@ def global_latlon_map(adfobj):
                     # difference: each entry should be (lat, lon)
                     dseasons[s] = mseasons[s] - oseasons[s]
 
-                    """#Grab data for desired multi-plots (from yaml file)
+                    #Grab data for desired multi-plots (from yaml file)
                     if multi_plots:
                         if var in adfobj.get_multi_case_info("global_latlon_map"):
                             multi_dict[var][case_name][s] = {"mdata":mseasons[s],
                                                             "odata":oseasons[s],
                                                             "diff_data":dseasons[s],
-                                                            "vres":vres}"""
+                                                            "vres":vres}
 
                     pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                             [syear_cases[case_idx],eyear_cases[case_idx]],
@@ -330,6 +330,13 @@ def global_latlon_map(adfobj):
 
                         # difference: each entry should be (lat, lon)
                         dseasons[s] = mseasons[s] - oseasons[s]
+                        #Grab data for desired multi-plots (from yaml file)
+                        if multi_plots:
+                            if var in adfobj.get_multi_case_info("global_latlon_map"):
+                                multi_dict[var][case_name][s] = {"mdata":mseasons[s],
+                                                                "odata":oseasons[s],
+                                                                "diff_data":dseasons[s],
+                                                                "vres":vres}
 
                         pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
@@ -343,13 +350,6 @@ def global_latlon_map(adfobj):
                     #End for (seasons)
                 #End for (pressure levels)
             #End if (plotting pressure levels)
-            #Grab data for desired multi-plots (from yaml file)
-            if multi_plots:
-                if var in adfobj.get_multi_case_info("global_latlon_map"):
-                    multi_dict[var][case_name][s] = {"mdata":mseasons[s],
-                                                    "odata":oseasons[s],
-                                                    "diff_data":dseasons[s],
-                                                    "vres":vres}
         #End for (case loop)
     #End for (variable loop)
 
