@@ -11,7 +11,6 @@ When multiple test cases are provided, they are plotted with different colors.
 #
 # --- imports and configuration ---
 #
-from collections import OrderedDict
 from pathlib import Path
 import numpy as np
 import xarray as xr
@@ -50,23 +49,11 @@ def cam_taylor_diagram(adfobj):
     #       test case(s) == case(s) to be diagnosed  will be called `case` (assumes a list)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)  # Loop over these
 
-    #Grab case climo years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
-
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
-    base_nickname = adfobj.case_nicknames["base_nickname"]
 
-    if len(case_names) > 1:
-        multi_case = True
-
-        main_site_path = adfobj.main_site_paths["main_site_path"]
-        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
-
-    else:
-        multi_case = False
-    #End if (check for multiple cases)
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
 
     case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
 
@@ -74,6 +61,8 @@ def cam_taylor_diagram(adfobj):
     if len(case_names) == 1:
         plot_location = adfobj.plot_location
         plot_loc = Path(plot_location[0])
+    else:
+        plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -87,9 +76,12 @@ def cam_taylor_diagram(adfobj):
         data_name = adfobj.get_baseline_info('cam_case_name', required=True)
         data_list = data_name # should not be needed (?)
         data_loc = adfobj.get_baseline_info("cam_climo_loc", required=True)
+
+        #Grab baseline case nickname
+        base_nickname = adfobj.case_nicknames["base_nickname"]
     #End if
 
-    #Grab baseline years (which may be empty strings if using Obs):
+    #Extract baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
@@ -168,87 +160,22 @@ def cam_taylor_diagram(adfobj):
         #
         # -- PLOTTING (one per season) --
         #
-
         fig, ax = taylor_plot_setup(title=f"Taylor Diagram - {s}",
                                     baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
 
         for i, case in enumerate(case_names):
             ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
 
-            #If multi-case, make all individual case vs baseline taylor diagram
-            if multi_case:
-                fig_m, ax_m = taylor_plot_setup(title=f"Taylor Diagram - {s}",
-                                    baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
-                ax_m = plot_taylor_data(ax_m, result_by_case[case], case_color=case_colors[i], use_bias=True)
-                ax_m = taylor_plot_finalize(ax_m, test_nicknames[i], case_colors[i],
-                                            syear_cases[i], eyear_cases[i],
-                                            needs_bias_labels=True,multi=True)
-
-                # add text with variable names:
-                txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
-                fig_m.text(0.9, 0.9, "\n".join(txtstrs), va='top')
-
-                plot_name = Path(plot_location[i]) / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
-                fig_m.savefig(plot_name, bbox_inches='tight')
-                print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
-                plt.close()
-
-                #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_name, "TaylorDiag", case, category=None, season=s, plot_type = "Special")
-            #End if (multi-case)
-        #End for (cases)
-
-        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=False)
-        #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
+        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         # add text with variable names:
         txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
         fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
-
+        fig.savefig(plot_name, bbox_inches='tight')
         adfobj.debug_log(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
 
-        plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
-        print(f"\t - Plotting Taylor Diagram, {s}")
+        #Add plot to website (if enabled):
+        adfobj.add_website_data(plot_name, "TaylorDiag", None, season=s, multi_case=True)
 
-        if multi_case:
-            plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
-
-            # Check redo_plot. If set to True: remove old plot, if it already exists:
-            if (not redo_plot) and plot_name.is_file():
-                #Add already-existing plot to website (if enabled):
-                adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
-
-                #Continue to next iteration:
-                continue
-            elif (redo_plot) and plot_name.is_file():
-                plot_name.unlink()
-            
-            fig.savefig(plot_name, bbox_inches='tight')
-            plt.close()
-
-            #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
-
-            print("  ...Taylor Diagram multi-case plots have been generated successfully.")
-        else:
-            plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
-
-            # Check redo_plot. If set to True: remove old plot, if it already exists:
-            if (not redo_plot) and plot_name.is_file():
-                #Add already-existing plot to website (if enabled):
-                adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
-
-                #Continue to next iteration:
-                continue
-            elif (redo_plot) and plot_name.is_file():
-                plot_name.unlink()
-
-            fig.savefig(plot_name, bbox_inches='tight')
-            print(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
-            plt.close()
-
-            #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
-        #End if (multi-case check)
     #Notify user that script has ended:
     print("  ...Taylor Diagrams have been generated successfully.")
 
@@ -619,8 +546,7 @@ def plot_taylor_data(wks, df, **kwargs):
     return wks
 
 
-#def taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, needs_bias_labels=True, multi=False):
-def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cases, needs_bias_labels=True, multi=False):
+def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cases, needs_bias_labels=True):
     """Apply final formatting to a Taylor diagram.
         wks -> Axes object that has passed through taylor_plot_setup and plot_taylor_data
         casenames -> list of case names for the legend
@@ -628,7 +554,6 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
         needs_bias_labels -> Bool, if T make the legend for the bias-sized markers.
     """
     # CASE LEGEND -- Color-coded
-    bottom_of_text = 0.05
     height_of_lines = 0.03
 
     case_pos = 0.75
@@ -640,7 +565,7 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
         syear = syear_cases[case_idx]
         eyear = eyear_cases[case_idx]
         text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{case}  yrs: {syear}-{eyear}",
-                        color=c, va='top', transform=wks.transAxes, fontsize=10)
+                            color=c, va='top', transform=wks.transAxes, fontsize=10)
         n += 1
 
     # BIAS LEGEND
