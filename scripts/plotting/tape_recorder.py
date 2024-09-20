@@ -33,8 +33,11 @@ def tape_recorder(adfobj):
     print("\n  Generating tape recorder plots...")
 
     #Special ADF variable which contains the output paths for plots:
-    plot_location = adfobj.plot_location
-    plot_loc = Path(plot_location[0])
+    if len(case_names) == 1:
+        plot_location = adfobj.plot_location
+        plot_loc = Path(plot_location[0])
+    else:
+        plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
@@ -49,12 +52,24 @@ def tape_recorder(adfobj):
     # - Search for either h0 or h0a
     substrings = {"cam.h0","cam.h0a"}
     case_hist_strs = []
-    for cam_case_str in cam_hist_strs:
-        # Check each possible h0 string
-        for string in cam_case_str:
-            if string in substrings:
-               case_hist_strs.append(string)
-               break
+    if len (case_names) == 1:
+        for cam_case_str in cam_hist_strs:
+            # Check each possible h0 string
+            for string in cam_case_str:
+                if string in substrings:
+                    case_hist_strs.append(string)
+                    break
+    else:
+        hist_str_multi_case = cam_hist_strs[0][0]
+        for case_idx,_ in enumerate(case_names):
+            hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
+            hist_strs = hist_str_multi_case[hist_str_case_idx]
+            # Check each possible h0 string
+            for string in hist_strs:
+                if string in substrings:
+                    case_hist_strs.append(string)
+                    break
+
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
@@ -223,8 +238,13 @@ def tape_recorder(adfobj):
         x1_loc = x1[1]
         x2_loc = x2[3]
 
-    y1_loc = y1[count]-0.03
-    y2_loc = y1[count]-0.02
+    if len(runname_LT) <= 3:
+        y1_loc = y1[count-1]-0.03
+        y2_loc = y1[count-1]-0.02
+
+    if len(runname_LT) > 3:
+        y1_loc = y1[count]-0.03
+        y2_loc = y1[count]-0.02
 
     ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
                       x1_loc, x2_loc, y1_loc, y2_loc,
