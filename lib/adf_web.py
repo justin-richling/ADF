@@ -665,7 +665,7 @@ class AdfWeb(AdfObs):
                 if var not in non_seasons[ptype][category]:
                     non_seasons[ptype][category][var] = non_seasons
                 #End if
-                print(f"{ptype} {category} {var} ->",non_seasons[ptype][category][var],"\n")
+
             #End if (data-frame check)
         #End for (web_data list loop)
 
