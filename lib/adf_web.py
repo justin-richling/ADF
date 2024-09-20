@@ -153,8 +153,9 @@ class AdfWeb(AdfObs):
             if self.get_mdtf_info('mdtf_run'):
                 syear = self.climo_yrs["syears"]
                 eyear = self.climo_yrs["eyears"]
-                mdtf_path = f"../mdtf/MDTF_{case_name}"
-                mdtf_path += f"_{syear[0]}_{eyear[0]}"
+                #mdtf_path = f"../mdtf/MDTF_{case_name}"
+                mdtf_path = plot_path / f"mdtf/MDTF_{case_name}_{syear[0]}_{eyear[0]}"
+                #mdtf_path += f"_{syear[0]}_{eyear[0]}"
                 self.external_package_links['MDTF'] = mdtf_path
                 print("mdtf_path: ",mdtf_path,"\n")
             #End if
