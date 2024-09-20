@@ -404,7 +404,7 @@ class AdfDiag(AdfWeb):
             # Check if history files actually exqist. If not then kill script:
             if not baseline:
                 hist_str_multi_case = hist_str_list[0][0]
-                if len(case_names) > 1:
+                if (len(case_names) > 1) or (isinstance(hist_str_multi_case, dict)):
                     hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
                     hist_strs = hist_str_multi_case[hist_str_case_idx]
                 else:
