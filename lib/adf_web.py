@@ -154,9 +154,10 @@ class AdfWeb(AdfObs):
                 syear = self.climo_yrs["syears"]
                 eyear = self.climo_yrs["eyears"]
                 #mdtf_path = f"../mdtf/MDTF_{case_name}"
-                mdtf_path = plot_path / f"mdtf/MDTF_{case_name}_{syear[0]}_{eyear[0]}"
+                mdtf_path = f"mdtf/MDTF_{case_name}_{syear[0]}_{eyear[0]}"
+                #mdtf_path = plot_path / f"mdtf/MDTF_{case_name}_{syear[0]}_{eyear[0]}"
                 #mdtf_path += f"_{syear[0]}_{eyear[0]}"
-                #self.external_package_links['MDTF'] = mdtf_path
+                self.external_package_links['MDTF'] = mdtf_path
                 print("mdtf_path: ",mdtf_path,"\n")
             #End if
             
@@ -718,7 +719,7 @@ class AdfWeb(AdfObs):
             # External packages that can be run through ADF
             
             avail_external_packages = {'MDTF':'mdtf_html_path', 'CVDP':'cvdp_html_path'}
-            self.external_package_links['MDTF'] = mdtf_index_html_file
+            #self.external_package_links['MDTF'] = mdtf_index_html_file
             print("self.external_package_links:",self.external_package_links)
             
             #Construct index.html
