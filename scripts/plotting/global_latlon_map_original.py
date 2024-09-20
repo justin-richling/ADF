@@ -13,7 +13,6 @@ plot_file_op
 """
 #Import standard modules:
 from pathlib import Path
-from collections import OrderedDict
 import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
@@ -90,20 +89,6 @@ def global_latlon_map(adfobj):
     #all generated plots and tables for each case:
     plot_locations = adfobj.plot_location
 
-    #CAM simulation variables (this is always assumed to be a list):
-    case_names = adfobj.get_cam_info("cam_case_name", required=True)
-    if len(case_names) > 1:
-        #Check if multi-plots are desired from yaml file
-        if adfobj.get_multi_case_info("global_latlon_map"):
-                multi_plots = True
-                multi_dict = OrderedDict()
-        else:
-            multi_plots = False
-        #End if (check for multi-case plots for LatLon)
-    else:
-        multi_plots = False
-    #End if (check for multiple cases)
-
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
@@ -111,10 +96,6 @@ def global_latlon_map(adfobj):
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
-
-    #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
-    base_nickname = adfobj.case_nicknames["base_nickname"]
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -151,14 +132,7 @@ def global_latlon_map(adfobj):
             dmsg = f"No reference data found for variable `{var}`, global lat/lon mean plotting skipped."
             adfobj.debug_log(dmsg)
             print(dmsg)
-            continue      
-
-        #Check if multi-case scenario, if so grab details
-        if multi_plots:
-            for multi_var in adfobj.get_multi_case_info("global_latlon_map"):
-                if multi_var not in multi_dict:
-                    multi_dict[multi_var] = OrderedDict()
-  
+            continue        
 
         #Notify user of variable being plotted:
         print("\t - lat/lon maps for {}".format(var))
@@ -203,11 +177,6 @@ def global_latlon_map(adfobj):
 
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
-
-            #Grab data for desired multi-plots (from yaml file)
-            if multi_plots:
-                if var in adfobj.get_multi_case_info("global_latlon_map"):
-                    multi_dict[var][case_name] = OrderedDict()
 
             #Set case nickname:
             case_nickname = adfobj.data.test_nicknames[case_idx]
@@ -283,14 +252,6 @@ def global_latlon_map(adfobj):
                     # difference: each entry should be (lat, lon)
                     dseasons[s] = mseasons[s] - oseasons[s]
 
-                    """#Grab data for desired multi-plots (from yaml file)
-                    if multi_plots:
-                        if var in adfobj.get_multi_case_info("global_latlon_map"):
-                            multi_dict[var][case_name][s] = {"mdata":mseasons[s],
-                                                            "odata":oseasons[s],
-                                                            "diff_data":dseasons[s],
-                                                            "vres":vres}"""
-
                     pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                             [syear_cases[case_idx],eyear_cases[case_idx]],
                                             [syear_baseline,eyear_baseline],
@@ -343,28 +304,8 @@ def global_latlon_map(adfobj):
                     #End for (seasons)
                 #End for (pressure levels)
             #End if (plotting pressure levels)
-            #Grab data for desired multi-plots (from yaml file)
-            if multi_plots:
-                if var in adfobj.get_multi_case_info("global_latlon_map"):
-                    multi_dict[var][case_name][s] = {"mdata":mseasons[s],
-                                                    "odata":oseasons[s],
-                                                    "diff_data":dseasons[s],
-                                                    "vres":vres}
         #End for (case loop)
     #End for (variable loop)
-
-    #This will be a list of variables for multi-case plotting based off LatLon plot type
-    if multi_plots:
-        #Notify user that script has started:
-        print("\n  Generating lat/lon multi-case plots...")
-
-        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
-
-        pf.multi_latlon_plots(main_site_assets_path, "LatLon", case_names,
-                             [test_nicknames,base_nickname], multi_dict,
-                             web_category, adfobj)
-
-        print("  ...lat/lon multi-case plots have been generated successfully.")
 
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")

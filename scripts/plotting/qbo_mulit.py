@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap ## used to create custom colormaps
 import matplotlib.colors as mcolors
 import matplotlib as mpl
-import plotting_functions as pf
 
 def my_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
@@ -29,7 +28,7 @@ def qbo(adfobj):
     Isla Simpson (islas@ucar.edu) 22nd March 2022
 
     """
-    #Notify user that script has started:
+ #Notify user that script has started:
     print("\n  Generating qbo plots...")
 
     #Extract relevant info from the ADF:
@@ -38,25 +37,22 @@ def qbo(adfobj):
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
-    #Special ADF variable which contains the output paths for plots:
-    if len(case_names) == 1:
-        plot_location = adfobj.plot_location
-        plot_loc = Path(plot_location[0])
-    else:
-        plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
+    plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
-    
+
     if len(case_names) > 1:
         multi_case = True
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
     else:
         multi_case = False
     #End if (check for multiple cases)
+
+   
 
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
@@ -77,28 +73,12 @@ def qbo(adfobj):
     #End if
 
     #Set path for QBO figures:
-    plot_loc_ts  = Path(plot_loc) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
-    plot_loc_amp = Path(plot_loc) / f'QBO_Amplitude_Special_Mean.{plot_type}'
+    plot_loc_ts  = Path(plot_locations[0]) / f'QBOts.{plot_type}'
+    plot_loc_amp = Path(plot_locations[0]) / f'QBOamp.{plot_type}'
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:
-    print(f"\t QBO plots will be saved here: {plot_loc}")
-
-    # Check redo_plot. If set to True: remove old plots, if they already exist:
-    if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
-        #Add already-existing plot to website (if enabled):
-        adfobj.debug_log(f"'{plot_loc_ts}' and '{plot_loc_amp}' exist and clobber is false.")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
-
-        #Continue to next iteration:
-        return
-    elif (redo_plot):
-        if plot_loc_ts.is_file():
-            plot_loc_ts.unlink()
-        if plot_loc_amp.is_file():
-            plot_loc_amp.unlink()
-    #End if
+    print(f"\t QBO plots will be saved here: {plot_locations[0]}")
 
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
@@ -111,7 +91,8 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
-    casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+
+    casedat = [ _load_dataset(case_loc[i], case_names[i],'U') for i in range(0,ncases,1) ]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
@@ -157,7 +138,7 @@ def qbo(adfobj):
     else:
         ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
-    casecount=0
+    #casecount=0
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
             #Check if this is multi-case diagnostics
@@ -243,7 +224,7 @@ def qbo(adfobj):
             break
         #End if
     #End for
-
+    #ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[casecount]-0.035,y1[casecount]-0.03)
     ax = plotcolorbar(fig, x1[0]+0.2, x2[2]-0.2,y1[ncases]-0.035,y1[ncases]-0.03)
     
     if multi_case:#Notify user that script has started:
@@ -263,7 +244,6 @@ def qbo(adfobj):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
         adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
                                 multi_case=True,plot_type="Special")
-
     #-----------------
 
     #---Dunkerton and Delisi QBO amplitude
@@ -336,7 +316,6 @@ def qbo(adfobj):
     
     #Close main fig
     plt.close()
-
     #-------------------
 
     #Notify user that script has ended:
@@ -344,6 +323,35 @@ def qbo(adfobj):
 
     #End QBO plotting script:
     return
+
+#-------------------For Reading Data------------------------
+
+def _load_dataset(data_loc, case_name, variable, other_name=None):
+    """
+    This method exists to get an xarray Dataset that can be passed into the plotting methods.
+
+    This could (should) be changed to use an intake-esm catalog if (when) that is available.
+    * At some point, we hope ADF will provide functions that can be used directly to replace this step,
+      so the user will not need to know how the data gets saved.
+
+    In this example, assume timeseries files are available via the ADF api.
+
+    """
+
+    dloc    = Path(data_loc)
+
+    # a hack here: ADF uses different file names for "reference" case and regridded model data,
+    # - try the longer name first (regridded), then try the shorter name
+
+    fils = sorted(dloc.glob(f"{case_name}.*.{variable}.*.nc"))
+    if (len(fils) == 0):
+        warnings.warn("QBO: Input file list is empty.")
+        return None
+    elif (len(fils) > 1):
+        return xr.open_mfdataset(fils, combine='by_coords')
+    else:
+        sfil = str(fils[0])
+        return xr.open_dataset(sfil)
 
 #-----------------For Calculating-----------------------------
 
@@ -417,6 +425,7 @@ def plotqbotimeseries(fig, dat, ny, x1, x2, y1, y2, title):
     ax.set_yticklabels(['1000','300','100','30','10','3','1'])
     ax.set_ylabel('Pressure (hPa)', fontsize=12)
     ax.set_title(title, fontsize=14)
+    #ax.set_xlabel("Years",fontsize=12,labelpad=10)
 
     return ax
 
@@ -464,3 +473,16 @@ def blue2red_cmap(n, nowhite = False):
     mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap', colors)
 
     return mymap
+
+def _set_ymargin(ax, top, bottom):
+    """
+    Allow for custom padding of plot lines and axes borders
+    -----
+    """
+    ax.set_ymargin(0)
+    ax.autoscale_view()
+    lim = ax.get_ylim()
+    delta = np.diff(lim)
+    top = lim[1] + delta*top
+    bottom = lim[0] - delta*bottom
+    ax.set_ylim(bottom,top)
