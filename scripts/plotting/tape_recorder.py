@@ -141,7 +141,10 @@ def tape_recorder(adfobj):
     var = "Q"
 
     #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
+    if len(case_names) == 1:
+        plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
+    else:
+        plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_multi_plot.{plot_type}"
 
     print(f"\t - Plotting annual tape recorder for {var}")
 
