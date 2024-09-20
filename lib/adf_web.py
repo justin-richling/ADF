@@ -650,19 +650,18 @@ class AdfWeb(AdfObs):
                     #End if
                     mean_html_info[ptype][category][var][season] = web_data.html_file.name
                 #End if (check for multi_plot)
+                #Initialize Ordered Dictionary for non season kwarg:
+                if ptype not in non_seasons:
+                    non_seasons[ptype] = OrderedDict()
+                #End if
+                if category not in non_seasons[ptype]:
+                    non_seasons[ptype][category] = OrderedDict()
+                #End if
+                if var not in non_seasons[ptype][category]:
+                    non_seasons[ptype][category][var] = non_seasons
+                #End if
             #End if (data-frame check)
         #End for (web_data list loop)
-
-        #Initialize Ordered Dictionary for non season kwarg:
-        if ptype not in non_seasons:
-            non_seasons[ptype] = OrderedDict()
-        #End if
-        if category not in non_seasons[ptype]:
-            non_seasons[ptype][category] = OrderedDict()
-        #End if
-        if var not in non_seasons[ptype][category]:
-            non_seasons[ptype][category][var] = non_seasons
-        #End if
 
         #Loop over all web data objects again:
         #NOTE: This will be for non multi-case diagnostics
