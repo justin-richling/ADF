@@ -1180,7 +1180,8 @@ class AdfWeb(AdfObs):
 
                             #Remove keys from main dictionary for this html page
                             templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
-
+                            
+                            templ_rend_kwarg_dict["non_seasons"] = non_seasons[web_data.plot_type]
                             #Construct individual plot type mean_diag
                             #html files, if they don't already exist:
                             tmp = jinenv.get_template('template_multi_case_mean_diag.html')
