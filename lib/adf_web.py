@@ -156,7 +156,7 @@ class AdfWeb(AdfObs):
                 #mdtf_path = f"../mdtf/MDTF_{case_name}"
                 mdtf_path = plot_path / f"mdtf/MDTF_{case_name}_{syear[0]}_{eyear[0]}"
                 #mdtf_path += f"_{syear[0]}_{eyear[0]}"
-                self.external_package_links['MDTF'] = mdtf_path
+                #self.external_package_links['MDTF'] = mdtf_path
                 print("mdtf_path: ",mdtf_path,"\n")
             #End if
             
@@ -695,7 +695,7 @@ class AdfWeb(AdfObs):
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
             mdtf_index_html_file = \
-                self.__case_web_paths[web_data.case]['mdtf_path'] / "index.html"
+                self.__case_web_paths[web_data.case]['mdtf_dir'] / "index.html"
 
             #Re-et plot types list:
             if web_data.case == 'multi-case':
