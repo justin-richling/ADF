@@ -703,8 +703,7 @@ class AdfWeb(AdfObs):
                                   "table_html": table_html,
                                   "multi_head": False,
                                   "multi": multi_layout,
-                                  "case_sites": case_sites,
-                                  "non_seasons": non_seasons[web_data.plot_type]}
+                                  "case_sites": case_sites}
 
                 table_tmpl = jinenv.get_template('template_table.html')
 
