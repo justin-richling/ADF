@@ -695,8 +695,8 @@ class AdfWeb(AdfObs):
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
-            mdtf_index_html_file = \
-                self.__case_web_paths[web_data.case]['mdtf_dir'] / "index.html"
+            #mdtf_index_html_file = \
+            #    self.__case_web_paths[web_data.case]['mdtf_dir'] / "index.html"
 
             #Re-et plot types list:
             if web_data.case == 'multi-case':
