@@ -179,6 +179,9 @@ class AdfDiag(AdfWeb):
         # Provide convenience functions for data handling:
         self.data = AdfData(self)
 
+        #Add multi plots info to object:
+        self.__multi_case_plots = self.read_config_var('multi_case_plots')
+
     # Create property needed to return "plotting_scripts" variable to user:
     @property
     def plotting_scripts(self):
@@ -186,6 +189,16 @@ class AdfDiag(AdfWeb):
         # Note that a copy is needed in order to avoid having a script mistakenly
         # modify this variable:
         return copy.copy(self.__plotting_scripts)
+
+    def get_multi_case_info(self, var_str, required=False):
+        """
+        Return the config variable from 'multi_case_plots' as requested by
+        the user.
+        """
+
+        return self.read_config_var(var_str,
+                                    conf_dict=self.__multi_case_plots,
+                                    required=required)
 
     #########
     # Script-running functions
