@@ -32,15 +32,15 @@ def tape_recorder(adfobj):
     #Notify user that script has started:
     print("\n  Generating tape recorder plots...")
 
+    #Grab test case name(s)
+    case_names = adfobj.get_cam_info('cam_case_name', required=True)
+
     #Special ADF variable which contains the output paths for plots:
     if len(case_names) == 1:
         plot_location = adfobj.plot_location
         plot_loc = Path(plot_location[0])
     else:
         plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
-
-    #Grab test case name(s)
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
@@ -69,6 +69,7 @@ def tape_recorder(adfobj):
                 if string in substrings:
                     case_hist_strs.append(string)
                     break
+
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
@@ -151,9 +152,10 @@ def tape_recorder(adfobj):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
         return
+
     elif (redo_plot) and plot_name.is_file():
         plot_name.unlink()
-
+    
     # Plotting
     #---------
     # MLS data
