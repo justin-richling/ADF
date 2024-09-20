@@ -156,7 +156,10 @@ class AdfWeb(AdfObs):
                 mdtf_path = f"../mdtf/MDTF_{case_name}"
                 mdtf_path += f"_{syear[0]}_{eyear[0]}"
                 self.external_package_links['MDTF'] = mdtf_path
+                print("mdtf_path: ",mdtf_path,"\n")
             #End if
+
+            print("table_pages_dir",table_pages_dir,"\n")
             
             #Add all relevant paths to dictionary for specific case:
             self.__case_web_paths[case_name] = {'website_dir': website_dir,
