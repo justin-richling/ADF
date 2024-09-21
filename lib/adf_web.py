@@ -1240,9 +1240,13 @@ class AdfWeb(AdfObs):
             
             print("\nmulti_plots",multi_plots)
             print("multi_case_plots",multi_case_plots,"\n")
+
+            del_multi_plots = []
             for key,val in multi_plots.items():
                 if not Path(val).is_file():
-                    del multi_plots[key]
+                    del_multi_plots.append(key)
+            for i in del_multi_plots:
+                del multi_plots[key]
             print("multi_plots AFTER",multi_plots)
 
             main_title = "ADF Diagnostics"
