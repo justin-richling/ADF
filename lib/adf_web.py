@@ -1128,6 +1128,8 @@ class AdfWeb(AdfObs):
                                                             multi_plot_page]
                         print("ptype",ptype)
                         print("multi_mean_html_info.keys()",multi_mean_html_info.keys())
+                        if ptype not in multi_mean_html_info.keys():
+                            continue
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
                                             "season_title": season,
