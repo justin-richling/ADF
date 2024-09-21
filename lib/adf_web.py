@@ -1232,6 +1232,9 @@ class AdfWeb(AdfObs):
                     print("mcase_plot",mcase_plot,"avail_plot_types",avail_plot_types)
                     print("multi_case_dict[key]",multi_case_dict[key])
                     multi_plots[multi_case_dict[key]] = mcase_plot
+
+                    if multi_case_plots:
+                        print()
                 #End for
             #End if
             
@@ -1244,7 +1247,7 @@ class AdfWeb(AdfObs):
                                          case_sites=case_sites,
                                          base_name=data_name,
                                          baseline_yrs=baseline_yrs,
-                                         avail_multi_plots=multi_plots,
+                                         multi_plots=multi_plots,
                                          non_seasons=non_seasons[web_data.plot_type],
                                          seasons=seasons,
                                          avail_plot_types=avail_plot_types,
