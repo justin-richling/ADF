@@ -1085,6 +1085,8 @@ class AdfWeb(AdfObs):
                                                     "non_seasons": non_seasons[web_data.plot_type]}
 
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                print("if str(web_data.case) == str(case1):")
+                                print("multimean",multimean,"\n")
                                 if not (img_pages_dir / multimean).exists():
 
                                     tmpl = jinenv.get_template('template_multi_case.html')
