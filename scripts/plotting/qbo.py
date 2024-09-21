@@ -165,7 +165,7 @@ def qbo(adfobj):
                 if icase != ncases-1:
                     #plot_loc_ts  = Path(plot_locations[icase]) / f'QBOts.{plot_type}'
                     #Set path for QBO figures:
-                    plot_loc_ts  = Path(plot_loc[icase]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
+                    plot_loc_ts  = Path(plot_loc) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
                     #plot_loc_amp = Path(plot_loc) / f'QBO_Amplitude_Special_Mean.{plot_type}'
 
                     #----QBO timeseries plots
