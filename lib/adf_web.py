@@ -1175,6 +1175,7 @@ class AdfWeb(AdfObs):
 
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                        print("multimean",multimean,"\n")
                         if not (img_pages_dir / multimean).exists():
                             tmpl = jinenv.get_template('template_multi_case.html')
 
@@ -1186,34 +1187,12 @@ class AdfWeb(AdfObs):
                                 ofil.write(rndr)
                         #End if (multimean)
 
-                        #Check if the mean plot type and var page exists for this case:
-                        img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                        plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
-                        mean_ptype_plot_page = img_pages_dir / plot_page
-
-                        """if not mean_ptype_plot_page.exists():
-
-                            #Remove key from main dictionary for this html page
-                            templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
-
-                            #Construct individual plot type mean_diag
-                            #html files, if they don't already exist:
-                            page_tmpl = jinenv.get_template('template_multi_case_var.html')
-
-                            plot_page_rndr = page_tmpl.render(templ_var_rend_kwarg_dict)
-
-                            #Write mean diagnostic plots HTML file:
-                            with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                                ofil.write(plot_page_rndr)
-                            #End with
-                        #End if (mean_ptype_plot_page exists)
-                        """
                         multi_mean = f"multi_case_mean_diag_{ptype}.html"
                         mean_ptype_file = main_site_img_path / multi_mean
                         if not mean_ptype_file.exists():
 
                             #Remove keys from main dictionary for this html page
-                            templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
+                            #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                             
                             templ_rend_kwarg_dict["non_seasons"] = non_seasons[web_data.plot_type]
                             templ_rend_kwarg_dict["seasons"] = seasons
@@ -1259,10 +1238,6 @@ class AdfWeb(AdfObs):
                                          seasons=seasons,
                                          avail_plot_types=avail_plot_types,
                                          list=jinja_list)
-
-            #templ_rend_kwarg_dict["non_seasons"] = non_seasons[web_data.plot_type]
-            #templ_rend_kwarg_dict["seasons"] = seasons
-            templ_rend_kwarg_dict["list"] = jinja_list
 
             #Write multi-case main HTML file:
             outputfile = main_site_path / "index.html"
