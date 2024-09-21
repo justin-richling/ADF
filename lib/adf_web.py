@@ -1078,7 +1078,11 @@ class AdfWeb(AdfObs):
                                                     "plot_types": multi_plot_type_html,
                                                     "multi": multi_layout,
                                                     "case_sites": case_sites,
-                                                    "seasons": seasons}
+                                                    "avail_plot_types": avail_plot_types,
+                                                    "plot_types": plot_types,
+                                                    "multi": multi_layout,
+                                                    "seasons": seasons,
+                                                    "non_seasons": non_seasons[web_data.plot_type]}
 
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                 if not (img_pages_dir / multimean).exists():
@@ -1162,9 +1166,13 @@ class AdfWeb(AdfObs):
                                             "mydata": multi_mean_html_info[ptype],
                                             "plot_types": multi_plot_type_html,
                                             "multi": multi_layout,
-                                            "case_sites": case_sites}
-                        rend_kwarg_dict["non_seasons"] = non_seasons[web_data.plot_type]
-                        rend_kwarg_dict["seasons"] = seasons
+                                            "case_sites": case_sites,
+                                            "avail_plot_types": avail_plot_types,
+                                            "plot_types": plot_types,
+                                            "multi": multi_layout,
+                                            "seasons": seasons,
+                                            "non_seasons": non_seasons[web_data.plot_type]}
+
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                         if not (img_pages_dir / multimean).exists():
@@ -1249,7 +1257,8 @@ class AdfWeb(AdfObs):
                                          multi_plots=multi_plots,
                                          non_seasons=non_seasons[web_data.plot_type],
                                          seasons=seasons,
-                                         avail_plot_types=avail_plot_types)
+                                         avail_plot_types=avail_plot_types,
+                                         list=jinja_list)
 
             #templ_rend_kwarg_dict["non_seasons"] = non_seasons[web_data.plot_type]
             #templ_rend_kwarg_dict["seasons"] = seasons
