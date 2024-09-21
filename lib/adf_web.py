@@ -395,6 +395,17 @@ class AdfWeb(AdfObs):
         #Set climo years format for html file headers
         case_yrs=f"{syear_cases[0]} - {eyear_cases[0]}"
 
+        #Access variable defaults yaml file
+        res = self.variable_defaults
+
+        #List of ADF default plot types
+        avail_plot_types = res["default_ptypes"]
+        #Check if current plot type is in ADF default.
+        #If not, add it so the index.html file can include it
+        for ptype in plot_types.keys():
+            if ptype not in avail_plot_types:
+                avail_plot_types.append(plot_types)
+
         #Extract variable defaults dictionary (for categories):
         var_defaults_dict = self.variable_defaults
 
@@ -865,7 +876,8 @@ class AdfWeb(AdfObs):
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
                                             plot_types=plot_types,
-                                            multi=multi_layout)
+                                            multi=multi_layout,
+                                            avail_plot_types=avail_plot_types)
 
             #Write Mean diagnostics index HTML file:
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
@@ -1231,7 +1243,14 @@ class AdfWeb(AdfObs):
                                          case_sites=case_sites,
                                          base_name=data_name,
                                          baseline_yrs=baseline_yrs,
-                                         multi_plots=multi_plots)
+                                         multi_plots=multi_plots,
+                                         non_seasons=non_seasons[web_data.plot_type],
+                                         seasons=seasons,
+                                         avail_plot_types=avail_plot_types)
+
+            #templ_rend_kwarg_dict["non_seasons"] = non_seasons[web_data.plot_type]
+            #templ_rend_kwarg_dict["seasons"] = seasons
+            templ_rend_kwarg_dict["list"] = jinja_list
 
             #Write multi-case main HTML file:
             outputfile = main_site_path / "index.html"
