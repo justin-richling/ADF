@@ -1192,7 +1192,7 @@ class AdfWeb(AdfObs):
                         if not mean_ptype_file.exists():
 
                             #Remove keys from main dictionary for this html page
-                            #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
+                            templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                             
                             templ_rend_kwarg_dict["non_seasons"] = non_seasons[web_data.plot_type]
                             templ_rend_kwarg_dict["seasons"] = seasons
