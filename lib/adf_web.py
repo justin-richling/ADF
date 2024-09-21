@@ -1061,7 +1061,8 @@ class AdfWeb(AdfObs):
                                                     "mydata": multi_plot_html_info[ptype],
                                                     "plot_types": multi_plot_type_html,
                                                     "multi": multi_layout,
-                                                    "case_sites": case_sites}
+                                                    "case_sites": case_sites,
+                                                    "seasons": seasons}
 
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
                                 if not (img_pages_dir / multimean).exists():
