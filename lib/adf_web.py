@@ -1157,6 +1157,8 @@ class AdfWeb(AdfObs):
                         print("multi_mean_html_info.keys()",multi_mean_html_info.keys())
                         if ptype not in multi_mean_html_info.keys():
                             continue
+                        if var not in multi_mean_html_info[ptype][category]:
+                            continue
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
                                             "season_title": season,
