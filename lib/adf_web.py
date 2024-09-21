@@ -1229,7 +1229,7 @@ class AdfWeb(AdfObs):
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
                     mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
-                    print("mcase_plot",mcase_plot,"\n")
+                    print("mcase_plot",mcase_plot,"avail_plot_types",avail_plot_types,"\n")
                     multi_plots[multi_case_dict[key]] = mcase_plot
                 #End for
             #End if
