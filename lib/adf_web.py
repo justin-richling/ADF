@@ -400,11 +400,7 @@ class AdfWeb(AdfObs):
 
         #List of ADF default plot types
         avail_plot_types = res["default_ptypes"]
-        #Check if current plot type is in ADF default.
-        #If not, add it so the index.html file can include it
-        for ptype in plot_types.keys():
-            if ptype not in avail_plot_types:
-                avail_plot_types.append(plot_types)
+
 
         #Extract variable defaults dictionary (for categories):
         var_defaults_dict = self.variable_defaults
@@ -771,6 +767,12 @@ class AdfWeb(AdfObs):
                     else:
                         plot_types = plot_type_html
 
+                    #Check if current plot type is in ADF default.
+                    #If not, add it so the index.html file can include it
+                    for ptype in plot_types.keys():
+                        if ptype not in avail_plot_types:
+                            avail_plot_types.append(plot_types)
+
                     mean_table_rndr = mean_table_tmpl.render(new_dict)
 
                     #Write mean diagnostic tables HTML file:
@@ -801,6 +803,7 @@ class AdfWeb(AdfObs):
                                        "plottype_title": web_data.plot_type,
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
+                                       "avail_plot_types": avail_plot_types,
                                        "plot_types": plot_types,
                                        "multi": multi_layout,
                                        "seasons": seasons,
