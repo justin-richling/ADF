@@ -430,7 +430,8 @@ class AdfWeb(AdfObs):
 
         #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
-                       "Special":"html_img/multi_case_mean_diag_Special.html"}
+                       #"Special":"html_img/multi_case_mean_diag_Special.html"
+                       }
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -1227,6 +1228,7 @@ class AdfWeb(AdfObs):
 
             if multi_case_plots:
                 for key in multi_case_plots:
+                    print("key",key)
                     #Update the dictionary to add any plot types specified in the yaml file
                     mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
                     print("mcase_plot",mcase_plot,"avail_plot_types",avail_plot_types)
@@ -1241,13 +1243,13 @@ class AdfWeb(AdfObs):
             print("\nmulti_plots",multi_plots)
             print("multi_case_plots",multi_case_plots,"\n")
 
-            del_multi_plots = []
+            """del_multi_plots = []
             for key,val in multi_plots.items():
                 if not Path(val).is_file():
                     del_multi_plots.append(key)
             for i in del_multi_plots:
                 del multi_plots[i]
-            print("multi_plots AFTER",multi_plots)
+            print("multi_plots AFTER",multi_plots)"""
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
