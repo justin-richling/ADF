@@ -1240,6 +1240,10 @@ class AdfWeb(AdfObs):
             
             print("\nmulti_plots",multi_plots)
             print("multi_case_plots",multi_case_plots,"\n")
+            for key,val in multi_plots:
+                if not Path(val).is_file():
+                    del multi_plots[key]
+            print("multi_plots AFTER",multi_plots)
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
