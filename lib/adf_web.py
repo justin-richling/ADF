@@ -424,9 +424,9 @@ class AdfWeb(AdfObs):
         #This can probably be populated in the for-loops during html creation...
         #Or it should be declared somewhere higher up, like adf_info or something
         multi_case_dict = {"global_latlon_map":"LatLon",
-                               "zonal_mean":"Zonal",
-                               "meridional":"Meridional",
-                               "global_latlon_vect_map":"LatLon_Vector"}
+                            "zonal_mean":"Zonal",
+                            "meridional":"Meridional",
+                            "global_latlon_vect_map":"LatLon_Vector"}
 
         #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
@@ -681,6 +681,10 @@ class AdfWeb(AdfObs):
             #End if (data-frame check)
         #End for (web_data list loop)
 
+
+        # - - - - - - - - - - - - - - - - - - - - - -
+        # --- Start single-case diagnostics ---
+        # - - - - - - - - - - - - - - - - - - - - - -
         #Loop over all web data objects again:
         #NOTE: This will be for non multi-case diagnostics
         for idx,web_data in enumerate(self.__website_data):
@@ -837,26 +841,6 @@ class AdfWeb(AdfObs):
                             ofil.write(mean_rndr)
                         #End with
                     #End if (mean_ptype exists)
-
-                    """#Check if the mean plot type and var page exists for this case:
-                    plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
-                    mean_ptype_plot_page = img_pages_dir / plot_page
-                    if not mean_ptype_plot_page.exists():
-
-                        #Construct individual plot type mean_diag html files, if they don't
-                        #already exist:
-                        plot_page_tmpl = jinenv.get_template('template_var.html')
-
-                        #Remove key from main dictionary for this html page
-                        templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
-
-                        plot_page_rndr = plot_page_tmpl.render(templ_var_rend_kwarg_dict)
-
-                        #Write mean diagnostic plots HTML file:
-                        with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                            ofil.write(plot_page_rndr)
-                        #End with
-                    #End if (mean_ptype_plot_page)"""
                 #End if (check for multi-case diags)
             #Also check if index page exists for this case:
             index_html_file = \
@@ -1155,12 +1139,12 @@ class AdfWeb(AdfObs):
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                             start=main_site_img_path),
                                                             multi_plot_page]
-                        print("ptype",ptype)
+                        print("ptype",ptype) #NEED SPECIAL!
                         print("multi_mean_html_info.keys()",multi_mean_html_info.keys())
                         if ptype not in multi_mean_html_info.keys():
                             continue
-                        if var not in multi_mean_html_info[ptype][category]:
-                            continue
+                        #if var not in multi_mean_html_info[ptype][category]:
+                        #    continue
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
                                             "season_title": season,
