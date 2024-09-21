@@ -1187,6 +1187,8 @@ class AdfWeb(AdfObs):
                                 ofil.write(rndr)
                         #End if (multimean)
 
+                        # Page for all variables for a plot type, LatLon, Special, etc.
+                        # `multi_case_mean_diag_Special.html` might list Q_TapeRecorder, QBO, etc
                         multi_mean = f"multi_case_mean_diag_{ptype}.html"
                         mean_ptype_file = main_site_img_path / multi_mean
                         if not mean_ptype_file.exists():
