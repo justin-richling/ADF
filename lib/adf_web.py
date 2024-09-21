@@ -1229,10 +1229,14 @@ class AdfWeb(AdfObs):
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
                     mcase_plot = f"html_img/multi_case_mean_diag_{multi_case_dict[key]}.html"
-                    print("mcase_plot",mcase_plot,"avail_plot_types",avail_plot_types,"\n")
+                    print("mcase_plot",mcase_plot,"avail_plot_types",avail_plot_types)
+                    print("multi_case_dict[key]",multi_case_dict[key])
                     multi_plots[multi_case_dict[key]] = mcase_plot
                 #End for
             #End if
+            
+            print("\nmulti_plots",multi_plots)
+            print("multi_case_plots",multi_case_plots,"\n")
 
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
@@ -1240,7 +1244,7 @@ class AdfWeb(AdfObs):
                                          case_sites=case_sites,
                                          base_name=data_name,
                                          baseline_yrs=baseline_yrs,
-                                         multi_plots=multi_plots,
+                                         avail_multi_plots=multi_plots,
                                          non_seasons=non_seasons[web_data.plot_type],
                                          seasons=seasons,
                                          avail_plot_types=avail_plot_types,
