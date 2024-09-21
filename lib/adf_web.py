@@ -658,6 +658,7 @@ class AdfWeb(AdfObs):
                     #End if
                     mean_html_info[ptype][category][var][season] = web_data.html_file.name
                 #End if (check for multi_plot)
+
                 #Initialize Ordered Dictionary for non season kwarg:
                 if ptype not in non_seasons:
                     non_seasons[ptype] = OrderedDict()
