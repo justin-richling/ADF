@@ -1126,6 +1126,7 @@ class AdfWeb(AdfObs):
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                             start=main_site_img_path),
                                                             multi_plot_page]
+                        print("ptype",ptype)
                         print("multi_mean_html_info.keys()",multi_mean_html_info.keys())
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
