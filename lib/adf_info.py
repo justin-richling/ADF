@@ -90,10 +90,9 @@ class AdfInfo(AdfConfig):
         # Add MDTF info to object:
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
 
-        #if self.__mdtf_info is not None:
-        #    self.expand_references(self.__mdtf_info)
-        if self.__mdtf_info ['mdtf_run']:
-            self.expand_references(self.__mdtf_info)
+        if self.__mdtf_info is not None:
+            if self.__mdtf_info['mdtf_run']:
+                self.expand_references(self.__mdtf_info)
         # End if
 
         # Check if inputs are of the correct type:
@@ -353,7 +352,6 @@ class AdfInfo(AdfConfig):
         if len(case_names) > 1:
             cam_hist_str_eh = []
             for i in cam_hist_str[0]:
-                #cam_sub_hist_str.append(i)
                 cam_hist_str_eh.append([i])
             cam_hist_str = cam_hist_str_eh
 
@@ -425,13 +423,12 @@ class AdfInfo(AdfConfig):
                 #Grab first possible hist string, just looking for years of run
                 hist_strs = hist_str_case[0]
 
+                #Check if multi-case, or if it is a dictionary defined by user?
                 if (len(case_names) > 1) or (isinstance(hist_strs, dict)):
                     hist_str_case_1 = list(hist_strs.keys())[case_idx]
                     print("hist_str_case_1",hist_str_case_1,"\n")
                     hist_str = hist_strs[hist_str_case_1][0]
                 else:
-                    #if isinstance(hist_strs, dict):
-                    #    hist_str = hist_strs
                     hist_str = hist_strs
                 print("hist_str",hist_str,"\n")
 
