@@ -350,10 +350,12 @@ class AdfInfo(AdfConfig):
 
          # Check if this is multi-case and adjust appropriately
         if len(case_names) > 1:
-            cam_hist_str_eh = []
-            for i in cam_hist_str[0]:
-                cam_hist_str_eh.append([i])
-            cam_hist_str = cam_hist_str_eh
+            #cam_hist_str_eh = []
+            #for i in cam_hist_str[0]:
+            #    cam_hist_str_eh.append([i])
+            #cam_hist_str = cam_hist_str_eh
+
+            cam_hist_str = [[i] for i in cam_hist_str[0]]
 
         if not cam_hist_str:
             hist_str_dict = [['cam.h0a']]*self.__num_cases

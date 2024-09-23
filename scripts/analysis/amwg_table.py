@@ -145,7 +145,6 @@ def amwg_table(adf):
         input_ts_locs.append(input_ts_baseline)
 
         #Save the baseline to the first case's plots directory:
-        #output_locs.append(output_locs[0])
         if len(test_case_names) == 1:
             output_locs.append(output_locs[0])
     else:
@@ -323,12 +322,14 @@ def amwg_table(adf):
 
     #Start case comparison tables
     #----------------------------
-    # Copy the file to all individual directories
+    # Copy the baseline file to all individual directories
     if len(test_case_names) > 1:
         base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
-        for i,case in enumerate(test_case_names):
-            shutil.copy(base_csv[0], output_locs[i])
-        base_csv[0].unlink()
+        if base_csv:
+            for i,case in enumerate(test_case_names):
+                shutil.copy(base_csv[0], output_locs[i])
+            # Remove the baseline csv from????????
+            base_csv[0].unlink()
 
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
@@ -338,14 +339,19 @@ def amwg_table(adf):
         else:
             # Check if this a multi-case scenario or single case
             if len(test_case_names) == 1:
-                #Create comparison table for both cases
+                #Create comparison table for case vs baseline
                 print("\n  Making comparison table...")
                 _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
                 print("  ... Comparison table has been generated successfully")
 
             if len(test_case_names) > 1:
+                #Make on full table of all cases and baseline in one case
+                #Note: this will be put in the main diag plot location 
                 print("\n  Making comparison table for multiple cases...")
                 _df_multi_comp_table(adf, csv_locs, case_names, nicknames)
+                
+                #Run over each case and make a comparison table with the baseline
+                #NOTE: these tables will all live in each of the case_vs_baseline dirs
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
                     _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
@@ -395,17 +401,19 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
     -----
         - Read in table data and create side by side comparison table
         - Write output to csv file and add to website
+
+     * casenames - list of case names
     """
 
     import pandas as pd
 
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
-
-    # * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    #This will be for single-case for now (case_names[0]),
-    #will need to change to loop as multi-case is introduced
-    case = output_location/f"amwg_table_{case_names[0]}.csv"
-    baseline = base_output_location/f"amwg_table_{case_names[-1]}.csv"
+    case_name = case_names[0]
+    base_name = case_names[-1]
+    #This will be for single-case table generation
+    #NOTE: this will get called multiple times in a multi-case scenario
+    case = output_location/f"amwg_table_{case_name}.csv"
+    baseline = base_output_location/f"amwg_table_{base_name}.csv"
 
     #Read in test case and baseline dataframes:
     df_case = pd.read_csv(case)
@@ -428,7 +436,7 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
-    adf.add_website_data(df_comp, "case_comparison", case_names[0], plot_type="Tables")
+    adf.add_website_data(df_comp, "case_comparison", case_name, plot_type="Tables")
 
 
 def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
