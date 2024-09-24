@@ -729,8 +729,14 @@ class AdfDiag(AdfWeb):
                     ]
 
                     # Add to command list for use in multi-processing pool:
+                    # -----------------------------------------------------
+                    # generate time series files
                     list_of_commands.append(cmd)
+                    # Add global attributes: user, original hist file loc(s) and all filenames
                     list_of_commands2.append(cmd_ncatted)
+                    # Remove the `history` attr that gets tacked on (for clean up)
+                    # NOTE: this may not be best practice, but it the history attr repeats the files attrs
+                    #       so the global attrs become obtrusive...
                     list_of_commands3.append(cmd_remove_history)
 
                 # End variable loop
