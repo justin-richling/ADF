@@ -350,11 +350,6 @@ class AdfInfo(AdfConfig):
 
          # Check if this is multi-case and adjust appropriately
         if len(case_names) > 1:
-            #cam_hist_str_eh = []
-            #for i in cam_hist_str[0]:
-            #    cam_hist_str_eh.append([i])
-            #cam_hist_str = cam_hist_str_eh
-
             cam_hist_str = [[i] for i in cam_hist_str[0]]
 
         if not cam_hist_str:
@@ -362,6 +357,8 @@ class AdfInfo(AdfConfig):
         else:
             hist_str_dict = cam_hist_str
         #End if
+
+        print("hist_str_dict",hist_str_dict,"\n")
 
         #Initialize CAM history string nested list
         self.__hist_str = hist_str_dict
@@ -433,7 +430,6 @@ class AdfInfo(AdfConfig):
                 else:
                     hist_str = hist_strs
                 print("hist_str",hist_str,"\n")
-
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
