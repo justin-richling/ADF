@@ -430,7 +430,7 @@ class AdfWeb(AdfObs):
 
         #Dictionary for multi-case website plot types
         multi_plots = {"Tables": "html_table/mean_tables.html",
-                       #"Special":"html_img/multi_case_mean_diag_Special.html"
+                       "Special":"html_img/multi_case_mean_diag_Special.html"
                        }
 
         #Set plot type html dictionary (for Jinja templating):
