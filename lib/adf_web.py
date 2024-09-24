@@ -454,6 +454,7 @@ class AdfWeb(AdfObs):
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
                                                         f"multi_case_mean_diag_{plot_type}.html")
                 #End if
+                print("multi_plot_type_html[plot_type]",plot_type,multi_plot_type_html[plot_type],"\n")
             #End for
 
         #Set main title for website:
