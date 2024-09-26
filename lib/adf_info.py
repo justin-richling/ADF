@@ -200,7 +200,7 @@ class AdfInfo(AdfConfig):
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if baseline_ts_done:
-                baseline_hist_locs = [None]
+                baseline_hist_locs = None
 
                 #Grab baseline time series file location
                 input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
@@ -372,7 +372,7 @@ class AdfInfo(AdfConfig):
 
             #Check if time series files exist, if so don't rely on climo years
             if cam_ts_done[case_idx]:
-                cam_hist_locs[case_idx] = [None]
+                cam_hist_locs[case_idx] = None
 
                 #Grab case time series file location
                 input_ts_loc = Path(input_ts_locs[case_idx])
