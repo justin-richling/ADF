@@ -129,7 +129,7 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
     if show_err_msg:
         if isinstance(constit_list, list) and not constit_list:
             adfobj.debug_log(constit_errmsg)"""
-
+    print(isinstance(constit_list, list),constit_list)
     if isinstance(constit_list, list) and not constit_list:
         adfobj.debug_log(constit_errmsg)
 
