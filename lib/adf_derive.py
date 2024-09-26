@@ -104,7 +104,7 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
             # Print to log file and set flag for further down to not repeat message?
             #show_err_msg = False
             adfobj.debug_log(constit_errmsg)
-            return
+            return diag_var_list, constit_dict
         # End if
     # End if
     
