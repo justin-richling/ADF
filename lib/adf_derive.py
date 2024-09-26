@@ -79,6 +79,7 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
     constit_list = []
 
     try_cam_constits = True
+    show_err_msg = True
     # Try finding info from variable defaults yaml file
     try:
         vres = res[var]
@@ -100,6 +101,8 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
                 msg += f"checking constituents for '{var}'"
                 adfobj.debug_log(msg)
         else:
+            # Print to log file and set flag for further down to not repeat message?
+            #show_err_msg = False
             adfobj.debug_log(constit_errmsg)
         # End if
     # End if
@@ -109,6 +112,7 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
         if "derivable_from" in vres:
             constit_list = vres["derivable_from"]
         else:
+            # constit_list will be what?
             # Missing variable or missing derivable_from argument
             der_from_msg = f"derive time series for {case_name}:"
             der_from_msg += f"\n Can't create time series for {var}.\n\tEither "
@@ -121,7 +125,11 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
         # End if
     # End if
 
-    # Log if this variable can be derived but is missing list of constituents
+    """# Log if this variable can be derived but is missing list of constituents
+    if show_err_msg:
+        if isinstance(constit_list, list) and not constit_list:
+            adfobj.debug_log(constit_errmsg)"""
+
     if isinstance(constit_list, list) and not constit_list:
         adfobj.debug_log(constit_errmsg)
 
@@ -211,6 +219,7 @@ def derive_variable(adfobj, case_name, var, res, ts_dir,
                 msg = f"[{__name__}] Warning: '{var}' file was found "
                 msg += "and overwrite is False. Will use existing file."
                 print(msg)
+                return
 
         #NOTE: this will need to be changed when derived equations are more complex! - JR
         if var == "RESTOM":
