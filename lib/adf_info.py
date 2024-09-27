@@ -421,6 +421,7 @@ class AdfInfo(AdfConfig):
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
                 file_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
+                print("file_list",file_list,"\n")
                 #Partition string to find exactly where h-number is
                 #This cuts the string before and after the `{hist_str}.` sub-string
                 # so there will always be three parts:
