@@ -430,7 +430,9 @@ class AdfInfo(AdfConfig):
                 #  $CASE.cam.h#.YYYY<other date info>.nc
                 case_climo_yrs = [int(str(i).partition(f"{hist_str}.")[2][0:4]) for i in file_list]
                 case_climo_yrs = sorted(np.unique(case_climo_yrs))
-                print("case_climo_yrs",case_climo_yrs,"\n")
+                print("case_climo_yrs",case_climo_yrs,type(case_climo_yrs),"\n")
+                if not case_climo_yrs:
+                    print("Yeah, it's an empty list. Why did this not get checked before getting here. I mean come on.")
 
                 case_found_syr = int(case_climo_yrs[0])
                 case_found_eyr = int(case_climo_yrs[-1])
