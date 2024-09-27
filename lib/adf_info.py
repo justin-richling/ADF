@@ -420,8 +420,15 @@ class AdfInfo(AdfConfig):
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
+                print("starting_location",starting_location,"\n")
+                #ug = Path()
+                print("WoOOooHAHahahAhsd",starting_location.is_dir())
                 file_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                print("file_list",file_list,"\n")
+                print("file_list",file_list)
+                if len(file_list) == 0:
+                    print("\tYeah, it's an empty list. Why did this not get checked before getting here. I mean come on.\n")
+                else:
+                    print()
                 #Partition string to find exactly where h-number is
                 #This cuts the string before and after the `{hist_str}.` sub-string
                 # so there will always be three parts:
@@ -431,10 +438,12 @@ class AdfInfo(AdfConfig):
                 #  $CASE.cam.h#.YYYY<other date info>.nc
                 case_climo_yrs = [int(str(i).partition(f"{hist_str}.")[2][0:4]) for i in file_list]
                 case_climo_yrs = sorted(np.unique(case_climo_yrs))
-                print("case_climo_yrs",case_climo_yrs,type(case_climo_yrs),"\n")
+                print("case_climo_yrs",case_climo_yrs,type(case_climo_yrs))
                 print(len(case_climo_yrs))
                 if len(case_climo_yrs) == 0:
-                    print("Yeah, it's an empty list. Why did this not get checked before getting here. I mean come on.")
+                    print("Yeah, it's an empty list. Why did this not get checked before getting here. I mean come on.\n")
+                else:
+                    print()
 
                 case_found_syr = int(case_climo_yrs[0])
                 case_found_eyr = int(case_climo_yrs[-1])
