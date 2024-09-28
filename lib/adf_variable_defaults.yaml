@@ -69,7 +69,7 @@
 # Available ADF Default Plot Types
 #+++++++++++++
 default_ptypes: ["Tables","LatLon","LatLon_Vector","Zonal","Meridional",
-                  "NHPolar","SHPolar","Special"]
+                  "NHPolar","SHPolar","Special","TimeSeries","Chemistry"]
 
 #+++++++++++++
 # Constants
@@ -175,6 +175,18 @@ AODVISdn:
   obs_file: "MOD08_M3_192x288_AOD_2001-2020_climo.nc"
   obs_name: "MODIS"
   obs_var_name: "AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean"
+
+  aod_diags:
+    plot_params:
+      range_min: -0.4
+      range_max: 0.4
+      nlevel: 17
+
+    plot_params_relerr:
+      range_max: 100
+      range_min: -100
+      nlevel: 21
+
 
 BURDENBC:
   category: "Aerosols"
