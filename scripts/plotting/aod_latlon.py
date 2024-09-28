@@ -139,7 +139,7 @@ def aod_latlon(adfobj):
 
         #Skip this variable/case if the regridded climo file doesn't exist:
         if mdata is None:
-            dmsg = f"No regridded test file for {case_name} for variable `{var}`, global lat/lon plots skipped."
+            dmsg = f"No regridded test file for {case} for variable `{var}`, global lat/lon plots skipped."
             adfobj.debug_log(dmsg)
             continue
         casedir = f"{mam_dir}/{case}/yrs_{syears[idx]}-{eyears[idx]}/"
