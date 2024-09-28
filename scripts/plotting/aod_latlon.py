@@ -43,15 +43,15 @@ def aod_latlon(adfobj):
     case_nicknames = test_nicknames + [base_nickname]
 
     #Grab case years
-    syears = adfobj.climo_yrs["syears"]
-    eyears = adfobj.climo_yrs["eyears"]
+    syears_case = adfobj.climo_yrs["syears"]
+    eyears_case = adfobj.climo_yrs["eyears"]
 
     #Grab baseline years (which may be empty strings if using Obs):
     #syear_baseline = adfobj.climo_yrs["syear_baseline"]
     #eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
-    syears += adfobj.climo_yrs["syear_baseline"]
-    eyears += adfobj.climo_yrs["eyear_baseline"]
+    syears = syears_case + adfobj.climo_yrs["syear_baseline"]
+    eyears = eyears_case = adfobj.climo_yrs["eyear_baseline"]
 
     plot_dir = adfobj.plot_location
 
