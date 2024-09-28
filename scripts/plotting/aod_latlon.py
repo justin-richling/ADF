@@ -44,7 +44,6 @@ def aod_latlon(adfobj):
 
     #Grab case years
     syears_case = adfobj.climo_yrs["syears"]
-    print("syears_case",syears_case)
     eyears_case = adfobj.climo_yrs["eyears"]
 
     #Grab baseline years (which may be empty strings if using Obs):
