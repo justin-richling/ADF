@@ -302,7 +302,7 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
     plot_type = basic_info_dict.get('plot_type', 'png')
 
-    plot_dir = adfobj.plot_location
+    plot_dir = adfobj.plot_location[0]
 
     states_provinces = cfeature.NaturalEarthFeature(
         category='cultural',
