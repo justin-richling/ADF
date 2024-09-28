@@ -33,8 +33,8 @@ def aod_latlon(adfobj):
     var = "AODVISdn"
     season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
 
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_names += adfobj.get_baseline_info('cam_case_name')
+    test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    case_names = test_case_names + [adfobj.get_baseline_info('cam_case_name')]
 
     base_name = adfobj.get_baseline_info('cam_case_name')
 
