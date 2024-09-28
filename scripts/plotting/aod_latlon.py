@@ -51,7 +51,7 @@ def aod_latlon(adfobj):
     #eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
     syears = syears_case + adfobj.climo_yrs["syear_baseline"]
-    eyears = eyears_case = adfobj.climo_yrs["eyear_baseline"]
+    eyears = eyears_case + adfobj.climo_yrs["eyear_baseline"]
 
     plot_dir = adfobj.plot_location
 
