@@ -96,6 +96,9 @@ class AdfInfo(AdfConfig):
                 self.expand_references(self.__mdtf_info)
         # End if
 
+        # Get the current system user
+        self.__user = getpass.getuser()
+
         # Check if inputs are of the correct type:
         # -------------------------------------------
 
