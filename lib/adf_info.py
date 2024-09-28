@@ -89,7 +89,9 @@ class AdfInfo(AdfConfig):
 
         # Add MDTF info to object:
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
-        if self.__mdtf_info['mdtf_run']:
+
+        if self.__mdtf_info is not None:
+            if self.__mdtf_info['mdtf_run']:
                 self.expand_references(self.__mdtf_info)
         # End if
 
