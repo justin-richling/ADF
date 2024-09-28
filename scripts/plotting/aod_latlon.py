@@ -30,6 +30,7 @@ def my_formatwarning(msg, *args, **kwargs):
 
 
 def aod_latlon(adfobj):
+    var = "AODVISdn"
     season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
 
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
@@ -125,7 +126,7 @@ def aod_latlon(adfobj):
 
     #file_mam4_1 = os.path.join(mam4_1_dir, f'{case_names[0]}_AODVISdn_climo.nc')
     #file_mam4_2 = os.path.join(mam4_2_dir, f'{case_names[1]}_AODVISdn_climo.nc')
-    var = "AODVISdn"
+
     for idx,case in enumerate(case_names):
         """
         TODO: Need to check grid of test data in case they are on a different
