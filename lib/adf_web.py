@@ -538,12 +538,26 @@ class AdfWeb(AdfObs):
                     mean_html_info[ptype][category] = OrderedDict()
                 #End if
 
-                #Initialize Ordered Dictionary for variable:
+                """#Initialize Ordered Dictionary for variable:
                 if var not in mean_html_info[ptype][category]:
                     if web_data.cat_sub:
                         var = web_data.cat_sub
                     mean_html_info[ptype][category][var] = OrderedDict()
-                #End if
+                #End if"""
+
+                if var not in mean_html_info[ptype][category]:
+                    # Variable name to move
+                    var_to_move = '4-Panel AOD Diags'
+
+                    # Check if the variable exists in the OrderedDict
+                    if var_to_move in mean_html_info[ptype][category]:
+                        # Pop the variable (removes it from the OrderedDict)
+                        var_value = mean_html_info[ptype][category].pop(var_to_move)
+                        
+                        # Re-insert it at the first position
+                        mean_html_info[ptype][category] = OrderedDict([(var_to_move, var_value)] + list(mean_html_info[ptype][category].items()))
+
+                    mean_html_info[ptype][category][var] = OrderedDict()
 
                 #Initialize Ordered Dictionary for season:
                 mean_html_info[ptype][category][var][season] = web_data.html_file.name
