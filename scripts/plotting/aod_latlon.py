@@ -187,6 +187,7 @@ def aod_latlon(adfobj):
     ds_merra2['lat'] = ds_merra2['lat'].round(5)
 
     ds_mod08_m3 = xr.open_dataset(file_mod08_m3)
+    print(ds_mod08_m3)
     ds_mod08_m3 = ds_mod08_m3['AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean']
     ds_mod08_m3['lon'] = ds_mod08_m3['lon'].round(5)
     ds_mod08_m3['lat'] = ds_mod08_m3['lat'].round(5)
