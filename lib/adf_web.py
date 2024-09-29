@@ -230,12 +230,12 @@ class AdfWeb(AdfObs):
         #Check that the web_data is either a path
         #or a pandas dataframe:
         try:
-            if cat_sub:
-                web_data = Path(cat_sub)
-            else:
-                web_data = Path(web_data)
+            #if cat_sub:
+            #    web_data = Path(cat_sub)
+            #else:
+            web_data = Path(web_data)
 
-            print("web_data",web_data,"\n")
+            #print("web_data",web_data,"\n")
 
             #Make sure the path is to an actual file:
             if not web_data.is_file():
