@@ -579,8 +579,9 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         if i in [0,2]:
             uh = "Test"
         if i in [1,3]:
-            uh = "Base" 
-        adfobj.add_website_data(ind_plotfile, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category=f"{uh} Case AOD Diags")
+            uh = "Base"
+        ind_plotfile2 = f'AOD_vs_{obs_name.replace(" ","_")}_{types[i].replace(" ","_")}'
+        adfobj.add_website_data(ind_plotfile2, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category=f"{uh} Case AOD Diags")
         #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
         #print(ind_plotfile,"\n")
         plt.close(ind_fig)
