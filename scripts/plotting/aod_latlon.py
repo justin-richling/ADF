@@ -253,8 +253,8 @@ def aod_latlon(adfobj):
             for i_case,ds_case in enumerate(ds_cases):
                 case_nickname = case_nicknames[i_case]
                 print(f"{case_nickname} minus {obs_name}")
-                case_field = ds_case[:,:,season]- ds_ob[:,:,season]
-                #case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
+                #case_field = ds_case[:,:,season]- ds_ob[:,:,season]
+                case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
                 plotnames.append(f'{case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
                 fields.append(case_field)
                 params.append(plot_params)
@@ -262,8 +262,8 @@ def aod_latlon(adfobj):
                 case_namez.append(case_names[i_case])
 
                 print(f"{case_nickname} minus {obs_name} % Diff")
-                #field_relerr = 100 * case_field / ds_ob.sel(season=season)
-                field_relerr = 100 * case_field / ds_ob[:,:,season]
+                field_relerr = 100 * case_field / ds_ob.sel(season=season)
+                #field_relerr = 100 * case_field / ds_ob[:,:,season]
                 field_relerr = np.clip(field_relerr, -100, 100)
                 plotnames.append(f'Percent Diff {case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
                 fields.append(field_relerr)
