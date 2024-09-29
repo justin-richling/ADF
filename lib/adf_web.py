@@ -640,7 +640,7 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
-                #print("web_data.category",web_data.category,"\n")
+                print("web_data.name",web_data.name,"\n")
                 if web_data.category == "Test Case AOD Diags":
                     if web_data.season == "DJF":
                         #if web_data.case == self.data.ref_case_label:
