@@ -63,19 +63,6 @@ def aod_latlon(adfobj):
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
-
-    # Gather reference variable data
-    odata = adfobj.data.load_reference_regrid_da(base_name, var)
-
-    if odata is None:
-        dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
-        adfobj.debug_log(dmsg)
-        #continue
-
-    o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
-    if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
-        print(f"\t = skipping global map for {var} as REFERENCE does not have both lat and lon")
-        #continue
     
 
 
@@ -122,8 +109,30 @@ def aod_latlon(adfobj):
     #mam4_1_dir = f"{mam_dir}/{case_names[0]}/yrs_1997-2000/"
     #mam4_2_dir = f"{mam_dir}/{case_names[1]}/yrs_1997-2000/"
 
+    # Gather reference variable data
+    ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
 
+    if ds_base is None:
+        dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
+        adfobj.debug_log(dmsg)
+        #continue
 
+    #o_has_dims = pf.validate_dims(ds_base, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
+    #if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
+    #    print(f"\t = skipping global map for {var} as REFERENCE does not have both lat and lon")
+    #   #continue
+
+    #casedir = f"{mam_dir}/{case}/yrs_{syears[idx]}-{eyears[idx]}/"
+    #case_path = os.path.join(casedir, f'{case}_{var}_climo.nc')
+    #ds_case = xr.open_dataset(case_path)
+    """ds_base['lon'] = ds_base['lon'].round(5)
+    ds_base['lat'] = ds_base['lat'].round(5)
+
+    ds_base_season = monthly_to_seasonal(ds_base)
+    ds_base_season['lon'] = ds_base_season['lon'].round(5)
+    ds_base_season['lat'] = ds_base_season['lat'].round(5)
+    ds_base_season = ds_base_season[var]
+    ds_cases.append(ds_base_season)"""
     #file_mam4_1 = os.path.join(mam4_1_dir, f'{case_names[0]}_AODVISdn_climo.nc')
     #file_mam4_2 = os.path.join(mam4_2_dir, f'{case_names[1]}_AODVISdn_climo.nc')
 
@@ -135,16 +144,17 @@ def aod_latlon(adfobj):
         """
         #mam_dir = 
         #Load re-gridded model files:
-        mdata = adfobj.data.load_regrid_da(case, var)
+
+        ds_case = adfobj.data.load_regrid_da(case, var)
 
         #Skip this variable/case if the regridded climo file doesn't exist:
-        if mdata is None:
+        if ds_case is None:
             dmsg = f"No regridded test file for {case} for variable `{var}`, global lat/lon plots skipped."
             adfobj.debug_log(dmsg)
             continue
-        casedir = f"{mam_dir}/{case}/yrs_{syears[idx]}-{eyears[idx]}/"
-        case_path = os.path.join(casedir, f'{case}_{var}_climo.nc')
-        ds_case = xr.open_dataset(case_path)
+        #casedir = f"{mam_dir}/{case}/yrs_{syears[idx]}-{eyears[idx]}/"
+        #case_path = os.path.join(casedir, f'{case}_{var}_climo.nc')
+        #ds_case = xr.open_dataset(case_path)
         ds_case['lon'] = ds_case['lon'].round(5)
         ds_case['lat'] = ds_case['lat'].round(5)
 
@@ -153,6 +163,17 @@ def aod_latlon(adfobj):
         ds_case_season['lat'] = ds_case_season['lat'].round(5)
         ds_case_season = ds_case_season[var]
         ds_cases.append(ds_case_season)
+    
+    
+    ds_base['lon'] = ds_base['lon'].round(5)
+    ds_base['lat'] = ds_base['lat'].round(5)
+
+    ds_base_season = monthly_to_seasonal(ds_base)
+    ds_base_season['lon'] = ds_base_season['lon'].round(5)
+    ds_base_season['lat'] = ds_base_season['lat'].round(5)
+    ds_base_season = ds_base_season[var]
+    ds_cases.append(ds_base_season)
+    
     case_num = len(ds_cases)
 
     # Observational Datasets
@@ -194,22 +215,22 @@ def aod_latlon(adfobj):
     for i_season in range(1):
         # Loop over all test cases - could be multi-case scenario
         for i_case,ds_case in enumerate(ds_cases):
-            #print(i_case)
+
             case_name = str(case_names[i_case])
             varname = ds_case.name
-
-            plotfile = case_name + '_' + varname + '_' + season_abbr[i_season]
+            #print("case_name",case_name)
+            plotfile = case_name + '_' + var + '_' + season_abbr[i_season]
             field = ds_case[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
 
-        print("OBSIES")
+        """print("OBSIES")
         # Loop over supplied obs datasets
         for i_obs,ds_ob in enumerate(ds_obs):
             obs_name = obs_titles[i_obs]
             plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
             field = ds_ob[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + season_abbr[i_season], plot_params, field, i_season)
-
+        """
     # 4-Panel global lat/lon plots
     #-----------------------------
     """for i_obs,ds_ob in enumerate(ds_obs):
