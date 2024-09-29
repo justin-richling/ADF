@@ -326,6 +326,7 @@ def monthly_to_seasonal(ds,obs=False):
 
     # Assign the 'season' labels to the new 'season' dimension
     ds_season['season'] = seasons
+    ds_season = ds_season.transpose('lat', 'lon', 'season')
 
     # The new DataArray now has dimensions ('season', 'lat', 'lon')
     #print(ds_season)
