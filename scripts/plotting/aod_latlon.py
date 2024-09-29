@@ -109,13 +109,6 @@ def aod_latlon(adfobj):
     #mam4_1_dir = f"{mam_dir}/{case_names[0]}/yrs_1997-2000/"
     #mam4_2_dir = f"{mam_dir}/{case_names[1]}/yrs_1997-2000/"
 
-    # Gather reference variable data
-    ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
-
-    if ds_base is None:
-        dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
-        adfobj.debug_log(dmsg)
-        #continue
 
     #o_has_dims = pf.validate_dims(ds_base, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
     #if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
@@ -146,7 +139,7 @@ def aod_latlon(adfobj):
         #Load re-gridded model files:
 
         ds_case = adfobj.data.load_regrid_da(case, var)
-
+        ds_case = ds_case[var]
         #Skip this variable/case if the regridded climo file doesn't exist:
         if ds_case is None:
             dmsg = f"No regridded test file for {case} for variable `{var}`, global lat/lon plots skipped."
@@ -164,7 +157,14 @@ def aod_latlon(adfobj):
         ds_case_season = ds_case_season[var]
         ds_cases.append(ds_case_season)
     
-    
+    # Gather reference variable data
+    ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
+    ds_base = ds_base[var]
+    if ds_base is None:
+        dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
+        adfobj.debug_log(dmsg)
+        #continue
+
     ds_base['lon'] = ds_base['lon'].round(5)
     ds_base['lat'] = ds_base['lat'].round(5)
 
@@ -304,10 +304,10 @@ def monthly_to_seasonal(ds):
         if '_n' not in varname:
             print(varname)
             # MAM, JJA, SON, DJF
-            ds_season = xr.zeros_like(da_season)
+            ds_season[varname] = xr.zeros_like(da_season)
 
             for i,s in enumerate(["DJF","MAM","JJA","SON"]):
-                ds_season.values[:,:,i] = pf.seasonal_mean(ds, season=s, is_climo=True)
+                ds_season[varname].values[:,:,i] = pf.seasonal_mean(ds[varname], season=s, is_climo=True)
     return ds_season
 
 
