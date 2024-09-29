@@ -640,8 +640,8 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
-                print("web_data.category",web_data.category,"\n")
-                if web_data.category == "Chemistry":
+                #print("web_data.category",web_data.category,"\n")
+                if web_data.category == "Test Case AOD Diags":
                     print(web_data)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
