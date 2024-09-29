@@ -32,6 +32,8 @@ def my_formatwarning(msg, *args, **kwargs):
 def aod_latlon(adfobj):
     var = "AODVISdn"
     season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
+    # Define a list of season labels
+    seasons = ['MAM', 'JJA', 'SON','DJF']
 
     test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
     case_names = test_case_names + [adfobj.get_baseline_info('cam_case_name')]
@@ -235,7 +237,7 @@ def aod_latlon(adfobj):
     # 4-Panel global lat/lon plots
     #-----------------------------
     for i_obs,ds_ob in enumerate(ds_obs):
-        for s in range(1):
+        for i_s,season in enumerate(seasons):
             plotnames = []
             fields = []
             params = []
@@ -244,13 +246,13 @@ def aod_latlon(adfobj):
             season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
 
             obs_name = obs_titles[i_obs]
-            season = season_abbr[s]
+            season = season_abbr[i_s]
             print(season)
 
             for i_case,ds_case in enumerate(ds_cases):
                 case_nickname = case_nicknames[i_case]
                 print(f"{case_nickname} minus {obs_name}")
-                case_field = ds_case.sel(season=s) - ds_ob.sel(season=s)
+                case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
                 plotnames.append(f'{case_nickname} - {obs_name}\nAOD 550 nm - ' + season)
                 fields.append(case_field)
                 params.append(plot_params)
@@ -258,7 +260,7 @@ def aod_latlon(adfobj):
                 case_namez.append(case_names[i_case])
 
                 print(f"{case_nickname} minus {obs_name} % Diff")
-                field_relerr = 100 * case_field / ds_ob.sel(season=s)
+                field_relerr = 100 * case_field / ds_ob.sel(season=season)
                 field_relerr = np.clip(field_relerr, -100, 100)
                 plotnames.append(f'Percent Diff {case_nickname} - {obs_name}\nAOD 550 nm - ' + season)
                 fields.append(field_relerr)
