@@ -664,12 +664,16 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 #End if
                 # var_name
-                """print("web_data.name",web_data.name,"\n")
+                
+
+                if web_data.cat_sub:
+                    var2 = web_data.cat_sub
                 if web_data.category == "Test Case AOD Diags":
                     if web_data.season == "DJF":
                         #if web_data.case == self.data.ref_case_label:
                         if 1==1:
-                            print("WOWSA:",mean_html_info[web_data.plot_type][web_data.category]['AOD_f.e30_beta02.FMTHIST.ne30.104_vs_TERRA_MODIS_Diff']["DJF"],"\n\n\n")"""
+                            print("web_data.name",web_data.name)
+                            print("WOWSA:",mean_html_info[web_data.plot_type][web_data.category][var2]["DJF"],"\n\n\n")
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
