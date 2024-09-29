@@ -290,7 +290,7 @@ def aod_latlon(adfobj):
 
 
 
-def monthly_to_seasonal(ds):
+def monthly_to_seasonal(ds,obs=False):
     da = xr.DataArray(
         coords={'lat': ds.coords['lat'], 'lon': ds.coords['lon']},
         dims=['lat', 'lon'])
@@ -300,14 +300,17 @@ def monthly_to_seasonal(ds):
     da_season = xr.DataArray(
          coords=ds_season.coords, dims=['lat', 'lon', 'season'])
 
-    """for varname in ds:
-        if '_n' not in varname:
-            #print(varname)
-            # MAM, JJA, SON, DJF
-            #ds_season[varname] = xr.zeros_like(da_season)"""
-
-    for i,s in enumerate(["DJF","MAM","JJA","SON"]):
-        ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+    if obs:
+        for varname in ds:
+            if '_n' not in varname:
+                #print(varname)
+                # MAM, JJA, SON, DJF
+                ds_season = xr.zeros_like(da_season)
+                for i,s in enumerate(["DJF","MAM","JJA","SON"]):
+                    ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+    else:
+        for i,s in enumerate(["DJF","MAM","JJA","SON"]):
+            ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
     return ds_season
 
 
