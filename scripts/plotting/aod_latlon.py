@@ -213,28 +213,28 @@ def aod_latlon(adfobj):
 
     # Individual global lat/lon plots
     #--------------------------------
-    for i_season in range(1):
-        # Loop over all test cases - could be multi-case scenario
-        for i_case,ds_case in enumerate(ds_cases):
-
-            case_name = str(case_names[i_case])
-            varname = ds_case.name
-            #print("case_name",case_name)
-            plotfile = case_name + '_' + var + '_' + season_abbr[i_season]
-            field = ds_case[:,:,i_season]
-            plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
-
-        """print("OBSIES")
+    #for i_season in range(1):
+    #    # Loop over all test cases - could be multi-case scenario
+    #    for i_case,ds_case in enumerate(ds_cases):
+    #
+    #        case_name = str(case_names[i_case])
+    #        varname = ds_case.name
+    #        #print("case_name",case_name)
+    #        plotfile = case_name + '_' + var + '_' + season_abbr[i_season]
+    #        field = ds_case[:,:,i_season]
+    #        plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
+    """
+        print("OBSIES")
         # Loop over supplied obs datasets
         for i_obs,ds_ob in enumerate(ds_obs):
             obs_name = obs_titles[i_obs]
             plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
             field = ds_ob[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + season_abbr[i_season], plot_params, field, i_season)
-        """
+    """
     # 4-Panel global lat/lon plots
     #-----------------------------
-    """for i_obs,ds_ob in enumerate(ds_obs):
+    for i_obs,ds_ob in enumerate(ds_obs):
         for s in range(1):
             plotnames = []
             fields = []
@@ -266,7 +266,7 @@ def aod_latlon(adfobj):
                 types.append("Percent Diff")
                 case_namez.append(case_names[i_case])
 
-            yeah_boi(plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)"""
+            yeah_boi(plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
 
 
 
@@ -427,8 +427,8 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     png_file = Path(plot_dir) / plotfile
     print("png_file")
     #png_file = Path(plot_dir) / f'QBO_Amplitude_Special_Mean.{plot_type}'
-    adfobj.add_website_data(png_file, f"AOD_{case_name}", None, season=season, multi_case=True, plot_type="Chemistry")
-    print()
+    #adfobj.add_website_data(png_file, f"AOD_{case_name}", None, season=season, multi_case=True, plot_type="Chemistry")
+    #print()
     # Write final figure to file
     plt.savefig(png_file, bbox_inches='tight', dpi=300)
     # plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
@@ -442,11 +442,13 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
 
 
 def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
-
-    plotfile = f'aod_output2/cases_vs_{obs_name.replace(" ","_")}_{season}'
-    png_file = plotfile + '.png'
-    pdf_file = plotfile + '.pdf'
-    ps_file = plotfile + '.ps'
+    plot_dir = adfobj.plot_location[0]
+    #plotfile = f'aod_output2/cases_vs_{obs_name.replace(" ","_")}_{season}'
+    plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_Chemistry_Mean.{plot_type}'
+    png_file = Path(plot_dir) / plotfile
+    #png_file = plotfile + '.png'
+    #pdf_file = plotfile + '.pdf'
+    #ps_file = plotfile + '.ps'
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
@@ -557,8 +559,10 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         ind_ax"""
 
         # Save the individual figure
-        ind_plotfile = f'aod_output2/{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_{types[i]}'
-        adfobj.add_website_data(ind_plotfile, "AOD", None, season=season, multi_case=True)
+        #ind_plotfile = f'aod_output2/{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_{types[i]}'
+        ind_plotfile = f'AOD_{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_Chemistry_Mean.{plot_type}'
+        adfobj.add_website_data(ind_plotfile, "AOD", None, season=season, multi_case=False, plot_type="Chemistry")
+        #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
         print(ind_plotfile,"\n")
         ind_fig.savefig(f'{ind_plotfile}.{plot_type}', bbox_inches='tight', dpi=300)
         plt.close(ind_fig)
@@ -568,7 +572,8 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
 
     # Save the 4-panel figure
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
-    fig.savefig(pdf_file, bbox_inches='tight')
-    command = 'pdf2ps ' + pdf_file + ' ' + ps_file
-    os.system(command)
+    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
+    #fig.savefig(pdf_file, bbox_inches='tight')
+    #command = 'pdf2ps ' + pdf_file + ' ' + ps_file
+    #os.system(command)
     plt.close(fig)

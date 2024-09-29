@@ -229,6 +229,8 @@ class AdfWeb(AdfObs):
         try:
             web_data = Path(web_data)
 
+            print("web_data",web_data,"\n")
+
             #Make sure the path is to an actual file:
             if not web_data.is_file():
                 wmsg = f"The provided web data path '{web_data}'"
