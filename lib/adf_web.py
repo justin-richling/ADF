@@ -350,6 +350,9 @@ class AdfWeb(AdfObs):
         def jinja_list(seas_list):
             return list(seas_list)
 
+        def jinja_print(arg):
+            return print(arg)
+
         #Notify user that script has started:
         print("\n  Generating Diagnostics webpages...")
 
@@ -694,6 +697,7 @@ class AdfWeb(AdfObs):
                 #    rend_kwarg_dict["html_name"] = web_data.cat_sub
                 #except:
                 #    print("asdfasdf")
+
                 tmpl = jinenv.get_template('template.html')  #Set template
                 rndr = tmpl.render(rend_kwarg_dict) #The template rendered
 
@@ -712,6 +716,7 @@ class AdfWeb(AdfObs):
                 #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                 templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'season_title'}}
                 templ_rend_kwarg_dict["list"] = jinja_list
+                templ_rend_kwarg_dict["print"] = jinja_print
                 mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
 
                 #Write mean diagnostic plots HTML file:
