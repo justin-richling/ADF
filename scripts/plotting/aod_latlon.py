@@ -155,6 +155,8 @@ def aod_latlon(adfobj):
         ds_case_season['lon'] = ds_case_season['lon'].round(5)
         ds_case_season['lat'] = ds_case_season['lat'].round(5)
         #ds_case_season = ds_case_season[var]
+        if idx == 0:
+            print("\n",ds_case_season,"\n")
         ds_cases.append(ds_case_season)
     
     # Gather reference variable data
