@@ -529,16 +529,34 @@ class AdfWeb(AdfObs):
                     #End if
                 #End if
 
-                #Initialize Ordered Dictionary for plot type:
+                """#Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
                     mean_html_info[ptype] = OrderedDict()
                 #End if
 
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
+                #End if"""
+
+                #Initialize Ordered Dictionary for plot type:
+                if ptype not in mean_html_info:
+                    mean_html_info[ptype] = OrderedDict()
                 #End if
 
-                """#Initialize Ordered Dictionary for variable:
+                # Initialize Ordered Dictionary for category if not exists
+                if category not in mean_html_info[ptype]:
+                    mean_html_info[ptype][category] = OrderedDict()
+                if ptype == "Chemistry":
+                    match_string = "4-Panel AOD Diags"
+                    # Check if the matching category exists
+                    if match_string in mean_html_info[ptype]:
+                        # Pop the matching category
+                        cat_value = mean_html_info[ptype].pop(match_string)
+                        
+                        # Re-insert the matching category at the front
+                        mean_html_info[ptype] = OrderedDict([(match_string, cat_value)] + list(mean_html_info[ptype].items()))
+
+                #Initialize Ordered Dictionary for variable:
                 if var not in mean_html_info[ptype][category]:
                     if web_data.cat_sub:
                         var = web_data.cat_sub
@@ -547,31 +565,8 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for season:
                 mean_html_info[ptype][category][var][season] = web_data.html_file.name
-                """
+                
 
-                # Ensure the plot type and category exist in the dictionary
-                if var not in mean_html_info[ptype][category]:
-                    # Variable name to move
-                    var_to_move = '4-Panel AOD Diags'
-
-                    # Check if the variable exists in the OrderedDict
-                    if var_to_move in mean_html_info[ptype][category]:
-                        # Pop the variable (removes it from the OrderedDict)
-                        var_value = mean_html_info[ptype][category].pop(var_to_move)
-
-                        # Add the new var entry first
-                        mean_html_info[ptype][category][var] = OrderedDict()
-
-                        # Re-insert the popped '4-Panel AOD Diags' at the first position
-                        mean_html_info[ptype][category] = OrderedDict(
-                            [(var_to_move, var_value)] + list(mean_html_info[ptype][category].items())
-                        )
-                    else:
-                        # If '4-Panel AOD Diags' is not in the dictionary, just add the new var
-                        mean_html_info[ptype][category][var] = OrderedDict()
-
-                # Initialize Ordered Dictionary for the season:
-                mean_html_info[ptype][category][var][season] = web_data.html_file.name
 
 
                 #Initialize Ordered Dictionary for non season kwarg:
