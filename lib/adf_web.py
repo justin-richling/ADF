@@ -642,7 +642,7 @@ class AdfWeb(AdfObs):
                 #End if
                 #print("web_data.category",web_data.category,"\n")
                 if web_data.category == "Test Case AOD Diags":
-                    print(web_data)
+                    print(mean_html_info[web_data.plot_type])
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
