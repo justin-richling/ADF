@@ -587,7 +587,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
     if season == "MAM":
-        png_file2 = png_file.replace(season,"ANN")
+        png_file2 = str(png_file).replace(season,"ANN")
         adfobj.add_website_data(png_file2, f'AOD_diff_{obs_name.replace(" ","_")}', None, season="ANN", multi_case=True, plot_type="Chemistry")
     #fig.savefig(pdf_file, bbox_inches='tight')
     #command = 'pdf2ps ' + pdf_file + ' ' + ps_file
