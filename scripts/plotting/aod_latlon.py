@@ -304,10 +304,10 @@ def monthly_to_seasonal(ds):
         if '_n' not in varname:
             print(varname)
             # MAM, JJA, SON, DJF
-            ds_season[varname] = xr.zeros_like(da_season)
+            ds_season = xr.zeros_like(da_season)
 
             for i,s in enumerate(["DJF","MAM","JJA","SON"]):
-                ds_season[varname].values[:,:,i] = pf.seasonal_mean(ds[varname], season=s, is_climo=True)
+                ds_season.values[:,:,i] = pf.seasonal_mean(ds, season=s, is_climo=True)
     return ds_season
 
 
