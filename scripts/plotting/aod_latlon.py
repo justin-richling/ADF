@@ -425,8 +425,10 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     #plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
     plotfile = f"AOD_{case_name}_{season}_Chemistry_Mean.{plot_type}"
     png_file = Path(plot_dir) / plotfile
+    print("png_file")
     #png_file = Path(plot_dir) / f'QBO_Amplitude_Special_Mean.{plot_type}'
     adfobj.add_website_data(png_file, f"AOD_{case_name}", None, season=season, multi_case=True, plot_type="Chemistry")
+    print()
     # Write final figure to file
     plt.savefig(png_file, bbox_inches='tight', dpi=300)
     # plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
