@@ -70,7 +70,7 @@
                           <a href="../html_img/plot_page_{{ var_name }}_{{ season }}_{{ plottype_title }}_Mean.html"> {{var_name}} </a><br>
                         </div><!--grid-item2-->
                       {% endif %}
-                  
+                    {% endif %}<!-- check for var_name and var_title -->
                   {% endfor %}<!-- ptype_seas.keys() -->
 
                 {% else %}
