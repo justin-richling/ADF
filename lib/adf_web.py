@@ -540,8 +540,8 @@ class AdfWeb(AdfObs):
 
                 #Initialize Ordered Dictionary for variable:
                 if var not in mean_html_info[ptype][category]:
-                    if self.cat_sub:
-                        var = self.cat_sub
+                    if web_data.cat_sub:
+                        var = web_data.cat_sub
                     mean_html_info[ptype][category][var] = OrderedDict()
                 #End if
 
