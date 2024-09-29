@@ -574,7 +574,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         #ind_plotfile = f'aod_output2/{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_{types[i]}'
         pbase = f'AOD_{case_name[i]}_vs_{obs_name.replace(" ","_")}_{types[i].replace(" ","_")}'
         ind_plotfile = f'{pbase}_{season}_Chemistry.{file_type}'
-        adfobj.add_website_data(ind_plotfile, pbase, case_name[i], season=season, multi_case=False, plot_type="Chemistry", category="AOD Diags")
+        adfobj.add_website_data(ind_plotfile, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category="AOD Diags")
         #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
         #print(ind_plotfile,"\n")
         ind_fig.savefig(f'{ind_plotfile}', bbox_inches='tight', dpi=300)
