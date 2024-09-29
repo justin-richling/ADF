@@ -457,8 +457,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
 
     plot_dir = adfobj.plot_location[0]
     #plotfile = f'aod_output2/cases_vs_{obs_name.replace(" ","_")}_{season}'
-    plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_Chemistry_Mean.{plot_type}'
-    png_file = Path(plot_dir) / plotfile
+
     #png_file = plotfile + '.png'
     #pdf_file = plotfile + '.pdf'
     #ps_file = plotfile + '.ps'
@@ -584,6 +583,8 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         # adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
 
     # Save the 4-panel figure
+    plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_Chemistry_Mean.{plot_type}'
+    png_file = Path(plot_dir) / plotfile
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
     #if season == "MAM":
