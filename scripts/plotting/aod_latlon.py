@@ -271,7 +271,8 @@ def aod_latlon(adfobj):
                 types.append("Percent Diff")
                 case_namez.append(case_names[i_case])
 
-            yeah_boi(plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
+            yeah_boi(adfobj, plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
+            #yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, symmetric=False)
 
 
 
@@ -445,7 +446,7 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
 
 
 
-
+#yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False)
 def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
     plot_dir = adfobj.plot_location[0]
     #plotfile = f'aod_output2/cases_vs_{obs_name.replace(" ","_")}_{season}'
@@ -565,7 +566,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
 
         # Save the individual figure
         #ind_plotfile = f'aod_output2/{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_{types[i]}'
-        ind_plotfile = f'AOD_{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_Chemistry_Mean.{plot_type}'
+        ind_plotfile = f'AOD_{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_Chemistry_{types[i]}.{plot_type}'
         adfobj.add_website_data(ind_plotfile, "AOD", None, season=season, multi_case=False, plot_type="Chemistry")
         #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
         print(ind_plotfile,"\n")
