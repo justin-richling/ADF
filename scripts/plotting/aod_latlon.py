@@ -306,7 +306,7 @@ def monthly_to_seasonal(ds):
             #ds_season[varname] = xr.zeros_like(da_season)
 
             for i,s in enumerate(["DJF","MAM","JJA","SON"]):
-                ds_season.values[:,:,i] = pf.seasonal_mean(ds, season=s, is_climo=True)
+                ds_season[:,:,i] = pf.seasonal_mean(ds, season=s, is_climo=True)
     return ds_season
 
 
