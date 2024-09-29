@@ -645,7 +645,7 @@ class AdfWeb(AdfObs):
                     if web_data.season == "DJF":
                         #if web_data.case == self.data.ref_case_label:
                         if 1==1:
-                            print("WOWSA:",mean_html_info[web_data.plot_type]["Test Case AOD Diags"].keys(),"\n\n\n")
+                            print("WOWSA:",mean_html_info[web_data.plot_type][web_data.category]['AOD_f.e30_beta02.FMTHIST.ne30.104_vs_TERRA_MODIS_Diff'].keys(),"\n\n\n")
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
