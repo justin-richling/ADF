@@ -573,7 +573,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         # Save the individual figure
         #ind_plotfile = f'aod_output2/{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_{types[i]}'
         ind_plotfile = f'AOD_{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_Chemistry_{types[i]}.{file_type}'
-        #adfobj.add_website_data(ind_plotfile, "AOD", None, season=season, multi_case=False, plot_type="Chemistry")
+        adfobj.add_website_data(ind_plotfile, f'AOD_{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}', case_name[i], season=season, multi_case=False, plot_type="Chemistry", category="AOD Diags")
         #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
         #print(ind_plotfile,"\n")
         ind_fig.savefig(f'{ind_plotfile}.{plot_type}', bbox_inches='tight', dpi=300)
@@ -586,7 +586,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
     plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_Chemistry_Mean.{plot_type}'
     png_file = Path(plot_dir) / plotfile
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
+    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry", category="AOD Diags")
     #if season == "MAM":
     #    png_file2 = str(png_file).replace(season,"ANN")
     #    adfobj.add_website_data(png_file2, f'AOD_diff_{obs_name.replace(" ","_")}', None, season="ANN", multi_case=True, plot_type="Chemistry")
