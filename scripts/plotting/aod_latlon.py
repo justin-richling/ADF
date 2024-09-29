@@ -131,7 +131,7 @@ def aod_latlon(adfobj):
     #file_mam4_1 = os.path.join(mam4_1_dir, f'{case_names[0]}_AODVISdn_climo.nc')
     #file_mam4_2 = os.path.join(mam4_2_dir, f'{case_names[1]}_AODVISdn_climo.nc')
 
-    for idx,case in enumerate(case_names):
+    for idx,case in enumerate(test_case_names):
         """
         TODO: Need to check grid of test data in case they are on a different
                  grid than these particular observational data sets!
