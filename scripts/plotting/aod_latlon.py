@@ -299,14 +299,14 @@ def monthly_to_seasonal(ds):
     da_season = xr.DataArray(
          coords=ds_season.coords, dims=['lat', 'lon', 'season'])
 
-    for varname in ds:
+    """for varname in ds:
         if '_n' not in varname:
-            print(varname)
+            #print(varname)
             # MAM, JJA, SON, DJF
-            #ds_season[varname] = xr.zeros_like(da_season)
+            #ds_season[varname] = xr.zeros_like(da_season)"""
 
-            for i,s in enumerate(["DJF","MAM","JJA","SON"]):
-                ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+    for i,s in enumerate(["DJF","MAM","JJA","SON"]):
+        ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
     return ds_season
 
 
