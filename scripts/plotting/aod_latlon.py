@@ -244,7 +244,7 @@ def aod_latlon(adfobj):
             types = []
             case_namez = []
             season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
-            print(ds_ob)
+            print("ds_ob",ds_ob,"\n")
 
             obs_name = obs_titles[i_obs]
             season = season_abbr[i_s]
