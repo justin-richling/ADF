@@ -688,6 +688,11 @@ class AdfWeb(AdfObs):
                                        "plot_types": plot_types,
                                        "seasons": seasons,
                                        "non_seasons": non_seasons[web_data.plot_type]}
+                try:
+                    web_data.cat_sub
+                    rend_kwarg_dict["alt_name"] = web_data.cat_sub
+                except:
+                    print("asdfasdf")
                 tmpl = jinenv.get_template('template.html')  #Set template
                 rndr = tmpl.render(rend_kwarg_dict) #The template rendered
 
