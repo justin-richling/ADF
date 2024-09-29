@@ -248,7 +248,7 @@ def aod_latlon(adfobj):
 
             obs_name = obs_titles[i_obs]
             chem_season = season_abbr[i_s]
-            print(season)
+            #print(season)
 
             for i_case,ds_case in enumerate(ds_cases):
                 case_nickname = case_nicknames[i_case]
