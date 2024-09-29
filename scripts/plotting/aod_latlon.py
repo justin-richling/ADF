@@ -139,7 +139,7 @@ def aod_latlon(adfobj):
         #Load re-gridded model files:
 
         ds_case = adfobj.data.load_regrid_da(case, var)
-        ds_case = ds_case[var]
+
         #Skip this variable/case if the regridded climo file doesn't exist:
         if ds_case is None:
             dmsg = f"No regridded test file for {case} for variable `{var}`, global lat/lon plots skipped."
@@ -154,12 +154,11 @@ def aod_latlon(adfobj):
         ds_case_season = monthly_to_seasonal(ds_case)
         ds_case_season['lon'] = ds_case_season['lon'].round(5)
         ds_case_season['lat'] = ds_case_season['lat'].round(5)
-        ds_case_season = ds_case_season[var]
+        #ds_case_season = ds_case_season[var]
         ds_cases.append(ds_case_season)
     
     # Gather reference variable data
     ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
-    ds_base = ds_base[var]
     if ds_base is None:
         dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
         adfobj.debug_log(dmsg)
@@ -171,7 +170,7 @@ def aod_latlon(adfobj):
     ds_base_season = monthly_to_seasonal(ds_base)
     ds_base_season['lon'] = ds_base_season['lon'].round(5)
     ds_base_season['lat'] = ds_base_season['lat'].round(5)
-    ds_base_season = ds_base_season[var]
+    #ds_base_season = ds_base_season[var]
     ds_cases.append(ds_base_season)
     
     case_num = len(ds_cases)
