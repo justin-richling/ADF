@@ -300,18 +300,36 @@ def monthly_to_seasonal(ds,obs=False):
                 'season': np.arange(4)})
     da_season = xr.DataArray(
          coords=ds_season.coords, dims=['lat', 'lon', 'season'])
-
+    dataarrays = []
+    # Define a list of season labels
+    seasons = ['DJF', 'MAM', 'JJA', 'SON']
     if obs:
         for varname in ds:
             if '_n' not in varname:
                 #print(varname)
                 # MAM, JJA, SON, DJF
                 ds_season = xr.zeros_like(da_season)
-                for i,s in enumerate(["DJF","MAM","JJA","SON"]):
-                    ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+                for i,s in enumerate(seasons):
+                    #ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+                    dataarrays.append(pf.seasonal_mean(ds, season=s, is_climo=True))
     else:
-        for i,s in enumerate(["DJF","MAM","JJA","SON"]):
-            ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+        for i,s in enumerate(seasons):
+            #ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+            dataarrays.append(pf.seasonal_mean(ds, season=s, is_climo=True))
+
+    # Create a list of DataArrays
+    #dataarrays = [da_DJF, da_MAM, da_JJA, da_SON]
+
+
+    # Use xr.concat to combine along a new 'season' dimension
+    ds_season = xr.concat(dataarrays, dim='season')
+
+    # Assign the 'season' labels to the new 'season' dimension
+    ds_season['season'] = seasons
+
+    # The new DataArray now has dimensions ('season', 'lat', 'lon')
+    #print(ds_season)
+    print(ds_season.dims)
     return ds_season
 
 
