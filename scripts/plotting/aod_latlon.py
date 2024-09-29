@@ -244,7 +244,7 @@ def aod_latlon(adfobj):
             types = []
             case_namez = []
             season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
-            print("ds_ob",ds_ob,"\n")
+            #print("ds_ob",ds_ob,"\n")
 
             obs_name = obs_titles[i_obs]
             chem_season = season_abbr[i_s]
@@ -252,7 +252,7 @@ def aod_latlon(adfobj):
 
             for i_case,ds_case in enumerate(ds_cases):
                 case_nickname = case_nicknames[i_case]
-                print(f"{case_nickname} minus {obs_name}")
+                #print(f"{case_nickname} minus {obs_name}")
                 #case_field = ds_case[:,:,season]- ds_ob[:,:,season]
                 case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
                 plotnames.append(f'{case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
@@ -261,7 +261,7 @@ def aod_latlon(adfobj):
                 types.append("Diff")
                 case_namez.append(case_names[i_case])
 
-                print(f"{case_nickname} minus {obs_name} % Diff")
+                #print(f"{case_nickname} minus {obs_name} % Diff")
                 field_relerr = 100 * case_field / ds_ob.sel(season=season)
                 #field_relerr = 100 * case_field / ds_ob[:,:,season]
                 field_relerr = np.clip(field_relerr, -100, 100)
@@ -336,7 +336,7 @@ def monthly_to_seasonal(ds,obs=False):
 
     # The new DataArray now has dimensions ('season', 'lat', 'lon')
     #print(ds_season)
-    print(ds_season.dims)
+    #print(ds_season.dims)
     return ds_season
 
 
@@ -477,7 +477,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
 
     # LAYOUT WITH GRIDSPEC
     plot_len = int(3*case_num)
-    print(plot_len)
+    #print(plot_len)
     gs = mpl.gridspec.GridSpec(4, plot_len, wspace=0.5, hspace=0.0)
     gs.tight_layout(fig)
 
@@ -485,7 +485,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
     for i in range(case_num):
         start = i * 3
         end = (i + 1) * 3
-        print(f"{start}:{end}")
+        #print(f"{start}:{end}")
         axs.append(plt.subplot(gs[0:2, start:end], projection=proj))
         axs.append(plt.subplot(gs[2:, start:end], projection=proj))
 
@@ -576,7 +576,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         ind_plotfile = f'AOD_{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_Chemistry_{types[i]}.{file_type}'
         #adfobj.add_website_data(ind_plotfile, "AOD", None, season=season, multi_case=False, plot_type="Chemistry")
         #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
-        print(ind_plotfile,"\n")
+        #print(ind_plotfile,"\n")
         ind_fig.savefig(f'{ind_plotfile}.{plot_type}', bbox_inches='tight', dpi=300)
         plt.close(ind_fig)
 
