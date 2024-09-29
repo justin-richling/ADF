@@ -182,10 +182,12 @@ def aod_latlon(adfobj):
     file_mod08_m3 = os.path.join(climo_dir, 'MOD08_M3_192x288_AOD_2001-2020_climo.nc')
 
     ds_merra2 = xr.open_dataset(file_merra2)
+    ds_merra2 = ds_merra2['TOTEXTTAU']
     ds_merra2['lon'] = ds_merra2['lon'].round(5)
     ds_merra2['lat'] = ds_merra2['lat'].round(5)
 
     ds_mod08_m3 = xr.open_dataset(file_mod08_m3)
+    ds_mod08_m3 = ds_mod08_m3['AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean']
     ds_mod08_m3['lon'] = ds_mod08_m3['lon'].round(5)
     ds_mod08_m3['lat'] = ds_mod08_m3['lat'].round(5)
 
@@ -199,8 +201,6 @@ def aod_latlon(adfobj):
     ds_mod08_m3_season['lat'] = ds_mod08_m3_season['lat'].round(5)
     #ds_mod08_m3_season.to_netcdf('MOD08_M3_192x288_AOD_2001-2020_seasonal_climo.nc')
 
-    ds_mod08_m3 = ds_mod08_m3['AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean']
-    ds_merra2 = ds_merra2['TOTEXTTAU']
 
     ds_mod08_m3_season = ds_mod08_m3_season['AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean']
     ds_merra2_season = ds_merra2_season['TOTEXTTAU']
