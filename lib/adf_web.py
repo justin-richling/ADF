@@ -63,7 +63,8 @@ class _WebData:
                  data_frame = False,
                  html_file  = None,
                  asset_path = None,
-                 multi_case = False):
+                 multi_case = False,
+                 cat_sub = None):
 
         #Initialize relevant website variables:
         self.name       = web_name
@@ -77,6 +78,7 @@ class _WebData:
         self.html_file  = html_file
         self.asset_path = asset_path
         self.multi_case = multi_case
+        self.cat_sub    = cat_sub
 
 #+++++++++++++++++++++
 #Define main web class
@@ -186,7 +188,8 @@ class AdfWeb(AdfObs):
                          season = None,
                          non_season = False,
                          plot_type = "Special",
-                         multi_case=False):
+                         multi_case=False,
+                         cat_sub=None):
 
         """
         Method that provides scripts a way to add an image file or
@@ -227,7 +230,10 @@ class AdfWeb(AdfObs):
         #Check that the web_data is either a path
         #or a pandas dataframe:
         try:
-            web_data = Path(web_data)
+            if cat_sub:
+                web_data = Path(cat_sub)
+            else:
+                web_data = Path(web_data)
 
             print("web_data",web_data,"\n")
 
@@ -300,7 +306,8 @@ class AdfWeb(AdfObs):
                             data_frame = data_frame,
                             html_file = html_file,
                             asset_path = asset_path,
-                            multi_case = multi_case)
+                            multi_case = multi_case,
+                            cat_sub=cat_sub)
 
         #Add web data object to list:
         self.__website_data.append(web_data)
@@ -633,7 +640,8 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
-
+                if web_data.category == "Chemistry":
+                    print(web_data)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "season_title": web_data.season,
