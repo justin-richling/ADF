@@ -60,6 +60,7 @@
                           <a-blocked style="font-size: 30px;">{{ season }}</a-blocked>
                         </div><!--grid-item-blocked-->
                       {% endif %}
+                    {% endif %}<!--  -->
                   {% endfor %}<!-- ptype_seas.keys() -->
 
                 {% else %}
@@ -77,21 +78,6 @@
             <script type="text/html"> </div></script>
         </div><!--dropdown-vars-->
       </div><!--grid-item-->
-      {% endfor %}
-    </div><!--grid-container-ptype-->
-
-
-    <div class="grid-container">
-      {% for avail_type in avail_plot_types %}
-        {% if avail_type in plot_types.keys() %}
-          <div class="grid-item">
-            <a href={{ plot_types[avail_type] }} style="font-size: 30px;"> &nbsp; {{ avail_type }} </a>
-          </div><!--grid-item-->
-        {% else %}
-          <div class="grid-item-blocked">
-            <a-blocked style="font-size: 30px;">{{ avail_type }}</a-blocked>
-          </div><!--grid-item-blocked-->
-        {% endif %}
       {% endfor %}
     </div><!--grid-container-ptype-->
 
