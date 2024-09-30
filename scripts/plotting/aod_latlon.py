@@ -645,7 +645,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
     #ind_web_dict[f'AOD_diff'] = {"web_data":png_file, "web_name":plotfile, "case_name":None, "season":season, "multi_case":True,
     #                        "plot_type":"Chemistry", "category":"4-Panel AOD Diags",
     #                        "cat_sub":None}
-    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry", category="4-Panel AOD Diags")
+    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="LatLon", category="4-Panel AOD Diags")
     #fig.savefig(pdf_file, bbox_inches='tight')
     #command = 'pdf2ps ' + pdf_file + ' ' + ps_file
     #os.system(command)
