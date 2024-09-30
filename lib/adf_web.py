@@ -60,6 +60,7 @@ class _WebData:
                  season = None,
                  non_season = False,
                  plot_type = "Special",
+                 ext = "Mean",
                  data_frame = False,
                  html_file  = None,
                  asset_path = None,
@@ -74,6 +75,7 @@ class _WebData:
         self.season     = season
         self.non_season = non_season
         self.plot_type  = plot_type
+        self.ext        = ext
         self.data_frame = data_frame
         self.html_file  = html_file
         self.asset_path = asset_path
@@ -188,6 +190,7 @@ class AdfWeb(AdfObs):
                          season = None,
                          non_season = False,
                          plot_type = "Special",
+                         ext = "Mean",
                          multi_case=False,
                          cat_sub=None):
 
@@ -213,6 +216,8 @@ class AdfWeb(AdfObs):
                       - QBO is displayed as QBOts and QBOamp in the season argument above
 
         plot_type  -> Type of plot.  If not provided then plot type will be "Special".
+
+        ext        -> file name extension for averaged tag? ie Mean, or somethign else?
 
         multi_case -> Logical which indicates whether the image or dataframe can contain
                       multiple cases (e.g. a line plot with one line for each case).
@@ -304,6 +309,7 @@ class AdfWeb(AdfObs):
                             season = season,
                             non_season = non_season,
                             plot_type = plot_type,
+                            ext = ext,
                             data_frame = data_frame,
                             html_file = html_file,
                             asset_path = asset_path,
@@ -681,6 +687,7 @@ class AdfWeb(AdfObs):
                 print("web_data.name",web_data.name)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
+                                       "ext": web_data.ext,
                                        "season_title": web_data.season,
                                        "case_name": web_data.case,
                                        "case_yrs": case_yrs,

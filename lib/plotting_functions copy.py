@@ -91,7 +91,6 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 import matplotlib as mpl
-import matplotlib.cm as cm
 import cartopy.crs as ccrs
 #nice formatting for tick labels
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
@@ -99,7 +98,7 @@ from cartopy.util import add_cyclic_point
 import geocat.comp as gcomp
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.lines import Line2D
-from pathlib import Path
+import matplotlib.cm as cm
 
 from adf_diag import AdfDiag
 from adf_base import AdfError
@@ -130,6 +129,7 @@ seasons = {"ANN": np.arange(1,13,1),
             "SON": [9, 10, 11]
             }
 
+
 #################
 #HELPER FUNCTIONS
 #################
@@ -151,9 +151,6 @@ def load_dataset(fils):
     -----
     When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
     """
-    print(fils,"\n")
-    print(len(fils))
-
     if len(fils) == 0:
         warnings.warn(f"Input file list is empty.")
         return None
@@ -175,37 +172,6 @@ def use_this_norm():
             return mpl.colors.DivergingNorm, mplversion[0]
         else:
             return mpl.colors.TwoSlopeNorm, mplversion[0]
-
-
-def check_obs_file(adfobj, filepath):
-    """
-    Check whether provided obs file is in ADF defaults or a user supplied location
-
-    Usually the ADF takes care of this, but only for variables in the variable defaults yaml file.
-        - This is different since the object being called form variable defaults yaml file is plot related
-          not variable related, we need a check.
-
-      * If only file name is provided, we assume the file exists in the ADF default obs location
-      * If a full path and filename are provided, then the we assume it is a user supplied obs location
-
-    returns: full file path and name
-    """
-    
-    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
-    obs_filepath = adf_obs_loc / filepath.parts[-1]
-
-    #Check the file path structure
-    if str(filepath.parent) == ".":
-        #print(f"Ah, must be ADF default obs file: '{obs_filepath}'")
-        if obs_filepath.exists():
-            return obs_filepath
-        else:
-            print(f"'{filepath.parts[-1]}' is not in the ADF obs default location, please check the spelling")
-            print("Or supply your own path to this file!")
-            return
-    else:
-        #print(f"Ok, your are providing your own obs file: '{filepath}'")
-        return filepath
 
 
 def get_difference_colors(values):
@@ -857,8 +823,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         ax2.set_ylabel(kwargs["units"])
         ax3.set_ylabel(kwargs["units"])
     else:
-        ax2.set_ylabel(f"{dif.units}")
-        ax3.set_ylabel(f"{dif.units}")
+        ax2.set_ylabel(f"{d1.units}")
+        ax3.set_ylabel(f"{d1.units}")
 
 
     [a.set_extent(domain, ccrs.PlateCarree()) for a in [ax1, ax2, ax3]]
@@ -1243,7 +1209,6 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     # LAYOUT WITH GRIDSPEC
     gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
-    #gs.tight_layout(fig)
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
     ax1 = plt.subplot(gs[0:2, :3], projection=proj, **cp_info['subplots_opt'])
     ax2 = plt.subplot(gs[0:2, 3:], projection=proj, **cp_info['subplots_opt'])
@@ -1832,11 +1797,6 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if 'contour_levels' in kwargs:
         levels1 = kwargs['contour_levels']
-        # Check if any item in the list is a string
-        contains_string = any(isinstance(item, str) for item in levels1)
-        if contains_string:
-            levels1 = [float(item) for item in levels1]
-        #print("\nlevels1",levels1,"\n")
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
@@ -1886,23 +1846,11 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     if "diff_contour_levels" in kwargs:
         levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-        contains_string = any(isinstance(item, str) for item in levelsdiff)
-        if contains_string:
-            levelsdiff = [float(item) for item in levelsdiff]
     elif "diff_contour_range" in kwargs:
         assert len(kwargs['diff_contour_range']) == 3, \
         "diff_contour_range must have exactly three entries: min, max, step"
 
-        #levelsdiff = np.arange(*kwargs['diff_contour_range'])
-        contains_string = any(isinstance(item, str) for item in kwargs['diff_contour_range'])
-        if contains_string:
-            levelsdiff_convert = [float(item) for item in kwargs['diff_contour_range']]
-
-            #print("levelsdiff_convert",levelsdiff_convert)
-
-            levelsdiff = np.arange(*levelsdiff_convert)
-        else:
-            levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        levelsdiff = np.arange(*kwargs['diff_contour_range'])
     else:
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))
@@ -2041,8 +1989,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
         else:
             img2, ax[2] = zonal_plot(adata['lat'], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
-            fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
-            #fig.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
+            fig.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
 
         ax[0].set_title(case_title, loc='left', fontsize=tiFontSize)
         ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)
@@ -2494,7 +2441,6 @@ delta_symbol = r'$\Delta$'
 
 def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dict, obs_ds_dict, time_avg, interval, comp_plots_dict, obs_cam_vars):
     """
-
     """
 
     #Get plotting details for variable
@@ -2730,7 +2676,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
     fig.suptitle(f"Zonal Mean {cam_var} - {str_interval}",fontsize=12,y=0.91)
     """
     plt.suptitle(f"Zonal Mean {cam_var} - {interval}",fontsize=12,y=0.91)
-    
+
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
     plt.close()
@@ -2822,7 +2768,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         else:
             ax.set_yticklabels(["","$10^{2}$","","$10^{1}$"],fontsize=10)
             plt.ylabel('hPa',fontsize=10)
-        
+
         #Set title
         local_title=f"{case_names[idx]}"
         plt.title(local_title, fontsize=font_size)
@@ -2907,7 +2853,6 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         #Check for start of new row
         if idx % 4 == 0:
             row = idx // 4 + 1
-
         #Check to see where the colorbar will go
         #The idea is to if the plots fill up each row, put the colorbar on last plot of row
         #If the row isn't filled up, put the color bar on last possible plot of row
@@ -2923,17 +2868,17 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
                 # Set the font size for the colorbar label
                 cbar.set_label("K", fontsize=10, labelpad=1)
         """
-    
-    
+
+
     if hemi == "s":
         ptype = "SHPolar"
     if hemi == "n":
         ptype = "NHPolar"
 
     fig.suptitle(f"{hemi.upper()}H Polar Cap Temp Anomolies - {title_ext}",fontsize=12,y=0.93) #,horizontalalignment="center"
- 
+
     fig.savefig(plot_name, bbox_inches='tight', dpi=300)
-    
+
     #Close plots:
     plt.close()
 ########
@@ -2961,7 +2906,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     tick_inter = var_dict[var]["tick_inter"]
 
 
-    
+
 
     nplots = len(case_names)
     if nplots > 4:
@@ -3047,7 +2992,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
                         levels=levs,
                         colors='k',linewidths=0.5,alpha=0.5
                       )
-        
+
         # add contour labels
         #lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
 
@@ -3085,7 +3030,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
         #Add latitude label to first column of each row
         #if idx==2*(row-1):
         #   plt.ylabel('Latitude',fontsize=10)
-        
+
         #plt.ylabel('Latitude',fontsize=10)
         ax[idx].set_ylabel('Latitude',fontsize=10)
 
@@ -3145,9 +3090,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
             month = m-12
         if month == 12:
             month = 0
-
         case_seas[m] = ds_month[var][month_dict[month+1]]
-
     #Average over set of latitudes
     case_pcap = coslat_average(case_seas,slat,nlat)
     case_pcap = case_seas.sel(lev=vert_lev,method="nearest").sel(lat=slice(slat, nlat))
@@ -3160,7 +3103,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #Set up plot
     #ax = fig.add_subplot(nrows, ncols, idx+1)
 
-       
+
     cf=ax[idx].contourf(lat_grid, time_grid, (diff_pcap),
                         levels=diff_levs,
                         cmap=diff_cmap,#zorder=100
@@ -3169,7 +3112,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
                         levels=diff_levs[::2],
                         colors='k',linewidths=0.5,alpha=0.5
                       )
-        
+
     # add contour labels
     #lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
 
@@ -3200,7 +3143,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #Add latitude label to first column of each row
     #if idx==2*(row-1):
     #   plt.ylabel('Latitude',fontsize=10)
-        
+
     #plt.ylabel('Latitude',fontsize=10)
     ax[idx].set_ylabel('Latitude',fontsize=10)
 
@@ -3208,7 +3151,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     ax[idx].set_yticks(np.arange(slat,nlat+1,tick_inter))
     ax[idx].set_yticklabels(y_labels,fontsize=10)
 
-       
+
 
     axins = inset_axes(ax[idx],
                                 width="3%",
@@ -3244,13 +3187,13 @@ def qbo_amplitude(data):
     """
     Calculate the QBO amplitude
     """
-    
+
     from scipy.signal import convolve
-    
+
     boxcar = np.ones((6, 1)) / 6
     filtered_data = convolve(data, boxcar, mode='valid')
     amplitude=np.std(filtered_data, axis=0)
-    
+
     return amplitude
 
 
@@ -3258,22 +3201,22 @@ def qbo_frequency(data):
     """
     Calculate the QBO frequency
     """
-    
+
     [dt,dx]=data.shape
     dt2=int(dt/2)
     f=1*np.arange(0,dt2+1,1)/dt
     f=f[1:]
     f = np.tile(f, (dx, 1)).swapaxes(0,1)
-    
+
     fft_data = np.fft.fft(data, axis=0)
     fft_data = fft_data[1:dt2+1,:]
-    
+
     power_spectrum = np.abs(fft_data)**2
-    
+
     period=np.sum(power_spectrum*(1/f),axis=0)/np.sum(power_spectrum,axis=0)
-    
+
     return period
-  
+
 
 def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, eyear_cases):
     """
@@ -3399,7 +3342,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         nickname = nicknames[idx]
         yrs = syear_cases[idx]
         last_yr = eyear_cases[idx]
-        
+
         #Get number of time steps
         nt = len(case_data['time'])
         #If the number is greater than 10 years, clip it to 10 years?
@@ -3442,7 +3385,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
                                     levels=contour_levels[::5], colors='k',alpha=0.75,linewidths=0.5)
         # add contour labels
         lb = plt.clabel(c, fontsize=6, inline=True, fmt='%r')
-        
+
         """
         axins = inset_axes(axes[main_key[idx]], width="3%", height="80%", loc='center right', borderpad=-0.5)
         cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label="m/s",
@@ -3458,7 +3401,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         axes[main_key[idx]].tick_params(axis='y', labelsize=8)
         axes[main_key[idx]].set_title(nickname,y=y,fontsize=10)
         #print((nt_sub/12)+1)
-        
+
         """
         if idx == 0:
             axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
@@ -3486,7 +3429,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub)+1,12),rotation=40)
         #axes[main_key[idx]].set_xticks(np.arange(0,(nt_sub),12),rotation=40)
         #axes[main_key[idx]].set_xticklabels(np.arange(int(yrs+int(nt_sub/12)),int(yrs+int(nt_sub/12))+int(nt_sub/12)+1,1))
-        
+
         #print("YEEHAW",yr0+10)
         #axes[main_key[idx]].set_xticklabels(np.arange(yr0, yr0+int(nt_sub/12)+1, 1), fontsize=8)
         #print("\nWOWSA",np.arange(yr0, yr0+int(nt_sub/12), 1))
@@ -3533,14 +3476,11 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
 """def tem_plot(wks, case_nickname, base_nickname,
              case_climo_yrs, baseline_climo_yrs,
              mdlfld, obsfld, diffld, obs=False, **kwargs):
-
     # generate dictionary of contour plot settings:
     cp_info = prep_contour_plot(mdlfld, obsfld, diffld, **kwargs)
-
     # create figure object
     fig = plt.figure(figsize=(14,10))
     img = []
-
     # LAYOUT WITH GRIDSPEC
     gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
     #gs.tight_layout(fig)
@@ -3548,10 +3488,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     ax2 = plt.subplot(gs[0:2, 3:], **cp_info['subplots_opt'])
     ax3 = plt.subplot(gs[2, 1:5], **cp_info['subplots_opt'])
     ax = [ax1,ax2,ax3]
-
     fields = (mdlfld, obsfld, diffld)
     for i, a in enumerate(fields):
-
         if i == len(fields)-1:
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
@@ -3560,7 +3498,6 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
-
         levs = np.unique(np.array(levels))
         if len(levs) < 2:
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree()))
@@ -3569,7 +3506,6 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), **cp_info['contourf_opt']))
         #End if
         #ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
-
         # add contour lines <- Unused for now -JN
         # TODO: add an option to turn this on -BM
         #cs.append(ax[i].contour(lon2, lat2, fields[i], transform=ccrs.PlateCarree(), colors='k', linewidths=1))
@@ -3577,5 +3513,6 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         #ax[i].text( 10, -140, "CONTOUR FROM {} to {} by {}".format(min(cs[i].levels), max(cs[i].levels), cs[i].levels[1]-cs[i].levels[0]),
         #bbox=dict(facecolor='none', edgecolor='black'), fontsize=tiFontSize-2)
 """
+
 #####################
 #END HELPER FUNCTIONS
