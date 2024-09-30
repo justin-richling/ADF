@@ -717,7 +717,7 @@ class AdfWeb(AdfObs):
                 templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'season_title'}}
                 templ_rend_kwarg_dict["list"] = jinja_list
                 templ_rend_kwarg_dict["print"] = jinja_print
-                mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
+                mean_rndr = mean_tmpl.render(rend_kwarg_dict)
 
                 #Write mean diagnostic plots HTML file:
                 with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
