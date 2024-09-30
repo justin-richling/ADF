@@ -639,7 +639,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         # adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
 
     # Save the 4-panel figure
-    plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_Chemistry_Mean.{plot_type}'
+    plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_LatLon_Mean.{plot_type}'
     png_file = Path(plot_dir) / plotfile
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
     #ind_web_dict[f'AOD_diff'] = {"web_data":png_file, "web_name":plotfile, "case_name":None, "season":season, "multi_case":True,
