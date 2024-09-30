@@ -474,7 +474,33 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         print(f"\t    {save_path} not found, making new directory")
         output_location.mkdir(parents=True)
 
-    plot_locations = adfobj.plot_location[0]
+    #plot_locations = adfobj.plot_location[0]
+
+    #Grab history strings:
+    cam_hist_strs = adfobj.hist_string["test_hist_str"]
+
+    # Filter the list to include only strings that are exactly in the possible h0 strings
+    # - Search for either h0 or h0a
+    substrings = {"cam.h0","cam.h0a"}
+    case_hist_strs = []
+    for cam_case_str in cam_hist_strs:
+        # Check each possible h0 string
+        for string in cam_case_str:
+            if string in substrings:
+               case_hist_strs.append(string)
+               break
+
+    # CAUTION:
+    # "data" here refers to either obs or a baseline simulation,
+    # Until those are both treated the same (via intake-esm or similar)
+    # we will do a simple check and switch options as needed:
+    if not adfobj.get_basic_info("compare_obs"):
+        #Grab history string:
+        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+        # Filter the list to include only strings that are exactly in the substrings list
+        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+        hist_strs = case_hist_strs + base_hist_strs
+
 
     #Check if file exists. If so, open the file or make it if not
     if Path(f"{save_path}/waccm_zm_{case_name}.nc").exists():
@@ -482,9 +508,12 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         
     else:
         h0_lists = []
+        
 
         for yr in np.arange(int(syr),int(eyr)+1):
-            h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
+            #h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0a.{yr}-*')))
+            h0_lists.append(sorted(glob.glob(f'{hist_loc}*{hist_strs[0]}.{yr}-*')))
+
 
         h0_list = list(chain(*h0_lists))
 
