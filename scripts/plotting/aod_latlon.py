@@ -502,6 +502,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         facecolor='none')
 
     ind_web_dict = {}
+    ind_diff_web_dict = {}
     #ind_img_list = []
     #ind_cat_sub_list = []
     for i,field in enumerate(fields):
@@ -578,23 +579,38 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         ind_plotfile = f'{pbase}_{season}_Chemistry_Mean.{file_type}'
         ind_png_file = Path(plot_dir) / ind_plotfile
         ind_fig.savefig(f'{ind_png_file}', bbox_inches='tight', dpi=300)
+
+        ind_plotfile2 = f'AOD_vs_{obs_name.replace(" ","_")}_{types[i].replace(" ","_")}'
         #if i < len(fields)-1:
-        """if i in [0,2]:
+        """
+        if i in [0,2]:
             uh = "Test"
         if i in [1,3]:
-            uh = "Base"""
-
+            uh = "Base"
+        """
+        
         if i == 0:
             uh = "Test"
+            ind_web_dict[uh] = {"diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
         if i == 2:
-            uh = "Test_Diff"
+            uh = "Test"
+            ind_web_dict[uh] = {"per_diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
         if i == 1:
             uh = "Base"
+            ind_web_dict[uh] = {"diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
         if i == 3:
-            uh = "Base_Diff"
-        ind_plotfile2 = f'AOD_vs_{obs_name.replace(" ","_")}_{types[i].replace(" ","_")}'
-        ind_png_file2 = Path(plot_dir) / ind_plotfile2
-        print("ind_plotfile",ind_png_file2)
+            uh = "Base"
+            ind_web_dict[uh] = {"per_diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
+        
+
         #adfobj.add_website_data(ind_png_file, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category=f"{uh} Case AOD Diags", cat_sub=ind_plotfile2)
         """
         web_data, web_name, case_name,
@@ -606,9 +622,13 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
                          cat_sub=None)
         """
         
-        ind_web_dict[uh] = {"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+        """ind_web_dict[uh] = {"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
                             "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
                             "cat_sub":ind_plotfile2}
+
+        ind_diff_web_dict[uh] = {"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}"""
 
 
         #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
@@ -626,9 +646,6 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
     #                        "plot_type":"Chemistry", "category":"4-Panel AOD Diags",
     #                        "cat_sub":None}
     adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry", category="4-Panel AOD Diags")
-    #if season == "MAM":
-    #    png_file2 = str(png_file).replace(season,"ANN")
-    #    adfobj.add_website_data(png_file2, f'AOD_diff_{obs_name.replace(" ","_")}', None, season="ANN", multi_case=True, plot_type="Chemistry")
     #fig.savefig(pdf_file, bbox_inches='tight')
     #command = 'pdf2ps ' + pdf_file + ' ' + ps_file
     #os.system(command)
@@ -636,4 +653,5 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
 
     for i in ind_web_dict.keys():
         print("HUH???",i)
-        adfobj.add_website_data(**ind_web_dict[i])
+        for j in i.keys():
+            adfobj.add_website_data(**i[j])
