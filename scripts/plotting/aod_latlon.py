@@ -653,5 +653,5 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
 
     for i in ind_web_dict.keys():
         print("HUH???",i)
-        for j in i.keys():
+        for j in ind_web_dict[i].keys():
             adfobj.add_website_data(**i[j])
