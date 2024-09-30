@@ -587,8 +587,17 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         ind_png_file2 = Path(plot_dir) / ind_plotfile2
         print("ind_plotfile",ind_png_file2)
         #adfobj.add_website_data(ind_png_file, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category=f"{uh} Case AOD Diags", cat_sub=ind_plotfile2)
+        """
+        web_data, web_name, case_name,
+                         category = None,
+                         season = None,
+                         non_season = False,
+                         plot_type = "Special",
+                         multi_case=False,
+                         cat_sub=None)
+        """
         
-        ind_web_dict[uh] = {"ind_png_file":ind_png_file, "pbase":pbase, "casename":None, "season":season, "multi_case":True,
+        ind_web_dict[uh] = {"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
                             "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
                             "cat_sub":ind_plotfile2}
 
