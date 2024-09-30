@@ -50,7 +50,7 @@
               {% for var_name, ptype_seas in var_seas.items() %}
                 {% if non_seasons[category][var_name] == False %}
                   {% for season in ptype_seas.keys() %}
-                    {% if var_name != var_title %}
+                    {% if var_name != var_name %}
                       {% if season=="ANN" %}
                         <div class="grid-item-diag">
                           <a href="../html_img/plot_page_{{ var_title }}_ANN_{{ plottype_title }}_Mean.html"> {{var_name}} </a><br>
