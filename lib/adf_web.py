@@ -240,7 +240,7 @@ class AdfWeb(AdfObs):
             #else:
             web_data = Path(web_data)
 
-            print("web_data",web_data,"\n")
+            #print("web_data",web_data,"\n")
 
             #Make sure the path is to an actual file:
             if not web_data.is_file():
@@ -297,7 +297,7 @@ class AdfWeb(AdfObs):
             #End if
             asset_path = None
         else:
-            print("web_data.stem",web_data.stem,"\n\n")
+            #print("web_data.stem",web_data.stem,"\n\n")
             html_name = f'plot_page_{web_data.stem}.html'
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
@@ -574,7 +574,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 #Initialize Ordered Dictionary for season:
-                print("web_data.html_file.name",web_data.html_file.name,"\n")
+                #print("web_data.html_file.name",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][var][season] = web_data.html_file.name
                 
 
@@ -595,7 +595,7 @@ class AdfWeb(AdfObs):
         #End for (web_data list loop)
 
         #Loop over all web data objects again:
-        print("\n\n",self.__website_data,"\n\n")
+        #print("\n\n",self.__website_data,"\n\n")
         for web_data in self.__website_data:
 
             if web_data.data_frame:
@@ -684,7 +684,7 @@ class AdfWeb(AdfObs):
                         #if web_data.case == self.data.ref_case_label:
                         if 1==1:
                             print("WOWSA:",mean_html_info[web_data.plot_type][web_data.category][var2]["DJF"],"\n\n\n")"""
-                print("web_data.name",web_data.name)
+                #print("web_data.name",web_data.name)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "ext": web_data.ext,
