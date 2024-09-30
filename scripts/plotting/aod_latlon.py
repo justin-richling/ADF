@@ -501,7 +501,9 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         scale='50m',
         facecolor='none')
 
-
+    ind_web_dict = {}
+    #ind_img_list = []
+    #ind_cat_sub_list = []
     for i,field in enumerate(fields):
 
         ind_fig, ind_ax = plt.subplots(1, 1, figsize=((7*case_num)/2,10/2),subplot_kw={'projection': proj})
@@ -584,7 +586,13 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         ind_plotfile2 = f'AOD_vs_{obs_name.replace(" ","_")}_{types[i].replace(" ","_")}'
         ind_png_file2 = Path(plot_dir) / ind_plotfile2
         print("ind_plotfile",ind_png_file2)
-        adfobj.add_website_data(ind_png_file, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category=f"{uh} Case AOD Diags", cat_sub=ind_plotfile2)
+        #adfobj.add_website_data(ind_png_file, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category=f"{uh} Case AOD Diags", cat_sub=ind_plotfile2)
+        
+        ind_web_dict[uh] = {"ind_png_file":ind_png_file, "pbase":pbase, "casename":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}
+
+
         #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
         #print(ind_plotfile,"\n")
         plt.close(ind_fig)
@@ -604,3 +612,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
     #command = 'pdf2ps ' + pdf_file + ' ' + ps_file
     #os.system(command)
     plt.close(fig)
+
+    for i in ind_web_dict.keys:
+        print("HUH???",i)
+        adfobj.add_website_data(**ind_web_dict[i])
