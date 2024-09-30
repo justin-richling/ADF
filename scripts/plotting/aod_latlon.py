@@ -215,17 +215,17 @@ def aod_latlon(adfobj):
 
     # Individual global lat/lon plots
     #--------------------------------
-    #for i_season in range(1):
-    #    # Loop over all test cases - could be multi-case scenario
-    #    for i_case,ds_case in enumerate(ds_cases):
-    #
-    #        case_name = str(case_names[i_case])
-    #        varname = ds_case.name
-    #        #print("case_name",case_name)
-    #        plotfile = case_name + '_' + var + '_' + season_abbr[i_season]
-    #        field = ds_case[:,:,i_season]
-    #        plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
-    """
+    for i_season in range(1):
+        # Loop over all test cases - could be multi-case scenario
+        for i_case,ds_case in enumerate(ds_cases):
+    
+            case_name = str(case_names[i_case])
+            varname = ds_case.name
+            #print("case_name",case_name)
+            plotfile = case_name + '_' + var + '_' + season_abbr[i_season]
+            field = ds_case[:,:,i_season]
+            plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
+    
         print("OBSIES")
         # Loop over supplied obs datasets
         for i_obs,ds_ob in enumerate(ds_obs):
@@ -233,7 +233,7 @@ def aod_latlon(adfobj):
             plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
             field = ds_ob[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + season_abbr[i_season], plot_params, field, i_season)
-    """
+    
     # 4-Panel global lat/lon plots
     #-----------------------------
     for i_obs,ds_ob in enumerate(ds_obs):
