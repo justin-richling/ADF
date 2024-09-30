@@ -550,7 +550,7 @@ class AdfWeb(AdfObs):
                 # Initialize Ordered Dictionary for category if not exists
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
-                """if ptype == "Chemistry":
+                if ptype == "Chemistry":
                     match_string = "4-Panel AOD Diags"
                     # Check if the matching category exists
                     if match_string in mean_html_info[ptype]:
@@ -558,7 +558,7 @@ class AdfWeb(AdfObs):
                         cat_value = mean_html_info[ptype].pop(match_string)
                         
                         # Re-insert the matching category at the front
-                        mean_html_info[ptype] = OrderedDict([(match_string, cat_value)] + list(mean_html_info[ptype].items()))"""
+                        mean_html_info[ptype] = OrderedDict([(match_string, cat_value)] + list(mean_html_info[ptype].items()))
 
                 #Initialize Ordered Dictionary for variable:
                 if var not in mean_html_info[ptype][category]:
