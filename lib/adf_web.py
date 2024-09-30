@@ -723,6 +723,7 @@ class AdfWeb(AdfObs):
                 #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                 templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'season_title'}}
                 templ_rend_kwarg_dict["list"] = jinja_list
+                rend_kwarg_dict["list"] = jinja_list
                 templ_rend_kwarg_dict["print"] = jinja_print
                 mean_rndr = mean_tmpl.render(rend_kwarg_dict)
 
