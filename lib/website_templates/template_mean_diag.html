@@ -49,6 +49,7 @@
           <h3 class="block">{{ category }}</h3>
             <div class="grid-container" style="column-gap: 5px; row-gap: 5px; padding:2px">
               {% for var_name, ptype_seas in var_seas.items() %}
+              <a>{{ print(var_name) }}</a>
                 {% if non_seasons[category][var_name] == False %}
                   {% for season in ptype_seas.keys() %}
                     {% if var_name != var_title %}
