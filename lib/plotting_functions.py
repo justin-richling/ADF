@@ -3407,6 +3407,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         else:
             nt_sub = nt
         print("nt",nt)
+        print("nt_sub",nt_sub)
+        print(np.arange(0,nt_sub+1,1))
 
         [time_grid, lev_grid] = np.meshgrid(case_data['lev'],np.arange(0,nt_sub+1,1))
         print("time_grid",time_grid)
