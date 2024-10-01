@@ -171,7 +171,7 @@ def chem_aerosol_tables(adfobj):
     #End gathering case, path, and data info
     #-----------------------------------------
 
-
+    print("\nhist_strs",hist_strs,"\n")
     # Look for specific h-case
     #scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
     scenarios = [f'{case}.{hist_strs[ix]}' for ix,case in enumerate(case_names)]
