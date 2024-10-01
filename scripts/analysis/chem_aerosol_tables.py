@@ -235,7 +235,7 @@ def chem_aerosol_tables(adfobj):
         num_yrs[case_names[i]] = int(end_yrs[i])-int(start_yrs[i])+1
         print(f"number of years: {int(end_yrs[i])-int(start_yrs[i])+1}")
 
-        Files,Lats,Lons,areas[case] = Get_files(data_dirs[i],start_yrs[i],end_yrs[i],case_hist_strs[i],area=True)
+        Files,Lats,Lons,areas[case],ext1_SE = Get_files(data_dirs[i],start_yrs[i],end_yrs[i],case_hist_strs[i],area=True)
 
         # find the name of all the variables in the file.
         # this will help the code to work for the variables that are not in the files (assingn 0s)
