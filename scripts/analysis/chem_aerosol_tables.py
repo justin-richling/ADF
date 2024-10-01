@@ -244,7 +244,7 @@ def chem_aerosol_tables(adfobj):
         tmp_file.close()
 
         # Set up and fill dictionaries for components for current cases
-        dic_SE = set_dic_SE(ListVars)
+        dic_SE = set_dic_SE(ListVars,ext1_SE)
         #dic_SE = fill_dic_SE(dic_SE,VARIABLES,ListVars)
         dic_SE = fill_dic_SE(dic_SE, VARIABLES, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair)
 
