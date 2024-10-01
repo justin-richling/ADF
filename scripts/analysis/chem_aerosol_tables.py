@@ -1329,7 +1329,7 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
         dfs[nickname] = table_df
 
     # Merge the DataFrames on the 'variable' column
-    merged_df = pd.merge(dfs[nicknames[0]], dfs[nicknames[1]], on='variable')
+    merged_df = pd.merge(dfs[nicknames[case_names[0]]], dfs[nicknames[case_names[1]]], on='variable')
     print("merged_df.keys()",merged_df.keys(),"\n")
 
     # Calculate the differences between case columns
