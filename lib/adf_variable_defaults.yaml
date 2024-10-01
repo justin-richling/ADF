@@ -68,7 +68,7 @@
 #+++++++++++++
 # Available ADF Default Plot Types
 #+++++++++++++
-default_ptypes: ["Tables","gases Tables","aerosol Tables","LatLon","LatLon_Vector","Zonal","Meridional",
+default_ptypes: ["Tables","LatLon","LatLon_Vector","Zonal","Meridional",
                   "NHPolar","SHPolar","Special"]
 
 #+++++++++++++
