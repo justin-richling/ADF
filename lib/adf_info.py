@@ -251,6 +251,7 @@ class AdfInfo(AdfConfig):
                         baseline_hist_str = [baseline_hist_str]
                 #Initialize baseline history string list
                 self.__base_hist_str = baseline_hist_str
+                print("ADF INOF baseline_hist_str:",baseline_hist_str,"\n")
 
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
