@@ -190,7 +190,7 @@ def chem_aerosol_tables(adfobj):
     #end_periods = []
     durations = {}
     num_yrs = {}
-    for i,val in enumerate(start_dates):
+    """for i,val in enumerate(start_dates):
     # convert date strings to datetime format
         start_period = datetime.strptime(start_dates[i], "%Y-%m-%d")
         end_period = datetime.strptime(end_dates[i], "%Y-%m-%d")
@@ -205,7 +205,7 @@ def chem_aerosol_tables(adfobj):
         #num_yrs.append(int(end_dates[i])-int(start_dates[i])+1)
         num_yrs[case_names[i]] = int(end_yrs[i])-int(start_yrs[i])+1
         print(f"number of years: {int(end_yrs[i])-int(start_yrs[i])+1}")
-
+    """
 
 
 
