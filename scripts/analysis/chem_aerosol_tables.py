@@ -1326,14 +1326,14 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
             table_df['variable'] = table_df['variable'].replace(replacements)
 
         # Store the DataFrame in the dictionary
-        dfs[case] = table_df
+        dfs[nickname] = table_df
 
     # Merge the DataFrames on the 'variable' column
-    merged_df = pd.merge(dfs[case_names[0]], dfs[case_names[1]], on='variable')
+    merged_df = pd.merge(dfs[nickname[0]], dfs[nickname[1]], on='variable')
     print("merged_df.keys()",merged_df.keys(),"\n")
 
     # Calculate the differences between case columns
-    merged_df['difference'] = merged_df[case_names[0]] - merged_df[case_names[1]]
+    merged_df['difference'] = merged_df[nickname[0]] - merged_df[nickname[1]]
 
     # Optional: Save the result to a new CSV file
     merged_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
