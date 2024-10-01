@@ -220,6 +220,10 @@ def chem_aerosol_tables(adfobj):
     trops = {}
     insides = {}
     for i,case in enumerate(case_names):
+        print(f'Current Scenario: {case}',"\n",len(f'Current Scenario: {case}')*'-','\n')
+        #print(len(f'Current Scenario: {case}')*'-','\n')
+
+        #print(f'Current Scenario: {case}\n{len(f'Current Scenario: {case}')*'-','\n')
 
         start_period = datetime.strptime(start_dates[i], "%Y-%m-%d")
         end_period = datetime.strptime(end_dates[i], "%Y-%m-%d")
@@ -277,9 +281,6 @@ def chem_aerosol_tables(adfobj):
             else:
                 inside = np.full((len(Lats),len(Lons)),True)
 
-        print(f'Current Scenario: {case}')
-        print(len(f'Current Scenario: {case}')*'-','\n')
-
         current_crit = Dic_crit[0]
 
         if Tropospheric:
@@ -293,12 +294,14 @@ def chem_aerosol_tables(adfobj):
 
     if len(AEROSOL_VARIABLES) > 0:
         print("\tMaking table for aerosols")
-        aerosol_table = make_table(adfobj, AEROSOL_VARIABLES,'aerosols',Dic_scn_var_comp,areas,trops,case_names, durations, insides, AEROSOLS)
+        #aerosol_table = make_table(adfobj, AEROSOL_VARIABLES,'aerosols',Dic_scn_var_comp,areas,trops,case_names, durations, insides, AEROSOLS)
+        aerosol_table = make_table(adfobj, AEROSOL_VARIABLES, 'aerosols', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
         #make_table(vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, durations, insides, AEROSOLS)
 
     if len(GAS_VARIABLES) > 0:
         print("\tMaking table for gases")
-        gas_table = make_table(adfobj, GAS_VARIABLES,'gases',Dic_scn_var_comp,areas,trops,case_names, durations, insides, AEROSOLS)
+        #gas_table = make_table(adfobj, GAS_VARIABLES,'gases',Dic_scn_var_comp,areas,trops,case_names, durations, insides, AEROSOLS)
+        gas_table = make_table(adfobj, GAS_VARIABLES, 'gases', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
         #make_table(vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, durations, insides, AEROSOLS)
 
     #return
