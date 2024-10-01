@@ -1339,7 +1339,7 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
     merged_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
     #Add comparison table dataframe to website (if enabled):
     #adfobj.add_website_data(merged_df, case, case, plot_type=f"{chem_type} Tables")
-    adfobj.add_website_data(merged_df, case, chem_type, plot_type=f"Tables")
+    adfobj.add_website_data(merged_df, case, case, plot_type=f"Tables")
     #adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
 
     return merged_df
