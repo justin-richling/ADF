@@ -115,6 +115,11 @@ def chem_aerosol_tables(adfobj):
     case_names = adfobj.get_cam_info('cam_case_name', required=True) + [adfobj.get_baseline_info("cam_case_name")]
     case_names_len = len(case_names)
 
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    base_nickname = adfobj.case_nicknames["base_nickname"]
+    nicknames = test_nicknames + [base_nickname]
+
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
 
     start_yrs = adfobj.climo_yrs["syears"] + [adfobj.climo_yrs["syear_baseline"]]
@@ -122,7 +127,7 @@ def chem_aerosol_tables(adfobj):
 
     #Histort file num
     #h_case = "h0a"
-    h_case = "h0"
+    #h_case = "h0"
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
@@ -1278,11 +1283,12 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
 #####
 
 
-def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, durations, insides, num_yrs, AEROSOLS):
+def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS):
     # Initialize an empty dictionary to store DataFrames
     dfs = {}
 
     for case in case_names:
+        nickname = nicknames[case]
         # Collect row data in a list of dictionaries
         durations[case]
         rows = []
@@ -1292,7 +1298,8 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
 
             for key, val in chem_dict.items():
                 if val != 0:  # Skip variables with a value of 0
-                    rows.append({'variable': key, case: np.round(val, 3)})
+                    #rows.append({'variable': key, case: np.round(val, 3)})
+                    rows.append({'variable': key, nickname: np.round(val, 3)})
                 else:
                     msg = f"chem/aerosol tables:"
                     msg += f"\n\t - Variable '{key}' has value of 0, will not add to table"
