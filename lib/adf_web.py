@@ -691,7 +691,7 @@ class AdfWeb(AdfObs):
                 if ptype not in avail_plot_types:
                     avail_plot_types.append(plot_types)
 
-            print("avail_plot_types",avail_plot_types,"\n")
+            print("avail_plot_types",avail_plot_types)
             print("plot_types",plot_types,"\n")
 
             #Construct index.html

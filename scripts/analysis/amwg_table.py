@@ -299,7 +299,7 @@ def amwg_table(adf):
                 table_df.to_csv(output_csv_file, header=cols, index=False)
 
             # last step is to add table dataframe to website (if enabled):
-            adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+            adf.add_website_data(table_df, case_name, case_name, plot_type="Tables",category="Time Series")
         except FileNotFoundError:
             print(f"\n\tAMWG table for '{case_name}' not created.\n")
         #End try/except
