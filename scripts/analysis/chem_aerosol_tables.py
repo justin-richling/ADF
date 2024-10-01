@@ -148,6 +148,7 @@ def chem_aerosol_tables(adfobj):
     baseline_hist_strs = adfobj.hist_string["base_hist_str"]
     # Filter the list to include only strings that are exactly in the substrings list
     base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+    print("base_hist_strs",base_hist_strs,"\n")
     hist_strs = case_hist_strs + base_hist_strs
 
     #Grab history file locations from config yaml file
