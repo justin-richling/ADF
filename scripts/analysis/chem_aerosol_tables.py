@@ -1333,7 +1333,7 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
     print("merged_df.keys()",merged_df.keys(),"\n")
 
     # Calculate the differences between case columns
-    merged_df['difference'] = merged_df[nicknames[0]] - merged_df[nicknames[1]]
+    merged_df['difference'] = merged_df[nicknames[case_names[0]]] - merged_df[nicknames[case_names[1]]]
 
     # Optional: Save the result to a new CSV file
     merged_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
