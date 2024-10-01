@@ -144,6 +144,12 @@ def chem_aerosol_tables(adfobj):
                 case_hist_strs.append(string)
                 break
 
+    #Grab history string:
+    baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+    # Filter the list to include only strings that are exactly in the substrings list
+    base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+    hist_strs = case_hist_strs + base_hist_strs
+
     #Grab history file locations from config yaml file
     cam_hist_locs = adfobj.get_cam_info("cam_hist_loc", required=True)
     #cam_hist_locs = [adfobj.get_baseline_info("cam_hist_loc", required=True)]
@@ -168,7 +174,7 @@ def chem_aerosol_tables(adfobj):
 
     # Look for specific h-case
     #scenarios = [f'{ix}.cam.{h_case}' for ix in case_names]
-    scenarios = [f'{case}.{case_hist_strs[ix]}' for ix,case in enumerate(case_names)]
+    scenarios = [f'{case}.{hist_strs[ix]}' for ix,case in enumerate(case_names)]
 
     print("scenarios info:",len(scenarios),scenarios)
 
