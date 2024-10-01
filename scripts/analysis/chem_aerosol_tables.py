@@ -259,7 +259,8 @@ def chem_aerosol_tables(adfobj):
 
             # Make dictionary of all data for each case
             print(f"\t Calculating values for {case}")
-            Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(VARIABLES, data_dirs[i], dic_SE)
+            #Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(VARIABLES, data_dirs[i], dic_SE)
+            Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dirs[i], dic_SE, Files, ext1_SE, AEROSOLS)
 
             with open(f'{case}_Dic_scn_var_comp.pickle', 'wb') as handle:
                 pickle.dump(Dic_scn_var_comp[case], handle, protocol=pickle.HIGHEST_PROTOCOL)
