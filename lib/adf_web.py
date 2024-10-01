@@ -580,7 +580,7 @@ class AdfWeb(AdfObs):
                 #formatting features.
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
-
+                table_html_info
                 #Construct amwg_table.html
                 rend_kwarg_dict = {"title": main_title,
                                   "case_name": case1,
@@ -685,14 +685,20 @@ class AdfWeb(AdfObs):
             #List of ADF default plot types
             avail_plot_types = res["default_ptypes"]
             
-            #Check if current plot type is in ADF default.
+            """#Check if current plot type is in ADF default.
             #If not, add it so the index.html file can include it
             for ptype in plot_types.keys():
                 if ptype not in avail_plot_types:
-                    avail_plot_types.append(plot_types)
+                    avail_plot_types.append(plot_types)"""
 
             print("avail_plot_types",avail_plot_types)
             print("plot_types",plot_types,"\n")
+
+            """
+            avail_plot_types ['Tables', 'gases Tables', 'aerosol Tables', 'LatLon', 'LatLon_Vector', 'Zonal', 'Meridional', 'NHPolar', 'SHPolar', 'Special'] 
+            plot_types OrderedDict([('Tables', 'html_table/mean_tables.html')])
+            plot_types OrderedDict([('Tables', 'html_table/mean_tables.html'), ('aerosols Tables', 'html_img/mean_diag_aerosols Tables.html'), ('gases Tables', 'html_img/mean_diag_gases Tables.html')]) 
+            """
 
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
