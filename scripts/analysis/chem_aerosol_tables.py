@@ -116,9 +116,11 @@ def chem_aerosol_tables(adfobj):
     case_names_len = len(case_names)
 
     #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
-    base_nickname = adfobj.case_nicknames["base_nickname"]
-    nicknames = test_nicknames + [base_nickname]
+    test_nicknames_list = adfobj.case_nicknames["test_nicknames"]
+    base_nickname_list = adfobj.case_nicknames["base_nickname"]
+    nicknames_list = test_nicknames_list + [base_nickname_list]
+    nicknames = {}
+
 
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
 
@@ -152,6 +154,7 @@ def chem_aerosol_tables(adfobj):
     #Create path object for the CAM history file(s) location:
     data_dirs = []
     for case_idx,case in enumerate(case_names):
+        nicknames[case] = nicknames_list[case_idx]
         #Check that history file input directory actually exists:
         if not Path(hist_locs[case_idx]).is_dir():
             errmsg = f"History files directory '{hist_locs[case_idx]}' not found.  Script is exiting."
