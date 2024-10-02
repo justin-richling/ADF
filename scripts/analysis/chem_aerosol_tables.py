@@ -225,7 +225,7 @@ def chem_aerosol_tables(adfobj):
         trops[case] = trop
         insides[case] = inside
 
-
+    # Make and save tables
     if len(AEROSOL_VARIABLES) > 0:
         print("\tMaking table for aerosols")
         aerosol_table = make_table(adfobj, AEROSOL_VARIABLES, 'aerosols', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
@@ -240,9 +240,6 @@ def chem_aerosol_tables(adfobj):
 ##################
 # Helper functions
 ##################
-
-
-
 '''
 SE_functions.py
 this code is designed for compiling the functions used for processing SE files
