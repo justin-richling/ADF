@@ -77,11 +77,11 @@ def chem_aerosol_tables(adfobj):
     MW = bres['MW']
 
     # Avogadro's Number
-    AVO = bres['AVO']
+    AVO = float(bres['AVO'])
     # gravity
-    gr = bres['gr']
+    gr = float(bres['gr'])
     # Mw air
-    Mwair = bres['Mwair']
+    Mwair = float(bres['Mwair'])
 
     # The variables in the list below must be aerosols - do not add AOD and DAOD
     # no need to change this list, unless for a specific need!
