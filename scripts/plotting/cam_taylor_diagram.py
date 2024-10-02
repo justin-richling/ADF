@@ -57,24 +57,12 @@ def cam_taylor_diagram(adfobj):
 
     case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
 
-    # ADF variable which contains the output path for plots and tables:
-    plot_location = adfobj.plot_location
-    if not plot_location:
-        plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
-    if isinstance(plot_location, list):
-        for pl in plot_location:
-            plpth = Path(pl)
-            #Check if plot output directory exists, and if not, then create it:
-            if not plpth.is_dir():
-                print(f"\t    {pl} not found, making new directory")
-                plpth.mkdir(parents=True)
-        if len(plot_location) == 1:
-            plot_loc = Path(plot_location[0])
-        else:
-            print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
-            plot_loc = Path(plot_location[0])
+    # Special ADF variable which contains the output paths for plots:
+    if len(case_names) == 1:
+        plot_location = adfobj.plot_location
+        plot_loc = Path(plot_location[0])
     else:
-        plot_loc = Path(plot_location)
+        plot_loc = Path(adfobj.get_basic_info('cam_diag_plot_loc', required=True))
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -566,17 +554,20 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
         needs_bias_labels -> Bool, if T make the legend for the bias-sized markers.
     """
     # CASE LEGEND -- Color-coded
-    bottom_of_text = 0.05
-
     height_of_lines = 0.03
-    wks.text(0.052, 0.08, "Cases:",
-            color='k', ha='left', va='bottom', transform=wks.transAxes, fontsize=11)
-    n = 0
-    for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
 
-            wks.text(0.052, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
-            color=c, ha='left', va='bottom', transform=wks.transAxes, fontsize=10)
-            n += 1
+    case_pos = 0.75
+    wks.text(0.99, case_pos, "Cases:", va='top', transform=wks.transAxes, fontsize=10)
+
+    n = 0
+    for case_idx,c in enumerate(casecolors):
+        case = test_nicknames[case_idx]
+        syear = syear_cases[case_idx]
+        eyear = eyear_cases[case_idx]
+        text = wks.text(0.99, case_pos-((case_idx+1)*height_of_lines), f"{case}  yrs: {syear}-{eyear}",
+                            color=c, va='top', transform=wks.transAxes, fontsize=10)
+        n += 1
+
     # BIAS LEGEND
     if needs_bias_labels:
         # produce an info-box showing the markers/sizes based on bias
