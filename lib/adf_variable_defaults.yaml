@@ -1440,7 +1440,7 @@ budget_tables:
   AEROSOL_VARIABLES: ['AOD','SO4']
 
   #list of all the variables to be caculated.
-  VARIABLES: GAS_VARIABLES + AEROSOL_VARIABLES
+  #VARIABLES: GAS_VARIABLES + AEROSOL_VARIABLES
 
   # For the case that outputs are saved for a specific region.
   # i.e., when using fincllonlat in user_nl_cam

@@ -52,7 +52,7 @@ def chem_aerosol_tables(adfobj):
     AEROSOL_VARIABLES = bres['AEROSOL_VARIABLES']
 
     #list of all the variables to be caculated.
-    VARIABLES = bres['VARIABLES']
+    VARIABLES = GAS_VARIABLES + AEROSOL_VARIABLES
 
     # For the case that outputs are saved for a specific region.
     # i.e., when using fincllonlat in user_nl_cam
