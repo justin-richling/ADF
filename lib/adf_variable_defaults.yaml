@@ -84,6 +84,18 @@ Rgas: 287.04 #[J/K/Kg]=8.314/0.028965
 #List of variables for CAM-CHEM runs that have different constituents than regular CAM runs
 cam_chem_list: ["SOA","SO4"]
 
+# AOD specific diagnostics - 4-Panel plots
+aod_diags:
+    plot_params:
+      range_min: -0.4
+      range_max: 0.4
+      nlevel: 17
+
+    plot_params_relerr:
+      range_max: 100
+      range_min: -100
+      nlevel: 21
+
 #+++++++++++++
 # Category: Microphysics
 #+++++++++++++
