@@ -100,14 +100,6 @@ class AdfConfig(AdfBase):
 
             #Check if value is a dictionary instead:
             elif isinstance(value, dict):
-                #Currently this routine only handles one level of
-                #nested dictionaries, so throw an error if one has
-                #gone beyond that:
-                if sub_dict:
-                    ermsg = "ADF currently only allows for a single nested dict"
-                    ermsg += f" in the config (YAML) file.\n  Variable '{value}' is nested too far."
-                    self.end_diag_fail(ermsg)
-
                 #Apply routine to sub dictionary:
                 sub_config_search_dict = self.__create_search_dict(value,
                                                                  sub_dict = key)
