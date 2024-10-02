@@ -215,12 +215,9 @@ class AdfInfo(AdfConfig):
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
-            ts_not_needed = False
             if baseline_ts_done:
-                """if ts_not_needed:
-                    baseline_hist_locs = None"""
                 if not baseline_hist_locs:
-                    print()
+                    print("TS files exist, but still might need baseline_hist_locs??")
                     baseline_hist_locs = None
 
                 #Grab baseline time series file location
