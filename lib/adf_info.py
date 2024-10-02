@@ -205,9 +205,9 @@ class AdfInfo(AdfConfig):
             #if so don't rely on climo years from history location
             ts_not_needed = False
             if baseline_ts_done:
-                if ts_not_needed:
-                    baseline_hist_locs = None
-
+                #if ts_not_needed:
+                #    baseline_hist_locs = None
+                baseline_hist_locs = None
                 #Grab baseline time series file location
                 input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
                 input_ts_loc = Path(input_ts_baseline)
