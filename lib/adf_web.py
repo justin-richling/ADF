@@ -358,6 +358,9 @@ class AdfWeb(AdfObs):
 
         def jinja_print(arg):
             return print(arg)
+        
+        def jinja_enumerate(arg):
+            return enumerate(arg)
 
         #Notify user that script has started:
         print("\n  Generating Diagnostics webpages...")
@@ -723,6 +726,7 @@ class AdfWeb(AdfObs):
                 #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                 templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'season_title'}}
                 templ_rend_kwarg_dict["list"] = jinja_list
+                templ_rend_kwarg_dict["enumerate"] = jinja_enumerate
                 rend_kwarg_dict["list"] = jinja_list
                 templ_rend_kwarg_dict["print"] = jinja_print
                 mean_rndr = mean_tmpl.render(rend_kwarg_dict)
