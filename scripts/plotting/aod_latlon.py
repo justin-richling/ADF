@@ -31,11 +31,9 @@ def my_formatwarning(msg, *args, **kwargs):
 
 def aod_latlon(adfobj):
     var = "AODVISdn"
-    #season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
-    season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov']
+    season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
     # Define a list of season labels
-    #seasons = ['MAM', 'JJA', 'SON','DJF']
-    seasons = ['MAM', 'JJA', 'SON']
+    seasons = ['MAM', 'JJA', 'SON','DJF']
 
     test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
     case_names = test_case_names + [adfobj.get_baseline_info('cam_case_name')]
@@ -308,10 +306,12 @@ def monthly_to_seasonal(ds,obs=False):
                 'season': np.arange(4)})
     da_season = xr.DataArray(
          coords=ds_season.coords, dims=['lat', 'lon', 'season'])
+    
+    # Create a list of DataArrays
     dataarrays = []
     # Define a list of season labels
-    #seasons = ['DJF', 'MAM', 'JJA', 'SON']
-    seasons = ['MAM', 'JJA', 'SON']
+    seasons = ['DJF', 'MAM', 'JJA', 'SON']
+    
     if obs:
         for varname in ds:
             if '_n' not in varname:
@@ -325,10 +325,6 @@ def monthly_to_seasonal(ds,obs=False):
         for i,s in enumerate(seasons):
             #ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
             dataarrays.append(pf.seasonal_mean(ds, season=s, is_climo=True))
-
-    # Create a list of DataArrays
-    #dataarrays = [da_DJF, da_MAM, da_JJA, da_SON]
-
 
     # Use xr.concat to combine along a new 'season' dimension
     ds_season = xr.concat(dataarrays, dim='season')
@@ -584,14 +580,7 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         ind_fig.savefig(f'{ind_png_file}', bbox_inches='tight', dpi=300)
 
         ind_plotfile2 = f'AOD_vs_{obs_name.replace(" ","_")}_{types[i].replace(" ","_")}'
-        #if i < len(fields)-1:
-        """
-        if i in [0,2]:
-            uh = "Test"
-        if i in [1,3]:
-            uh = "Base"
-        """
-        
+
         if i == 0:
             uh = "Test"
             ind_web_dict[uh] = {"diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
