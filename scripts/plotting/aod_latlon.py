@@ -31,9 +31,11 @@ def my_formatwarning(msg, *args, **kwargs):
 
 def aod_latlon(adfobj):
     var = "AODVISdn"
-    season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
+    #season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
+    season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov']
     # Define a list of season labels
-    seasons = ['MAM', 'JJA', 'SON','DJF']
+    #seasons = ['MAM', 'JJA', 'SON','DJF']
+    seasons = ['MAM', 'JJA', 'SON']
 
     test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
     case_names = test_case_names + [adfobj.get_baseline_info('cam_case_name')]
@@ -308,7 +310,8 @@ def monthly_to_seasonal(ds,obs=False):
          coords=ds_season.coords, dims=['lat', 'lon', 'season'])
     dataarrays = []
     # Define a list of season labels
-    seasons = ['DJF', 'MAM', 'JJA', 'SON']
+    #seasons = ['DJF', 'MAM', 'JJA', 'SON']
+    seasons = ['MAM', 'JJA', 'SON']
     if obs:
         for varname in ds:
             if '_n' not in varname:
