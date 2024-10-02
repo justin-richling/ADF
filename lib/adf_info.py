@@ -202,10 +202,26 @@ class AdfInfo(AdfConfig):
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
 
+            #Check if user provided
+            if not baseline_hist_str:
+                baseline_hist_str = ['cam.h0a']
+            else:
+                #Make list if not already
+                if not isinstance(baseline_hist_str, list):
+                    baseline_hist_str = [baseline_hist_str]
+            #Initialize baseline history string list
+            self.__base_hist_str = baseline_hist_str
+            print("ADF INOF baseline_hist_str:",baseline_hist_str,"\n")
+
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
+            ts_not_needed = False
             if baseline_ts_done:
-                baseline_hist_locs = None
+                """if ts_not_needed:
+                    baseline_hist_locs = None"""
+                if not baseline_hist_locs:
+                    print()
+                    baseline_hist_locs = None
 
                 #Grab baseline time series file location
                 input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
