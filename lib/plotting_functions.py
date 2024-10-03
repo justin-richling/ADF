@@ -1764,8 +1764,12 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         - 'plot_log_p' : true/false whether to plot log(pressure) axis
     """
     # determine levels & color normalization:
-    minval = np.min([np.min(adata), np.min(bdata)])
-    maxval = np.max([np.max(adata), np.max(bdata)])
+    # Replace inf values with NaN
+    #adata = adata.where(~np.isinf(adata))
+    #bdata = bdata.where(~np.isinf(bdata))
+    minval = np.min([np.nanmin(adata), np.nanmin(bdata)])
+    maxval = np.max([np.nanmax(adata), np.nanmax(bdata)])
+    print(minval,maxval)
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
@@ -1777,22 +1781,27 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if 'contour_levels' in kwargs:
-        levels1 = kwargs['contour_levels']
+        print('Looking at: contour_levels')
+        levels1 = [float(x) for x in kwargs['contour_levels']]
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+
     elif 'contour_levels_range' in kwargs:
+        print('Looking at: contour_levels_range')
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
 
-        levels1 = np.arange(*kwargs['contour_levels_range'])
+        lev_range = [float(x) for x in kwargs['contour_levels_range']]
+        levels1 = np.arange(*lev_range)
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+
     else:
         levels1 = np.linspace(minval, maxval, 12)
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
@@ -1801,6 +1810,12 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         else:
             norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     #End if
+
+    #if ('non_linear' in kwargs) and (kwargs['non_linear']):
+    #    cmap_obj = cm.get_cmap(cmap1)
+    #    norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+    #else:
+    #    norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
 
     #Check if the minval and maxval are actually different.  If not,
     #then set "levels1" to be an empty list, which will cause the
@@ -1811,6 +1826,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
+        print('OH BOY THANKS FOR NOTHING')
         if ((minval < 0) and (0 < maxval)) and mplv > 2:
             norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
         else:
@@ -1826,14 +1842,19 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if "diff_contour_levels" in kwargs:
-        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+        levelsdiff = [float(x) for x in kwargs['diff_contour_range']]
+        #levelsdiff = np.arange(*lev_range)
+        #levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
     elif "diff_contour_range" in kwargs:
         assert len(kwargs['diff_contour_range']) == 3, \
         "diff_contour_range must have exactly three entries: min, max, step"
-
-        levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        lev_range = [float(x) for x in kwargs['diff_contour_range']]
+        levelsdiff = np.arange(*lev_range)
+        print("Diff Levels:",levelsdiff)
+        #levelsdiff = np.arange(*kwargs['diff_contour_range'])
     else:
         # set a symmetric color bar for diff:
+        diffdata.where(~np.isinf(diffdata))
         absmaxdif = np.max(np.abs(diffdata))
         # set levels for difference plot:
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
@@ -1875,6 +1896,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
             'levels1': levels1,
             'plot_log_p': plot_log_p
             }
+
 
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
