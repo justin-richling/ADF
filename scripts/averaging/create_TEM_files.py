@@ -456,7 +456,7 @@ def calc_tem(ds):
 
     dstem = xr.Dataset(data_vars=dict(date = ds.date,
                                       datesec = ds.datesec,
-                                      time_bnds = ds.time_bnds,
+                                      time_bnds = ds.time_bounds,
                                       uzm = uzm,
                                       vzm = vzm,
                                       epfy = epfy,
