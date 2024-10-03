@@ -404,9 +404,9 @@ def my_formatwarning(msg, *args, **kwargs):
 
 def aod_latlon(adfobj):
     var = "AODVISdn"
-    season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
+    season_abbr = ['Dec-Jan-Feb', 'Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov']
     # Define a list of season labels
-    seasons = ['MAM', 'JJA', 'SON','DJF']
+    seasons = ['DJF', 'MAM', 'JJA', 'SON']
 
     test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
     case_names = test_case_names + [adfobj.get_baseline_info('cam_case_name')]
@@ -558,7 +558,7 @@ def aod_latlon(adfobj):
             params = []
             types = []
             case_namez = []
-            season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
+            #season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
 
             obs_name = obs_titles[i_obs]
             chem_season = season_abbr[i_s]
@@ -713,7 +713,6 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     #plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
     plotfile = f"AOD_{case_name}_{season}_Chemistry_Mean.{plot_type}"
     png_file = Path(plot_dir) / plotfile
-    print("png_file")
     #png_file = Path(plot_dir) / f'QBO_Amplitude_Special_Mean.{plot_type}'
     #adfobj.add_website_data(png_file, f"AOD_{case_name}", None, season=season, multi_case=True, plot_type="Chemistry")
 
