@@ -549,15 +549,38 @@ class AdfWeb(AdfObs):
 
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
+                #End if"""
+
+                #Initialize Ordered Dictionary for plot type:
+                if ptype not in mean_html_info:
+                    mean_html_info[ptype] = OrderedDict()
                 #End if
+
+                # Initialize Ordered Dictionary for category if not exists
+                if category not in mean_html_info[ptype]:
+                    mean_html_info[ptype][category] = OrderedDict()
+                if ptype == "Chemistry":
+                    match_string = "4-Panel AOD Diags"
+                    # Check if the matching category exists
+                    if match_string in mean_html_info[ptype]:
+                        # Pop the matching category
+                        cat_value = mean_html_info[ptype].pop(match_string)
+                        
+                        # Re-insert the matching category at the front
+                        mean_html_info[ptype] = OrderedDict([(match_string, cat_value)] + list(mean_html_info[ptype].items()))
 
                 #Initialize Ordered Dictionary for variable:
                 if var not in mean_html_info[ptype][category]:
+                    if web_data.cat_sub:
+                        var = web_data.cat_sub
                     mean_html_info[ptype][category][var] = OrderedDict()
                 #End if
 
                 #Initialize Ordered Dictionary for season:
+                #print("web_data.html_file.name",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][var][season] = web_data.html_file.name
+                
+
 
 
                 #Initialize Ordered Dictionary for non season kwarg:
@@ -575,6 +598,7 @@ class AdfWeb(AdfObs):
         #End for (web_data list loop)
 
         #Loop over all web data objects again:
+        #print("\n\n",self.__website_data,"\n\n")
         for web_data in self.__website_data:
 
             if web_data.data_frame:
@@ -653,7 +677,17 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
+                # var_name
+                
 
+                """if web_data.cat_sub:
+                    var2 = web_data.cat_sub
+                if web_data.category == "Test Case AOD Diags":
+                    if web_data.season == "DJF":
+                        #if web_data.case == self.data.ref_case_label:
+                        if 1==1:
+                            print("WOWSA:",mean_html_info[web_data.plot_type][web_data.category][var2]["DJF"],"\n\n\n")"""
+                #print("web_data.name",web_data.name)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
                                        "ext": web_data.ext,
@@ -668,6 +702,12 @@ class AdfWeb(AdfObs):
                                        "plot_types": plot_types,
                                        "seasons": seasons,
                                        "non_seasons": non_seasons[web_data.plot_type]}
+                #try:
+                #    web_data.cat_sub
+                #    rend_kwarg_dict["html_name"] = web_data.cat_sub
+                #except:
+                #    print("asdfasdf")
+
                 tmpl = jinenv.get_template('template.html')  #Set template
                 rndr = tmpl.render(rend_kwarg_dict) #The template rendered
 
@@ -719,20 +759,11 @@ class AdfWeb(AdfObs):
                 if ptype not in avail_plot_types:
                     avail_plot_types.append(plot_types)
 
-            print("avail_plot_types",avail_plot_types)
-            print("plot_types",plot_types,"\n")
-
-            """
-            avail_plot_types ['Tables', 'gases Tables', 'aerosol Tables', 'LatLon', 'LatLon_Vector', 'Zonal', 'Meridional', 'NHPolar', 'SHPolar', 'Special'] 
-            plot_types OrderedDict([('Tables', 'html_table/mean_tables.html')])
-            plot_types OrderedDict([('Tables', 'html_table/mean_tables.html'), ('aerosols Tables', 'html_img/mean_diag_aerosols Tables.html'), ('gases Tables', 'html_img/mean_diag_gases Tables.html')]) 
-            """
-
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
             index_rndr = index_tmpl.render(title=index_title,
-                                            case_name=case1,#web_data.case,
+                                            case_name=web_data.case,
                                             base_name=data_name,
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
