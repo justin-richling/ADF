@@ -188,7 +188,7 @@ def tem(adf):
 
                 #Open the TEM file
                 tem_loc = tem_locs[idx]
-                output_loc_idx = Path(tem_loc) / case_name
+                output_loc_idx = Path(tem_loc)# / case_name
                 case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
                 tem = output_loc_idx / case_file_name
 
