@@ -58,34 +58,10 @@ def aod_latlon(adfobj):
 
     plot_dir = adfobj.plot_location
 
-    mam_dir = "/glade/derecho/scratch/richling/adf-output/tests/aod/climos/"
-
-
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
-    
-
-
-    """# Check redo_plot. If set to True: remove old plots, if they already exist:
-    if (not redo_plot) and plot_file.is_file():
-        #Add already-existing plot to website (if enabled):
-        adfobj.debug_log(f"'{plot_file}' and '{plot_file}' exist and clobber is false.")
-        adfobj.add_website_data(plot_file, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
-    """
-    """plot_params = dict()
-    plot_params['outdir'] = plot_dir
-    plot_params['range_min'] = -0.4
-    plot_params['range_max'] = 0.4
-    plot_params['nlevel'] = 17
-
-    plot_params_relerr = dict()
-    plot_params_relerr['outdir'] = plot_dir
-    plot_params_relerr['range_min'] = -100
-    plot_params_relerr['range_max'] = 100
-    plot_params_relerr['nlevel'] = 21
-    """
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
     res_aod_diags = res[var]["aod_diags"]
@@ -103,81 +79,6 @@ def aod_latlon(adfobj):
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
-
-    # Model Case Datasets
-    #-----------------------
-    ds_cases = []
-    #mam_dir = "/glade/derecho/scratch/richling/adf-output/tests/aod/climos/"
-    #mam4_1_dir = f"{mam_dir}/{case_names[0]}/yrs_1997-2000/"
-    #mam4_2_dir = f"{mam_dir}/{case_names[1]}/yrs_1997-2000/"
-
-
-    #o_has_dims = pf.validate_dims(ds_base, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
-    #if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
-    #    print(f"\t = skipping global map for {var} as REFERENCE does not have both lat and lon")
-    #   #continue
-
-    #casedir = f"{mam_dir}/{case}/yrs_{syears[idx]}-{eyears[idx]}/"
-    #case_path = os.path.join(casedir, f'{case}_{var}_climo.nc')
-    #ds_case = xr.open_dataset(case_path)
-    """ds_base['lon'] = ds_base['lon'].round(5)
-    ds_base['lat'] = ds_base['lat'].round(5)
-
-    ds_base_season = monthly_to_seasonal(ds_base)
-    ds_base_season['lon'] = ds_base_season['lon'].round(5)
-    ds_base_season['lat'] = ds_base_season['lat'].round(5)
-    ds_base_season = ds_base_season[var]
-    ds_cases.append(ds_base_season)"""
-    #file_mam4_1 = os.path.join(mam4_1_dir, f'{case_names[0]}_AODVISdn_climo.nc')
-    #file_mam4_2 = os.path.join(mam4_2_dir, f'{case_names[1]}_AODVISdn_climo.nc')
-
-    for idx,case in enumerate(test_case_names):
-        """
-        TODO: Need to check grid of test data in case they are on a different
-                 grid than these particular observational data sets!
-        
-        """
-        #mam_dir = 
-        #Load re-gridded model files:
-
-        ds_case = adfobj.data.load_regrid_da(case, var)
-
-        #Skip this variable/case if the regridded climo file doesn't exist:
-        if ds_case is None:
-            dmsg = f"No regridded test file for {case} for variable `{var}`, global lat/lon plots skipped."
-            adfobj.debug_log(dmsg)
-            continue
-        #casedir = f"{mam_dir}/{case}/yrs_{syears[idx]}-{eyears[idx]}/"
-        #case_path = os.path.join(casedir, f'{case}_{var}_climo.nc')
-        #ds_case = xr.open_dataset(case_path)
-        ds_case['lon'] = ds_case['lon'].round(5)
-        ds_case['lat'] = ds_case['lat'].round(5)
-
-        ds_case_season = monthly_to_seasonal(ds_case)
-        ds_case_season['lon'] = ds_case_season['lon'].round(5)
-        ds_case_season['lat'] = ds_case_season['lat'].round(5)
-        #ds_case_season = ds_case_season[var]
-        if idx == 0:
-            print("\n",ds_case_season.shape,"\n")
-        ds_cases.append(ds_case_season)
-    
-    # Gather reference variable data
-    ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
-    if ds_base is None:
-        dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
-        adfobj.debug_log(dmsg)
-        #continue
-
-    ds_base['lon'] = ds_base['lon'].round(5)
-    ds_base['lat'] = ds_base['lat'].round(5)
-
-    ds_base_season = monthly_to_seasonal(ds_base)
-    ds_base_season['lon'] = ds_base_season['lon'].round(5)
-    ds_base_season['lat'] = ds_base_season['lat'].round(5)
-    #ds_base_season = ds_base_season[var]
-    ds_cases.append(ds_base_season)
-    
-    case_num = len(ds_cases)
 
     # Observational Datasets
     #-----------------------
@@ -205,13 +106,55 @@ def aod_latlon(adfobj):
     ds_mod08_m3_season['lat'] = ds_mod08_m3_season['lat'].round(5)
     #ds_mod08_m3_season.to_netcdf('MOD08_M3_192x288_AOD_2001-2020_seasonal_climo.nc')
 
-
-    #ds_mod08_m3_season = ds_mod08_m3_season['AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean']
-    #ds_merra2_season = ds_merra2_season['TOTEXTTAU']
-
     ds_obs = [ds_mod08_m3_season, ds_merra2_season]
     obs_titles = ["TERRA MODIS", "MERRA2"]
 
+    # Model Case Datasets
+    #-----------------------
+    ds_cases = []
+
+    for idx,case in enumerate(test_case_names):
+        """
+        TODO: Need to check grid of test data in case they are on a different
+                 grid than these particular observational data sets!
+        
+        """
+        #Load re-gridded model files:
+        ds_case = adfobj.data.load_regrid_da(case, var)
+
+        #Skip this variable/case if the regridded climo file doesn't exist:
+        if ds_case is None:
+            dmsg = f"No regridded test file for {case} for variable `{var}`, global lat/lon plots skipped."
+            adfobj.debug_log(dmsg)
+            continue
+        else:
+            ds_case['lon'] = ds_case['lon'].round(5)
+            ds_case['lat'] = ds_case['lat'].round(5)
+
+            # Calculate seasonal means
+            ds_case_season = monthly_to_seasonal(ds_case)
+            ds_case_season['lon'] = ds_case_season['lon'].round(5)
+            ds_case_season['lat'] = ds_case_season['lat'].round(5)
+            ds_cases.append(ds_case_season)
+    
+    # Gather reference variable data
+    ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
+    if ds_base is None:
+        dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
+        adfobj.debug_log(dmsg)
+    else:
+        ds_base['lon'] = ds_base['lon'].round(5)
+        ds_base['lat'] = ds_base['lat'].round(5)
+
+        # Calculate seasonal means
+        ds_base_season = monthly_to_seasonal(ds_base)
+        ds_base_season['lon'] = ds_base_season['lon'].round(5)
+        ds_base_season['lat'] = ds_base_season['lat'].round(5)
+        ds_cases.append(ds_base_season)
+        
+    case_num = len(ds_cases)
+
+    
 
     # Individual global lat/lon plots
     #--------------------------------
@@ -226,7 +169,6 @@ def aod_latlon(adfobj):
             field = ds_case[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
     
-        print("OBSIES")
         # Loop over supplied obs datasets
         for i_obs,ds_ob in enumerate(ds_obs):
             obs_name = obs_titles[i_obs]
@@ -244,16 +186,13 @@ def aod_latlon(adfobj):
             types = []
             case_namez = []
             season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
-            #print("ds_ob",ds_ob,"\n")
 
             obs_name = obs_titles[i_obs]
             chem_season = season_abbr[i_s]
-            #print(season)
 
             for i_case,ds_case in enumerate(ds_cases):
                 case_nickname = case_nicknames[i_case]
                 #print(f"{case_nickname} minus {obs_name}")
-                #case_field = ds_case[:,:,season]- ds_ob[:,:,season]
                 case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
                 plotnames.append(f'{case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
                 fields.append(case_field)
@@ -263,39 +202,23 @@ def aod_latlon(adfobj):
 
                 #print(f"{case_nickname} minus {obs_name} % Diff")
                 field_relerr = 100 * case_field / ds_ob.sel(season=season)
-                #field_relerr = 100 * case_field / ds_ob[:,:,season]
                 field_relerr = np.clip(field_relerr, -100, 100)
                 plotnames.append(f'Percent Diff {case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
                 fields.append(field_relerr)
                 params.append(plot_params_relerr)
                 types.append("Percent Diff")
                 case_namez.append(case_names[i_case])
+            # End for
 
+            # Create 4-panel plot for season
             yeah_boi(adfobj, plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
-            #yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, symmetric=False)
+        # End for
+    # End for
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#######################################
+# Helper functions for AOD 4-panel plts
+#######################################
 
 def monthly_to_seasonal(ds,obs=False):
     da = xr.DataArray(
@@ -315,15 +238,11 @@ def monthly_to_seasonal(ds,obs=False):
     if obs:
         for varname in ds:
             if '_n' not in varname:
-                #print(varname)
-                # MAM, JJA, SON, DJF
                 ds_season = xr.zeros_like(da_season)
-                for i,s in enumerate(seasons):
-                    #ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
+                for s in seasons:
                     dataarrays.append(pf.seasonal_mean(ds, season=s, is_climo=True))
     else:
         for i,s in enumerate(seasons):
-            #ds_season = pf.seasonal_mean(ds, season=s, is_climo=True)
             dataarrays.append(pf.seasonal_mean(ds, season=s, is_climo=True))
 
     # Use xr.concat to combine along a new 'season' dimension
@@ -332,10 +251,8 @@ def monthly_to_seasonal(ds,obs=False):
     # Assign the 'season' labels to the new 'season' dimension
     ds_season['season'] = seasons
     ds_season = ds_season.transpose('lat', 'lon', 'season')
-
     # The new DataArray now has dimensions ('season', 'lat', 'lon')
-    #print(ds_season)
-    #print(ds_season.dims)
+
     return ds_season
 
 
@@ -385,21 +302,14 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     #diffs = np.diff(lon_values)
     #print("diffies",diffs)
 
-    field_values, lon_values \
-        = add_cyclic_point(field_values, coord=lon_values)
-
-    #print(lat_values.shape)
-    #print(lon_values.shape)
-    #print(field_values.shape)
+    field_values, lon_values = add_cyclic_point(field_values, coord=lon_values)
 
     lon_mesh, lat_mesh = np.meshgrid(lon_values, lat_values)
 
-    # print(np.nanmin(field_values), np.nanmax(field_values))
     field_mean = np.nanmean(field_values)
 
     extend_option = 'both' if symmetric else 'max'
     cmap_option = plt.cm.bwr if symmetric else plt.cm.turbo
-    #print("I'm guessing this is where it's going to brizzeak??")
 
     cp = ax.contourf(lon_mesh, lat_mesh, field_values,
         levels, cmap=cmap_option, extend=extend_option,
@@ -433,7 +343,7 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     print("png_file")
     #png_file = Path(plot_dir) / f'QBO_Amplitude_Special_Mean.{plot_type}'
     #adfobj.add_website_data(png_file, f"AOD_{case_name}", None, season=season, multi_case=True, plot_type="Chemistry")
-    #print()
+
     # Write final figure to file
     plt.savefig(png_file, bbox_inches='tight', dpi=300)
     # plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
@@ -443,9 +353,6 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     plt.clf()
 
 
-
-
-#yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False)
 def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
 
     #Set plot file type:
@@ -647,3 +554,6 @@ def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name
         print("HUH???",i)
         for j in ind_web_dict[i].keys():
             adfobj.add_website_data(**ind_web_dict[i][j])"""
+
+##############
+#END OF SCRIPT
