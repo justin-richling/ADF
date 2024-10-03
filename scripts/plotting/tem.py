@@ -522,7 +522,6 @@ def tem(adf):
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem
                     ax[1].set_title(f"{obs_title}\n",fontsize=10)
-
                 else:
                     base_yrs = f"{syear_baseline}-{eyear_baseline}"
                     plot_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {base_yrs}"
