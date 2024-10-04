@@ -339,7 +339,10 @@ def tem(adf):
                 
                 #Gather contour plot options
                 #prep_contour_plot(adata, bdata, diffdata, **kwargs)
-                cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
+                if s == "DJF":
+                    print("var",var)
+                    printies = True
+                cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, printies, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
                 norm = cp_info['norm1']
                 cmap = cp_info['cmap1']

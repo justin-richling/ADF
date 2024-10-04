@@ -1728,7 +1728,7 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
         ax = _meridional_plot_line(ax, lon,  data, color, **kwargs)
         return ax
 
-def prep_contour_plot(adata, bdata, diffdata, **kwargs):
+def prep_contour_plot(adata, bdata, diffdata, printies, **kwargs):
     """Preparation for making contour plots.
 
     Prepares for making contour plots of adata, bdata, and diffdata, which is
@@ -1781,7 +1781,8 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     #End if
 
     if 'contour_levels' in kwargs:
-        print('Looking at: contour_levels')
+        if printies:
+            print('Looking at: contour_levels')
         levels1 = [float(x) for x in kwargs['contour_levels']]
         if ('non_linear' in kwargs) and (kwargs['non_linear']):
             cmap_obj = cm.get_cmap(cmap1)
@@ -1790,7 +1791,8 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
 
     elif 'contour_levels_range' in kwargs:
-        print('Looking at: contour_levels_range')
+        if printies:
+            print('Looking at: contour_levels_range')
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
 
@@ -1850,7 +1852,8 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         "diff_contour_range must have exactly three entries: min, max, step"
         lev_range = [float(x) for x in kwargs['diff_contour_range']]
         levelsdiff = np.arange(*lev_range)
-        print("Diff Levels:",levelsdiff)
+        if printies:
+            print("Diff Levels:",levelsdiff)
         #levelsdiff = np.arange(*kwargs['diff_contour_range'])
     else:
         # set a symmetric color bar for diff:
