@@ -408,7 +408,7 @@ def seasonal_cycle(adfobj):
 
 
 
-    """#WACCM QBO
+    #WACCM QBO
     #---------
     plot_name = plot_loc / f"QBO_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
     if (not redo_plot) and plot_name.is_file():
@@ -430,7 +430,7 @@ def seasonal_cycle(adfobj):
                                     ext="SeasonalCycle_Mean",
                                     category="Seasonal Cycle",
                                     )
-    #End if"""
+    #End if
 
     #End plotting scripts
 
