@@ -255,7 +255,23 @@ class AdfInfo(AdfConfig):
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
+                print("starting_location",starting_location,"\n")
+                #ug = Path()
+                print("WoOOooHAHahahAhsd",starting_location.is_dir())
+                if not starting_location.is_dir():
+                    msg = "Checking history file location:\n"
+                    msg += f"\tYeah, there's no history file location: '{starting_location}'. Why did this not get checked before getting here. I mean come on.\n"
+                    self.debug_log(msg)
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
+                #print("file_list",file_list)
+                if len(file_list) == 0:
+                    msg = "Checking history files:\n"
+                    msg += f"\tYeah, there's no history files in {starting_location}. Why did this not get checked before getting here. I mean come on.\n"
+                    self.debug_log(msg)
+                else:
+                    msg = "Checking history files for time bounds:\n"
+                    msg += f"\Sweet, there's history files in {starting_location}. Checking if supplied years are part of dataset...\n"
+                    self.debug_log(msg)
                 # Partition string to find exactly where h-number is
                 # This cuts the string before and after the `{hist_str}.` sub-string
                 # so there will always be three parts:
@@ -420,7 +436,24 @@ class AdfInfo(AdfConfig):
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
+                print("starting_location",starting_location,"\n")
+                #ug = Path()
+                print("WoOOooHAHahahAhsd",starting_location.is_dir())
+                if not starting_location.is_dir():
+                    msg = "Checking history file location:\n"
+                    msg += f"\tYeah, there's no history file location: '{starting_location}'. Why did this not get checked before getting here. I mean come on.\n"
+                    self.debug_log(msg)
                 file_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
+                #print("file_list",file_list)
+                if len(file_list) == 0:
+                    msg = "Checking history files:\n"
+                    msg += f"\tYeah, there's no history files in {starting_location}. Why did this not get checked before getting here. I mean come on.\n"
+                    self.debug_log(msg)
+                else:
+                    msg = "Checking history files for time bounds:\n"
+                    msg += f"\Sweet, there's history files in {starting_location}. Checking if supplied years are part of dataset...\n"
+                    self.debug_log(msg)
+
                 #Partition string to find exactly where h-number is
                 #This cuts the string before and after the `{hist_str}.` sub-string
                 # so there will always be three parts:
