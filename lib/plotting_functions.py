@@ -3426,7 +3426,8 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         start_idx = 0 #119-24
         #print(plotdata[start_idx:start_idx+(12*9),:].shape)
         #end_idx = start_idx+(12*9)+1
-        end_idx = start_idx+nt+1
+        #end_idx = start_idx+nt+1
+        end_idx = start_idx+nt_sub+1
         #print("AHH",start_idx+(12*9)+1,"\n")
         #print("end_idx",end_idx,"\n\n")
 
