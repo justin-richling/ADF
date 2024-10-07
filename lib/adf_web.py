@@ -678,7 +678,6 @@ class AdfWeb(AdfObs):
                 #print("web_data.name",web_data.name)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
-                                       "ext": web_data.ext,
                                        "season_title": web_data.season,
                                        "case_name": web_data.case,
                                        "case_yrs": case_yrs,
