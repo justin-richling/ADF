@@ -514,22 +514,25 @@ def aod_latlon(adfobj):
     
 
     # Individual global lat/lon plots
+    # - For seasonal means
     #--------------------------------
-    for i_season in range(1):
+    for i_season,s_abbr in enumerate(season_abbr):
         # Loop over all test cases - could be multi-case scenario
         for i_case,ds_case in enumerate(ds_cases):
             case_name = str(case_names[i_case])
             varname = ds_case.name
-            plotfile = case_name + '_' + var + '_' + season_abbr[i_season]
+            #plotfile = case_name + '_' + var + '_' + s_abbr
+            plotfile = f"{varname}_{case_name}_{season}_LatLon_Mean.{plot_type}"
             field = ds_case[:,:,i_season]
-            plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
+            plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + s_abbr, plot_params, field, i_season)
     
         # Loop over supplied obs datasets
         for i_obs,ds_ob in enumerate(ds_obs):
             obs_name = obs_titles[i_obs]
-            plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
+            #plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
+            plotfile = f"{varname}_{obs_name}_{season}_LatLon_Mean.{plot_type}"
             field = ds_ob[:,:,i_season]
-            plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + season_abbr[i_season], plot_params, field, i_season)
+            plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + s_abbr, plot_params, field, i_season)
     
     # 4-Panel global lat/lon plots
     #-----------------------------
@@ -565,7 +568,7 @@ def aod_latlon(adfobj):
             # End for
 
             # Create 4-panel plot for season
-            yeah_boi(adfobj, plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
+            aod_4_panel_latlon(adfobj, plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
         # End for
     # End for
 
@@ -605,16 +608,19 @@ def monthly_to_seasonal(ds,obs=False):
     # Assign the 'season' labels to the new 'season' dimension
     ds_season['season'] = seasons
     ds_season = ds_season.transpose('lat', 'lon', 'season')
-    # The new DataArray now has dimensions ('season', 'lat', 'lon')
 
     return ds_season
 
 
 
 def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, field, season, symmetric=False):
-    import numpy as np
-    logging.info(plotfile)
-
+    """
+    Plotting individual global lat/lon plots of seasonal means for:
+        - Test case
+        - Baseline case
+        - MODIS
+        - MERRA2
+    """
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
@@ -623,12 +629,6 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     plot_type = basic_info_dict.get('plot_type', 'png')
 
     plot_dir = adfobj.plot_location[0]
-
-    states_provinces = cfeature.NaturalEarthFeature(
-        category='cultural',
-        name='admin_1_states_provinces_lines',
-        scale='50m',
-        facecolor='none')
 
     ax = plt.axes(projection=ccrs.PlateCarree())
 
@@ -642,11 +642,12 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
         levels = sorted(np.append(
             levels, np.array(plot_params['augment_levels'])))
 
-    # ****** QUESTION: Would this ever be the case???? ******
     if field.ndim > 2:
-        # field_values = np.clip(field.values[0,:,:], levels[0], levels[-1])
         field_values = field.values[0,:,:]
-        print("Required 2d lat/lon coordinates, got {field.ndim}d")
+        print(f"Required 2d lat/lon coordinates, got {field.ndim}d")
+        emg = "AOD 4-panel plot:\n"
+        emg += f"\t Too many dimensions for {case_name}. Needs 2 (lat/lon) but got {field.ndim}"
+        adfobj.debug_log(emg)
         return
 
     #field_values = field.values[:,:]
@@ -665,8 +666,6 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     # ax.gridlines()
     ax.set_facecolor('gray')
     ax.coastlines()
-    # ax.add_feature(cfeature.BORDERS)
-    # ax.add_feature(states_provinces)
 
     plt.title(plotname + ('  Mean %.2g' % field_mean))
 
@@ -685,8 +684,9 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     #plt.savefig(pdf_file, bbox_inches='tight')
 
     #plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
-    plotfile = f"AOD_{case_name}_{season}_Chemistry_Mean.{plot_type}"
+    #plotfile = f"AOD_{case_name}_{season}_LatLon_Mean.{plot_type}"
     png_file = Path(plot_dir) / plotfile
+    logging.info(png_file)
     #png_file = Path(plot_dir) / f'QBO_Amplitude_Special_Mean.{plot_type}'
     #adfobj.add_website_data(png_file, f"AOD_{case_name}", None, season=season, multi_case=True, plot_type="Chemistry")
 
@@ -699,7 +699,7 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     plt.clf()
 
 
-def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
+def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
