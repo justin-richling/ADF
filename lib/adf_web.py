@@ -188,7 +188,7 @@ class AdfWeb(AdfObs):
                          season = None,
                          non_season = False,
                          plot_type = "Special",
-                         multi_case=False
+                         multi_case=False,
                          cat_sub=None):
 
         """
