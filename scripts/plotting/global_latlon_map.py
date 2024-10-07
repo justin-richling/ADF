@@ -323,6 +323,7 @@ def global_latlon_map(adfobj):
 
     # Check for AOD, and run the 4-panel diagnostics against MERRA and MODIS
     if "AODVISdn" in var_list:
+        print("\tRunning AOD 4-panel diagnostics...")
         aod_latlon(adfobj)
 
     #Notify user that script has ended:
@@ -420,7 +421,7 @@ def aod_latlon(adfobj):
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
-    res_aod_diags = res[var]["aod_diags"]
+    res_aod_diags = res["aod_diags"]
     plot_params = res_aod_diags["plot_params"]
     plot_params_relerr = res_aod_diags["plot_params_relerr"]
 
