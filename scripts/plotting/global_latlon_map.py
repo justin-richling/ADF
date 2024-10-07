@@ -643,14 +643,13 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
             levels, np.array(plot_params['augment_levels'])))
 
     # ****** QUESTION: Would this ever be the case???? ******
-    if field.ndim == 3:
+    if field.ndim > 2:
         # field_values = np.clip(field.values[0,:,:], levels[0], levels[-1])
         field_values = field.values[0,:,:]
-    else:
-        # field_values = np.clip(field.values[:,:], levels[0], levels[-1])
-        field_values = field.values[:,:]
-        # field_values = field
+        print("Required 2d lat/lon coordinates, got {field.ndim}d")
+        return
 
+    #field_values = field.values[:,:]
     field_values, lon_values = add_cyclic_point(field_values, coord=lon_values)
     lon_mesh, lat_mesh = np.meshgrid(lon_values, lat_values)
 
