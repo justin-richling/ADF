@@ -342,14 +342,11 @@ class AdfWeb(AdfObs):
             self.end_diag_fail(emsg)
         #End except
 
-        #Make a jinja function that mimics python list object. This will allow for
-        # the use of 'list' in the html rendering.
+        #Make jinja functions that mimics python functions.
+        #  - This will allow for the use of 'list' in the html rendering.
         def jinja_list(seas_list):
             return list(seas_list)
-
-        def jinja_print(arg):
-            return print(arg)
-        
+        #   - This will allow for the use of 'enumerate' in the html rendering.
         def jinja_enumerate(arg):
             return enumerate(arg)
 
@@ -533,46 +530,23 @@ class AdfWeb(AdfObs):
                     #End if
                 #End if
 
-                """#Initialize Ordered Dictionary for plot type:
-                if ptype not in mean_html_info:
-                    mean_html_info[ptype] = OrderedDict()
-                #End if
-
-                if category not in mean_html_info[ptype]:
-                    mean_html_info[ptype][category] = OrderedDict()
-                #End if"""
-
                 #Initialize Ordered Dictionary for plot type:
                 if ptype not in mean_html_info:
                     mean_html_info[ptype] = OrderedDict()
                 #End if
 
-                # Initialize Ordered Dictionary for category if not exists
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
-                if ptype == "Chemistry":
-                    match_string = "4-Panel AOD Diags"
-                    # Check if the matching category exists
-                    if match_string in mean_html_info[ptype]:
-                        # Pop the matching category
-                        cat_value = mean_html_info[ptype].pop(match_string)
-                        
-                        # Re-insert the matching category at the front
-                        mean_html_info[ptype] = OrderedDict([(match_string, cat_value)] + list(mean_html_info[ptype].items()))
+                #End if
 
                 #Initialize Ordered Dictionary for variable:
                 if var not in mean_html_info[ptype][category]:
-                    if web_data.cat_sub:
-                        var = web_data.cat_sub
                     mean_html_info[ptype][category][var] = OrderedDict()
                 #End if
 
                 #Initialize Ordered Dictionary for season:
                 #print("web_data.html_file.name",web_data.html_file.name,"\n")
                 mean_html_info[ptype][category][var][season] = web_data.html_file.name
-                
-
-
 
                 #Initialize Ordered Dictionary for non season kwarg:
                 if ptype not in non_seasons:
@@ -668,16 +642,7 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
-                # var_name
-                
 
-                """if web_data.cat_sub:
-                    var2 = web_data.cat_sub
-                if web_data.category == "Test Case AOD Diags":
-                    if web_data.season == "DJF":
-                        #if web_data.case == self.data.ref_case_label:
-                        if 1==1:
-                            print("WOWSA:",mean_html_info[web_data.plot_type][web_data.category][var2]["DJF"],"\n\n\n")"""
                 #print("web_data.name",web_data.name)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
@@ -692,11 +657,6 @@ class AdfWeb(AdfObs):
                                        "plot_types": plot_types,
                                        "seasons": seasons,
                                        "non_seasons": non_seasons[web_data.plot_type]}
-                #try:
-                #    web_data.cat_sub
-                #    rend_kwarg_dict["html_name"] = web_data.cat_sub
-                #except:
-                #    print("asdfasdf")
 
                 tmpl = jinenv.get_template('template.html')  #Set template
                 rndr = tmpl.render(rend_kwarg_dict) #The template rendered
@@ -713,14 +673,10 @@ class AdfWeb(AdfObs):
                 mean_tmpl = jinenv.get_template('template_mean_diag.html')
 
                 #Remove keys from main dictionary for this html page
-                #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
                 templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'season_title'}}
                 templ_rend_kwarg_dict["list"] = jinja_list
                 templ_rend_kwarg_dict["enumerate"] = jinja_enumerate
-                rend_kwarg_dict["enumerate"] = jinja_enumerate
-                rend_kwarg_dict["list"] = jinja_list
-                templ_rend_kwarg_dict["print"] = jinja_print
-                mean_rndr = mean_tmpl.render(rend_kwarg_dict)
+                mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
 
                 #Write mean diagnostic plots HTML file:
                 with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
