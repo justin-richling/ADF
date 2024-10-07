@@ -84,17 +84,6 @@ Rgas: 287.04 #[J/K/Kg]=8.314/0.028965
 #List of variables for CAM-CHEM runs that have different constituents than regular CAM runs
 cam_chem_list: ["SOA","SO4"]
 
-# AOD specific diagnostics - 4-Panel plots
-aod_diags:
-    plot_params:
-      range_min: -0.4
-      range_max: 0.4
-      nlevel: 17
-
-    plot_params_relerr:
-      range_max: 100
-      range_min: -100
-      nlevel: 21
 
 #+++++++++++++
 # Category: Microphysics
@@ -1313,120 +1302,21 @@ utendwtem:
   obs_name: "ERA5"
   obs_var_name: "utendwtem"
 
-#lat_vs_month:
-#  Q: {"slat":-90,"nlat":90,"levels":[0.5,5,0.4],
-#      "cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
-#      "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100}
-
-#  T: {"slat":-45,"nlat":45,"levels":[190,221,2x],
-#      "cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)","tick_inter":15,"units":"K",
-#      "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"lev":90}
-
-#var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.2),"cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
-#                "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100},
-#            "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
-#                "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
-
-
-
-
 # Plot Specific formatting
 ##########################
-#NOTE: If using any obs file that is in the ADF default directory, provide just the file name
-#      ex: MERRA2_met.nc -> is an ADF default obs file
-#
-#      If providing your own path for obs file (not using ADF defaults), provide the full path and file name
-#      ex: /glade/work/richling/ADF/different_MERRA2.nc
 
-# WACCM seasonal cycle plots
-#---------------------------
-waccm_seasonal_cycle:
-  calc_var_list: ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
-  #calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
-  calc_var_list: ['U','T','Q']
+# AOD 4-Panel plots vs MERRA and MODIS
+#-------------------------------------
+aod_diags:
+    plot_params:
+      range_min: -0.4
+      range_max: 0.4
+      nlevel: 17
 
-  merra2_vars: ['U','T','V','lat','lev']
-  saber_vars: ['u','temp','lat','lev']
-  #merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
-  #saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
-  
-  merra2_file: "MERRA2_met.nc"
-  #merra2_file: "MERRA2_met_FAKESIES.nc"
-  saber_file: "SABER_monthly_2002-2014.nc"
-  #swoosh_file: 
+    plot_params_relerr:
+      range_max: 100
+      range_min: -100
+      nlevel: 21
+#-------------------------------------
 
-  obs_cam_vars:
-    saber:
-      U: "u"
-      T: "temp"
-    merra: 
-      U: "U"
-      T: "T"
-    swoosh:
-      O3: "O3"
-
-# Latitude vs Month
-lat_vs_month:
-  T: 
-    slat: -45
-    nlat: 45
-    levels: [190,221,2]
-    diff_levels: [-5,5.1,0.5]
-    cmap: 'RdBu_r'
-    title: "Cold Point Tropopause (CPT) Temps"
-    tick_inter: 15
-    units: "K"
-    y_labels: ["45S","30S","15S","EQ","15N","30N","45N"]
-    plot_vert_levs: [90]
-    cmap: 'RdYlBu_r'
-    diff_cmap: "BrBG"
-  
-  Q: 
-    slat: -90
-    nlat: 90
-    levels: [0.5,5.3,0.3]
-    #diff_levels: [-2,2.1,.2]
-    diff_levels: [-1.2,1.3,0.12]
-    cmap: 'RdYlBu_r'
-    title: "H$_{2}$O Mixing Ratio"
-    y_labels: ["90S","60S","30S","EQ","30N","60N","90N"]
-    tick_inter: 30
-    units: "ppmv"
-    plot_vert_levs: [90,100]
-    cmap: 'RdYlBu_r'
-    diff_cmap: "BrBG"
-
-# Comparison plots for SABER/MERRA2/SWOOSH
-comparison_plots:
-  cam_vars: ["U","T"]
-  #NOTE: If using month number for month, you must keep it as an integer, not a string!
-  interval: [6,12,"DJF","JJA"]
-
-  U:
-    levs: [-120, 121, 10]
-    diff_levs: [-30, 31, 3]
-    units: "m/s"
-  T: 
-    levs: [140, 300, 10]
-    diff_levs: [-40, 41, 4]
-    units: "K"
-
-# Polar Cap Temps
-pcap_plots:
-  T: 
-    levs: [140, 300, 10]
-    diff_levs: [-40, 41, 4]
-    units: "K"
-
-# Tape Recorder plot
-#-------------------
-tape_recorder:
-  mls:
-    #obs_file: "mls_h2o_latNpressNtime_3d_monthly_v5_FAKESIES.nc"
-    obs_file: "mls_h2o_latNpressNtime_3d_monthly_v5.nc"
-
-  era5:
-    obs_file: "ERA5_Q_10Sto10N_1980to2020.nc"
-
-#-----------
 #End of File
