@@ -12,32 +12,18 @@ plot_file_op
     Check on status of output plot file.
 """
 #Import standard modules:
-import os
-import logging
 from pathlib import Path
 import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
 
-# Import plotting modules:
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
-from cartopy.util import add_cyclic_point
-from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import plotting_functions as pf
 
-# Warnings
-import warnings  # use to warn user about missing files.
-#     - Format warning messages:
+#Format warning messages:
 def my_formatwarning(msg, *args, **kwargs):
     """Issue `msg` as warning."""
     return str(msg) + '\n'
 warnings.formatwarning = my_formatwarning
-
-#########
 
 def global_latlon_map(adfobj):
     """
@@ -321,9 +307,7 @@ def global_latlon_map(adfobj):
         #End for (case loop)
     #End for (variable loop)
 
-    # Check for AOD, and run the 4-panel diagnostics against MERRA and MODIS
     if "AODVISdn" in var_list:
-        print("\tRunning AOD 4-panel diagnostics...")
         aod_latlon(adfobj)
 
     #Notify user that script has ended:
@@ -383,7 +367,39 @@ def plot_file_op(adfobj, plot_name, var, case_name, season, web_category, redo_p
             return False  # False tells caller that file exists and not to overwrite
     else:
         return True
-########
+
+
+
+
+import os
+import logging
+
+import numpy as np
+from scipy import stats
+
+import matplotlib
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+
+import cartopy
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from cartopy.util import add_cyclic_point
+from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
+
+import xarray as xr
+import pandas as pd
+
+import warnings  # use to warn user about missing files.
+
+import plotting_functions as pf
+from pathlib import Path
+
+#Format warning messages:
+def my_formatwarning(msg, *args, **kwargs):
+    """Issue `msg` as warning."""
+    return str(msg) + '\n'
 
 
 def aod_latlon(adfobj):
@@ -421,7 +437,7 @@ def aod_latlon(adfobj):
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
-    res_aod_diags = res["aod_diags"]
+    res_aod_diags = res[var]["aod_diags"]
     plot_params = res_aod_diags["plot_params"]
     plot_params_relerr = res_aod_diags["plot_params_relerr"]
 
@@ -514,25 +530,24 @@ def aod_latlon(adfobj):
     
 
     # Individual global lat/lon plots
-    # - For seasonal means
     #--------------------------------
-    for i_season,s_abbr in enumerate(season_abbr):
+    for i_season in range(1):
         # Loop over all test cases - could be multi-case scenario
         for i_case,ds_case in enumerate(ds_cases):
+    
             case_name = str(case_names[i_case])
             varname = ds_case.name
-            #plotfile = case_name + '_' + var + '_' + s_abbr
-            plotfile = f"AOD_{case_name}_{seasons[i_season]}_LatLon_Mean.{plot_type}"
+            #print("case_name",case_name)
+            plotfile = case_name + '_' + var + '_' + season_abbr[i_season]
             field = ds_case[:,:,i_season]
-            plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + s_abbr, plot_params, field, i_season)
+            plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + season_abbr[i_season], plot_params, field, i_season)
     
         # Loop over supplied obs datasets
         for i_obs,ds_ob in enumerate(ds_obs):
             obs_name = obs_titles[i_obs]
-            #plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
-            plotfile = f"AOD_{obs_name}_{seasons[i_season]}_LatLon_Mean.{plot_type}"
+            plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
             field = ds_ob[:,:,i_season]
-            plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + s_abbr, plot_params, field, i_season)
+            plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + season_abbr[i_season], plot_params, field, i_season)
     
     # 4-Panel global lat/lon plots
     #-----------------------------
@@ -543,6 +558,7 @@ def aod_latlon(adfobj):
             params = []
             types = []
             case_namez = []
+            #season_abbr = ['Mar-Apr-May', 'Jun-Jul-Aug', 'Sep-Oct-Nov', 'Dec-Jan-Feb']
 
             obs_name = obs_titles[i_obs]
             chem_season = season_abbr[i_s]
@@ -568,7 +584,7 @@ def aod_latlon(adfobj):
             # End for
 
             # Create 4-panel plot for season
-            aod_4_panel_latlon(adfobj, plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
+            yeah_boi(adfobj, plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
         # End for
     # End for
 
@@ -608,19 +624,16 @@ def monthly_to_seasonal(ds,obs=False):
     # Assign the 'season' labels to the new 'season' dimension
     ds_season['season'] = seasons
     ds_season = ds_season.transpose('lat', 'lon', 'season')
+    # The new DataArray now has dimensions ('season', 'lat', 'lon')
 
     return ds_season
 
 
 
 def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, field, season, symmetric=False):
-    """
-    Plotting individual global lat/lon plots of seasonal means for:
-        - Test case
-        - Baseline case
-        - MODIS
-        - MERRA2
-    """
+    import numpy as np
+    logging.info(plotfile)
+
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
@@ -629,6 +642,12 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     plot_type = basic_info_dict.get('plot_type', 'png')
 
     plot_dir = adfobj.plot_location[0]
+
+    states_provinces = cfeature.NaturalEarthFeature(
+        category='cultural',
+        name='admin_1_states_provinces_lines',
+        scale='50m',
+        facecolor='none')
 
     ax = plt.axes(projection=ccrs.PlateCarree())
 
@@ -642,16 +661,22 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
         levels = sorted(np.append(
             levels, np.array(plot_params['augment_levels'])))
 
-    if field.ndim > 2:
+    # ****** QUESTION: Would this ever be the case???? ******
+    if field.ndim == 3:
+        # field_values = np.clip(field.values[0,:,:], levels[0], levels[-1])
         field_values = field.values[0,:,:]
-        print(f"Required 2d lat/lon coordinates, got {field.ndim}d")
-        emg = "AOD 4-panel plot:\n"
-        emg += f"\t Too many dimensions for {case_name}. Needs 2 (lat/lon) but got {field.ndim}"
-        adfobj.debug_log(emg)
-        return
+    else:
+        # field_values = np.clip(field.values[:,:], levels[0], levels[-1])
+        field_values = field.values[:,:]
+        # field_values = field
 
-    field_values = field.values[:,:]
+    #import numpy as np
+
+    #diffs = np.diff(lon_values)
+    #print("diffies",diffs)
+
     field_values, lon_values = add_cyclic_point(field_values, coord=lon_values)
+
     lon_mesh, lat_mesh = np.meshgrid(lon_values, lat_values)
 
     field_mean = np.nanmean(field_values)
@@ -666,6 +691,8 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     # ax.gridlines()
     ax.set_facecolor('gray')
     ax.coastlines()
+    # ax.add_feature(cfeature.BORDERS)
+    # ax.add_feature(states_provinces)
 
     plt.title(plotname + ('  Mean %.2g' % field_mean))
 
@@ -684,9 +711,8 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     #plt.savefig(pdf_file, bbox_inches='tight')
 
     #plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
-    #plotfile = f"AOD_{case_name}_{season}_LatLon_Mean.{plot_type}"
+    plotfile = f"AOD_{case_name}_{season}_Chemistry_Mean.{plot_type}"
     png_file = Path(plot_dir) / plotfile
-    logging.info(png_file)
     #png_file = Path(plot_dir) / f'QBO_Amplitude_Special_Mean.{plot_type}'
     #adfobj.add_website_data(png_file, f"AOD_{case_name}", None, season=season, multi_case=True, plot_type="Chemistry")
 
@@ -699,7 +725,7 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     plt.clf()
 
 
-def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
+def yeah_boi(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
 
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
@@ -708,6 +734,7 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
     plot_type = basic_info_dict.get('plot_type', 'png')
 
     plot_dir = adfobj.plot_location[0]
+    #plotfile = f'aod_output2/cases_vs_{obs_name.replace(" ","_")}_{season}'
 
     #png_file = plotfile + '.png'
     #pdf_file = plotfile + '.pdf'
@@ -720,12 +747,14 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
     file_type = basic_info_dict.get('plot_type', 'png')
 
     # create figure:
+    #fig = plt.figure(figsize=(14,10))
     fig = plt.figure(figsize=(7*case_num,10))
 
     proj = ccrs.PlateCarree()
 
     # LAYOUT WITH GRIDSPEC
     plot_len = int(3*case_num)
+    #print(plot_len)
     gs = mpl.gridspec.GridSpec(4, plot_len, wspace=0.5, hspace=0.0)
     gs.tight_layout(fig)
 
@@ -733,6 +762,7 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
     for i in range(case_num):
         start = i * 3
         end = (i + 1) * 3
+        #print(f"{start}:{end}")
         axs.append(plt.subplot(gs[0:2, start:end], projection=proj))
         axs.append(plt.subplot(gs[2:, start:end], projection=proj))
 
@@ -749,6 +779,10 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
         scale='50m',
         facecolor='none')
 
+    ind_web_dict = {}
+    ind_diff_web_dict = {}
+    #ind_img_list = []
+    #ind_cat_sub_list = []
     for i,field in enumerate(fields):
 
         ind_fig, ind_ax = plt.subplots(1, 1, figsize=((7*case_num)/2,10/2),subplot_kw={'projection': proj})
@@ -805,6 +839,17 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
             cbar.ax.set_xticklabels(plot_params[i]['tick_labels'])
             ind_cbar.ax.set_xticklabels(plot_params[i]['tick_labels'])
         cbar.ax.tick_params(labelsize=6)
+        ind_cbar
+
+        """#imgs.append(img)# = [img1,img2,img3,img4]
+        axs[i].tick_params('both', length=5, width=1.5, which='major')
+        ind_ax
+        axs[i].tick_params('both', length=5, width=1.5, which='minor')
+        ind_ax
+        axs[i].xaxis.set_major_formatter(lon_formatter)
+        ind_ax
+        axs[i].yaxis.set_major_formatter(lat_formatter)
+        ind_ax"""
 
         # Save the individual figure
         #ind_plotfile = f'aod_output2/{case_name[i]}_vs_{obs_name.replace(" ","_")}_{season}_{types[i]}'
@@ -812,19 +857,75 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
         ind_plotfile = f'{pbase}_{season}_Chemistry_Mean.{file_type}'
         ind_png_file = Path(plot_dir) / ind_plotfile
         ind_fig.savefig(f'{ind_png_file}', bbox_inches='tight', dpi=300)
+
+        ind_plotfile2 = f'AOD_vs_{obs_name.replace(" ","_")}_{types[i].replace(" ","_")}'
+
+        if i == 0:
+            uh = "Test"
+            ind_web_dict[uh] = {"diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
+        if i == 2:
+            uh = "Test"
+            ind_web_dict[uh] = {"per_diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
+        if i == 1:
+            uh = "Base"
+            ind_web_dict[uh] = {"diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
+        if i == 3:
+            uh = "Base"
+            ind_web_dict[uh] = {"per_diff":{"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}}
+        
+
+        #adfobj.add_website_data(ind_png_file, pbase, None, season=season, multi_case=True, plot_type="Chemistry", category=f"{uh} Case AOD Diags", cat_sub=ind_plotfile2)
+        """
+        web_data, web_name, case_name,
+                         category = None,
+                         season = None,
+                         non_season = False,
+                         plot_type = "Special",
+                         multi_case=False,
+                         cat_sub=None)
+        """
+        
+        """ind_web_dict[uh] = {"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}
+
+        ind_diff_web_dict[uh] = {"web_data":ind_png_file, "web_name":pbase, "case_name":None, "season":season, "multi_case":True,
+                            "plot_type":"Chemistry", "category":f"{uh} Case AOD Diags",
+                            "cat_sub":ind_plotfile2}"""
+
+
+        #adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="Chemistry")
+        #print(ind_plotfile,"\n")
         plt.close(ind_fig)
-    # End for
+
+        # plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
+        # adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
 
     # Save the 4-panel figure
     plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_LatLon_Mean.{plot_type}'
     png_file = Path(plot_dir) / plotfile
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
+    #ind_web_dict[f'AOD_diff'] = {"web_data":png_file, "web_name":plotfile, "case_name":None, "season":season, "multi_case":True,
+    #                        "plot_type":"Chemistry", "category":"4-Panel AOD Diags",
+    #                        "cat_sub":None}
     adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="LatLon", category="4-Panel AOD Diags")
     #fig.savefig(pdf_file, bbox_inches='tight')
     #command = 'pdf2ps ' + pdf_file + ' ' + ps_file
     #os.system(command)
     plt.close(fig)
 
+    """for i in ind_web_dict.keys():
+        print("HUH???",i)
+        for j in ind_web_dict[i].keys():
+            adfobj.add_website_data(**ind_web_dict[i][j])"""
 
 ##############
 #END OF SCRIPT
