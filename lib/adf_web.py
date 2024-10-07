@@ -594,7 +594,7 @@ class AdfWeb(AdfObs):
 
                 #Construct amwg_table.html
                 rend_kwarg_dict = {"title": main_title,
-                                  "case_name": case1,
+                                  "case_name": web_data.case,
                                   "case_yrs": case_yrs,
                                   "base_name": data_name,
                                   "baseline_yrs": baseline_yrs,
