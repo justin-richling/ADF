@@ -270,7 +270,7 @@ class AdfInfo(AdfConfig):
                     self.debug_log(msg)
                 else:
                     msg = "Checking history files for time bounds:\n"
-                    msg += f"\Sweet, there's history files in {starting_location}. Checking if supplied years are part of dataset...\n"
+                    msg += f"\tSweet, there's history files in {starting_location}. Checking if supplied years are part of dataset...\n"
                     self.debug_log(msg)
                 # Partition string to find exactly where h-number is
                 # This cuts the string before and after the `{hist_str}.` sub-string
@@ -451,7 +451,7 @@ class AdfInfo(AdfConfig):
                     self.debug_log(msg)
                 else:
                     msg = "Checking history files for time bounds:\n"
-                    msg += f"\Sweet, there's history files in {starting_location}. Checking if supplied years are part of dataset...\n"
+                    msg += f"\tSweet, there's history files in {starting_location}. Checking if supplied years are part of dataset...\n"
                     self.debug_log(msg)
 
                 #Partition string to find exactly where h-number is
