@@ -437,7 +437,7 @@ def aod_latlon(adfobj):
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
-    res_aod_diags = res[var]["aod_diags"]
+    res_aod_diags = res["aod_diags"]
     plot_params = res_aod_diags["plot_params"]
     plot_params_relerr = res_aod_diags["plot_params_relerr"]
 
