@@ -547,7 +547,7 @@ class AdfWeb(AdfObs):
                 # Initialize Ordered Dictionary for category if not exists
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
-                if ptype == "Chemistry":
+                if ptype == "LatLon":
                     match_string = "4-Panel AOD Diags"
                     # Check if the matching category exists
                     if match_string in mean_html_info[ptype]:
