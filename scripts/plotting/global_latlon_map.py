@@ -650,7 +650,7 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
         adfobj.debug_log(emg)
         return
 
-    #field_values = field.values[:,:]
+    field_values = field.values[:,:]
     field_values, lon_values = add_cyclic_point(field_values, coord=lon_values)
     lon_mesh, lat_mesh = np.meshgrid(lon_values, lat_values)
 
