@@ -417,7 +417,6 @@ def aod_latlon(adfobj):
 
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
-    print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -430,11 +429,7 @@ def aod_latlon(adfobj):
     # -- So check for it, and default to png
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
     plot_type = basic_info_dict.get('plot_type', 'png')
-    print(f"\t NOTE: Plot type is set to {plot_type}")
 
-    # check if existing plots need to be redone
-    redo_plot = adfobj.get_basic_info('redo_plot')
-    print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
 
     # Observational Datasets
@@ -513,7 +508,7 @@ def aod_latlon(adfobj):
 
     
 
-    # Individual global lat/lon plots
+    """# Individual global lat/lon plots
     # - For seasonal means
     #--------------------------------
     for i_season,s_abbr in enumerate(season_abbr):
@@ -533,6 +528,7 @@ def aod_latlon(adfobj):
             plotfile = f"AOD_{obs_name}_{seasons[i_season]}_LatLon_Mean.{plot_type}"
             field = ds_ob[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + s_abbr, plot_params, field, i_season)
+    """
     
     # 4-Panel global lat/lon plots
     #-----------------------------
@@ -613,7 +609,7 @@ def monthly_to_seasonal(ds,obs=False):
 
 
 
-def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, field, season, symmetric=False):
+'''def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, field, season, symmetric=False):
     """
     Plotting individual global lat/lon plots of seasonal means for:
         - Test case
@@ -697,6 +693,7 @@ def plot_lon_lat(adfobj, plotfile, plot_dir, case_name, plotname, plot_params, f
     #command = 'pdf2ps ' + pdf_file + ' ' + ps_file
     #os.system(command)
     plt.clf()
+'''
 
 
 def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, case_name, case_num, types, symmetric=False):
@@ -763,12 +760,17 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
             levels = sorted(np.append(
                 levels, np.array(plot_params[i]['augment_levels'])))
 
-        if field.ndim == 3:
+        if field.ndim > 2:
             field_values = field.values[0,:,:]
-        else:
-            field_values = field.values[:,:]
+            print(f"Required 2d lat/lon coordinates, got {field.ndim}d")
+            emg = "AOD 4-panel plot:\n"
+            emg += f"\t Too many dimensions for {case_name}. Needs 2 (lat/lon) but got {field.ndim}"
+            adfobj.debug_log(emg)
+            return
 
-        #field_values, lon_values  = add_cyclic_point(field_values, coord=lon_values)
+        # Get data
+        field_values = field.values[:,:]
+        field_values, lon_values  = add_cyclic_point(field_values, coord=lon_values)
         lon_mesh, lat_mesh = np.meshgrid(lon_values, lat_values)
         field_mean = np.nanmean(field_values)
 
