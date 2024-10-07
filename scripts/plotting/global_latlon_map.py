@@ -522,7 +522,7 @@ def aod_latlon(adfobj):
             case_name = str(case_names[i_case])
             varname = ds_case.name
             #plotfile = case_name + '_' + var + '_' + s_abbr
-            plotfile = f"{varname}_{case_name}_{season}_LatLon_Mean.{plot_type}"
+            plotfile = f"{varname}_{case_name}_{seasons[i_season]}_LatLon_Mean.{plot_type}"
             field = ds_case[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, case_name, f'{case_name}\nAOD 550 nm  1997-2000' + ' ' + s_abbr, plot_params, field, i_season)
     
@@ -530,7 +530,7 @@ def aod_latlon(adfobj):
         for i_obs,ds_ob in enumerate(ds_obs):
             obs_name = obs_titles[i_obs]
             #plotfile = obs_name + '_' + varname + '_' + season_abbr[i_season]
-            plotfile = f"{varname}_{obs_name}_{season}_LatLon_Mean.{plot_type}"
+            plotfile = f"{varname}_{obs_name}_{seasons[i_season]}_LatLon_Mean.{plot_type}"
             field = ds_ob[:,:,i_season]
             plot_lon_lat(adfobj, plotfile, plot_dir, obs_name, f'{obs_name}\nAOD 550 nm  2001-2020' + ' ' + s_abbr, plot_params, field, i_season)
     
