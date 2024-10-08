@@ -386,7 +386,7 @@ class AdfDiag(AdfWeb):
         # get info about variable defaults
         res = self.variable_defaults
 
-        print(baseline,"calc_cam_ts",calc_cam_ts,"\n")
+        print(case_name,"calc_cam_ts",calc_cam_ts,"\n")
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
