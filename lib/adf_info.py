@@ -234,18 +234,18 @@ class AdfInfo(AdfConfig):
             #else:
             #    self.__calc_bl_climo = True
 
-
+            calc_bl_ts = {}
             # Make new variable `calc_ts` in case the user does not want time series generation but 
             # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
             if (not baseline_ts_done) and (not input_ts_baseline) and (not self.get_baseline_info("calc_cam_climo")) and (self.get_baseline_info("cam_hist_loc")):
-                self.__calc_baseline_ts = False
+                calc_bl_ts[data_name] = False
             else:
-                self.__calc_baseline_ts = True
+                calc_bl_ts[data_name] = True
             """
             {"test": copy.copy(self.__calc_test_ts),
                 "baseline": copy.copy(self.__calc_baseline_ts)}
             """
-
+            self.__calc_baseline_ts = calc_bl_ts
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if (baseline_ts_done) and (input_ts_baseline):
