@@ -181,6 +181,8 @@ class AdfData:
             fils = self.ref_var_loc.get(var, None)
             return [fils] if fils is not None else None
         ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        if not ref_loc:
+            return None
         # NOTE: originally had this looking for *_baseline.nc
         fils = sorted(Path(ref_loc).glob(f"{self.ref_case_label}_{var}_climo.nc"))
         if fils:
