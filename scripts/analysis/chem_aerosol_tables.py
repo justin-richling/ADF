@@ -173,7 +173,7 @@ def chem_aerosol_tables(adfobj):
         # find the name of all the variables in the file.
         # this will help the code to work for the variables that are not in the files (assingn 0s)
         tmp_file = Dataset(Path(data_dirs[i]) / Files[0])
-        ListVars = tmp_file.variables.keys()
+        ListVars = list(tmp_file.variables.keys())
         print("ListVars",ListVars,"\n")
         tmp_file.close()
 
