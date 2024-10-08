@@ -362,7 +362,7 @@ class AdfDiag(AdfWeb):
             case_names = self.get_cam_info("cam_case_name", required=True)
             #cam_ts_done = self.get_cam_info("cam_ts_done")
             #calc_cam_ts = self.get_cam_info("calc_cam_ts")
-            calc_cam_ts = [self.calc_ts["test"]]
+            calc_cam_ts = self.calc_ts["test"]
             cam_ts_done = self.ts_done_dict["test"]
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
             overwrite_ts = self.cam_overwrite_ts_dict["test"]
