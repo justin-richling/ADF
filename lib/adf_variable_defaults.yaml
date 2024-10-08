@@ -833,6 +833,7 @@ RESTOM:
     colorbar:
       label : "W m$^{-2}$"
   category: "TOA energy flux"
+  derivable_from_cam_chem:
   derivable_from: ['FLNT','FSNT']
 
 SWCF:
