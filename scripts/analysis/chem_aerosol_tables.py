@@ -20,7 +20,6 @@ except ImportError:
 #End except
 
 # Import necessary ADF modules:
-from adf_diag import AdfDiag
 from adf_base import AdfError
 
 
@@ -83,7 +82,6 @@ def chem_aerosol_tables(adfobj):
 
     # CAM simulation variables (these quantities are always lists):
     case_names = adfobj.get_cam_info('cam_case_name', required=True) + [adfobj.get_baseline_info("cam_case_name")]
-    case_names_len = len(case_names)
 
     # Grab all case nickname(s)
     test_nicknames_list = adfobj.case_nicknames["test_nicknames"]
@@ -197,7 +195,7 @@ def chem_aerosol_tables(adfobj):
                 pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         if regional:
-            #inside=Inside_SE_region(current_lat,current_lon,dir_shapefile)
+            #inside = Inside_SE_region(current_lat,current_lon,dir_shapefile)
             inside = Inside_SE(Lats,Lons,limit)
         else:
             if len(np.shape(areas)) == 1:
