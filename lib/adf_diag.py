@@ -368,6 +368,8 @@ class AdfDiag(AdfWeb):
             case_type_string="case"
             hist_str_list = self.hist_string["test_hist_str"]
 
+        print("overwrite_ts",overwrite_ts,"\n")
+
         # Notify user that script has started:
         print(f"\n  Writing time series files to {ts_dir}")
 
