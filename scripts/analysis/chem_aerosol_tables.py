@@ -7,8 +7,6 @@ import warnings  # use to warn user about missing files.
 from datetime import datetime
 import numpy as np
 
-from netCDF4 import Dataset
-
 import pickle
 #import json
 import itertools
@@ -172,16 +170,8 @@ def chem_aerosol_tables(adfobj):
 
         # find the name of all the variables in the file.
         # this will help the code to work for the variables that are not in the files (assingn 0s)
-        tmp_file = Dataset(Path(data_dirs[i]) / Files[0])
-        ListVars = list(tmp_file.variables.keys())
-        print("ListVars",ListVars,"\n")
-        tmp_file.close()
-
-        tmp_file2 = xr.open_dataset(Path(data_dirs[i]) / Files[0])
-        ListVars2 = list(tmp_file2.variables)#.keys()
-        print("ListVars2",ListVars2,"\n")
-
-        print("Equals?",ListVars==ListVars2)
+        tmp_file = xr.open_dataset(Path(data_dirs[i]) / Files[0])
+        ListVars = list(tmp_file.variables)
 
         # Set up and fill dictionaries for components for current cases
         dic_SE = set_dic_SE(ListVars,ext1_SE)
