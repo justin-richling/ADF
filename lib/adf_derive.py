@@ -111,9 +111,6 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
                                                     "derivable_from_cam_chem")
             chem_constit_errmsg = chem_constit_errmsg.replace("yaml file.",
                                                     "yaml file if this is a CAM-CHEM case. Checking if this can be derived from regular CAM constituents...")
-
-            #yaml file.
-            #constit_errmsg += ",if this is a CAM-CHEM case. Checking if this can be derived from regular CAM constituents..."
             adfobj.debug_log(chem_constit_errmsg)
             #return diag_var_list, constit_dict
         # End if
@@ -124,7 +121,6 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
         if "derivable_from" in vres:
             constit_list = vres["derivable_from"]
         else:
-            # constit_list will be what?
             # Missing variable or missing derivable_from argument
             der_from_msg = f"derive time series for {case_name}:"
             der_from_msg += f"\n Can't create time series for {var}.\n\tEither "
