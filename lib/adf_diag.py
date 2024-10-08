@@ -345,11 +345,11 @@ class AdfDiag(AdfWeb):
             # Use baseline settings, while converting them all
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
-            cam_ts_done = [self.get_baseline_info("cam_ts_done")]
+            #cam_ts_done = [self.get_baseline_info("cam_ts_done")]
+            cam_ts_done = self.ts_done_dict["baseline"]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
-            #overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
             overwrite_ts = self.cam_overwrite_ts_dict["baseline"]
+            ts_dir = [self.get_baseline_info("cam_ts_loc")]
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
@@ -358,11 +358,11 @@ class AdfDiag(AdfWeb):
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
-            cam_ts_done = self.get_cam_info("cam_ts_done")
+            #cam_ts_done = self.get_cam_info("cam_ts_done")
+            cam_ts_done = self.ts_done_dict["test"]
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc", required=True)
-            #overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             overwrite_ts = self.cam_overwrite_ts_dict["test"]
+            ts_dir = self.get_cam_info("cam_ts_loc")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
@@ -382,11 +382,13 @@ class AdfDiag(AdfWeb):
         # get info about variable defaults
         res = self.variable_defaults
 
+        print(baseline,"cam_ts_done",cam_ts_done,"\n")
+
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
-            if cam_ts_done[case_idx]:
-                emsg = " Configuration file indicates time series files have been pre-computed"
+            if cam_ts_done[case_name]:
+                emsg = "\tConfiguration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
                 continue
@@ -645,7 +647,7 @@ class AdfDiag(AdfWeb):
 
                     # If files exist, then check if over-writing is allowed:
                     if ts_file_list:
-                        if not overwrite_ts[case_name]:
+                        if not overwrite_ts[case_idx]:
                             # If not, then simply skip this variable:
                             continue
 
