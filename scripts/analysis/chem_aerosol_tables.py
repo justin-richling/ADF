@@ -29,6 +29,9 @@ from adf_base import AdfError
 def chem_aerosol_tables(adfobj):
 
 
+    #Notify user that script has started:
+    print("\n  Calculating chemistry/aerosol budget tables...")
+
     # Inputs
     #-------
     # Variable defaults info
@@ -175,8 +178,10 @@ def chem_aerosol_tables(adfobj):
         tmp_file.close()
 
         tmp_file2 = xr.open_dataset(Path(data_dirs[i]) / Files[0])
-        ListVars2 = tmp_file2.variables#.keys()
+        ListVars2 = list(tmp_file2.variables)#.keys()
         print("ListVars2",ListVars2,"\n")
+
+        print("Equals?",ListVars==ListVars2)
 
         # Set up and fill dictionaries for components for current cases
         dic_SE = set_dic_SE(ListVars,ext1_SE)
