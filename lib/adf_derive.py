@@ -134,7 +134,8 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
             der_from_msg += "or set appropriate argument in variable "
             der_from_msg += "defaults yaml file."
             adfobj.debug_log(der_from_msg)
-        if (not constit_list) and (log_err_msg):
+        #if (not constit_list) and (log_err_msg):
+        if not constit_list:
             adfobj.debug_log(constit_errmsg)
         # End if
     # End if
