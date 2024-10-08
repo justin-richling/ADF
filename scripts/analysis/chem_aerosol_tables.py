@@ -214,13 +214,28 @@ def chem_aerosol_tables(adfobj):
         insides[case] = inside
 
     # Make and save tables
+    table_kwargs = {"adfobj":adfobj,
+                    "Dic_scn_var_comp":Dic_scn_var_comp,
+                    "areas":areas,
+                    "trops":trops,
+                    "case_names":case_names,
+                    "nicknames":nicknames,
+                    "durations":durations,
+                    "insides":insides,
+                    "num_yrs":num_yrs,
+                    "AEROSOLS":AEROSOLS}
+    # make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
     if len(AEROSOL_VARIABLES) > 0:
         print("\tMaking table for aerosols")
-        aerosol_table = make_table(adfobj, AEROSOL_VARIABLES, 'aerosols', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
+        #aerosol_table = make_table(adfobj, AEROSOL_VARIABLES, 'aerosols', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
+        aerosol_table = make_table(vars=AEROSOL_VARIABLES, chem_type='aerosols', **table_kwargs)
+
 
     if len(GAS_VARIABLES) > 0:
         print("\tMaking table for gases")
-        gas_table = make_table(adfobj, GAS_VARIABLES, 'gases', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
+        #gas_table = make_table(adfobj, GAS_VARIABLES, 'gases', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
+        gas_table = make_table(vars=GAS_VARIABLES, chem_type='gases', **table_kwargs)
+
 
     #return
 
