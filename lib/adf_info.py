@@ -393,7 +393,6 @@ class AdfInfo(AdfConfig):
                         cam_ts_done[i] = True
             else:
                 print()
-
         #self.__calc_test_climo = {}
         self.__test_ts_done = {}
         for i,cam_ts in enumerate(cam_ts_done):
@@ -406,6 +405,34 @@ class AdfInfo(AdfConfig):
             bl_ts_done = True
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
         self.__ts_done_dict = ts_done_dict
+
+
+        #Check if using pre-made ts files
+        cam_overwrite_ts   = self.get_cam_info("cam_overwrite_ts")
+        if cam_overwrite_ts is None:
+            cam_overwrite_ts = [False]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(cam_overwrite_ts) == len(case_names):
+                for i,overwrite_ts in enumerate(cam_overwrite_ts):
+                    if overwrite_ts is None:
+                        cam_overwrite_ts[i] = False
+            else:
+                print()
+        #self.__cam_overwrite_ts_dict
+        #self.__calc_test_climo = {}
+        self.__test_overwrite_ts = {}
+        for i,cam_ts in enumerate(cam_overwrite_ts):
+            self.__test_overwrite_ts[case_names[i]] = cam_ts
+
+        test_overwrite_ts = copy.copy(self.__test_overwrite_ts)
+        if self.__baseline_ts_done:
+            bl_overwrite_ts = self.__bl_overwrite_ts
+        else:
+            bl_overwrite_ts = False
+        overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
+        self.__cam_overwrite_ts_dict = overwrite_ts_dict
+
 
         #Grab case time series file location(s)
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
@@ -816,6 +843,27 @@ class AdfInfo(AdfConfig):
     def ts_done_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__ts_done_dict
+
+
+    @property
+    def cam_overwrite_ts(self):
+        """ Return the history string name to the user if requested."""
+
+        #Make list of all entries, similarly how the ADF does in various scripts
+        overwrite_ts = []
+        for key,val in self.__cam_overwrite_ts_dict.items():
+            if key == "test":
+                for _,val2 in val.items():
+                    overwrite_ts.append(val2)
+            else: # baseline
+                overwrite_ts.append(val)
+        return overwrite_ts
+
+    @property
+    def cam_overwrite_ts_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__cam_overwrite_ts_dict
+    
 
 
 
