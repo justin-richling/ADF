@@ -221,6 +221,14 @@ class AdfInfo(AdfConfig):
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
 
+            #Check if any time series files are pre-made
+            baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
+            print("baseline_ts_done",baseline_overwrite_ts,"\n")
+            if baseline_overwrite_ts is None:
+                baseline_overwrite_ts = False
+            self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+
+
             if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
                 self.__calc_bl_climo = False
             else:
@@ -426,7 +434,7 @@ class AdfInfo(AdfConfig):
             self.__test_overwrite_ts[case_names[i]] = cam_ts
 
         test_overwrite_ts = copy.copy(self.__test_overwrite_ts)
-        if self.__baseline_ts_done:
+        if self.__bl_overwrite_ts:
             bl_overwrite_ts = self.__bl_overwrite_ts
         else:
             bl_overwrite_ts = False
