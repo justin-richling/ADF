@@ -679,18 +679,18 @@ class AdfWeb(AdfObs):
                 #End if
 
                 rend_kwarg_dict = {"title": main_title,
-                                       "var_title": web_data.name,
-                                       "season_title": web_data.season,
-                                       "case_name": web_data.case,
-                                       "case_yrs": case_yrs,
-                                       "base_name": data_name,
-                                       "baseline_yrs": baseline_yrs,
-                                       "plottype_title": web_data.plot_type,
-                                       "imgs": img_data,
-                                       "mydata": mean_html_info[web_data.plot_type],
-                                       "plot_types": plot_types,
-                                       "seasons": seasons,
-                                       "non_seasons": non_seasons[web_data.plot_type]}
+                                   "var_title": web_data.name,
+                                   "season_title": web_data.season,
+                                   "case_name": web_data.case,
+                                   "case_yrs": case_yrs,
+                                   "base_name": data_name,
+                                   "baseline_yrs": baseline_yrs,
+                                   "plottype_title": web_data.plot_type,
+                                   "imgs": img_data,
+                                   "mydata": mean_html_info[web_data.plot_type],
+                                   "plot_types": plot_types,
+                                   "seasons": seasons,
+                                   "non_seasons": non_seasons[web_data.plot_type]}
 
                 tmpl = jinenv.get_template('template.html')  #Set template
                 rndr = tmpl.render(rend_kwarg_dict) #The template rendered
