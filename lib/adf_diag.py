@@ -386,11 +386,23 @@ class AdfDiag(AdfWeb):
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
+            # Notify user that script has started:
+            print(f"\n  Generating CAM time series files for '{case_name}'...")
             # Check if particular case should be processed:
-            if cam_ts_done[case_name]:
-                emsg = "\tConfiguration file indicates time series files have been pre-computed"
-                emsg += f" for case '{case_name}'.  Will rely on those files directly."
+
+            #Check whether the user needs to use time series files at all
+            #or are missing the time series files all together.
+            if not calc_cam_ts[case_idx]:
+                emsg = "\tConfiguration file indicates time series files don't need to be calculated."
                 print(emsg)
+                no_msg = True
+                continue
+
+            if cam_ts_done[case_idx]:
+                emsg = "\tConfiguration file indicates time series files have been pre-computed."
+                emsg += f" Will rely on those files directly."
+                print(emsg)
+                no_msg = True
                 continue
             # End if
 
