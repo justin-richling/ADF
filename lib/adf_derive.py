@@ -105,6 +105,9 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
         else:
             # Print to log file and set flag for further down to not repeat message?
             log_err_msg = False
+            constit_errmsg = constit_errmsg.replace(f"time series for {var}",
+                                                    f"time series for {var} from CAM-CHEM")
+            constit_errmsg += " Checking if this can be derived from regular CAM constituents"
             adfobj.debug_log(constit_errmsg)
             #return diag_var_list, constit_dict
         # End if
