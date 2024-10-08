@@ -107,7 +107,9 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
             log_err_msg = False
             constit_errmsg = constit_errmsg.replace(f"time series for {var}",
                                                     f"time series for {var} from CAM-CHEM")
-            constit_errmsg += " Checking if this can be derived from regular CAM constituents"
+            constit_errmsg = constit_errmsg.replace("derivable_from",
+                                                    "derivable_from_cam_chem")
+            constit_errmsg += ",if this is a CAM-CHEM case. Checking if this can be derived from regular CAM constituents..."
             adfobj.debug_log(constit_errmsg)
             #return diag_var_list, constit_dict
         # End if
