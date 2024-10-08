@@ -71,7 +71,7 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
 
     # No time series creation
     exit_msg = f"WARNING: {var} is not in the file {hist0} and can't be derived."
-    exit_msg += "\t     ** No time series will be generated. **"
+    exit_msg += "\n\t     ** No time series will be generated. **"
 
     # Initialiaze list for constituents
     # NOTE: This is if the variable is NOT derivable but needs
@@ -79,7 +79,7 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
     constit_list = []
 
     try_cam_constits = True
-    show_err_msg = True
+    log_err_msg = True
     # Try finding info from variable defaults yaml file
     try:
         vres = res[var]
@@ -93,6 +93,8 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
         constit_list = vres["derivable_from_cam_chem"]
 
         if constit_list:
+            # Check if all constituents are in history file, if not this will be
+            # addressed further below.
             if all(item in hist_file_ds.data_vars for item in constit_list):
                 # Set check to look for regular CAM constituents in variable defaults
                 try_cam_constits = False
@@ -102,9 +104,9 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
                 adfobj.debug_log(msg)
         else:
             # Print to log file and set flag for further down to not repeat message?
-            #show_err_msg = False
+            log_err_msg = False
             adfobj.debug_log(constit_errmsg)
-            return diag_var_list, constit_dict
+            #return diag_var_list, constit_dict
         # End if
     # End if
     
@@ -123,6 +125,8 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
             der_from_msg += "or set appropriate argument in variable "
             der_from_msg += "defaults yaml file."
             adfobj.debug_log(der_from_msg)
+        if (not constit_list) and (log_err_msg):
+            adfobj.debug_log(constit_errmsg)
         # End if
     # End if
 
@@ -130,9 +134,10 @@ def check_derive(adfobj, res, var, case_name, diag_var_list, constit_dict, hist_
     if show_err_msg:
         if isinstance(constit_list, list) and not constit_list:
             adfobj.debug_log(constit_errmsg)"""
-    print(isinstance(constit_list, list),constit_list)
-    if isinstance(constit_list, list) and not constit_list:
-        adfobj.debug_log(constit_errmsg)
+    #print(isinstance(constit_list, list),constit_list)
+
+    #if (not constit_list) and (show_err_msg):
+    #    adfobj.debug_log(constit_errmsg)
 
     # Check if any constituents were found
     if constit_list:
