@@ -231,16 +231,16 @@ class AdfInfo(AdfConfig):
 
             if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
                 self.__calc_bl_climo = False
-            else:
-                self.__calc_bl_climo = True
+            #else:
+            #    self.__calc_bl_climo = True
 
 
             # Make new variable `calc_ts` in case the user does not want time series generation but 
             # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
             if (not baseline_ts_done) and (not input_ts_baseline) and (not self.get_baseline_info("calc_cam_climo")) and (self.get_baseline_info("cam_hist_loc")):
-                self.__calc_bl_climo = False
+                self.__calc_baseline_ts = False
             else:
-                self.__calc_bl_climo = True
+                self.__calc_baseline_ts = True
             """
             {"test": copy.copy(self.__calc_test_ts),
                 "baseline": copy.copy(self.__calc_baseline_ts)}
@@ -503,10 +503,21 @@ class AdfInfo(AdfConfig):
         syears_fixed = []
         eyears_fixed = []
         ts_done = {}
+
+        calc_test_ts = {}
         for case_idx, case_name in enumerate(case_names):
 
             syear = syears[case_idx]
             eyear = eyears[case_idx]
+
+            # Make new variable `calc_ts` in case the user does not want time series generation but 
+            # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
+            if (not baseline_ts_done) and (not input_ts_baseline) and (not self.get_baseline_info("calc_cam_climo")) and (self.get_baseline_info("cam_hist_loc")):
+                #self.__calc_baseline_ts = False
+                calc_test_ts[case_name] = False
+            else:
+                calc_test_ts[case_name] = True
+            
 
             #Check if time series files exist, if so don't rely on climo years
             if (cam_ts_done[case_idx]) and (input_ts_locs[case_idx]):
@@ -639,6 +650,8 @@ class AdfInfo(AdfConfig):
 
         self.__syears = syears_fixed
         self.__eyears = eyears_fixed
+
+        self.__calc_test_ts = calc_test_ts
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
