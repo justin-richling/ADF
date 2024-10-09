@@ -390,9 +390,6 @@ class AdfDiag(AdfWeb):
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
-            # Notify user that script has started:
-            print(f"\n  Generating CAM time series files for '{case_name}'...")
-            # Check if particular case should be processed:
 
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
@@ -423,6 +420,10 @@ class AdfDiag(AdfWeb):
                 emsg += f" '{starting_location}' not found.  Script is ending here."
                 self.end_diag_fail(emsg)
             # End if
+
+            # Notify user that script has started:
+            print(f"\n  Generating CAM time series files for '{case_name}'...")
+            # Check if particular case should be processed:
 
             # Check if history files actually exqist. If not then kill script:
             hist_str_case = hist_str_list[case_idx]
