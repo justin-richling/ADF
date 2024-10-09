@@ -537,12 +537,26 @@ class AdfInfo(AdfConfig):
 
 
             print("OKAY, here we go...")
-            print(self.get_cam_info("cam_ts_done")[case_idx])
-            print(self.get_cam_info("cam_ts_loc")[case_idx])
-            print(self.get_cam_info("calc_cam_climo")[case_idx])
-            print(self.get_cam_info('cam_hist_loc')[case_idx])
+            try:
+                test_ts_done = self.get_cam_info("cam_ts_done")[case_idx]
+            except:
+                test_ts_done = None
 
-            if (baseline_ts_done is None) and (input_ts_baseline is None) and (calc_test_climo[case_idx] is None) and (cam_hist_locs[case_idx]):
+            #test_ts_done = self.get_cam_info("cam_ts_done")[case_idx]
+            test_ts_loc = self.get_cam_info("cam_ts_loc")[case_idx]
+            #calc_test_climo = self.get_cam_info("calc_cam_climo")[case_idx]
+            try:
+                calc_test_climo = self.get_cam_info("calc_cam_climo")[case_idx]
+            except:
+                calc_test_climo = None
+            cam_hist_loc = self.get_cam_info('cam_hist_loc')[case_idx]
+
+            print(test_ts_done)
+            print(test_ts_loc)
+            print(calc_test_climo)
+            print(cam_hist_loc)
+
+            if (test_ts_done is None) and (test_ts_loc is None) and (calc_test_climo is None) and (cam_hist_loc):
                 calc_test_ts[case_name] = False
             else:
                 calc_test_ts[case_name] = True
