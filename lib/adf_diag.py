@@ -375,7 +375,7 @@ class AdfDiag(AdfWeb):
         #print("overwrite_ts",overwrite_ts,"\n")
 
         # Notify user that script has started:
-        print(f"\n  Writing time series files to {ts_dir}")
+        #print(f"\n  Writing time series files to {ts_dir}")
 
         # End if
 
@@ -427,6 +427,9 @@ class AdfDiag(AdfWeb):
             # Check if history files actually exqist. If not then kill script:
             hist_str_case = hist_str_list[case_idx]
             for hist_str in hist_str_case:
+
+                # Notify user that script has started:
+                print(f"\n  Writing time series files to {ts_dir[case_idx]}")
 
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
