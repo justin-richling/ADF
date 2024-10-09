@@ -497,7 +497,11 @@ class AdfInfo(AdfConfig):
                         input_ts_locs[i] = None
             else:
                 print()
+        ###########################################################
 
+
+        # Check if climos need to be calculated - calc test climo
+        ###########################################################
         calc_test_climo = self.get_cam_info("calc_cam_climo")
         if calc_test_climo is None:
             #calc_test_climo = [False]*len(case_names)
