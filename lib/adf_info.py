@@ -535,12 +535,20 @@ class AdfInfo(AdfConfig):
             syear = syears[case_idx]
             eyear = eyears[case_idx]
 
-            # Make new variable `calc_ts` in case the user does not want time series generation but 
-            # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
-            if (not baseline_ts_done) and (not input_ts_baseline) and (not self.get_baseline_info("calc_cam_climo")) and (self.get_baseline_info("cam_hist_loc")):
+
+
+            print(test_ts_done[case_idx])
+            print(input_ts_locs[case_idx])
+            print(calc_test_climo[case_idx])
+            print(cam_hist_locs[case_idx])
+
+            if (baseline_ts_done is None) and (input_ts_baseline is None) and (calc_test_climo[case_idx] is None) and (cam_hist_locs[case_idx]):
                 calc_test_ts[case_name] = False
             else:
                 calc_test_ts[case_name] = True
+
+
+
             
 
             #Check if time series files exist, if so don't rely on climo years
