@@ -79,12 +79,15 @@ class AdfData:
             self.ref_labels = {}
             # when using a reference simulation, allow a "special" attribute with the case name:
             self.ref_case_label = self.adf.get_baseline_info("cam_case_name", required=True)
-            for v in self.adf.diag_var_list:
-                self.ref_var_nam[v] = v
-                self.ref_labels[v] = self.adf.get_baseline_info("cam_case_name", required=True)
-                f = self.get_reference_climo_file(v)
-                if f:
-                    self.ref_var_loc[v] = f
+            if "var_obs_dict" in dir(self.adf):
+                for v in self.adf.diag_var_list:
+                    self.ref_var_nam[v] = v
+                    self.ref_labels[v] = self.adf.get_baseline_info("cam_case_name", required=True)
+                    f = self.get_reference_climo_file(v)
+                    if f:
+                        self.ref_var_loc[v] = f
+            else:
+                print("hmmm")
 
     def set_ref_var_loc(self):
         """Set reference climo file locations"""
