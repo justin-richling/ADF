@@ -372,7 +372,7 @@ class AdfDiag(AdfWeb):
             case_type_string="case"
             hist_str_list = self.hist_string["test_hist_str"]
 
-        print("overwrite_ts",overwrite_ts,"\n")
+        #print("overwrite_ts",overwrite_ts,"\n")
 
         # Notify user that script has started:
         print(f"\n  Writing time series files to {ts_dir}")
@@ -386,7 +386,7 @@ class AdfDiag(AdfWeb):
         # get info about variable defaults
         res = self.variable_defaults
 
-        print(case_name,"calc_cam_ts",calc_cam_ts,"\n")
+        print(baseline,"calc_cam_ts",calc_cam_ts,"\n")
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
