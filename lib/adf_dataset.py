@@ -46,6 +46,7 @@ class AdfData:
     """
     def __init__(self, adfobj):
         self.adf = adfobj  # provides quick access to the AdfDiag object
+        print(dir(self.adf))
         # paths 
         self.model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
 
