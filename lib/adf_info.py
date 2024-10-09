@@ -536,7 +536,7 @@ class AdfInfo(AdfConfig):
             eyear = eyears[case_idx]
 
 
-
+            print("OKAY, here we go...")
             print(test_ts_done[case_idx])
             print(input_ts_locs[case_idx])
             print(calc_test_climo[case_idx])
