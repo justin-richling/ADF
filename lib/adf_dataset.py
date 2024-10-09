@@ -64,10 +64,11 @@ class AdfData:
     def set_reference(self):
         """Set attributes for reference (aka baseline) data location, names, and variables."""
         if self.adf.compare_obs:
-            self.ref_var_loc = {v: self.adf.var_obs_dict[v]['obs_file'] for v in self.adf.var_obs_dict}
-            self.ref_labels = {v: self.adf.var_obs_dict[v]['obs_name'] for v in self.adf.var_obs_dict}
-            self.ref_var_nam = {v: self.adf.var_obs_dict[v]['obs_var'] for v in self.adf.var_obs_dict}
-            self.ref_case_label = "Obs"
+            if self.adf.var_obs_dict:
+                self.ref_var_loc = {v: self.adf.var_obs_dict[v]['obs_file'] for v in self.adf.var_obs_dict}
+                self.ref_labels = {v: self.adf.var_obs_dict[v]['obs_name'] for v in self.adf.var_obs_dict}
+                self.ref_var_nam = {v: self.adf.var_obs_dict[v]['obs_var'] for v in self.adf.var_obs_dict}
+                self.ref_case_label = "Obs"
             if not self.adf.var_obs_dict:
                 warnings.warn("\t WARNING: reference is observations, but no observations found to plot against.")
         else:
