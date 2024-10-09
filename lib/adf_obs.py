@@ -83,6 +83,9 @@ class AdfObs(AdfInfo):
         _variable_defaults = self.__variable_defaults
         #-----------------------------------------
 
+        if not self.diag_var_list:
+            return
+
         #Check if land or ocean mask is requested, and if so then add OCNFRAC
         #to the variable list.  Note that this setting, and the defaults_file
         #code above, should probably be moved to AdfInfo, or somewhere else
