@@ -410,13 +410,13 @@ class AdfDiag(AdfWeb):
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
             if not calc_cam_ts[case_name]:
-                emsg = "  Configuration file indicates time series files don't need to be calculated."
+                emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
                 print(emsg)
                 no_msg = True
                 continue
 
             if cam_ts_done[case_name]:
-                emsg = "  Configuration file indicates time series files have been pre-computed."
+                emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
                 emsg += f" Will rely on those files directly."
                 print(emsg)
                 no_msg = True
