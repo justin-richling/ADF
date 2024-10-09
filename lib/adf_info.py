@@ -168,6 +168,7 @@ class AdfInfo(AdfConfig):
         self.__baseline_ts_done = None
         self.__calc_bl_climo = True
         self.__bl_overwrite_ts = False
+        self.__calc_baseline_ts = False
         
 
         #Initialize "compare_obs" variable:
