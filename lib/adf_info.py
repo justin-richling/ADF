@@ -426,7 +426,8 @@ class AdfInfo(AdfConfig):
         # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
         cam_hist_str = self.__hist_str
 
-        #Check if using pre-made ts files
+        #Check if premade ts files - premade ts files
+        ###########################################################
         cam_ts_done   = self.get_cam_info("cam_ts_done")
         if cam_ts_done is None:
             cam_ts_done = [True]*len(case_names)
@@ -438,7 +439,7 @@ class AdfInfo(AdfConfig):
                         cam_ts_done[i] = True
             else:
                 print()
-        #self.__calc_test_climo = {}
+
         self.__test_ts_done = {}
         for i,cam_ts in enumerate(cam_ts_done):
             self.__test_ts_done[case_names[i]] = cam_ts
@@ -450,22 +451,24 @@ class AdfInfo(AdfConfig):
             bl_ts_done = True
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
         self.__ts_done_dict = ts_done_dict
+        ###########################################################
 
 
-        #Check if using pre-made ts files
+        #Check if using pre-made ts files, overwrite them - overwrite ts
+        ###########################################################
         cam_overwrite_ts   = self.get_cam_info("cam_overwrite_ts")
         if cam_overwrite_ts is None:
-            cam_overwrite_ts = [False]*len(case_names)
+            #cam_overwrite_ts = [False]*len(case_names)
+            cam_overwrite_ts = [None]*len(case_names)
         else:
             #Check if any time series files are pre-made
             if len(cam_overwrite_ts) == len(case_names):
                 for i,overwrite_ts in enumerate(cam_overwrite_ts):
                     if overwrite_ts is None:
-                        cam_overwrite_ts[i] = False
+                        #cam_overwrite_ts[i] = False
+                        cam_overwrite_ts[i] = None
             else:
                 print()
-        #self.__cam_overwrite_ts_dict
-        #self.__calc_test_climo = {}
         self.__test_overwrite_ts = {}
         for i,cam_ts in enumerate(cam_overwrite_ts):
             self.__test_overwrite_ts[case_names[i]] = cam_ts
@@ -474,13 +477,15 @@ class AdfInfo(AdfConfig):
         if self.__bl_overwrite_ts:
             bl_overwrite_ts = self.__bl_overwrite_ts
         else:
-            bl_overwrite_ts = False
+            #bl_overwrite_ts = False
+            bl_overwrite_ts = None
         overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
         self.__cam_overwrite_ts_dict = overwrite_ts_dict
+        ###########################################################
 
 
-        #Grab case time series file location(s)
-        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        #Grab case time series file location(s) - input ts locs
+        ###########################################################
         input_ts_locs = self.get_cam_info("cam_ts_loc")
         if input_ts_locs is None:
             input_ts_locs = [None]*len(case_names)
@@ -495,17 +500,23 @@ class AdfInfo(AdfConfig):
 
         calc_test_climo = self.get_cam_info("calc_cam_climo")
         if calc_test_climo is None:
-            calc_test_climo = [False]*len(case_names)
+            #calc_test_climo = [False]*len(case_names)
+            calc_test_climo = [None]*len(case_names)
         else:
             #Check if any time series files are pre-made
             if len(input_ts_locs) == len(case_names):
                 for i,case in enumerate(calc_test_climo):
                     if case is None:
-                        calc_test_climo[i] = True
+                        #calc_test_climo[i] = True
+                        calc_test_climo[i] = None
             else:
                 print()
+        ###########################################################
 
         #Add check for obs!!!
+
+        # Check if climo files need to be calculated - calc climo
+        ###########################################################
         self.__calc_test_climo = {}
         for i in range(len(calc_test_climo)):
             #if (input_ts_locs[i]) and (not input_ts_baseline[i]) and (not calc_test_climo[i]):
@@ -523,6 +534,7 @@ class AdfInfo(AdfConfig):
             calc_bl_climo = True
         calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
         self.__calc_climo_dict = calc_climo_dict
+        ###########################################################
 
         #Loop over cases:
         syears_fixed = []
@@ -565,7 +577,8 @@ class AdfInfo(AdfConfig):
             print(calc_test_climo)
             print(cam_hist_loc)
 
-            if (test_ts_done is None) and (test_ts_loc is None) and (calc_test_climo is None) and (cam_hist_loc):
+            #if (test_ts_done is None) and (test_ts_loc is None) and (calc_test_climo is None) and (cam_hist_loc):
+            if (not test_ts_done) and (not test_ts_loc) and (not calc_test_climo) and (cam_hist_loc):
                 calc_test_ts[case_name] = False
             else:
                 calc_test_ts[case_name] = True
