@@ -84,7 +84,7 @@ class AdfObs(AdfInfo):
         #-----------------------------------------
         print("self.diag_var_list",self.diag_var_list,"\n")
         if self.diag_var_list is None:
-            self.__var_obs_dict = None
+            self.__var_obs_dict = []
             return
 
         #Check if land or ocean mask is requested, and if so then add OCNFRAC
