@@ -225,6 +225,7 @@ class AdfObs(AdfInfo):
 #++++++++++++++++++++
 #End Class definition
 #++++++++++++++++++++
+'''
 class MyClass:
     def __init__(self, condition):
         if condition:
@@ -242,3 +243,4 @@ class MyClass:
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable, as it is mutable and thus passed by reference:
         return copy.copy(self.__var_obs_dict)
+'''
