@@ -84,7 +84,7 @@ class AdfObs(AdfInfo):
         #-----------------------------------------
 
         if self.diag_var_list is None:
-            return
+            break
 
         #Check if land or ocean mask is requested, and if so then add OCNFRAC
         #to the variable list.  Note that this setting, and the defaults_file
