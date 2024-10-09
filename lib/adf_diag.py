@@ -347,7 +347,7 @@ class AdfDiag(AdfWeb):
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             #cam_ts_done = [self.get_baseline_info("cam_ts_done")]
             #calc_cam_ts = [self.get_baseline_info("calc_cam_ts")]
-            calc_cam_ts = [self.calc_ts["baseline"]]
+            calc_cam_ts = self.calc_ts["baseline"]
             cam_ts_done = self.ts_done_dict["baseline"]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             overwrite_ts = self.cam_overwrite_ts_dict["baseline"]
