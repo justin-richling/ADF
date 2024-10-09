@@ -388,6 +388,22 @@ class AdfDiag(AdfWeb):
 
         #print(baseline,"calc_cam_ts",calc_cam_ts,"\n")
 
+        # Check if all values are None
+        if all(value is None for value in calc_cam_ts):
+            print("All values in calc_cam_ts are None.")
+            emsg = "  Configuration file indicates time series files don't need to be calculated."
+            print(emsg)
+            no_msg = True
+
+
+        # Check if all values are None
+        if all(value is None for value in cam_ts_done):
+            print("All values in cam_ts_done are None.")
+            emsg = "  Configuration file indicates time series files have been pre-computed."
+            emsg += f" Will rely on those files directly."
+            print(emsg)
+            no_msg = True
+
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
 
