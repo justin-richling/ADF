@@ -82,9 +82,9 @@ class AdfObs(AdfInfo):
 
         _variable_defaults = self.__variable_defaults
         #-----------------------------------------
-
+        print("self.diag_var_list",self.diag_var_list,"\n")
         if self.diag_var_list is None:
-            pass
+            return
 
         #Check if land or ocean mask is requested, and if so then add OCNFRAC
         #to the variable list.  Note that this setting, and the defaults_file
@@ -225,3 +225,20 @@ class AdfObs(AdfInfo):
 #++++++++++++++++++++
 #End Class definition
 #++++++++++++++++++++
+class MyClass:
+    def __init__(self, condition):
+        if condition:
+            print("Condition met, exiting early.")
+            return  # Early exit from __init__ (does not return a value)
+        
+        # Code below will not execute if the condition is True
+        print("Continuing with the rest of __init__.")
+        self.value = 42
+    
+    # Create property needed to return "var_obs_dict" dictionary to user:
+    @property
+    def var_obs_dict(self):
+        """Return a copy of the "var_obs_dict" list to the user if requested."""
+        #Note that a copy is needed in order to avoid having a script mistakenly
+        #modify this variable, as it is mutable and thus passed by reference:
+        return copy.copy(self.__var_obs_dict)
