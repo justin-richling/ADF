@@ -537,7 +537,7 @@ class AdfInfo(AdfConfig):
 
 
             print("OKAY, here we go...")
-            print(test_ts_done[case_idx])
+            print(test_ts_done[case_name])
             print(input_ts_locs[case_idx])
             print(calc_test_climo[case_idx])
             print(cam_hist_locs[case_idx])
