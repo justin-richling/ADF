@@ -214,25 +214,8 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
-            print("baseline_ts_done",baseline_ts_done,"\n")
-            if baseline_ts_done is None:
-                baseline_ts_done = True
-            self.__baseline_ts_done = {data_name:baseline_ts_done}
-            input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-
-
-            #Check if any time series files are pre-made
             baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
-            print("baseline_ts_done",baseline_overwrite_ts,"\n")
-            if baseline_overwrite_ts is None:
-                baseline_overwrite_ts = False
-            self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
 
-
-            if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
-                self.__calc_bl_climo = False
-            #else:
-            #    self.__calc_bl_climo = True
 
             calc_bl_ts = {}
             # Make new variable `calc_ts` in case the user does not want time series generation but 
@@ -246,11 +229,47 @@ class AdfInfo(AdfConfig):
                 calc_bl_ts[data_name] = False
             else:
                 calc_bl_ts[data_name] = True
+
+            self.__calc_baseline_ts = calc_bl_ts
+
+
+            print("baseline_ts_done",baseline_ts_done,"\n")
+            if baseline_ts_done is None:
+                baseline_ts_done = True
+            self.__baseline_ts_done = {data_name:baseline_ts_done}
+            input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+
+
+            #Check if any time series files are pre-made
+            #baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
+            print("baseline_ts_done",baseline_overwrite_ts,"\n")
+            if baseline_overwrite_ts is None:
+                baseline_overwrite_ts = False
+            self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+
+
+            if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
+                self.__calc_bl_climo = False
+            #else:
+            #    self.__calc_bl_climo = True
+
+            """calc_bl_ts = {}
+            # Make new variable `calc_ts` in case the user does not want time series generation but 
+            # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
+            print(baseline_ts_done)
+            print(input_ts_baseline)
+            print(self.get_baseline_info("calc_cam_climo"))
+            print(self.get_baseline_info("cam_hist_loc"))
+
+            if (baseline_ts_done is None) and (input_ts_baseline is None) and (self.get_baseline_info("calc_cam_climo") is None) and (self.get_baseline_info("cam_hist_loc")):
+                calc_bl_ts[data_name] = False
+            else:
+                calc_bl_ts[data_name] = True"""
             """
             {"test": copy.copy(self.__calc_test_ts),
                 "baseline": copy.copy(self.__calc_baseline_ts)}
             """
-            self.__calc_baseline_ts = calc_bl_ts
+
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if (baseline_ts_done) and (input_ts_baseline):
@@ -518,7 +537,6 @@ class AdfInfo(AdfConfig):
             # Make new variable `calc_ts` in case the user does not want time series generation but 
             # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
             if (not baseline_ts_done) and (not input_ts_baseline) and (not self.get_baseline_info("calc_cam_climo")) and (self.get_baseline_info("cam_hist_loc")):
-                #self.__calc_baseline_ts = False
                 calc_test_ts[case_name] = False
             else:
                 calc_test_ts[case_name] = True
