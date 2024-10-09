@@ -543,13 +543,22 @@ class AdfInfo(AdfConfig):
                 test_ts_done = None
 
             #test_ts_done = self.get_cam_info("cam_ts_done")[case_idx]
-            test_ts_loc = self.get_cam_info("cam_ts_loc")[case_idx]
+            #test_ts_loc = self.get_cam_info("cam_ts_loc")[case_idx]
             #calc_test_climo = self.get_cam_info("calc_cam_climo")[case_idx]
+            #cam_hist_loc = self.get_cam_info('cam_hist_loc')[case_idx]
+            try:
+                test_ts_loc = self.get_cam_info("cam_ts_loc")[case_idx]
+            except:
+                test_ts_loc = None
             try:
                 calc_test_climo = self.get_cam_info("calc_cam_climo")[case_idx]
             except:
                 calc_test_climo = None
-            cam_hist_loc = self.get_cam_info('cam_hist_loc')[case_idx]
+            try:
+                cam_hist_loc = self.get_cam_info('cam_hist_loc')[case_idx]
+            except:
+                cam_hist_loc = None
+            
 
             print(test_ts_done)
             print(test_ts_loc)
