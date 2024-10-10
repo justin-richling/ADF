@@ -81,21 +81,34 @@ def chem_aerosol_tables(adfobj):
     #-----------------------------------------
 
     # CAM simulation variables (these quantities are always lists):
-    case_names = adfobj.get_cam_info('cam_case_name', required=True) + [adfobj.get_baseline_info("cam_case_name")]
-
+    case_names = adfobj.get_cam_info('cam_case_name', required=True)
     # Grab all case nickname(s)
     test_nicknames_list = adfobj.case_nicknames["test_nicknames"]
-    base_nickname_list = adfobj.case_nicknames["base_nickname"]
-    nicknames_list = test_nicknames_list + [base_nickname_list]
-    nicknames = {}
+    nicknames_list = test_nicknames_list
 
     # Grab climo years
-    start_yrs = adfobj.climo_yrs["syears"] + [adfobj.climo_yrs["syear_baseline"]]
-    end_yrs = adfobj.climo_yrs["eyears"] + [adfobj.climo_yrs["eyear_baseline"]]
+    start_yrs = adfobj.climo_yrs["syears"]
+    end_yrs = adfobj.climo_yrs["eyears"]
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
-    hist_strs = cam_hist_strs + [adfobj.hist_string["base_hist_str"]]
+    hist_strs = cam_hist_strs
+
+    if not adfobj.adf.compare_obs:
+        case_names += [adfobj.get_baseline_info("cam_case_name")]
+        base_nickname_list = adfobj.case_nicknames["base_nickname"]
+        nicknames_list += [base_nickname_list]
+        # Grab climo years
+        start_yrs += [adfobj.climo_yrs["syear_baseline"]]
+        end_yrs += [adfobj.climo_yrs["eyear_baseline"]]
+        hist_strs = cam_hist_strs + [adfobj.hist_string["base_hist_str"]]
+
+    
+    #base_nickname_list = adfobj.case_nicknames["base_nickname"]
+    #nicknames_list = test_nicknames_list + [base_nickname_list]
+    nicknames = {}
+
+    #hist_strs = cam_hist_strs + [adfobj.hist_string["base_hist_str"]]
 
     # Filter the list to include only strings that are possible h0 strings
     # - Search for either h0 or h0a
