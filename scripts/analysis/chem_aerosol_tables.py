@@ -115,11 +115,14 @@ def chem_aerosol_tables(adfobj):
     # Create path object for the CAM history file(s) location:
     data_dirs = []
     for case_idx,case in enumerate(case_names):
+        print(case,"hist_locs[case_idx]",hist_locs[case_idx])
         nicknames[case] = nicknames_list[case_idx]
         #Check that history file input directory actually exists:
         if not Path(hist_locs[case_idx]).is_dir():
             errmsg = f"History files directory '{hist_locs[case_idx]}' not found.  Script is exiting."
-            raise AdfError(errmsg)
+            #raise AdfError(errmsg)
+            print(errmsg)
+            continue
 
         #Write to debug log if enabled:
         adfobj.debug_log(f"DEBUG: location of files is {str(hist_locs[case_idx])}")
