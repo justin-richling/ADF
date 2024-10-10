@@ -388,6 +388,8 @@ class AdfDiag(AdfWeb):
 
         #print(baseline,"calc_cam_ts",calc_cam_ts,"\n")
 
+        no_msg = False
+
         # Check if all values are None
         if all(value is None for value in calc_cam_ts):
             print("All values in calc_cam_ts are None.")
