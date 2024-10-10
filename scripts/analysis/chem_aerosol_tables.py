@@ -1257,19 +1257,19 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
 
     # Merge the DataFrames on the 'variable' column
     if len(case_names) == 2:
-        merged_df = pd.merge(dfs[nicknames[case_names[0]]], dfs[nicknames[case_names[1]]], on='variable')
+        table_df = pd.merge(dfs[nicknames[case_names[0]]], dfs[nicknames[case_names[1]]], on='variable')
 
         # Calculate the differences between case columns
-        merged_df['difference'] = merged_df[nicknames[case_names[0]]] - merged_df[nicknames[case_names[1]]]
+        table_df['difference'] = table_df[nicknames[case_names[0]]] - table_df[nicknames[case_names[1]]]
 
         # Save the result to a new CSV file
-        merged_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
+        #table_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
 
-    else:
-        table_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
+    #else:
+    table_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
     
     #Add budget table dataframe to website (if enabled):
-    adfobj.add_website_data(merged_df, chem_type, case, plot_type=f"Tables")
+    adfobj.add_website_data(table_df, chem_type, case, plot_type=f"Tables")
 
-    return merged_df
+    #return table_df
 #####
