@@ -117,6 +117,11 @@ def chem_aerosol_tables(adfobj):
     for case_idx,case in enumerate(case_names):
         print(case,"hist_locs[case_idx]",hist_locs[case_idx])
         nicknames[case] = nicknames_list[case_idx]
+        if hist_locs[case_idx] is None:
+            errmsg = f"History files directory '{hist_locs[case_idx]}' not found.  Script is exiting."
+            #raise AdfError(errmsg)
+            print(errmsg)
+            continue
         #Check that history file input directory actually exists:
         if not Path(hist_locs[case_idx]).is_dir():
             errmsg = f"History files directory '{hist_locs[case_idx]}' not found.  Script is exiting."
