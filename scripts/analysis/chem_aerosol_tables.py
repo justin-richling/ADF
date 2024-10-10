@@ -94,7 +94,7 @@ def chem_aerosol_tables(adfobj):
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
     hist_strs = cam_hist_strs
 
-    if not adfobj.adf.compare_obs:
+    if not adfobj.compare_obs:
         case_names += [adfobj.get_baseline_info("cam_case_name")]
         base_nickname_list = adfobj.case_nicknames["base_nickname"]
         nicknames_list += [base_nickname_list]
