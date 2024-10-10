@@ -79,7 +79,8 @@ class AdfData:
             self.ref_labels = {}
             # when using a reference simulation, allow a "special" attribute with the case name:
             self.ref_case_label = self.adf.get_baseline_info("cam_case_name", required=True)
-            if "var_obs_dict" in dir(self.adf):
+            #if "var_obs_dict" in dir(self.adf):
+            if 1==1:
                 for v in self.adf.diag_var_list:
                     self.ref_var_nam[v] = v
                     self.ref_labels[v] = self.adf.get_baseline_info("cam_case_name", required=True)
