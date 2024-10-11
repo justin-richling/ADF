@@ -153,6 +153,7 @@ def amwg_table(adf):
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
+        print("case_name",case_name,"\n")
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
