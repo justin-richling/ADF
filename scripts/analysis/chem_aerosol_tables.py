@@ -1277,12 +1277,13 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
 
     #Create output file name:
     output_csv_file = output_location / f'ADF_amwg_{chem_type}_table.csv'
+    print("output_csv_file",output_csv_file,"\n")
 
     #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
     if Path(output_csv_file).is_file():
         Path.unlink(output_csv_file)
     #End if
-
+    print("WTH????????")
     table_df.to_csv(output_csv_file, index=False)
     #table_df.to_csv(output_csv_file, header=cols, index=False)
 
