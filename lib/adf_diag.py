@@ -685,7 +685,7 @@ class AdfDiag(AdfWeb):
 
                     # If files exist, then check if over-writing is allowed:
                     if ts_file_list:
-                        if not overwrite_ts[case_idx]:
+                        if not overwrite_ts[case_name]:
                             # If not, then simply skip this variable:
                             continue
 
