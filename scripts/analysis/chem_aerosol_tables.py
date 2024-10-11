@@ -1221,6 +1221,14 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
 def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS):
     # Initialize an empty dictionary to store DataFrames
     dfs = {}
+    #Special ADF variable which contains the output paths for
+    #all generated plots and tables for each case:
+    output_locs = adfobj.plot_location
+
+    #Convert output location string to a Path object:
+    output_location = Path(output_locs[0])
+
+    
 
     for case in case_names:
         nickname = nicknames[case]
@@ -1266,7 +1274,18 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
         #table_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
 
     #else:
-    table_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
+
+    #Create output file name:
+    output_csv_file = output_location / f'ADF_amwg_{chem_type}_table.csv'
+
+    #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
+    if Path(output_csv_file).is_file():
+        Path.unlink(output_csv_file)
+    #End if
+
+    table_df.to_csv(output_csv_file, index=False)
+    #table_df.to_csv(output_csv_file, header=cols, index=False)
+
     
     #Add budget table dataframe to website (if enabled):
     adfobj.add_website_data(table_df, chem_type, case, plot_type=f"Tables")
