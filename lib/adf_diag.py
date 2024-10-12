@@ -351,7 +351,7 @@ class AdfDiag(AdfWeb):
             cam_ts_done = self.ts_done_dict["baseline"]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             overwrite_ts = self.cam_overwrite_ts_dict["baseline"]
-            ts_dir = [self.get_baseline_info("cam_ts_loc")]
+            ts_dirs = [self.get_baseline_info("cam_ts_loc")]
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
@@ -359,17 +359,27 @@ class AdfDiag(AdfWeb):
 
         else:
             # Use test case settings, which are already lists:
+            
             case_names = self.get_cam_info("cam_case_name", required=True)
+            
             #cam_ts_done = self.get_cam_info("cam_ts_done")
             #calc_cam_ts = self.get_cam_info("calc_cam_ts")
+            
             calc_cam_ts = self.calc_ts["test"]
+            
             cam_ts_done = self.ts_done_dict["test"]
+            
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
+            
             overwrite_ts = self.cam_overwrite_ts_dict["test"]
-            ts_dir = self.get_cam_info("cam_ts_loc")
+            
+            ts_dirs = self.get_cam_info("cam_ts_loc")
+            
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
+            
             case_type_string="case"
+
             hist_str_list = self.hist_string["test_hist_str"]
 
         #print("overwrite_ts",overwrite_ts,"\n")
@@ -385,8 +395,6 @@ class AdfDiag(AdfWeb):
 
         # get info about variable defaults
         res = self.variable_defaults
-
-        #print(baseline,"calc_cam_ts",calc_cam_ts,"\n")
 
         no_msg = False
 
@@ -409,15 +417,17 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
 
+            ts_dir = ts_dirs[case_idx]
+
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
-            if not calc_cam_ts[case_name]:
+            if (not calc_cam_ts[case_name]) and (not all(value is None for value in calc_cam_ts)):
                 emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
                 print(emsg)
                 no_msg = True
                 continue
 
-            if cam_ts_done[case_name]:
+            if (cam_ts_done[case_name]) and (not all(value is None for value in calc_cam_ts)):
                 emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
                 emsg += f" Will rely on those files directly."
                 print(emsg)
@@ -448,7 +458,7 @@ class AdfDiag(AdfWeb):
             for hist_str in hist_str_case:
 
                 # Notify user that script has started:
-                print(f"\n  Writing time series files to {ts_dir[case_idx]}")
+                print(f"\n  Writing time series files to {ts_dir}")
 
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
@@ -541,7 +551,7 @@ class AdfDiag(AdfWeb):
 
                 # Check if time series directory exists, and if not, then create it:
                 # Use pathlib to create parent directories, if necessary.
-                Path(ts_dir[case_idx]).mkdir(parents=True, exist_ok=True)
+                Path(ts_dir).mkdir(parents=True, exist_ok=True)
 
                 # INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
                 first_file_split = str(hist_files[0]).split(".")
@@ -675,7 +685,7 @@ class AdfDiag(AdfWeb):
                     # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
 
                     ts_outfil_str = (
-                        ts_dir[case_idx]
+                        ts_dir
                         + os.sep
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
                     )
@@ -792,7 +802,7 @@ class AdfDiag(AdfWeb):
                 if vars_to_derive:
                     self.derive_variables(
                         res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
-                        constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
+                        constit_dict=constit_dict, ts_dir=ts_dir
                     )
                 # End with
             # End for hist_str
