@@ -229,7 +229,7 @@ class AdfInfo(AdfConfig):
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
 
-            calc_bl_ts = {}
+            #calc_bl_ts = {}
             # Make new variable `calc_ts` in case the user does not want time series generation but 
             # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
             print(baseline_ts_done)
@@ -238,9 +238,9 @@ class AdfInfo(AdfConfig):
             print(self.get_baseline_info("cam_hist_loc"))
 
             if (baseline_ts_done is None) and (input_ts_baseline is None) and (self.get_baseline_info("calc_cam_climo") is None) and (self.get_baseline_info("cam_hist_loc")):
-                calc_bl_ts[data_name] = False
+                calc_bl_ts = False
             else:
-                calc_bl_ts[data_name] = True
+                calc_bl_ts = True
 
             self.__calc_baseline_ts = calc_bl_ts
 
@@ -248,7 +248,8 @@ class AdfInfo(AdfConfig):
             print("baseline_ts_done",baseline_ts_done,"\n")
             if baseline_ts_done is None:
                 baseline_ts_done = True
-            self.__baseline_ts_done = {data_name:baseline_ts_done}
+            self.__baseline_ts_done = baseline_ts_done
+            #self.__baseline_ts_done = {data_name:baseline_ts_done}
             #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
 
@@ -257,7 +258,8 @@ class AdfInfo(AdfConfig):
             print("baseline_overwrite_ts",baseline_overwrite_ts,"\n")
             if baseline_overwrite_ts is None:
                 baseline_overwrite_ts = False
-            self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+            self.__bl_overwrite_ts = baseline_overwrite_ts
+            #self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
 
 
 
@@ -458,8 +460,8 @@ class AdfInfo(AdfConfig):
         else:
             #Check if any time series files are pre-made
             if len(syears) == len(case_names):
-                for i,case in enumerate(syears):
-                    if case is None:
+                for i,syear in enumerate(syears):
+                    if syear is None:
                         syears[i] = True
             else:
                 print()
@@ -475,8 +477,8 @@ class AdfInfo(AdfConfig):
             baseline_syears = None
 
         print("test_syears",test_syears)
-
-        syears_dict = {"test":test_syears,"baseline":{data_name:baseline_syears}}
+        syears_dict = {"test":test_syears,"baseline":baseline_syears}
+        #syears_dict = {"test":test_syears,"baseline":{data_name:baseline_syears}}
         self.__syears_dict = syears_dict
         ###########################################################
 
@@ -491,8 +493,8 @@ class AdfInfo(AdfConfig):
         else:
             #Check if any time series files are pre-made
             if len(eyears) == len(case_names):
-                for i,case in enumerate(eyears):
-                    if case is None:
+                for i,eyear in enumerate(eyears):
+                    if eyear is None:
                         eyears[i] = True
             else:
                 print()
@@ -506,7 +508,8 @@ class AdfInfo(AdfConfig):
             baseline_eyears = self.__eyear_baseline
         else:
             baseline_eyears = None
-        eyears_dict = {"test":test_eyears,"baseline":{data_name:baseline_eyears}}
+        eyears_dict = {"test":test_eyears,"baseline":baseline_eyears}
+        #eyears_dict = {"test":test_eyears,"baseline":{data_name:baseline_eyears}}
         self.__eyears_dict = eyears_dict
         ###########################################################
 
@@ -526,11 +529,57 @@ class AdfInfo(AdfConfig):
 
 
         
-
+        """
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
         if cam_hist_locs is None:
             cam_hist_locs = [None]*len(case_names)
+        """
+
+        
+
+        #Check if premade ts files - premade ts files
+        ###########################################################
+        #Start years (not currently required):
+        eyears = self.get_cam_info('end_year')
+        cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        if cam_hist_locs is None:
+            cam_hist_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(cam_hist_locs) == len(case_names):
+                for i,hist_loc in enumerate(cam_hist_locs):
+                    if hist_loc is None:
+                        cam_hist_locs[i] = True
+            else:
+                print()
+
+        self.__test_hist_locs = {}
+        for i,hist_loc in enumerate(cam_hist_locs):
+            self.__test_hist_locs[case_names[i]] = hist_loc
+
+        test_hist_locs = copy.copy(self.__test_hist_locs)
+        if self.__baseline_hist_loc:
+            baseline_hist_loc = self.__baseline_hist_loc
+        else:
+            baseline_hist_loc = None
+        
+        hist_locs_dict = {"test":test_hist_locs,"baseline":baseline_hist_loc}
+        #hist_locs_dict = {"test":test_hist_locs,"baseline":{data_name:baseline_hist_loc}}
+        self.__hist_locs_dict = hist_locs_dict
+        ###########################################################
+
+
+
+
+
+
+
+
+
+
+
+
 
         # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
         cam_hist_str = self.__hist_str
@@ -559,6 +608,8 @@ class AdfInfo(AdfConfig):
         else:
             bl_ts_done = True
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
+        #ts_done_dict = {"test":test_ts_done,"baseline":{data_name:bl_ts_done}}
+        
         self.__ts_done_dict = ts_done_dict
         ###########################################################
 
@@ -589,6 +640,8 @@ class AdfInfo(AdfConfig):
             #bl_overwrite_ts = False
             bl_overwrite_ts = None
         overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
+        #overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":{data_name:bl_overwrite_ts}}
+
         self.__cam_overwrite_ts_dict = overwrite_ts_dict
         ###########################################################
 
@@ -606,6 +659,21 @@ class AdfInfo(AdfConfig):
                         input_ts_locs[i] = None
             else:
                 print()
+
+        self.__test_overwrite_ts = {}
+        for i,ts_loc in enumerate(input_ts_locs):
+            self.__test_ts_locs[case_names[i]] = ts_loc
+
+        test_ts_locs = copy.copy(self.__test_ts_locs)
+        if self.__bl_ts_locs:
+            bl_ts_locs = self.__bl_ts_locs
+        else:
+            #bl_overwrite_ts = False
+            bl_overwrite_ts = None
+        ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_locs}
+        #ts_locs_dict = {"test":test_ts_locs,"baseline":{data_name:bl_ts_locs}}
+
+        self.__cam_ts_locs_dict = ts_locs_dict
         ###########################################################
 
 
@@ -646,6 +714,8 @@ class AdfInfo(AdfConfig):
         else:
             calc_bl_climo = True
         calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":{data_name:calc_bl_climo}}
+
         self.__calc_climo_dict = calc_climo_dict
         ###########################################################
 
@@ -813,10 +883,10 @@ class AdfInfo(AdfConfig):
             eyears_fixed[case_name] = eyear
 
             #Update case name with provided/found years:
-            case_name += f"_{syear}_{eyear}"
+            case_name_long = case_name+f"_{syear}_{eyear}"
 
             #Set the final directory name and save it to plot_location:
-            direc_name = f"{case_name}_vs_{data_name_long}"
+            direc_name = f"{case_name_long}_vs_{data_name_long}"
             plot_loc = os.path.join(plot_dir, direc_name)
             self.__plot_location.append(plot_loc)
 
@@ -1081,6 +1151,12 @@ class AdfInfo(AdfConfig):
     def cam_overwrite_ts_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__cam_overwrite_ts_dict
+
+
+    @property
+    def ts_locs_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__cam_ts_locs_dict
 
 
     # Create property needed to return whether to caculate time series files:

@@ -346,12 +346,17 @@ class AdfDiag(AdfWeb):
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             #cam_ts_done = [self.get_baseline_info("cam_ts_done")]
+            
             #calc_cam_ts = [self.get_baseline_info("calc_cam_ts")]
             calc_cam_ts = self.calc_ts["baseline"]
+            
             cam_ts_done = self.ts_done_dict["baseline"]
+            
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
+
             overwrite_ts = self.cam_overwrite_ts_dict["baseline"]
-            ts_dirs = [self.get_baseline_info("cam_ts_loc")]
+            #ts_dirs = [self.get_baseline_info("cam_ts_loc")]
+            ts_dirs = self.ts_locs_dict["baseline"]
             #start_years = [self.climo_yrs["syear_baseline"]]
             #end_years = [self.climo_yrs["eyear_baseline"]]
 
@@ -382,7 +387,8 @@ class AdfDiag(AdfWeb):
             
             overwrite_ts = self.cam_overwrite_ts_dict["test"]
             
-            ts_dirs = self.get_cam_info("cam_ts_loc")
+            #ts_dirs = self.get_cam_info("cam_ts_loc")
+            ts_dirs = self.ts_locs_dict["test"]
             
             #start_years = self.climo_yrs["syears"]
             #end_years = self.climo_yrs["eyears"]
@@ -426,7 +432,16 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
 
-            ts_dir = ts_dirs[case_idx]
+            if baseline:
+                ts_dir = ts_dirs
+                start_year = start_years
+                end_year = end_years
+                overwrite = overwrite_ts
+            else:
+                ts_dir = ts_dirs[case_name]
+                start_year = start_years[case_name]
+                end_year = end_years[case_name]
+                overwrite = overwrite_ts[case_name]
 
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
@@ -443,10 +458,6 @@ class AdfDiag(AdfWeb):
                 no_msg = True
                 continue
             # End if
-
-            # Extract start and end year values:
-            start_year = start_years[case_name]
-            end_year = end_years[case_name]
 
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
@@ -704,7 +715,7 @@ class AdfDiag(AdfWeb):
 
                     # If files exist, then check if over-writing is allowed:
                     if ts_file_list:
-                        if not overwrite_ts[case_name]:
+                        if not overwrite:
                             # If not, then simply skip this variable:
                             continue
 
