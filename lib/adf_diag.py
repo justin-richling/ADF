@@ -356,6 +356,7 @@ class AdfDiag(AdfWeb):
             #end_years = [self.climo_yrs["eyear_baseline"]]
 
             start_years = self.syears_dict["baseline"]
+            print("\n\nstart_years",start_years,"\n\n")
             end_years = self.eyears_dict["baseline"]
 
             case_type_string = "baseline"
@@ -374,7 +375,7 @@ class AdfDiag(AdfWeb):
             cam_ts_done = self.ts_done_dict["test"]
 
             start_years = self.syears_dict["test"]
-            print("\n\nstart_years",start_years,"\n\n")
+            print("\n\nNOT BASELINE start_years",start_years,"\n\n")
             end_years = self.eyears_dict["test"]
             
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
