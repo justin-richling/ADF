@@ -462,19 +462,35 @@ class AdfDiag(AdfWeb):
 
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
-            if (not calc_cam_ts[case_name]) and (not all(value is None for value in calc_cam_ts)):
-                emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
-                print(emsg)
-                no_msg = True
-                continue
-
-            if (cam_ts_done[case_name]) and (not all(value is None for value in calc_cam_ts)):
-                emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
-                emsg += f" Will rely on those files directly."
-                print(emsg)
-                no_msg = True
-                continue
-            # End if
+            if baseline:
+                if (not calc_cam_ts) and (not calc_cam_ts):
+                    emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
+                    print(emsg)
+                    no_msg = True
+                    continue
+            else:
+                if (not calc_cam_ts[case_name]) and (not all(value is None for value in calc_cam_ts)):
+                    emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
+                    print(emsg)
+                    no_msg = True
+                    continue
+            
+            if baseline:
+                if (cam_ts_done) and (not calc_cam_ts):
+                    emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
+                    emsg += f" Will rely on those files directly."
+                    print(emsg)
+                    no_msg = True
+                    continue
+                # End if
+            else:
+                if (cam_ts_done[case_name]) and (not all(value is None for value in calc_cam_ts)):
+                    emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
+                    emsg += f" Will rely on those files directly."
+                    print(emsg)
+                    no_msg = True
+                    continue
+                # End if
 
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
