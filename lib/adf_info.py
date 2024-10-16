@@ -506,7 +506,7 @@ class AdfInfo(AdfConfig):
             baseline_eyears = self.__eyear_baseline
         else:
             baseline_eyears = None
-        eyears_dict = {"test":test_eyears,"baseline":{data_name:baseline_syears}}
+        eyears_dict = {"test":test_eyears,"baseline":{data_name:baseline_eyears}}
         self.__eyears_dict = eyears_dict
         ###########################################################
 
