@@ -222,6 +222,7 @@ class AdfInfo(AdfConfig):
             baseline_hist_str = self.get_baseline_info("hist_str")
             if not isinstance(conf_val, list):
                 baseline_hist_str = [baseline_hist_str]
+            self.__baseline_hist_loc = baseline_hist_str
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
