@@ -447,6 +447,9 @@ class AdfInfo(AdfConfig):
             baseline_syears = self.__syear_baseline
         else:
             baseline_syears = None
+
+        print("test_syears",test_syears)
+
         syears_dict = {"test":test_syears,"baseline":baseline_syears}
         self.__syears_dict = syears_dict
         ###########################################################
