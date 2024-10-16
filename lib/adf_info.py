@@ -650,8 +650,10 @@ class AdfInfo(AdfConfig):
         ###########################################################
 
         #Loop over cases:
-        syears_fixed = []
-        eyears_fixed = []
+        #syears_fixed = []
+        #eyears_fixed = []
+        syears_fixed = {}
+        eyears_fixed = {}
         ts_done = {}
 
         calc_test_ts = {}
@@ -805,8 +807,10 @@ class AdfInfo(AdfConfig):
             #Update climo year lists in case anything changed
             syear = int(syear)
             eyear = int(eyear)
-            syears_fixed.append(syear)
-            eyears_fixed.append(eyear)
+            #syears_fixed.append(syear)
+            syears_fixed[case_name] = syear
+            #eyears_fixed.append(eyear)
+            eyears_fixed[case_name] = eyear
 
             #Update case name with provided/found years:
             case_name += f"_{syear}_{eyear}"
