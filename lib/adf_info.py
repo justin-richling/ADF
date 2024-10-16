@@ -443,8 +443,8 @@ class AdfInfo(AdfConfig):
             self.__test_syears[case_names[i]] = syear
 
         test_syears = copy.copy(self.__test_syears)
-        if self.__baseline_syears:
-            baseline_syears = self.__baseline_syears
+        if self.__syear_baseline:
+            baseline_syears = self.__syear_baseline
         else:
             baseline_syears = None
         syears_dict = {"test":test_syears,"baseline":baseline_syears}
@@ -473,8 +473,8 @@ class AdfInfo(AdfConfig):
             self.__test_eyears[case_names[i]] = eyear
 
         test_eyears = copy.copy(self.__test_eyears)
-        if self.__baseline_eyears:
-            baseline_eyears = self.__baseline_eyears
+        if self.__eyear_baseline:
+            baseline_eyears = self.__eyear_baseline
         else:
             baseline_eyears = None
         eyears_dict = {"test":test_eyears,"baseline":baseline_eyears}
