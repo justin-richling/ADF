@@ -254,10 +254,14 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             #baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
-            print("baseline_ts_done",baseline_overwrite_ts,"\n")
+            print("baseline_overwrite_ts",baseline_overwrite_ts,"\n")
             if baseline_overwrite_ts is None:
                 baseline_overwrite_ts = False
             self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+
+
+
+            
 
 
             if (baseline_ts_done) and (not input_ts_baseline) and (self.get_baseline_info("calc_cam_climo")):
@@ -392,7 +396,7 @@ class AdfInfo(AdfConfig):
             eyear_baseline = int(eyear_baseline)
 
             #Update baseline case name:
-            data_name += f"_{syear_baseline}_{eyear_baseline}"
+            data_name_long = data_name+f"_{syear_baseline}_{eyear_baseline}"
         #End if (compare_obs)
 
         #Initialize case nicknames:
@@ -402,6 +406,28 @@ class AdfInfo(AdfConfig):
         #Save starting and ending years as object variables:
         self.__syear_baseline = syear_baseline
         self.__eyear_baseline = eyear_baseline
+
+
+
+
+        """
+        #Check if any time series files are pre-made
+        #baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
+        print("baseline_overwrite_ts",baseline_overwrite_ts,"\n")
+        if baseline_overwrite_ts is None:
+            baseline_overwrite_ts = False
+        self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+
+        #Check if any time series files are pre-made
+        #baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
+        print("baseline_overwrite_ts",baseline_overwrite_ts,"\n")
+        if baseline_overwrite_ts is None:
+            baseline_overwrite_ts = False
+        self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+        """
+
+
+
 
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
@@ -450,7 +476,7 @@ class AdfInfo(AdfConfig):
 
         print("test_syears",test_syears)
 
-        syears_dict = {"test":test_syears,"baseline":baseline_syears}
+        syears_dict = {"test":test_syears,"baseline":{data_name:baseline_syears}}
         self.__syears_dict = syears_dict
         ###########################################################
 
@@ -480,7 +506,7 @@ class AdfInfo(AdfConfig):
             baseline_eyears = self.__eyear_baseline
         else:
             baseline_eyears = None
-        eyears_dict = {"test":test_eyears,"baseline":baseline_eyears}
+        eyears_dict = {"test":test_eyears,"baseline":{data_name:baseline_syears}}
         self.__eyears_dict = eyears_dict
         ###########################################################
 
@@ -786,7 +812,7 @@ class AdfInfo(AdfConfig):
             case_name += f"_{syear}_{eyear}"
 
             #Set the final directory name and save it to plot_location:
-            direc_name = f"{case_name}_vs_{data_name}"
+            direc_name = f"{case_name}_vs_{data_name_long}"
             plot_loc = os.path.join(plot_dir, direc_name)
             self.__plot_location.append(plot_loc)
 
