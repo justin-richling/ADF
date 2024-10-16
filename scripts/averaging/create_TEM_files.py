@@ -185,8 +185,8 @@ def create_TEM_files(adf):
         print(f"\t Processing TEM for case '{case_name}' :")
 
         #Extract start and end year values:
-        start_year = start_years[case_idx]
-        end_year   = end_years[case_idx]
+        start_year = start_years[case_name]
+        end_year   = end_years[case_name]
 
         #Create path object for the CAM history file(s) location:
         starting_location = Path(cam_hist_locs[case_idx])
