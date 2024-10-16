@@ -421,13 +421,82 @@ class AdfInfo(AdfConfig):
         #End year (not currently rquired):
         eyears = self.get_cam_info('end_year')
 
-        #Make lists of None to be iterated over for case_names
+
+
+        #Check if premade ts files - premade ts files
+        ###########################################################
+        #Start years (not currently required):
+        syears = self.get_cam_info('start_year')
+        if syears is None:
+            syears = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(syears) == len(case_names):
+                for i,case in enumerate(syears):
+                    if case is None:
+                        syears[i] = True
+            else:
+                print()
+
+        self.__test_syears = {}
+        for i,syear in enumerate(syears):
+            self.__test_syears[case_names[i]] = syear
+
+        test_syears = copy.copy(self.__test_syears)
+        if self.__baseline_syears:
+            baseline_syears = self.__baseline_syears
+        else:
+            baseline_syears = None
+        syears_dict = {"test":test_syears,"baseline":baseline_syears}
+        self.__syears_dict = syears_dict
+        ###########################################################
+
+
+
+        #Check if premade ts files - premade ts files
+        ###########################################################
+        #Start years (not currently required):
+        eyears = self.get_cam_info('end_year')
+        if eyears is None:
+            eyears = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(eyears) == len(case_names):
+                for i,case in enumerate(eyears):
+                    if case is None:
+                        eyears[i] = True
+            else:
+                print()
+
+        self.__test_eyears = {}
+        for i,eyear in enumerate(eyears):
+            self.__test_eyears[case_names[i]] = eyear
+
+        test_eyears = copy.copy(self.__test_eyears)
+        if self.__baseline_eyears:
+            baseline_eyears = self.__baseline_eyears
+        else:
+            baseline_eyears = None
+        eyears_dict = {"test":test_eyears,"baseline":baseline_eyears}
+        self.__eyears_dict = eyears_dict
+        ###########################################################
+
+
+
+
+
+
+        """#Make lists of None to be iterated over for case_names
         if syears is None:
             syears = [None]*len(case_names)
         #End if
         if eyears is None:
             eyears = [None]*len(case_names)
-        #End if
+        #End if"""
+
+
+
+        
 
         #Extract cam history files location:
         cam_hist_locs = self.get_cam_info('cam_hist_loc')
@@ -986,6 +1055,25 @@ class AdfInfo(AdfConfig):
     def calc_ts(self):
         return {"test": copy.copy(self.__calc_test_ts),
                 "baseline": copy.copy(self.__calc_baseline_ts)}
+
+
+    # Create property needed to return whether to caculate time series files:
+    @property
+    def eyears(self):
+        return {"test": copy.copy(self.__calc_test_ts),
+                "baseline": copy.copy(self.__eyears_dict)}
+    
+
+
+    @property
+    def eyears_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__eyears_dict
+
+    @property
+    def syears_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__syears_dict
     
 
 

@@ -352,8 +352,12 @@ class AdfDiag(AdfWeb):
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             overwrite_ts = self.cam_overwrite_ts_dict["baseline"]
             ts_dirs = [self.get_baseline_info("cam_ts_loc")]
-            start_years = [self.climo_yrs["syear_baseline"]]
-            end_years = [self.climo_yrs["eyear_baseline"]]
+            #start_years = [self.climo_yrs["syear_baseline"]]
+            #end_years = [self.climo_yrs["eyear_baseline"]]
+
+            start_years = self.syears_dict["baseline"]
+            end_years = self.eyears_dict["baseline"]
+
             case_type_string = "baseline"
             hist_str_list = [self.hist_string["base_hist_str"]]
 
@@ -368,6 +372,9 @@ class AdfDiag(AdfWeb):
             calc_cam_ts = self.calc_ts["test"]
             
             cam_ts_done = self.ts_done_dict["test"]
+
+            start_years = self.syears_dict["test"]
+            end_years = self.eyears_dict["test"]
             
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
             
@@ -375,8 +382,8 @@ class AdfDiag(AdfWeb):
             
             ts_dirs = self.get_cam_info("cam_ts_loc")
             
-            start_years = self.climo_yrs["syears"]
-            end_years = self.climo_yrs["eyears"]
+            #start_years = self.climo_yrs["syears"]
+            #end_years = self.climo_yrs["eyears"]
             
             case_type_string = "case"
 
