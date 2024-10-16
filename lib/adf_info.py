@@ -661,7 +661,7 @@ class AdfInfo(AdfConfig):
             else:
                 print()
 
-        self.__test_overwrite_ts = {}
+        self.__test_ts_locs = {}
         for i,ts_loc in enumerate(input_ts_locs):
             self.__test_ts_locs[case_names[i]] = ts_loc
 
@@ -670,7 +670,7 @@ class AdfInfo(AdfConfig):
             bl_ts_locs = self.__bl_ts_locs
         else:
             #bl_overwrite_ts = False
-            bl_overwrite_ts = None
+            bl_ts_locs = None
         ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_locs}
         #ts_locs_dict = {"test":test_ts_locs,"baseline":{data_name:bl_ts_locs}}
 
