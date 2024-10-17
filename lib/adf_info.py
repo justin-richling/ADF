@@ -774,7 +774,7 @@ class AdfInfo(AdfConfig):
         for i,climo_loc in enumerate(test_climo_locs):
             self.__test_climo_locs[case_names[i]] = climo_loc
 
-        test_climo_locs = copy.copy(self.test_climo_locs)
+        test_climo_locs = copy.copy(self.__test_climo_locs)
         if self.__bl_climo_locs:
             bl_climo_locs = self.__bl_climo_locs
         else:
