@@ -99,8 +99,10 @@ def chem_aerosol_tables(adfobj):
         base_nickname_list = adfobj.case_nicknames["base_nickname"]
         nicknames_list += [base_nickname_list]
         # Grab climo years
-        start_yrs += [adfobj.climo_yrs["syear_baseline"]]
-        end_yrs += [adfobj.climo_yrs["eyear_baseline"]]
+        bl_start_yrs = adfobj.climo_yrs["syear_baseline"]
+        bl_end_yrs = adfobj.climo_yrs["eyear_baseline"]
+        start_years = {**start_yrs, **bl_start_yrs}
+        end_years = {**end_yrs, **bl_end_yrs}
         hist_strs = cam_hist_strs + [adfobj.hist_string["base_hist_str"]]
 
     
@@ -154,13 +156,13 @@ def chem_aerosol_tables(adfobj):
     # Periods of Interest
     # -------------------
     # choose the period of interest. Plots will be averaged within this period
-    start_dates = []
-    for syr in start_yrs:
+    """start_dates = []
+    for syr in start_years:
         start_dates.append(f"{syr}-1-1")
     end_dates = []
     for eyr in end_yrs:
         end_dates.append(f"{eyr}-1-1")
-
+    """
     durations = {}
     num_yrs = {}
 
@@ -175,17 +177,20 @@ def chem_aerosol_tables(adfobj):
     for i,case in enumerate(case_names):
         print(f'Current case: {case}',"\n",len(f'Current case: {case}')*'-','\n')
 
-        start_period = datetime.strptime(start_dates[i], "%Y-%m-%d")
-        end_period = datetime.strptime(end_dates[i], "%Y-%m-%d")
+        start_date = f"{start_years[case]}-1-1"
+        end_date = f"{end_years[case]}-1-1"
+        
+        start_period = datetime.strptime(start_date, "%Y-%m-%d")
+        end_period = datetime.strptime(end_date, "%Y-%m-%d")
 
         # Calculated duration of time period in seconds?
         durations[case_names[i]] = (end_period-start_period).days*86400+365*86400
 
         # Get number of years for calculations
-        num_yrs[case_names[i]] = int(end_yrs[i])-int(start_yrs[i])+1
-        print(f"number of years: {int(end_yrs[i])-int(start_yrs[i])+1}")
+        num_yrs[case_names[i]] = int(end_years[case])-int(start_years[case])+1
+        print(f"number of years: {int(end_years[case])-int(start_years[case])+1}")
 
-        Files,Lats,Lons,areas[case],ext1_SE = Get_files(data_dirs[i],start_yrs[i],end_yrs[i],case_hist_strs[i],area=True)
+        Files,Lats,Lons,areas[case],ext1_SE = Get_files(data_dirs[i],start_years[case],end_years[case],case_hist_strs[i],area=True)
 
         # find the name of all the variables in the file.
         # this will help the code to work for the variables that are not in the files (assingn 0s)
