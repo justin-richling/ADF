@@ -57,7 +57,8 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    input_climo_locs = adf.climo_locs_dict["test"]
 
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
@@ -116,8 +117,8 @@ def regrid_and_vert_interp(adf):
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adf.climo_yrs["syear_baseline"]
-    eyear_baseline = adf.climo_yrs["eyear_baseline"]
+    syear_baseline = adf.climo_yrs["syear_baseline"][adf.data.ref_case_label]
+    eyear_baseline = adf.climo_yrs["eyear_baseline"][adf.data.ref_case_label]
 
     #Set attributes dictionary for climo years to save in the file attributes
     base_climo_yrs_attr = f"{target_list[0]}: {syear_baseline}-{eyear_baseline}"
@@ -152,8 +153,10 @@ def regrid_and_vert_interp(adf):
         pmid_loc_dict = {}
 
         #Get climo years for case
-        syear = syear_cases[case_idx]
-        eyear = eyear_cases[case_idx]
+        #syear = syear_cases[case_idx]
+        #eyear = eyear_cases[case_idx]
+        syear = syear_cases[case_name]
+        eyear = eyear_cases[case_name]
 
         # probably want to do this one variable at a time:
         for var in var_list:
