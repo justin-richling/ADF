@@ -250,7 +250,8 @@ class AdfInfo(AdfConfig):
             else:
                 calc_bl_ts = True
 
-            self.__calc_baseline_ts = calc_bl_ts
+            self.__calc_baseline_ts = {}
+            self.__calc_baseline_ts[data_name] = calc_bl_ts
 
 
             print("baseline_ts_done",baseline_ts_done,"\n")
