@@ -676,7 +676,7 @@ class AdfInfo(AdfConfig):
 
 
 
-        self.__overwrite_climo_dict
+
         #Check if using pre-made ts files, overwrite them - overwrite ts
         ###########################################################
         cam_overwrite_climo   = self.get_cam_info("cam_overwrite_climo")
