@@ -414,7 +414,22 @@ class AdfDiag(AdfWeb):
 
         no_msg = False
 
-        if baseline:
+        # Check if all values are None
+        if all(value is None for value in calc_cam_ts):
+            print("All values in calc_cam_ts are None.")
+            emsg = "  Configuration file indicates time series files don't need to be calculated."
+            print(emsg)
+            no_msg = True
+
+        # Check if all values are None
+        if all(value is None for value in cam_ts_done):
+            print("All values in cam_ts_done are None.")
+            emsg = "  Configuration file indicates time series files have been pre-computed."
+            emsg += f" Will rely on those files directly."
+            print(emsg)
+            no_msg = True
+
+        """if baseline:
             # Check if all values are None
             if not calc_cam_ts:
                 print("All values in calc_cam_ts are None.")
@@ -444,12 +459,12 @@ class AdfDiag(AdfWeb):
                 emsg = "  Configuration file indicates time series files have been pre-computed."
                 emsg += f" Will rely on those files directly."
                 print(emsg)
-                no_msg = True
+                no_msg = True"""
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
 
-            if baseline:
+            """if baseline:
                 ts_dir = ts_dirs
                 start_year = start_years
                 end_year = end_years
@@ -458,11 +473,30 @@ class AdfDiag(AdfWeb):
                 ts_dir = ts_dirs[case_name]
                 start_year = start_years[case_name]
                 end_year = end_years[case_name]
-                overwrite = overwrite_ts[case_name]
+                overwrite = overwrite_ts[case_name]"""
+
+
+            ts_dir = ts_dirs[case_name]
+            start_year = start_years[case_name]
+            end_year = end_years[case_name]
+            overwrite = overwrite_ts[case_name]
+
+            if (not calc_cam_ts[case_name]) and (not all(value is None for value in calc_cam_ts)):
+                emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
+                print(emsg)
+                no_msg = True
+                continue
+
+            if (cam_ts_done[case_name]) and (not all(value is None for value in calc_cam_ts)):
+                emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
+                emsg += f" Will rely on those files directly."
+                print(emsg)
+                no_msg = True
+                continue
 
             #Check whether the user needs to use time series files at all
             #or are missing the time series files all together.
-            if baseline:
+            """if baseline:
                 if (not calc_cam_ts) and (not calc_cam_ts):
                     emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
                     print(emsg)
@@ -490,7 +524,7 @@ class AdfDiag(AdfWeb):
                     print(emsg)
                     no_msg = True
                     continue
-                # End if
+                # End if"""
 
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])

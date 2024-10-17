@@ -70,31 +70,65 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
-    calc_climos   = adf.get_cam_info("calc_cam_climo")
-    overwrite     = adf.get_cam_info("cam_overwrite_climo")
+    
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    input_ts_locs = adf.ts_locs_dict["test"]
+    
+    #output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
+    output_locs   = adf.climo_locs_dict["test"]
+    
+    #calc_climos   = adf.get_cam_info("calc_cam_climo")
+    calc_climos   = adf.calc_climo_dict["test"]
+    
+    #overwrite     = adf.get_cam_info("cam_overwrite_climo")
+    overwrite     = adf.overwrite_climo_dict["test"]
+
+    """#case_names = self.get_cam_info("cam_case_name", required=True)
+    calc_cam_ts = self.calc_ts["test"]
+    cam_ts_done = self.ts_done_dict["test"]
+    start_years = self.syears_dict["test"]
+    print("\n\nNOT BASELINE start_years",start_years,"\n\n")
+    end_years = self.eyears_dict["test"]     
+    cam_hist_locs = self.get_cam_info("cam_hist_loc")  
+    overwrite_ts = self.cam_overwrite_ts_dict["test"] 
+    ts_dirs = self.ts_locs_dict["test"]
+    hist_str_list = self.hist_string["test_hist_str"]"""
 
     #Extract simulation years:
     start_year = adf.climo_yrs["syears"]
     end_year   = adf.climo_yrs["eyears"]
 
-    #If variables weren't provided in config file, then make them a list
+    """#If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
     if not calc_climos:
         calc_climos = [None]*len(case_names)
     if not overwrite:
         overwrite = [None]*len(case_names)
-    #End if
+    #End if"""
+
+    """# load reference data (observational or baseline)
+    if not adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
+    else:
+        base_name = adfobj.data.ref_labels[var]"""
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
-        baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
-        output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
-        calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
-        ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
+        #baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
+        baseline_name = adf.data.ref_case_label
+        
+        #input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+        input_ts_baseline = adf.ts_locs_dict["baseline"]#[baseline_name]
+        
+        #output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
+        output_bl_loc     = adf.climo_locs_dict["baseline"]#[baseline_name]
+        
+        #calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
+        calc_bl_climos    = adf.calc_climo_dict["baseline"]#[baseline_name]
+        
+        #ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
+        ovr_bl            = adf.overwrite_climo_dict["baseline"]#[baseline_name]
 
         #Extract baseline years:
         bl_syr = adf.climo_yrs["syear_baseline"]
@@ -103,11 +137,20 @@ def create_climo_files(adf, clobber=False, search=None):
         #Append to case lists:
         case_names.append(baseline_name)
         #input_ts_locs.append(input_ts_baseline)
+        # Create a new dictionary by combining dict1 and dict2
+        input_ts_locss = {**input_ts_locs, **input_ts_baseline}
         #output_locs.append(output_bl_loc)
+        output_locss = {**output_locs, **output_bl_loc}
         #calc_climos.append(calc_bl_climos)
+        calc_climoss = {**calc_climos, **calc_bl_climos}
         #overwrite.append(ovr_bl)
+        overwrites = {**overwrite, **ovr_bl}
         #start_year.append(bl_syr)
+        start_years = {**start_year, **bl_syr}
         #end_year.append(bl_eyr)
+        end_years = {**end_year, **bl_eyr}
+    #else:
+        #base_name = adf.data.ref_labels[var]
     #-----------------------------------------
 
     # Check whether averaging interval is supplied
@@ -121,22 +164,26 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
-        if not calc_climos[case_idx]:
+        #if not calc_climos[case_idx]:
+        if not calc_climos[case_name]:
             continue
 
         #Notify user of model case being processed:
         print(f"\t Calculating climatologies for case '{case_name}' :")
 
         #Create "Path" objects:
-        input_location  = Path(input_ts_locs[case_idx])
-        output_location = Path(output_locs[case_idx])
+        #input_location  = Path(input_ts_locs[case_idx])
+        #output_location = Path(output_locs[case_idx])
+        input_location  = Path(input_ts_locss[case_name])
+        output_location = Path(output_locss[case_name])
 
         #Whether to overwrite existing climo files
-        clobber = overwrite[case_idx]
+        #clobber = overwrite[case_idx]
+        clobber = overwrite[case_name]
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_ts_locs}' not found.  Script is exiting."
+            errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
             raise AdfError(errmsg)
 
         #Check if climo directory exists, and if not, then create it:
@@ -149,7 +196,9 @@ def create_climo_files(adf, clobber=False, search=None):
             search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
 
         #Check model year bounds:
-        syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
+        #syr, eyr = check_averaging_interval(start_years[case_idx], end_year[case_idx])
+        syr, eyr = check_averaging_interval(start_years[case_name], end_year[case_name])
+        
 
         #Loop over CAM output variables:
         list_of_arguments = []

@@ -228,8 +228,13 @@ class AdfInfo(AdfConfig):
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
             baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
 
+            baseline_overwrite_climo   = self.get_baseline_info("cam_overwrite_climo")
+
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
             self.__bl_ts_locs = input_ts_baseline
+
+            input_climo_baseline = self.get_baseline_info("cam_climo_loc")
+            self.__bl_climo_locs = input_climo_baseline
 
 
             #calc_bl_ts = {}
@@ -263,6 +268,14 @@ class AdfInfo(AdfConfig):
                 baseline_overwrite_ts = False
             self.__bl_overwrite_ts = baseline_overwrite_ts
             #self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+
+
+            #Check if any time series files are pre-made
+            #baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
+            print("baseline_overwrite_climo",baseline_overwrite_climo,"\n")
+            if baseline_overwrite_climo is None:
+                baseline_overwrite_climo = False
+            self.__bl_overwrite_climo = baseline_overwrite_climo
 
 
 
@@ -480,8 +493,8 @@ class AdfInfo(AdfConfig):
             baseline_syears = None
 
         print("test_syears",test_syears)
-        syears_dict = {"test":test_syears,"baseline":baseline_syears}
-        #syears_dict = {"test":test_syears,"baseline":{data_name:baseline_syears}}
+        #syears_dict = {"test":test_syears,"baseline":baseline_syears}
+        syears_dict = {"test":test_syears,"baseline":{data_name:baseline_syears}}
         self.__syears_dict = syears_dict
         ###########################################################
 
@@ -511,8 +524,8 @@ class AdfInfo(AdfConfig):
             baseline_eyears = self.__eyear_baseline
         else:
             baseline_eyears = None
-        eyears_dict = {"test":test_eyears,"baseline":baseline_eyears}
-        #eyears_dict = {"test":test_eyears,"baseline":{data_name:baseline_eyears}}
+        #eyears_dict = {"test":test_eyears,"baseline":baseline_eyears}
+        eyears_dict = {"test":test_eyears,"baseline":{data_name:baseline_eyears}}
         self.__eyears_dict = eyears_dict
         ###########################################################
 
@@ -567,8 +580,8 @@ class AdfInfo(AdfConfig):
         else:
             baseline_hist_loc = None
         
-        hist_locs_dict = {"test":test_hist_locs,"baseline":baseline_hist_loc}
-        #hist_locs_dict = {"test":test_hist_locs,"baseline":{data_name:baseline_hist_loc}}
+        #hist_locs_dict = {"test":test_hist_locs,"baseline":baseline_hist_loc}
+        hist_locs_dict = {"test":test_hist_locs,"baseline":{data_name:baseline_hist_loc}}
         self.__hist_locs_dict = hist_locs_dict
         ###########################################################
 
@@ -610,11 +623,16 @@ class AdfInfo(AdfConfig):
             bl_ts_done = self.__baseline_ts_done
         else:
             bl_ts_done = True
-        ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
-        #ts_done_dict = {"test":test_ts_done,"baseline":{data_name:bl_ts_done}}
+        #ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
+        ts_done_dict = {"test":test_ts_done,"baseline":{data_name:bl_ts_done}}
         
         self.__ts_done_dict = ts_done_dict
         ###########################################################
+
+
+
+
+
 
 
         #Check if using pre-made ts files, overwrite them - overwrite ts
@@ -642,11 +660,59 @@ class AdfInfo(AdfConfig):
         else:
             #bl_overwrite_ts = False
             bl_overwrite_ts = None
-        overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
-        #overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":{data_name:bl_overwrite_ts}}
+        #overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
+        overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":{data_name:bl_overwrite_ts}}
 
         self.__cam_overwrite_ts_dict = overwrite_ts_dict
         ###########################################################
+
+
+
+
+
+
+
+
+
+
+
+        self.__overwrite_climo_dict
+        #Check if using pre-made ts files, overwrite them - overwrite ts
+        ###########################################################
+        cam_overwrite_climo   = self.get_cam_info("cam_overwrite_climo")
+        if cam_overwrite_climo is None:
+            #cam_overwrite_ts = [False]*len(case_names)
+            cam_overwrite_climo = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(cam_overwrite_climo) == len(case_names):
+                for i,overwrite_c in enumerate(cam_overwrite_climo):
+                    if overwrite_c is None:
+                        #cam_overwrite_ts[i] = False
+                        cam_overwrite_climo[i] = None
+            else:
+                print()
+        self.__overwrite_climo = {}
+        for i,cam_ts in enumerate(cam_overwrite_climo):
+            self.__overwrite_climo[case_names[i]] = cam_ts
+
+        overwrite_climo = copy.copy(self.__overwrite_climo)
+        if self.__bl_overwrite_climo:
+            bl_overwrite_climo = self.__bl_overwrite_climo
+        else:
+            #bl_overwrite_ts = False
+            bl_overwrite_climo = None
+        #overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
+        overwrite_climo_dict = {"test":overwrite_climo,"baseline":{data_name:bl_overwrite_climo}}
+
+        self._overwrite_climo_dict = overwrite_climo_dict
+        ###########################################################
+
+
+
+
+
+
 
 
         #Grab case time series file location(s) - input ts locs
@@ -673,11 +739,65 @@ class AdfInfo(AdfConfig):
         else:
             #bl_overwrite_ts = False
             bl_ts_locs = None
-        ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_locs}
-        #ts_locs_dict = {"test":test_ts_locs,"baseline":{data_name:bl_ts_locs}}
+        #ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_locs}
+        ts_locs_dict = {"test":test_ts_locs,"baseline":{data_name:bl_ts_locs}}
 
         self.__cam_ts_locs_dict = ts_locs_dict
         ###########################################################
+
+
+
+
+
+
+
+
+
+
+
+
+        #Grab case climo file location(s) - input ts locs
+        ###########################################################
+        test_climo_locs = self.get_cam_info("cam_climo_loc")
+        if test_climo_locs is None:
+            test_climo_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(test_climo_locs) == len(case_names):
+                for i,case in enumerate(test_climo_locs):
+                    if case is None:
+                        test_climo_locs[i] = None
+            else:
+                print()
+
+        self.__test_climo_locs = {}
+        for i,climo_loc in enumerate(test_climo_locs):
+            self.__test_climo_locs[case_names[i]] = climo_loc
+
+        test_climo_locs = copy.copy(self.test_climo_locs)
+        if self.__bl_climo_locs:
+            bl_climo_locs = self.__bl_climo_locs
+        else:
+            #bl_overwrite_ts = False
+            bl_climo_locs = None
+        #climo_locs_dict = {"test":test_climo_locs,"baseline":bl_climo_locs}
+        climo_locs_dict = {"test":test_climo_locs,"baseline":{data_name:bl_climo_locs}}
+
+        self.__cam_climo_locs_dict = climo_locs_dict
+        ###########################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         # Check if climos need to be calculated - calc test climo
@@ -716,8 +836,8 @@ class AdfInfo(AdfConfig):
             calc_bl_climo = self.__calc_bl_climo
         else:
             calc_bl_climo = True
-        calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
-        #calc_climo_dict = {"test":calc_test_climo,"baseline":{data_name:calc_bl_climo}}
+        #calc_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
+        calc_climo_dict = {"test":calc_test_climo,"baseline":{data_name:calc_bl_climo}}
 
         self.__calc_climo_dict = calc_climo_dict
         ###########################################################
@@ -1113,6 +1233,11 @@ class AdfInfo(AdfConfig):
         """ Return the history string name to the user if requested."""
         return self.__calc_climo_dict
 
+    @property
+    def overwrite_climo_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__overwrite_climo_dict
+
 
 
 
@@ -1160,6 +1285,12 @@ class AdfInfo(AdfConfig):
     def ts_locs_dict(self):
         """ Return the history string name to the user if requested."""
         return self.__cam_ts_locs_dict
+
+
+    @property
+    def climo_locs_dict(self):
+        """ Return the history string name to the user if requested."""
+        return self.__cam_climo_locs_dict
 
 
     # Create property needed to return whether to caculate time series files:
