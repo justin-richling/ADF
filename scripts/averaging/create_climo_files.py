@@ -102,12 +102,12 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Append to case lists:
         case_names.append(baseline_name)
-        input_ts_locs.append(input_ts_baseline)
-        output_locs.append(output_bl_loc)
-        calc_climos.append(calc_bl_climos)
-        overwrite.append(ovr_bl)
-        start_year.append(bl_syr)
-        end_year.append(bl_eyr)
+        #input_ts_locs.append(input_ts_baseline)
+        #output_locs.append(output_bl_loc)
+        #calc_climos.append(calc_bl_climos)
+        #overwrite.append(ovr_bl)
+        #start_year.append(bl_syr)
+        #end_year.append(bl_eyr)
     #-----------------------------------------
 
     # Check whether averaging interval is supplied
