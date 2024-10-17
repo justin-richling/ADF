@@ -386,8 +386,8 @@ class AdfWeb(AdfObs):
         eyear_cases = self.climo_yrs["eyears"]
 
         #Grab baseline years (which may be empty strings if using Obs):
-        syear_baseline = self.climo_yrs["syear_baseline"]
-        eyear_baseline = self.climo_yrs["eyear_baseline"]
+        syear_baseline = self.climo_yrs["syear_baseline"][self.data.ref_case_label]
+        eyear_baseline = self.climo_yrs["eyear_baseline"][self.data.ref_case_label]
 
         #Set name of comparison data, which depends on "compare_obs":
         if self.compare_obs:
