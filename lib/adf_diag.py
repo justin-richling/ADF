@@ -465,6 +465,7 @@ class AdfDiag(AdfWeb):
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
+            print("case_name",case_name,"\n")
 
             """if baseline:
                 ts_dir = ts_dirs
