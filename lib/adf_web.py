@@ -400,8 +400,10 @@ class AdfWeb(AdfObs):
             baseline_yrs=f"{syear_baseline} - {eyear_baseline}"
         #End if
 
+        """
         #Set climo years format for html file headers
         case_yrs=f"{syear_cases[0]} - {eyear_cases[0]}"
+        """
 
         #Extract variable defaults dictionary (for categories):
         var_defaults_dict = self.variable_defaults
@@ -619,6 +621,9 @@ class AdfWeb(AdfObs):
                 else:
                     case1 = case_names[0]
                 #End if
+
+                #Set climo years format for html file headers
+                case_yrs=f"{syear_cases[case1]} - {eyear_cases[case1]}"
 
                 #Write table dataframe HTML as a string:
                 #Note:  One could generate an image file here instead of raw HTML code,
