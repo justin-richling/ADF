@@ -706,7 +706,7 @@ class AdfInfo(AdfConfig):
         #overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
         overwrite_climo_dict = {"test":overwrite_climo,"baseline":{data_name:bl_overwrite_climo}}
 
-        self._overwrite_climo_dict = overwrite_climo_dict
+        self.__overwrite_climo_dict = overwrite_climo_dict
         ###########################################################
 
 
