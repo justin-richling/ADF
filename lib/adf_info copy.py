@@ -429,6 +429,24 @@ class AdfInfo(AdfConfig):
 
 
 
+        """
+        #Check if any time series files are pre-made
+        #baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
+        print("baseline_overwrite_ts",baseline_overwrite_ts,"\n")
+        if baseline_overwrite_ts is None:
+            baseline_overwrite_ts = False
+        self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+
+        #Check if any time series files are pre-made
+        #baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
+        print("baseline_overwrite_ts",baseline_overwrite_ts,"\n")
+        if baseline_overwrite_ts is None:
+            baseline_overwrite_ts = False
+        self.__bl_overwrite_ts = {data_name:baseline_overwrite_ts}
+        """
+
+
+
 
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
@@ -447,52 +465,6 @@ class AdfInfo(AdfConfig):
 
         #End year (not currently rquired):
         eyears = self.get_cam_info('end_year')
-
-
-
-
-
-
-
-
-
-
-
-        def make_dict(arg="cam_climo_loc", bl_arg=self.__bl_climo_locs):
-            test_climo_locs = self.get_cam_info(arg)
-            if test_climo_locs is None:
-                test_climo_locs = [None]*len(case_names)
-            else:
-                #Check if any time series files are pre-made
-                if len(test_climo_locs) == len(case_names):
-                    for i,case in enumerate(test_climo_locs):
-                        if case is None:
-                            test_climo_locs[i] = None
-                else:
-                    print()
-
-            self.__test_climo_locs = {}
-            for i,climo_loc in enumerate(test_climo_locs):
-                self.__test_climo_locs[case_names[i]] = climo_loc
-
-            test_climo_locs = copy.copy(self.__test_climo_locs)
-            if bl_arg:
-                bl_climo_locs = bl_arg
-            else:
-                #bl_overwrite_ts = False
-                bl_climo_locs = None
-            #climo_locs_dict = {"test":test_climo_locs,"baseline":bl_climo_locs}
-            climo_locs_dict = {"test":test_climo_locs,"baseline":{data_name:bl_climo_locs}}
-
-            self.__cam_climo_locs_dict = climo_locs_dict
-
-
-
-
-
-
-
-
 
 
 
@@ -562,6 +534,27 @@ class AdfInfo(AdfConfig):
 
 
 
+
+        """#Make lists of None to be iterated over for case_names
+        if syears is None:
+            syears = [None]*len(case_names)
+        #End if
+        if eyears is None:
+            eyears = [None]*len(case_names)
+        #End if"""
+
+
+
+        
+        """
+        #Extract cam history files location:
+        cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        if cam_hist_locs is None:
+            cam_hist_locs = [None]*len(case_names)
+        """
+
+        
+
         #Check if premade ts files - premade ts files
         ###########################################################
         #Start years (not currently required):
@@ -592,6 +585,14 @@ class AdfInfo(AdfConfig):
         hist_locs_dict = {"test":test_hist_locs,"baseline":{data_name:baseline_hist_loc}}
         self.__hist_locs_dict = hist_locs_dict
         ###########################################################
+
+
+
+
+
+
+
+
 
 
 
@@ -632,6 +633,9 @@ class AdfInfo(AdfConfig):
 
 
 
+
+
+
         #Check if using pre-made ts files, overwrite them - overwrite ts
         ###########################################################
         cam_overwrite_ts   = self.get_cam_info("cam_overwrite_ts")
@@ -662,6 +666,14 @@ class AdfInfo(AdfConfig):
 
         self.__cam_overwrite_ts_dict = overwrite_ts_dict
         ###########################################################
+
+
+
+
+
+
+
+
 
 
 
@@ -700,6 +712,10 @@ class AdfInfo(AdfConfig):
 
 
 
+
+
+
+
         #Grab case time series file location(s) - input ts locs
         ###########################################################
         input_ts_locs = self.get_cam_info("cam_ts_loc")
@@ -733,6 +749,14 @@ class AdfInfo(AdfConfig):
 
 
 
+
+
+
+
+
+
+
+
         #Grab case climo file location(s) - input ts locs
         ###########################################################
         test_climo_locs = self.get_cam_info("cam_climo_loc")
@@ -762,6 +786,13 @@ class AdfInfo(AdfConfig):
 
         self.__cam_climo_locs_dict = climo_locs_dict
         ###########################################################
+
+
+
+
+
+
+
 
 
 
