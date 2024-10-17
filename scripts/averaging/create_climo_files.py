@@ -165,7 +165,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
         #if not calc_climos[case_idx]:
-        if not calc_climos[case_name]:
+        if not calc_climoss[case_name]:
             continue
 
         #Notify user of model case being processed:
@@ -179,7 +179,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Whether to overwrite existing climo files
         #clobber = overwrite[case_idx]
-        clobber = overwrite[case_name]
+        clobber = overwrites[case_name]
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
@@ -197,7 +197,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Check model year bounds:
         #syr, eyr = check_averaging_interval(start_years[case_idx], end_year[case_idx])
-        syr, eyr = check_averaging_interval(start_years[case_name], end_year[case_name])
+        syr, eyr = check_averaging_interval(start_years[case_name], end_years[case_name])
         
 
         #Loop over CAM output variables:

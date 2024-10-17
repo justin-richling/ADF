@@ -1186,7 +1186,8 @@ class AdfInfo(AdfConfig):
         syears = copy.copy(self.__syears) #Send copies so a script doesn't modify the original
         eyears = copy.copy(self.__eyears)
         return {"syears":syears,"eyears":eyears,
-                "syear_baseline":self.__syear_baseline, "eyear_baseline":self.__eyear_baseline}
+                "syear_baseline":{self.data.ref_case_label:self.__syear_baseline},
+                "eyear_baseline":{self.data.ref_case_label:self.__eyear_baseline}}
 
 
     # Create property needed to return the case nicknames to user:
