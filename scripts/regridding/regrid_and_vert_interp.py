@@ -145,7 +145,7 @@ def regrid_and_vert_interp(adf):
         print(f"\t Regridding case '{case_name}' :")
 
         #Set case climo data path:
-        mclimo_loc  = Path(input_climo_locs[case_idx])
+        mclimo_loc  = Path(input_climo_locs[case_name])
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
