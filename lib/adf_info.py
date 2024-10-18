@@ -204,12 +204,13 @@ class AdfInfo(AdfConfig):
 
             #Grab baseline time series file location
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
-            input_ts_loc = Path(input_ts_baseline)
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
-            if baseline_ts_done:
+            if (baseline_ts_done) and (input_ts_baseline):
                 baseline_hist_locs = [None]
+
+                input_ts_loc = Path(input_ts_baseline)
 
                 #Get years from pre-made timeseries file(s)
                 found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(
@@ -242,7 +243,7 @@ class AdfInfo(AdfConfig):
             # End if
 
             # Check if history file path exists:
-            if (any(baseline_hist_locs)) and (input_ts_loc):
+            if (any(baseline_hist_locs)) and (input_ts_baseline):
                 #Check if user provided
                 if not baseline_hist_str:
                     baseline_hist_str = ['cam.h0a']
@@ -378,14 +379,15 @@ class AdfInfo(AdfConfig):
 
             print("cam_ts_done[case_idx]",cam_ts_done[case_idx],"\n")
 
-            input_ts_loc = Path(input_ts_locs[case_idx])
+            #if input_ts_locs:
+            #input_ts_loc = Path(input_ts_locs[case_idx])
 
             #Check if time series files exist, if so don't rely on climo years
-            if cam_ts_done[case_idx]:
+            if (cam_ts_done[case_idx]) and (input_ts_locs):
                 cam_hist_locs[case_idx] = None
 
                 #Grab case time series file location
-                #input_ts_loc = Path(input_ts_locs[case_idx])
+                input_ts_loc = Path(input_ts_locs[case_idx])
                 print(f"Checking existing time-series files in {input_ts_loc}")
 
                 #Get years from pre-made timeseries file(s)
@@ -420,7 +422,7 @@ class AdfInfo(AdfConfig):
 
             #Check if history file path exists:
             hist_str_case = hist_str[case_idx]
-            if (any(cam_hist_locs)) and (input_ts_loc):
+            if (any(cam_hist_locs)) and (input_ts_locs[case_idx]):
                 #Grab first possible hist string, just looking for years of run
                 hist_str = hist_str_case[0]
 
