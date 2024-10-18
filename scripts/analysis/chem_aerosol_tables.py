@@ -29,6 +29,9 @@ def chem_aerosol_tables(adfobj):
     #Notify user that script has started:
     print("\n  Calculating chemistry/aerosol budget tables...")
 
+    #pkl_data = adfobj.pkl_data
+    pkl_data = True
+
     # Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     output_locs = adfobj.plot_location
@@ -209,7 +212,7 @@ def chem_aerosol_tables(adfobj):
         dic_SE = set_dic_SE(ListVars,ext1_SE)
         dic_SE = fill_dic_SE(dic_SE, VARIABLES, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair)
 
-        try:
+        """try:
             with open(output_location / f'{case}_Dic_scn_var_comp.pickle', 'rb') as handle:
                 Dic_scn_var_comp[case] = pickle.load(handle)
 
@@ -226,7 +229,32 @@ def chem_aerosol_tables(adfobj):
                 pickle.dump(Dic_scn_var_comp[case], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
             with open(output_location / f'{case}_Dic_crit.pickle', 'wb') as handle:
-                pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)
+                pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)"""
+
+        if pkl_data:
+            dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
+            dc_pkl = f'{case}_Dic_crit.pickle'
+
+            if ((output_location / dsvc_pkl).is_file()) and (output_location / dc_pkl.is_file()):
+                with open(output_location / dsvc_pkl, 'rb') as handle:
+                    Dic_scn_var_comp[case] = pickle.load(handle)
+
+                with open(output_location / dc_pkl, 'rb') as handle2:
+                    Dic_crit = pickle.load(handle2)
+            else:
+                print("JSON file not found, need to create the files.")
+
+                # Make dictionary of all data for each case
+                print(f"\t Calculating values for {case}")
+                Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dirs[i], dic_SE, Files, ext1_SE, AEROSOLS)
+
+                with open(output_location / dsvc_pkl, 'wb') as handle:
+                    pickle.dump(Dic_scn_var_comp[case], handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+                with open(output_location / dc_pkl, 'wb') as handle:
+                    pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
 
         if regional:
             #inside = Inside_SE_region(current_lat,current_lon,dir_shapefile)
