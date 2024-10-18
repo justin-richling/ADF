@@ -1439,8 +1439,8 @@ budget_tables:
   GAS_VARIABLES: ["CH4",'CH3COCH3','CO']
 
   # list of the aerosol variables to be caculated.
-  #AEROSOL_VARIABLES=['AOD','DAOD','SOA', 'SALT', 'DUST', 'POM', 'BC', 'SO4']
-  AEROSOL_VARIABLES: ['AOD','SO4']
+  AEROSOL_VARIABLES=['AOD','DAOD','SOA', 'SALT', 'DUST', 'POM', 'BC', 'SO4']
+  #AEROSOL_VARIABLES: ['AOD','SO4']
 
   #list of all the variables to be caculated.
   #VARIABLES: GAS_VARIABLES + AEROSOL_VARIABLES
@@ -1493,5 +1493,7 @@ budget_tables:
   # The variables in the list below must be aerosols - do not add AOD and DAOD
   # no need to change this list, unless for a specific need!
   AEROSOLS: ['SOA', 'SALT', 'DUST', 'POM', 'BC', 'SO4']
+
+  pkl_data: True
 #-----------
 #End of File

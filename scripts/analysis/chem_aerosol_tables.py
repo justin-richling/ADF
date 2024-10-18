@@ -29,9 +29,6 @@ def chem_aerosol_tables(adfobj):
     #Notify user that script has started:
     print("\n  Calculating chemistry/aerosol budget tables...")
 
-    #pkl_data = adfobj.pkl_data
-    pkl_data = True
-
     # Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     output_locs = adfobj.plot_location
@@ -44,6 +41,8 @@ def chem_aerosol_tables(adfobj):
     # Variable defaults info
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     bres = res['budget_tables']
+    pkl_data = bres.get("pkl_data",False)
+    #pkl_data = True
 
     # list of the gaseous variables to be caculated.
     GAS_VARIABLES = bres['GAS_VARIABLES']
@@ -234,10 +233,6 @@ def chem_aerosol_tables(adfobj):
         if pkl_data:
             dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
             dc_pkl = f'{case}_Dic_crit.pickle'
-            print("dsvc_pkl",output_location / dsvc_pkl)
-            print("dc_pkl",output_location / dc_pkl)
-            print((output_location / dsvc_pkl).is_file())
-            print((output_location / dc_pkl).is_file())
 
             if ((output_location / dsvc_pkl).is_file()) and ((output_location / dc_pkl).is_file()):
                 with open(output_location / dsvc_pkl, 'rb') as handle:
@@ -246,7 +241,7 @@ def chem_aerosol_tables(adfobj):
                 with open(output_location / dc_pkl, 'rb') as handle2:
                     Dic_crit = pickle.load(handle2)
             else:
-                print("JSON file not found, need to create the files.")
+                print("Pickle file not found, need to create the files.")
 
                 # Make dictionary of all data for each case
                 print(f"\t Calculating values for {case}")
@@ -1286,7 +1281,7 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
 
             for key, val in chem_dict.items():
                 if val != 0:  # Skip variables with a value of 0
-                    print("\n\n",'variable:', key,np.round(val, 3),"\n\n")
+                    #print("\n\n",'variable:', key,np.round(val, 3),"\n\n")
                     rows.append({'variable': key, nickname: np.round(val, 3)})
                 else:
                     msg = f"chem/aerosol tables:"
