@@ -235,7 +235,7 @@ def chem_aerosol_tables(adfobj):
             dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
             dc_pkl = f'{case}_Dic_crit.pickle'
 
-            if ((output_location / dsvc_pkl).is_file()) and (output_location / dc_pkl.is_file()):
+            if ((output_location / dsvc_pkl).is_file()) and ((output_location / dc_pkl).is_file()):
                 with open(output_location / dsvc_pkl, 'rb') as handle:
                     Dic_scn_var_comp[case] = pickle.load(handle)
 
