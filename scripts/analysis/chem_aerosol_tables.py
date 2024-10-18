@@ -902,7 +902,7 @@ def SEbudget(dic_SE,data_dir,files,var,ext1_SE,**kwargs):
             if i not in needed_vars:
                 needed_vars.append(i)
             if file == 0:
-                print("No variable was found for:",i)
+                print("Variable:",i)
 
             if ((i!='PS'+ext1_SE) and (i!='U'+ext1_SE) ) :
 
@@ -916,7 +916,7 @@ def SEbudget(dic_SE,data_dir,files,var,ext1_SE,**kwargs):
 
                 if file == 0:
                 #     print(f"An error occurred: {e}")
-                    print(f"No variable was found for: {var}")
+                    print(f"Variable: {var}")
 
                 if var not in missing_vars:
                     missing_vars.append(var)
@@ -1033,7 +1033,7 @@ def SEbudget_dask(dic_SE,data_dir,files,var,ext1_SE,**kwargs):
         if i not in needed_vars:
             needed_vars.append(i)
         if file == 0:
-            print("No variable was found for:",i)
+            print("Variable:",i)
 
         if ((i!='PS'+ext1_SE) and (i!='U'+ext1_SE) ) :
 
@@ -1047,7 +1047,7 @@ def SEbudget_dask(dic_SE,data_dir,files,var,ext1_SE,**kwargs):
 
             if file == 0:
             #     print(f"An error occurred: {e}")
-                print(f"No variable was found for: {var}")
+                print(f"Variable: {var}")
 
             if var not in missing_vars:
                 missing_vars.append(var)
@@ -1282,6 +1282,7 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
 
             for key, val in chem_dict.items():
                 if val != 0:  # Skip variables with a value of 0
+                    print("\n\n",'variable:', key,np.round(val, 3),"\n\n")
                     rows.append({'variable': key, nickname: np.round(val, 3)})
                 else:
                     msg = f"chem/aerosol tables:"
