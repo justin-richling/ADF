@@ -82,17 +82,18 @@ class AdfInfo(AdfConfig):
 
         # Add CVDP info to object:
         self.__cvdp_info = self.read_config_var("diag_cvdp_info")
-
         # Expand CVDP climo info variable strings:
         if self.__cvdp_info is not None:
-            self.expand_references(self.__cvdp_info)
+            if self.__cvdp_info['cvdp_run']:
+                self.expand_references(self.__cvdp_info)
         # End if
 
         # Add MDTF info to object:
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
-
+        # Expand MDTF info variable strings:
         if self.__mdtf_info is not None:
-            self.expand_references(self.__mdtf_info)
+            if self.__mdtf_info['mdtf_run']:
+                self.expand_references(self.__mdtf_info)
         # End if
 
         # Get the current system user
@@ -204,7 +205,7 @@ class AdfInfo(AdfConfig):
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if baseline_ts_done:
-                baseline_hist_locs = None
+                baseline_hist_locs = [None]
 
                 #Grab baseline time series file location
                 input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
@@ -309,7 +310,7 @@ class AdfInfo(AdfConfig):
             eyear_baseline = int(eyear_baseline)
 
             #Update baseline case name:
-            data_name += f"_{syear_baseline}_{eyear_baseline}"
+            data_name_long = data_name+f"_{syear_baseline}_{eyear_baseline}"
         #End if (compare_obs)
 
         #Initialize case nicknames:
@@ -467,10 +468,10 @@ class AdfInfo(AdfConfig):
             eyears_fixed.append(eyear)
 
             #Update case name with provided/found years:
-            case_name += f"_{syear}_{eyear}"
+            case_name_long = case_name + f"_{syear}_{eyear}"
 
             #Set the final directory name and save it to plot_location:
-            direc_name = f"{case_name}_vs_{data_name}"
+            direc_name = f"{case_name_long}_vs_{data_name_long}"
             plot_loc = os.path.join(plot_dir, direc_name)
             self.__plot_location.append(plot_loc)
 
@@ -792,7 +793,7 @@ class AdfInfo(AdfConfig):
             errmsg = f"Time series directory '{input_ts_loc}' not found.  Script is exiting."
             raise AdfError(errmsg)
 
-        # Search for first available variable in var_list to get a time series file to read
+        # Search for first variable in var_list to get a time series file to read
         # NOTE: it is assumed all the variables have the same dates!
         # Also, it is assumed that only h0 files should be climo-ed.
         for var in var_list:
