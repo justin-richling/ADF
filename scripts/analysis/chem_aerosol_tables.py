@@ -234,6 +234,10 @@ def chem_aerosol_tables(adfobj):
         if pkl_data:
             dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
             dc_pkl = f'{case}_Dic_crit.pickle'
+            print("dsvc_pkl",output_location / dsvc_pkl)
+            print("dc_pkl",output_location / dc_pkl)
+            print((output_location / dsvc_pkl).is_file())
+            print((output_location / dc_pkl).is_file())
 
             if ((output_location / dsvc_pkl).is_file()) and ((output_location / dc_pkl).is_file()):
                 with open(output_location / dsvc_pkl, 'rb') as handle:
