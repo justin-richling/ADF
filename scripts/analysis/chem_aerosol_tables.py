@@ -29,6 +29,13 @@ def chem_aerosol_tables(adfobj):
     #Notify user that script has started:
     print("\n  Calculating chemistry/aerosol budget tables...")
 
+    # Special ADF variable which contains the output paths for
+    #all generated plots and tables for each case:
+    output_locs = adfobj.plot_location
+
+    #Convert output location string to a Path object:
+    output_location = Path(output_locs[0])
+
     # Inputs
     #-------
     # Variable defaults info
@@ -185,7 +192,7 @@ def chem_aerosol_tables(adfobj):
 
         # Calculated duration of time period in seconds?
         durations[case_names[i]] = (end_period-start_period).days*86400+365*86400
-        print("durations",durations[case_names[i]])
+        print("\n\ndurations",durations[case_names[i]],"\n\n")
 
         # Get number of years for calculations
         num_yrs[case_names[i]] = int(end_years[case])-int(start_years[case])+1
@@ -203,10 +210,10 @@ def chem_aerosol_tables(adfobj):
         dic_SE = fill_dic_SE(dic_SE, VARIABLES, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair)
 
         try:
-            with open(f'{case}_Dic_scn_var_comp.pickle', 'rb') as handle:
+            with open(output_location / f'{case}_Dic_scn_var_comp.pickle', 'rb') as handle:
                 Dic_scn_var_comp[case] = pickle.load(handle)
 
-            with open(f'{case}_Dic_crit.pickle', 'rb') as handle2:
+            with open(output_location / f'{case}_Dic_crit.pickle', 'rb') as handle2:
                 Dic_crit = pickle.load(handle2)
         except:
             print("JSON file not found, need to create the files.")
@@ -215,10 +222,10 @@ def chem_aerosol_tables(adfobj):
             print(f"\t Calculating values for {case}")
             Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dirs[i], dic_SE, Files, ext1_SE, AEROSOLS)
 
-            with open(f'{case}_Dic_scn_var_comp.pickle', 'wb') as handle:
+            with open(output_location / f'{case}_Dic_scn_var_comp.pickle', 'wb') as handle:
                 pickle.dump(Dic_scn_var_comp[case], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-            with open(f'{case}_Dic_crit.pickle', 'wb') as handle:
+            with open(output_location / f'{case}_Dic_crit.pickle', 'wb') as handle:
                 pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         if regional:
