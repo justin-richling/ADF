@@ -185,6 +185,7 @@ def chem_aerosol_tables(adfobj):
 
         # Calculated duration of time period in seconds?
         durations[case_names[i]] = (end_period-start_period).days*86400+365*86400
+        print("durations",durations[case_names[i]])
 
         # Get number of years for calculations
         num_yrs[case_names[i]] = int(end_years[case])-int(start_years[case])+1
