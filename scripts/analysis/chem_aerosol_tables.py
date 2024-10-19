@@ -96,8 +96,8 @@ def chem_aerosol_tables(adfobj):
     nicknames_list = test_nicknames_list
 
     # Grab climo years
-    start_yrs = adfobj.climo_yrs["syears"]
-    end_yrs = adfobj.climo_yrs["eyears"]
+    start_years = adfobj.climo_yrs["syears"]
+    end_years = adfobj.climo_yrs["eyears"]
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
@@ -111,9 +111,9 @@ def chem_aerosol_tables(adfobj):
         bl_start_yrs = adfobj.climo_yrs["syear_baseline"]
         bl_end_yrs = adfobj.climo_yrs["eyear_baseline"]
         #start_years = {**start_yrs, **bl_start_yrs}
-        start_yrs += [bl_start_yrs]
+        start_years += [bl_start_yrs]
         #end_years = {**end_yrs, **bl_end_yrs}
-        end_yrs += [bl_end_yrs]
+        end_years += [bl_end_yrs]
         hist_strs = cam_hist_strs + [adfobj.hist_string["base_hist_str"]]
 
     
