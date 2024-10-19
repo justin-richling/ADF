@@ -239,10 +239,10 @@ class AdfInfo(AdfConfig):
             #calc_bl_ts = {}
             # Make new variable `calc_ts` in case the user does not want time series generation but 
             # need to use history files for diagnostics, ie MDTF, Tape Recorder, budget tables, etc.
-            print(baseline_ts_done)
-            print(input_ts_baseline)
-            print(self.get_baseline_info("calc_cam_climo"))
-            print(self.get_baseline_info("cam_hist_loc"))
+            #print(baseline_ts_done)
+            #print(input_ts_baseline)
+            #print(self.get_baseline_info("calc_cam_climo"))
+            #print(self.get_baseline_info("cam_hist_loc"))
 
             if (baseline_ts_done is None) and (input_ts_baseline is None) and (self.get_baseline_info("calc_cam_climo") is None) and (self.get_baseline_info("cam_hist_loc")):
                 calc_bl_ts = False
