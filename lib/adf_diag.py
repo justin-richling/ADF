@@ -414,7 +414,9 @@ class AdfDiag(AdfWeb):
 
         no_msg = False
 
-        print(baseline,"calc_cam_ts",calc_cam_ts,"\n")
+        print(baseline,"calc_cam_ts",calc_cam_ts)
+        print(baseline,"cam_ts_done[case_name]",cam_ts_done[case_name],"\n")
+        #cam_ts_done[case_name]
 
         # Check if all values are None
         if all(value is None for value in calc_cam_ts):
