@@ -201,6 +201,9 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
+            #print("baseline_ts_done",baseline_ts_done,"\n")
+            #if baseline_ts_done is None:
+            #    baseline_ts_done = True
 
             #Grab baseline time series file location
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
@@ -364,9 +367,13 @@ class AdfInfo(AdfConfig):
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
+        if cam_ts_done is None:
+            cam_ts_done = [None]*len(case_names)
 
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc")
+        if input_ts_locs is None:
+            input_ts_locs = [None]*len(case_names)
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
 
         #Loop over cases:
@@ -383,7 +390,7 @@ class AdfInfo(AdfConfig):
             #input_ts_loc = Path(input_ts_locs[case_idx])
 
             #Check if time series files exist, if so don't rely on climo years
-            if (cam_ts_done[case_idx]) and (input_ts_locs):
+            if (cam_ts_done[case_idx]) and (input_ts_locs[case_idx]):
                 cam_hist_locs[case_idx] = None
 
                 #Grab case time series file location
