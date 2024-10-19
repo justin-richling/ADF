@@ -224,8 +224,7 @@ class AdfInfo(AdfConfig):
                 baseline_hist_str = [baseline_hist_str]
             self.__baseline_hist_loc = baseline_hist_str
 
-            #Check if any time series files are pre-made
-            baseline_ts_done   = self.get_baseline_info("cam_ts_done")
+            # 
             baseline_overwrite_ts   = self.get_baseline_info("cam_overwrite_ts")
 
             baseline_overwrite_climo   = self.get_baseline_info("cam_overwrite_climo")
@@ -253,10 +252,11 @@ class AdfInfo(AdfConfig):
             self.__calc_baseline_ts = {}
             self.__calc_baseline_ts[data_name] = calc_bl_ts
 
-
+            #Check if any time series files are pre-made
+            baseline_ts_done   = self.get_baseline_info("cam_ts_done")
             print("baseline_ts_done",baseline_ts_done,"\n")
             if baseline_ts_done is None:
-                baseline_ts_done = True
+                baseline_ts_done = False
             self.__baseline_ts_done = baseline_ts_done
             #self.__baseline_ts_done = {data_name:baseline_ts_done}
             #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
@@ -622,7 +622,7 @@ class AdfInfo(AdfConfig):
         if self.__baseline_ts_done:
             bl_ts_done = self.__baseline_ts_done
         else:
-            bl_ts_done = True
+            bl_ts_done = False
         #ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
         ts_done_dict = {"test":test_ts_done,"baseline":{data_name:bl_ts_done}}
         
