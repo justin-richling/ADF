@@ -187,9 +187,10 @@ def chem_aerosol_tables(adfobj):
     insides = {}
     for i,case in enumerate(case_names):
         print(f'Current case: {case}',"\n",len(f'Current case: {case}')*'-','\n')
-
-        start_date = f"{start_years[case]}-1-1"
-        end_date = f"{end_years[case]}-1-1"
+        start_year = start_years[i]
+        end_year = end_years[i]
+        start_date = f"{start_year}-1-1"
+        end_date = f"{end_year}-1-1"
         
         start_period = datetime.strptime(start_date, "%Y-%m-%d")
         end_period = datetime.strptime(end_date, "%Y-%m-%d")
@@ -199,10 +200,10 @@ def chem_aerosol_tables(adfobj):
         print("\n\ndurations",durations[case_names[i]],"\n\n")
 
         # Get number of years for calculations
-        num_yrs[case_names[i]] = int(end_years[case])-int(start_years[case])+1
-        print(f"number of years: {int(end_years[case])-int(start_years[case])+1}")
+        num_yrs[case_names[i]] = int(end_year)-int(start_year)+1
+        print(f"number of years: {int(end_year)-int(start_year)+1}")
 
-        Files,Lats,Lons,areas[case],ext1_SE = Get_files(data_dirs[i],start_years[case],end_years[case],case_hist_strs[i],area=True)
+        Files,Lats,Lons,areas[case],ext1_SE = Get_files(data_dirs[i],start_year,end_year,case_hist_strs[i],area=True)
 
         # find the name of all the variables in the file.
         # this will help the code to work for the variables that are not in the files (assingn 0s)
