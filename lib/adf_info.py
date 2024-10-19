@@ -235,6 +235,15 @@ class AdfInfo(AdfConfig):
             input_climo_baseline = self.get_baseline_info("cam_climo_loc")
             self.__bl_climo_locs = input_climo_baseline
 
+            #Check if any time series files are pre-made
+            baseline_ts_done   = self.get_baseline_info("cam_ts_done")
+            print("baseline_ts_done",baseline_ts_done,"\n")
+            if baseline_ts_done is None:
+                baseline_ts_done = False
+            self.__baseline_ts_done = baseline_ts_done
+            #self.__baseline_ts_done = {data_name:baseline_ts_done}
+            #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+
 
             #calc_bl_ts = {}
             # Make new variable `calc_ts` in case the user does not want time series generation but 
@@ -251,15 +260,6 @@ class AdfInfo(AdfConfig):
 
             self.__calc_baseline_ts = {}
             self.__calc_baseline_ts[data_name] = calc_bl_ts
-
-            #Check if any time series files are pre-made
-            baseline_ts_done   = self.get_baseline_info("cam_ts_done")
-            print("baseline_ts_done",baseline_ts_done,"\n")
-            if baseline_ts_done is None:
-                baseline_ts_done = False
-            self.__baseline_ts_done = baseline_ts_done
-            #self.__baseline_ts_done = {data_name:baseline_ts_done}
-            #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
 
 
             #Check if any time series files are pre-made
