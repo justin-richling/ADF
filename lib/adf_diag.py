@@ -416,7 +416,7 @@ class AdfDiag(AdfWeb):
 
         print(baseline,"calc_cam_ts",calc_cam_ts,"\n")
 
-        """# Check if all values are None
+        # Check if all values are None
         if all(value is None for value in calc_cam_ts):
             print("All values in calc_cam_ts are None.")
             emsg = "  Configuration file indicates time series files don't need to be calculated."
@@ -429,9 +429,9 @@ class AdfDiag(AdfWeb):
             emsg = "  Configuration file indicates time series files have been pre-computed."
             emsg += f" Will rely on those files directly."
             print(emsg)
-            no_msg = True"""
+            no_msg = True
 
-        if baseline:
+        """if baseline:
             # Check if all values are None
             if not calc_cam_ts:
                 print("All values in calc_cam_ts are None.")
@@ -451,7 +451,7 @@ class AdfDiag(AdfWeb):
             if not cam_ts_done:
                 print("All values in cam_ts_done are None.")
                 emsg = "  Configuration file indicates time series files have been pre-computed."
-                emsg += f" Will rely on those files directly."
+                emsg += f" Will rely on those files directly. ITS HERE RIGHT BOIIOIIOI"
                 print(emsg)
                 no_msg = True
         else:
@@ -461,7 +461,7 @@ class AdfDiag(AdfWeb):
                 emsg = "  Configuration file indicates time series files have been pre-computed."
                 emsg += f" Will rely on those files directly."
                 print(emsg)
-                no_msg = True
+                no_msg = True"""
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
@@ -492,7 +492,7 @@ class AdfDiag(AdfWeb):
 
             if (cam_ts_done[case_name]) and (not all(value is None for value in calc_cam_ts)):
                 emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
-                emsg += f" Will rely on those files directly."
+                emsg += f" Will rely on those files directly.   cam_ts_done[case_name]"
                 print(emsg)
                 no_msg = True
                 continue
