@@ -96,7 +96,7 @@ def global_latlon_vect_map(adfobj):
     if not adfobj.compare_obs:
         base_name = adfobj.data.ref_case_label
     else:
-        base_name = adfobj.data.ref_labels[var]
+        base_name = adfobj.data.ref_labels[var_list[0]]
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"][base_name]

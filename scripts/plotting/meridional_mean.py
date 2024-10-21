@@ -46,7 +46,7 @@ def meridional_mean(adfobj):
     # we will do a simple check and switch options as needed:
     if adfobj.get_basic_info("compare_obs"):
 
-        data_name = adfobj.data.ref_labels[var]
+        data_name = adfobj.data.ref_labels[var_list[0]]
 
         #Set obs call for observation details for plot titles
         obs = True

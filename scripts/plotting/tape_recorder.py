@@ -60,6 +60,13 @@ def tape_recorder(adfobj):
     start_years = adfobj.climo_yrs["syears"]
     end_years = adfobj.climo_yrs["eyears"]
 
+    # load reference data (observational or baseline)
+    if not adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
+    else:
+        var_list = adfobj.diag_var_list
+        base_name = adfobj.data.ref_labels[var_list[0]]
+
     #Grab test case nickname(s)
     test_nicknames = adfobj.case_nicknames['test_nicknames']
 
@@ -79,8 +86,11 @@ def tape_recorder(adfobj):
         base_nickname = adfobj.case_nicknames['base_nickname']
         test_nicknames = test_nicknames+[base_nickname]
 
-        data_start_year = adfobj.climo_yrs["syear_baseline"]
-        data_end_year = adfobj.climo_yrs["eyear_baseline"]
+        #data_start_year = adfobj.climo_yrs["syear_baseline"]
+        #data_end_year = adfobj.climo_yrs["eyear_baseline"]
+        #Grab baseline years (which may be empty strings if using Obs):
+        data_start_year = adfobj.climo_yrs["syear_baseline"][base_name]
+        data_end_year = adfobj.climo_yrs["eyear_baseline"][base_name]
         start_years = start_years+[data_start_year]
         end_years = end_years+[data_end_year]
 

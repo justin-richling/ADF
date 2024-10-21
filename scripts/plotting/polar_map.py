@@ -64,13 +64,20 @@ def polar_map(adfobj):
     else:
         obs = False
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
+        adfobj.data.ref_case_label
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
     #End if
 
+    # load reference data (observational or baseline)
+    if not adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
+    else:
+        base_name = adfobj.data.ref_labels[var_list[0]]
+
     #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    syear_baseline = adfobj.climo_yrs["syear_baseline"][base_name]
+    eyear_baseline = adfobj.climo_yrs["eyear_baseline"][base_name]
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
@@ -281,7 +288,7 @@ def polar_map(adfobj):
                                     #End if
 
                                     pf.make_polar_plot(plot_name, case_nickname, base_nickname,
-                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                     [syear_cases[case_name],eyear_cases[case_name]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi, obs=obs, **vres)
 
@@ -362,7 +369,7 @@ def polar_map(adfobj):
                                         #End if
 
                                         pf.make_polar_plot(plot_name, case_nickname, base_nickname,
-                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                     [syear_cases[case_name],eyear_cases[case_name]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], hemisphere=hemi, obs=obs, **vres)
 

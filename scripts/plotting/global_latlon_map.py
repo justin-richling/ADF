@@ -97,7 +97,7 @@ def global_latlon_map(adfobj):
     if not adfobj.compare_obs:
         base_name = adfobj.data.ref_case_label
     else:
-        base_name = adfobj.data.ref_labels[var]
+        base_name = adfobj.data.ref_labels[var_list[0]]
 
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"][base_name]
