@@ -603,7 +603,7 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
 
     # LAYOUT WITH GRIDSPEC
     plot_len = int(3*case_num)
-    gs = mpl.gridspec.GridSpec(4, plot_len, wspace=0.5, hspace=0.0)
+    gs = mpl.gridspec.GridSpec(2, plot_len, wspace=0.5, hspace=0.0)
     gs.tight_layout(fig)
 
     axs = []
