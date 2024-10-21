@@ -731,7 +731,8 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
     file_type = basic_info_dict.get('plot_type', 'png')
 
     # create figure:
-    fig = plt.figure(figsize=(7*case_num,10))
+    #fig = plt.figure(figsize=(7*case_num,10))
+    fig = plt.figure(figsize=(7*case_num,5*case_num))
 
     proj = ccrs.PlateCarree()
 
