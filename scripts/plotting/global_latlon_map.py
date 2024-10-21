@@ -731,14 +731,14 @@ def aod_4_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name,
     file_type = basic_info_dict.get('plot_type', 'png')
 
     # create figure:
-    #fig = plt.figure(figsize=(7*case_num,10))
-    fig = plt.figure(figsize=(7*case_num,5*case_num))
+    fig = plt.figure(figsize=(7*case_num,10))
+    #fig = plt.figure(figsize=(7*case_num,5*case_num))
 
     proj = ccrs.PlateCarree()
 
     # LAYOUT WITH GRIDSPEC
     plot_len = int(3*case_num)
-    gs = mpl.gridspec.GridSpec(4, plot_len, wspace=0.5, hspace=0.0)
+    gs = mpl.gridspec.GridSpec(2*case_num, plot_len, wspace=0.5, hspace=0.0)
     gs.tight_layout(fig)
 
     axs = []
