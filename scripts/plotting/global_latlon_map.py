@@ -485,9 +485,6 @@ def aod_latlon(adfobj):
             ds_base_season['lat'] = ds_base_season['lat'].round(5)
             ds_cases.append(ds_base_season)
 
-    # Number of relevant cases        
-    case_num = len(ds_cases)
-
     
     # 4-Panel global lat/lon plots
     #-----------------------------
@@ -504,23 +501,49 @@ def aod_latlon(adfobj):
 
             for i_case,ds_case in enumerate(ds_cases):
                 case_nickname = case_nicknames[i_case]
-                print(ds_ob['lat'] == ds_case['lat'])
-                print(ds_ob['lon'] == ds_case['lon'])
-                case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
-                plotnames.append(f'{case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
-                fields.append(case_field)
-                params.append(plot_params)
-                types.append("Diff")
-                case_name_list.append(case_names[i_case])
 
-                field_relerr = 100 * case_field / ds_ob.sel(season=season)
-                field_relerr = np.clip(field_relerr, -100, 100)
-                plotnames.append(f'Percent Diff {case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
-                fields.append(field_relerr)
-                params.append(plot_params_relerr)
-                types.append("Percent Diff")
-                case_name_list.append(case_names[i_case])
+                # Check if the lats/lons are same as supplied observations
+                if ds_ob['lat'] == ds_case['lat']:
+                    lats_match = True
+                else:
+                    err_msg = "AOD 4-panel plot:\n"
+                    err_msg += f"\t The lat values don't match between '{obs_name}' and '{case_names[i_case]}'"                    
+                    err_msg += f"{case_names[i_case]} lat shape: {ds_case.lat.shape} and "
+                    err_msg += f"{obs_name} lat shape: {ds_ob.lat.shape}"
+                    adfobj.debug_log(err_msg)
+                # End if
+
+                if ds_ob['lon'] == ds_case['lon']:
+                    lons_match = True
+                else:
+                    err_msg = "AOD 4-panel plot:\n"
+                    err_msg += f"\t The lon values don't match between '{obs_name}' and '{case_names[i_case]}'"
+                    err_msg += f"{case_names[i_case]} lon shape: {ds_case.lon.shape} and "
+                    err_msg += f"{obs_name} lon shape: {ds_ob.lon.shape}"
+                    adfobj.debug_log(err_msg)
+                # End if
+
+                # Check 
+                if (lats_match) and (lons_match):
+                    case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
+                    plotnames.append(f'{case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
+                    fields.append(case_field)
+                    params.append(plot_params)
+                    types.append("Diff")
+                    case_name_list.append(case_names[i_case])
+
+                    field_relerr = 100 * case_field / ds_ob.sel(season=season)
+                    field_relerr = np.clip(field_relerr, -100, 100)
+                    plotnames.append(f'Percent Diff {case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
+                    fields.append(field_relerr)
+                    params.append(plot_params_relerr)
+                    types.append("Percent Diff")
+                    case_name_list.append(case_names[i_case])
+                # End if
             # End for
+
+            # Number of relevant cases        
+            case_num = len(case_name_list)
 
             # Create 4-panel plot for season
             aod_panel_latlon(adfobj, plotnames, params, fields, season, obs_name, case_name_list, case_num, types, symmetric=True)
