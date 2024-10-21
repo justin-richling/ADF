@@ -603,15 +603,15 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
 
     # LAYOUT WITH GRIDSPEC
     plot_len = int(3*case_num)
-    gs = mpl.gridspec.GridSpec(2, plot_len, wspace=0.5, hspace=0.0)
+    gs = mpl.gridspec.GridSpec(4, plot_len, wspace=0.5, hspace=0.0)
     gs.tight_layout(fig)
 
     axs = []
     for i in range(case_num):
         start = i * 3
         end = (i + 1) * 3
-        axs.append(plt.subplot(gs[0:case_num, start:end], projection=proj))
-        axs.append(plt.subplot(gs[case_num:, start:end], projection=proj))
+        axs.append(plt.subplot(gs[0:2, start:end], projection=proj))
+        axs.append(plt.subplot(gs[2:, start:end], projection=proj))
 
     # formatting for tick labels
     lon_formatter = LongitudeFormatter(number_format='0.0f',
