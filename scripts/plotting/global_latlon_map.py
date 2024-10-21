@@ -479,7 +479,8 @@ def aod_latlon(adfobj):
         
         """
         #Load re-gridded model files:
-        ds_case = adfobj.data.load_regrid_da(case, var)
+        #ds_case = adfobj.data.load_regrid_da(case, var)
+        ds_case = adfobj.data.load_climo_da(case, var)
 
         #Skip this variable/case if the regridded climo file doesn't exist:
         if ds_case is None:
@@ -501,7 +502,7 @@ def aod_latlon(adfobj):
         base_name = adfobj.data.ref_case_label
     
         # Gather reference variable data
-        ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
+        ds_base = adfobj.data.load_reference_climo_da(base_name, var)
         if ds_base is None:
             dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
             adfobj.debug_log(dmsg)

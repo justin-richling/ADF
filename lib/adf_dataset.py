@@ -175,6 +175,13 @@ class AdfData:
 
 
     # Reference case (baseline/obs)
+    # Test case(s)
+    def load_reference_climo_da(self, case, variablename):
+        """Return DataArray from climo file"""
+        add_offset, scale_factor = self.get_value_converters(case, variablename)
+        fils = self.get_reference_climo_file(case, variablename)
+        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor)
+
     def get_reference_climo_file(self, var):
         """Return a list of files to be used as reference (aka baseline) for variable var."""
         if self.adf.compare_obs:
