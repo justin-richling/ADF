@@ -648,6 +648,7 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
         axs[i].set_title(plotnames[i] + ('  Mean %.2g' % field_mean),fontsize=10)
         ind_ax.set_title(plotnames[i] + ('  Mean %.2g' % field_mean),fontsize=10)
 
+        # Colorbar options
         cbar = plt.colorbar(img, orientation='horizontal', pad=0.05)
         ind_cbar = plt.colorbar(ind_img, orientation='horizontal', pad=0.05)
 
@@ -674,14 +675,7 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
     adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="LatLon", category="4-Panel AOD Diags")
 
-    pdf_file = f'{plotfile}.pdf'
-    ps_file = f'{plotfile}.ps'
-    
-    fig.savefig(pdf_file, bbox_inches='tight')
-
-    # Create and save PDF file
-    #cmd = ["pdf2ps", pdf_file, ps_file]
-    #subprocess.run(cmd, shell=False)
+    # Close the figure
     plt.close(fig)
 
 
