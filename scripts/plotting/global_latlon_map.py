@@ -613,7 +613,6 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
                 levels, np.array(plot_params[i]['augment_levels'])))
 
         if field.ndim > 2:
-            field_values = field.values[0,:,:]
             print(f"Required 2d lat/lon coordinates, got {field.ndim}d")
             emg = "AOD panel plot:\n"
             emg += f"\t Too many dimensions for {case_name}. Needs 2 (lat/lon) but got {field.ndim}"
