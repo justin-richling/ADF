@@ -668,11 +668,11 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
     # End for
 
     # Save the panel figure
-    plotfile = f'AOD_diff_panel_plot_{obs_name.replace(" ","_")}_{season}_LatLon_Mean'
+    plotfile = f'AOD_diff_{obs_name.replace(" ","_")}_{season}_LatLon_Mean'
     png_file = f'{plotfile}.{file_type}'
     png_file = Path(plot_dir) / png_file
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(png_file, f'AOD_diff_panel_plot_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="LatLon", category="4-Panel AOD Diags")
+    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="LatLon", category="4-Panel AOD Diags")
 
     pdf_file = f'{plotfile}.pdf'
     ps_file = f'{plotfile}.ps'
