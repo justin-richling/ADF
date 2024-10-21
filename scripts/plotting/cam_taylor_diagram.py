@@ -81,21 +81,23 @@ def cam_taylor_diagram(adfobj):
     # Until those are both treated the same (via intake-esm or similar)
     # we will do a simple check and switch options as needed:
     if adfobj.get_basic_info("compare_obs"):
-        data_name = "obs"  # does not get used, is just here as a placemarker
+        #data_name = "obs"  # does not get used, is just here as a placemarker
+        base_name = adfobj.data.ref_labels[var_list[0]]
         data_list = adfobj.read_config_var("obs_type_list")  # Double caution!
         data_loc = adfobj.get_basic_info("obs_climo_loc", required=True)
     else:
-        data_name = adfobj.get_baseline_info('cam_case_name', required=True)
-        data_list = data_name # should not be needed (?)
+        #data_name = adfobj.get_baseline_info('cam_case_name', required=True)
+        base_name = adfobj.data.ref_case_label
+        data_list = base_name # should not be needed (?)
         data_loc = adfobj.get_baseline_info("cam_climo_loc", required=True)
 
         #Grab baseline case nickname
         base_nickname = adfobj.case_nicknames["base_nickname"]
     #End if
 
-    #Extract baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adfobj.climo_yrs["syear_baseline"][base_name]
+    eyear_baseline = adfobj.climo_yrs["eyear_baseline"][base_name]
 
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -163,7 +165,7 @@ def cam_taylor_diagram(adfobj):
         # LOOP OVER VARIABLES
         #
         for v in var_list:
-            base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
+            base_x = _retrieve(adfobj, v, base_name, data_loc) # get the baseline field
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
                 case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber])
                 # ASSUMING `time` is 1-12, get the current season:
