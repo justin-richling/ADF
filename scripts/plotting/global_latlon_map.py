@@ -610,8 +610,8 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
     for i in range(case_num):
         start = i * 3
         end = (i + 1) * 3
-        axs.append(plt.subplot(gs[0:case_num, start:end], projection=proj))
-        axs.append(plt.subplot(gs[case_num:, start:end], projection=proj))
+        axs.append(plt.subplot(gs[0:2, start:end], projection=proj))
+        axs.append(plt.subplot(gs[2:, start:end], projection=proj))
 
     # formatting for tick labels
     lon_formatter = LongitudeFormatter(number_format='0.0f',
