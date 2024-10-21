@@ -499,22 +499,21 @@ def aod_latlon(adfobj):
     # load reference data (observational or baseline)
     if not adfobj.compare_obs:
         base_name = adfobj.data.ref_case_label
-    else:
-        base_name = adfobj.data.ref_labels[var]
-    # Gather reference variable data
-    ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
-    if ds_base is None:
-        dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
-        adfobj.debug_log(dmsg)
-    else:
-        ds_base['lon'] = ds_base['lon'].round(5)
-        ds_base['lat'] = ds_base['lat'].round(5)
+    
+        # Gather reference variable data
+        ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
+        if ds_base is None:
+            dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon plots skipped."
+            adfobj.debug_log(dmsg)
+        else:
+            ds_base['lon'] = ds_base['lon'].round(5)
+            ds_base['lat'] = ds_base['lat'].round(5)
 
-        # Calculate seasonal means
-        ds_base_season = monthly_to_seasonal(ds_base)
-        ds_base_season['lon'] = ds_base_season['lon'].round(5)
-        ds_base_season['lat'] = ds_base_season['lat'].round(5)
-        ds_cases.append(ds_base_season)
+            # Calculate seasonal means
+            ds_base_season = monthly_to_seasonal(ds_base)
+            ds_base_season['lon'] = ds_base_season['lon'].round(5)
+            ds_base_season['lat'] = ds_base_season['lat'].round(5)
+            ds_cases.append(ds_base_season)
         
     case_num = len(ds_cases)
 
@@ -544,6 +543,8 @@ def aod_latlon(adfobj):
     
     # 4-Panel global lat/lon plots
     #-----------------------------
+    print("len(case_names)",len(case_names))
+    print("len(ds_cases)",len(ds_cases))
     for i_obs,ds_ob in enumerate(ds_obs):
         for i_s,season in enumerate(seasons):
             plotnames = []
