@@ -396,6 +396,8 @@ def aod_latlon(adfobj):
     if not adfobj.compare_obs:
         base_name = adfobj.data.ref_case_label
         case_names = test_case_names + [base_name]
+    else:
+        case_names = test_case_names
 
     #base_name = adfobj.get_baseline_info('cam_case_name')
 
