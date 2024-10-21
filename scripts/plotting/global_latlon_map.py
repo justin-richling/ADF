@@ -543,7 +543,7 @@ def aod_latlon(adfobj):
             # End for
 
             # Number of relevant cases        
-            case_num = len(case_name_list)
+            #case_num = len(case_name_list)
 
             # Create 4-panel plot for season
             aod_panel_latlon(adfobj, plotnames, params, fields, season, obs_name, case_name_list, case_num, types, symmetric=True)
@@ -603,7 +603,7 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
 
     # LAYOUT WITH GRIDSPEC
     plot_len = int(3*case_num)
-    gs = mpl.gridspec.GridSpec(2*case_num, plot_len, wspace=0.5, hspace=0.0)
+    gs = mpl.gridspec.GridSpec(4, plot_len, wspace=0.5, hspace=0.0)
     gs.tight_layout(fig)
 
     axs = []
