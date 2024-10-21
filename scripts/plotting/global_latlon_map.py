@@ -13,7 +13,6 @@ plot_file_op
 """
 #Import standard modules:
 import os
-import logging
 from pathlib import Path
 import numpy as np
 import xarray as xr
@@ -323,7 +322,7 @@ def global_latlon_map(adfobj):
 
     # Check for AOD, and run the 4-panel diagnostics against MERRA and MODIS
     if "AODVISdn" in var_list:
-        print("\tRunning AOD 4-panel diagnostics...")
+        print("\tRunning AOD panel diagnostics...")
         aod_latlon(adfobj)
 
     #Notify user that script has ended:
@@ -405,6 +404,7 @@ def aod_latlon(adfobj):
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 
+    """
     #Grab case years
     syears_case = adfobj.climo_yrs["syears"]
     eyears_case = adfobj.climo_yrs["eyears"]
@@ -420,6 +420,7 @@ def aod_latlon(adfobj):
 
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
+    """
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -427,12 +428,13 @@ def aod_latlon(adfobj):
     plot_params = res_aod_diags["plot_params"]
     plot_params_relerr = res_aod_diags["plot_params_relerr"]
 
+    """
     #Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
     # -- So check for it, and default to png
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
     plot_type = basic_info_dict.get('plot_type', 'png')
-
+    """
 
 
     # Observational Datasets
@@ -491,7 +493,12 @@ def aod_latlon(adfobj):
             ds_case_season['lon'] = ds_case_season['lon'].round(5)
             ds_case_season['lat'] = ds_case_season['lat'].round(5)
             ds_cases.append(ds_case_season)
-    
+
+    # load reference data (observational or baseline)
+    if not adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
+    else:
+        base_name = adfobj.data.ref_labels[var]
     # Gather reference variable data
     ds_base = adfobj.data.load_reference_regrid_da(base_name, var)
     if ds_base is None:
