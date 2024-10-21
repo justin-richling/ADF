@@ -393,9 +393,12 @@ def aod_latlon(adfobj):
     seasons = ['DJF', 'MAM', 'JJA', 'SON']
 
     test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_names = test_case_names + [adfobj.get_baseline_info('cam_case_name')]
+    # load reference data (observational or baseline)
+    if not adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
+        case_names = test_case_names + [base_name]
 
-    base_name = adfobj.get_baseline_info('cam_case_name')
+    #base_name = adfobj.get_baseline_info('cam_case_name')
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
