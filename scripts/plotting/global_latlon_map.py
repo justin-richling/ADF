@@ -497,20 +497,21 @@ def aod_latlon(adfobj):
             fields = []
             params = []
             types = []
-            case_namez = []
+            case_name_list = []
 
             obs_name = obs_titles[i_obs]
             chem_season = season_abbr[i_s]
 
             for i_case,ds_case in enumerate(ds_cases):
                 case_nickname = case_nicknames[i_case]
-
+                print(ds_ob['lat'] == ds_case['lat'])
+                print(ds_ob['lon'] == ds_case['lon'])
                 case_field = ds_case.sel(season=season) - ds_ob.sel(season=season)
                 plotnames.append(f'{case_nickname} - {obs_name}\nAOD 550 nm - ' + chem_season)
                 fields.append(case_field)
                 params.append(plot_params)
                 types.append("Diff")
-                case_namez.append(case_names[i_case])
+                case_name_list.append(case_names[i_case])
 
                 field_relerr = 100 * case_field / ds_ob.sel(season=season)
                 field_relerr = np.clip(field_relerr, -100, 100)
@@ -518,11 +519,11 @@ def aod_latlon(adfobj):
                 fields.append(field_relerr)
                 params.append(plot_params_relerr)
                 types.append("Percent Diff")
-                case_namez.append(case_names[i_case])
+                case_name_list.append(case_names[i_case])
             # End for
 
             # Create 4-panel plot for season
-            aod_panel_latlon(adfobj, plotnames, params, fields, season, obs_name, case_namez, case_num, types, symmetric=True)
+            aod_panel_latlon(adfobj, plotnames, params, fields, season, obs_name, case_name_list, case_num, types, symmetric=True)
         # End for
     # End for
 
@@ -604,13 +605,16 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
         lon_values = field.lon.values
         lat_values = field.lat.values
 
+        # Get field plot paramters
+        plot_param = plot_params[i]
+
         # Define plot levels
         levels = np.linspace(
-            plot_params[i]['range_min'], plot_params[i]['range_max'],
-            plot_params[i]['nlevel'], endpoint=True)
-        if 'augment_levels' in plot_params[i]:
+            plot_param['range_min'], plot_param['range_max'],
+            plot_param['nlevel'], endpoint=True)
+        if 'augment_levels' in plot_param:
             levels = sorted(np.append(
-                levels, np.array(plot_params[i]['augment_levels'])))
+                levels, np.array(plot_param['augment_levels'])))
 
         if field.ndim > 2:
             print(f"Required 2d lat/lon coordinates, got {field.ndim}d")
@@ -651,12 +655,12 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
         cbar = plt.colorbar(img, orientation='horizontal', pad=0.05)
         ind_cbar = plt.colorbar(ind_img, orientation='horizontal', pad=0.05)
 
-        if 'ticks' in plot_params[i]:
-            cbar.set_ticks(plot_params[i]['ticks'])
-            ind_cbar.set_ticks(plot_params[i]['ticks'])
-        if 'tick_labels' in plot_params[i]:
-            cbar.ax.set_xticklabels(plot_params[i]['tick_labels'])
-            ind_cbar.ax.set_xticklabels(plot_params[i]['tick_labels'])
+        if 'ticks' in plot_param:
+            cbar.set_ticks(plot_param['ticks'])
+            ind_cbar.set_ticks(plot_param['ticks'])
+        if 'tick_labels' in plot_param:
+            cbar.ax.set_xticklabels(plot_param['tick_labels'])
+            ind_cbar.ax.set_xticklabels(plot_param['tick_labels'])
         cbar.ax.tick_params(labelsize=6)
 
         # Save the individual figure
@@ -672,7 +676,8 @@ def aod_panel_latlon(adfobj, plotnames, plot_params, fields, season, obs_name, c
     png_file = f'{plotfile}.{file_type}'
     png_file = Path(plot_dir) / png_file
     fig.savefig(png_file, bbox_inches='tight', dpi=300)
-    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None, season=season, multi_case=True, plot_type="LatLon", category="4-Panel AOD Diags")
+    adfobj.add_website_data(png_file, f'AOD_diff_{obs_name.replace(" ","_")}', None,
+                            season=season, multi_case=True, plot_type="LatLon", category="4-Panel AOD Diags")
 
     # Close the figure
     plt.close(fig)
