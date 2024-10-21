@@ -36,15 +36,18 @@ def meridional_mean(adfobj):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
-    #Grab case years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
     # we will do a simple check and switch options as needed:
     if adfobj.get_basic_info("compare_obs"):
+
+        data_name = adfobj.data.ref_labels[var]
+
         #Set obs call for observation details for plot titles
         obs = True
 
@@ -58,14 +61,15 @@ def meridional_mean(adfobj):
             return
     else:
         obs = False
-        data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
+        #data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
+        data_name = adfobj.data.ref_case_label
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
     #End if
 
-    #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    #Grab all case nickname(s)
+    test_nicknames = adfobj.case_nicknames["test_nicknames"][data_name]
+    base_nickname = adfobj.case_nicknames["base_nickname"][data_name]
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]

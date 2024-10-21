@@ -92,9 +92,15 @@ def global_latlon_vect_map(adfobj):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
+    # load reference data (observational or baseline)
+    if not adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
+    else:
+        base_name = adfobj.data.ref_labels[var]
+
     #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
-    base_nickname = adfobj.case_nicknames["base_nickname"]
+    test_nicknames = adfobj.case_nicknames["test_nicknames"][base_name]
+    base_nickname = adfobj.case_nicknames["base_nickname"][base_name]
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -409,7 +415,7 @@ def global_latlon_vect_map(adfobj):
                                 #   *Any other entries will be ignored.
                                 # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
                                 pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
-                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [syear_cases[case_name],eyear_cases[case_name]],
                                                         [syear_baseline,eyear_baseline],lv,
                                                         umseasons[s], vmseasons[s],
                                                         uoseasons[s], voseasons[s],
@@ -463,7 +469,7 @@ def global_latlon_vect_map(adfobj):
                             #   *Any other entries will be ignored.
                             # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
                             pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
-                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                      [syear_cases[case_name],eyear_cases[case_name]],
                                                       [syear_baseline,eyear_baseline], None,
                                                       umseasons[s], vmseasons[s],
                                                       uoseasons[s], voseasons[s],
