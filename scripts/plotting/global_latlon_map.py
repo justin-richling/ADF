@@ -485,6 +485,8 @@ def aod_latlon(adfobj):
             ds_base_season['lat'] = ds_base_season['lat'].round(5)
             ds_cases.append(ds_base_season)
 
+    # Number of relevant cases
+    case_num = len(ds_cases)
     
     # 4-Panel global lat/lon plots
     #-----------------------------
@@ -541,9 +543,6 @@ def aod_latlon(adfobj):
                     case_name_list.append(case_names[i_case])
                 # End if
             # End for
-
-            # Number of relevant cases        
-            case_num = len(case_name_list)
 
             # Create 4-panel plot for season
             aod_panel_latlon(adfobj, plotnames, params, fields, season, obs_name, case_name_list, case_num, types, symmetric=True)
