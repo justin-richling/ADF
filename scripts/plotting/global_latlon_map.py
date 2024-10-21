@@ -503,7 +503,7 @@ def aod_latlon(adfobj):
                 case_nickname = case_nicknames[i_case]
 
                 # Check if the lats/lons are same as supplied observations
-                if ds_ob['lat'] == ds_case['lat']:
+                if ds_ob['lat'].shape == ds_case['lat'].shape:
                     lats_match = True
                 else:
                     err_msg = "AOD 4-panel plot:\n"
@@ -513,7 +513,7 @@ def aod_latlon(adfobj):
                     adfobj.debug_log(err_msg)
                 # End if
 
-                if ds_ob['lon'] == ds_case['lon']:
+                if ds_ob['lon'].shape == ds_case['lon'].shape:
                     lons_match = True
                 else:
                     err_msg = "AOD 4-panel plot:\n"
