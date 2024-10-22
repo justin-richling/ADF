@@ -110,18 +110,13 @@ def chem_aerosol_tables(adfobj):
         # Grab climo years
         bl_start_yrs = adfobj.climo_yrs["syear_baseline"]
         bl_end_yrs = adfobj.climo_yrs["eyear_baseline"]
-        #start_years = {**start_yrs, **bl_start_yrs}
         start_years += [bl_start_yrs]
-        #end_years = {**end_yrs, **bl_end_yrs}
         end_years += [bl_end_yrs]
         hist_strs = cam_hist_strs + [adfobj.hist_string["base_hist_str"]]
 
     
-    #base_nickname_list = adfobj.case_nicknames["base_nickname"]
-    #nicknames_list = test_nicknames_list + [base_nickname_list]
+    # Initialize nicknames dictionary
     nicknames = {}
-
-    #hist_strs = cam_hist_strs + [adfobj.hist_string["base_hist_str"]]
 
     # Filter the list to include only strings that are possible h0 strings
     # - Search for either h0 or h0a
@@ -167,13 +162,6 @@ def chem_aerosol_tables(adfobj):
     # Periods of Interest
     # -------------------
     # choose the period of interest. Plots will be averaged within this period
-    """start_dates = []
-    for syr in start_years:
-        start_dates.append(f"{syr}-1-1")
-    end_dates = []
-    for eyr in end_yrs:
-        end_dates.append(f"{eyr}-1-1")
-    """
     durations = {}
     num_yrs = {}
 
@@ -214,29 +202,13 @@ def chem_aerosol_tables(adfobj):
         dic_SE = set_dic_SE(ListVars,ext1_SE)
         dic_SE = fill_dic_SE(dic_SE, VARIABLES, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair)
 
-        """try:
-            with open(output_location / f'{case}_Dic_scn_var_comp.pickle', 'rb') as handle:
-                Dic_scn_var_comp[case] = pickle.load(handle)
-
-            with open(output_location / f'{case}_Dic_crit.pickle', 'rb') as handle2:
-                Dic_crit = pickle.load(handle2)
-        except:
-            print("JSON file not found, need to create the files.")
-
-            # Make dictionary of all data for each case
-            print(f"\t Calculating values for {case}")
-            Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dirs[i], dic_SE, Files, ext1_SE, AEROSOLS)
-
-            with open(output_location / f'{case}_Dic_scn_var_comp.pickle', 'wb') as handle:
-                pickle.dump(Dic_scn_var_comp[case], handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-            with open(output_location / f'{case}_Dic_crit.pickle', 'wb') as handle:
-                pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)"""
-
+        # Check to see if pickle the intermidiate data calculations
+        # NOTE: The calculations can take a long time, so this can help save progress!
         if pkl_data:
             dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
             dc_pkl = f'{case}_Dic_crit.pickle'
 
+            # Check if both files already exist
             if ((output_location / dsvc_pkl).is_file()) and ((output_location / dc_pkl).is_file()):
                 with open(output_location / dsvc_pkl, 'rb') as handle:
                     Dic_scn_var_comp[case] = pickle.load(handle)
@@ -257,7 +229,8 @@ def chem_aerosol_tables(adfobj):
                     pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-
+        # Regional refinement
+        # NOTE: This function is unavailable at the moment! - JR 10/2024
         if regional:
             #inside = Inside_SE_region(current_lat,current_lon,dir_shapefile)
             inside = Inside_SE(Lats,Lons,limit)
@@ -288,21 +261,18 @@ def chem_aerosol_tables(adfobj):
                     "insides":insides,
                     "num_yrs":num_yrs,
                     "AEROSOLS":AEROSOLS}
-    # make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
+
+    # Create the budget tables
+    #-------------------------
+    # Aerosols
     if len(AEROSOL_VARIABLES) > 0:
         print("\tMaking table for aerosols")
-        #aerosol_table = make_table(adfobj, AEROSOL_VARIABLES, 'aerosols', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
-        aerosol_table = make_table(vars=AEROSOL_VARIABLES, chem_type='aerosols', **table_kwargs)
-
-
+        make_table(vars=AEROSOL_VARIABLES, chem_type='aerosols', **table_kwargs)
+    # Gases
     if len(GAS_VARIABLES) > 0:
         print("\tMaking table for gases")
-        #gas_table = make_table(adfobj, GAS_VARIABLES, 'gases', Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS)
-        gas_table = make_table(vars=GAS_VARIABLES, chem_type='gases', **table_kwargs)
-
-
-    #return
-
+        make_table(vars=GAS_VARIABLES, chem_type='gases', **table_kwargs)
+#######
 
 ##################
 # Helper functions
@@ -349,7 +319,7 @@ def list_files(directory,start_year,end_year,h_case):
     end_year
     """
 
-    #History file year range
+    # History file year range
     yrs = np.arange(int(start_year), int(end_year)+1)
 
     all_filenames = []
@@ -428,12 +398,8 @@ def Get_files(data_dir,start_year,end_year,h_case,**kwargs):
                 tmp_area = dx*dy
                 areas = tmp_area
 
-
-    files = current_files
-    Lats = lat
-    Lons = lon
-
-    return files,Lats,Lons,areas,ext1_SE
+    # Variables to return
+    return current_files,lat,lon,areas,ext1_SE
 #####
 
 def set_dic_SE(ListVars, ext1_SE):
@@ -775,7 +741,7 @@ def make_Dic_scn_var_comp(adfobj, variables, data_dir, dic_SE, Files, ext1_SE, A
 
     Dic_var_comp={}
 
-    for ivar,current_var in enumerate(variables):
+    for current_var in variables:
         if 'AOD' in current_var:
             components=[current_var+'_AOD']
         else:
@@ -832,8 +798,7 @@ def make_Dic_scn_var_comp(adfobj, variables, data_dir, dic_SE, Files, ext1_SE, A
         Dic_var_comp[current_var] = Dic_comp
     Dic_scn_var_comp = Dic_var_comp
 
-    # Critical threshholds?
-    # Just run this once
+    # Critical threshholds, just run this once
     current_crit=SEbudget(dic_SE,current_dir,current_files,'O3',ext1_SE)
     Dic_crit=current_crit
 
@@ -1001,7 +966,7 @@ def SEbudget_dask(dic_SE,data_dir,files,var,ext1_SE,**kwargs):
     def preprocess(ds):
         return ds[variables]
 
-    print("Ahhhhh: ",var," - ",dic_SE[var].keys())
+    print(var," - ",dic_SE[var].keys())
     # gas constanct
     Rgas=287.04 #[J/K/Kg]=8.314/0.028965
 
@@ -1097,6 +1062,9 @@ def SEbudget_dask(dic_SE,data_dir,files,var,ext1_SE,**kwargs):
 
 
 def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs, duration, AEROSOLS):
+    """
+    Function to run through desired table values for calculation
+    """
 
     chem_dict = {}
 
@@ -1262,6 +1230,8 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
 
 
 def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_names, nicknames, durations, insides, num_yrs, AEROSOLS):
+    """
+    """
     # Initialize an empty dictionary to store DataFrames
     dfs = {}
     #Special ADF variable which contains the output paths for
@@ -1271,8 +1241,7 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
     #Convert output location string to a Path object:
     output_location = Path(output_locs[0])
 
-    
-
+    # Loop over model cases
     for case in case_names:
         nickname = nicknames[case]
         # Collect row data in a list of dictionaries
@@ -1284,7 +1253,6 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
 
             for key, val in chem_dict.items():
                 if val != 0:  # Skip variables with a value of 0
-                    #print("\n\n",'variable:', key,np.round(val, 3),"\n\n")
                     rows.append({'variable': key, nickname: np.round(val, 3)})
                 else:
                     msg = f"chem/aerosol tables:"
@@ -1314,25 +1282,11 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
         # Calculate the differences between case columns
         table_df['difference'] = table_df[nicknames[case_names[0]]] - table_df[nicknames[case_names[1]]]
 
-        # Save the result to a new CSV file
-        #table_df.to_csv(f'ADF_amwg_{chem_type}_table.csv', index=False)
-
-    #else:
-
     #Create output file name:
     output_csv_file = output_location / f'ADF_amwg_{chem_type}_table.csv'
-    print("output_csv_file",output_csv_file,"\n")
 
-    #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
-    if Path(output_csv_file).is_file():
-        Path.unlink(output_csv_file)
-    #End if
-    print("WTH????????")
+    # Save table to CSV and add table dataframe to website (if enabled)
     table_df.to_csv(output_csv_file, index=False)
-    #table_df.to_csv(output_csv_file, header=cols, index=False)
-
-    
-    #Add budget table dataframe to website (if enabled):
     adfobj.add_website_data(table_df, chem_type, case, plot_type=f"Tables")
 
     #return table_df
