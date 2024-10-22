@@ -1270,7 +1270,15 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
                 'CH3COCH3': 'Acetone',
                 'O3_LNO': 'LNOx_PROD'
             }
-            table_df['variable'] = table_df['variable'].replace(replacements)
+            table_df['variable'] = table_df['variable'].replace(replacements, regex=True)
+            
+            """
+            # Change some compounds to match old AMWG chem tables
+            table_df = table_df.replace('MTERP','Monoterpene', regex=True)
+            table_df = table_df.replace('CH3OH','Methanol', regex=True)
+            table_df = table_df.replace('CH3COCH3','Acetone', regex=True)
+            table_df = table_df.replace('O3_LNO','LNOx_PROD', regex=True)
+            """
 
         # Store the DataFrame in the dictionary
         dfs[nickname] = table_df
