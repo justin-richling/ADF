@@ -272,7 +272,7 @@ def chem_aerosol_tables(adfobj):
 
         # Set up and fill dictionaries for components for current cases
         dic_SE = set_dic_SE(ListVars,ext1_SE)
-        dic_SE = fill_dic_SE(dic_SE, VARIABLES, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair)
+        dic_SE = fill_dic_SE(adfobj, dic_SE, VARIABLES, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair)
 
         # Check to see if pickle the intermidiate data calculations
         # NOTE: The calculations can take a long time, so this can help save progress!
@@ -492,7 +492,7 @@ def set_dic_SE(ListVars, ext1_SE):
     return dic_SE
 #####
 
-def fill_dic_SE(dic_SE, variables, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair):
+def fill_dic_SE(adfobj, dic_SE, variables, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair):
     """
     Function for dealing with conversion factors for different components and filling the main data
     dictionary 'dic_SE'
@@ -503,8 +503,9 @@ def fill_dic_SE(dic_SE, variables, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwa
     We convert everying to kg/m2/s or kg/m2 or kg/s, so that final Tg/yr or Tg results are consistent
     """
     for var in variables:
-
-        print("Main variable:",var,"\n")
+        msg = f"chem/aerosol tables: 'fill_dic_SE'"
+        msg += f"\n\t Main variable: {var}"
+        adfobj.debug_log(msg)
 
         if 'AOD' in var:
             dic_SE[var+'_AOD']={}
@@ -538,7 +539,9 @@ def fill_dic_SE(dic_SE, variables, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwa
         var_keys=dic_SE[var].keys()
 
         for key in var_keys:
-            print("\t - component:",key,"\n")
+            msg = f"chem/aerosol tables: 'fill_dic_SE'"
+            msg += f"\n\t  - component: {key}"
+            adfobj.debug_log(msg)
             # for CHML and CHMP:
             # original unit : [molec/cm3/s]
             # following Tilmes code to convert to [kg/m2/s]
