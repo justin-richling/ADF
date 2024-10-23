@@ -689,7 +689,8 @@ class AdfWeb(AdfObs):
             #End if
 
             #List of ADF default plot types
-            avail_plot_types = ["Tables","LatLon","LatLon_Vector","Zonal","Meridonal","NHPolar","SHPolar","Special","WACCM"]
+            avail_plot_types = ["Tables","LatLon","LatLon_Vector","Zonal","Meridonal",
+                                "NHPolar","SHPolar","Special","WACCM"]
             
             for ptype in plot_types.keys():
                 if ptype not in avail_plot_types:
