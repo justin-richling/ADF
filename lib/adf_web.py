@@ -55,10 +55,12 @@ class _WebData:
     needed by the website generator.
     """
 
-    def __init__(self, web_data, web_name, case_name,
+    def __init__(self, web_data, web_name, case_name,ext=None,
                  category = None,
                  season = None,
+                 non_season = False,
                  plot_type = "Special",
+                 #ext = "Mean",
                  data_frame = False,
                  html_file  = None,
                  asset_path = None,
@@ -70,7 +72,9 @@ class _WebData:
         self.case       = case_name
         self.category   = category
         self.season     = season
+        self.non_season = non_season
         self.plot_type  = plot_type
+        self.ext        = ext
         self.data_frame = data_frame
         self.html_file  = html_file
         self.asset_path = asset_path
@@ -179,10 +183,12 @@ class AdfWeb(AdfObs):
 
     #########
 
-    def add_website_data(self, web_data, web_name, case_name,
+    def add_website_data(self, web_data, web_name, case_name,ext=None,
                          category = None,
                          season = None,
+                         non_season = False,
                          plot_type = "Special",
+                         #ext = "Mean",
                          multi_case=False):
 
         """
@@ -202,6 +208,10 @@ class AdfWeb(AdfObs):
                       then it will default to "No category yet".
         season     -> What the season is for the plot.  If not provided it will assume the
                       plot does not need any seasonal seperation.
+
+        non_season -> Are the plots NOT divided up by seaons, ANN, DJF, MAM, JJA, or SON?
+                      - QBO is displayed as QBOts and QBOamp in the season argument above
+
         plot_type  -> Type of plot.  If not provided then plot type will be "Special".
 
         multi_case -> Logical which indicates whether the image or dataframe can contain
@@ -278,6 +288,8 @@ class AdfWeb(AdfObs):
             asset_path = None
         else:
             html_name = f'plot_page_{web_data.stem}.html'
+            #print(web_data)
+            #print(html_name)
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
@@ -286,11 +298,14 @@ class AdfWeb(AdfObs):
         web_data = _WebData(web_data, web_name, case_name,
                             category = category,
                             season = season,
+                            non_season = non_season,
                             plot_type = plot_type,
+                            ext = ext,
                             data_frame = data_frame,
                             html_file = html_file,
                             asset_path = asset_path,
                             multi_case = multi_case)
+        #print("WTF????",web_data.ext)
 
         #Add web data object to list:
         self.__website_data.append(web_data)
@@ -327,6 +342,11 @@ class AdfWeb(AdfObs):
             self.end_diag_fail(emsg)
         #End except
 
+        #Make a jinja function that mimics python list object. This will allow for
+        # the use of 'list' in the html rendering.
+        def jinja_list(seas_list):
+            return list(seas_list)
+
         #Notify user that script has started:
         print("\n  Generating Diagnostics webpages...")
 
@@ -355,6 +375,7 @@ class AdfWeb(AdfObs):
         if self.compare_obs:
             data_name = "Obs"
             baseline_yrs = ""
+
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
 
@@ -421,6 +442,8 @@ class AdfWeb(AdfObs):
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
 
+        non_seasons = OrderedDict()
+
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
 
@@ -444,6 +467,7 @@ class AdfWeb(AdfObs):
                 shutil.copyfile(gif_file, css_files_dir / gif_file.name)
             #End for
 
+            #Check first for AMWG tables data frame
             if web_data.data_frame:
 
                 #Create a directory that will hold table html files, if a table is present:
@@ -457,7 +481,20 @@ class AdfWeb(AdfObs):
                 #Note:  Need to use data name instead of case name for tables.
                 table_html_info[web_data.name] = web_data.html_file.name
 
+           #Now check all plot types
             if not web_data.data_frame:
+                #Determine season value:
+                if web_data.season:
+                    season = web_data.season
+                else:
+                    season = "plot" #Just have the link be labeled "plot".
+                #End if
+
+                #Extract web data name (usually the variable name):
+                var = web_data.name
+
+                #Extract whether plot has traditional seasons or not
+                non_season = web_data.non_season
 
                 #Create a directory that will hold just the html files for individual images:
                 self.__case_web_paths[web_data.case]['img_pages_dir'].mkdir(exist_ok=True)
@@ -470,11 +507,6 @@ class AdfWeb(AdfObs):
 
                 #Extract plot_type:
                 ptype = web_data.plot_type
-
-                #Initialize Ordered Dictionary for plot type:
-                if ptype not in mean_html_info:
-                    mean_html_info[ptype] = OrderedDict()
-                #End if
 
                 #Check if category has been provided for this web data:
                 if web_data.category:
@@ -492,27 +524,33 @@ class AdfWeb(AdfObs):
                     #End if
                 #End if
 
+                #Initialize Ordered Dictionary for plot type:
+                if ptype not in mean_html_info:
+                    mean_html_info[ptype] = OrderedDict()
+                #End if
+
                 if category not in mean_html_info[ptype]:
                     mean_html_info[ptype][category] = OrderedDict()
                 #End if
 
-                #Extract web data name (usually the variable name):
-                name = web_data.name
-
                 #Initialize Ordered Dictionary for variable:
-                if name not in mean_html_info[ptype][category]:
-                    mean_html_info[ptype][category][name] = OrderedDict()
-                #End if
-
-                #Determine season value:
-                if web_data.season:
-                    season = web_data.season
-                else:
-                    season = "plot" #Just have the link be labeled "plot".
+                if var not in mean_html_info[ptype][category]:
+                    mean_html_info[ptype][category][var] = OrderedDict()
                 #End if
 
                 #Initialize Ordered Dictionary for season:
-                mean_html_info[ptype][category][name][season] = web_data.html_file.name
+                mean_html_info[ptype][category][var][season] = web_data.html_file.name
+
+                #Initialize Ordered Dictionary for non season kwarg:
+                if ptype not in non_seasons:
+                    non_seasons[ptype] = OrderedDict()
+                #End if
+                if category not in non_seasons[ptype]:
+                    non_seasons[ptype][category] = OrderedDict()
+                #End if
+                if var not in non_seasons[ptype][category]:
+                    non_seasons[ptype][category][var] = non_season
+                #End if
 
             #End if (data-frame check)
         #End for (web_data list loop)
@@ -547,17 +585,18 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
 
                 #Construct amwg_table.html
+                rend_kwarg_dict = {"title": main_title,
+                                  "case_name": case1,
+                                  "case_yrs": case_yrs,
+                                  "base_name": data_name,
+                                  "baseline_yrs": baseline_yrs,
+                                  "amwg_tables": table_html_info,
+                                  "table_name": web_data.name,
+                                  "table_html": table_html,
+                                  "multi_head": False}
+                rend_kwarg_dict["plot_types"] = multi_plot_type_html
                 table_tmpl = jinenv.get_template('template_table.html')
-                table_rndr = table_tmpl.render(title=main_title,
-                                  case1=case1,
-                                  case2=data_name,
-                                  case_yrs=case_yrs,
-                                  baseline_yrs=baseline_yrs,
-                                  amwg_tables=table_html_info,
-                                  plot_types=plot_types,
-                                  table_name=web_data.name,
-                                  table_html=table_html
-                                  )
+                table_rndr = table_tmpl.render(rend_kwarg_dict)
 
                 #Write mean diagnostic tables HTML file:
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
@@ -569,22 +608,19 @@ class AdfWeb(AdfObs):
                 if not mean_table_file.exists():
                     #Construct mean_table.html
                     mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
-                    mean_table_rndr = mean_table_tmpl.render(title=main_title,
-                                                             case1=case1,
-                                                             case2=data_name,
-                                                             case_yrs=case_yrs,
-                                                             baseline_yrs=baseline_yrs,
-                                                             amwg_tables=table_html_info,
-                                                             plot_types=plot_types,
-                                                            )
-
+                    #Reuse the rend_kwarg_dict, but ignore certain keys
+                    #since all others are the same
+                    new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
+                    mean_table_rndr = mean_table_tmpl.render(new_dict)
                     #Write mean diagnostic tables HTML file:
                     with open(mean_table_file, 'w', encoding='utf-8') as ofil:
                         ofil.write(mean_table_rndr)
                     #End with
                 #End if
+            #End if (tables)
 
             else: #Plot image
+                plot_types = plot_type_html
 
                 #Create output HTML file path:
                 img_pages_dir = self.__case_web_paths[web_data.case]['img_pages_dir']
@@ -598,19 +634,24 @@ class AdfWeb(AdfObs):
                     case1 = web_data.case
                     plot_types = plot_type_html
                 #End if
+
+                #print(web_data.plot_type,web_data.ext)
+                rend_kwarg_dict = {"title": main_title,
+                                       "var_title": web_data.name,
+                                       "ext": web_data.ext,
+                                       "season_title": web_data.season,
+                                       "case_name": web_data.case,
+                                       "case_yrs": case_yrs,
+                                       "base_name": data_name,
+                                       "baseline_yrs": baseline_yrs,
+                                       "plottype_title": web_data.plot_type,
+                                       "imgs": img_data,
+                                       "mydata": mean_html_info[web_data.plot_type],
+                                       "plot_types": plot_types,
+                                       "seasons": seasons,
+                                       "non_seasons": non_seasons[web_data.plot_type]}
                 tmpl = jinenv.get_template('template.html')  #Set template
-                rndr = tmpl.render(title=main_title,
-                                   var_title=web_data.name,
-                                   season_title=web_data.season,
-                                   plottype_title=web_data.plot_type,
-                                   imgs=img_data,
-                                   case1=case1,
-                                   case2=data_name,
-                                   case_yrs=case_yrs,
-                                   baseline_yrs=baseline_yrs,
-                                   mydata=mean_html_info[web_data.plot_type],
-                                   plot_types=plot_types,
-                                   seasons=seasons) #The template rendered
+                rndr = tmpl.render(rend_kwarg_dict) #The template rendered
 
                 #Write HTML file:
                 with open(web_data.html_file, 'w', encoding='utf-8') as ofil:
@@ -619,49 +660,20 @@ class AdfWeb(AdfObs):
 
                 #Check if the mean plot type page exists for this case:
                 mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type}.html"
-                if not mean_ptype_file.exists():
-                    #Construct individual plot type mean_diag html files, if they don't
-                    #already exist:
-                    mean_tmpl = jinenv.get_template('template_mean_diag.html')
-                    mean_rndr = mean_tmpl.render(title=main_title,
-                                                 case1=case1,
-                                                 case2=data_name,
-                                                 case_yrs=case_yrs,
-                                                 baseline_yrs=baseline_yrs,
-                                                 mydata=mean_html_info[web_data.plot_type],
-                                                 curr_type=web_data.plot_type,
-                                                 plot_types=plot_types)
 
-                    #Write mean diagnostic plots HTML file:
-                    with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
-                        ofil.write(mean_rndr)
-                    #End with
-                #End if (mean_ptype exists)
+                #Construct individual plot type mean_diag html files, if they don't
+                #already exist:
+                mean_tmpl = jinenv.get_template('template_mean_diag.html')
 
-                #Check if the mean plot type and var page exists for this case:
-                mean_ptype_plot_page = img_pages_dir / f"plot_page_{web_data.name}_{web_data.plot_type}.html"
-                if not mean_ptype_plot_page.exists():
+                #Remove keys from main dictionary for this html page
+                templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
+                templ_rend_kwarg_dict["list"] = jinja_list
+                mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
 
-                    #Construct individual plot type mean_diag html files, if they don't
-                    #already exist:
-                    plot_page_tmpl = jinenv.get_template('template_var.html')
-                    plot_page_rndr = plot_page_tmpl.render(title=main_title,
-                                                 var_title=web_data.name,
-                                                 season_title=web_data.season,
-                                                 plottype_title=web_data.plot_type,
-                                                 case1=case1,
-                                                 case2=data_name,
-                                                 case_yrs=case_yrs,
-                                                 baseline_yrs=baseline_yrs,
-                                                 mydata=mean_html_info[web_data.plot_type],
-                                                 curr_type=web_data.plot_type,
-                                                 plot_types=plot_types,
-                                                 seasons=seasons)
-
-                    #Write mean diagnostic plots HTML file:
-                    with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                        ofil.write(plot_page_rndr)
-                    #End with
+                #Write mean diagnostic plots HTML file:
+                with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
+                    ofil.write(mean_rndr)
+                #End with
             #End if (data frame)
 
             #Also check if index page exists for this case:
@@ -673,17 +685,25 @@ class AdfWeb(AdfObs):
                 plot_types = multi_plot_type_html
             else:
                 plot_types = plot_type_html
+            plot_types = plot_type_html
             #End if
 
+            #List of ADF default plot types
+            avail_plot_types = ["Tables","LatLon","LatLon_Vector","Zonal","Meridonal","NHPolar","SHPolar","Special","WACCM"]
+            
+            for ptype in plot_types.keys():
+                if ptype not in avail_plot_types:
+                    avail_plot_types.append(plot_types)
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
             index_rndr = index_tmpl.render(title=index_title,
-                                            case1=web_data.case,
-                                            case2=data_name,
+                                            case_name=web_data.case,
+                                            base_name=data_name,
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
-                                            plot_types=plot_types)
+                                            plot_types=plot_types,
+                                            avail_plot_types=avail_plot_types)
 
             #Write Mean diagnostics index HTML file:
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
@@ -727,6 +747,8 @@ class AdfWeb(AdfObs):
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
                             case_sites=case_sites,
+                            base_name=data_name,
+                            baseline_yrs=baseline_yrs,
                             )
 
             #Write multi-case main HTML file:
