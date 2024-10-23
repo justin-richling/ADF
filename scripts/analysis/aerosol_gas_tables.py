@@ -1025,7 +1025,7 @@ def SEbudget(adfobj,dic_SE,data_dir,files,var,ext1_SE,**kwargs):
 
 def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs, duration, AEROSOLS):
     """
-    Function to run through desired table values for calculation
+    Function to run through desired table values for calculations for the table entries
     """
 
     # Initialize full data dictionary for current table type
