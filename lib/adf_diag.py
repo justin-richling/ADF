@@ -366,7 +366,7 @@ class AdfDiag(AdfWeb):
             end_years = self.eyears_dict["baseline"]
 
             case_type_string = "baseline"
-            hist_str_list = [self.hist_string["base_hist_str"]]
+            hist_str_list = self.hist_string["base_hist_str"]
 
         else:
             # Use test case settings, which are already lists:
