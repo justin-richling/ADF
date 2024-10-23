@@ -1089,6 +1089,7 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
             chmp = np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
             CHMP = np.ma.sum(chmp*duration*1e-9)/num_yrs
             chem_dict[f"{current_var}_CHEM_PROD (Tg{specifier}/yr)"] = np.round(CHMP,5)
+        # End if
 
         # Aerosol calculations
         #---------------------
