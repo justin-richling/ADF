@@ -241,7 +241,7 @@ def aerosol_gas_tables(adfobj):
     trops = {}
     insides = {}
     for i,case in enumerate(case_names):
-        print(f'Current case: {case}',"\n",len(f'Current case: {case}')*'-','\n')
+        print(f'\nCurrent case: {case}',"\n",len(f'Current case: {case}')*'-','\n')
         start_year = start_years[i]
         end_year = end_years[i]
         start_date = f"{start_year}-1-1"
