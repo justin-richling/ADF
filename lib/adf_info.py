@@ -356,6 +356,7 @@ class AdfInfo(AdfConfig):
 
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
+                print("base_hist_str",base_hist_str,"\n")
                 
                 #hist_str = baseline_hist_str[0]
                 starting_location = Path(baseline_hist_locs)
