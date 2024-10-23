@@ -222,6 +222,8 @@ class AdfInfo(AdfConfig):
             baseline_hist_str = self.get_baseline_info("hist_str")
             if not isinstance(conf_val, list):
                 baseline_hist_str = [baseline_hist_str]
+
+            print("baseline_hist_str",baseline_hist_str,"FIRST\n")
             self.__baseline_hist_loc = baseline_hist_str
 
             # 
@@ -344,6 +346,7 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_locs):
+                print("baseline_hist_str",baseline_hist_str,"BEFORE\n")
                 #Check if user provided
                 if not baseline_hist_str:
                     baseline_hist_str = ['cam.h0a']
@@ -355,7 +358,7 @@ class AdfInfo(AdfConfig):
                 self.__base_hist_str = baseline_hist_str
 
                 #Grab first possible hist string, just looking for years of run
-                print("baseline_hist_str",baseline_hist_str,"\n")
+                print("baseline_hist_str",baseline_hist_str,"AFTER\n")
                 base_hist_str = baseline_hist_str[0][0]
                 print("base_hist_str",base_hist_str,"\n")
                 
