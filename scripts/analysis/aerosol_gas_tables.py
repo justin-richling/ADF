@@ -102,7 +102,7 @@ def aerosol_gas_tables(adfobj):
     # Variable defaults info
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     bres = res['budget_tables']
-    pkl_data = bres.get("pkl_data",False)
+    json_data = bres.get("json_data",False)
     #pkl_data = True
 
     # list of the gaseous variables to be caculated.
