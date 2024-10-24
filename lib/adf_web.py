@@ -650,6 +650,8 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 #End if
 
+                print("\nFirst plot_types",plot_types,"\n")
+
                 #print(web_data.plot_type,web_data.ext)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
@@ -710,6 +712,8 @@ class AdfWeb(AdfObs):
             for ptype in plot_types.keys():
                 if ptype not in avail_plot_types:
                     avail_plot_types.append(plot_types)
+
+            print("\nSecond plot_types",plot_types,"\n")
 
 
             # External packages that can be run through ADF

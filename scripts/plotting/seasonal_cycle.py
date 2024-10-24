@@ -51,34 +51,36 @@ def seasonal_cycle(adfobj):
 
     """
 
-    #CAM simulation variables (this is always assumed to be a list):
-    case_names = adfobj.get_cam_info("cam_case_name", required=True)
-    #Extract cam history files location:
-    cam_hist_locs = adfobj.get_cam_info('cam_hist_loc')
+    # Notify user that script has started:
+    print("\n  Generating zonal vertical seasonal cycle plots plots ...")
 
-    #Special ADF variable which contains the output paths for
-    #all generated plots and tables:
+    # Special ADF variable which contains the output paths for all generated plots and tables:
     plot_locations = adfobj.plot_location
     plot_loc = Path(plot_locations[0])
 
-    #Set plot file type:
+    # Set plot file type:
     # -- this should be set in basic_info_dict, but is not required
     # -- So check for it, and default to png
     basic_info_dict = adfobj.read_config_var("diag_basic_info")
     plot_type = basic_info_dict.get('plot_type', 'png')
     print(f"\t NOTE: Plot type is set to {plot_type}")
 
-    # check if existing plots need to be redone
+    # Check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
-    #Grab case years
+    # CAM simulation variables (this is always assumed to be a list):
+    case_names = adfobj.get_cam_info("cam_case_name", required=True)
+    # Extract cam history files location:
+    cam_hist_locs = adfobj.get_cam_info('cam_hist_loc')
+
+    # Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
     nicknames = adfobj.case_nicknames["test_nicknames"]
 
-    #Grab history strings:
+    # Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
 
     # Filter the list to include only strings that are exactly in the possible h0 strings
@@ -95,7 +97,6 @@ def seasonal_cycle(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
-    #try:
     if 'waccm_seasonal_cycle' in res:
         seas_cyc_res = res['waccm_seasonal_cycle']
     else:
@@ -113,7 +114,7 @@ def seasonal_cycle(adfobj):
 
     calc_var_list = seas_cyc_res['calc_var_list']
 
-    #Grab location of ADF default obs files
+    # Grab location of ADF default obs files
     adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
     #saber_filename = seas_cyc_res['saber_file']
     saber_filename = "SABER_monthly_2002-2014.nc"
@@ -128,24 +129,24 @@ def seasonal_cycle(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
     
-        #Grab baseline years and add to years lists
+        # Grab baseline years and add to years lists
         syear_baseline = adfobj.climo_yrs["syear_baseline"]
         syear_cases = syear_cases + [syear_baseline]
         eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
         eyear_cases = eyear_cases + [eyear_baseline]
 
-        #Grab all case nickname(s) and add to nicknames lists
+        # Grab all case nickname(s) and add to nicknames lists
         base_nickname = adfobj.case_nicknames["base_nickname"]
         nicknames = nicknames + [base_nickname]
 
-        #Grab baaseline cae name and add to case names list
+        # Grab baaseline cae name and add to case names list
         case_names = case_names + data_list
 
-        #Get baeline case history location and add to hist loc list
+        # Get baeline case history location and add to hist loc list
         baseline_hist_locs = adfobj.get_baseline_info('cam_hist_loc')
         cam_hist_locs = cam_hist_locs + [baseline_hist_locs]
 
-        #Grab history string:
+        # Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
         # Filter the list to include only strings that are exactly in the substrings list
         base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
@@ -154,20 +155,16 @@ def seasonal_cycle(adfobj):
         syear_cases = syear_cases + [""]
         eyear_cases = eyear_cases + [""]
         hist_strs = case_hist_strs
-    #End if
+    # End if
 
     climo_yrs = [syear_cases, eyear_cases]
     #climo_yrs["case"] = []
     #climo_yrs["baseline"] = []
 
-    # Notify user that script has started:
-    print("\n  Generating zonal vertical seasonal cycle plots plots ...")
-
-
     #var_list = adfobj.diag_var_list
     var_list = calc_var_list + ['lat','lev','time']
 
-    #Set up creation of all CAM data dictionaries
+    # Set up creation of all CAM data dictionaries
     cases_coords = {}
     cases_seasonal = {}
     cases_monthly = {}
@@ -179,10 +176,10 @@ def seasonal_cycle(adfobj):
         syr = syear_cases[idx]
         eyr = eyear_cases[idx]
 
-        #Make or access the WACCM zonal mean file
+        # Make or access the WACCM zonal mean file
         ncfile = make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,return_ds=True)
 
-        #Set up creation of individual CAM data dictionaries
+        # Set up creation of individual CAM data dictionaries
         case_coords = {}
         case_seasonal = {}
         case_monthly = {}
@@ -194,7 +191,7 @@ def seasonal_cycle(adfobj):
                 case_monthly[var] = {}
             case_coords[var] =  ncfile[var]
 
-            #TODO: clean this up,
+            # TODO: clean this up,
             if var in calc_var_list:
                 for season in seasons:
                     if season not in case_seasonal[var]:
@@ -203,7 +200,7 @@ def seasonal_cycle(adfobj):
                                                                interval=season,
                                                                is_climo=None)
 
-                #Set months number to reflect actual month num, ie 1:Jan, 2:Feb, etc
+                # Set months number to reflect actual month num, ie 1:Jan, 2:Feb, etc
                 for month in np.arange(1,13,1):
                     case_monthly[var][month_dict[month]] = time_mean(ncfile, case_coords[var],
                                                                     time_avg="month",
@@ -214,13 +211,13 @@ def seasonal_cycle(adfobj):
         cases_monthly[case_name] = case_monthly
         cases_seasonal[case_name] = case_seasonal
     
-    #Make nested dictionary of all case data
+    # Make nested dictionary of all case data
     case_ds_dict = {"coords":cases_coords,
                     "monthly":cases_monthly,
                     "seasonal":cases_seasonal}
 
 
-    #Get Obs and seasonal and monthly averages
+    # Get Obs and seasonal and monthly averages
     """# SABER
     result = saber_data(adfobj, saber_file, saber_vars)
     if result is not None:
@@ -260,6 +257,10 @@ def seasonal_cycle(adfobj):
 
     #Zonal Mean Wind and Temp vs MERRA2 and SABER
     #--------------------------------------------
+
+    # Notify user that script has started:
+    print("\n\t  Generating Zonal Mean Wind and Temp vs MERRA2 and SABER...")
+
     # Comparison plot defaults    
     comp_plots_dict = res['comparison_plots']
     #cont_ranges = comp_plots_dict['cont_ranges']
@@ -300,6 +301,9 @@ def seasonal_cycle(adfobj):
 
     #Polar Cap Temps
     #---------------
+    # Notify user that script has started:
+    print("\n\t  Generating Polar Cap Temps...")
+
     pcap_dict = res['pcap_plots']
     for hemi in ["s","n"]:
 
@@ -338,6 +342,9 @@ def seasonal_cycle(adfobj):
 
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
+    # Notify user that script has started:
+    print("\n\t  Generating Cold Point Temp/Tropopause @ 90hPa...")
+
     var = "T"
     #vert_lev = 90
     try:
@@ -376,6 +383,8 @@ def seasonal_cycle(adfobj):
 
     #H20 Mixing Ratio @ 90 and 100hPa
     #----------------------------------
+    # Notify user that script has started:
+    print("\n\t  Generating H20 Mixing Ratio @ 90 and 100hPa...")
     var = "Q"
     try:
         vert_levs = var_dict[var]["plot_vert_levs"]
@@ -413,6 +422,8 @@ def seasonal_cycle(adfobj):
 
     #WACCM QBO
     #---------
+    # Notify user that script has started:
+    print("\n\t  Generating WACCM QBO...")
     plot_name = plot_loc / f"QBO_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
     if (not redo_plot) and plot_name.is_file():
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
@@ -495,7 +506,9 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
         waccm_zm = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
         waccm_zm = waccm_zm[calc_var_list].mean(dim='lon')
         
-        waccm_zm.to_netcdf(f"{save_path}/waccm_zm_{case_name}.nc")
+        #waccm_zm.to_netcdf(f"{save_path}/waccm_zm_{case_name}.nc")
+        save_path = Path(plot_locations)
+        waccm_zm.to_netcdf(save_path / f"/waccm_zm_{case_name}.nc")
 
     if return_ds:
         return waccm_zm
