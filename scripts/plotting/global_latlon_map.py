@@ -217,12 +217,12 @@ def global_latlon_map(adfobj):
             if not has_dims['has_lev']:
                 for s in seasons:
                     plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
-                    doplot[plot_name] = plot_file_op(adfobj, plot_name, var, case_name, s, web_category, redo_plot, "LatLon")
+                    doplot[plot_name] = plot_file_op(adfobj, plot_name, var, case_name, s, web_category, redo_plot, "LatLon", "Mean")
             else:
                 for pres in pres_levs:
                     for s in seasons:
                         plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
-                        doplot[plot_name] = plot_file_op(adfobj, plot_name, f"{var}_{pres}hpa", case_name, s, web_category, redo_plot, "LatLon")
+                        doplot[plot_name] = plot_file_op(adfobj, plot_name, f"{var}_{pres}hpa", case_name, s, web_category, redo_plot, "LatLon", "Mean")
             if all(value is None for value in doplot.values()):
                 print(f"All plots exist for {var}. Redo is {redo_plot}. Existing plots added to website data. Continue.")
                 continue
@@ -260,7 +260,7 @@ def global_latlon_map(adfobj):
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                            season=s, plot_type="LatLon")
+                                            season=s, plot_type="LatLon", ext="Mean")
 
             else: # => pres_levs has values, & we already checked that lev is in mdata (has_lev)
 
@@ -300,7 +300,7 @@ def global_latlon_map(adfobj):
 
                         #Add plot to website (if enabled):
                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, category=web_category,
-                                                season=s, plot_type="LatLon")
+                                                season=s, plot_type="LatLon", ext="Mean")
                     #End for (seasons)
                 #End for (pressure levels)
             #End if (plotting pressure levels)
@@ -311,7 +311,7 @@ def global_latlon_map(adfobj):
     print("  ...lat/lon maps have been generated successfully.")
 
 
-def plot_file_op(adfobj, plot_name, var, case_name, season, web_category, redo_plot, plot_type):
+def plot_file_op(adfobj, plot_name, var, case_name, season, web_category, redo_plot, plot_type, ext):
     """Check if output plot needs to be made or remade.
     
     Parameters
@@ -360,7 +360,7 @@ def plot_file_op(adfobj, plot_name, var, case_name, season, web_category, redo_p
         else:
             #Add already-existing plot to website (if enabled):
             adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                    season=season, plot_type=plot_type)
+                                    season=season, plot_type=plot_type ,ext=ext)
             return False  # False tells caller that file exists and not to overwrite
     else:
         return True
