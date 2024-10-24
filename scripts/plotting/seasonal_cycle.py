@@ -78,6 +78,20 @@ def seasonal_cycle(adfobj):
 
     nicknames = adfobj.case_nicknames["test_nicknames"]
 
+    #Grab history strings:
+    cam_hist_strs = adfobj.hist_string["test_hist_str"]
+
+    # Filter the list to include only strings that are exactly in the possible h0 strings
+    # - Search for either h0 or h0a
+    substrings = {"cam.h0","cam.h0a"}
+    case_hist_strs = []
+    for cam_case_str in cam_hist_strs:
+        # Check each possible h0 string
+        for string in cam_case_str:
+            if string in substrings:
+               case_hist_strs.append(string)
+               break
+
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
@@ -130,9 +144,16 @@ def seasonal_cycle(adfobj):
         #Get baeline case history location and add to hist loc list
         baseline_hist_locs = adfobj.get_baseline_info('cam_hist_loc')
         cam_hist_locs = cam_hist_locs + [baseline_hist_locs]
+
+        #Grab history string:
+        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+        # Filter the list to include only strings that are exactly in the substrings list
+        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+        hist_strs = case_hist_strs + base_hist_strs
     else:
         syear_cases = syear_cases + [""]
         eyear_cases = eyear_cases + [""]
+        hist_strs = case_hist_strs
     #End if
 
     climo_yrs = [syear_cases, eyear_cases]
@@ -153,12 +174,13 @@ def seasonal_cycle(adfobj):
     for idx,case_name in enumerate(case_names):
 
         hist_loc = cam_hist_locs[idx]
+        hist_str = hist_strs[idx]
 
         syr = syear_cases[idx]
         eyr = eyear_cases[idx]
 
         #Make or access the WACCM zonal mean file
-        ncfile = make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True)
+        ncfile = make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,return_ds=True)
 
         #Set up creation of individual CAM data dictionaries
         case_coords = {}
@@ -421,7 +443,7 @@ def seasonal_cycle(adfobj):
 # Helper functions
 ##################
 
-def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True):
+def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,return_ds=True):
     """
     Make zonal mean files from history monthly files
 
@@ -465,7 +487,8 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         h0_lists = []
 
         for yr in np.arange(int(syr),int(eyr)+1):
-            h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
+            #h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
+            h0_lists.append(sorted(glob.glob(f'{hist_loc}*{hist_str}.{yr}-*')))
 
         h0_list = list(chain(*h0_lists))
 
