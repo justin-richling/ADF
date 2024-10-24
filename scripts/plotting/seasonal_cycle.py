@@ -183,7 +183,7 @@ def seasonal_cycle(adfobj):
         case_coords = {}
         case_seasonal = {}
         case_monthly = {}
-        for index, var in enumerate(var_list):
+        for var in var_list:
 
             if var not in case_seasonal:
                 case_seasonal[var] = {}
@@ -218,29 +218,6 @@ def seasonal_cycle(adfobj):
 
 
     # Get Obs and seasonal and monthly averages
-    """# SABER
-    result = saber_data(adfobj, saber_file, saber_vars)
-    if result is not None:
-        # Function call was successful
-        saber, saber_monthly, saber_seasonal = result
-    else:
-        # Exception occurred
-        return
-    #End if
-
-    # MERRA2
-    result = merra_data(adfobj, merra_file, merra2_vars)
-    if result is not None:
-        # Function call was successful
-        merra2, merra2_monthly, merra2_seasonal = result
-    else:
-        # Exception occurred
-        return
-    #End if
-    """
-
-    
-
     saber, saber_monthly, saber_seasonal = saber_data(saber_file, saber_vars)
     merra2, merra2_monthly, merra2_seasonal = merra_data(merra_file, merra2_vars)
     #swoosh, swoosh_monthly, swoosh_seasonal = swoosh_data(filename = "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc")
@@ -267,6 +244,9 @@ def seasonal_cycle(adfobj):
 
     #for cam_var in ["U","T"]:
     for cam_var in comp_plots_dict['cam_vars']:
+        #Notify user of variable being plotted:
+        print(f"\t - zonal mean maps for {var}")
+
         #for interval in [6,12,"DJF", "JJA"]:
         for interval in comp_plots_dict['interval']:
             #Check if interval is integer (month number) or string (season)
@@ -306,6 +286,8 @@ def seasonal_cycle(adfobj):
 
     pcap_dict = res['pcap_plots']
     for hemi in ["s","n"]:
+        #Notify user of variable being plotted:
+        print(f"\t - polar temp maps for {hemi}")
 
         plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
@@ -355,6 +337,8 @@ def seasonal_cycle(adfobj):
         print(errmsg)
 
     for vert_lev in vert_levs:
+        #Notify user of variable being plotted:
+        print(f"\t - cold point temp maps for {vert_lev}hPa")
         plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
@@ -394,6 +378,8 @@ def seasonal_cycle(adfobj):
         print(errmsg)
 
     for vert_lev in vert_levs:
+        #Notify user of variable being plotted:
+        print(f"\t - mixing ratio maps for {vert_lev}hPa")
         plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
