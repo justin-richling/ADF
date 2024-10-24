@@ -801,7 +801,7 @@ class AdfInfo(AdfConfig):
                 break
             else:
                 logmsg = "get years for time series:"
-                logmsg = f"\tVar '{var}' not in dataset, skip to next to try and find climo years..."
+                logmsg = f"\n\tVar '{var}' not in dataset, skip to next to try and find climo years..."
                 self.debug_log(logmsg)
 
         #Read in file(s)
