@@ -1257,7 +1257,7 @@ budget_tables:
   AEROSOLS: ['SOA', 'SALT', 'DUST', 'POM', 'BC', 'SO4']
 
   # Pickle intermidiate data dictionaries
-  pkl_data: True
+  json_data: True
 
 #-----------
 #End of File
