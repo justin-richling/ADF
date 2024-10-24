@@ -272,17 +272,17 @@ def aerosol_gas_tables(adfobj):
         # Check to see if pickle the intermidiate data calculations
         # NOTE: The calculations can take a long time, so this can help save progress!
         if json_data:
-            dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
-            dc_pkl = f'{case}_Dic_crit.pickle'
+            dsvc_json = f'{case}_Dic_scn_var_comp.json'
+            dc_json = f'{case}_Dic_crit.json'
 
             # Check if both files already exist
-            if ((output_location / dsvc_pkl).is_file()) and ((output_location / dc_pkl).is_file()):
+            if ((output_location / dsvc_json).is_file()) and ((output_location / dc_json).is_file()):
 
                 # Retrieve from JSON file
-                with open(output_location / dsvc_pkl, "r") as f:
+                with open(output_location / dsvc_json, "r") as f:
                     loaded_data = json.load(f)
                 # Retrieve from JSON file
-                with open(output_location / dc_pkl, "r") as f:
+                with open(output_location / dc_json, "r") as f:
                     loaded_data = json.load(f)
 
 
@@ -294,12 +294,12 @@ def aerosol_gas_tables(adfobj):
                 Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS)
 
                 # Save to JSON file
-                with open(output_location / dsvc_pkl, "w") as f:
-                    json.dump(data, f)
+                with open(output_location / dsvc_json, "w") as f:
+                    json.dump(Dic_scn_var_comp[case], f)
 
                 # Save to JSON file
-                with open(output_location / dc_pkl, "w") as f:
-                    json.dump(data, f)
+                with open(output_location / dc_json, "w") as f:
+                    json.dump(Dic_crit, f)
 
         # Regional refinement
         # NOTE: This function 'Inside_SE' is unavailable at the moment! - JR 10/2024
