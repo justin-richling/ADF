@@ -102,10 +102,6 @@ def amwg_table(adf):
     # VARIABLE-NAME, RUN VALUE, OBS VALUE, RUN-OBS, RMSE
     #----------------------
 
-    #Notify user that script has started:
-    print("\n  Calculating AMWG variable table...")
-
-
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     var_list     = adf.diag_var_list
@@ -166,6 +162,9 @@ def amwg_table(adf):
             raise AdfError(errmsg)
         #Write to debug log if enabled:
         adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
+
+        #Notify user that script has started:
+        print(f"\n  Calculating AMWG variable table for '{case_name}'...")
 
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"

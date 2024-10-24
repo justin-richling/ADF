@@ -508,7 +508,7 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
         
         #waccm_zm.to_netcdf(f"{save_path}/waccm_zm_{case_name}.nc")
         save_path = Path(plot_locations)
-        waccm_zm.to_netcdf(save_path / f"/waccm_zm_{case_name}.nc")
+        waccm_zm.to_netcdf(save_path / f"waccm_zm_{case_name}.nc")
 
     if return_ds:
         return waccm_zm
