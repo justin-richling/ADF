@@ -18,6 +18,7 @@ except ImportError:
     sys.exit(1)
 #End except
 
+from adf_base import AdfError
 
 def aerosol_gas_tables(adfobj):
     '''
@@ -206,15 +207,15 @@ def aerosol_gas_tables(adfobj):
         nicknames[case] = nicknames_list[case_idx]
         if hist_locs[case_idx] is None:
             errmsg = f"History files directory '{hist_locs[case_idx]}' not found.  Script is exiting."
-            #raise AdfError(errmsg)
-            print(errmsg)
-            continue
+            raise AdfError(errmsg)
+            #print(errmsg)
+            #continue
         #Check that history file input directory actually exists:
         if not Path(hist_locs[case_idx]).is_dir():
             errmsg = f"History files directory '{hist_locs[case_idx]}' not found.  Script is exiting."
-            #raise AdfError(errmsg)
-            print(errmsg)
-            continue
+            raise AdfError(errmsg)
+            #print(errmsg)
+            #continue
 
         #Write to debug log if enabled:
         adfobj.debug_log(f"DEBUG: location of files is {str(hist_locs[case_idx])}")
@@ -782,6 +783,7 @@ def fill_dic_SE(adfobj, dic_SE, variables, ListVars, ext1_SE, AEROSOLS, MW, AVO,
                     dic_SE[var+'_LNO']['PS'+ext1_SE]=0
                 # End if
             # End if (aerosols or gases)
+        # End for
     return dic_SE
 #####
 
