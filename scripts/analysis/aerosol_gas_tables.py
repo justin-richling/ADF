@@ -7,8 +7,7 @@ import warnings  # use to warn user about missing files.
 from datetime import datetime
 import numpy as np
 
-import pickle
-#import json
+import json
 import itertools
 
 try:
@@ -273,17 +272,21 @@ def aerosol_gas_tables(adfobj):
 
         # Check to see if pickle the intermidiate data calculations
         # NOTE: The calculations can take a long time, so this can help save progress!
-        if pkl_data:
-            dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
-            dc_pkl = f'{case}_Dic_crit.pickle'
+        if json_data:
+            dsvc_json = f'{case}_Dic_scn_var_comp.json'
+            dc_json = f'{case}_Dic_crit.json'
 
             # Check if both files already exist
-            if ((output_location / dsvc_pkl).is_file()) and ((output_location / dc_pkl).is_file()):
-                with open(output_location / dsvc_pkl, 'rb') as handle:
-                    Dic_scn_var_comp[case] = pickle.load(handle)
+            if ((output_location / dsvc_json).is_file()) and ((output_location / dc_json).is_file()):
 
-                with open(output_location / dc_pkl, 'rb') as handle2:
-                    Dic_crit = pickle.load(handle2)
+                # Retrieve from JSON file
+                with open(output_location / dsvc_json, "r") as f:
+                    loaded_data = json.load(f)
+                # Retrieve from JSON file
+                with open(output_location / dc_json, "r") as f:
+                    loaded_data = json.load(f)
+
+
             else:
                 print("Pickle file not found, need to create the files.")
 
@@ -291,11 +294,13 @@ def aerosol_gas_tables(adfobj):
                 print(f"\t Calculating values for {case}")
                 Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS)
 
-                with open(output_location / dsvc_pkl, 'wb') as handle:
-                    pickle.dump(Dic_scn_var_comp[case], handle, protocol=pickle.HIGHEST_PROTOCOL)
+                # Save to JSON file
+                with open(output_location / dsvc_json, "w") as f:
+                    json.dump(Dic_scn_var_comp[case], f)
 
-                with open(output_location / dc_pkl, 'wb') as handle:
-                    pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)
+                # Save to JSON file
+                with open(output_location / dc_json, "w") as f:
+                    json.dump(Dic_crit, f)
 
         # Regional refinement
         # NOTE: This function 'Inside_SE' is unavailable at the moment! - JR 10/2024
