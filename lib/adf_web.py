@@ -55,12 +55,11 @@ class _WebData:
     needed by the website generator.
     """
 
-    def __init__(self, web_data, web_name, case_name,ext=None,
+    def __init__(self, web_data, web_name, case_name,ext="Mean",
                  category = None,
                  season = None,
                  non_season = False,
                  plot_type = "Special",
-                 #ext = "Mean",
                  data_frame = False,
                  html_file  = None,
                  asset_path = None,
@@ -195,12 +194,11 @@ class AdfWeb(AdfObs):
 
     #########
 
-    def add_website_data(self, web_data, web_name, case_name,ext=None,
+    def add_website_data(self, web_data, web_name, case_name,ext="Mean",
                          category = None,
                          season = None,
                          non_season = False,
                          plot_type = "Special",
-                         #ext = "Mean",
                          multi_case=False):
 
         """
@@ -657,7 +655,7 @@ class AdfWeb(AdfObs):
                                        "var_title": web_data.name,
                                        "ext": web_data.ext,
                                        "season_title": web_data.season,
-                                       "case_name": web_data.case,
+                                       "case_name": case1,
                                        "case_yrs": case_yrs,
                                        "base_name": data_name,
                                        "baseline_yrs": baseline_yrs,
@@ -700,6 +698,7 @@ class AdfWeb(AdfObs):
             if web_data.case == 'multi-case':
                 plot_types = multi_plot_type_html
             else:
+                case1 = web_data.case
                 plot_types = plot_type_html
             plot_types = plot_type_html
             #End if
@@ -723,7 +722,7 @@ class AdfWeb(AdfObs):
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
             index_rndr = index_tmpl.render(title=index_title,
-                                            case_name=web_data.case,
+                                            case_name=case1,
                                             base_name=data_name,
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
