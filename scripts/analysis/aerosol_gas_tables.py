@@ -949,7 +949,7 @@ def SEbudget(adfobj,dic_SE,data_dir,files,var,ext1_SE,**kwargs):
 
         ds=xr.open_dataset(Path(data_dir) / files[file])
 
-
+        # Calculate these just once
         if file==0:
             mock_2d=np.zeros_like(np.array(ds['PS'+ext1_SE].isel(time=0)))
             mock_3d=np.zeros_like(np.array(ds['U'+ext1_SE].isel(time=0)))
@@ -1276,5 +1276,5 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
 
     # Save table to CSV and add table dataframe to website (if enabled)
     table_df.to_csv(output_csv_file, index=False)
-    adfobj.add_website_data(table_df, chem_type, case, plot_type=f"Tables")
+    adfobj.add_website_data(table_df, chem_type, case, plot_type="Tables")
 #####
