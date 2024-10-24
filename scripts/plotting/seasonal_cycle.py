@@ -489,10 +489,12 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
         output_location.mkdir(parents=True)
 
     plot_locations = adfobj.plot_location[0]
+    save_path = Path(plot_locations)
+    zm_file = save_path / f"waccm_zm_{case_name}.nc"
 
     #Check if file exists. If so, open the file or make it if not
-    if Path(f"{save_path}/waccm_zm_{case_name}.nc").exists():
-        waccm_zm = xr.open_mfdataset(f"{save_path}/waccm_zm_{case_name}.nc")
+    if zm_file.exists():
+        waccm_zm = xr.open_mfdataset(zm_file)
         
     else:
         h0_lists = []
@@ -506,9 +508,7 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
         waccm_zm = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
         waccm_zm = waccm_zm[calc_var_list].mean(dim='lon')
         
-        #waccm_zm.to_netcdf(f"{save_path}/waccm_zm_{case_name}.nc")
-        save_path = Path(plot_locations)
-        waccm_zm.to_netcdf(save_path / f"waccm_zm_{case_name}.nc")
+        waccm_zm.to_netcdf(zm_file)
 
     if return_ds:
         return waccm_zm
