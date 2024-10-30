@@ -256,6 +256,8 @@ def tem(adf):
             elif (redo_plot) and plot_name.is_file():
                 plot_name.unlink()"""
 
+            tem_loc = tem_case_locs[idx]
+
             #Extract start and end year values:
             start_year = syear_cases[idx]
             end_year   = eyear_cases[idx]
