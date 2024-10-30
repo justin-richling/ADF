@@ -273,8 +273,10 @@ class AdfInfo(AdfConfig):
                     msg = "Checking history files:\n"
                     msg += f"\tThere are no history files in '{starting_location}'."
                     self.debug_log(msg)
-                    emsg = f"{data_name} starting_location '{starting_location}': No history files found!\n"
-                    emsg += "\tTry checking the path 'cam_hist_loc' or the 'hist_str' in 'diag_cam_baseline_climo' "
+                    emsg = f"{data_name} starting_location {starting_location}: "
+                    emsg += f"No history files found for {base_hist_str}!\n"
+                    emsg += "\tTry checking the path 'cam_hist_loc' or the 'hist_str' "
+                    emsg += " in 'diag_cam_baseline_climo' "
                     emsg += "section in your config file are correct..."
                     self.end_diag_fail(emsg)
 
@@ -466,8 +468,10 @@ class AdfInfo(AdfConfig):
                     msg = "Checking history files:\n"
                     msg += f"\tThere are no history files in '{starting_location}'."
                     self.debug_log(msg)
-                    emsg = f"{case_name} starting_location {starting_location}: No history files found!\n"
-                    emsg += "\tTry checking the path 'cam_hist_loc' or the 'hist_str' in 'diag_cam_climo' "
+                    emsg = f"{case_name} starting_location {starting_location}: "
+                    emsg += f"No history files found for {hist_str}!\n"
+                    emsg += "\tTry checking the path 'cam_hist_loc' or the 'hist_str' "
+                    emsg += "in 'diag_cam_climo' "
                     emsg += "section in your config file are correct..."
                     self.end_diag_fail(emsg)
 
