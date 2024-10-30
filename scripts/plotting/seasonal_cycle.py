@@ -484,7 +484,7 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
         h0_lists = []
 
         for yr in np.arange(int(syr),int(eyr)+1):
-            h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
+            h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*.nc')))
 
         h0_list = list(chain(*h0_lists))
 
