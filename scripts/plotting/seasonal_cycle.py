@@ -488,6 +488,9 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
 
         h0_list = list(chain(*h0_lists))
 
+        print("calc_var_list",calc_var_list)
+        print("h0_list",h0_list,"\n")
+
         waccm_zm = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
         waccm_zm = waccm_zm[calc_var_list].mean(dim='lon')
         
