@@ -117,7 +117,7 @@ def tem(adf):
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     #Baseline TEM location
-    input_loc_idx = Path(tem_base_loc) / base_name
+    input_loc_idx = Path(tem_base_loc)
 
     #Check if comparing against obs
     if adf.compare_obs:
