@@ -462,7 +462,7 @@ def make_zm_files(adfobj,hist_loc,case_name,calc_var_list,syr,eyr,return_ds=True
        - case specific file name with case data, saved to where???????
     """
 
-    save_path = adfobj.get_basic_info('diag_loc', required=True)
+    save_path = adfobj.get_basic_info('cam_diag_plot_loc', required=True)
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     save_path = adfobj.plot_location[0]
