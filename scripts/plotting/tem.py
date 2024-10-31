@@ -345,6 +345,7 @@ def tem(adf):
                     oseasons.attrs['units'] = "K"
                     pmid = pmid.mean(dim="lon")
                     mseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,mseasons* units.kelvin)
+                    print("AHHH",np.max(mseasons.values))
                     oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
 
 
