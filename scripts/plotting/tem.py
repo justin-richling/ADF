@@ -297,6 +297,7 @@ def tem(adf):
                 if var == "thzm":
                     import metpy.calc.thermo as thermo
                     from metpy.units import units
+                    import metpy.constants as mconst
 
                     """
                     from metpy.calc import temperature_from_potential_temperature
@@ -348,9 +349,20 @@ def tem(adf):
                     #print("AHHH",np.max(mseasons.values))
                     #oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
 
-                    mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
-                    print("AHHH",np.max(mseasons.values))
-                    oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
+                    #mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
+                    #print("AHHH",np.max(mseasons.values))
+                    #oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
+
+                    # exner_function(pressure, reference_pressure=mpconsts.P0)
+                    # potential_temperature * exner_function(pressure)
+                    exner_function = (pmid / mconst.P0)**mconst.kappa
+                    #(pmid / mconst.P0)**mconst.kappa
+
+                    mseasons = mseasons * exner_function
+                    oseasons = oseasons * exner_function
+
+
+
 
 
                 #difference: each entry should be (lat, lon)
