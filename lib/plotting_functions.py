@@ -1827,31 +1827,32 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         cmap1 = 'coolwarm'
     #End if
 
-    if 'contour_levels' in kwargs:
+    if 'contour_levels' in kwargs: # list: Check if contours are specified as list
         levels1 = kwargs['contour_levels']
         # Check if any item in the list is a string
         contains_string = any(isinstance(item, str) for item in levels1)
         if contains_string:
             levels1 = [float(item) for item in levels1]
         #print("\nlevels1",levels1,"\n")
-        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    elif 'contour_levels_range' in kwargs:
+    elif 'contour_levels_range' in kwargs: # arange: Check if the user wants to generate a list from start, stop, step
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
 
         levels1 = np.arange(*kwargs['contour_levels_range'])
-        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+            norm = mcolors.BoundaryNorm(bounds, cmap.N, clip=False, extend='both')
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    else:
+    else: # linspace: Check if user wants to generate a list from start, stop, num_steps
         levels1 = np.linspace(minval, maxval, 12)
-        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
         else:
@@ -1874,7 +1875,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         #End if
     #End if
 
-# Difference options -- Check in kwargs for colormap and levels
+    # Difference options -- Check in kwargs for colormap and levels
     if "diff_colormap" in kwargs:
         cmapdiff = kwargs["diff_colormap"]
     else:
