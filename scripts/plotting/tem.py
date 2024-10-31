@@ -355,7 +355,7 @@ def tem(adf):
 
                     # exner_function(pressure, reference_pressure=mpconsts.P0)
                     # potential_temperature * exner_function(pressure)
-                    exner_function = (pmid / mconst.P0)**mconst.kappa
+                    exner_function = (pmid / mconst.P0*100)**mconst.kappa
                     #(pmid / mconst.P0)**mconst.kappa
 
                     mseasons = mseasons * exner_function
