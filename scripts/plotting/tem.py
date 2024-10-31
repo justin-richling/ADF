@@ -363,8 +363,8 @@ def tem(adf):
                     print("AHHH",np.max(mseasons.values))
 
 
-                    print("mseasons",np.max(mseasons_metpy)==np.max(mseasons))
-                    print("oseasons",np.max(oseasons_metpy)==np.max(oseasons))
+                    #print("mseasons",np.max(mseasons_metpy)==np.max(mseasons))
+                    #print("oseasons",np.max(oseasons_metpy)==np.max(oseasons))
 
 
 
