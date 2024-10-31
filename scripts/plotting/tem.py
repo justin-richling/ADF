@@ -296,6 +296,17 @@ def tem(adf):
 
                 if var == "thzm":
                     import metpy.calc.thermo as thermo
+                    from metpy.units import units
+
+                    """
+                    from metpy.calc import temperature_from_potential_temperature
+                    # potential temperature
+                    theta = np.array([ 286.12859679, 288.22362587]) * units.kelvin
+                    p = 850 * units.mbar
+                    T = temperature_from_potential_temperature(p, theta)
+                    """
+
+
                     #path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
                     #path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
                     #ds_pmid = xr.open_dataset(path+"f.cam6_3_132.FMTHIST_ne30.sponge.001.cam.h0.PMID.199601-200512.nc")
@@ -333,8 +344,8 @@ def tem(adf):
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
                     pmid = pmid.mean(dim="lon")
-                    mseasons = thermo.temperature_from_potential_temperature(pmid,mseasons)
-                    oseasons = thermo.temperature_from_potential_temperature(pmid,oseasons)
+                    mseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,mseasons* units.kelvin)
+                    oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
 
 
                 #difference: each entry should be (lat, lon)
