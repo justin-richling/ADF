@@ -194,13 +194,13 @@ def tem(adf):
             #Open the TEM file
             output_loc_idx = Path(tem_loc) / case_name
             case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
-            tem = output_loc_idx / case_file_name
+            tem_case = output_loc_idx / case_file_name
 
             #Grab the data for the TEM netCDF files
-            if tem.is_file():
-                ds = xr.open_dataset(tem)
+            if tem_case.is_file():
+                ds = xr.open_dataset(tem_case)
             else:
-                print(f"\t'{case_file_name}' does not exist. TEM plots will be skipped.")
+                print(f"\t'{tem_case}' does not exist. TEM plots will be skipped.")
                 return
 
             #Loop over season dictionary:
