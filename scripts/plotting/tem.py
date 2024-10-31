@@ -192,7 +192,7 @@ def tem(adf):
             end_year   = eyear_cases[idx]
 
             #Open the TEM file
-            output_loc_idx = Path(tem_loc) / case_name
+            output_loc_idx = Path(tem_loc)
             case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
             tem_case = output_loc_idx / case_file_name
 
