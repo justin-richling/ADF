@@ -360,6 +360,7 @@ def tem(adf):
 
                     mseasons = mseasons * exner_function
                     oseasons = oseasons * exner_function
+                    print("AHHH",np.max(mseasons.values))
 
 
 
