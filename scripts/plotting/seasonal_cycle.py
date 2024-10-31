@@ -487,11 +487,11 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
 
         for yr in np.arange(int(syr),int(eyr)+1):
             #h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
-            h0_lists.append(sorted(glob.glob(f'{hist_loc}*{hist_str}.{yr}-*')))
+            h0_lists.append(sorted(glob.glob(f'{hist_loc}*{hist_str}.{yr}-*.nc')))
 
         h0_list = list(chain(*h0_lists))
 
-        waccm_zm = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list,compat='override')
+        waccm_zm = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
         waccm_zm = waccm_zm[calc_var_list].mean(dim='lon')
         
         waccm_zm.to_netcdf(zm_file)
