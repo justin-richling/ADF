@@ -32,10 +32,13 @@ def create_TEM_files(adf):
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
 
     if "qbo" in adf.plotting_scripts:
-        var_list = ['uzm','epfy','epfz','vtem','wtem',
+        #var_list = ['uzm','epfy','epfz','vtem','wtem',
+        #            'psitem','utendepfd','utendvtem','utendwtem']
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
     else:
-        var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     tem_locs = []
     
