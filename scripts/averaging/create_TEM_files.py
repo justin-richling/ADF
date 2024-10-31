@@ -425,6 +425,12 @@ def calc_tem(ds):
     vzm.attrs['long_name'] = 'Zonal-Mean meridional wind'
     vzm.attrs['units'] = 'm/s'
 
+    thzm.attrs['long_name'] = 'Zonal-Mean potential temperature'
+    thzm.attrs['units'] = 'K'
+
+    #tzm.attrs['long_name'] = 'Zonal-Mean temperature'
+    #tzm.attrs['units'] = 'K'
+
     epfy.attrs['long_name'] = 'northward component of E-P flux'
     epfy.attrs['units'] = 'm3/s2'
 
@@ -462,6 +468,7 @@ def calc_tem(ds):
                                       time_bnds = ds.time_bnds,
                                       uzm = uzm,
                                       vzm = vzm,
+                                      thzm = thzm,
                                       epfy = epfy,
                                       epfz = epfz,
                                       vtem = vtem,
