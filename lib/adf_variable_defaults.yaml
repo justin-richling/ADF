@@ -1143,7 +1143,7 @@ thzm:
   #contour_levels_range: [185,300,6]
   contour_levels_range: [185,300,6]
   #diff_contour_range: [-40,41,5]
-  diff_contour_range: [-20,21,2]
+  diff_contour_range: [-10,10,1]
   ylim: [1e3,1e-1]
   mpl:
     colorbar:
