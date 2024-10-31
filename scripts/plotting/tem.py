@@ -30,6 +30,9 @@ def tem(adf):
 
     """
 
+    # Notify user that script has started:
+    print("\n  Generating TEM plots ...")
+
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     plot_location = Path(adf.plot_location[0])
@@ -131,6 +134,7 @@ def tem(adf):
     
     #Set full path for baseline/obs file
     tem_base = input_loc_idx / base_file_name
+    print("tem_base",tem_base)
 
     #Check to see if baseline/obs TEM file exists    
     if tem_base.is_file():
