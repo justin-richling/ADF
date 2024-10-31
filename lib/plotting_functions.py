@@ -1847,7 +1847,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-            norm = mcolors.BoundaryNorm(bounds, cmap.N, clip=False, extend='both')
+            #norm = mcolors.BoundaryNorm(bounds, cmap.N, clip=False, extend='both')
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     else: # linspace: Check if user wants to generate a list from start, stop, num_steps
