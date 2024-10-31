@@ -146,6 +146,7 @@ def tem(adf):
         print(f"\t'{base_file_name}' does not exist. TEM plots will be skipped.")
         return
 
+    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
     #Loop over variables:
     for var in var_list:
@@ -295,9 +296,15 @@ def tem(adf):
 
                 if var == "thzm":
                     import metpy.calc.thermo as thermo
-                    path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
-                    path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
-                    ds_pmid = xr.open_dataset(path+"f.cam6_3_132.FMTHIST_ne30.sponge.001.cam.h0.PMID.199601-200512.nc")
+                    #path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
+                    #path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
+                    #ds_pmid = xr.open_dataset(path+"f.cam6_3_132.FMTHIST_ne30.sponge.001.cam.h0.PMID.199601-200512.nc")
+
+                    #path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
+                    #path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
+                    path = input_ts_locs[idx]
+                    ds_pmid = xr.open_dataset(f"{path}{case_name}.cam.h0.PMID.{start_year}01-{end_year}12.nc")
+
 
                     ds_pmid_interp = ds_pmid.interp(lat=mseasons.zalat,method="nearest")
                     pmid = ds_pmid_interp["PMID"]
