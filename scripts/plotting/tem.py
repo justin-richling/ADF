@@ -380,8 +380,8 @@ def tem(adf):
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
-                if var == "utendepfd":
-                    print("clevs",clevs,"\n")
+                if ((var == "utendepfd") or (var == "epfz")) and (s=="ANN"):
+                    print(f"clevs for {var}",clevs,"\n")
                 norm = cp_info['norm1']
                 cmap = cp_info['cmap1']
                 levs_diff = np.unique(np.array(cp_info['levelsdiff']))
