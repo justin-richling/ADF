@@ -390,9 +390,9 @@ def tem(adf):
                 lats, levs = np.meshgrid(lat, lev)
                 print("highest vertical lev",np.min(levs),"\n")
                 #filtered_levs = levs[levs >= np.min(levs)]
-                # Find the next value above `value` in a log scale
-                next_value = 10 ** (np.ceil(np.log10(np.min(levs))))
-                next_value
+                # Find the next value below highest vertical level
+                prev_major_tick = 10 ** (np.floor(np.log10(np.min(levs))))
+                prev_major_tick
 
                 # Set padding for colorbar form axis
                 cmap_pad = 0.005
@@ -485,7 +485,7 @@ def tem(adf):
 
                         #print("y_lims",y_lims,"\n")
                         np.min(levs)
-                        y_lims[-1]=np.min(levs)
+                        y_lims[-1]=prev_major_tick #np.min(levs)
                         print("y_lims",y_lims,"\n")
                         a.set_ylim(y_lims)
                     else:
