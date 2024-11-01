@@ -471,6 +471,7 @@ def tem(adf):
                 for i,a in enumerate(ax[:]):
                     a.set_yscale("log")
                     a.set_xlabel("Latitude")
+                    # Only plot y-axis label for test case
                     if i == 0:
                         a.set_ylabel('Pressure [hPa]', va='center', rotation='vertical')
                     if 'ylim' in vres:
@@ -481,10 +482,10 @@ def tem(adf):
 
                 # Format color bars
                 print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
-                plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
-                # Remove the label if you don't want it on this colorbar
-                cp_info['colorbar_opt'].pop("label", None)
                 plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
+                # Remove the colorbar label for baseline
+                cp_info['colorbar_opt'].pop("label", None)
+                plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
 
                 #Set titles of subplots
                 #Set figure title
