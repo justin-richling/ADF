@@ -389,7 +389,7 @@ def tem(adf):
                 lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
                 print("highest vertical lev",np.min(levs),"\n")
-                filtered_levs = levs[levs >= np.min(levs)]
+                #filtered_levs = levs[levs >= np.min(levs)]
                 # Find the next value above `value` in a log scale
                 next_value = 10 ** (np.ceil(np.log10(np.min(levs))))
                 next_value
@@ -408,11 +408,11 @@ def tem(adf):
                 ax = [ax1,ax2,ax3]
 
                 #Contour fill
-                img0 = ax[0].contourf(lats, filtered_levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
-                img1 = ax[1].contourf(lats, filtered_levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
+                img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
+                img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
                 #Add contours for highlighting
-                c0 = ax[0].contour(lats,filtered_levs,mseasons,levels=clevs[::2], norm=norm,
+                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm,
                                     colors="k", linewidths=0.5)
 
                 #Check if contour labels need to be adjusted
@@ -433,7 +433,7 @@ def tem(adf):
                     plt.clabel(c0, inline=True, fontsize=8, levels=c0.levels)
 
                 #Add contours for highlighting
-                c1 = ax[1].contour(lats,filtered_levs,oseasons,levels=clevs[::2], norm=norm,
+                c1 = ax[1].contour(lats,levs,oseasons,levels=clevs[::2], norm=norm,
                                     colors="k", linewidths=0.5)
 
                 #Check if contour labels need to be adjusted
@@ -465,9 +465,9 @@ def tem(adf):
                     ax[2].text(prop_x, prop_y, empty_message,
                                     transform=ax[2].transAxes, bbox=props)
                 else:
-                    img2 = ax[2].contourf(lats, filtered_levs, dseasons, cmap="BrBG", levels=clevs_diff,
+                    img2 = ax[2].contourf(lats, levs, dseasons, cmap="BrBG", levels=clevs_diff,
                                             norm=cp_info['normdiff'])
-                    ax[2].contour(lats, filtered_levs, dseasons, colors="k", linewidths=0.5,
+                    ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
                                     levels=clevs_diff[::2], norm=cp_info['normdiff'])
                     cp_info['diff_colorbar_opt']["label"] = cp_info['colorbar_opt']["label"]
                     plt.colorbar(img2, ax=ax[2], location='right', pad=cmap_pad,**cp_info['diff_colorbar_opt'])
@@ -482,6 +482,9 @@ def tem(adf):
                         a.set_ylabel('Pressure [hPa]', va='center', rotation='vertical')
                     if 'ylim' in vres:
                         y_lims = [float(lim) for lim in vres['ylim']]
+
+                        print("y_lims",y_lims,"\n")
+                        np.min(levs)
                         a.set_ylim(y_lims)
                     else:
                         a.set_ylim(a.get_ylim()[::-1])
