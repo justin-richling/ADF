@@ -482,6 +482,8 @@ def tem(adf):
                 # Format color bars
                 print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
                 plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
+                # Remove the label if you don't want it on this colorbar
+                cp_info['colorbar_opt'].pop("label", None)
                 plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
 
                 #Set titles of subplots
