@@ -388,7 +388,7 @@ def tem(adf):
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
-                print("max lev",np.max(levs),"\n")
+                print("highest vertical lev",np.min(levs),"\n")
 
                 # Set padding for colorbar form axis
                 cmap_pad = 0.005
