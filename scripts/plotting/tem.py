@@ -467,10 +467,12 @@ def tem(adf):
                     plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
 
                 #Format y-axis
-                for a in ax[:]:
+                #for a in ax[:]:
+                for i,a in enumerate(ax[:]):
                     a.set_yscale("log")
                     a.set_xlabel("Latitude")
-                    a.set_ylabel('Pressure [hPa]', va='center', rotation='vertical')
+                    if i == 0:
+                        a.set_ylabel('Pressure [hPa]', va='center', rotation='vertical')
                     if 'ylim' in vres:
                         y_lims = [float(lim) for lim in vres['ylim']]
                         a.set_ylim(y_lims)
@@ -478,6 +480,7 @@ def tem(adf):
                         a.set_ylim(a.get_ylim()[::-1])
 
                 # Format color bars
+                print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
                 plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
                 plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
 
