@@ -1265,7 +1265,7 @@ utendepfd:
   colormap: "Spectral"
   #contour_levels_range: [-2e-4,2e-4,2e-5]
   #contour_adjust: 1e-4
-  contour_levels: [-0.3,-0.2,-0.1e,-0.08,-0.06,-0.04,-0.02,-0.01,0,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.3]
+  contour_levels: [-0.3,-0.2,-0.1,-0.08,-0.06,-0.04,-0.02,-0.01,0,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.3]
   #contour_levels: [-3e-4,-2e-4,-1e-4,-0.8e-4,-0.6e-4,-0.4e-4,-0.2e-4,-0.1e-4,0,0.1e-4,0.2e-4,0.4e-4,0.6e-4,0.8e-4,1e-4,2e-4,3e-4]
   non_linear_levels: True
   diff_contour_range: [-0.1,0.11,.01]
@@ -1274,7 +1274,7 @@ utendepfd:
   mpl:
     colorbar:
       #ticks: [-0.5,0.5,0.05]
-      label : "m/s2"
+      label : "mm/s2"
   long_name: EP flux divergence ($\nabla \cdot F$)
   #long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
   obs_file: "TEM_ERA5.nc"
