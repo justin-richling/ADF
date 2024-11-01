@@ -372,8 +372,9 @@ def tem(adf):
 
 
 
-
-
+                if var == "utendepfd":
+                    mseasons = mseasons*1000
+                    oseasons = oseasons*1000
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
                 
