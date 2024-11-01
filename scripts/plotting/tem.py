@@ -393,7 +393,7 @@ def tem(adf):
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Set padding for colorbar form axis
-                cmap_pad = 0.01
+                cmap_pad = 0
 
                 # create figure object
                 fig = plt.figure(figsize=(14,10))
