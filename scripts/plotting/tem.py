@@ -464,7 +464,8 @@ def tem(adf):
                                             norm=cp_info['normdiff'])
                     ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
                                     levels=levs_diff[::2], norm=cp_info['normdiff'])
-                    plt.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
+                    cp_info['diff_colorbar_opt']["label"] = cp_info['colorbar_opt']["label"]
+                    plt.colorbar(img2, ax=ax[2], location='right', pad=0.0,**cp_info['diff_colorbar_opt'])
 
                 #Format y-axis
                 #for a in ax[:]:
@@ -482,10 +483,10 @@ def tem(adf):
 
                 # Format color bars
                 print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
-                plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
+                plt.colorbar(img1, ax=ax[1], location='right', pad=0.0,**cp_info['colorbar_opt'])
                 # Remove the colorbar label for baseline
                 cp_info['colorbar_opt'].pop("label", None)
-                plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
+                plt.colorbar(img0, ax=ax[0], location='right', pad=0.0,**cp_info['colorbar_opt'])
 
                 #Set titles of subplots
                 #Set figure title
