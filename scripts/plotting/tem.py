@@ -381,15 +381,14 @@ def tem(adf):
                     print(f"clevs for {var}",clevs,"\n")
                 norm = cp_info['norm1']
                 cmap = cp_info['cmap1']
-                levs_diff = np.unique(np.array(cp_info['levelsdiff']))
+                clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
-
-                print("max lev",np.max(levs),"\n")
 
                 # mesh for plots:
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
+                print("max lev",np.max(levs),"\n")
 
                 # Set padding for colorbar form axis
                 cmap_pad = 0.005
@@ -462,10 +461,10 @@ def tem(adf):
                     ax[2].text(prop_x, prop_y, empty_message,
                                     transform=ax[2].transAxes, bbox=props)
                 else:
-                    img2 = ax[2].contourf(lats, levs, dseasons, cmap="BrBG", levels=levs_diff,
+                    img2 = ax[2].contourf(lats, levs, dseasons, cmap="BrBG", levels=clevs_diff,
                                             norm=cp_info['normdiff'])
                     ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
-                                    levels=levs_diff[::2], norm=cp_info['normdiff'])
+                                    levels=clevs_diff[::2], norm=cp_info['normdiff'])
                     cp_info['diff_colorbar_opt']["label"] = cp_info['colorbar_opt']["label"]
                     plt.colorbar(img2, ax=ax[2], location='right', pad=cmap_pad,**cp_info['diff_colorbar_opt'])
 
