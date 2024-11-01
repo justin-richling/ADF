@@ -383,6 +383,9 @@ def tem(adf):
                 cmap = cp_info['cmap1']
                 levs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
+
+                print("max lev",np.max(levs),"\n")
+
                 # mesh for plots:
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
