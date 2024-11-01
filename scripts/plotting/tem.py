@@ -422,8 +422,8 @@ def tem(adf):
                 #         indicate that it is e5.
                 fmt = {}
                 if 'contour_adjust' in vres:
-                    strs = c0.levels/float(vres['contour_adjust'])
-                    for l, str0 in zip(c0.levels, strs):
+                    test_strs = c0.levels/float(vres['contour_adjust'])
+                    for l, str0 in zip(c0.levels, test_strs):
                         fmt[l] = str0
 
                     # Add contour labels
@@ -443,8 +443,8 @@ def tem(adf):
                 #         indicate that it is e5.
                 fmt = {}
                 if 'contour_adjust' in vres:
-                    strs = c1.levels/float(vres['contour_adjust'])
-                    for l, str0 in zip(c1.levels, strs):
+                    base_strs = c1.levels/float(vres['contour_adjust'])
+                    for l, str0 in zip(c1.levels, base_strs):
                         fmt[l] = str0
 
                     # Add contour labels
