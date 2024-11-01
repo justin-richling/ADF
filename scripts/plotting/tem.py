@@ -376,6 +376,8 @@ def tem(adf):
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
+                if var == "utendepfd":
+                    print("clevs",clevs,"\n")
                 norm = cp_info['norm1']
                 cmap = cp_info['cmap1']
                 levs_diff = np.unique(np.array(cp_info['levelsdiff']))
@@ -402,7 +404,7 @@ def tem(adf):
                 #Add contours for highlighting
                 c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm,
                                     colors="k", linewidths=0.5)
-    
+
                 #Check if contour labels need to be adjusted
                 #ie if the values are large and/or in scientific notation, just label the 
                 #contours with the leading numbers.
@@ -470,7 +472,7 @@ def tem(adf):
                     else:
                         a.set_ylim(a.get_ylim()[::-1])
 
-
+                # Format color bars
                 plt.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
                 plt.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
 
