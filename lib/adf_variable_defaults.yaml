@@ -1274,7 +1274,7 @@ utendepfd:
       #ticks: [-0.5,0.5,0.05]
       label : "m/s2"
   long_name: EP flux divergence ($\nabla \cdot F$)
-  long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
+  #long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendepfd"
