@@ -392,6 +392,9 @@ def tem(adf):
                 lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
+                # Set padding for colorbar form axis
+                cmap_pad = 0.1
+
                 # create figure object
                 fig = plt.figure(figsize=(14,10))
                 # LAYOUT WITH GRIDSPEC
@@ -465,7 +468,7 @@ def tem(adf):
                     ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
                                     levels=levs_diff[::2], norm=cp_info['normdiff'])
                     cp_info['diff_colorbar_opt']["label"] = cp_info['colorbar_opt']["label"]
-                    plt.colorbar(img2, ax=ax[2], location='right', pad=0.0,**cp_info['diff_colorbar_opt'])
+                    plt.colorbar(img2, ax=ax[2], location='right', pad=cmap_pad,**cp_info['diff_colorbar_opt'])
 
                 #Format y-axis
                 #for a in ax[:]:
@@ -483,10 +486,10 @@ def tem(adf):
 
                 # Format color bars
                 print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
-                plt.colorbar(img1, ax=ax[1], location='right', pad=0.0,**cp_info['colorbar_opt'])
+                plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,**cp_info['colorbar_opt'])
                 # Remove the colorbar label for baseline
                 cp_info['colorbar_opt'].pop("label", None)
-                plt.colorbar(img0, ax=ax[0], location='right', pad=0.0,**cp_info['colorbar_opt'])
+                plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,**cp_info['colorbar_opt'])
 
                 #Set titles of subplots
                 #Set figure title
