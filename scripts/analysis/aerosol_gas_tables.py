@@ -208,7 +208,7 @@ def aerosol_gas_tables(adfobj):
 
     # Filter the list to include only strings that are possible h0 strings
     # - Search for either h0 or h0a
-    substrings = {"cam.h1","cam.h1a"}
+    substrings = {"cam.h2","cam.h2a"}
     case_hist_strs = []
     print("hist_strs",hist_strs,"\n")
     for cam_case_str in hist_strs:
