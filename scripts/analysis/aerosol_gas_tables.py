@@ -193,9 +193,22 @@ def aerosol_gas_tables(adfobj):
     # Initialize nicknames dictionary
     nicknames = {}
 
-    # Filter the list to include only strings that are possible h0 strings
+    """# Filter the list to include only strings that are possible h0 strings
     # - Search for either h0 or h0a
     substrings = {"cam.h0","cam.h0a"}
+    case_hist_strs = []
+    print("hist_strs",hist_strs,"\n")
+    for cam_case_str in hist_strs:
+        # Check each possible h0 string
+        for string in cam_case_str:
+            if string in substrings:
+                case_hist_strs.append(string)
+                break"""
+
+
+    # Filter the list to include only strings that are possible h0 strings
+    # - Search for either h0 or h0a
+    substrings = {"cam.h1","cam.h1a"}
     case_hist_strs = []
     print("hist_strs",hist_strs,"\n")
     for cam_case_str in hist_strs:
