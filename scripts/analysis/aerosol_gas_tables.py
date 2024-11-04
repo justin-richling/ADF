@@ -300,16 +300,20 @@ def aerosol_gas_tables(adfobj):
             else:
                 inside = np.full((len(Lats),len(Lons)),True)
 
-        # Set critical threshold
-        current_crit = Dic_crit[0]
+        if Dic_crit:
+            # Set critical threshold
+            current_crit = Dic_crit[0]
 
-        if Tropospheric:
-            trop = np.where(current_crit>150,np.nan,current_crit)
-            #strat=np.where(current_crit>150,current_crit,np.nan)
+            if Tropospheric:
+                trop = np.where(current_crit>150,np.nan,current_crit)
+                #strat=np.where(current_crit>150,current_crit,np.nan)
+            else:
+                trop=current_crit
+            trops[case] = trop
+            insides[case] = inside
         else:
-            trop=current_crit
-        trops[case] = trop
-        insides[case] = inside
+            trops[case] = np.nan
+            insides[case] = inside
 
     # Make and save tables
     table_kwargs = {"adfobj":adfobj,
