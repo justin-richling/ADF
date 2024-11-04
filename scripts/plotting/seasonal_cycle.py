@@ -498,6 +498,7 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
         attrs_dict = {"Description":"Zonal averaged mean of history files",
             "adf_user": adfobj.user,
             "climo_yrs": f"{syr}-{eyr}",
+            "hist_loc":hist_loc,
             #"time_series_files": ts_files_str,
         }
         cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
