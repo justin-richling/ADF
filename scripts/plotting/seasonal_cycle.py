@@ -459,7 +459,7 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
 
     output: netcdf file
     ------
-       - case specific file name with case data, saved to where???????
+       - case specific file name with case data, saved to diagnostics plot location
     """
 
     save_path = adfobj.get_basic_info('cam_diag_plot_loc', required=True)
@@ -483,6 +483,7 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
         waccm_zm = xr.open_mfdataset(zm_file)
         
     else:
+        print(f"\t  ...Making zonal mean average file from history files for {case_name}")
         h0_lists = []
 
         for yr in np.arange(int(syr),int(eyr)+1):
