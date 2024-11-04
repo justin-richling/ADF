@@ -902,8 +902,11 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
 
     # Critical threshholds, just run this once
     # this is for finding tropospheric values
-    current_crit=SEbudget(adfobj,dic_SE,current_dir,current_files,'O3',ext1_SE)
-    Dic_crit=current_crit
+    if "O3" in variables:
+        current_crit=SEbudget(adfobj,dic_SE,current_dir,current_files,'O3',ext1_SE)
+        Dic_crit=current_crit
+    else:
+        Dic_crit = None
 
     # Log info to logging file
     msg = f"chem/aerosol tables:"
