@@ -217,7 +217,7 @@ def aerosol_gas_tables(adfobj):
             if string in substrings:
                 case_hist_strs.append(string)
                 break
-
+    print("UHAJLKNM",case_hist_strs,"\n")
     # Create path object for the CAM history file(s) location:
     data_dirs = []
     for case_idx,case in enumerate(case_names):
