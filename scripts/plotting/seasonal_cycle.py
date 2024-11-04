@@ -493,6 +493,18 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
 
         waccm_zm = xr.open_mfdataset(h0_list, use_cftime=True, data_vars=calc_var_list)
         waccm_zm = waccm_zm[calc_var_list].mean(dim='lon')
+
+
+        attrs_dict = {"Description":"Zonal averaged mean of history files",
+            "adf_user": adfobj.user,
+            "climo_yrs": f"{syr}-{eyr}",
+            #"time_series_files": ts_files_str,
+        }
+        cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
+
+        #Output variable climatology to NetCDF-4 file:
+        #cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
+
         
         waccm_zm.to_netcdf(zm_file)
 
