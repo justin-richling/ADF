@@ -794,6 +794,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         cmapdiff = kwargs["diff_colormap"]
         dnorm, _ = get_difference_colors(levelsdiff)  # color map output ignored
     else:
+        cmapdiff = "PuOr_r"
         dnorm, cmapdiff = get_difference_colors(levelsdiff)
     #End if
 
@@ -1879,7 +1880,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     if "diff_colormap" in kwargs:
         cmapdiff = kwargs["diff_colormap"]
     else:
-        cmapdiff = 'PuOr'
+        cmapdiff = "PuOr_r"
     #End if
 
     if "diff_contour_levels" in kwargs:
