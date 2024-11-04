@@ -113,7 +113,8 @@ def aerosol_gas_tables(adfobj):
     AEROSOL_VARIABLES = bres['AEROSOL_VARIABLES']
 
     #list of all the variables to be caculated.
-    VARIABLES = GAS_VARIABLES + AEROSOL_VARIABLES
+    #VARIABLES = GAS_VARIABLES + AEROSOL_VARIABLES
+    VARIABLES = AEROSOL_VARIABLES
 
     # For the case that outputs are saved for a specific region.
     # i.e., when using fincllonlat in user_nl_cam
@@ -329,9 +330,9 @@ def aerosol_gas_tables(adfobj):
         print("\tMaking table for aerosols")
         make_table(vars=AEROSOL_VARIABLES, chem_type='aerosols', **table_kwargs)
     # Gases
-    if len(GAS_VARIABLES) > 0:
-        print("\tMaking table for gases")
-        make_table(vars=GAS_VARIABLES, chem_type='gases', **table_kwargs)
+    #if len(GAS_VARIABLES) > 0:
+    #    print("\tMaking table for gases")
+    #    make_table(vars=GAS_VARIABLES, chem_type='gases', **table_kwargs)
 #######
 
 ##################
@@ -864,6 +865,7 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
                             current_var+'_DDF',current_var+'_WDF', current_var+'_SF', current_var+'_CLXF',
                             current_var+'_TEND']
 
+                
                 if current_var =="O3":
                         components.append(current_var+'_LNO')
             # End if
