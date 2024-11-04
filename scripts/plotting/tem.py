@@ -465,7 +465,10 @@ def tem(adf):
                     ax[2].text(prop_x, prop_y, empty_message,
                                     transform=ax[2].transAxes, bbox=props)
                 else:
-                    img2 = ax[2].contourf(lats, levs, dseasons, cmap="BrBG", levels=clevs_diff,
+                    img2 = ax[2].contourf(lats, levs, dseasons,
+                                            #cmap="BrBG",
+                                            cmap=cp_info['diff_colormap'],
+                                            levels=clevs_diff,
                                             norm=cp_info['normdiff'])
                     ax[2].contour(lats, levs, dseasons, colors="k", linewidths=0.5,
                                     levels=clevs_diff[::2], norm=cp_info['normdiff'])
