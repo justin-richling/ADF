@@ -1879,7 +1879,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     if "diff_colormap" in kwargs:
         cmapdiff = kwargs["diff_colormap"]
     else:
-        cmapdiff = 'coolwarm'
+        cmapdiff = 'PuOr'
     #End if
 
     if "diff_contour_levels" in kwargs:
