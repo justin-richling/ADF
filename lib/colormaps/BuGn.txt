@@ -1,0 +1,13 @@
+# NCL rainbow - used for most plots
+#---------------------------------
+amwg = pd.read_csv("/glade/work/richling/CVDP-LE/dev/ncl_default.csv")
+amwg_colors = []
+for i in range(0,254):
+    amwg_colors.append((float(amwg["r "][i]),
+                               float(amwg["g"][i]),
+                               float(amwg["b"][i]),
+                               #float(amwg["a"][i])
+                             ))
+cmap_name="ncl_default"
+amwg_cmap = LinearSegmentedColormap.from_list(
+            cmap_name, amwg_colors)

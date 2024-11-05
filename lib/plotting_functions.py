@@ -1826,7 +1826,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         cmap1 = kwargs['colormap']
         # Check if the colormap name exists in Matplotlib
         if cmap1 not in plt.colormaps():
-            print(f"{cmap1} is not a matplotlib standard color map. Defaulting to 'coolwarm'")
+            print(f"{cmap1} is not a matplotlib standard color map. Defaulting to 'coolwarm' for test/base plots")
             cmap1 = 'coolwarm'
     else:
         cmap1 = 'coolwarm'
@@ -1885,7 +1885,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         cmapdiff = kwargs["diff_colormap"]
         # Check if the colormap name exists in Matplotlib
         if cmapdiff not in plt.colormaps():
-            print(f"{cmapdiff} is not a matplotlib standard color map. Defaulting to 'coolwarm'")
+            print(f"{cmapdiff} is not a matplotlib standard color map. Defaulting to 'PuOr_r' for difference plots")
             cmapdiff = 'PuOr_r'
     else:
         cmapdiff = "PuOr_r"
