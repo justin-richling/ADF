@@ -871,7 +871,7 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
 
                 
                 if current_var =="O3":
-                        components.append(current_var+'_LNO')
+                    components.append(current_var+'_LNO')
             # End if
         # End if
         msg = f"chem/aerosol tables: 'make_Dic_scn_var_comp'"
