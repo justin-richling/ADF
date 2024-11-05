@@ -506,6 +506,8 @@ def aod_latlon(adfobj):
                 ds_case_season['lon'] = ds_case_season['lon'].round(5)
                 ds_case_season['lat'] = ds_case_season['lat'].round(5)
                 ds_cases.append(ds_case_season)
+            else:
+                print("Smoehtnsg si borken")
             # End if
         # End if
 

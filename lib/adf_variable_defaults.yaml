@@ -1199,6 +1199,22 @@ utendwtem:
 # Plot Specific formatting
 ##########################
 
+# AOD 4-Panel plots vs MERRA and MODIS
+#-------------------------------------
+aod_diags:
+    plot_params:
+      range_min: -0.4
+      range_max: 0.4
+      nlevel: 17
+
+    plot_params_relerr:
+      range_max: 100
+      range_min: -100
+      nlevel: 21
+
+#-----------
+
+
 # Chemistry and Aerosol Budget Tables
 #------------------------------------
 budget_tables:
@@ -1255,4 +1271,6 @@ budget_tables:
   # Mw air
   Mwair: 28.97
 #-----------
+
+
 #End of File
