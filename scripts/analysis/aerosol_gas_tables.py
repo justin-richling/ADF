@@ -113,8 +113,8 @@ def aerosol_gas_tables(adfobj):
     AEROSOL_VARIABLES = bres['AEROSOL_VARIABLES']
 
     #list of all the variables to be caculated.
-    #VARIABLES = GAS_VARIABLES + AEROSOL_VARIABLES
-    VARIABLES = AEROSOL_VARIABLES
+    VARIABLES = GAS_VARIABLES + AEROSOL_VARIABLES
+    #VARIABLES = AEROSOL_VARIABLES
 
     # For the case that outputs are saved for a specific region.
     # i.e., when using fincllonlat in user_nl_cam
@@ -194,7 +194,7 @@ def aerosol_gas_tables(adfobj):
     # Initialize nicknames dictionary
     nicknames = {}
 
-    """# Filter the list to include only strings that are possible h0 strings
+    # Filter the list to include only strings that are possible h0 strings
     # - Search for either h0 or h0a
     substrings = {"cam.h0","cam.h0a"}
     case_hist_strs = []
@@ -204,10 +204,10 @@ def aerosol_gas_tables(adfobj):
         for string in cam_case_str:
             if string in substrings:
                 case_hist_strs.append(string)
-                break"""
+                break
 
 
-    # Filter the list to include only strings that are possible h0 strings
+    """# Filter the list to include only strings that are possible h0 strings
     # - Search for either h0 or h0a
     substrings = {"cam.h2","cam.h2a"}
     case_hist_strs = []
@@ -217,7 +217,7 @@ def aerosol_gas_tables(adfobj):
         for string in cam_case_str:
             if string in substrings:
                 case_hist_strs.append(string)
-                break
+                break"""
 
     print("UHAJLKNM",case_hist_strs,"\n")
     # Create path object for the CAM history file(s) location:
