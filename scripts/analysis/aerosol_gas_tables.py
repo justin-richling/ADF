@@ -7,6 +7,7 @@ import warnings  # use to warn user about missing files.
 from datetime import datetime
 import numpy as np
 import itertools
+import pickle
 
 try:
     import pandas as pd
@@ -102,6 +103,14 @@ def aerosol_gas_tables(adfobj):
 
     # Inputs
     #-------
+
+    # Special ADF variable which contains the output paths for
+    #all generated plots and tables for each case:
+    output_locs = adfobj.plot_location
+
+    #Convert output location string to a Path object:
+    output_location = Path(output_locs[0])
+
     # Variable defaults info
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     bres = res['budget_tables']
@@ -289,6 +298,29 @@ def aerosol_gas_tables(adfobj):
         # Gather dictionary data for current case
         # NOTE: The calculations can take a long time...
         Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS)
+        pkl_data = True
+        if pkl_data:
+            dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
+            dc_pkl = f'{case}_Dic_crit.pickle'
+
+            if ((output_location / dsvc_pkl).is_file()) and ((output_location / dc_pkl).is_file()):
+                with open(output_location / dsvc_pkl, 'rb') as handle:
+                    Dic_scn_var_comp[case] = pickle.load(handle)
+
+                with open(output_location / dc_pkl, 'rb') as handle2:
+                    Dic_crit = pickle.load(handle2)
+            else:
+                print("Pickle file not found, need to create the files.")
+
+                # Make dictionary of all data for each case
+                print(f"\t Calculating values for {case}")
+                Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dirs[i], dic_SE, Files, ext1_SE, AEROSOLS)
+
+                with open(output_location / dsvc_pkl, 'wb') as handle:
+                    pickle.dump(Dic_scn_var_comp[case], handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+                with open(output_location / dc_pkl, 'wb') as handle:
+                    pickle.dump(Dic_crit, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # Regional refinement
         # NOTE: This function 'Inside_SE' is unavailable at the moment! - JR 10/2024
