@@ -1118,6 +1118,7 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
             # Assume spc_burd is already defined
             trop = np.full_like(spc_burd, np.nan)
             spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
+        print(spc_burd.shape,"\n")
         tmp_burden = np.nansum(spc_burd*area,axis=0)
         burden = np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
         BURDEN = np.ma.sum(burden*1e-9)
