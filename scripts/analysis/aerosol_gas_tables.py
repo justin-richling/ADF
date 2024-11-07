@@ -1111,6 +1111,7 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
 
         # Burden
         spc_burd = Dic_scn_var_comp[current_var][current_var+'_BURDEN']
+        print(f"\ntropsies??? {trop}\n")
         if trop is not None:
             spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
         #spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
