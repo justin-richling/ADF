@@ -297,7 +297,7 @@ def aerosol_gas_tables(adfobj):
 
         # Gather dictionary data for current case
         # NOTE: The calculations can take a long time...
-        Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS)
+        #Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS)
         pkl_data = True
         if pkl_data:
             dsvc_pkl = f'{case}_Dic_scn_var_comp.pickle'
