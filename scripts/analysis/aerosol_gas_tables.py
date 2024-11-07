@@ -1114,7 +1114,10 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
         print(f"\ntropsies??? {trop}\n")
         if trop is not None:
             spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
-        #spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
+        else:
+            # Assume spc_burd is already defined
+            trop = np.full_like(spc_burd, np.nan)
+            spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
         tmp_burden = np.nansum(spc_burd*area,axis=0)
         burden = np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
         BURDEN = np.ma.sum(burden*1e-9)
@@ -1124,7 +1127,10 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
         spc_chml = Dic_scn_var_comp[current_var][current_var+'_CHML']
         if trop is not None:
             spc_chml = np.where(np.isnan(trop),np.nan,spc_chml)
-        #spc_chml = np.where(np.isnan(trop),np.nan,spc_chml)
+        else:
+            # Assume spc_burd is already defined
+            trop = np.full_like(spc_burd, np.nan)
+            spc_chml = np.where(np.isnan(trop),np.nan,spc_chml)
         tmp_chml = np.nansum(spc_chml*area,axis=0)
         chml = np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
         CHML = np.ma.sum(chml*duration*1e-9)/num_yrs
@@ -1138,7 +1144,10 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
             spc_chmp = Dic_scn_var_comp[current_var][current_var+'_CHMP']
             if trop is not None:
                 spc_chmp = np.where(np.isnan(trop),np.nan,spc_chmp)
-            #spc_chmp = np.where(np.isnan(trop),np.nan,spc_chmp)
+            else:
+                # Assume spc_burd is already defined
+                trop = np.full_like(spc_burd, np.nan)
+                spc_chmp = np.where(np.isnan(trop),np.nan,spc_chmp)
             tmp_chmp = np.nansum(spc_chmp*area,axis=0)
             chmp = np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
             CHMP = np.ma.sum(chmp*duration*1e-9)/num_yrs
@@ -1237,7 +1246,10 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
             spc_tnd = Dic_scn_var_comp[current_var][current_var+'_TEND']
             if trop is not None:
                 spc_tnd = np.where(np.isnan(trop),np.nan,spc_tnd)
-            #spc_tnd = np.where(np.isnan(trop),np.nan,spc_tnd)
+            else:
+                # Assume spc_burd is already defined
+                trop = np.full_like(spc_burd, np.nan)
+                spc_tnd = np.where(np.isnan(trop),np.nan,spc_tnd)
             tmp_tnd = np.nansum(spc_tnd,axis=0)
             tnd = np.ma.masked_where(inside==False,tmp_tnd)  #convert Kg/s to Tg/yr
             TND = np.ma.sum(tnd*duration*1e-9)/num_yrs
