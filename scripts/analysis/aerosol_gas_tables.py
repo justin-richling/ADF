@@ -1078,8 +1078,9 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
 
         # Burden
         spc_burd = Dic_scn_var_comp[current_var][current_var+'_BURDEN']
-        if trop:
-            spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
+        #if trop:
+        #    spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
+        spc_burd = np.where(np.isnan(trop),np.nan,spc_burd)
         tmp_burden = np.nansum(spc_burd*area,axis=0)
         burden = np.ma.masked_where(inside==False,tmp_burden)  #convert Kg/m2 to Tg
         BURDEN = np.ma.sum(burden*1e-9)
@@ -1087,8 +1088,9 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
 
         # Chemical Loss
         spc_chml = Dic_scn_var_comp[current_var][current_var+'_CHML']
-        if trop:
-            spc_chml = np.where(np.isnan(trop),np.nan,spc_chml)
+        #if trop:
+        #    spc_chml = np.where(np.isnan(trop),np.nan,spc_chml)
+        spc_chml = np.where(np.isnan(trop),np.nan,spc_chml)
         tmp_chml = np.nansum(spc_chml*area,axis=0)
         chml = np.ma.masked_where(inside==False,tmp_chml)  #convert Kg/m2/s to Tg/yr
         CHML = np.ma.sum(chml*duration*1e-9)/num_yrs
@@ -1100,8 +1102,9 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
             chem_dict[f"{current_var}_CHEM_PROD (Tg{specifier}/yr)"] = 0
         else:
             spc_chmp = Dic_scn_var_comp[current_var][current_var+'_CHMP']
-            if trop:
-                spc_chmp = np.where(np.isnan(trop),np.nan,spc_chmp)
+            #if trop:
+            #    spc_chmp = np.where(np.isnan(trop),np.nan,spc_chmp)
+            spc_chmp = np.where(np.isnan(trop),np.nan,spc_chmp)
             tmp_chmp = np.nansum(spc_chmp*area,axis=0)
             chmp = np.ma.masked_where(inside==False,tmp_chmp)  #convert Kg/m2/s to Tg/yr
             CHMP = np.ma.sum(chmp*duration*1e-9)/num_yrs
@@ -1198,8 +1201,9 @@ def calc_budget_data(current_var, Dic_scn_var_comp, area, trop, inside, num_yrs,
             #NET = CHMP-CHML
             # Chemical Tendency
             spc_tnd = Dic_scn_var_comp[current_var][current_var+'_TEND']
-            if trop:
-                spc_tnd = np.where(np.isnan(trop),np.nan,spc_tnd)
+            #if trop:
+            #    spc_tnd = np.where(np.isnan(trop),np.nan,spc_tnd)
+            spc_tnd = np.where(np.isnan(trop),np.nan,spc_tnd)
             tmp_tnd = np.nansum(spc_tnd,axis=0)
             tnd = np.ma.masked_where(inside==False,tmp_tnd)  #convert Kg/s to Tg/yr
             TND = np.ma.sum(tnd*duration*1e-9)/num_yrs
