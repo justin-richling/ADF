@@ -540,6 +540,8 @@ def aod_latlon(adfobj):
             print("ds_base['lat'].shape == ds_obs[0]['lat'].shape",ds_base['lat'].shape[0] == ds_obs[0]['lat'].shape[0],"\n")
             print("ds_base['lat'].shape[0]",ds_base['lat'].shape[0])
             print("ds_obs[0]['lat'].shape[0]",ds_obs[0]['lat'].shape[0],"\n")
+            print("ds_base['lon'].shape[0]",ds_base['lon'].shape[0])
+            print("ds_obs[0]['lon'].shape[0]",ds_obs[0]['lon'].shape[0],"\n")
             # Check if the lats/lons are same as the first supplied observation set
             if ds_base['lat'].shape == ds_obs[0]['lat'].shape:
                 base_lat = True
