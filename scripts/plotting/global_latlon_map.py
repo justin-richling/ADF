@@ -573,7 +573,7 @@ def aod_latlon(adfobj):
                 ds_cases.append(ds_base_season)
             else:
                 print("Smoehtnsg si borken")
-                print("wawaswa",interp_diff(ds_case_season, ds_obs[0]))
+                print("wawaswa",interp_diff(ds_base, ds_obs[0]))
             # End if
         # End if
     # Number of relevant cases
@@ -875,6 +875,7 @@ def interp_diff(arr_anom1, arr_anom2):
              "obs mask array.\nRegridding to ensemble lats and lons")
 
     if (not same_lons) and (not same_lats):
+        print("ARE WE HERE???")
 
         ds_out = xr.Dataset(
             {
