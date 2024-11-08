@@ -517,7 +517,7 @@ def aod_latlon(adfobj):
                 # Regrid the model data to obs
                 #NOTE: first argument is the model to be regridded, second is the obs
                 #      to be regridded to
-                ds_case_regrid = regrid_to_obs(ds_case, ds_obs[0])
+                ds_case_regrid = regrid_to_obs(adfobj, ds_case, ds_obs[0])
                 #print("ds_case_regrid['lat'].shape[0]",ds_case_regrid['lat'].shape[0])
                 #print("ds_obs[0]['lat'].shape[0]",obs_lat_shape[0],"\n")
                 ds_case_season = monthly_to_seasonal(ds_case_regrid)
@@ -588,7 +588,7 @@ def aod_latlon(adfobj):
                 # Regrid the model data to obs
                 #NOTE: first argument is the model to be regridded, second is the obs
                 #      to be regridded to
-                ds_base_regrid = regrid_to_obs(ds_base, ds_obs[0])
+                ds_base_regrid = regrid_to_obs(adfobj, ds_base, ds_obs[0])
                 #print("ds_base_regrid['lat'].shape[0]",ds_base_regrid['lat'].shape[0])
                 #print("ds_obs[0]['lat'].shape[0]",obs_lat_shape,"\n")
                 ds_base_season = monthly_to_seasonal(ds_base_regrid)
@@ -788,6 +788,7 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
             emg = "AOD panel plot:\n"
             emg += f"\t Too many dimensions for {case_name}. Needs 2 (lat/lon) but got {field.ndim}"
             adfobj.debug_log(emg)
+            print(f"{emg} ")
             return
         # End if
 
