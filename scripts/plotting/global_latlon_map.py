@@ -454,6 +454,8 @@ def aod_latlon(adfobj):
     ds_mod08_m3_season['lat'] = ds_mod08_m3_season['lat'].round(5)
 
     ds_obs = [ds_mod08_m3_season, ds_merra2_season]
+    obs_lat_shape = ds_obs[0]['lat'].shape[0]
+    obs_lon_shape = ds_obs[0]['lon'].shape[0]
     obs_titles = ["TERRA MODIS", "MERRA2"]
 
     # Model Case Datasets
@@ -476,30 +478,31 @@ def aod_latlon(adfobj):
             #       Rounding all datasets to 5 places ensures the proper difference calculation
             ds_case['lon'] = ds_case['lon'].round(5)
             ds_case['lat'] = ds_case['lat'].round(5)
+            case_lat_shape = ds_case['lat'].shape[0]
+            case_lon_shape = ds_case['lon'].shape[0]
 
-            print("ds_case['lat'].shape[0]",ds_case['lat'].shape[0])
-            print("ds_case[0]['lat'].shape[0]",ds_case[0]['lat'].shape[0],"\n")
+            #print("ds_case['lat'].shape[0]",case_lat_shape)
 
             # Check if the lats/lons are same as the first supplied observation set
-            if ds_case['lat'].shape == ds_obs[0]['lat'].shape:
+            if case_lat_shape == obs_lat_shape:
                 case_lat = True
             else:
                 err_msg = "AOD 4-panel plot:\n"
-                err_msg += f"\t The lat values don't match between obs and '{case}'"                    
-                err_msg += f"{case} lat shape: {ds_case.lat.shape} and "
-                err_msg += f"obs lat shape: {ds_obs[0].lat.shape}"
+                err_msg += f"\t The lat values don't match between obs and '{case}'\n"                    
+                err_msg += f"{case} lat shape: {case_lat_shape} and "
+                err_msg += f"obs lat shape: {obs_lat_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
                 case_lat = False
             # End if
 
-            if ds_case['lon'].shape == ds_obs[0]['lon'].shape:
+            if case_lon_shape == obs_lon_shape:
                 case_lon = True
             else:
                 err_msg = "AOD 4-panel plot:\n"
-                err_msg += f"\t The lon values don't match between obs and '{case}'"
-                err_msg += f"{case} lon shape: {ds_case.lon.shape} and "
-                err_msg += f"obs lon shape: {ds_obs[0].lon.shape}"
+                err_msg += f"\t The lon values don't match between obs and '{case}'\n"
+                err_msg += f"{case} lon shape: {case_lon_shape} and "
+                err_msg += f"obs lon shape: {obs_lon_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
                 case_lon = False
@@ -513,8 +516,16 @@ def aod_latlon(adfobj):
                 ds_case_season['lat'] = ds_case_season['lat'].round(5)
                 ds_cases.append(ds_case_season)
             else:
-                print("Smoehtnsg si borken")
-                print(interp_diff(ds_case_season, ds_obs[0]))
+                # Regrid the model data to obs
+                #NOTE: first argument is the model to be regridded, second is the obs
+                #      to be regridded to
+                ds_case_regrid = interp_diff(ds_case, ds_obs[0])
+                print("ds_case_regrid['lat'].shape[0]",ds_case_regrid['lat'].shape[0])
+                print("ds_obs[0]['lat'].shape[0]",obs_lat_shape[0],"\n")
+                ds_case_season = monthly_to_seasonal(ds_case_regrid)
+                ds_case_season['lon'] = ds_case_season['lon'].round(5)
+                ds_case_season['lat'] = ds_case_season['lat'].round(5)
+                ds_cases.append(ds_case_season)
             # End if
         # End if
 
@@ -536,32 +547,33 @@ def aod_latlon(adfobj):
             #       Rounding all datasets to 5 places ensures the proper difference calculation
             ds_base['lon'] = ds_base['lon'].round(5)
             ds_base['lat'] = ds_base['lat'].round(5)
+            base_lat_shape = ds_base['lat'].shape[0]
+            base_lon_shape = ds_base['lon'].shape[0]
 
-            print("ds_base['lat'].shape == ds_obs[0]['lat'].shape",ds_base['lat'].shape[0] == ds_obs[0]['lat'].shape[0],"\n")
-            print("ds_base['lat'].shape[0]",ds_base['lat'].shape[0])
-            print("ds_obs[0]['lat'].shape[0]",ds_obs[0]['lat'].shape[0],"\n")
-            print("ds_base['lon'].shape[0]",ds_base['lon'].shape[0])
-            print("ds_obs[0]['lon'].shape[0]",ds_obs[0]['lon'].shape[0],"\n")
+            print("ds_base['lat'].shape[0]",base_lat_shape)
+            print("ds_obs[0]['lat'].shape[0]",obs_lat_shape,"\n")
+            print("ds_base['lon'].shape[0]",base_lon_shape)
+            print("ds_obs[0]['lon'].shape[0]",obs_lon_shape,"\n")
             # Check if the lats/lons are same as the first supplied observation set
-            if ds_base['lat'].shape == ds_obs[0]['lat'].shape:
+            if base_lat_shape == obs_lat_shape:
                 base_lat = True
             else:
                 err_msg = "AOD 4-panel plot:\n"
-                err_msg += f"\t The lat values don't match between obs and '{base_name}'"                    
-                err_msg += f"{base_name} lat shape: {ds_base.lat.shape} and "
-                err_msg += f"obs lat shape: {ds_obs[0].lat.shape}"
+                err_msg += f"\t The lat values don't match between obs and '{base_name}'\n"                    
+                err_msg += f"{base_name} lat shape: {base_lat_shape} and "
+                err_msg += f"obs lat shape: {obs_lat_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
                 base_lat = False
             # End if
 
-            if ds_base['lon'].shape == ds_obs[0]['lon'].shape:
+            if base_lon_shape == obs_lon_shape:
                 base_lon = True
             else:
                 err_msg = "AOD 4-panel plot:\n"
-                err_msg += f"\t The lon values don't match between obs and '{base_name}'"
-                err_msg += f"{base_name} lon shape: {ds_base.lon.shape} and "
-                err_msg += f"obs lon shape: {ds_obs[0].lon.shape}"
+                err_msg += f"\t The lon values don't match between obs and '{base_name}'\n"
+                err_msg += f"{base_name} lon shape: {base_lon_shape} and "
+                err_msg += f"obs lon shape: {obs_lon_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
                 base_lon = False
@@ -575,11 +587,12 @@ def aod_latlon(adfobj):
                 ds_base_season['lat'] = ds_base_season['lat'].round(5)
                 ds_cases.append(ds_base_season)
             else:
-                print("Smoehtnsg si borken")
-                #print("wawaswa",interp_diff(ds_base, ds_obs[0]))
+                # Regrid the model data to obs
+                #NOTE: first argument is the model to be regridded, second is the obs
+                #      to be regridded to
                 ds_base_regrid = interp_diff(ds_base, ds_obs[0])
                 print("ds_base_regrid['lat'].shape[0]",ds_base_regrid['lat'].shape[0])
-                print("ds_obs[0]['lat'].shape[0]",ds_obs[0]['lat'].shape[0],"\n")
+                print("ds_obs[0]['lat'].shape[0]",obs_lat_shape,"\n")
                 ds_base_season = monthly_to_seasonal(ds_base_regrid)
                 ds_base_season['lon'] = ds_base_season['lon'].round(5)
                 ds_base_season['lat'] = ds_base_season['lat'].round(5)
@@ -788,7 +801,12 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
 
         # Set plot details
         extend_option = 'both' if symmetric else 'max'
-        cmap_option = plt.cm.bwr if symmetric else plt.cm.turbo
+        #cmap_option = plt.cm.bwr if symmetric else plt.cm.turbo
+
+        if 'colormap' in plot_param:
+            cmap_option = plot_param['colormap'] if symmetric else plt.cm.turbo
+        else:
+            cmap_option = plt.cm.bwr if symmetric else plt.cm.turbo
 
         img = axs[i].contourf(lon_mesh, lat_mesh, field_values,
             levels, cmap=cmap_option, extend=extend_option,
@@ -848,8 +866,8 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
 
 def interp_diff(arr_anom1, arr_anom2):
     """
-    Check if the Obs array needs to be interpolated
-    to the ensemble file
+    Check if the model grid needs to be interpolated
+    to the obs grid
 
     Most likely the input array will need to be interpolated!
     """
@@ -859,10 +877,9 @@ def interp_diff(arr_anom1, arr_anom2):
     obs_lons = arr_anom2.lon
     obs_lats = arr_anom2.lat
 
-    # Just set these to true for now
+    # Just set defaults for now
     same_lats = True
     same_lons = True
-
     arr_prime = None
 
     if obs_lons.shape == test_lons.shape:
@@ -881,11 +898,10 @@ def interp_diff(arr_anom1, arr_anom2):
     else:
         same_lats = False
         same_lons = False
-        print("The ensemble array lat/lon shape does not match the " \
-             "obs mask array.\nRegridding to ensemble lats and lons")
+        print("The model lat/lon grid does not match the " \
+             "obs grid.\nRegridding to observation lats and lons")
 
     if (not same_lons) and (not same_lats):
-        print("ARE WE HERE???")
 
         ds_out = xr.Dataset(
             {
@@ -894,11 +910,11 @@ def interp_diff(arr_anom1, arr_anom2):
             }
         )
 
-        # Regrid to the ensemble grid to make altered obs grid
+        # Regrid to the ensemble grid to make altered model grid
         regridder = xe.Regridder(arr_anom1, ds_out, "bilinear", periodic=True)
         arr_prime = regridder(arr_anom1, keep_attrs=True)
 
-    # Return the new interpolated obs array
+    # Return the new interpolated model array
     return arr_prime
 
 #######
