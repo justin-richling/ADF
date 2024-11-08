@@ -393,8 +393,8 @@ def aod_latlon(adfobj):
 
     Calculate the seasonal means for DJF, MAM, JJA, SON for model and obs datasets
 
-    NOTE: The model lat/lons must be on the same grid as the observations. If they are not, they need to be
-          regridded to match both the MERRA and MODIS observation dataset! 
+    NOTE: The model lat/lons must be on the same grid as the observations. If they are not, they will be
+          regridded to match both the MERRA and MODIS observation dataset using helper function 'regrid_to_obs'
 
           For details about spatial coordiantes of obs datasets, see /glade/campaign/cgd/amp/amwg/ADF_obs/:
             - MERRA2_192x288_AOD_2001-2020_climo.nc
@@ -656,9 +656,9 @@ def aod_latlon(adfobj):
     # End for
 
 
-#######################################
-# Helper functions for AOD 4-panel plts
-#######################################
+########################################
+# Helper functions for AOD 4-panel plots
+########################################
 
 def monthly_to_seasonal(ds,obs=False):
     ds_season = xr.Dataset(
@@ -856,19 +856,13 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
 
     # Close the figure
     plt.close(fig)
-
-
-
-
-
+######
 
 
 def regrid_to_obs(adfobj, model_arr, obs_arr):
     """
-    Check if the model grid needs to be interpolated
-    to the obs grid
-
-    - 
+    Check if the model grid needs to be interpolated to the obs grid. If so,
+    use xesmf to regrid and return new dataset
     """
     test_lons = model_arr.lon
     test_lats = model_arr.lat
@@ -884,9 +878,9 @@ def regrid_to_obs(adfobj, model_arr, obs_arr):
     if obs_lons.shape == test_lons.shape:
         try:
             xr.testing.assert_equal(test_lons, obs_lons)
-            err_msg = "AOD 4-panel plot:\n"
-            err_msg += "\t The lons ARE the same"
-            adfobj.debug_log(err_msg)
+            #err_msg = "AOD 4-panel plot:\n"
+            #err_msg += "\t The lons ARE the same"
+            #adfobj.debug_log(err_msg)
         except AssertionError as e:
             same_lons = False
             err_msg = "AOD 4-panel plot:\n"
@@ -894,9 +888,9 @@ def regrid_to_obs(adfobj, model_arr, obs_arr):
             adfobj.debug_log(err_msg)
         try:
             xr.testing.assert_equal(test_lats, obs_lats)
-            err_msg = "AOD 4-panel plot:\n"
-            err_msg += "\t The lats ARE the same"
-            adfobj.debug_log(err_msg)
+            #err_msg = "AOD 4-panel plot:\n"
+            #err_msg += "\t The lats ARE the same"
+            #adfobj.debug_log(err_msg)
         except AssertionError as e:
             same_lats = False
             err_msg = "AOD 4-panel plot:\n"
