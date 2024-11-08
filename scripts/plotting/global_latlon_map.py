@@ -481,15 +481,13 @@ def aod_latlon(adfobj):
             case_lat_shape = ds_case['lat'].shape[0]
             case_lon_shape = ds_case['lon'].shape[0]
 
-            #print("ds_case['lat'].shape[0]",case_lat_shape)
-
             # Check if the lats/lons are same as the first supplied observation set
             if case_lat_shape == obs_lat_shape:
                 case_lat = True
             else:
                 err_msg = "AOD 4-panel plot:\n"
                 err_msg += f"\t The lat values don't match between obs and '{case}'\n"                    
-                err_msg += f"{case} lat shape: {case_lat_shape} and "
+                err_msg += f"\t  - {case} lat shape: {case_lat_shape} and "
                 err_msg += f"obs lat shape: {obs_lat_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
@@ -501,7 +499,7 @@ def aod_latlon(adfobj):
             else:
                 err_msg = "AOD 4-panel plot:\n"
                 err_msg += f"\t The lon values don't match between obs and '{case}'\n"
-                err_msg += f"{case} lon shape: {case_lon_shape} and "
+                err_msg += f"\t  - {case} lon shape: {case_lon_shape} and "
                 err_msg += f"obs lon shape: {obs_lon_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
@@ -519,9 +517,9 @@ def aod_latlon(adfobj):
                 # Regrid the model data to obs
                 #NOTE: first argument is the model to be regridded, second is the obs
                 #      to be regridded to
-                ds_case_regrid = interp_diff(ds_case, ds_obs[0])
-                print("ds_case_regrid['lat'].shape[0]",ds_case_regrid['lat'].shape[0])
-                print("ds_obs[0]['lat'].shape[0]",obs_lat_shape[0],"\n")
+                ds_case_regrid = regrid_to_obs(ds_case, ds_obs[0])
+                #print("ds_case_regrid['lat'].shape[0]",ds_case_regrid['lat'].shape[0])
+                #print("ds_obs[0]['lat'].shape[0]",obs_lat_shape[0],"\n")
                 ds_case_season = monthly_to_seasonal(ds_case_regrid)
                 ds_case_season['lon'] = ds_case_season['lon'].round(5)
                 ds_case_season['lat'] = ds_case_season['lat'].round(5)
@@ -550,17 +548,17 @@ def aod_latlon(adfobj):
             base_lat_shape = ds_base['lat'].shape[0]
             base_lon_shape = ds_base['lon'].shape[0]
 
-            print("ds_base['lat'].shape[0]",base_lat_shape)
-            print("ds_obs[0]['lat'].shape[0]",obs_lat_shape,"\n")
-            print("ds_base['lon'].shape[0]",base_lon_shape)
-            print("ds_obs[0]['lon'].shape[0]",obs_lon_shape,"\n")
+            """print(f"{base_name} lat shape:",base_lat_shape)
+            print("Obs lat shape:",obs_lat_shape)
+            print(f"{base_name} lon shape:",base_lon_shape)
+            print("Obs lon shape:",obs_lon_shape)"""
             # Check if the lats/lons are same as the first supplied observation set
             if base_lat_shape == obs_lat_shape:
                 base_lat = True
             else:
                 err_msg = "AOD 4-panel plot:\n"
                 err_msg += f"\t The lat values don't match between obs and '{base_name}'\n"                    
-                err_msg += f"{base_name} lat shape: {base_lat_shape} and "
+                err_msg += f"\t  - {base_name} lat shape: {base_lat_shape} and "
                 err_msg += f"obs lat shape: {obs_lat_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
@@ -572,7 +570,7 @@ def aod_latlon(adfobj):
             else:
                 err_msg = "AOD 4-panel plot:\n"
                 err_msg += f"\t The lon values don't match between obs and '{base_name}'\n"
-                err_msg += f"{base_name} lon shape: {base_lon_shape} and "
+                err_msg += f"\t  - {base_name} lon shape: {base_lon_shape} and "
                 err_msg += f"obs lon shape: {obs_lon_shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
@@ -590,9 +588,9 @@ def aod_latlon(adfobj):
                 # Regrid the model data to obs
                 #NOTE: first argument is the model to be regridded, second is the obs
                 #      to be regridded to
-                ds_base_regrid = interp_diff(ds_base, ds_obs[0])
-                print("ds_base_regrid['lat'].shape[0]",ds_base_regrid['lat'].shape[0])
-                print("ds_obs[0]['lat'].shape[0]",obs_lat_shape,"\n")
+                ds_base_regrid = regrid_to_obs(ds_base, ds_obs[0])
+                #print("ds_base_regrid['lat'].shape[0]",ds_base_regrid['lat'].shape[0])
+                #print("ds_obs[0]['lat'].shape[0]",obs_lat_shape,"\n")
                 ds_base_season = monthly_to_seasonal(ds_base_regrid)
                 ds_base_season['lon'] = ds_base_season['lon'].round(5)
                 ds_base_season['lat'] = ds_base_season['lat'].round(5)
@@ -864,45 +862,54 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
 
 
 
-def interp_diff(arr_anom1, arr_anom2):
+def regrid_to_obs(adfobj, model_arr, obs_arr):
     """
     Check if the model grid needs to be interpolated
     to the obs grid
 
-    Most likely the input array will need to be interpolated!
+    - 
     """
-    test_lons = arr_anom1.lon
-    test_lats = arr_anom1.lat
+    test_lons = model_arr.lon
+    test_lats = model_arr.lat
 
-    obs_lons = arr_anom2.lon
-    obs_lats = arr_anom2.lat
+    obs_lons = obs_arr.lon
+    obs_lats = obs_arr.lat
 
     # Just set defaults for now
     same_lats = True
     same_lons = True
-    arr_prime = None
+    model_regrid_arr = None
 
     if obs_lons.shape == test_lons.shape:
         try:
             xr.testing.assert_equal(test_lons, obs_lons)
-            print("the lons ARE the same")
+            err_msg = "AOD 4-panel plot:\n"
+            err_msg += "\t The lons ARE the same"
+            adfobj.debug_log(err_msg)
         except AssertionError as e:
             same_lons = False
-            print("the lons aren't the same")
+            err_msg = "AOD 4-panel plot:\n"
+            err_msg += "\t The lons ARE NOT the same"
+            adfobj.debug_log(err_msg)
         try:
             xr.testing.assert_equal(test_lats, obs_lats)
-            print("the lats ARE the same")
+            err_msg = "AOD 4-panel plot:\n"
+            err_msg += "\t The lats ARE the same"
+            adfobj.debug_log(err_msg)
         except AssertionError as e:
             same_lats = False
-            print("the lats aren't the same")
+            err_msg = "AOD 4-panel plot:\n"
+            err_msg += "\t The lats ARE NOT the same"
+            adfobj.debug_log(err_msg)
     else:
         same_lats = False
         same_lons = False
-        print("The model lat/lon grid does not match the " \
-             "obs grid.\nRegridding to observation lats and lons")
+        print("\tThe model lat/lon grid does not match the " \
+             "obs grid.\n\t - Regridding to observation lats and lons")
 
+    # QUESTION: will there ever be a scenario where we need to regrid only lats or lons??
     if (not same_lons) and (not same_lats):
-
+        # Make dummy array to be populated
         ds_out = xr.Dataset(
             {
                 "lat": (["lat"], obs_lats.values, {"units": "degrees_north"}),
@@ -910,12 +917,12 @@ def interp_diff(arr_anom1, arr_anom2):
             }
         )
 
-        # Regrid to the ensemble grid to make altered model grid
-        regridder = xe.Regridder(arr_anom1, ds_out, "bilinear", periodic=True)
-        arr_prime = regridder(arr_anom1, keep_attrs=True)
+        # Regrid to the obs grid to make altered model grid
+        regridder = xe.Regridder(model_arr, ds_out, "bilinear", periodic=True)
+        model_regrid_arr = regridder(model_arr, keep_attrs=True)
 
     # Return the new interpolated model array
-    return arr_prime
+    return model_regrid_arr
 
 #######
 
