@@ -578,7 +578,7 @@ def aod_latlon(adfobj):
                 ds_base_regrid = interp_diff(ds_base, ds_obs[0])
                 print("ds_base_regrid['lat'].shape[0]",ds_base_regrid['lat'].shape[0])
                 print("ds_base_regrid[0]['lat'].shape[0]",ds_base_regrid[0]['lat'].shape[0],"\n")
-                ds_base_season = monthly_to_seasonal(ds_base)
+                ds_base_season = monthly_to_seasonal(ds_base_regrid)
                 ds_base_season['lon'] = ds_base_season['lon'].round(5)
                 ds_base_season['lat'] = ds_base_season['lat'].round(5)
                 ds_cases.append(ds_base_season)
