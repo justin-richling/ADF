@@ -31,8 +31,8 @@ def regrid_and_vert_interp(adf):
     """
 
     #Import necessary modules:
-    import numpy as np
-    import plotting_functions as pf
+    #import numpy as np
+    #import plotting_functions as pf
 
     from pathlib import Path
     import os
@@ -67,7 +67,7 @@ def regrid_and_vert_interp(adf):
 
     obs_dir = adf.get_basic_info("obs_data_loc")
     file_merra2 = os.path.join(obs_dir, 'MERRA2_192x288_AOD_2001-2020_climo.nc')
-    file_mod08_m3 = os.path.join(obs_dir, 'MOD08_M3_192x288_AOD_2001-2020_climo.nc')
+    #file_mod08_m3 = os.path.join(obs_dir, 'MOD08_M3_192x288_AOD_2001-2020_climo.nc')
 
     #Extract model baseline variables:
     target_loc = obs_dir
