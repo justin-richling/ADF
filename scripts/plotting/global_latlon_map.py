@@ -485,6 +485,7 @@ def aod_latlon(adfobj):
                 err_msg += f"{case} lat shape: {ds_case.lat.shape} and "
                 err_msg += f"obs lat shape: {ds_obs[0].lat.shape}"
                 adfobj.debug_log(err_msg)
+                print(err_msg)
                 case_lat = False
             # End if
 
@@ -496,6 +497,7 @@ def aod_latlon(adfobj):
                 err_msg += f"{case} lon shape: {ds_case.lon.shape} and "
                 err_msg += f"obs lon shape: {ds_obs[0].lon.shape}"
                 adfobj.debug_log(err_msg)
+                print(err_msg)
                 case_lon = False
             # End if
             
@@ -540,6 +542,7 @@ def aod_latlon(adfobj):
                 err_msg += f"{base_name} lat shape: {ds_case.lat.shape} and "
                 err_msg += f"obs lat shape: {ds_obs[0].lat.shape}"
                 adfobj.debug_log(err_msg)
+                print(err_msg)
                 base_lat = False
             # End if
 
@@ -551,6 +554,7 @@ def aod_latlon(adfobj):
                 err_msg += f"{base_name} lon shape: {ds_case.lon.shape} and "
                 err_msg += f"obs lon shape: {ds_obs[0].lon.shape}"
                 adfobj.debug_log(err_msg)
+                print(err_msg)
                 base_lon = False
             # End if
 
@@ -561,6 +565,9 @@ def aod_latlon(adfobj):
                 ds_base_season['lon'] = ds_base_season['lon'].round(5)
                 ds_base_season['lat'] = ds_base_season['lat'].round(5)
                 ds_cases.append(ds_base_season)
+            else:
+                print("Smoehtnsg si borken")
+                print(interp_diff(ds_case_season, ds_obs[0]))
             # End if
         # End if
     # Number of relevant cases
