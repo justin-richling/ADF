@@ -2580,8 +2580,14 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
 
         #Format axes
         plt.yscale("log")
-        ax.set_ylim(1000,0.0001)
-        plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
+
+        # Find the next value below highest vertical level
+        prev_major_tick = 10 ** (np.floor(np.log10(np.min(lev_grid))))
+        y_lims = [float(lim) for lim in [1e3,prev_major_tick]]
+
+        ax.set_ylim(y_lims)
+        
+        #plt.yticks([1000,100,10,1,0.1,.01,.001,.0001])
         plt.xticks(np.arange(-90,91,45),rotation=40)
         ax.tick_params(axis='x', labelsize=8)
         if idx > 0:
