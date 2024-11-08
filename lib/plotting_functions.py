@@ -2582,7 +2582,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
         plt.yscale("log")
 
         # Find the next value below highest vertical level
-        prev_major_tick = 10 ** (np.floor(np.log10(np.min(lev_grid))))
+        prev_major_tick = 10 ** (np.floor(np.log10(np.min(data_lat))))
         y_lims = [float(lim) for lim in [1e3,prev_major_tick]]
 
         ax.set_ylim(y_lims)
