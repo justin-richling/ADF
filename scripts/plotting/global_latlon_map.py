@@ -542,7 +542,7 @@ def aod_latlon(adfobj):
             else:
                 err_msg = "AOD 4-panel plot:\n"
                 err_msg += f"\t The lat values don't match between obs and '{base_name}'"                    
-                err_msg += f"{base_name} lat shape: {ds_case.lat.shape} and "
+                err_msg += f"{base_name} lat shape: {ds_base.lat.shape} and "
                 err_msg += f"obs lat shape: {ds_obs[0].lat.shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
@@ -554,7 +554,7 @@ def aod_latlon(adfobj):
             else:
                 err_msg = "AOD 4-panel plot:\n"
                 err_msg += f"\t The lon values don't match between obs and '{base_name}'"
-                err_msg += f"{base_name} lon shape: {ds_case.lon.shape} and "
+                err_msg += f"{base_name} lon shape: {ds_base.lon.shape} and "
                 err_msg += f"obs lon shape: {ds_obs[0].lon.shape}"
                 adfobj.debug_log(err_msg)
                 print(err_msg)
