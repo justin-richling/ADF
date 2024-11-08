@@ -476,6 +476,9 @@ def aod_latlon(adfobj):
             ds_case['lon'] = ds_case['lon'].round(5)
             ds_case['lat'] = ds_case['lat'].round(5)
 
+            print("ds_case['lat'].shape[0]",ds_case['lat'].shape[0])
+            print("ds_case[0]['lat'].shape[0]",ds_case[0]['lat'].shape[0],"\n")
+
             # Check if the lats/lons are same as the first supplied observation set
             if ds_case['lat'].shape == ds_obs[0]['lat'].shape:
                 case_lat = True
