@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 import numpy as np
 import xarray as xr
+import xesmf as xe
 import warnings  # use to warn user about missing files.
 
 # Import plotting modules:
