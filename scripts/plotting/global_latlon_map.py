@@ -533,6 +533,8 @@ def aod_latlon(adfobj):
             ds_base['lon'] = ds_base['lon'].round(5)
             ds_base['lat'] = ds_base['lat'].round(5)
 
+            print("ds_base['lat'].shape == ds_obs[0]['lat'].shape",ds_base['lat'].shape == ds_obs[0]['lat'].shape,"\n")
+
             # Check if the lats/lons are same as the first supplied observation set
             if ds_base['lat'].shape == ds_obs[0]['lat'].shape:
                 base_lat = True
@@ -567,7 +569,7 @@ def aod_latlon(adfobj):
                 ds_cases.append(ds_base_season)
             else:
                 print("Smoehtnsg si borken")
-                print(interp_diff(ds_case_season, ds_obs[0]))
+                print("wawaswa",interp_diff(ds_case_season, ds_obs[0]))
             # End if
         # End if
     # Number of relevant cases
