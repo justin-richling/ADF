@@ -2900,7 +2900,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         #Format the axes
         plt.yscale("log")
         ax.set_ylim(300,1)
-        ax.set_yticks([300,100,30,10])
+        ax.set_yticks([300,100,30,10,1])
         ax.set_xticks(np.arange(0,12,2))#,rotation=40
         ax.set_xticklabels(('Jan','Mar','May','Jul','Sep','Nov'),rotation=40,fontsize=8)
         if idx > 0:
