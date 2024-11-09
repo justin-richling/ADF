@@ -137,7 +137,6 @@ def tem(adf):
     
     #Set full path for baseline/obs file
     tem_base = input_loc_idx / base_file_name
-    print("tem_base",tem_base)
 
     #Check to see if baseline/obs TEM file exists    
     if tem_base.is_file():
@@ -360,7 +359,6 @@ def tem(adf):
 
                     mseasons = (mseasons * exner_function)/13.894954
                     oseasons = (oseasons * exner_function)/13.894954
-                    print("AHHH",np.max(mseasons.values))
 
 
                     #print("mseasons",np.max(mseasons_metpy)==np.max(mseasons))
@@ -377,8 +375,8 @@ def tem(adf):
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
-                if ((var == "utendepfd") or (var == "epfz")) and (s=="ANN"):
-                    print(f"clevs for {var}",clevs,"\n")
+                #if ((var == "utendepfd") or (var == "epfz")) and (s=="ANN"):
+                #    print(f"clevs for {var}",clevs,"\n")
                 norm = cp_info['norm1']
                 cmap = cp_info['cmap1']
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
@@ -388,7 +386,7 @@ def tem(adf):
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
-                print("highest vertical lev",np.min(levs),"\n")
+                #print("highest vertical lev",np.min(levs),"\n")
                 #filtered_levs = levs[levs >= np.min(levs)]
                 # Find the next value below highest vertical level
                 prev_major_tick = 10 ** (np.floor(np.log10(np.min(levs))))
@@ -489,13 +487,13 @@ def tem(adf):
                         #print("y_lims",y_lims,"\n")
                         np.min(levs)
                         y_lims[-1]=prev_major_tick #np.min(levs)
-                        print("y_lims",y_lims,"\n")
+                        #print("y_lims",y_lims,"\n")
                         a.set_ylim(y_lims)
                     else:
                         a.set_ylim(a.get_ylim()[::-1])
 
                 # Format color bars
-                print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
+                #print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
                 plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,**cp_info['colorbar_opt'])
                 # Remove the colorbar label for baseline
                 cp_info['colorbar_opt'].pop("label", None)
