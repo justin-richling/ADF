@@ -236,7 +236,7 @@ def seasonal_cycle(adfobj):
     #--------------------------------------------
 
     # Notify user that script has started:
-    print("\n\t  Making Zonal Mean Wind and Temp vs MERRA2 and SABER...")
+    print("\n\t Making Zonal Mean Wind and Temp vs MERRA2 and SABER...")
 
     # Comparison plot defaults    
     comp_plots_dict = res['comparison_plots']
@@ -245,7 +245,7 @@ def seasonal_cycle(adfobj):
     #for cam_var in ["U","T"]:
     for cam_var in comp_plots_dict['cam_vars']:
         #Notify user of variable being plotted:
-        print(f"\t  - zonal mean maps for {var}")
+        print(f"\t - zonal mean maps for {var}")
 
         #for interval in [6,12,"DJF", "JJA"]:
         for interval in comp_plots_dict['interval']:
@@ -282,12 +282,12 @@ def seasonal_cycle(adfobj):
     #Polar Cap Temps
     #---------------
     # Notify user that script has started:
-    print("\n\t  Making Polar Cap Temps...")
+    print("\n\t Making Polar Cap Temps...")
 
     pcap_dict = res['pcap_plots']
     for hemi in ["s","n"]:
         #Notify user of variable being plotted:
-        print(f"\t  - polar temp maps for {hemi}")
+        print(f"\t - polar temp maps for {hemi}")
 
         plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
@@ -325,7 +325,7 @@ def seasonal_cycle(adfobj):
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
     # Notify user that script has started:
-    print("\n\t  Making Cold Point Temp/Tropopause @ 90hPa...")
+    print("\n\t Making Cold Point Temp/Tropopause @ 90hPa...")
 
     var = "T"
     #vert_lev = 90
@@ -338,7 +338,7 @@ def seasonal_cycle(adfobj):
 
     for vert_lev in vert_levs:
         #Notify user of variable being plotted:
-        print(f"\t  - cold point temp maps for {vert_lev}hPa")
+        print(f"\t - cold point temp maps for {vert_lev}hPa")
         plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
@@ -368,7 +368,7 @@ def seasonal_cycle(adfobj):
     #H20 Mixing Ratio @ 90 and 100hPa
     #----------------------------------
     # Notify user that script has started:
-    print("\n\t  Making H20 Mixing Ratio @ 90 and 100hPa...")
+    print("\n\t Making H20 Mixing Ratio @ 90 and 100hPa...")
     var = "Q"
     try:
         vert_levs = var_dict[var]["plot_vert_levs"]
@@ -379,7 +379,7 @@ def seasonal_cycle(adfobj):
 
     for vert_lev in vert_levs:
         #Notify user of variable being plotted:
-        print(f"\t  - mixing ratio maps for {vert_lev}hPa")
+        print(f"\t - mixing ratio maps for {vert_lev}hPa")
         plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
@@ -409,7 +409,7 @@ def seasonal_cycle(adfobj):
     #WACCM QBO
     #---------
     # Notify user that script has started:
-    print("\n\t  Making WACCM QBO...")
+    print("\n\t Making WACCM QBO...")
     plot_name = plot_loc / f"QBO_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
     if (not redo_plot) and plot_name.is_file():
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
