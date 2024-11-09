@@ -52,7 +52,7 @@ def seasonal_cycle(adfobj):
     """
 
     # Notify user that script has started:
-    print("\n  Generating zonal vertical seasonal cycle plots plots ...")
+    print("\n  Generating zonal vertical seasonal cycle plots...")
 
     # Special ADF variable which contains the output paths for all generated plots and tables:
     plot_locations = adfobj.plot_location
