@@ -507,24 +507,34 @@ def aod_latlon(adfobj):
             # End if
             
             # Check to make sure spatial dimensions are compatible
-            if (case_lat) and (case_lon):
+            #if (case_lat) and (case_lon):
                 # Calculate seasonal means
-                ds_case_season = monthly_to_seasonal(ds_case)
-                ds_case_season['lon'] = ds_case_season['lon'].round(5)
-                ds_case_season['lat'] = ds_case_season['lat'].round(5)
-                ds_cases.append(ds_case_season)
-            else:
+                #ds_case_season = monthly_to_seasonal(ds_case)
+                #ds_case_season['lon'] = ds_case_season['lon'].round(5)
+                #ds_case_season['lat'] = ds_case_season['lat'].round(5)
+                #ds_cases.append(ds_case_season)
+            if (not case_lat) and (not case_lon):
                 # Regrid the model data to obs
                 #NOTE: first argument is the model to be regridded, second is the obs
                 #      to be regridded to
-                ds_case_regrid = regrid_to_obs(adfobj, ds_case, ds_obs[0])
+                ds_case = regrid_to_obs(adfobj, ds_case, ds_obs[0])
                 #print("ds_case_regrid['lat'].shape[0]",ds_case_regrid['lat'].shape[0])
                 #print("ds_obs[0]['lat'].shape[0]",obs_lat_shape[0],"\n")
-                ds_case_season = monthly_to_seasonal(ds_case_regrid)
-                ds_case_season['lon'] = ds_case_season['lon'].round(5)
-                ds_case_season['lat'] = ds_case_season['lat'].round(5)
-                ds_cases.append(ds_case_season)
+                #ds_case_season = monthly_to_seasonal(ds_case_regrid)
+                #ds_case_season['lon'] = ds_case_season['lon'].round(5)
+                #ds_case_season['lat'] = ds_case_season['lat'].round(5)
+                #ds_cases.append(ds_case_season)
             # End if
+
+            # Get seasonal averages
+            ds_case_season = monthly_to_seasonal(ds_case)
+
+            # Round lat/lons
+            ds_case_season['lon'] = ds_case_season['lon'].round(5)
+            ds_case_season['lat'] = ds_case_season['lat'].round(5)
+
+            # Add data set to list
+            ds_cases.append(ds_case_season)
         # End if
 
     # load reference data (observational or baseline)
@@ -578,24 +588,36 @@ def aod_latlon(adfobj):
             # End if
 
             # Check to make sure spatial dimensions are compatible
-            if (base_lat) and (base_lon):
+            #if (base_lat) and (base_lon):
                 # Calculate seasonal means
-                ds_base_season = monthly_to_seasonal(ds_base)
-                ds_base_season['lon'] = ds_base_season['lon'].round(5)
-                ds_base_season['lat'] = ds_base_season['lat'].round(5)
-                ds_cases.append(ds_base_season)
-            else:
+                #ds_base_season = monthly_to_seasonal(ds_base)
+                #ds_base_season['lon'] = ds_base_season['lon'].round(5)
+                #ds_base_season['lat'] = ds_base_season['lat'].round(5)
+                #ds_cases.append(ds_base_season)
+            if (not base_lat) and (not base_lon):
                 # Regrid the model data to obs
                 #NOTE: first argument is the model to be regridded, second is the obs
                 #      to be regridded to
-                ds_base_regrid = regrid_to_obs(adfobj, ds_base, ds_obs[0])
+                #ds_base_regrid = regrid_to_obs(adfobj, ds_base, ds_obs[0])
+                ds_base = regrid_to_obs(adfobj, ds_base, ds_obs[0])
                 #print("ds_base_regrid['lat'].shape[0]",ds_base_regrid['lat'].shape[0])
                 #print("ds_obs[0]['lat'].shape[0]",obs_lat_shape,"\n")
-                ds_base_season = monthly_to_seasonal(ds_base_regrid)
-                ds_base_season['lon'] = ds_base_season['lon'].round(5)
-                ds_base_season['lat'] = ds_base_season['lat'].round(5)
-                ds_cases.append(ds_base_season)
+                #ds_base_season = monthly_to_seasonal(ds_base_regrid)
+                #ds_base_season['lon'] = ds_base_season['lon'].round(5)
+                #ds_base_season['lat'] = ds_base_season['lat'].round(5)
+                #ds_cases.append(ds_base_season)
             # End if
+
+            # Get seasonal averages
+            ds_base_season = monthly_to_seasonal(ds_base)
+
+            # Round lat/lons
+            ds_base_season['lon'] = ds_base_season['lon'].round(5)
+            ds_base_season['lat'] = ds_base_season['lat'].round(5)
+
+            # Add data set to list
+            ds_cases.append(ds_base_season)
+
         # End if
     # Number of relevant cases
     case_num = len(ds_cases)
