@@ -1899,17 +1899,31 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
     # Difference options -- Check in kwargs for colormap and levels
     if "diff_colormap" in kwargs:
         cmapdiff = kwargs["diff_colormap"]
+        # Check if the colormap name exists in Matplotlib
+        if cmapdiff not in plt.colormaps():
+            print(f"{cmapdiff} is not a matplotlib standard color map. Defaulting to 'PuOr_r' for difference plots")
+            cmapdiff = 'PuOr_r'
     else:
-        cmapdiff = 'coolwarm'
+        cmapdiff = "PuOr_r"
     #End if
 
     if "diff_contour_levels" in kwargs:
         levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+        contains_string = any(isinstance(item, str) for item in levelsdiff)
+        if contains_string:
+            levelsdiff = [float(item) for item in levelsdiff]
     elif "diff_contour_range" in kwargs:
         assert len(kwargs['diff_contour_range']) == 3, \
         "diff_contour_range must have exactly three entries: min, max, step"
+        contains_string = any(isinstance(item, str) for item in kwargs['diff_contour_range'])
+        if contains_string:
+            levelsdiff_convert = [float(item) for item in kwargs['diff_contour_range']]
 
-        levelsdiff = np.arange(*kwargs['diff_contour_range'])
+            #print("levelsdiff_convert",levelsdiff_convert)
+
+            levelsdiff = np.arange(*levelsdiff_convert)
+        else:
+            levelsdiff = np.arange(*kwargs['diff_contour_range'])
     else:
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))
