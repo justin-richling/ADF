@@ -276,9 +276,9 @@ def aerosol_gas_tables(adfobj):
         dic_SE = set_dic_SE(ListVars,ext1_SE)
         dic_SE = fill_dic_SE(adfobj, dic_SE, VARIABLES, ListVars, ext1_SE, AEROSOLS, MW, AVO, gr, Mwair)
 
-        text = f'\n\t Calculating values for {case}'
+        """text = f'\n\t Calculating values for {case}'
         print(text)
-        print("\t " + "-" * (len(text) - 2))
+        print("\t " + "-" * (len(text) - 2))"""
 
         # Gather dictionary data for current case
         # NOTE: The calculations can take a long time...
@@ -298,7 +298,9 @@ def aerosol_gas_tables(adfobj):
                 print("Pickle file not found, need to create the files.")
 
                 # Make dictionary of all data for each case
-                print(f"\t Calculating values for {case}")
+                text = f'\n\t Calculating values for {case}'
+                print(text)
+                print("\t " + "-" * (len(text) - 2))
                 Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dirs[i], dic_SE, Files, ext1_SE, AEROSOLS)
 
                 with open(output_location / dsvc_pkl, 'wb') as handle:
