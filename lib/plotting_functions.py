@@ -1981,7 +1981,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
             'levelsdiff': levelsdiff,
             #'normpct': normpct,
             #'cmappct': cmappct,
-            'levelspctdiff':levelspctdiff,
+            #'levelspctdiff':levelspctdiff,
             'cmap1': cmap1,
             'norm1': norm1,
             'levels1': levels1,
@@ -1990,6 +1990,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
     if pctdata:
         contour_dict['normpct'] = normpct
         contour_dict['cmappct'] = cmappct
+        contour_dict['levelspctdiff'] = levelspctdiff
     return contour_dict
 
 
