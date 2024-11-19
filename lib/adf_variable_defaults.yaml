@@ -2628,6 +2628,24 @@ tape_recorder:
 #End of File
 
 
+# AOD 4-Panel plots vs MERRA and MODIS
+#-------------------------------------
+aod_diags:
+    plot_params:
+      range_min: -0.4
+      range_max: 0.4
+      nlevel: 17
+      colormap: "bwr"
+
+    plot_params_relerr:
+      range_max: 100
+      range_min: -100
+      nlevel: 21
+      colormap: "PuOr_r"
+
+#-----------
+
+
 
 # Plot Specific formatting
 ##########################
