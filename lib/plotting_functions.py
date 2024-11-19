@@ -1382,6 +1382,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     #Close plots:
     plt.close()
+    
+    print("cp_info: ",cp_info['colorbar_opt'])
 
 #
 #  -- vertical interpolation code --
