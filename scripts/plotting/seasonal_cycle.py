@@ -52,7 +52,7 @@ def seasonal_cycle(adfobj):
     """
 
     # Notify user that script has started:
-    print("\n  Generating zonal vertical seasonal cycle plots plots ...")
+    print("\n  Generating zonal vertical seasonal cycle plots...")
 
     # Special ADF variable which contains the output paths for all generated plots and tables:
     plot_locations = adfobj.plot_location
@@ -236,7 +236,7 @@ def seasonal_cycle(adfobj):
     #--------------------------------------------
 
     # Notify user that script has started:
-    print("\n\t  Generating Zonal Mean Wind and Temp vs MERRA2 and SABER...")
+    print("\n\t Making Zonal Mean Wind and Temp vs MERRA2 and SABER...")
 
     # Comparison plot defaults    
     comp_plots_dict = res['comparison_plots']
@@ -282,7 +282,7 @@ def seasonal_cycle(adfobj):
     #Polar Cap Temps
     #---------------
     # Notify user that script has started:
-    print("\n\t  Generating Polar Cap Temps...")
+    print("\n\t Making Polar Cap Temps...")
 
     pcap_dict = res['pcap_plots']
     for hemi in ["s","n"]:
@@ -325,7 +325,7 @@ def seasonal_cycle(adfobj):
     #Cold Point Temp/Tropopause @ 90hPa
     #----------------------------------
     # Notify user that script has started:
-    print("\n\t  Generating Cold Point Temp/Tropopause @ 90hPa...")
+    print("\n\t Making Cold Point Temp/Tropopause @ 90hPa...")
 
     var = "T"
     #vert_lev = 90
@@ -368,7 +368,7 @@ def seasonal_cycle(adfobj):
     #H20 Mixing Ratio @ 90 and 100hPa
     #----------------------------------
     # Notify user that script has started:
-    print("\n\t  Generating H20 Mixing Ratio @ 90 and 100hPa...")
+    print("\n\t Making H20 Mixing Ratio @ 90 and 100hPa...")
     var = "Q"
     try:
         vert_levs = var_dict[var]["plot_vert_levs"]
@@ -409,7 +409,7 @@ def seasonal_cycle(adfobj):
     #WACCM QBO
     #---------
     # Notify user that script has started:
-    print("\n\t  Generating WACCM QBO...")
+    print("\n\t Making WACCM QBO...")
     plot_name = plot_loc / f"QBO_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
     if (not redo_plot) and plot_name.is_file():
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
