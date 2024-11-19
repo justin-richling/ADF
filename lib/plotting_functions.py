@@ -1917,25 +1917,26 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
         
     # Percent Difference options -- Check in kwargs for colormap and levels
-    if "pct_diff_colormap" in kwargs:
-        cmappct = kwargs["pct_diff_colormap"]
-    else:
-        cmappct = 'coolwarm'
-    #End if
+    if pctdata:
+        if "pct_diff_colormap" in kwargs:
+            cmappct = kwargs["pct_diff_colormap"]
+        else:
+            cmappct = 'coolwarm'
+        #End if
 
-    if "pct_diff_contour_levels" in kwargs:
-        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
-    elif "pct_diff_contour_range" in kwargs:
-        assert len(kwargs['pct_diff_contour_range']) == 3, \
-        "pct_diff_contour_range must have exactly three entries: min, max, step"
+        if "pct_diff_contour_levels" in kwargs:
+            levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
+        elif "pct_diff_contour_range" in kwargs:
+            assert len(kwargs['pct_diff_contour_range']) == 3, \
+            "pct_diff_contour_range must have exactly three entries: min, max, step"
 
-        levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
-    else:
-        # set a symmetric color bar for diff:
-        absmaxpct = np.max(np.abs(pctdata))
-        # set levels for difference plot:
-        levelspctdiff = np.linspace(-1*absmaxpct, absmaxpct, 12)
-    #End if
+            levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
+        else:
+            # set a symmetric color bar for diff:
+            absmaxpct = np.max(np.abs(pctdata))
+            # set levels for difference plot:
+            levelspctdiff = np.linspace(-1*absmaxpct, absmaxpct, 12)
+        #End if
 
     if "plot_log_pressure" in kwargs:
         plot_log_p = kwargs["plot_log_pressure"]
@@ -1949,11 +1950,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
         
     # color normalization for percent difference
-    if "pct_diff_contour_levels" in kwargs:
-        normpct = mpl.colors.BoundaryNorm(levelspctdiff,256)
-    else :
-        normpct = mpl.colors.Normalize(vmin=np.min(levelspctdiff), vmax=np.max(levelspctdiff))
-    #End if
+    if pctdata:
+        if "pct_diff_contour_levels" in kwargs:
+            normpct = mpl.colors.BoundaryNorm(levelspctdiff,256)
+        else :
+            normpct = mpl.colors.Normalize(vmin=np.min(levelspctdiff), vmax=np.max(levelspctdiff))
+        #End if
 
     subplots_opt = {}
     contourf_opt = {}
@@ -1969,7 +1971,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         diff_colorbar_opt.update(kwargs['mpl'].get('diff_colorbar',{}))
         pct_colorbar_opt.update(kwargs['mpl'].get('pct_diff_colorbar',{}))
     #End if
-    return {'subplots_opt': subplots_opt,
+    contour_dict = {'subplots_opt': subplots_opt,
             'contourf_opt': contourf_opt,
             'colorbar_opt': colorbar_opt,
             'diff_colorbar_opt': diff_colorbar_opt,
@@ -1977,7 +1979,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'normdiff': normdiff,
             'cmapdiff': cmapdiff,
             'levelsdiff': levelsdiff,
-            'normpct': normpct,
+            #'normpct': normpct,
             'cmappct': cmappct,
             'levelspctdiff':levelspctdiff,
             'cmap1': cmap1,
@@ -1985,6 +1987,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'levels1': levels1,
             'plot_log_p': plot_log_p
             }
+    if pctdata:
+        contour_dict['normpct'] = normpct
+    return contour_dict
 
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
