@@ -3019,7 +3019,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         if idx > 0:
             plt.yticks([])
         else:
-            ax.set_yticklabels(["","$10^{2}$","","$10^{1}$"],fontsize=10)
+            ax.set_yticklabels(["","$10^{2}$","","$10^{1}$","1"],fontsize=10)
             plt.ylabel('hPa',fontsize=10)
 
         #Set title
