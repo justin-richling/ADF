@@ -245,6 +245,7 @@ def global_latlon_map(adfobj):
             mseasons = {}
             oseasons = {}
             dseasons = {} # hold the differences
+            pseasons = {} # hold percent change
 
             if not has_dims['has_lev']:  # strictly 2-d data          
 
