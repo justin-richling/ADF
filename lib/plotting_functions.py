@@ -1886,7 +1886,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
         contains_string = any(isinstance(item, str) for item in levels1)
         if contains_string:
             levels1 = [float(item) for item in levels1]
-        #print("\nlevels1",levels1,"\n")
         if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
             cmap_obj = cm.get_cmap(cmap1)
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
@@ -2024,9 +2023,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
             'normdiff': normdiff,
             'cmapdiff': cmapdiff,
             'levelsdiff': levelsdiff,
-            #'normpct': normpct,
-            #'cmappct': cmappct,
-            #'levelspctdiff':levelspctdiff,
             'cmap1': cmap1,
             'norm1': norm1,
             'levels1': levels1,
