@@ -1827,10 +1827,10 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
         ax = _meridional_plot_line(ax, lon,  data, color, **kwargs)
         return ax
 
-def prep_contour_plot(adata, bdata, diffdata, **kwargs):
+def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
     """Preparation for making contour plots.
 
-    Prepares for making contour plots of adata, bdata, and diffdata, which is
+    Prepares for making contour plots of adata, bdata, diffdata, and pctdata, which is
     presumably the difference between adata and bdata.
     - set colormap from kwargs or defaults to coolwarm
     - set contour levels from kwargs or 12 evenly spaced levels to span the data
@@ -1841,7 +1841,7 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
 
     Parameters
     ----------
-    adata, bdata, diffdata
+    adata, bdata, diffdata, pctdata
         the data to be plotted
     kwargs : dict, optional
         plotting options
