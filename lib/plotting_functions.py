@@ -1986,7 +1986,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
         
     # color normalization for percent difference
-    if pctdata:
+    if type(pctdata) != NoneType:
         if "pct_diff_contour_levels" in kwargs:
             normpct = mpl.colors.BoundaryNorm(levelspctdiff,256)
         else :
