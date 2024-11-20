@@ -2636,19 +2636,6 @@ month_dict = {1:'JAN',
 
 delta_symbol = r'$\Delta$'
 
-#temp_levs = np.arange(140, 300, 10)
-#temp_diff_levs = np.arange(-40, 41, 4)
-
-#wind_levs = np.arange(-120, 121, 10)
-#wind_diff_levs = np.arange(-30, 31, 3)
-#cont_ranges = {"U":{"levs":wind_levs,"diff_levs":wind_diff_levs,"units":"m/s"},
-#               "T":{"levs":temp_levs,"diff_levs":temp_diff_levs,"units":"K"}}
-
-#obs_cam_vars={"saber":{"U":"u", "T":"temp"},
-#              "merra":{"U":"U", "T":"T"}}
-
-
-
 
 def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dict, obs_ds_dict, time_avg, interval, comp_plots_dict, obs_cam_vars):
     """
