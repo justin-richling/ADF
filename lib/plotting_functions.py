@@ -2032,7 +2032,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
             'levels1': levels1,
             'plot_log_p': plot_log_p
             }
-    if pctdata:
+    if type(pctdata) != NoneType:
         contour_dict['normpct'] = normpct
         contour_dict['cmappct'] = cmappct
         contour_dict['levelspctdiff'] = levelspctdiff
