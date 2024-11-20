@@ -86,6 +86,7 @@ _meridional_plot_preslon
 """
 
 #import statements:
+from types import NoneType
 from typing import Optional
 import numpy as np
 import xarray as xr
@@ -1952,7 +1953,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
         
     # Percent Difference options -- Check in kwargs for colormap and levels
-    if pctdata:
+    if type(pctdata) != NoneType:
         if "pct_diff_colormap" in kwargs:
             cmappct = kwargs["pct_diff_colormap"]
         else:
