@@ -161,14 +161,13 @@
               <tbody>
                 <tr>                 
                   <td>
-                    <strong>Case Names</strong>:<br>
-                    b.e23_alpha16g.BLT1850.ne30_t232.068<br>
-                    b.e23_alpha16g.BLT1850.ne30_t232.070<br>
+                    <strong>Test Case Names</strong>:<br>
+                    <h6>{{ case_name }} - years: {{ case_yrs }}</h6></td><br>
                   </td>
                   <td>
                     <strong>Baseline Name</strong>:<br>
-                    b.e23_alpha16b.BLT1850.ne30_t232.054 <br>
-                  </td>   
+                    <h6>{{ base_name }} - years: {{ baseline_yrs }}</h6><br>
+                  </td>  
                 </tr>
               </tbody>
             </table>
@@ -191,7 +190,7 @@
                         {% if non_seasons[category][var_name] == False %}<!-- Check if these have traditional seasons, ANN, DJF, etc. -->
                           {% for i,season in enumerate(ptype_seas.keys()) %}
                               {% if i==0 %}<!-- Grab first available season to make as default -->
-                                <div class="grid-item-diag">
+                                <div class="grid-item">
                                   <a href="../html_img/plot_page_{{ var_name }}_{{ season }}_{{ plottype_title }}_Mean.html"> {{var_name}} </a><br>
                                 </div><!--grid-item2-->
                               {% endif %}
@@ -200,7 +199,7 @@
                         {% else %}
                           {% for season in ptype_seas.keys() %}
                             {% if season == list(ptype_seas.keys())[0] %}
-                              <div class="grid-item-diag">
+                              <div class="grid-item">
                                 <a href="../html_img/plot_page_{{ var_name }}_{{ season }}_{{ plottype_title }}_Mean.html"> {{var_name}} </a><br>
                               </div><!--grid-item2-->
                             {% endif %}
