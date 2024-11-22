@@ -185,18 +185,18 @@
                       {% if non_seasons[category][var_name] == False %}
                         {% for season in seasons %}
                           {% if season in ptype_seas.keys() %}
-                            <div style="width: 50%;" class="grid-item">
+                            <div class="grid-item-adf">
                               <a href="../html_img/{{ ptype_seas[season] }}">{{ season }}</a>
                             </div><!--grid-item-->
                           {% else %}
-                            <div style="width: 50%;" class="grid-item-blocked">
+                            <div class="grid-item-blocked">
                               <a-blocked>{{ season }}</a-blocked>
                             </div><!--grid-item-blocked-->
                           {% endif %}<!-- ptype_seas.keys() -->
                         {% endfor %}<!-- season in seasons -->
                       {% else %}
                         {% for season in ptype_seas.keys() %}
-                          <div style="width: 50%;" class="grid-item">
+                          <div class="grid-item-adf">
                             <a href="../html_img/{{ ptype_seas[season] }}">{{ season }}</a>
                           </div><!--grid-item-->
                         {% endfor %}<!-- ptype_seas.keys() -->
