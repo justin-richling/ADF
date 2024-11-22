@@ -217,10 +217,10 @@ def create_TEM_files(adf):
 
         #Set case file name
         tem_fil = output_loc_idx / f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
-
+        print("tem_fil",tem_fil,"\n")
         #Get current case tem over-write boolean
         overwrite_tem = overwrite_tem_cases[case_idx]
-
+        no_tem_file = False
         #If files exist, then check if over-writing is allowed:
         if (tem_fil.is_file()) and (not overwrite_tem):
             print(f"\t    INFO: Found TEM file and clobber is False, so moving to next case.")
@@ -228,6 +228,11 @@ def create_TEM_files(adf):
         else:
             if tem_fil.is_file():
                 print(f"\t    INFO: Found TEM file but clobber is True, so over-writing file.")
+            else:
+                print(f"tem file is not an actaul files? Check '{tem_fil}")
+                #continue
+                no_tem_file = True
+                continue
 
             #Glob each set of years
             #NOTE: This will make a nested list
@@ -241,6 +246,8 @@ def create_TEM_files(adf):
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
 
+            if not hist_files:
+                print(f"Historyu list is empty, maybe there;s no actaul files? Check '{tem_fil}")
             ds = xr.open_mfdataset(hist_files)
 
             #iterate over the times in a dataset
