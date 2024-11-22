@@ -179,12 +179,10 @@
             <!--</div>--><!--center-->
         
             <div class="center" style="display: flex; gap: 20px; width: 75%;"> <!-- main div-->
-              <div>
                 <div>
                   <button style="border-radius: 10px; margin: 5px;"><a href="mean_diag_{{plottype_title}}.html">Back to {{plottype_title}}</a></button>
                   <button style="border-radius: 10px; margin: 5px;"><a href="../index.html">Back to Plot Types</a></button>
                 </div>
-              </div>
               <div class="grid-container-template" style="border: 3px solid black; border-radius: 10px; flex-grow: 1; padding: 10px;">
                 {% for category, var_seas in mydata.items() %}
                   {% for var_name, ptype_seas in var_seas.items() %}
