@@ -192,9 +192,13 @@
                       {% if non_seasons[category][var_name] == False %}
                         {% for season in seasons %}
                           {% if season in ptype_seas.keys() %}
-                            <div class="grid-item">
+                          <div class="grid-item {% if current_season == season %}disabled{% endif %}">
+                            {% if current_season == season %}
+                              <span>{{ season }}</span>
+                            {% else %}
                               <a href="../html_img/{{ ptype_seas[season] }}">{{ season }}</a>
-                            </div><!--grid-item-->
+                            {% endif %}
+                          </div><!--grid-item-->
                           {% else %}
                             <div class="grid-item-blocked">
                               <a-blocked>{{ season }}</a-blocked>
