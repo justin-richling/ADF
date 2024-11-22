@@ -162,40 +162,43 @@
                 <tr>                 
                   <td>
                     <strong>Test Case Names</strong>:<br>
-                    <h6>{{ case_name }} - years: {{ case_yrs }}</h6></td><br>
+                    <h6>{{ case_name }} - years: {{ case_yrs }}</h6></td>
                   </td>
                   <td>
                     <strong>Baseline Name</strong>:<br>
-                    <h6>{{ base_name }} - years: {{ baseline_yrs }}</h6><br>
+                    <h6>{{ base_name }} - years: {{ baseline_yrs }}</h6>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <br>
                   
             <div class="center">
                 <div class="float-child">
                   <div><h1>{{plottype_title}} - {{var_title}}</h1></div>
                 </div><!--float-child-->
-                <div class="float-child">
-                  <div>
-                    <button style="border-radius: 10px;"><a href="mean_diag_{{plottype_title}}.html">Back to {{plottype_title}}</a></button>
-                    <button style="border-radius: 10px;"><a href="../index.html">Back to Plot Types</a></button>
-                  </div>
-                </div><!--float-child-->
-            </div><!--center-->
+            <!--</div>--><!--center-->
         
-            <div style="width: 100%;"> <!-- main div-->
-              <div class="grid-container-template" style="border: 3px solid black; border-radius: 10px;">
+            <!--<div class="center" style="display: flex; gap: 20px; width: 75%;">--> <!-- main div-->
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 20px; width: 100%;">
+
+                <div>
+                  <button style="border-radius: 10px; margin: 5px;"><a href="mean_diag_{{plottype_title}}.html">Back to {{plottype_title}}</a></button>
+                  <button style="border-radius: 10px; margin: 5px;"><a href="../index.html">Back to Plot Types</a></button>
+                </div>
+              <div class="grid-container-template" style="border: 3px solid black; border-radius: 10px; flex-grow: 1; padding: 10px;">
                 {% for category, var_seas in mydata.items() %}
                   {% for var_name, ptype_seas in var_seas.items() %}
                     {% if var_name == var_title %}
                       {% if non_seasons[category][var_name] == False %}
                         {% for season in seasons %}
                           {% if season in ptype_seas.keys() %}
-                            <div class="grid-item">
+                          <div class="grid-item {% if current_season == season %}disabled{% endif %}">
+                            {% if current_season == season %}
+                              <span>{{ season }}</span>
+                            {% else %}
                               <a href="../html_img/{{ ptype_seas[season] }}">{{ season }}</a>
-                            </div><!--grid-item-->
+                            {% endif %}
+                          </div><!--grid-item-->
                           {% else %}
                             <div class="grid-item-blocked">
                               <a-blocked>{{ season }}</a-blocked>
@@ -213,16 +216,18 @@
                   {% endfor %}<!-- var_seas.items() -->
                 {% endfor %}<!-- mydata.items() -->
               </div><!--grid-container-->
-              <br>
-        
-              <div id="footer">
-                <div style="width: 100%;" class="center"><!--bottom div -->
-                  <a href="{{ imgs[0] }}" target="_blank">
-                    <img src="{{ imgs[0] }}" alt="{{ imgs[1] }}"></img>
-                  </a>
-                </div> <!-- end bottom div -->
-              </div><!--footer-->
             </div> <!-- end main div -->
+            <br>
+
+            <div id="footer">
+              <div style="width: 100%;" class="center"><!--bottom div -->
+                <a href="{{ imgs[0] }}" target="_blank">
+                  <img src="{{ imgs[0] }}" alt="{{ imgs[1] }}"></img>
+                </a>
+              </div> <!-- end bottom div -->
+            </div><!--footer-->
+          <!--</div>--> <!-- end main div -->
+        </div><!--center-->
 
 
 
