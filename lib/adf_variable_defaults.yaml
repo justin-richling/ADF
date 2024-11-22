@@ -147,7 +147,7 @@ AODDUST:
   category: "Aerosols"
   colormap: "Oranges"
   contour_levels_range: [0.01, 0.6, 0.05]
-  diff_colormap: "PuOr_r"
+  diff_colormap: "BrBG"
   diff_contour_range: [-0.06, 0.06, 0.01]
   scale_factor: 1
   add_offset: 0
@@ -159,7 +159,7 @@ AODVIS:
   category: "Aerosols"
   colormap: "Oranges"
   contour_levels_range: [0.05, 0.6, 0.05]
-  diff_colormap: "PuOr_r"
+  diff_colormap: "BrBG"
   diff_contour_range: [-0.1, 0.1, 0.01]
   scale_factor: 1
   add_offset: 0
@@ -171,7 +171,7 @@ AODVISdn:
   category: "Aerosols"
   colormap: "jet"
   contour_levels_range: [0.01, 1.01, 0.05]
-  diff_colormap: "PuOr_r"
+  diff_colormap: "BrBG"
   diff_contour_range: [-0.4, 0.401, 0.05]
   scale_factor: 1
   add_offset: 0
@@ -1649,7 +1649,7 @@ PBLH:
 PSL:
   colormap: "Oranges"
   contour_levels_range: [980, 1052, 4]
-  diff_colormap: "PuOr_r"
+  diff_colormap: "BrBG"
   diff_contour_range: [-9, 9, 0.5]
   scale_factor: 0.01
   add_offset: 0
@@ -1667,7 +1667,7 @@ PSL:
 PS:
   colormap: "Oranges"
   contour_levels: [500,600,630,660,690,720,750,780,810,840,870,900,930,960,990,1020,1050]
-  diff_colormap: "PuOr_r"
+  diff_colormap: "BrBG"
   diff_contour_range: [-9, 9, 0.5]
   scale_factor: 0.01
   add_offset: 0
