@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ADF Diagnostics</title>
+    <link rel="stylesheet" href="templates/adf_diag.css">
+  </head>
+  <body >
+    <div class="header">
+      <div id="screenFiller" style="background:url(templates/NCAR.gif) top right no-repeat; border:5px solid #555;">
+        <div class="center"><h1> {{ title }}</h1></div><!--center-->
+          <div class="center">
+            <nav role="navigation" class="primary-navigation">
+            <ul>
+              <li><a href="index.html">Case Home</a></li>
+              <li><a href="#">Links &dtrif;</a>
+                <ul class="dropdown">
+                  <li><a href="https://www.cesm.ucar.edu">CESM</a></li>
+                  <li><a href="https://www.cesm.ucar.edu/working_groups/Atmosphere/?ref=nav">AMWG</a></li>
+                  <li><a href="https://www.cgd.ucar.edu/amp/">AMP</a></li>
+                </ul>
+              </li>
+              <li><a href="https://github.com/NCAR/ADF">About</a></li>
+              <li><a href="https://github.com/NCAR/ADF/discussions">Contact</a></li>
+            </ul>
+          </nav>
+        </div><!--center-->
+        <br>
+        <h2 style="display:inline; color:black;"> Test Case: </h2><h2 style="display:inline;">{{ case_name }}</h2><h2 style="display:inline; color:black;"> - years: {{ case_yrs }}</h2><br>
+        <h2 style="display:inline; color:black;"> Baseline Case: </h2><h2 style="display:inline;">{{ base_name }}</h2><h2 style="display:inline; color:black;"> - years: {{ baseline_yrs }}</h2>
+      </div><!--screenFiller-->
+    </div><!--header-->
+
+    <div class="center">
+      <h1>Plot Types</h1>
+    </div>
+
+    <div class="grid-container">
+      {% for avail_type in avail_plot_types %}
+        {% if avail_type in plot_types.keys() %}
+          <div class="grid-item">
+            <a href={{ plot_types[avail_type] }} style="font-size: 30px;"> &nbsp; {{ avail_type }} </a>
+          </div><!--grid-item-->
+        {% else %}
+          <div class="grid-item-blocked">
+            <a-blocked style="font-size: 30px;">{{ avail_type }}</a-blocked>
+          </div><!--grid-item-blocked-->
+        {% endif %}
+      {% endfor %}
+    </div><!--grid-container-ptype-->
+
+    <div class="center">
+      <h1>External Diagnostic Packages</h1>
+    </div>
+    
+    <div class="grid-container">
+      {% for avail_type in avail_external_packages %}
+        {% if avail_type in external_package_links.keys() %}
+          <div class="grid-item">
+            <a href={{ external_package_links[avail_type] }} style="font-size: 30px;"> &nbsp; {{ avail_type }} </a>
+          </div><!--grid-item-->
+        {% else %}
+          <div class="grid-item-blocked">
+            <a-blocked style="font-size: 30px;">{{ avail_type }}</a-blocked>
+          </div><!--grid-item-blocked-->
+        {% endif %}
+      {% endfor %}
+    </div><!--grid-container-external-plots-->
+
+  </body>
+</html>
