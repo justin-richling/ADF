@@ -591,6 +591,7 @@ class AdfWeb(AdfObs):
                 #End if
 
                 if web_data.case == "Case Comparison":
+                    print("AHIUHBJKNKJN")
                     comp_table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
                     comp_table_name = "Case Comparison"
