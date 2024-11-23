@@ -170,13 +170,31 @@
             </div>
         
             <div style="width: 100%;">
-              <table class="big-table">
-                {% for case_name, html_file in amwg_tables.items() %}
-                  <tr>
-                    <td><a id="amwg_table" href="{{ html_file }}">{{ case_name }}</a></td>
-                  </tr>
-                {% endfor %}
-              </table>
+
+
+              <div style="width: 100%;">
+                <table class="big-table">
+                  {% set is_case_comparison = false %}
+                  {% for case_name, html_file in amwg_tables.items() %}
+                    <tr>
+                      <td><a id="amwg_table" href="{{ html_file }}">{{ case_name }}</a></td>
+                    </tr>
+                    {% if case_name == 'Case Comparison' %}
+                      {% set is_case_comparison = true %}
+                    {% endif %}
+                  {% endfor %}
+                </table>
+              
+                <!-- Main Table HTML -->
+                {% if is_case_comparison %}
+                  <h3>{{ table_name }}</h3>
+                  {{ table_html }}
+                {% else %}
+                  <h3>{{ case1 }}</h3>
+                  {{ test_table }}
+                {% endif %}
+              </div>
+              
           </div>
             
             
