@@ -596,7 +596,7 @@ class AdfWeb(AdfObs):
                 #formatting features.
                 table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
-
+                print("web_data.name????",web_data.name==case1)
                 #Construct amwg_table.html
                 rend_kwarg_dict = {"title": main_title,
                                   "case_name": case1,
