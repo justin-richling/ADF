@@ -186,9 +186,9 @@
                 </table>
               
                 <!-- Main Table HTML -->
-                {% if is_case_comparison %}
-                  <h3>{{ case_name }}</h3>
-                  {{ html_file }}
+                {% if table_name == 'Case Comparison' %}
+                  <h3>{{ table_name }}</h3>
+                  {{ table_html }}
                 {% endif %}
               </div>
               
