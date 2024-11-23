@@ -603,6 +603,7 @@ class AdfWeb(AdfObs):
                                   "base_name": data_name,
                                   "baseline_yrs": baseline_yrs,
                                   "amwg_tables": table_html_info,
+                                  "test_table": table_html_info[case_names[0]],
                                   "table_name": web_data.name,
                                   "table_html": table_html,
                                   "multi_head": False}

@@ -180,7 +180,14 @@
                     <tr>
                       <td>
                         <h3>{{ table_name }}</h3>
-                        {{ table_html }}
+                        {{ html_file }}
+                      </td>
+                    </tr>
+                  {% else %}
+                    <tr>
+                      <td>
+                        <h3>{{ test_table }}</h3>
+                        {{ html_file }}
                       </td>
                     </tr>
                   {% endif %}
