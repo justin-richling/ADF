@@ -175,25 +175,9 @@
                   <tr>
                     <td><a id="amwg_table" href="{{ html_file }}">{{ case_name }}</a></td>
                   </tr>
-                  <!-- Main Table HTML -->
-                  {% if case_name == 'Case Comparison' %}
-                    <tr>
-                      <td>
-                        <h3>{{ table_name }}</h3>
-                        {{ html_file }}
-                      </td>
-                    </tr>
-                  {% else %}
-                    <tr>
-                      <td>
-                        <h3>{{ test_table }}</h3>
-                        {{ html_file }}
-                      </td>
-                    </tr>
-                  {% endif %}
                 {% endfor %}
               </table>
-            </div>
+          </div>
             
             
 
