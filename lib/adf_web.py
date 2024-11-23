@@ -594,6 +594,9 @@ class AdfWeb(AdfObs):
                     comp_table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
                     comp_table_name = "Case Comparison"
+                else:
+                    comp_table_html = ""
+                    comp_table_name = ""
 
                 #Write table dataframe HTML as a string:
                 #Note:  One could generate an image file here instead of raw HTML code,
