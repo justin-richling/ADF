@@ -609,7 +609,7 @@ class AdfWeb(AdfObs):
                                   "multi_head": False}
                 rend_kwarg_dict["plot_types"] = multi_plot_type_html
 
-                if web_data.case == "Case Comparison":
+                if web_data.name == "Case Comparison":
                     print("AHIUHBJKNKJN")
                     comp_table_html = web_data.data.to_html(index=False, border=1, justify='center',
                                                    float_format='{:6g}'.format)
