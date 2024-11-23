@@ -590,15 +590,6 @@ class AdfWeb(AdfObs):
                     case1 = case_names[0]
                 #End if
 
-                if web_data.case == "Case Comparison":
-                    print("AHIUHBJKNKJN")
-                    comp_table_html = web_data.data.to_html(index=False, border=1, justify='center',
-                                                   float_format='{:6g}'.format)
-                    comp_table_name = "Case Comparison"
-                else:
-                    comp_table_html = ""
-                    comp_table_name = ""
-
                 #Write table dataframe HTML as a string:
                 #Note:  One could generate an image file here instead of raw HTML code,
                 #which might be beneficial for colored tables and other more advance
@@ -613,12 +604,19 @@ class AdfWeb(AdfObs):
                                   "base_name": data_name,
                                   "baseline_yrs": baseline_yrs,
                                   "amwg_tables": table_html_info,
-                                  "comp_table_name": comp_table_name,
-                                  "comp_table_html":comp_table_html,
                                   "table_name": web_data.name,
                                   "table_html": table_html,
                                   "multi_head": False}
                 rend_kwarg_dict["plot_types"] = multi_plot_type_html
+
+                if web_data.case == "Case Comparison":
+                    print("AHIUHBJKNKJN")
+                    comp_table_html = web_data.data.to_html(index=False, border=1, justify='center',
+                                                   float_format='{:6g}'.format)
+                    comp_table_name = "Case Comparison"
+                    rend_kwarg_dict["comp_table_name"] = comp_table_name
+                    rend_kwarg_dict["comp_table_html"] = comp_table_html
+
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(rend_kwarg_dict)
 
