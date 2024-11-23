@@ -174,7 +174,7 @@
               <div class="grid-item">
   
                   <h3 class="block">{{ category }}</h3>
-                    <div class="grid-container" >
+                    <div class="grid-container-ptype" >
                       {% for var_name, ptype_seas in var_seas.items() %}
                         {% if non_seasons[category][var_name] == False %}<!-- Check if these have traditional seasons, ANN, DJF, etc. -->
                           {% for i,season in enumerate(ptype_seas.keys()) %}
