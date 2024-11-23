@@ -615,7 +615,7 @@ class AdfWeb(AdfObs):
                                                    float_format='{:6g}'.format)
                     comp_table_name = "Case Comparison"
                     rend_kwarg_dict["comp_table_name"] = comp_table_name
-                    rend_kwarg_dict["comp_table_html"] = comp_table_html
+                    rend_kwarg_dict["comp_table_html"] = table_html#comp_table_html
 
                 table_tmpl = jinenv.get_template('template_table.html')
                 table_rndr = table_tmpl.render(rend_kwarg_dict)
@@ -633,7 +633,7 @@ class AdfWeb(AdfObs):
                 #Reuse the rend_kwarg_dict, but ignore certain keys
                 #since all others are the same
                 new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
-                mean_table_rndr = mean_table_tmpl.render(new_dict)
+                mean_table_rndr = mean_table_tmpl.render(rend_kwarg_dict)
                 #Write mean diagnostic tables HTML file:
                 with open(mean_table_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(mean_table_rndr)
