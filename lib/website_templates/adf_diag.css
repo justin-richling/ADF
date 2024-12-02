@@ -221,13 +221,23 @@ table.dataframe thead th{
   height: 100%;
 }
 
-.grid-item-adf {
+/*.grid-item-adf {
   background-color: rgba(255, 255, 255, 0.6);
   font-family: Tahoma, Geneva, Verdana, sans-serif;
   border-collapse: collapse;
   border-radius: 15px;  padding: 10px;
   font-size: 16px;
   text-align: center;
+}*/
+
+
+.grid-container-adf {
+  display: grid;
+  column-gap: 50px;
+  row-gap: 50px;
+  grid-template-columns: repeat(3, auto);
+  background-color: #e4eef0;
+  padding: 85px;
 }
 
 .grid-item-blocked {
@@ -246,6 +256,8 @@ table.dataframe thead th{
   font-size: 12px;
   text-align: center;
 }
+
+
 
 .grid-container-ptype {
   display: grid;

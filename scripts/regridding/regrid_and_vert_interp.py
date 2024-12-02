@@ -253,6 +253,7 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Perform regridding and interpolation of variable:
+                    # _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs)
                     rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
@@ -330,6 +331,7 @@ def regrid_and_vert_interp(adf):
                         #End if
 
                         #Generate vertically-interpolated baseline dataset:
+                        # _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs)
                         tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
                                                                      **regrid_kwargs)
 
