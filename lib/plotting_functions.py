@@ -1372,7 +1372,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     bbox_transform=ax3.transAxes,
                     borderpad=0,
                     )
-    PCT_CB = fig.colorbar(img[2], cax=cb_pct_ax, **cp_info['colorbar_opt'])
+    #PCT_CB = fig.colorbar(img[2], cax=cb_pct_ax, **cp_info['colorbar_opt'])
+    PCT_CB = fig.colorbar(img[2], cax=cb_pct_ax, **cp_info['pct_colorbar_opt'])
     PCT_CB.ax.set_ylabel="%"
 
     cb_diff_ax = inset_axes(ax4,
