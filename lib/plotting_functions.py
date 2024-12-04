@@ -732,19 +732,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         # set levels for difference plot (with a symmetric color bar):
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
     #End if
-    
-    """if "pct_diff_contour_levels" in kwargs:
-        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
-    elif "pct_diff_contour_range" in kwargs:
-            assert len(kwargs['pct_diff_contour_range']) == 3, "pct_diff_contour_range must have exactly three entries: min, max, step"
-            levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
-    else:
-        # set levels for difference plot (with a symmetric color bar):
-        levelspctdiff = np.linspace(-1*absmaxpct, absmaxpct, 15)"""
-
-    # Pct Difference options
-    levelspctdiff = [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
-    pnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
 
     #NOTE: Sometimes the contour levels chosen in the defaults file
     #can result in the "contourf" software stack generating a
@@ -766,8 +753,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     if max(np.abs(levelsdiff)) > 10*absmaxdif:
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
-    
-    
     #End if
     #-------------------------------
 
@@ -780,17 +765,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         
     # Pct Difference options -- Check in kwargs for colormap and levels
     if "pct_diff_colormap" in kwargs:
-        cmappct = kwargs["pct_diff_colormap"]
-        #if "pct_diff_contour_levels" in kwargs:
-        #    pnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
-        #else:
-        #    pnorm, _ = get_difference_colors(levelspctdiff)  # color map output ignored
-        
+        cmappct = kwargs["pct_diff_colormap"]        
     else:
         cmappct = "PuOr_r"
-        #pnorm, cmappct = get_difference_colors(levelspctdiff)
-        #if "pct_diff_contour_levels" in kwargs:
-        #    pnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
     #End if
 
     # -- end options
@@ -1372,7 +1349,6 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                     bbox_transform=ax3.transAxes,
                     borderpad=0,
                     )
-    #PCT_CB = fig.colorbar(img[2], cax=cb_pct_ax, **cp_info['colorbar_opt'])
     PCT_CB = fig.colorbar(img[2], cax=cb_pct_ax, **cp_info['pct_colorbar_opt'])
     PCT_CB.ax.set_ylabel="%"
 
@@ -1932,23 +1908,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         cmappct = "PuOr_r"
     #End if
 
-    """if "pct_diff_contour_levels" in kwargs:
-        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
-    elif "pct_diff_contour_range" in kwargs:
-        assert len(kwargs['pct_diff_contour_range']) == 3, \
-        "pct_diff_contour_range must have exactly three entries: min, max, step"
-
-        levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
-    else:
-        # set a symmetric color bar for diff:
-        absmaxpct = np.max(np.abs(pctdata))
-        # set levels for difference plot:
-        levelspctdiff = np.linspace(-1*absmaxpct, absmaxpct, 12)
-    #End if"""
-
-    #levelspctdiff = [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
-    #normpct = mpl.colors.BoundaryNorm(levelspctdiff,256)
-    #pctnorm
     if "plot_log_pressure" in kwargs:
         plot_log_p = kwargs["plot_log_pressure"]
     else:
@@ -1959,13 +1918,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
     else:
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-        
-    """# color normalization for percent difference
-    if "pct_diff_contour_levels" in kwargs:
-        normpct = mpl.colors.BoundaryNorm(levelspctdiff,256)
-    else :
-        normpct = mpl.colors.Normalize(vmin=np.min(levelspctdiff), vmax=np.max(levelspctdiff))
-    #End if"""
 
     subplots_opt = {}
     contourf_opt = {}
