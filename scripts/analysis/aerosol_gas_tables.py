@@ -273,7 +273,7 @@ def aerosol_gas_tables(adfobj):
 
         # Gather dictionary data for current case
         # NOTE: The calculations can take a long time...
-        Dic_crit, Dic_scn_var_comp[case] = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS)
+        Dic_crit, Dic_scn_var_comp[case],Tropospheric = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS, Tropospheric)
 
         # Regional refinement
         # NOTE: This function 'Inside_SE' is unavailable at the moment! - JR 10/2024
@@ -776,7 +776,7 @@ def fill_dic_SE(adfobj, dic_SE, variables, ListVars, ext1_SE, AEROSOLS, MW, AVO,
 #####
 
 
-def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files, ext1_SE, AEROSOLS):
+def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files, ext1_SE, AEROSOLS, Tropospheric):
     """
     This function retrieves the files, latitude, and longitude information
     in all the directories within the chosen dates.
@@ -905,7 +905,7 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
     msg += f"\n\t - needed variables for budget {needed_vars_tot}"
     adfobj.debug_log(msg)
 
-    return Dic_crit,Dic_scn_var_comp
+    return Dic_crit,Dic_scn_var_comp,Tropospheric
 #####
 
 
