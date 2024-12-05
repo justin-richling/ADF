@@ -887,7 +887,13 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
 
     # Critical threshholds, just run this once
     # this is for finding tropospheric values
-    current_crit=SEbudget(adfobj,dic_SE,current_dir,current_files,'O3',ext1_SE)
+    #current_crit=SEbudget(adfobj,dic_SE,current_dir,current_files,'O3',ext1_SE)
+    try:
+        current_crit=SEbudget(adfobj,dic_SE,current_dir,current_files,'O3',ext1_SE)
+    except:
+        current_crit=SEbudget(adfobj,dic_SE,current_dir,current_files,'U',ext1_SE)
+        Tropospheric=False
+        print('WARNING: O3 was not found in the model, budgets are total')
     Dic_crit=current_crit
 
     # Log info to logging file
