@@ -163,7 +163,7 @@ def aerosol_gas_tables(adfobj):
     end_years = adfobj.climo_yrs["eyears"]
 
     #Grab history strings:
-    hist_strs = adfobj.hist_string["test_hist_str"]
+    #hist_strs = adfobj.hist_string["test_hist_str"]
 
     # Grab history file locations from config yaml file
     hist_locs = adfobj.get_cam_info("cam_hist_loc", required=True)
@@ -180,7 +180,7 @@ def aerosol_gas_tables(adfobj):
         end_years += [adfobj.climo_yrs["eyear_baseline"]]
 
         # Get history file info
-        hist_strs += [adfobj.hist_string["base_hist_str"]]
+        #hist_strs += [adfobj.hist_string["base_hist_str"]]
         hist_locs += [adfobj.get_baseline_info("cam_hist_loc")]
     # End if
 
@@ -193,7 +193,7 @@ def aerosol_gas_tables(adfobj):
     # Initialize nicknames dictionary
     nicknames = {}
 
-    # Filter the list to include only strings that are possible h0 strings
+    """# Filter the list to include only strings that are possible h0 strings
     # - Search for either h0 or h0a
     substrings = {"cam.h0","cam.h0a"}
     case_hist_strs = []
@@ -203,7 +203,7 @@ def aerosol_gas_tables(adfobj):
         for string in cam_case_str:
             if string in substrings:
                 case_hist_strs.append(string)
-                break
+                break"""
 
     # Create path object for the CAM history file(s) location:
     data_dirs = []
@@ -256,7 +256,7 @@ def aerosol_gas_tables(adfobj):
         data_dir = data_dirs[i]
 
         # Get all files, lats, lons, and area weights for current case
-        Files,Lats,Lons,areas[case],ext1_SE = Get_files(adfobj,data_dir,start_year,end_year,case_hist_strs[i],area=True)
+        Files,Lats,Lons,areas[case],ext1_SE = Get_files(adfobj,data_dir,start_year,end_year,area=True)#,case_hist_strs[i]
 
         # find the name of all the variables in the file.
         # this will help the code to work for the variables that are not in the files (assingn 0s)
@@ -325,7 +325,7 @@ def aerosol_gas_tables(adfobj):
 # Helper functions
 ##################
 
-def list_files(adfobj, directory, start_year ,end_year, h_case):
+def list_files(adfobj, directory, start_year ,end_year):#, h_case
 
     """
     This function extracts the files in the directory that are within the chosen dates
@@ -334,6 +334,14 @@ def list_files(adfobj, directory, start_year ,end_year, h_case):
 
     # History file year range
     yrs = np.arange(int(start_year), int(end_year)+1)
+
+    possible_h_strings = ["cam.h0","cam.h0a","cam.h1","cam.h1a"]
+
+    for h_case in possible_h_strings:
+        test_files = sorted(Path(directory).glob(f'*.{h_case}.{yrs[0]}-*'))
+        if len(test_files) > 0:
+            break
+            #h_case = "cam.h0a"
 
     all_filenames = []
     for i in yrs:
@@ -351,7 +359,7 @@ def list_files(adfobj, directory, start_year ,end_year, h_case):
 #####
 
 
-def Get_files(adfobj, data_dir, start_year, end_year, h_case, **kwargs):
+def Get_files(adfobj, data_dir, start_year, end_year, **kwargs):#h_case
 
     """
     This function retrieves the files, latitude, and longitude information
@@ -362,7 +370,7 @@ def Get_files(adfobj, data_dir, start_year, end_year, h_case, **kwargs):
 
     Earth_rad=6.371e6 # Earth Radius in meters
 
-    current_files = list_files(adfobj, data_dir, start_year, end_year,h_case)
+    current_files = list_files(adfobj, data_dir, start_year, end_year)#,h_case
 
     # get the Lat and Lons for each case
     tmp_file = xr.open_dataset(Path(data_dir) / current_files[0])
