@@ -340,12 +340,15 @@ def list_files(adfobj, directory, start_year ,end_year):#, h_case
     for h_case in possible_h_strings:
         test_files = sorted(Path(directory).glob(f'*.{h_case}.{yrs[0]}-*'))
         if len(test_files) > 0:
+            print(f"Looks like its {h_case}!")
+            use_h_case = h_case
             break
             #h_case = "cam.h0a"
+        
 
     all_filenames = []
     for i in yrs:
-        all_filenames.append(sorted(Path(directory).glob(f'*.{h_case}.{i}-*')))
+        all_filenames.append(sorted(Path(directory).glob(f'*.{use_h_case}.{i}-*')))
 
     # Flattening the list of lists
     filenames = list(itertools.chain.from_iterable(sorted(all_filenames)))
