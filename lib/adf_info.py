@@ -221,6 +221,7 @@ class AdfInfo(AdfConfig):
                 pass
 
             if (not calc_baseline_ts) and (input_ts_baseline):
+                #print(f"\nUser indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
                 baseline_ts_done = True
 
 
