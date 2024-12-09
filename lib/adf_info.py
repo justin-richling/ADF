@@ -192,7 +192,11 @@ class AdfInfo(AdfConfig):
             calc_baseline_climo   = self.get_baseline_info("calc_cam_climo")
             cam_climo_loc   = self.get_baseline_info("cam_climo_loc")
             overwrite = self.get_baseline_info("cam_overwrite_climo")
-            overwrite_ts = self.get_baseline_info("cam_overwrite_ts")
+            overwrite_ts = self.get_baseline_info("cam_overwrite_ts")\
+            #Grab baseline time series file location
+            input_ts_baseline = self.get_baseline_info("cam_ts_loc")#, required=True
+            input_ts_loc = Path(input_ts_baseline)
+            
 
             #
             self.__baseline_climo_loc = cam_climo_loc
@@ -210,10 +214,15 @@ class AdfInfo(AdfConfig):
 
             skip_baseline_ts = False
 
-            if not calc_baseline_ts:
+            if (not calc_baseline_ts) and (not input_ts_baseline):
                 print(f"\nWARNING: User indicates they don't want to rely on the ADF for timeseries or history files for '{data_name}'.")
                 print("  - The climo years specified in the config file cannot be verified!")
                 skip_baseline_ts = True
+                pass
+
+            if (not calc_baseline_ts) and (input_ts_baseline):
+                baseline_ts_done = True
+
 
             if not skip_baseline_ts:
                 #Check if time series files already exist,
@@ -221,9 +230,9 @@ class AdfInfo(AdfConfig):
                 if baseline_ts_done:
                     baseline_hist_locs = None
 
-                    #Grab baseline time series file location
+                    """#Grab baseline time series file location
                     input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
-                    input_ts_loc = Path(input_ts_baseline)
+                    input_ts_loc = Path(input_ts_baseline)"""
 
                     #Get years from pre-made timeseries file(s)
                     found_syear_baseline, found_eyear_baseline = self.get_climo_yrs_from_ts(input_ts_loc, data_name)

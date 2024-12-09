@@ -165,10 +165,14 @@ diag_cam_climo:
     end_year: 1999
 
     #Do time series files exist?
-    #If True, then diagnostics assumes that model files are already time series.
-    #If False, or if simply not present, then diagnostics will attempt to create
-    #time series files from history (time-slice) files:
-    cam_ts_done: false
+    #If True, then diagnostics will attempt to create
+    #  time series files from history (time-slice) files:
+    #If False, or if simply not present, then diagnostics assumes the user
+    #is either: 1) using pre-made timeseries -> then just needs: cam_ts_loc
+    #           2) ignoring time series all together -> no need for: cam_ts_save, cam_overwrite_ts, or cam_ts_loc
+    #              eg:
+    #                - Using pre-made climo files 
+    calc_cam_ts: true
 
     #Save interim time series files?
     #WARNING:  This can take up a significant amount of space,
@@ -243,9 +247,9 @@ diag_cam_climo:
     #    - 1999
     #    - 99
 
-    #cam_ts_done:
-    #    - false
-    #    - false
+    #calc_cam_ts:
+    #    - true
+    #    - true
 
     #cam_ts_save:
     #    - true
@@ -320,11 +324,15 @@ diag_cam_baseline_climo:
     #       end at latest available year.
     end_year: 1999
 
-    #Do time series files need to be generated?
-    #If True, then diagnostics assumes that model files are already time series.
-    #If False, or if simply not present, then diagnostics will attempt to create
-    #time series files from history (time-slice) files:
-    cam_ts_done: false
+    #Do time series files exist?
+    #If True, then diagnostics will attempt to create
+    #  time series files from history (time-slice) files:
+    #If False, or if simply not present, then diagnostics assumes the user
+    #is either: 1) using pre-made timeseries -> then just needs: cam_ts_loc
+    #           2) ignoring time series all together -> no need for: cam_ts_save, cam_overwrite_ts, or cam_ts_loc
+    #              eg:
+    #                - Using pre-made climo files 
+    calc_cam_ts: true
 
     #Save interim time series files for baseline run?
     #WARNING:  This can take up a significant amount of space:
