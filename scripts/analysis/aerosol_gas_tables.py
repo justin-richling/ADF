@@ -419,6 +419,8 @@ def set_dic_SE(ListVars, ext1_SE):
     #----------------------
     dic_SE={}
 
+    dic_SE['U']={'U'+ext1_SE:1}
+
     # Chemistry
     #----------
     dic_SE['O3']={'O3'+ext1_SE:1e9} # covert to ppb for Tropopause calculation
