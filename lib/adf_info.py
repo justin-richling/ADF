@@ -422,13 +422,15 @@ class AdfInfo(AdfConfig):
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         calc_test_ts = self.get_cam_info("cam_ts_done")
         if calc_test_ts is None:
-            calc_test_ts = [None]*len(case_names)
+            calc_test_ts = {}#[None]*len(case_names)
+            for case in case_names:
+                calc_test_ts[case] = None
         else:
             #Check if any time series files are pre-made
             if len(calc_test_ts) == len(case_names):
                 for i,case in enumerate(calc_test_ts):
                     if case is None:
-                        calc_test_ts[i] = None
+                        calc_test_ts[case] = None
             else:
                 print("We have a problem, the number of locs does not match the number of cases!")
                 #adf.error thingy
@@ -874,10 +876,10 @@ class AdfInfo(AdfConfig):
 
         #Note that copies are needed in order to avoid having a script mistakenly
         #modify these variables, as they are mutable and thus passed by reference:
-        calc_test_ts = copy.copy(self.__calc_test_ts)
+        calc_test_tss = copy.copy(self.__calc_test_ts)
         calc_baseline_ts = self.__calc_baseline_ts
 
-        return {"test":calc_test_ts,"baseline":calc_baseline_ts}
+        return {"test":calc_test_tss,"baseline":calc_baseline_ts}
 
 
     @property#self.__calc_baseline_ts
