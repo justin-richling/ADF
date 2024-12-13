@@ -126,16 +126,74 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    input_locs = adf.ts_locs("test")
+
+
+    #Check if user wants to skip time series file creation
+    #calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
+    if not input_locs:
+        #print("User indicates no time series files will be used")
+        #print()
+        emsg = "\n  User indicates no time series files will be used."
+        emsg += " Looking if table already exisits:"
+        print(emsg)
+
+        #if ah:
+        for case_idx, case_name in enumerate(case_names):
+            #Convert output location string to a Path object:
+            output_location = Path(output_locs[case_idx])
+            #Create output file name:
+            output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+            if Path(output_csv_file).is_file():
+                print(f"\t - AMWG table for '{case_name}' exists, adding to website.")
+                table_df = pd.read_csv(output_csv_file)
+                # last step is to add table dataframe to website (if enabled):
+                adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+            else:
+                print(f"\t - AMWG table for '{case_name}' does not exist.")
+                print('\t  check here:',output_csv_file,"\n")
+        pass#return
+    else:
+        input_locs = adf.get_cam_info("cam_climo_loc")
+
+
+
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+        input_loc = adf.get_baseline_info("cam_ts_loc", required=True)
+
+
+        if not input_loc:
+            #print("User indicates no time series files will be used")
+            #print()
+            emsg = "\n  User indicates no time series files will be used."
+            emsg += " Looking if table already exisits:"
+            print(emsg)
+
+            #if ah:
+            for case_idx, case_name in enumerate(case_names):
+                #Convert output location string to a Path object:
+                output_location = Path(output_locs[case_idx])
+                #Create output file name:
+                output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+                if Path(output_csv_file).is_file():
+                    print(f"\t - AMWG table for '{case_name}' exists, adding to website.")
+                    table_df = pd.read_csv(output_csv_file)
+                    # last step is to add table dataframe to website (if enabled):
+                    adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+                else:
+                    print(f"\t - AMWG table for '{case_name}' does not exist.")
+                    print('\t  check here:',output_csv_file,"\n")
+            pass#return
+        else:
+            input_loc = adf.get_cam_info("cam_climo_loc")
 
         case_names.append(baseline_name)
-        input_ts_locs.append(input_ts_baseline)
+        input_locs.append(input_loc)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
@@ -154,7 +212,7 @@ def amwg_table(adf):
         output_location = Path(output_locs[case_idx])
 
         #Generate input file path:
-        input_location = Path(input_ts_locs[case_idx])
+        input_location = Path(input_locs[case_idx])
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
