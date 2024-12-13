@@ -209,6 +209,8 @@ class AdfInfo(AdfConfig):
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
             self.__input_ts_baseline = {data_name:input_ts_baseline}
 
+            #self.__calc_baseline_climo = {data_name:input_ts_baseline}
+
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             #if baseline_ts_done:
@@ -250,6 +252,7 @@ class AdfInfo(AdfConfig):
                         print(msg)
                         eyear_baseline = found_eyear_baseline
                 else:
+                    #self.__calc_baseline_climo = {data_name:False}
                     print(f"Ahhh, no time series are supplied/needed for {data_name}? Better be sure of this boi!")
             # End if
 
@@ -403,7 +406,7 @@ class AdfInfo(AdfConfig):
         self.__hist_str = hist_str
 
         #Check if using pre-made ts files
-        cam_ts_done   = self.get_cam_info("cam_ts_done")
+        #cam_ts_done   = self.get_cam_info("cam_ts_done")
         calc_baseline_ts   = self.get_baseline_info("cam_calc_ts")
         print("calc_baseline_ts",calc_baseline_ts,"\n")
         if calc_baseline_ts is None:
@@ -477,6 +480,45 @@ class AdfInfo(AdfConfig):
         #test_ts_locs[data_name] = test_ts_loc
         #self.__ts_locs_dict = test_ts_locs
         ##################################################################
+
+
+
+
+
+        #Check if climatology files need to be calculated
+        ##################################################################
+        calc_test_climo = self.get_cam_info("calc_cam_climo")
+        if calc_test_climo is None:
+            calc_test_climo = [False]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(calc_test_climo) == len(case_names):
+                for i,case in enumerate(calc_test_climo):
+                    if case is None:
+                        calc_test_climo[i] = True
+            else:
+                print()
+
+        #Add check for obs!!!        
+        self.__calc_test_climo = {}
+        for i,cam_ts in enumerate(calc_test_climo):
+            self.__calc_test_climo[case_names[i]] = cam_ts
+
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+        #calc_bl_climo = self.__calc_bl_climo
+        """if self.__calc_bl_climo:
+            calc_bl_climo = self.__calc_bl_climo
+        else:
+            calc_bl_climo = True
+        calc_test_climo[data_name] = calc_bl_climo
+        self.__calc_climo_dict = calc_test_climo"""
+        ##################################################################
+
+
+
+
+
+
 
         #Loop over cases:
         syears_fixed = []
@@ -847,6 +889,24 @@ class AdfInfo(AdfConfig):
         baseline_ts_loc = self.__input_ts_baseline
 
         return {"test":test_ts_locs,"baseline":baseline_ts_loc}
+
+    
+    @property#self.__calc_baseline_ts
+    def calc_climos(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        #test_ts_locs = copy.copy(self.__test_ts_locs)
+        #calc_baseline_ts = self.__calc_baseline_ts
+        #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
+
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+
+        #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+        calc_base_climo = self.__calc_base_climo
+
+        return {"test":calc_test_climo,"baseline":calc_base_climo}
 
     #########
 

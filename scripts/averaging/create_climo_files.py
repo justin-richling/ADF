@@ -70,8 +70,8 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
+    input_ts_locs = adf.get_cam_info("cam_ts_loc")#, required=True
+    output_locs   = adf.get_cam_info("cam_climo_loc")#, required=True
     calc_climos   = adf.get_cam_info("calc_cam_climo")
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
@@ -87,12 +87,40 @@ def create_climo_files(adf, clobber=False, search=None):
         overwrite = [None]*len(case_names)
     #End if
 
+    #If variables weren't provided in config file, then make them a list
+    #containing only None-type entries:
+    if not calc_climos:
+        calc_climos = [None]*len(case_names)
+    else:
+        #Check if any time series files are pre-made
+        if len(calc_climos) == len(case_names):
+            for i,case in enumerate(calc_climos):
+                if case is None:
+                    calc_climos[i] = None
+        else:
+            print("We have a problem, the number of climo locs does not match the number of cases!")
+            #adf.error thingy
+    
+    if not overwrite:
+        overwrite = [None]*len(case_names)
+    else:
+        #Check if any time series files are pre-made
+        if len(overwrite) == len(case_names):
+            for i,case in enumerate(overwrite):
+                if case is None:
+                    overwrite[i] = None
+        else:
+            print("We have a problem, the number of overwrite does not match the number of cases!")
+            #adf.error thingy
+
+
+
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
-        output_bl_loc     = adf.get_baseline_info("cam_climo_loc", required=True)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")#, required=True
+        output_bl_loc     = adf.get_baseline_info("cam_climo_loc")#, required=True
         calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
