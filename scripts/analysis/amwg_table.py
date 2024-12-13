@@ -129,6 +129,15 @@ def amwg_table(adf):
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     input_locs = adf.ts_locs("test")
 
+    #adf.get_baseline_info("cam_climo_loc")
+    input_climo_locs = adf.get_cam_info("cam_climo_loc")
+
+    #Grab case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
+
+    
+
 
     #Check if user wants to skip time series file creation
     #calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
@@ -153,11 +162,11 @@ def amwg_table(adf):
             else:
                 print(f"\t - AMWG table for '{case_name}' does not exist.")
                 print('\t  check here:',output_csv_file,"\n")
+        #input_locs = []
         pass#return
-    else:
-        input_locs = adf.get_cam_info("cam_climo_loc")
-
-
+    #else:
+        #input_locs = []
+        #input_locs = adf.get_cam_info("cam_climo_loc")
 
 
     #Check if a baseline simulation is also being used:
@@ -165,7 +174,15 @@ def amwg_table(adf):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         input_loc = adf.get_baseline_info("cam_ts_loc", required=True)
+        input_climo_loc = adf.get_baseline_info("cam_climo_loc")
+        input_climo_locs.append(input_climo_loc)
 
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = adf.climo_yrs["syear_baseline"]
+        eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+        syear_cases.append(syear_baseline)
+        eyear_cases.append(eyear_baseline)
 
         if not input_loc:
             #print("User indicates no time series files will be used")
@@ -175,30 +192,31 @@ def amwg_table(adf):
             print(emsg)
 
             #if ah:
-            for case_idx, case_name in enumerate(case_names):
-                #Convert output location string to a Path object:
-                output_location = Path(output_locs[case_idx])
-                #Create output file name:
-                output_csv_file = output_location / f"amwg_table_{case_name}.csv"
-                if Path(output_csv_file).is_file():
-                    print(f"\t - AMWG table for '{case_name}' exists, adding to website.")
-                    table_df = pd.read_csv(output_csv_file)
-                    # last step is to add table dataframe to website (if enabled):
-                    adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
-                else:
-                    print(f"\t - AMWG table for '{case_name}' does not exist.")
-                    print('\t  check here:',output_csv_file,"\n")
+            #for case_idx, case_name in enumerate(case_names):
+            #Convert output location string to a Path object:
+            output_location = Path(output_locs[0])
+            #Create output file name:
+            output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
+            if Path(output_csv_file).is_file():
+                print(f"\t - AMWG table for '{baseline_name}' exists, adding to website.")
+                table_df = pd.read_csv(output_csv_file)
+                # last step is to add table dataframe to website (if enabled):
+                adf.add_website_data(table_df, baseline_name, baseline_name, plot_type="Tables")
+            else:
+                print(f"\t - AMWG table for '{baseline_name}' does not exist.")
+                print('\t  check here:',output_csv_file,"\n")
             pass#return
         else:
-            input_loc = adf.get_cam_info("cam_climo_loc")
-
-        #case_names.append(baseline_name)
-        if input_loc:
-            case_names.append(baseline_name)
+            #input_loc = adf.get_baseline_info("cam_climo_loc")
             input_locs.append(input_loc)
 
+        #case_names.append(baseline_name)
+        #if input_loc:
+        case_names.append(baseline_name)
+            #input_locs.append(input_loc)
+
         #Save the baseline to the first case's plots directory:
-        output_locs.append(output_locs[0])
+        output_locs.append(output_location)
     else:
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
@@ -216,9 +234,24 @@ def amwg_table(adf):
         #Generate input file path:
         input_location = Path(input_locs[case_idx])
 
+        if not input_location:
+            print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
+            is_climo = True
+        else:
+            is_climo = False
+
+        print("\nis_climo:",is_climo,"\n")
+
+        #Generate input file path:
+        if not is_climo:
+            input_location = Path(input_locs[case_idx])
+        if is_climo:
+            input_location = Path(input_climo_locs[case_idx])
+        #print("input_location",input_location,"\n")
+
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
-            errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
+            errmsg = f"Directory '{input_location}' not found.  Script is exiting."
             raise AdfError(errmsg)
         #Write to debug log if enabled:
         adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
@@ -245,18 +278,27 @@ def amwg_table(adf):
             print(f"\t - Variable '{var}' being added to table")
 
             #Create list of time series files present for variable:
-            ts_filenames = f'{case_name}.*.{var}.*nc'
-            ts_files = sorted(input_location.glob(ts_filenames))
+            #ts_filenames = f'{case_name}.*.{var}.*nc'
+            #ts_files = sorted(input_location.glob(ts_filenames))
+
+
+            if is_climo:
+                #Create list of climo files present for variable:
+                filenames = f'{case_name}_{var}_climo.nc'
+            else:
+                #Create list of time series files present for variable:
+                filenames = f'{case_name}.*.{var}.*nc'
+            files = sorted(input_location.glob(filenames))
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
-            if not ts_files:
+            if not files:
                 errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
             #End if
 
             #TEMPORARY:  For now, make sure only one file exists:
-            if len(ts_files) != 1:
+            if len(files) != 1:
                 errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
                 errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
                 print(errmsg)
@@ -264,8 +306,10 @@ def amwg_table(adf):
             #End if
 
             #Load model variable data from file:
-            ds = pf.load_dataset(ts_files)
+            ds = pf.load_dataset(files)
             data = ds[var]
+            if not is_climo:
+                data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
@@ -321,7 +365,7 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = pf.spatial_average(data)  # changes data "in place"
 
-            # In order to get correct statistics, average to annual or seasonal
+            """# In order to get correct statistics, average to annual or seasonal
             data = pf.annual_mean(data, whole_years=True, time_name='time')
 
             # create a dataframe:
@@ -330,7 +374,29 @@ def amwg_table(adf):
 
             # These get written to our output file:
             stats_list = _get_row_vals(data)
-            row_values = [var, unit_str] + stats_list
+            row_values = [var, unit_str] + stats_list"""
+
+            if is_climo:
+                data = pf.seasonal_mean(data, season="ANN", is_climo=True)
+                #Conditional Formatting depending on type of float
+                if np.abs(data) < 1:
+                    formatter = ".3g"
+                else:
+                    formatter = ".3f"
+                mean_final = f'{data:{formatter}}'
+
+                # create a dataframe:
+                cols = ['variable', 'unit', 'mean']
+                row_values = [var, unit_str] + [mean_final]
+            else:
+                # In order to get correct statistics, average to annual or seasonal
+                data = pf.annual_mean(data, whole_years=True, time_name='time')
+                # create a dataframe:
+                cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
+                            'standard error', '95% CI', 'trend', 'trend p-value']
+                stats_list = _get_row_vals(data)
+                row_values = [var, unit_str] + stats_list
+            #End if
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -393,6 +459,15 @@ def amwg_table(adf):
 ##################
 # Helper functions
 ##################
+
+def fixcesmtime(dat,syear,eyear):
+    """
+    Fix the CESM timestamp with a simple set of dates
+    """
+    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
+    dat = dat.assign_coords({"time":timefix})
+
+    return dat
 
 def _get_row_vals(data):
     # Now that data is (time,), we can do our simple stats:
