@@ -218,7 +218,7 @@ class AdfInfo(AdfConfig):
             if not calc_baseline_ts:
                 baseline_hist_locs = None
 
-                if input_ts_baseline:
+                if input_ts_baseline is not None:
                     #Grab baseline time series file location
                     #input_ts_baseline = self.get_baseline_info("cam_ts_loc", required=True)
                     input_ts_loc = Path(input_ts_baseline)
