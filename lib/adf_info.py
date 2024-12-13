@@ -204,9 +204,10 @@ class AdfInfo(AdfConfig):
             print("calc_baseline_ts",calc_baseline_ts,"\n")
             if calc_baseline_ts is None:
                 calc_baseline_ts = False
-            #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
+            self.__calc_baseline_ts = {data_name:calc_baseline_ts}
 
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+            self.__input_ts_baseline = {data_name:input_ts_baseline}
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
@@ -818,6 +819,34 @@ class AdfInfo(AdfConfig):
             base_hist_strs = ""
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
+
+
+    @property#self.__calc_baseline_ts
+    def calc_ts(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        calc_test_ts = copy.copy(self.__calc_test_ts)
+        calc_baseline_ts = self.__calc_baseline_ts
+
+        return {"test":calc_test_ts,"baseline":calc_baseline_ts}
+
+
+    @property#self.__calc_baseline_ts
+    def ts_locs(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        test_ts_locs = copy.copy(self.__test_ts_locs)
+        #calc_baseline_ts = self.__calc_baseline_ts
+        #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
+
+        #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+        baseline_ts_loc = self.__input_ts_baseline
+
+        return {"test":test_ts_locs,"baseline":baseline_ts_loc}
 
     #########
 

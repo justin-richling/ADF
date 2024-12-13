@@ -345,9 +345,10 @@ class AdfDiag(AdfWeb):
             # Use baseline settings, while converting them all
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
-            cam_ts_done = [self.get_baseline_info("cam_ts_done")]
+            calc_ts = [self.calc_ts("baseline")]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            ts_dirs = [self.get_baseline_info("cam_ts_loc", required=True)]
+            #ts_dirs = [self.get_baseline_info("cam_ts_loc", required=True)]
+            ts_dirs = [self.ts_locs("baseline")]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
@@ -357,9 +358,10 @@ class AdfDiag(AdfWeb):
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
-            cam_ts_done = self.get_cam_info("cam_ts_done")
+            calc_ts = self.calc_ts("test")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dirs = self.get_cam_info("cam_ts_loc", required=True)
+            #ts_dirs = self.get_cam_info("cam_ts_loc", required=True)
+            ts_dirs = self.ts_locs("test")
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
@@ -377,9 +379,16 @@ class AdfDiag(AdfWeb):
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
-            if cam_ts_done[case_idx]:
+            if (not calc_ts[case_name]) and (ts_dirs[case_name]):
                 emsg = " Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
+                print(emsg)
+                continue
+            # End if
+            
+            if (not calc_ts[case_name]) and (not ts_dirs[case_name]):
+                emsg = f" Configuration file indicates time series files for case '{case_name}'"
+                emsg += f" don't need to be used."
                 print(emsg)
                 continue
             # End if
