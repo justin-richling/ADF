@@ -207,6 +207,8 @@ class AdfInfo(AdfConfig):
             self.__calc_baseline_ts = {data_name:calc_baseline_ts}
 
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+            if input_ts_baseline == "None":
+                input_ts_baseline = None
             print(input_ts_baseline)
             self.__input_ts_baseline = {data_name:input_ts_baseline}
 
@@ -462,7 +464,8 @@ class AdfInfo(AdfConfig):
             #Check if any time series files are pre-made
             if len(input_ts_locs) == len(case_names):
                 for i,case in enumerate(input_ts_locs):
-                    if case is None:
+                    #if case is None:
+                    if case == "None":
                         input_ts_locs[i] = None
             else:
                 print("We have a problem, the number of locs does not match the number of cases!")
