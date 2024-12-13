@@ -192,8 +192,10 @@ def amwg_table(adf):
         else:
             input_loc = adf.get_cam_info("cam_climo_loc")
 
-        case_names.append(baseline_name)
-        input_locs.append(input_loc)
+        #case_names.append(baseline_name)
+        if input_loc:
+            case_names.append(baseline_name)
+            input_locs.append(input_loc)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
