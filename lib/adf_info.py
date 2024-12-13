@@ -219,7 +219,7 @@ class AdfInfo(AdfConfig):
             #if baseline_ts_done:
             #if (not calc_baseline_ts) and (input_ts_baseline):
             if not calc_baseline_ts:
-                baseline_hist_locs = None
+                baseline_hist_locs = [None]
 
                 if input_ts_baseline is not None:
                     #Grab baseline time series file location
