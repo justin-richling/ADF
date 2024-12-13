@@ -207,6 +207,7 @@ class AdfInfo(AdfConfig):
             self.__calc_baseline_ts = {data_name:calc_baseline_ts}
 
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
+            print(input_ts_baseline)
             self.__input_ts_baseline = {data_name:input_ts_baseline}
 
             #self.__calc_baseline_climo = {data_name:input_ts_baseline}
