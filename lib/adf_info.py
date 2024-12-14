@@ -530,6 +530,8 @@ class AdfInfo(AdfConfig):
         syears_fixed = []
         eyears_fixed = []
         for case_idx, case_name in enumerate(case_names):
+            syear = syears[case_idx]
+            eyear = eyears[case_idx]
 
             #if not calc_test_ts[case_idx]:
             if not calc_test_ts[case_name]:
@@ -538,8 +540,8 @@ class AdfInfo(AdfConfig):
 
                 if test_ts_locs[case_name]:
                     test_ts_loc = test_ts_locs[case_name]
-                    syear = syears[case_idx]
-                    eyear = eyears[case_idx]
+                    #syear = syears[case_idx]
+                    #eyear = eyears[case_idx]
 
                     #Check if time series files exist, if so don't rely on climo years
                     #if cam_ts_done[case_idx]:
