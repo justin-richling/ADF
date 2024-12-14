@@ -200,7 +200,7 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             #baseline_ts_done   = self.get_baseline_info("cam_ts_done")
-            calc_baseline_ts   = self.get_baseline_info("cam_calc_ts")
+            calc_baseline_ts   = self.get_baseline_info("calc_cam_ts")
             print("calc_baseline_ts",calc_baseline_ts,"\n")
             if calc_baseline_ts is None:
                 calc_baseline_ts = False
