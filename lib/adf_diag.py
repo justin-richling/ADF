@@ -375,10 +375,11 @@ class AdfDiag(AdfWeb):
 
         # get info about variable defaults
         res = self.variable_defaults
-        print("ts_dirs[case_name]",ts_dirs[case_name])
-        print("calc_ts[case_name]",calc_ts[case_name],"\n")
+
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
+            print("ts_dirs[case_name]",ts_dirs[case_name])
+            print("calc_ts[case_name]",calc_ts[case_name],"\n")
             # Check if particular case should be processed:
             if (not calc_ts[case_name]) and (ts_dirs[case_name]):
                 emsg = " Configuration file indicates time series files have been pre-computed"
