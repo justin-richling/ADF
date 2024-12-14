@@ -532,7 +532,7 @@ class AdfInfo(AdfConfig):
         for case_idx, case_name in enumerate(case_names):
 
             #if not calc_test_ts[case_idx]:
-            if not calc_test_ts[case_names]:
+            if not calc_test_ts[case_name]:
                 cam_hist_locs[case_idx] = None
                 #test_ts_loc = test_ts_locs[case_idx]
 
