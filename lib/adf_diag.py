@@ -375,7 +375,8 @@ class AdfDiag(AdfWeb):
 
         # get info about variable defaults
         res = self.variable_defaults
-
+        print("ts_dirs[case_name]",ts_dirs[case_name])
+        print("calc_ts[case_name]",calc_ts[case_name],"\n")
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
