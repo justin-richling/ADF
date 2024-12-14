@@ -375,7 +375,7 @@ class AdfDiag(AdfWeb):
 
         # get info about variable defaults
         res = self.variable_defaults
-
+        print("calc_ts",calc_ts,"\n")
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             print("ts_dirs[case_name]",ts_dirs[case_name],type(ts_dirs[case_name]))
