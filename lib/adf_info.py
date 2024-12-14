@@ -408,13 +408,13 @@ class AdfInfo(AdfConfig):
         #Initialize CAM history string nested list
         self.__hist_str = hist_str
 
-        #Check if using pre-made ts files
+        """#Check if using pre-made ts files
         #cam_ts_done   = self.get_cam_info("cam_ts_done")
         calc_baseline_ts   = self.get_baseline_info("cam_calc_ts")
         print("calc_baseline_ts",calc_baseline_ts,"\n")
         if calc_baseline_ts is None:
             calc_baseline_ts = False
-        #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
+        #self.__calc_baseline_ts = {data_name:calc_baseline_ts}"""
 
 
         #Grab case time series file location(s)
