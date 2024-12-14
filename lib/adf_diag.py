@@ -348,7 +348,7 @@ class AdfDiag(AdfWeb):
             calc_ts = [self.calc_ts["baseline"]]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             #ts_dirs = [self.get_baseline_info("cam_ts_loc", required=True)]
-            ts_dirs = [self.ts_locs("baseline")]
+            ts_dirs = [self.ts_locs["baseline"]]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
@@ -361,7 +361,7 @@ class AdfDiag(AdfWeb):
             calc_ts = self.calc_ts["test"]
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
             #ts_dirs = self.get_cam_info("cam_ts_loc", required=True)
-            ts_dirs = self.ts_locs("test")
+            ts_dirs = self.ts_locs["test"]
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
