@@ -167,6 +167,11 @@ def aerosol_gas_tables(adfobj):
 
     # Grab history file locations from config yaml file
     hist_locs = adfobj.get_cam_info("cam_hist_loc", required=True)
+
+    # Grab history file locations from config yaml file
+    hist_strs = adfobj.get_cam_info("aerosol_hist_str")
+    if hist_strs is None:
+        hist_strs = ["cam.h0a"]*len(case_names)
     
     # Check if this is test model vs baseline model
     # If so, update test case(s) lists created above
@@ -180,8 +185,13 @@ def aerosol_gas_tables(adfobj):
         end_years += [adfobj.climo_yrs["eyear_baseline"]]
 
         # Get history file info
-        #hist_strs += [adfobj.hist_string["base_hist_str"]]
         hist_locs += [adfobj.get_baseline_info("cam_hist_loc")]
+
+        # Grab history file locations from config yaml file
+        base_hist_str = adfobj.get_baseline_info("aerosol_hist_str")
+        if base_hist_str is None:
+            base_hist_str = "cam.h0a"
+        hist_strs += [base_hist_str]
     # End if
 
     # Check to ensure number of case names matches number history file locations.
@@ -254,9 +264,10 @@ def aerosol_gas_tables(adfobj):
 
         # Get currenty history file directory
         data_dir = data_dirs[i]
+        hist_str = hist_strs[i]
 
         # Get all files, lats, lons, and area weights for current case
-        Files,Lats,Lons,areas[case],ext1_SE = Get_files(adfobj,data_dir,start_year,end_year,area=True)#,case_hist_strs[i]
+        Files,Lats,Lons,areas[case],ext1_SE = Get_files(adfobj,data_dir,hist_str,start_year,end_year,area=True)#,case_hist_strs[i]
 
         # find the name of all the variables in the file.
         # this will help the code to work for the variables that are not in the files (assingn 0s)
@@ -325,7 +336,7 @@ def aerosol_gas_tables(adfobj):
 # Helper functions
 ##################
 
-def list_files(adfobj, directory, start_year ,end_year):#, h_case
+def list_files(adfobj, directory, hist_str, start_year ,end_year):#, h_case
 
     """
     This function extracts the files in the directory that are within the chosen dates
@@ -335,20 +346,21 @@ def list_files(adfobj, directory, start_year ,end_year):#, h_case
     # History file year range
     yrs = np.arange(int(start_year), int(end_year)+1)
 
-    possible_h_strings = ["cam.h0","cam.h0a","cam.h1","cam.h1a"]
+    #possible_h_strings = ["cam.h0","cam.h0a","cam.h1","cam.h1a","cam.h2","cam.h2a"]
 
-    for h_case in possible_h_strings:
-        test_files = sorted(Path(directory).glob(f'*.{h_case}.{yrs[0]}-*'))
-        if len(test_files) > 0:
-            print(f"Looks like its {h_case}!")
-            use_h_case = h_case
-            break
-            #h_case = "cam.h0a"
+    #for h_case in possible_h_strings:
+    #    test_files = sorted(Path(directory).glob(f'*.{h_case}.{yrs[0]}-*'))
+    #    if len(test_files) > 0:
+    #        print(f"Looks like its {h_case}!")
+    #        use_h_case = h_case
+    #        break
+    #        #h_case = "cam.h0a"
         
 
+    test_files = sorted(Path(directory).glob(f'*.{hist_str}.{yrs[0]}-*'))
     all_filenames = []
     for i in yrs:
-        all_filenames.append(sorted(Path(directory).glob(f'*.{use_h_case}.{i}-*')))
+        all_filenames.append(sorted(Path(directory).glob(f'*.{hist_str}.{i}-*')))
 
     # Flattening the list of lists
     filenames = list(itertools.chain.from_iterable(sorted(all_filenames)))
@@ -362,7 +374,7 @@ def list_files(adfobj, directory, start_year ,end_year):#, h_case
 #####
 
 
-def Get_files(adfobj, data_dir, start_year, end_year, **kwargs):#h_case
+def Get_files(adfobj, data_dir, hist_str, start_year, end_year, **kwargs):#h_case
 
     """
     This function retrieves the files, latitude, and longitude information
@@ -373,7 +385,7 @@ def Get_files(adfobj, data_dir, start_year, end_year, **kwargs):#h_case
 
     Earth_rad=6.371e6 # Earth Radius in meters
 
-    current_files = list_files(adfobj, data_dir, start_year, end_year)#,h_case
+    current_files = list_files(adfobj, data_dir, hist_str, start_year, end_year)#,h_case
 
     # get the Lat and Lons for each case
     tmp_file = xr.open_dataset(Path(data_dir) / current_files[0])
