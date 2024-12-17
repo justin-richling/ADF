@@ -267,6 +267,7 @@ def aerosol_gas_tables(adfobj):
         hist_str = hist_strs[i]
 
         # Get all files, lats, lons, and area weights for current case
+        print("hist_str",hist_str,"\n")
         Files,Lats,Lons,areas[case],ext1_SE = Get_files(adfobj,data_dir,hist_str,start_year,end_year,area=True)#,case_hist_strs[i]
 
         # find the name of all the variables in the file.
