@@ -358,6 +358,7 @@ def list_files(adfobj, directory, hist_str, start_year ,end_year):#, h_case
         
 
     test_files = sorted(Path(directory).glob(f'*.{hist_str}.{yrs[0]}-*'))
+    print("test_files",test_files,"\n")
     all_filenames = []
     for i in yrs:
         all_filenames.append(sorted(Path(directory).glob(f'*.{hist_str}.{i}-*')))
@@ -386,6 +387,8 @@ def Get_files(adfobj, data_dir, hist_str, start_year, end_year, **kwargs):#h_cas
     Earth_rad=6.371e6 # Earth Radius in meters
 
     current_files = list_files(adfobj, data_dir, hist_str, start_year, end_year)#,h_case
+
+    print("current_files",current_files,"\n")
 
     # get the Lat and Lons for each case
     tmp_file = xr.open_dataset(Path(data_dir) / current_files[0])
