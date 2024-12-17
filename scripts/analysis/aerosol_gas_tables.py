@@ -358,11 +358,11 @@ def list_files(adfobj, directory, hist_str, start_year ,end_year):#, h_case
     #        #h_case = "cam.h0a"
         
 
-    test_files = sorted(Path(directory).glob(f'*.{hist_str}.{yrs[0]}-*'))
+    test_files = sorted(Path(directory).glob(f'*.{hist_str}.{yrs[0]}-*.nc'))
     print("test_files",test_files,"\n")
     all_filenames = []
     for i in yrs:
-        all_filenames.append(sorted(Path(directory).glob(f'*.{hist_str}.{i}-*')))
+        all_filenames.append(sorted(Path(directory).glob(f'*.{hist_str}.{i}-*.nc')))
 
     # Flattening the list of lists
     filenames = list(itertools.chain.from_iterable(sorted(all_filenames)))
