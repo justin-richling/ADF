@@ -485,7 +485,7 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
     else:
         print(f"\t  ...Making zonal mean average file from history files for {case_name}")
         h0_lists = []
-
+        print("hist_loc",hist_loc,"\n","hist_str",hist_str,"\n")
         for yr in np.arange(int(syr),int(eyr)+1):
             #h0_lists.append(sorted(glob.glob(f'{hist_loc}*cam.h0.{yr}-*')))
             h0_lists.append(sorted(glob.glob(f'{hist_loc}*{hist_str}.{yr}-*.nc')))
