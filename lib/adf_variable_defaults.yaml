@@ -1385,6 +1385,23 @@ utendwtem:
 
 # Plot Specific formatting
 ##########################
+# AOD 4-Panel plots vs MERRA and MODIS
+#-------------------------------------
+aod_diags:
+    plot_params:
+      range_min: -0.4
+      range_max: 0.4
+      nlevel: 17
+      colormap: "bwr"
+
+    plot_params_relerr:
+      range_max: 100
+      range_min: -100
+      nlevel: 21
+      colormap: "PuOr_r"
+
+#-----------
+
 #NOTE: If using any obs file that is in the ADF default directory, provide just the file name
 #      ex: MERRA2_met.nc -> is an ADF default obs file
 #
