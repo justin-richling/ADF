@@ -1398,7 +1398,7 @@ aod_diags:
       range_max: 100
       range_min: -100
       nlevel: 21
-      colormap: "PuOr_r"
+      colormap: "bwr"
 
 #-----------
 
