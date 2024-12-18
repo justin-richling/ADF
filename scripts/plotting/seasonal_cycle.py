@@ -406,7 +406,7 @@ def seasonal_cycle(adfobj):
 
 
 
-    #WACCM QBO
+    """#WACCM QBO
     #---------
     # Notify user that script has started:
     print("\n\t Making WACCM QBO...")
@@ -432,7 +432,7 @@ def seasonal_cycle(adfobj):
                                     )
     #End if
 
-    #End plotting scripts
+    #End plotting scripts"""
 
 
 
