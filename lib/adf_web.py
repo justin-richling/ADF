@@ -662,7 +662,7 @@ class AdfWeb(AdfObs):
                                        "var_title": web_data.name,
                                        "ext": web_data.ext,
                                        "season_title": web_data.season,
-                                       "case_name": case1,
+                                       "case_name": web_data.case,
                                        "case_yrs": case_yrs,
                                        "base_name": data_name,
                                        "baseline_yrs": baseline_yrs,
@@ -726,7 +726,7 @@ class AdfWeb(AdfObs):
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
             index_rndr = index_tmpl.render(title=index_title,
-                                            case_name=case1,
+                                            case_name=web_data.case,
                                             base_name=data_name,
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
