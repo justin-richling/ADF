@@ -37,6 +37,8 @@ def my_formatwarning(msg, *args, **kwargs):
     return str(msg) + '\n'
 warnings.formatwarning = my_formatwarning
 
+#########
+
 def global_latlon_map(adfobj):
     """
     This script/function is designed to generate global
