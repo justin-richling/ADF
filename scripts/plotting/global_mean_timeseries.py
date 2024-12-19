@@ -41,6 +41,10 @@ def global_mean_timeseries(adfobj):
 
     # Loop over variables
     for field in adfobj.diag_var_list:
+        #Remove unneccasry vairbale from plotting
+        if field == "PMID":
+            #var_list.remove("PMID")
+            continue
 
         # Check res for any variable specific options that need to be used BEFORE going to the plot:
         if field in res:
