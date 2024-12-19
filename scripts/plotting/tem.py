@@ -406,8 +406,8 @@ def tem(adf):
                 # mesh for plots:
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
-                #lats, levs = np.meshgrid(lat, lev)
-                levs, lats = np.meshgrid(lev, lat)
+                lats, levs = np.meshgrid(lat, lev)
+                #levs, lats = np.meshgrid(lev, lat)
                 #print("highest vertical lev",np.min(levs),"\n")
                 #filtered_levs = levs[levs >= np.min(levs)]
                 # Find the next value below highest vertical level
