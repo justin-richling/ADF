@@ -380,7 +380,8 @@ def tem(adf):
                     oseasons = oseasons*1000
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
-
+                print("mseasons.shape",mseasons.shape)
+                print("oseasons.shape",oseasons.shape)
                 oseasons = interp_tem(mseasons, oseasons)
                 
                 #Gather contour plot options
