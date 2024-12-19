@@ -380,6 +380,7 @@ def tem(adf):
                     oseasons = oseasons*1000
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
+    
                 print("mseasons.shape",mseasons.shape)
                 print("oseasons.shape",oseasons.shape)
                 oseasons = interp_tem(mseasons, oseasons)
@@ -559,7 +560,72 @@ def tem(adf):
 
 import xesmf as xe
 
+
+
 def interp_tem(arr_anom1, arr_anom2):
+    """
+    Check if the Obs array needs to be interpolated
+    to the ensemble file
+
+    Most likely the input array will need to be interpolated!
+    """
+
+    arr_anom1 = arr_anom1.rename(lev="lon", zalat="lat")
+    arr_anom2 = arr_anom2.rename(lev="lon", zalat="lat")
+
+    test_lons = arr_anom1.lon
+    test_lats = arr_anom1.lat
+
+    obs_lons = arr_anom2.lon
+    obs_lats = arr_anom2.lat
+
+    # Just set these to true for now
+    same_lats = True
+    same_lons = True
+
+    arr_prime = None
+
+    if obs_lons.shape == test_lons.shape:
+        try:
+            xr.testing.assert_equal(test_lons, obs_lons)
+            print("the lons ARE the same")
+        except AssertionError as e:
+            same_lons = False
+            print("the lons aren't the same")
+        try:
+            xr.testing.assert_equal(test_lats, obs_lats)
+            print("the lats ARE the same")
+        except AssertionError as e:
+            same_lats = False
+            print("the lats aren't the same")
+    else:
+        same_lats = False
+        same_lons = False
+        print("The ensemble array lat/lon shape does not match the " \
+             "obs mask array.\nRegridding to ensemble lats and lons")
+
+    if (not same_lons) and (not same_lats):
+
+        ds_out = xr.Dataset(
+            {
+                "lat": (["lat"], obs_lats.values, {"units": "degrees_north"}),
+                "lon": (["lon"], obs_lons.values, {"units": "degrees_east"}),
+            }
+        )
+
+        # Regrid to the ensemble grid to make altered obs grid
+        regridder = xe.Regridder(arr_anom1, ds_out, "bilinear", periodic=True)
+        arr_prime = regridder(arr_anom1, keep_attrs=True)
+
+    # Return the new interpolated obs array
+    return arr_prime
+
+
+
+
+
+
+'''def interp_tem(arr_anom1, arr_anom2):
     """
     Calculate seasonal averages and regrid the seasonal data to match the target grid,
     only if the levels (lev) or latitudes (zalat) are different between the two datasets.
@@ -599,7 +665,7 @@ def interp_tem(arr_anom1, arr_anom2):
     anom1_prime = regridder(arr_anom1, keep_attrs=True)
     
     # Step 7: Return the regridded seasonal anomalies
-    return anom1_prime
+    return anom1_prime'''
 
 
 
