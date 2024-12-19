@@ -229,9 +229,6 @@ def tem(adf):
 
                 #Grab variable defaults for this variable
                 vres = res[var]
-                #print("ds.shape",ds)
-                #print("ds_base.shape",ds_base)
-                #s_base = interp_tem(ds, ds_base)
 
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
@@ -381,8 +378,7 @@ def tem(adf):
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
     
-                print("mseasons.shape",mseasons,"\n\n")
-                print("oseasons.shape",oseasons,"\n\n")
+                # Check if the data arrays need to be regridded
                 mseasons = mseasons.rename(lev="lon", zalat="lat")
                 oseasons = oseasons.rename(lev="lon", zalat="lat")
                 mseasons = interp_tem(mseasons, oseasons)
@@ -390,9 +386,6 @@ def tem(adf):
                 mseasons = mseasons.rename(lon="lev", lat="zalat")
                 mseasons = mseasons.transpose("lev", "zalat")
                 oseasons = oseasons.rename(lon="lev", lat="zalat")
-
-                print(mseasons,"\n\n")
-                print(oseasons,"\n\n")
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
@@ -407,9 +400,7 @@ def tem(adf):
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
-                #levs, lats = np.meshgrid(lev, lat)
-                #print("highest vertical lev",np.min(levs),"\n")
-                #filtered_levs = levs[levs >= np.min(levs)]
+
                 # Find the next value below highest vertical level
                 prev_major_tick = 10 ** (np.floor(np.log10(np.min(levs))))
                 prev_major_tick
