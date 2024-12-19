@@ -1287,7 +1287,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     #End if
 
     # generate dictionary of contour plot settings:
-    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
+    #cp_info = prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
+    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, **kwargs)
 
     # specify the central longitude for the plot
     central_longitude = kwargs.get('central_longitude', 180)
@@ -1847,7 +1848,8 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
         ax = _meridional_plot_line(ax, lon,  data, color, **kwargs)
         return ax
 
-def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
+#def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
+def prep_contour_plot(adata, bdata, diffdata, **kwargs):
     """Preparation for making contour plots.
 
     Prepares for making contour plots of adata, bdata, diffdata, and pctdata, which is
@@ -2352,7 +2354,8 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
 
     if has_lev:
         # generate dictionary of contour plot settings:
-        cp_info = prep_contour_plot(adata, bdata, diff, pct, **kwargs)
+        #cp_info = prep_contour_plot(adata, bdata, diff, pct, **kwargs)
+        cp_info = prep_contour_plot(adata, bdata, diff, **kwargs)
 
         # generate plot objects:
         fig, ax = plt.subplots(figsize=(10,10),nrows=4, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
