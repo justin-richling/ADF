@@ -387,7 +387,7 @@ def tem(adf):
                 oseasons = oseasons.rename(lev="lon", zalat="lat")
                 mseasons = interp_tem(mseasons, oseasons)
 
-                mseasons = mseasons.rename(lon="lev", lat="zalat")
+                mseasons = mseasons.rename(lon="zalat", lat="lev")
                 oseasons = oseasons.rename(lon="lev", lat="zalat")
 
                 print(mseasons,"\n\n")
