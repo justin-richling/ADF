@@ -629,10 +629,8 @@ class AdfWeb(AdfObs):
                 mean_table_file = table_pages_dir / "mean_tables.html"
                 #Construct mean_table.html
                 mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
-                #Reuse the rend_kwarg_dict, but ignore certain keys
-                #since all others are the same
-                new_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name', 'table_html'}}
-                mean_table_rndr = mean_table_tmpl.render(new_dict)
+                #Reuse the rend_kwarg_dict
+                mean_table_rndr = mean_table_tmpl.render(rend_kwarg_dict)
                 #Write mean diagnostic tables HTML file:
                 with open(mean_table_file, 'w', encoding='utf-8') as ofil:
                     ofil.write(mean_table_rndr)
