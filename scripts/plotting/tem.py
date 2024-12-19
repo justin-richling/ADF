@@ -230,11 +230,13 @@ def tem(adf):
                 #Grab variable defaults for this variable
                 vres = res[var]
 
+                ds_base = interp_tem(ds, ds_base)
+
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
                 odata = ds_base[var].squeeze()
 
-                odata = interp_tem(mdata, odata)
+                
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
