@@ -587,7 +587,8 @@ def interp_tem(arr_anom1, arr_anom2):
             "lev": (["lev"], arr_anom2.lev.values, {"units": "hPa"}),
         }
     )
-
+    arr_anom1 = arr_anom1.rename(lev="lat", zalat="lon")
+    arr_anom2 = arr_anom2.rename(lev="lat", zalat="lon")
     print("arr_anom1.shape",arr_anom1.shape)
     print("arr_anom2.shape",arr_anom2.shape)
 
