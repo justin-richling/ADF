@@ -112,6 +112,7 @@ def create_TEM_files(adf):
             if var in res:
                 #Gather from variable defaults file
                 obs_file_path = Path(res[var]["obs_file"])
+                print("YEHAWW:",obs_file_path)
                 if not obs_file_path.is_file():
                     obs_data_loc = adf.get_basic_info("obs_data_loc")
                     obs_file_path = Path(obs_data_loc)/obs_file_path
@@ -133,6 +134,7 @@ def create_TEM_files(adf):
         #Make a copy of obs data so we don't do anything bad
         ds_obs = ds.copy()
         ds_base = xr.Dataset({'uzm': xr.Variable(('time', 'lev', 'zalat'), ds_obs.uzm.data),
+                                'thzm': xr.Variable(('time', 'lev', 'zalat'), ds_obs.thzm.data),
                                 'epfy': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfy.data),
                                 'epfz': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfz.data),
                                 'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.vtem.data),
