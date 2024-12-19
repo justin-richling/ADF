@@ -236,6 +236,8 @@ def tem(adf):
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
                 odata = ds_base[var].squeeze()
+                print("ds.shape",mdata.shape())
+                print("ds_base.shape",odata.shape())
                 odata = interp_tem(mdata, odata)
                 
 
