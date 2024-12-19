@@ -351,17 +351,19 @@ def tem(adf):
                     #print("AHHH",np.max(mseasons.values))
                     #oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
 
-                    mseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
+                    mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
+                    #mseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
                     #print("AHHH",np.max(mseasons.values))
-                    oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
+                    #oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
+                    oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
 
                     # exner_function(pressure, reference_pressure=mpconsts.P0)
                     # potential_temperature * exner_function(pressure)
-                    exner_function = (pmid / mconst.P0*100)**mconst.kappa
+                    #exner_function = (pmid / mconst.P0*100)**mconst.kappa
                     #(pmid / mconst.P0)**mconst.kappa
 
-                    mseasons = (mseasons * exner_function)/13.894954
-                    oseasons = (oseasons * exner_function)/13.894954
+                    #mseasons = (mseasons * exner_function)/13.894954
+                    #oseasons = (oseasons * exner_function)/13.894954
 
 
                     #print("mseasons",np.max(mseasons_metpy)==np.max(mseasons))
