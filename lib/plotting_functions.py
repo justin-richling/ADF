@@ -1965,11 +1965,12 @@ def prep_contour_plot(adata, bdata, diffdata, **kwargs):
         contains_string = any(isinstance(item, str) for item in levelsdiff)
         if contains_string:
             levelsdiff = [float(item) for item in levelsdiff]
+        #continue
     elif "diff_contour_range" in kwargs:
         assert len(kwargs['diff_contour_range']) == 3, \
         "diff_contour_range must have exactly three entries: min, max, step"
-
-        levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        #print(kwargs['diff_contour_range'])
+        #levelsdiff = np.arange(*kwargs['diff_contour_range'])
         #levelsdiff = np.arange(*kwargs['diff_contour_range'])
         contains_string = any(isinstance(item, str) for item in kwargs['diff_contour_range'])
         if contains_string:
