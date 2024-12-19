@@ -381,8 +381,8 @@ def tem(adf):
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
     
-                print("mseasons.shape",mseasons.shape)
-                print("oseasons.shape",oseasons.shape)
+                print("mseasons.shape",mseasons,"\n\n")
+                print("oseasons.shape",oseasons,"\n\n")
                 mseasons = mseasons.rename(lev="lon", zalat="lat")
                 oseasons = oseasons.rename(lev="lon", zalat="lat")
                 mseasons = interp_tem(mseasons, oseasons)
