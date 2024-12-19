@@ -136,6 +136,7 @@ def tem(adf):
         input_loc_idx = Path(tem_locs[0])
     else:
         #Set TEM file for baseline
+        input_loc_idx = Path(tem_base_loc)
         base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
     
     #Set full path for baseline/obs file
@@ -411,6 +412,7 @@ def tem(adf):
                 ax = [ax1,ax2,ax3]
 
                 #Contour fill
+                print(mseasons,"\n")
                 img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
@@ -547,3 +549,60 @@ def tem(adf):
 
 # Helper functions
 ##################
+
+def interp_tem(arr_anom1, arr_anom2):
+    """
+    Check if the Obs array needs to be interpolated
+    to the ensemble file
+
+    Most likely the input array will need to be interpolated!
+    """
+    import xesmf as xe
+    test_lons = arr_anom1.lon
+    test_lats = arr_anom1.lat
+
+    obs_lons = arr_anom2.lon
+    obs_lats = arr_anom2.lat
+
+    # Just set these to true for now
+    same_lats = True
+    same_lons = True
+
+    arr_prime = None
+
+    if obs_lons.shape == test_lons.shape:
+        try:
+            xr.testing.assert_equal(test_lons, obs_lons)
+            print("the lons ARE the same")
+        except AssertionError as e:
+            same_lons = False
+            print("the lons aren't the same")
+        try:
+            xr.testing.assert_equal(test_lats, obs_lats)
+            print("the lats ARE the same")
+        except AssertionError as e:
+            same_lats = False
+            print("the lats aren't the same")
+    else:
+        same_lats = False
+        same_lons = False
+        print("The ensemble array lat/lon shape does not match the " \
+             "obs mask array.\nRegridding to ensemble lats and lons")
+
+    if (not same_lons) and (not same_lats):
+
+        ds_out = xr.Dataset(
+            {
+                "lat": (["lat"], obs_lats.values, {"units": "degrees_north"}),
+                "lon": (["lon"], obs_lons.values, {"units": "degrees_east"}),
+            }
+        )
+
+        # Regrid to the ensemble grid to make altered obs grid
+        regridder = xe.Regridder(arr_anom1, ds_out, "bilinear", periodic=True)
+        arr_prime = regridder(arr_anom1, keep_attrs=True)
+
+    # Return the new interpolated obs array
+    return arr_prime
+
+#######
