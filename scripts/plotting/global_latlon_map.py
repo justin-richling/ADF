@@ -99,7 +99,7 @@ def global_latlon_map(adfobj):
     # Use ADF api to get all necessary information
     #
 
-    #Variabel list
+    #Variable list
     var_list = adfobj.diag_var_list
     #Remove unneccasry vairbale from plotting
     if "PMID" in var_list:
