@@ -1635,7 +1635,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
             nt_sub = nt
         #print("nt",nt)
 
-        [time_grid, lev_grid] = np.meshgrid(case_data['lev'],np.arange(0,nt_sub+11,1))
+        [time_grid, lev_grid] = np.meshgrid(case_data['lev'],np.arange(0,nt_sub+12,1))
 
         contour_levels = np.arange(-35, 35, 2.5)
 
