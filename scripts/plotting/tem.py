@@ -383,13 +383,20 @@ def tem(adf):
     
                 print("mseasons.shape",mseasons.shape)
                 print("oseasons.shape",oseasons.shape)
-                oseasons = interp_tem(mseasons, oseasons)
+                mseasons = mseasons.rename(lev="lon", zalat="lat")
+                oseasons = oseasons.rename(lev="lon", zalat="lat")
+                mseasons = interp_tem(mseasons, oseasons)
+
+                mseasons = mseasons.rename(lon="lev", lat="zalat")
+                oseasons = oseasons.rename(lon="lev", lat="zalat")
+
+                print(mseasons,"\n\n")
+                print(oseasons,"\n\n")
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
-                #if ((var == "utendepfd") or (var == "epfz")) and (s=="ANN"):
-                #    print(f"clevs for {var}",clevs,"\n")
+
                 norm = cp_info['norm1']
                 cmap = cp_info['cmap1']
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
@@ -419,8 +426,6 @@ def tem(adf):
                 ax = [ax1,ax2,ax3]
 
                 #Contour fill
-                print(mseasons,"\n\n")
-                print(oseasons,"\n\n")
                 img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
@@ -570,8 +575,8 @@ def interp_tem(arr_anom1, arr_anom2):
     Most likely the input array will need to be interpolated!
     """
 
-    arr_anom1 = arr_anom1.rename(lev="lon", zalat="lat")
-    arr_anom2 = arr_anom2.rename(lev="lon", zalat="lat")
+    #arr_anom1 = arr_anom1.rename(lev="lon", zalat="lat")
+    #arr_anom2 = arr_anom2.rename(lev="lon", zalat="lat")
 
     test_lons = arr_anom1.lon
     test_lats = arr_anom1.lat
