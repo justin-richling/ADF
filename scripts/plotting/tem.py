@@ -412,7 +412,8 @@ def tem(adf):
                 ax = [ax1,ax2,ax3]
 
                 #Contour fill
-                print(mseasons,"\n")
+                print(mseasons,"\n\n")
+                print(oseasons,"\n\n")
                 img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
