@@ -236,10 +236,6 @@ def tem(adf):
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
                 odata = ds_base[var].squeeze()
-                print("ds.shape",mdata.shape)
-                print("ds_base.shape",odata.shape)
-                odata = interp_tem(mdata, odata)
-                
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
@@ -384,6 +380,8 @@ def tem(adf):
                     oseasons = oseasons*1000
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
+
+                oseasons = interp_tem(mseasons, oseasons)
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
