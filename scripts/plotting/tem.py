@@ -588,6 +588,9 @@ def interp_tem(arr_anom1, arr_anom2):
         }
     )
 
+    print("arr_anom1.shape",arr_anom1.shape)
+    print("ds_out.shape",ds_out.shape)
+
     # Step 5: Apply the regridding
     regridder = xe.Regridder(arr_anom1, ds_out, method="bilinear", periodic=True)
 
