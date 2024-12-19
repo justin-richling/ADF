@@ -1640,8 +1640,11 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
         contour_levels = np.arange(-35, 35, 2.5)
 
         plotdata = pf.coslat_average(case_data['U'],-10,10)
+        plotdata = pf.coslat_average(case_data['U'],-10,10)
+        print("plotdata.shape",plotdata.shape)
         plotdata_clip = np.clip(np.abs(plotdata), None, 35)
         plotdata=np.sign(plotdata)*plotdata_clip
+        print("CLIPPED plotdata.shape",plotdata.shape)
 
         #TODO: this will need to be adjusted??
         #Curently this is finding (start_idx)th month and then going out 9 years
