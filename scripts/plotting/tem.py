@@ -229,14 +229,14 @@ def tem(adf):
 
                 #Grab variable defaults for this variable
                 vres = res[var]
-                print("ds.shape",ds)
-                print("ds_base.shape",ds_base)
-                ds_base = interp_tem(ds, ds_base)
+                #print("ds.shape",ds)
+                #print("ds_base.shape",ds_base)
+                #s_base = interp_tem(ds, ds_base)
 
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
                 odata = ds_base[var].squeeze()
-
+                odata = interp_tem(mdata, odata)
                 
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
@@ -556,7 +556,53 @@ def tem(adf):
 # Helper functions
 ##################
 
+import xesmf as xe
+
 def interp_tem(arr_anom1, arr_anom2):
+    """
+    Calculate seasonal averages and regrid the seasonal data to match the target grid,
+    only if the levels (lev) or latitudes (zalat) are different between the two datasets.
+    """
+    # Step 1: Compute seasonal averages for arr_anom1 (ensemble) and arr_anom2 (observations)
+    
+    # Resample to seasonal averages: We assume monthly data, resampling to DJF, MAM, JJA, SON
+    #seasonal_anom1 = arr_anom1.resample(time='QS-DEC').mean()  # 'QS-DEC' starts the season in December (for DJF)
+    #seasonal_anom2 = arr_anom2.resample(time='QS-DEC').mean()
+
+    # Step 2: Check if levs and zalats are the same between the two datasets
+    same_levs = xr.DataArray.equals(arr_anom1.lev, arr_anom2.lev)
+    same_zalats = xr.DataArray.equals(arr_anom1.zalat, arr_anom2.zalat)
+
+    # Step 3: If both levs and zalats are the same, no regridding is needed
+    if same_levs and same_zalats:
+        print("The levels (lev) and zalats are the same. No regridding required.")
+        return arr_anom1  # Return the seasonal data as is
+
+    # Step 4: If levs or zalats are different, create a new output grid (target grid) from arr_anom2
+    print("The levels (lev) or zalats are different. Proceeding with regridding.")
+    ds_out = xr.Dataset(
+        {
+            "zalat": (["zalat"], arr_anom2.zalat.values, {"units": "degrees_north"}),
+            "lev": (["lev"], arr_anom2.lev.values, {"units": "hPa"}),
+        }
+    )
+
+    # Step 5: Apply the regridding
+    regridder = xe.Regridder(arr_anom1, ds_out, method="bilinear", periodic=True)
+
+    # Step 6: Regrid the seasonal data from arr_anom1 to the target grid
+    anom1_prime = regridder(arr_anom1, keep_attrs=True)
+    
+    # Step 7: Return the regridded seasonal anomalies
+    return anom1_prime
+
+
+
+
+
+
+
+'''def interp_tem(arr_anom1, arr_anom2):
     """
     Check if the Obs array needs to be interpolated
     to the ensemble file
@@ -611,4 +657,4 @@ def interp_tem(arr_anom1, arr_anom2):
     # Return the new interpolated obs array
     return arr_prime
 
-#######
+#######'''
