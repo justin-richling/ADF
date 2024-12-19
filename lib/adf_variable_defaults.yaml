@@ -2093,7 +2093,7 @@ thzm:
   mpl:
     colorbar:
       label : "K"
-  long_name: Zonal mean temperature ($\bar{T}$)
+  long_name: Zonal mean potential temperature ($\bar{\theta}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "uzm"
