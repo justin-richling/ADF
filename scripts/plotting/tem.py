@@ -612,9 +612,9 @@ def interp_tem(arr_anom1, arr_anom2):
     if (not same_lons) and (not same_lats):
 
         ds_out = xr.Dataset(
-            {
-                "lat": (["lat"], obs_lats.values, {"units": "degrees_north"}),
+            {   
                 "lon": (["lon"], obs_lons.values, {"units": "degrees_east"}),
+                "lat": (["lat"], obs_lats.values, {"units": "degrees_north"}),
             }
         )
 
