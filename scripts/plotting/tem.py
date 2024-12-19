@@ -234,6 +234,8 @@ def tem(adf):
                 mdata = ds[var].squeeze()
                 odata = ds_base[var].squeeze()
 
+                odata = interp_tem(mdata, odata)
+
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
                 mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
@@ -559,43 +561,43 @@ def interp_tem(arr_anom1, arr_anom2):
     Most likely the input array will need to be interpolated!
     """
     import xesmf as xe
-    test_lons = arr_anom1.lon
-    test_lats = arr_anom1.lat
+    test_levs = arr_anom1.lev
+    test_zalats = arr_anom1.zalat
 
-    obs_lons = arr_anom2.lon
-    obs_lats = arr_anom2.lat
+    obs_levs = arr_anom2.lev
+    obs_zalats = arr_anom2.zalat
 
     # Just set these to true for now
-    same_lats = True
-    same_lons = True
+    same_zalats = True
+    same_levs = True
 
     arr_prime = None
 
-    if obs_lons.shape == test_lons.shape:
+    if obs_levs.shape == test_levs.shape:
         try:
-            xr.testing.assert_equal(test_lons, obs_lons)
+            xr.testing.assert_equal(test_levs, obs_levs)
             print("the lons ARE the same")
         except AssertionError as e:
-            same_lons = False
+            same_levs = False
             print("the lons aren't the same")
         try:
-            xr.testing.assert_equal(test_lats, obs_lats)
-            print("the lats ARE the same")
+            xr.testing.assert_equal(test_zalats, obs_zalats)
+            print("the zalats ARE the same")
         except AssertionError as e:
-            same_lats = False
-            print("the lats aren't the same")
+            same_zalats = False
+            print("the zalats aren't the same")
     else:
-        same_lats = False
-        same_lons = False
-        print("The ensemble array lat/lon shape does not match the " \
+        same_zalats = False
+        same_levs = False
+        print("The ensemble array lev/zalats shape does not match the " \
              "obs mask array.\nRegridding to ensemble lats and lons")
 
-    if (not same_lons) and (not same_lats):
+    if (not same_levs) and (not same_zalats):
 
         ds_out = xr.Dataset(
             {
-                "lat": (["lat"], obs_lats.values, {"units": "degrees_north"}),
-                "lon": (["lon"], obs_lons.values, {"units": "degrees_east"}),
+                "lat": (["lat"], obs_zalats.values, {"units": "degrees_north"}),
+                "lon": (["lon"], obs_levs.values, {"units": "hPa"}),
             }
         )
 
