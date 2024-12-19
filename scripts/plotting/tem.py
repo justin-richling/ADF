@@ -602,7 +602,7 @@ def interp_tem(arr_anom1, arr_anom2):
         )
 
         # Regrid to the ensemble grid to make altered obs grid
-        regridder = xe.Regridder(arr_anom1, ds_out, "bilinear", periodic=True)
+        regridder = xe.Regridder(arr_anom1, ds_out, "bilinear")
         arr_prime = regridder(arr_anom1, keep_attrs=True)
 
     # Return the new interpolated obs array
