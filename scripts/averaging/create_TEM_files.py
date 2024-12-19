@@ -112,11 +112,10 @@ def create_TEM_files(adf):
             if var in res:
                 #Gather from variable defaults file
                 obs_file_path = Path(res[var]["obs_file"])
-                print("YEHAWW:",obs_file_path)
                 if not obs_file_path.is_file():
                     obs_data_loc = adf.get_basic_info("obs_data_loc")
                     obs_file_path = Path(obs_data_loc)/obs_file_path
-
+                print("YEHAWW:",obs_file_path)
                 #It's likely multiple TEM vars will come from one file, so check
                 #to see if it already exists from other vars.
                 if obs_file_path not in tem_obs_fils:
