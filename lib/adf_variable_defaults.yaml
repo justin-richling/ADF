@@ -2106,10 +2106,8 @@ epfy:
   diff_colormap: "PuOr_r"
   diff_contour_range: [-2e7,2e7,0.2e7]
   ylim: [1e3,1e-1]
-  #units: K
   mpl:
     colorbar:
-      #ticks: [-5,-1,-0.2,0.2,1,5]
       label : "m3/s2"
   long_name: EP Flux - meridional component ($F_{y}$)
   obs_file: "TEM_ERA5.nc"
@@ -2192,10 +2190,8 @@ utendepfd:
   ylim: [1e3,1e-1]
   mpl:
     colorbar:
-      #ticks: [-0.5,0.5,0.05]
       label : "mm/s2"
   long_name: EP flux divergence ($\nabla \cdot F$)
-  #long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendepfd"
