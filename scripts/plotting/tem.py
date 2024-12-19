@@ -229,8 +229,8 @@ def tem(adf):
 
                 #Grab variable defaults for this variable
                 vres = res[var]
-                print("ds.shape",ds.shape())
-                print("ds_base.shape",ds_base.shape())
+                print("ds.shape",ds)
+                print("ds_base.shape",ds_base)
                 ds_base = interp_tem(ds, ds_base)
 
                 #Gather data for both cases
