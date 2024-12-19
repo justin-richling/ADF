@@ -592,7 +592,7 @@ def interp_tem(arr_anom1, arr_anom2):
     print("ds_out.shape",ds_out)
 
     # Step 5: Apply the regridding
-    regridder = xe.Regridder(arr_anom1, ds_out, method="bilinear", periodic=True)
+    regridder = xe.Regridder(arr_anom1, arr_anom2, method="bilinear")
 
     # Step 6: Regrid the seasonal data from arr_anom1 to the target grid
     anom1_prime = regridder(arr_anom1, keep_attrs=True)
