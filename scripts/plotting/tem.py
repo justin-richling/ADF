@@ -387,7 +387,7 @@ def tem(adf):
                 oseasons = oseasons.rename(lev="lon", zalat="lat")
                 mseasons = interp_tem(mseasons, oseasons)
 
-                mseasons = mseasons.rename(lon="zalat", lat="lev")
+                mseasons = mseasons.rename(lon="lev", lat="zalat")
                 oseasons = oseasons.rename(lon="lev", lat="zalat")
 
                 print(mseasons,"\n\n")
@@ -405,7 +405,8 @@ def tem(adf):
                 # mesh for plots:
                 lat = mseasons['zalat']
                 lev = mseasons['lev']
-                lats, levs = np.meshgrid(lat, lev)
+                #lats, levs = np.meshgrid(lat, lev)
+                levs, lats = np.meshgrid(lev, lat)
                 #print("highest vertical lev",np.min(levs),"\n")
                 #filtered_levs = levs[levs >= np.min(levs)]
                 # Find the next value below highest vertical level
