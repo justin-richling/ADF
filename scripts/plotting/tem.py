@@ -596,8 +596,8 @@ def interp_tem(arr_anom1, arr_anom2):
 
         ds_out = xr.Dataset(
             {
-                "lat": (["lat"], obs_zalats.values, {"units": "degrees_north"}),
-                "lon": (["lon"], obs_levs.values, {"units": "hPa"}),
+                "zalat": (["lat"], obs_zalats.values, {"units": "degrees_north"}),
+                "lev": (["lon"], obs_levs.values, {"units": "hPa"}),
             }
         )
 
