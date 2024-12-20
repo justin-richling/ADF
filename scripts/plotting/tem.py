@@ -555,18 +555,25 @@ def tem(adf):
 
                     # Step 1: Interpolate source data to the new vertical levels
                     source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
-                    source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
-                    source_regridded_values_vert = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
+                    #source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
+                    #source_regridded_values_vert = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
+
+                    source_points = np.array(np.meshgrid(source_lev, source_lat, indexing='ij')).reshape(2, -1).T
+                    source_regridded_values_vert = source_interpolator(source_points).reshape(len(source_lev), len(source_lat))
 
                     # Step 2: Interpolate target data to the new vertical levels
                     target_values = target_data.values
                     target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
-                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
-                    target_regridded_values_vert = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+                    #target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    #target_regridded_values_vert = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+
+                    target_points = np.array(np.meshgrid(source_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    target_regridded_values_vert = target_interpolator(target_points).reshape(len(source_lev), len(target_lat))
 
                     # Step 3: Interpolate source data to the new horizontal latitude grid
                     source_regridded_values_horiz = []
-                    for i, lev in enumerate(standard_lev):
+                    #for i, lev in enumerate(standard_lev):
+                    for i, lev in enumerate(source_lev):
                         interpolator = RegularGridInterpolator((source_lat,), source_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
                         regridded_values = interpolator(source_lat)#new_lat
                         source_regridded_values_horiz.append(regridded_values)
@@ -574,7 +581,8 @@ def tem(adf):
 
                     # Step 4: Interpolate target data to the new horizontal latitude grid
                     target_regridded_values_horiz = []
-                    for i, lev in enumerate(standard_lev):
+                    #for i, lev in enumerate(standard_lev):
+                    for i, lev in enumerate(source_lev):
                         interpolator = RegularGridInterpolator((target_lat,), target_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
                         regridded_values = interpolator(source_lat)#new_lat
                         target_regridded_values_horiz.append(regridded_values)
@@ -586,14 +594,16 @@ def tem(adf):
                     source_regridded_data = xr.DataArray(
                         data=source_regridded_values_horiz,
                         dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": source_lat},
+                        #coords={"lev": standard_lev, "zalat": source_lat},
+                        coords={"lev": source_lev, "zalat": source_lat},
                         name="source_regridded_data"
                     )
 
                     target_regridded_data = xr.DataArray(
                         data=target_regridded_values_horiz,
                         dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": source_lat},
+                        #coords={"lev": standard_lev, "zalat": source_lat},
+                        coords={"lev": source_lev, "zalat": source_lat},
                         name="target_regridded_data"
                     )
 
