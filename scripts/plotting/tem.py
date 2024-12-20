@@ -482,16 +482,16 @@ def tem(adf):
                     interpolator = RegularGridInterpolator((source_lev, source_lat), source_values)
 
                     # Define target points for interpolation to the standard levels
-                    target_points = np.array(np.meshgrid(target_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
 
                     # Perform the interpolation to the standard levels
-                    regridded_values = interpolator(target_points).reshape(len(target_lev), len(target_lat))
+                    regridded_values = interpolator(target_points).reshape(len(standard_lev), len(target_lat))
 
                     # Convert the regridded values back into an xarray.DataArray
                     regridded_data = xr.DataArray(
                         data=regridded_values,
                         dims=["lev", "zalat"],
-                        coords={"lev": target_lev, "zalat": target_lat},
+                        coords={"lev": standard_lev, "zalat": target_lat},
                         name="regridded_data"
                     )
 
