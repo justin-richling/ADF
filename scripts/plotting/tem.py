@@ -381,6 +381,8 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
+                print("\n\nmseasons",mseasons,"\n\n")
+
                 print("mseasons.shape",mseasons.shape)
                 print("oseasons.shape",oseasons.shape,"\n\n")
 
