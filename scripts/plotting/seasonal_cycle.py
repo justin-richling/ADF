@@ -1392,19 +1392,19 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
                                             np.arange(0,25))
     #Set up plot
     #ax = fig.add_subplot(nrows, ncols, idx+1)
-    """
+
     # set a symmetric color bar for diff:
     absmaxdif = np.max(np.abs(diff_pcap))
     # set levels for difference plot:
-    diff_levs = np.linspace(-1*absmaxdif, absmaxdif, 24)
-    """
-    # Calculate the min, max, and midpoint
+    diff_levs = np.linspace(-1*absmaxdif, absmaxdif, 21)
+
+    """# Calculate the min, max, and midpoint
     data_min = diff_pcap.min()
     data_max = diff_pcap.max()
     midpoint = (data_max + data_min) / 2
     span = max(data_max - midpoint, midpoint - data_min)
     diff_levs = np.linspace(midpoint - span, midpoint + span, 20)
-
+    """
     cf=ax[idx].contourf(lat_grid, time_grid, (diff_pcap),
                         levels=diff_levs,
                         cmap=diff_cmap,#zorder=100
