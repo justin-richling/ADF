@@ -553,9 +553,6 @@ def tem(adf):
                     standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
                                             30, 20, 10, 7, 5, 3, 2, 1])
 
-                    # Define new latitude grid (horizontal target levels)
-                    new_lat = np.linspace(-90, 90, 180)  # Example: 1-degree resolution from -90 to 90
-
                     # Step 1: Interpolate source data to the new vertical levels
                     source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
                     source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
@@ -583,7 +580,7 @@ def tem(adf):
                         target_regridded_values_horiz.append(regridded_values)
                     target_regridded_values_horiz = np.array(target_regridded_values_horiz)
 
-                    print("source_regridded_values_horiz",source_regridded_values_horiz,"\n\n")
+                    #print("source_regridded_values_horiz",source_regridded_values_horiz,"\n\n")
 
                     # Step 5: Convert regridded values back into xarray.DataArray
                     source_regridded_data = xr.DataArray(
