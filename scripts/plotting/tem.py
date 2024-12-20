@@ -381,10 +381,11 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
-                print("\n\nmseasons",mseasons,"\n\n")
+                if s == "DJF":
+                    print("\n\nmseasons",mseasons,"\n\n")
 
-                print("mseasons.shape",mseasons.shape)
-                print("oseasons.shape",oseasons.shape,"\n\n")
+                    print("mseasons.shape",mseasons.shape)
+                    print("oseasons.shape",oseasons.shape,"\n\n")
 
                 test_lons = mseasons.lev
                 test_lats = mseasons.zalat
@@ -474,8 +475,8 @@ def tem(adf):
                     target_lev = target_data.lev.values  # Use the smaller lev grid as the target
 
                     # Define standard pressure levels (target levels)
-                    #standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
-                    #                        30, 20, 10, 7, 5, 3, 2, 1])
+                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
+                                            30, 20, 10, 7, 5, 3, 2, 1])
 
                     # Create the interpolator based on the source data grid
                     interpolator = RegularGridInterpolator((source_lev, source_lat), source_values)
