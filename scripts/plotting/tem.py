@@ -379,23 +379,135 @@ def tem(adf):
                 if var == "utendepfd":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
-    
-                # Check if the data arrays need to be regridded
-                mseasons_interp = mseasons.rename(lev="lon", zalat="lat")
-                oseasons = oseasons.rename(lev="lon", zalat="lat")
-                mseasons_interp = interp_tem(mseasons_interp, oseasons)
 
-                mseasons_interp = mseasons_interp.rename(lon="lev", lat="zalat")
-                mseasons_interp = mseasons_interp.transpose("lev", "zalat")
-                oseasons = oseasons.rename(lon="lev", lat="zalat")
+                test_lons = mseasons.lev
+                test_lats = mseasons.zalat
+
+                obs_lons = oseasons.lev
+                obs_lats = oseasons.zalat
+
+                if obs_lons.shape == test_lons.shape:
+                    try:
+                        xr.testing.assert_equal(test_lons, obs_lons)
+                        print("the lons ARE the same")
+                    except AssertionError as e:
+                        same_lons = False
+                        print("the lons aren't the same")
+                    try:
+                        xr.testing.assert_equal(test_lats, obs_lats)
+                        print("the lats ARE the same")
+                    except AssertionError as e:
+                        same_lats = False
+                        print("the lats aren't the same")
+                else:
+                    same_lats = False
+                    same_lons = False
+                    print("The ensemble array lat/lon shape does not match the " \
+                        "obs mask array.\nRegridding to ensemble lats and lons")
+
+
+
+                if (not same_lats) and (not same_lons):
+                    """if obs_lons > test_lons:
+                        source_lons = test_lons
+                    else:
+                        source_lons = obs_lons
+
+                    # Check if the data arrays need to be regridded
+                    mseasons = mseasons.rename(lev="lon", zalat="lat")
+                    oseasons = oseasons.rename(lev="lon", zalat="lat")
+                    #mseasons = interp_tem(mseasons, oseasons)
+                    #mseasons = mseasons.transpose("lev", "zalat")
+                    #lat = mseasons['zalat']
+                    #lev = mseasons['lev']
+
+                    oseasons = interp_tem(oseasons, mseasons)
+                    oseasons = oseasons.transpose("lev", "zalat")
+                    lat = oseasons['zalat']
+                    lev = oseasons['lev']
+
+                    mseasons = mseasons.rename(lon="lev", lat="zalat")
+                    oseasons = oseasons.rename(lon="lev", lat="zalat")"""
+
+
+
+                    """from scipy.interpolate import interp1d
+
+                    # Assuming source_data has dimensions ('lev', 'lat')
+                    source_lev = source_data.lev.values
+                    target_lev = np.linspace(source_lev.min(), source_lev.max(), 50)
+
+                    # Apply 1D interpolation along the vertical dimension
+                    vertical_interp = interp1d(source_lev, source_data.values, axis=0, kind='linear')
+                    vertical_result = vertical_interp(target_lev)"""
+
+
+                    from scipy.interpolate import RegularGridInterpolator
+                    import numpy as np
+                    import xarray as xr
+
+                    # Assuming you have two datasets: data1 and data2
+                    # data1 and data2 are xarray DataArrays with 'lev' and 'lat' dimensions
+
+                    # Compare the number of levels in the 'lev' coordinate
+                    if len(mseasons.lev) > len(oseasons.lev):
+                        source_data = mseasons
+                        target_data = oseasons
+                    else:
+                        source_data = oseasons
+                        target_data = mseasons
+
+                    # Extract source and target coordinates
+                    source_lat = source_data.zalat.values
+                    source_lev = source_data.lev.values
+                    source_values = source_data.values
+
+                    target_lat = target_data.zalat.values  # Assuming lat is consistent; modify if needed
+                    target_lev = target_data.lev.values  # Use the smaller lev grid as the target
+
+                    # Define standard pressure levels (target levels)
+                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
+                                            30, 20, 10, 7, 5, 3, 2, 1])
+
+                    # Create the interpolator based on the source data grid
+                    interpolator = RegularGridInterpolator((source_lev, source_lat), source_values)
+
+                    # Define target points for interpolation to the standard levels
+                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
+
+                    # Perform the interpolation to the standard levels
+                    regridded_values = interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+
+                    # Convert the regridded values back into an xarray.DataArray
+                    regridded_data = xr.DataArray(
+                        data=regridded_values,
+                        dims=["lev", "zalat"],
+                        coords={"lev": standard_lev, "zalat": target_lat},
+                        name="regridded_data"
+                    )
+
+                    # Output the regridded data
+                    print(regridded_data)
+                    if len(mseasons.lev) > len(oseasons.lev):
+                        #source_data = mseasons
+                        oseasons = regridded_data
+                    else:
+                        mseasons = regridded_data
+
+
+
+
+
+                else:
+                    lat = mseasons['zalat']
+                    lev = mseasons['lev']
+                    
 
                 #difference: each entry should be (lat, lon)
-                dseasons = mseasons_interp-oseasons
-
-                #dseasons = mseasons-oseasons
+                dseasons = mseasons-oseasons
                 
                 #Gather contour plot options
-                cp_info = pf.prep_contour_plot(mseasons_interp, oseasons, dseasons, **vres)
+                cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
 
                 norm = cp_info['norm1']
@@ -403,8 +515,8 @@ def tem(adf):
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
                 # mesh for plots:
-                lat = mseasons_interp['zalat']
-                lev = mseasons_interp['lev']
+                #lat = mseasons['zalat']
+                #lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Find the next value below highest vertical level
@@ -425,11 +537,11 @@ def tem(adf):
                 ax = [ax1,ax2,ax3]
 
                 #Contour fill
-                img0 = ax[0].contourf(lats, levs,mseasons_interp, levels=clevs, norm=norm, cmap=cmap)
+                img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
                 #Add contours for highlighting
-                c0 = ax[0].contour(lats,levs,mseasons_interp,levels=clevs[::2], norm=norm,
+                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm,
                                     colors="k", linewidths=0.5)
 
                 #Check if contour labels need to be adjusted
