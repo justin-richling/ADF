@@ -478,26 +478,48 @@ def tem(adf):
                     standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
                                             30, 20, 10, 7, 5, 3, 2, 1])
 
-                    # Create the interpolator based on the source data grid
+                    """# Create the interpolator based on the source data grid
                     interpolator = RegularGridInterpolator((source_lev, source_lat), source_values)
 
                     # Define target points for interpolation to the standard levels
                     target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
 
                     # Perform the interpolation to the standard levels
-                    regridded_values = interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+                    regridded_values = interpolator(target_points).reshape(len(standard_lev), len(target_lat))"""
 
-                    # Convert the regridded values back into an xarray.DataArray
-                    regridded_data = xr.DataArray(
-                        data=regridded_values,
-                        dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": target_lat},
-                        name="regridded_data"
+                    # Step 1: Interpolate source data to the new vertical levels
+                    source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
+                    source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
+                    source_regridded_values = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
+
+                    # Step 2: Interpolate target data to the new vertical levels
+                    target_values = target_data.values
+                    target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
+                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    target_regridded_values = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+
+                    # Step 3: Convert regridded values back into xarray.DataArray
+                    source_regridded_data = xr.DataArray(
+                        data=source_regridded_values,
+                        dims=["lev", "lat"],
+                        coords={"lev": standard_lev, "lat": source_lat},
+                        name="source_regridded_data"
+                    )
+
+                    target_regridded_data = xr.DataArray(
+                        data=target_regridded_values,
+                        dims=["lev", "lat"],
+                        coords={"lev": standard_lev, "lat": target_lat},
+                        name="target_regridded_data"
                     )
 
                     # Output the regridded data
-                    print("\n\nregridded_data",regridded_data,"\n\n")
-                    if len(source_data.lev) > len(target_data.lev):
+                    print("Source Regridded Data:")
+                    print(source_regridded_data,"\n\n")
+
+                    print("\nTarget Regridded Data:")
+                    print(target_regridded_data,"\n\n")
+                    """if len(source_data.lev) > len(target_data.lev):
                         #source_data = mseasons
                         mseasons = regridded_data
                         lat = mseasons['zalat']
@@ -505,7 +527,7 @@ def tem(adf):
                     else:
                         oseasons = regridded_data
                         lat = oseasons['zalat']
-                        lev = oseasons['lev']
+                        lev = oseasons['lev']"""
                 else:
                     lat = mseasons['zalat']
                     lev = mseasons['lev']
