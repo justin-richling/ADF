@@ -1135,7 +1135,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
                                )
             #diff_levs
             #cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
-            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(diff_levs[1],diff_levs[-2],3))
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(diff_levs[1],diff_levs[-2]-abs(diff_levs[-2]-diff_levs[-1]),3))
             cbar.ax.tick_params(axis='y', labelsize=8)
             # Set the font size for the colorbar label
             cbar.set_label("K", fontsize=10, labelpad=1)
