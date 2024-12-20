@@ -456,7 +456,7 @@ def tem(adf):
                     # data1 and data2 are xarray DataArrays with 'lev' and 'lat' dimensions
 
                     # Compare the number of levels in the 'lev' coordinate
-                    if len(mseasons.lev) > len(oseasons.lev):
+                    if len(mseasons.lev) < len(oseasons.lev):
                         print("source data is mseasons")
                         source_data = mseasons
                         target_data = oseasons
@@ -496,7 +496,7 @@ def tem(adf):
 
                     # Output the regridded data
                     print(regridded_data)
-                    if len(source_data.lev) > len(target_data.lev):
+                    if len(source_data.lev) < len(target_data.lev):
                         #source_data = mseasons
                         mseasons = regridded_data
                         lat = mseasons['zalat']
