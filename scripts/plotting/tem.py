@@ -611,6 +611,7 @@ def interp_tem(arr_anom1, arr_anom2):
         same_lons = False
         print("The ensemble array lat/lon shape does not match the " \
              "obs mask array.\nRegridding to ensemble lats and lons")
+        return arr_anom1
 
     if (not same_lons) and (not same_lats):
 
