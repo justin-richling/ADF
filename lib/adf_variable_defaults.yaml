@@ -2089,6 +2089,7 @@ thzm:
   colormap: "Spectral_r"
   contour_levels_range: [185,300,6]
   diff_colormap: "bwr"
+  diff_contour_range: [-7,7.1,0.5]
   ylim: [1e3,1e-1]
   mpl:
     colorbar:
