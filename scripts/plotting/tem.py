@@ -380,7 +380,7 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
     
-                # Check if the data arrays need to be regridded
+                """# Check if the data arrays need to be regridded
                 mseasons_interp = mseasons.rename(lev="lon", zalat="lat")
                 oseasons = oseasons.rename(lev="lon", zalat="lat")
                 mseasons_interp = interp_tem(mseasons_interp, oseasons)
@@ -390,7 +390,9 @@ def tem(adf):
                 oseasons = oseasons.rename(lon="lev", lat="zalat")
 
                 #difference: each entry should be (lat, lon)
-                dseasons = mseasons_interp-oseasons
+                dseasons = mseasons_interp-oseasons"""
+
+                dseasons = mseasons-oseasons
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
@@ -400,10 +402,9 @@ def tem(adf):
                 cmap = cp_info['cmap1']
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
-
                 # mesh for plots:
-                lat = mseasons_interp['zalat']
-                lev = mseasons_interp['lev']
+                lat = mseasons['zalat']
+                lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Find the next value below highest vertical level
