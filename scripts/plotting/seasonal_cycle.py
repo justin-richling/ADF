@@ -975,7 +975,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
     if "diff_levs" in pcap_dict["T"][f"{hemi}h"]:
         diff_levs = np.arange(*pcap_dict["T"][f"{hemi}h"]["diff_levs"])
     else:
-        diff_levs = np.arange(-9,10,1)
+        diff_levs = np.arange(-10,11,1)
 
     #Get number of test cases (number of columns)
     casenum = len(case_names)

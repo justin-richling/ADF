@@ -2371,10 +2371,10 @@ pcap_plots:
   T:
     sh:
       levs: [140, 301, 10]
-      diff_levs: [-9, 10, 1]
+      diff_levs: [-10, 11, 1]
     nh:
       levs: [140, 301, 10]
-      diff_levs: [-9, 10, 1]
+      diff_levs: [-10, 11, 1]
     units: "K"
 
 # Tape Recorder plot
