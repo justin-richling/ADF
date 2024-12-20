@@ -1403,7 +1403,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     data_max = diff_pcap.max()
     midpoint = (data_max + data_min) / 2
     span = max(data_max - midpoint, midpoint - data_min)
-    diff_levs = np.linspace(midpoint - span, midpoint + span, 21)
+    diff_levs = np.linspace(midpoint - span, midpoint + span, 20)
 
     cf=ax[idx].contourf(lat_grid, time_grid, (diff_pcap),
                         levels=diff_levs,
