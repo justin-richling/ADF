@@ -381,6 +381,9 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
+                print("mseasons.shape",mseasons.shape)
+                print("oseasons.shape",oseasons.shape,"\n\n")
+
                 test_lons = mseasons.lev
                 test_lats = mseasons.zalat
 
