@@ -381,7 +381,7 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
-                if s == "DJF":
+                if s == "DJF" and var=="uzm":
                     print("\n\nmseasons",mseasons,"\n\n")
 
                     print("mseasons.shape",mseasons.shape)
