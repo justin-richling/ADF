@@ -385,8 +385,8 @@ def tem(adf):
                 oseasons = oseasons.rename(lev="lon", zalat="lat")
                 mseasons_interp = interp_tem(mseasons_interp, oseasons)
 
-                mseasons_interp = mseasons.rename(lon="lev", lat="zalat")
-                mseasons_interp = mseasons.transpose("lev", "zalat")
+                mseasons_interp = mseasons_interp.rename(lon="lev", lat="zalat")
+                mseasons_interp = mseasons_interp.transpose("lev", "zalat")
                 oseasons = oseasons.rename(lon="lev", lat="zalat")
 
                 #difference: each entry should be (lat, lon)
