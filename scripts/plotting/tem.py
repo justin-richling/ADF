@@ -402,8 +402,8 @@ def tem(adf):
 
 
                 # mesh for plots:
-                lat = mseasons['zalat']
-                lev = mseasons['lev']
+                lat = mseasons_interp['zalat']
+                lev = mseasons_interp['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Find the next value below highest vertical level
@@ -424,11 +424,11 @@ def tem(adf):
                 ax = [ax1,ax2,ax3]
 
                 #Contour fill
-                img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
+                img0 = ax[0].contourf(lats, levs,mseasons_interp, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
                 #Add contours for highlighting
-                c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm,
+                c0 = ax[0].contour(lats,levs,mseasons_interp,levels=clevs[::2], norm=norm,
                                     colors="k", linewidths=0.5)
 
                 #Check if contour labels need to be adjusted
