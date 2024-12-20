@@ -604,7 +604,10 @@ def tem(adf):
 
                     print("Target Regridded Data:")
                     print(target_regridded_data, "\n\n")
-
+                    oseasons = source_regridded_data
+                    mseasons = target_regridded_data
+                    lat = mseasons['zalat']
+                    lev = mseasons['lev']
 
 
 
