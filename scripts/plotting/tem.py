@@ -452,9 +452,11 @@ def tem(adf):
 
                     # Compare the number of levels in the 'lev' coordinate
                     if len(mseasons.lev) < len(oseasons.lev):
+                        print("source data is mseasons")
                         source_data = mseasons
                         target_data = oseasons
                     else:
+                        print("source data is oseasons")
                         source_data = oseasons
                         target_data = mseasons
 
@@ -498,11 +500,6 @@ def tem(adf):
                         mseasons = regridded_data
                         lat = mseasons['zalat']
                         lev = mseasons['lev']
-
-
-
-
-
                 else:
                     lat = mseasons['zalat']
                     lev = mseasons['lev']
