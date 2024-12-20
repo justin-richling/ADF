@@ -1182,6 +1182,12 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     diff_cmap = var_dict[var]["diff_cmap"]
     levs = np.arange(*var_dict[var]["levels"])
     diff_levs = np.arange(*var_dict[var]["diff_levels"])
+    
+    """# set a symmetric color bar for diff:
+    absmaxdif = np.max(np.abs(diffdata))
+    # set levels for difference plot:
+    levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)"""
+    
     units = var_dict[var]["units"]
     title = var_dict[var]["title"]
     y_labels = var_dict[var]["y_labels"]
@@ -1387,7 +1393,11 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #Set up plot
     #ax = fig.add_subplot(nrows, ncols, idx+1)
 
-       
+    # set a symmetric color bar for diff:
+    absmaxdif = np.max(np.abs(diff_pcap))
+    # set levels for difference plot:
+    diff_levs = np.linspace(-1*absmaxdif, absmaxdif, 24)
+
     cf=ax[idx].contourf(lat_grid, time_grid, (diff_pcap),
                         levels=diff_levs,
                         cmap=diff_cmap,#zorder=100
