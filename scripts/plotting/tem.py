@@ -539,73 +539,73 @@ def tem(adf):
 
 
 
-                from scipy.interpolate import RegularGridInterpolator
-                import numpy as np
-                import xarray as xr
+                    from scipy.interpolate import RegularGridInterpolator
+                    import numpy as np
+                    import xarray as xr
 
-                # Extract source and target coordinates
-                source_lat = source_data.zalat.values  # Latitude for source data
-                source_lev = source_data.lev.values   # Vertical levels for source data
-                source_values = source_data.values
+                    # Extract source and target coordinates
+                    source_lat = source_data.zalat.values  # Latitude for source data
+                    source_lev = source_data.lev.values   # Vertical levels for source data
+                    source_values = source_data.values
 
-                target_lat = target_data.zalat.values  # Latitude for target data
-                target_lev = target_data.lev.values    # Vertical levels for target data
+                    target_lat = target_data.zalat.values  # Latitude for target data
+                    target_lev = target_data.lev.values    # Vertical levels for target data
 
-                # Define standard pressure levels (vertical target levels)
-                standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
-                                        30, 20, 10, 7, 5, 3, 2, 1])
+                    # Define standard pressure levels (vertical target levels)
+                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
+                                            30, 20, 10, 7, 5, 3, 2, 1])
 
-                # Define new latitude grid (horizontal target levels)
-                new_lat = np.linspace(-90, 90, 180)  # Example: 1-degree resolution from -90 to 90
+                    # Define new latitude grid (horizontal target levels)
+                    new_lat = np.linspace(-90, 90, 180)  # Example: 1-degree resolution from -90 to 90
 
-                # Step 1: Interpolate source data to the new vertical levels
-                source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
-                source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
-                source_regridded_values_vert = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
+                    # Step 1: Interpolate source data to the new vertical levels
+                    source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
+                    source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
+                    source_regridded_values_vert = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
 
-                # Step 2: Interpolate target data to the new vertical levels
-                target_values = target_data.values
-                target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
-                target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
-                target_regridded_values_vert = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+                    # Step 2: Interpolate target data to the new vertical levels
+                    target_values = target_data.values
+                    target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
+                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    target_regridded_values_vert = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
 
-                # Step 3: Interpolate source data to the new horizontal latitude grid
-                source_regridded_values_horiz = []
-                for i, lev in enumerate(standard_lev):
-                    interpolator = RegularGridInterpolator((source_lat,), source_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                    regridded_values = interpolator(new_lat)
-                    source_regridded_values_horiz.append(regridded_values)
-                source_regridded_values_horiz = np.array(source_regridded_values_horiz)
+                    # Step 3: Interpolate source data to the new horizontal latitude grid
+                    source_regridded_values_horiz = []
+                    for i, lev in enumerate(standard_lev):
+                        interpolator = RegularGridInterpolator((source_lat,), source_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
+                        regridded_values = interpolator(new_lat)
+                        source_regridded_values_horiz.append(regridded_values)
+                    source_regridded_values_horiz = np.array(source_regridded_values_horiz)
 
-                # Step 4: Interpolate target data to the new horizontal latitude grid
-                target_regridded_values_horiz = []
-                for i, lev in enumerate(standard_lev):
-                    interpolator = RegularGridInterpolator((target_lat,), target_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                    regridded_values = interpolator(new_lat)
-                    target_regridded_values_horiz.append(regridded_values)
-                target_regridded_values_horiz = np.array(target_regridded_values_horiz)
+                    # Step 4: Interpolate target data to the new horizontal latitude grid
+                    target_regridded_values_horiz = []
+                    for i, lev in enumerate(standard_lev):
+                        interpolator = RegularGridInterpolator((target_lat,), target_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
+                        regridded_values = interpolator(new_lat)
+                        target_regridded_values_horiz.append(regridded_values)
+                    target_regridded_values_horiz = np.array(target_regridded_values_horiz)
 
-                # Step 5: Convert regridded values back into xarray.DataArray
-                source_regridded_data = xr.DataArray(
-                    data=source_regridded_values_horiz,
-                    dims=["lev", "lat"],
-                    coords={"lev": standard_lev, "lat": new_lat},
-                    name="source_regridded_data"
-                )
+                    # Step 5: Convert regridded values back into xarray.DataArray
+                    source_regridded_data = xr.DataArray(
+                        data=source_regridded_values_horiz,
+                        dims=["lev", "lat"],
+                        coords={"lev": standard_lev, "lat": new_lat},
+                        name="source_regridded_data"
+                    )
 
-                target_regridded_data = xr.DataArray(
-                    data=target_regridded_values_horiz,
-                    dims=["lev", "lat"],
-                    coords={"lev": standard_lev, "lat": new_lat},
-                    name="target_regridded_data"
-                )
+                    target_regridded_data = xr.DataArray(
+                        data=target_regridded_values_horiz,
+                        dims=["lev", "lat"],
+                        coords={"lev": standard_lev, "lat": new_lat},
+                        name="target_regridded_data"
+                    )
 
-                # Output the regridded data
-                print("Source Regridded Data:")
-                print(source_regridded_data, "\n\n")
+                    # Output the regridded data
+                    print("Source Regridded Data:")
+                    print(source_regridded_data, "\n\n")
 
-                print("Target Regridded Data:")
-                print(target_regridded_data, "\n\n")
+                    print("Target Regridded Data:")
+                    print(target_regridded_data, "\n\n")
 
 
 
