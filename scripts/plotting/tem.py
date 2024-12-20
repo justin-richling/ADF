@@ -474,23 +474,23 @@ def tem(adf):
                     target_lev = target_data.lev.values  # Use the smaller lev grid as the target
 
                     # Define standard pressure levels (target levels)
-                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
-                                            30, 20, 10, 7, 5, 3, 2, 1])
+                    #standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
+                    #                        30, 20, 10, 7, 5, 3, 2, 1])
 
                     # Create the interpolator based on the source data grid
                     interpolator = RegularGridInterpolator((source_lev, source_lat), source_values)
 
                     # Define target points for interpolation to the standard levels
-                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    target_points = np.array(np.meshgrid(target_lev, target_lat, indexing='ij')).reshape(2, -1).T
 
                     # Perform the interpolation to the standard levels
-                    regridded_values = interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+                    regridded_values = interpolator(target_points).reshape(len(target_lev), len(target_lat))
 
                     # Convert the regridded values back into an xarray.DataArray
                     regridded_data = xr.DataArray(
                         data=regridded_values,
                         dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": target_lat},
+                        coords={"lev": target_lev, "zalat": target_lat},
                         name="regridded_data"
                     )
 
