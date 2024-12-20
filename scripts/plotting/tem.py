@@ -540,8 +540,6 @@ def tem(adf):
 
 
                     from scipy.interpolate import RegularGridInterpolator
-                    import numpy as np
-                    import xarray as xr
 
                     # Extract source and target coordinates
                     source_lat = source_data.zalat.values  # Latitude for source data
