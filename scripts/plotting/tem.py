@@ -9,6 +9,7 @@ from matplotlib.ticker import ScalarFormatter
 import matplotlib as mpl
 import matplotlib.cm as cm
 import pandas as pd
+from scipy.interpolate import RegularGridInterpolator
 
 import plotting_functions as pf
 
@@ -442,9 +443,9 @@ def tem(adf):
                     vertical_result = vertical_interp(target_lev)"""
 
 
-                    from scipy.interpolate import RegularGridInterpolator
-                    import numpy as np
-                    import xarray as xr
+
+                    #import numpy as np
+                    #import xarray as xr
 
                     # Assuming you have two datasets: data1 and data2
                     # data1 and data2 are xarray DataArrays with 'lev' and 'lat' dimensions
