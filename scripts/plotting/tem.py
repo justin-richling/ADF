@@ -578,8 +578,8 @@ def interp_tem(arr_anom1, arr_anom2):
     import numpy as np
 
     # Ensure the source data is contiguous
-    if not arr_anom1.values.flags['C_CONTIGUOUS']:
-        arr_anom1 = arr_anom1.copy(data=np.ascontiguousarray(arr_anom1.values))
+    #if not arr_anom1.values.flags['C_CONTIGUOUS']:
+    #    arr_anom1 = arr_anom1.copy(data=np.ascontiguousarray(arr_anom1.values))
 
     test_lons = arr_anom1.lon
     test_lats = arr_anom1.lat
