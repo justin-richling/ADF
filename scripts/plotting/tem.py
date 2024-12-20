@@ -175,6 +175,10 @@ def tem(adf):
             data_var = var
         #End if
         """
+        if (adf.compare_obs) and (var == "thzm"):
+            print("Obs case is missing potential temperature, so this variable will be skipped.")
+            continue
+
         #Notify user of variable being plotted:
         print(f"\t - TEM plots for {var}")
 

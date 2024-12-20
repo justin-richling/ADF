@@ -133,7 +133,6 @@ def create_TEM_files(adf):
         #Make a copy of obs data so we don't do anything bad
         ds_obs = ds.copy()
         ds_base = xr.Dataset({'uzm': xr.Variable(('time', 'lev', 'zalat'), ds_obs.uzm.data),
-                                'thzm': xr.Variable(('time', 'lev', 'zalat'), ds_obs.thzm.data),
                                 'epfy': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfy.data),
                                 'epfz': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfz.data),
                                 'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.vtem.data),
