@@ -575,6 +575,13 @@ def interp_tem(arr_anom1, arr_anom2):
 
     #arr_anom1 = arr_anom1.rename(lev="lon", zalat="lat")
     #arr_anom2 = arr_anom2.rename(lev="lon", zalat="lat")
+    import numpy as np
+
+    # Assuming `data` is your array
+    if not arr_anom1.flags['C_CONTIGUOUS']:
+        arr_anom1 = np.ascontiguousarray(arr_anom1)
+    if not arr_anom2.flags['C_CONTIGUOUS']:
+        arr_anom2 = np.ascontiguousarray(arr_anom2)
 
     test_lons = arr_anom1.lon
     test_lats = arr_anom1.lat
