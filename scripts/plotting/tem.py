@@ -499,12 +499,12 @@ def tem(adf):
                     if len(source_data.lev) < len(target_data.lev):
                         #source_data = mseasons
                         mseasons = regridded_data
-                        lat = mseasons['zalat']
-                        lev = mseasons['lev']
-                    else:
-                        oseasons = regridded_data
                         lat = oseasons['zalat']
                         lev = oseasons['lev']
+                    else:
+                        oseasons = regridded_data
+                        lat = mseasons['zalat']
+                        lev = mseasons['lev']
                 else:
                     lat = mseasons['zalat']
                     lev = mseasons['lev']
