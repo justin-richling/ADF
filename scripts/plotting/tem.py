@@ -571,7 +571,7 @@ def tem(adf):
                     source_regridded_values_horiz = []
                     for i, lev in enumerate(standard_lev):
                         interpolator = RegularGridInterpolator((source_lat,), source_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                        regridded_values = interpolator(new_lat)
+                        regridded_values = interpolator(source_lat)#new_lat
                         source_regridded_values_horiz.append(regridded_values)
                     source_regridded_values_horiz = np.array(source_regridded_values_horiz)
 
@@ -579,7 +579,7 @@ def tem(adf):
                     target_regridded_values_horiz = []
                     for i, lev in enumerate(standard_lev):
                         interpolator = RegularGridInterpolator((target_lat,), target_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                        regridded_values = interpolator(new_lat)
+                        regridded_values = interpolator(source_lat)#new_lat
                         target_regridded_values_horiz.append(regridded_values)
                     target_regridded_values_horiz = np.array(target_regridded_values_horiz)
 
@@ -587,14 +587,14 @@ def tem(adf):
                     source_regridded_data = xr.DataArray(
                         data=source_regridded_values_horiz,
                         dims=["lev", "lat"],
-                        coords={"lev": standard_lev, "lat": new_lat},
+                        coords={"lev": standard_lev, "lat": source_lat},
                         name="source_regridded_data"
                     )
 
                     target_regridded_data = xr.DataArray(
                         data=target_regridded_values_horiz,
                         dims=["lev", "lat"],
-                        coords={"lev": standard_lev, "lat": new_lat},
+                        coords={"lev": standard_lev, "lat": source_lat},
                         name="target_regridded_data"
                     )
 
