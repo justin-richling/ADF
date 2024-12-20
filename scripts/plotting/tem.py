@@ -583,6 +583,8 @@ def tem(adf):
                         target_regridded_values_horiz.append(regridded_values)
                     target_regridded_values_horiz = np.array(target_regridded_values_horiz)
 
+                    print("source_regridded_values_horiz",source_regridded_values_horiz,"\n\n")
+
                     # Step 5: Convert regridded values back into xarray.DataArray
                     source_regridded_data = xr.DataArray(
                         data=source_regridded_values_horiz,
