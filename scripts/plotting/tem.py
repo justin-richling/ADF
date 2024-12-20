@@ -451,7 +451,7 @@ def tem(adf):
                     # data1 and data2 are xarray DataArrays with 'lev' and 'lat' dimensions
 
                     # Compare the number of levels in the 'lev' coordinate
-                    if len(mseasons.lev) > len(oseasons.lev):
+                    if len(mseasons.lev) < len(oseasons.lev):
                         source_data = mseasons
                         target_data = oseasons
                     else:
