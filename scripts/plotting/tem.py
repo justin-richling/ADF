@@ -601,16 +601,21 @@ def tem(adf):
                     )
 
                     # Output the regridded data
-                    print("Source Regridded Data:")
-                    print(source_regridded_data, "\n\n")
+                    #print("Source Regridded Data:")
+                    #print(source_regridded_data, "\n\n")
 
-                    print("Target Regridded Data:")
-                    print(target_regridded_data, "\n\n")
+                    #print("Target Regridded Data:")
+                    #print(target_regridded_data, "\n\n")
                     oseasons = source_regridded_data
                     mseasons = target_regridded_data
                     lat = mseasons['zalat']
                     lev = mseasons['lev']
+                    if var=="uzm" and s=="ANN":
+                        print("Source Regridded Data:")
+                        print(source_regridded_data, "\n\n")
 
+                        print("Target Regridded Data:")
+                        print(target_regridded_data, "\n\n")
 
 
 
