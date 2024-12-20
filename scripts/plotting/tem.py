@@ -379,17 +379,18 @@ def tem(adf):
                 if var == "utendepfd":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
-                #difference: each entry should be (lat, lon)
-                dseasons = mseasons-oseasons
     
                 # Check if the data arrays need to be regridded
-                mseasons = mseasons.rename(lev="lon", zalat="lat")
+                mseasons_interp = mseasons.rename(lev="lon", zalat="lat")
                 oseasons = oseasons.rename(lev="lon", zalat="lat")
-                mseasons = interp_tem(mseasons, oseasons)
+                mseasons_interp = interp_tem(mseasons_interp, oseasons)
 
-                mseasons = mseasons.rename(lon="lev", lat="zalat")
-                mseasons = mseasons.transpose("lev", "zalat")
+                mseasons_interp = mseasons.rename(lon="lev", lat="zalat")
+                mseasons_interp = mseasons.transpose("lev", "zalat")
                 oseasons = oseasons.rename(lon="lev", lat="zalat")
+
+                #difference: each entry should be (lat, lon)
+                dseasons = mseasons_interp-oseasons
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
