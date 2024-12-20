@@ -152,9 +152,11 @@ def seasonal_cycle(adfobj):
         base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
         hist_strs = case_hist_strs + base_hist_strs
     else:
-        syear_cases = syear_cases + [""]
-        eyear_cases = eyear_cases + [""]
-        hist_strs = case_hist_strs
+        print("\t The seasonal cycle plots currently don't work when comparing against obs. Exiting script.")
+        return
+        #syear_cases = syear_cases + [""]
+        #eyear_cases = eyear_cases + [""]
+        #hist_strs = case_hist_strs
     # End if
 
     climo_yrs = [syear_cases, eyear_cases]
