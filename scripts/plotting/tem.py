@@ -495,7 +495,7 @@ def tem(adf):
                     )
 
                     # Output the regridded data
-                    print(regridded_data)
+                    print("\n\nregridded_data",regridded_data,"\n\n")
                     if len(source_data.lev) > len(target_data.lev):
                         #source_data = mseasons
                         mseasons = regridded_data
