@@ -586,15 +586,15 @@ def tem(adf):
                     # Step 5: Convert regridded values back into xarray.DataArray
                     source_regridded_data = xr.DataArray(
                         data=source_regridded_values_horiz,
-                        dims=["lev", "lat"],
-                        coords={"lev": standard_lev, "lat": source_lat},
+                        dims=["lev", "zalat"],
+                        coords={"lev": standard_lev, "zalat": source_lat},
                         name="source_regridded_data"
                     )
 
                     target_regridded_data = xr.DataArray(
                         data=target_regridded_values_horiz,
-                        dims=["lev", "lat"],
-                        coords={"lev": standard_lev, "lat": source_lat},
+                        dims=["lev", "zalat"],
+                        coords={"lev": standard_lev, "zalat": source_lat},
                         name="target_regridded_data"
                     )
 
