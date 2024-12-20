@@ -967,8 +967,15 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
 def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly, pcap_dict):
     """
     """
-
-    levs = np.arange(*pcap_dict["T"]["levs"])
+    if "levs" in pcap_dict["T"][f"{hemi}h"]:
+        levs = np.arange(*pcap_dict["T"][f"{hemi}h"]["levs"])
+    else:
+        levs = np.arange(140,301,10)
+    
+    if "diff_levs" in pcap_dict["T"][f"{hemi}h"]:
+        diff_levs = np.arange(*pcap_dict["T"][f"{hemi}h"]["diff_levs"])
+    else:
+        diff_levs = np.arange(-9,10,1)
 
     #Get number of test cases (number of columns)
     casenum = len(case_names)
@@ -1071,7 +1078,8 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
         ax = fig.add_subplot(nrows, casenum, casenum+idx+1)
         clevs = np.arange(-10,11,1)
         cf=plt.contourf(lev_grid, time_grid, (case_pcap-merra2_pcap),
-                        levels=np.arange(-10,11,1),cmap='RdYlBu_r'
+                        levels=diff_levs,cmap='RdYlBu_r'
+                        #levels=np.arange(-10,11,1),cmap='RdYlBu_r'
                        ) #np.arange(-10,11,1)
         c0=plt.contour(lev_grid, time_grid, (case_pcap-merra2_pcap), colors='grey',
                            levels=clevs[::3],
@@ -1125,7 +1133,9 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
                                 loc='center right',
                                 borderpad=-1.5
                                )
-            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
+            #diff_levs
+            #cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(-9,10,3))
+            cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(diff_levs[0],diff_levs[1],3))
             cbar.ax.tick_params(axis='y', labelsize=8)
             # Set the font size for the colorbar label
             cbar.set_label("K", fontsize=10, labelpad=1)
@@ -1181,7 +1191,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     cmap = var_dict[var]["cmap"]
     diff_cmap = var_dict[var]["diff_cmap"]
     levs = np.arange(*var_dict[var]["levels"])
-    diff_levs = np.arange(*var_dict[var]["diff_levels"])
+    #diff_levs = np.arange(*var_dict[var]["diff_levels"])
     
     """# set a symmetric color bar for diff:
     absmaxdif = np.max(np.abs(diffdata))
@@ -1393,10 +1403,13 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
     #Set up plot
     #ax = fig.add_subplot(nrows, ncols, idx+1)
 
-    # set a symmetric color bar for diff:
-    absmaxdif = np.max(np.abs(diff_pcap))
-    # set levels for difference plot:
-    diff_levs = np.linspace(-1*absmaxdif, absmaxdif, 21)
+    if "diff_levels" in var_dict[var]:
+        diff_levs = np.arange(*var_dict[var]["diff_levels"])
+    else:
+        # set a symmetric color bar for diff:
+        absmaxdif = np.max(np.abs(diff_pcap))
+        # set levels for difference plot:
+        diff_levs = np.linspace(-1*absmaxdif, absmaxdif, 21)
 
     """# Calculate the min, max, and midpoint
     data_min = diff_pcap.min()
