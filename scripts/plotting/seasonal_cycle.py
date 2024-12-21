@@ -1138,6 +1138,7 @@ def polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, mer
             #print("\n",diff_levs[-2]-abs(diff_levs[-2]-diff_levs[-1]))
             #print(diff_levs[-2]-abs(diff_levs[-2]+diff_levs[-1]),"\n")
             space = abs(diff_levs[-2]-diff_levs[-1])
+            print("space",space)
             print("first",diff_levs[1]-space)
             print("last",diff_levs[-2]+space)
             cbar = fig.colorbar(cf, cax=axins, orientation="vertical", label='K', ticks=np.arange(diff_levs[1]+space,diff_levs[-2]+space,3))
