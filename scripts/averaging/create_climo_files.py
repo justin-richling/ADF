@@ -70,8 +70,9 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
-    input_ts_locs = adf.get_cam_info("cam_ts_loc")#, required=True
-    output_locs   = adf.get_cam_info("cam_climo_loc")#, required=True
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc")#, required=True
+    #output_locs   = adf.get_cam_info("cam_climo_loc")#, required=True
+    output_locs = adf.climo_locs["test"]
     #calc_climos   = adf.get_cam_info("calc_cam_climo")
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
@@ -131,12 +132,13 @@ def create_climo_files(adf, clobber=False, search=None):
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_ts_baseline = adf.get_baseline_info("cam_ts_loc")#, required=True
-        output_bl_loc     = adf.get_baseline_info("cam_climo_loc")#, required=True
-        calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
+        #input_ts_baseline = adf.get_baseline_info("cam_ts_loc")#, required=True
+        #output_bl_loc     = adf.get_baseline_info("cam_climo_loc")#, required=True
+        output_bl_loc = adf.climo_locs["baseline"]
+        #calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
 
-        baseline_name = adf.get_baseline_info("cam_case_name", required=True)
+        multiple_baseline_ts = adf.get_baseline_info("cam_case_name", required=True)
         calc_bl_climos = adf.calc_climos["baseline"]
         #cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
         #ts_dirs = [self.get_baseline_info("cam_ts_loc", required=True)]
@@ -197,8 +199,8 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Time series file search
         if search is None:
-            #search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
-            search = "{CASE}*{HIST_STR}*.{VARIABLE}.{SYEAR}01-{EYEAR}12.nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
+            search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
+            #search = "{CASE}*{HIST_STR}*.{VARIABLE}.{SYEAR}01-{EYEAR}12.nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
         #000101-009912
         #Check model year bounds:
         syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
