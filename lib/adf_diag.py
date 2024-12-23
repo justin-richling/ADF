@@ -1346,7 +1346,7 @@ class AdfDiag(AdfWeb):
         #
         # Move the data to the dir structure and file names expected by the MDTF
         #    model_input_data/case/freq/case.VAR.freq.nc
-
+        print("NOT HERE RIGHT?")
         self.move_tsfiles_for_mdtf(verbose)
 
         #
