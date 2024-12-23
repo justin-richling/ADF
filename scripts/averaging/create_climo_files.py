@@ -207,6 +207,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
         #Loop over CAM output variables:
         list_of_arguments = []
+        nums = []
         for var in var_list:
 
             # Create name of climatology output file (which includes the full path)
@@ -234,15 +235,20 @@ def create_climo_files(adf, clobber=False, search=None):
                 warnings.warn(errmsg)
                 continue
 
-            list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
+            if len(ts_files) > 1:
+                process_variable(adf, ts_files, syr, eyr, output_file)
+            else:
+                list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
+                nums.append("yes")
 
 
         #End of var_list loop
         #--------------------
-
-        # Parallelize the computation using multiprocessing pool:
-        with mp.Pool(processes=number_of_cpu) as p:
-            result = p.starmap(process_variable, list_of_arguments)
+        print("nums:",nums)
+        if len(nums) > 0: 
+            # Parallelize the computation using multiprocessing pool:
+            with mp.Pool(processes=number_of_cpu) as p:
+                result = p.starmap(process_variable, list_of_arguments)
 
     #End of model case loop
     #----------------------
@@ -265,8 +271,10 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
         print("It's coming here, right????")
         cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
         print(cam_ts_data.variables,"\n\n\n")
+    print("THIS IS WHERE IT MESSES UP RIGHT???\n")
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
+        print("OR IS THIS WHERE IT MESSES UP???\n")
         time = cam_ts_data['time']
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
         time = xr.DataArray(cam_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
@@ -274,6 +282,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
         cam_ts_data.assign_coords(time=time)
         cam_ts_data = xr.decode_cf(cam_ts_data)
     #Extract data subset using provided year bounds:
+    print("OR HERE???\n")
     tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
     cam_ts_data = cam_ts_data.isel(time=tslice)
     #Group time series values by month, and average those months together:
