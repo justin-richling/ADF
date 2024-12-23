@@ -264,7 +264,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     else:
         print("It's coming here, right????")
         cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
-        print(cam_ts_data.variables)
+        print(cam_ts_data.variables,"\n\n\n")
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
         time = cam_ts_data['time']
