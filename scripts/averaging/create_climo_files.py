@@ -218,7 +218,9 @@ def create_climo_files(adf, clobber=False, search=None):
 
             #Create list of time series files present for variable:
             # Note that we hard-code for h0 because we only want to make climos of monthly output
-            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var, SYEAR=start_year[case_idx], EYEAR=end_year[case_idx])
+            syear = start_year[case_idx].zfill(4)
+            eyear = end_year[case_idx].zfill(4)
+            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var, SYEAR=syear, EYEAR=eyear)
             ts_files = sorted(list(input_location.glob(ts_filenames)))
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
