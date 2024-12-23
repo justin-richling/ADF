@@ -639,20 +639,20 @@ class AdfInfo(AdfConfig):
         #Grab case time series file location(s)
         ##################################################################
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
-        input_ts_locs = self.get_cam_info("cam_ts_loc")
-        if input_ts_locs is None:
-            input_ts_locs = [None]*len(case_names)
+        test_ts_locs = self.get_cam_info("cam_ts_loc")
+        if test_ts_locs is None:
+            test_ts_locs = [None]*len(case_names)
         else:
             #Check if any time series files are pre-made
-            if len(input_ts_locs) == len(case_names):
-                for i,case in enumerate(input_ts_locs):
+            if len(test_ts_locs) == len(case_names):
+                for i,case in enumerate(test_ts_locs):
                     #if case is None:
                     if case == "None":
-                        input_ts_locs[i] = None
+                        test_ts_locs[i] = None
             else:
                 print("We have a problem, the number of locs does not match the number of cases!")
                 #adf.error thingy
-        self.__test_ts_locs = input_ts_locs
+        self.__test_ts_locs = test_ts_locs
         #Add check for obs!!!        
         #self.__test_ts_locs = {}
         #for i,cam_ts in enumerate(input_ts_locs):
