@@ -400,7 +400,7 @@ class AdfDiag(AdfWeb):
             end_year = end_years[case_idx]
 
             # Create path object for the CAM history file(s) location:
-            starting_location = Path(cam_hist_locs[case_idx])
+            starting_location = Path(cam_hist_locs[case_name])
 
             # Check that path actually exists:
             if not starting_location.is_dir():
@@ -714,7 +714,8 @@ class AdfDiag(AdfWeb):
                     #3parent
                     #hist_locs = []
                     #for f in hist_files:
-                    hist_locs_str = ', '.join(str(loc) for loc in cam_hist_locs)
+                    #hist_locs_str = ', '.join(str(loc) for loc in cam_hist_locs)
+                    hist_locs_str = ', '.join(str(value) for value in cam_hist_locs.values())
 
                     # Step 2: Create the ncatted command to add both global attributes
                     cmd_ncatted = [
