@@ -378,6 +378,7 @@ class AdfDiag(AdfWeb):
         print("calc_ts",calc_ts,"\n")
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
+            print(f"{case_name}\n-------------------------------------")
             print("ts_dirs[case_name]",ts_dirs[case_idx],type(ts_dirs[case_idx]))
             print("calc_ts[case_name]",calc_ts[case_idx],"\n")
             # Check if particular case should be processed:
