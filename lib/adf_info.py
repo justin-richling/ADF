@@ -78,7 +78,7 @@ class AdfInfo(AdfConfig):
         self.__cam_climo_info = self.read_config_var('diag_cam_climo', required=True)
 
         #Expand CAM climo info variable strings:
-        print("HERE?")
+        print("HERE?",self.__cam_climo_info)
         self.expand_references(self.__cam_climo_info)
 
         # Add CVDP info to object:
