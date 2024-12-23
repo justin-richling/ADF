@@ -205,13 +205,15 @@ class AdfInfo(AdfConfig):
             print("calc_baseline_ts",calc_baseline_ts,"\n")
             if calc_baseline_ts is None:
                 calc_baseline_ts = False
-            self.__calc_baseline_ts = {data_name:calc_baseline_ts}
+            #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
+            self.__calc_baseline_ts = calc_baseline_ts
 
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
             if input_ts_baseline == "None":
                 input_ts_baseline = None
             print(input_ts_baseline)
-            self.__input_ts_baseline = {data_name:input_ts_baseline}
+            #self.__input_ts_baseline = {data_name:input_ts_baseline}
+            self.__input_ts_baseline = input_ts_baseline
 
             #self.__calc_baseline_climo = {data_name:input_ts_baseline}
 
@@ -647,7 +649,7 @@ class AdfInfo(AdfConfig):
             if len(test_ts_locs) == len(case_names):
                 for i,case in enumerate(test_ts_locs):
                     #if case is None:
-                    if case == "None":
+                    if case is None:
                         test_ts_locs[i] = None
             else:
                 print("We have a problem, the number of locs does not match the number of cases!")
