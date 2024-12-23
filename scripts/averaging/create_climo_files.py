@@ -72,8 +72,20 @@ def create_climo_files(adf, clobber=False, search=None):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc")#, required=True
     output_locs   = adf.get_cam_info("cam_climo_loc")#, required=True
-    calc_climos   = adf.get_cam_info("calc_cam_climo")
+    #calc_climos   = adf.get_cam_info("calc_cam_climo")
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
+
+
+    #case_names = self.get_cam_info("cam_case_name", required=True)
+    calc_climos = adf.calc_climos["test"]
+    #cam_hist_locs = self.get_cam_info("cam_hist_loc")
+    #ts_dirs = self.get_cam_info("cam_ts_loc", required=True)
+    input_ts_locs = adf.ts_locs["test"]
+    #overwrite_ts = self.get_cam_info("cam_overwrite_ts")
+    #start_years = self.climo_yrs["syears"]
+    #end_years = self.climo_yrs["eyears"]
+    #case_type_string="case"
+    #hist_str_list = self.hist_string["test_hist_str"]
 
     #Extract simulation years:
     start_year = adf.climo_yrs["syears"]
@@ -123,6 +135,17 @@ def create_climo_files(adf, clobber=False, search=None):
         output_bl_loc     = adf.get_baseline_info("cam_climo_loc")#, required=True
         calc_bl_climos    = adf.get_baseline_info("calc_cam_climo")
         ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
+
+        baseline_name = adf.get_baseline_info("cam_case_name", required=True)
+        calc_bl_climos = adf.calc_climos["baseline"]
+        #cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
+        #ts_dirs = [self.get_baseline_info("cam_ts_loc", required=True)]
+        input_ts_baseline = adf.ts_locs["baseline"]
+        #overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
+        #start_years = [self.climo_yrs["syear_baseline"]]
+        #end_years = [self.climo_yrs["eyear_baseline"]]
+        #case_type_string = "baseline"
+        #hist_str_list = [self.hist_string["base_hist_str"]]
 
         #Extract baseline years:
         bl_syr = adf.climo_yrs["syear_baseline"]

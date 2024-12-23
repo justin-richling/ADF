@@ -215,6 +215,13 @@ class AdfInfo(AdfConfig):
             #self.__input_ts_baseline = {data_name:input_ts_baseline}
             self.__input_ts_baseline = input_ts_baseline
 
+            input_climo_baseline = self.get_baseline_info("cam_climo_loc")
+            if input_climo_baseline == "None":
+                input_climo_baseline = None
+            print(input_climo_baseline)
+            #self.__input_ts_baseline = {data_name:input_ts_baseline}
+            self.__input_climo_baseline = input_climo_baseline
+
             #self.__calc_baseline_climo = {data_name:input_ts_baseline}
 
             #Check if time series files already exist,
@@ -706,6 +713,39 @@ class AdfInfo(AdfConfig):
 
 
 
+        #Grab case time series file location(s)
+        ##################################################################
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        test_climo_locs = self.get_cam_info("cam_climo_loc")
+        if test_climo_locs is None:
+            test_climo_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(test_climo_locs) == len(case_names):
+                for i,case in enumerate(test_climo_locs):
+                    #if case is None:
+                    if case is None:
+                        test_climo_locs[i] = None
+            else:
+                print("We have a problem, the number of locs does not match the number of cases!")
+                #adf.error thingy
+        self.__test_climo_locs = test_climo_locs
+        #Add check for obs!!!        
+        #self.__test_ts_locs = {}
+        #for i,cam_ts in enumerate(input_ts_locs):
+        #    self.__test_ts_locs[case_names[i]] = cam_ts
+
+        #test_ts_locs = copy.copy(self.__test_ts_locs)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
 
 
         #Loop over cases:
@@ -1104,6 +1144,19 @@ class AdfInfo(AdfConfig):
         calc_base_climo = self.__calc_base_climo
 
         return {"test":calc_test_climo,"baseline":calc_base_climo}
+
+
+    @property
+    def ts_locs(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        test_ts_locs = copy.copy(self.__test_climo_locs)
+
+        baseline_ts_loc = self.__input_climo_baseline
+
+        return {"test":test_ts_locs,"baseline":baseline_ts_loc}
 
     #########
 
