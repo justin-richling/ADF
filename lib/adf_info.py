@@ -719,8 +719,8 @@ class AdfInfo(AdfConfig):
                 cam_hist_locs[case_idx] = None
                 #test_ts_loc = test_ts_locs[case_idx]
 
-                if test_ts_locs[case_name]:
-                    test_ts_loc = test_ts_locs[case_name]
+                if test_ts_locs[case_idx]:
+                    test_ts_loc = test_ts_locs[case_idx]
                     #syear = syears[case_idx]
                     #eyear = eyears[case_idx]
 
