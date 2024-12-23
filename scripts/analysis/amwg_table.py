@@ -127,10 +127,11 @@ def amwg_table(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    input_locs = adf.ts_locs("test")
+    input_locs = adf.ts_locs["test"]
 
     #adf.get_baseline_info("cam_climo_loc")
-    input_climo_locs = adf.get_cam_info("cam_climo_loc")
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc")
+    input_climo_locs = adf.climo_locs["test"]
 
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
@@ -173,8 +174,10 @@ def amwg_table(adf):
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
-        input_loc = adf.get_baseline_info("cam_ts_loc", required=True)
-        input_climo_loc = adf.get_baseline_info("cam_climo_loc")
+        #input_loc = adf.get_baseline_info("cam_ts_loc", required=True)
+        input_loc = adf.ts_locs["baseline"]
+        #input_climo_loc = adf.get_baseline_info("cam_climo_loc")
+        input_climo_loc = adf.climo_locs["baseline"]
         input_climo_locs.append(input_climo_loc)
 
         #Grab baseline years (which may be empty strings if using Obs):
