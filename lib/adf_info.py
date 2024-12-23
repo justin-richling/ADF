@@ -1155,7 +1155,7 @@ class AdfInfo(AdfConfig):
 
 
     @property
-    def ts_locs(self):
+    def climo_locs(self):
         """Return the test case and baseline nicknames to the user if requested."""
 
         #Note that copies are needed in order to avoid having a script mistakenly
