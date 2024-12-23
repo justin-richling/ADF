@@ -631,7 +631,7 @@ class AdfInfo(AdfConfig):
                 hist_str = hist_str_case[0]
 
                 #Get climo years for verification or assignment if missing
-                starting_location = Path(cam_hist_locs[case_idx])
+                starting_location = Path(cam_hist_locs[case_name])
                 print(f"Checking history files in '{starting_location}'")
 
                 file_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
@@ -668,7 +668,7 @@ class AdfInfo(AdfConfig):
                 #  $CASE.cam.h#.YYYY<other date info>.nc
                 case_climo_yrs = [int(str(i).partition(f"{hist_str}.")[2][0:4]) for i in file_list]
                 if not case_climo_yrs:
-                    msg = f"No climo years found in {cam_hist_locs[case_idx]}, "
+                    msg = f"No climo years found in {cam_hist_locs[case_name]}, "
                     raise AdfError(msg)
                 case_climo_yrs = sorted(np.unique(case_climo_yrs))
 
