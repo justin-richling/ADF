@@ -417,6 +417,42 @@ class AdfInfo(AdfConfig):
             calc_baseline_ts = False
         #self.__calc_baseline_ts = {data_name:calc_baseline_ts}"""
 
+        #Grab case history file location(s)
+        ##################################################################
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        cam_hist_locs = self.get_cam_info("cam_hist_loc")
+        if cam_hist_locs is None:
+            cam_hist_locs = {}#[None]*len(case_names)
+            for case in case_names:
+                cam_hist_locs[case] = None
+        else:
+            #Check if any time series files are pre-made
+            if len(cam_hist_locs) == len(case_names):
+                for i,case in enumerate(cam_hist_locs):
+                    if case is None:
+                        cam_hist_locs[case] = None
+            else:
+                print("We have a problem, the number of locs does not match the number of cases!")
+                #adf.error thingy
+
+        #Add check for obs!!!        
+        self.__cam_hist_locs = {}
+        for i,cam_ts in enumerate(cam_hist_locs):
+            self.__cam_hist_locs[case_names[i]] = cam_ts
+
+        #calc_test_ts = copy.copy(self.__calc_test_ts)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
+
+
 
         #Grab case time series file location(s)
         ##################################################################
@@ -530,6 +566,7 @@ class AdfInfo(AdfConfig):
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
+        print("cam_hist_locs",cam_hist_locs,"\n")
         for case_idx, case_name in enumerate(case_names):
             syear = syears[case_idx]
             eyear = eyears[case_idx]
