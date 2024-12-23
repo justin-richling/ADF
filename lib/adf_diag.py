@@ -378,17 +378,17 @@ class AdfDiag(AdfWeb):
         print("calc_ts",calc_ts,"\n")
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
-            print("ts_dirs[case_name]",ts_dirs[case_name],type(ts_dirs[case_name]))
-            print("calc_ts[case_name]",calc_ts[case_name],"\n")
+            print("ts_dirs[case_name]",ts_dirs[case_idx],type(ts_dirs[case_idx]))
+            print("calc_ts[case_name]",calc_ts[case_idx],"\n")
             # Check if particular case should be processed:
-            if (not calc_ts[case_name]) and (ts_dirs[case_name]):
+            if (not calc_ts[case_idx]) and (ts_dirs[case_idx]):
                 emsg = " Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
                 continue
             # End if
             
-            if (not calc_ts[case_name]) and (not ts_dirs[case_name]):
+            if (not calc_ts[case_idx]) and (not ts_dirs[case_idx]):
                 emsg = f" Configuration file indicates time series files for case '{case_name}'"
                 emsg += f" don't need to be used."
                 print(emsg)
