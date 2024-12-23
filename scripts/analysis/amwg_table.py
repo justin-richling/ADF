@@ -186,7 +186,7 @@ def amwg_table(adf):
 
         syear_cases.append(syear_baseline)
         eyear_cases.append(eyear_baseline)
-
+        print("AHHH:",input_loc)
         if not input_loc:
             #print("User indicates no time series files will be used")
             #print()
