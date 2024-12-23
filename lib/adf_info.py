@@ -215,6 +215,14 @@ class AdfInfo(AdfConfig):
             #self.__input_ts_baseline = {data_name:input_ts_baseline}
             self.__input_ts_baseline = input_ts_baseline
 
+            calc_base_climo   = self.get_baseline_info("calc_cam_climo")
+            print("calc_base_climo",calc_base_climo,"\n")
+            if calc_base_climo is None:
+                calc_base_climo = False
+            #self.__calc_base_climo = {data_name:calc_base_climo}
+            self.__calc_base_climo = calc_base_climo
+            #self.__calc_base_climo
+
             input_climo_baseline = self.get_baseline_info("cam_climo_loc")
             if input_climo_baseline == "None":
                 input_climo_baseline = None
