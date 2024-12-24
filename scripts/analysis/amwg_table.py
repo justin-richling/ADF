@@ -325,7 +325,7 @@ def amwg_table(adf):
                 # Slice using only the 4-digit year
                 time_slice = slice(str(syear).zfill(4), str(eyear).zfill(4))
                 ds = ds.sel(time=time_slice)
-                print("afdasdfs",ds.time,"\n")
+                #print("afdasdfs",ds.time,"\n")
                 data = ds[var].compute()
                 #print(data.time)
                 #data = data.sel(time=slice())
