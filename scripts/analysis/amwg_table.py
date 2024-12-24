@@ -318,13 +318,14 @@ def amwg_table(adf):
 
             #Load model variable data from file:
             ds = pf.load_dataset(files)
-            print("afdasdfs",ds.time,"\n")
+            #print("afdasdfs",ds.time,"\n")
             #data = ds[var]
             if len(files) > 1:
                 # Slice for years 0500 to 0521
                 # Slice using only the 4-digit year
                 time_slice = slice(str(syear).zfill(4), str(eyear).zfill(4))
                 ds = ds.sel(time=time_slice)
+                print("afdasdfs",ds.time,"\n")
                 data = ds[var].compute()
                 #print(data.time)
                 #data = data.sel(time=slice())
