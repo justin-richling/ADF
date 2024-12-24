@@ -216,7 +216,7 @@ def amwg_table(adf):
             pass#return
         else:
             #input_loc = adf.get_baseline_info("cam_climo_loc")
-            input_locs.append(input_climo_loc)
+            input_locs.append(input_loc)
 
         #case_names.append(baseline_name)
         #if input_loc:
