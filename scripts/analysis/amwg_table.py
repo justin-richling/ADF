@@ -165,7 +165,12 @@ def amwg_table(adf):
                 print('\t  check here:',output_csv_file,"\n")
         #input_locs = []
         pass#return
-    #else:
+    else:
+        input_locs = [None]*len(case_names)
+        #input_locs = input_climo_locs
+        #for loc in input_locs:
+        #    if not loc:
+        #        input_locs.append()
         #input_locs = []
         #input_locs = adf.get_cam_info("cam_climo_loc")
 
@@ -235,7 +240,7 @@ def amwg_table(adf):
         output_location = Path(output_locs[case_idx])
 
         #Generate input file path:
-        #input_location = Path(input_locs[case_idx])
+        input_location = Path(input_locs[case_idx])
 
         if not input_location:
             print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
