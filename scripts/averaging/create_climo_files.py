@@ -99,10 +99,6 @@ def create_climo_files(adf, clobber=False, search=None):
     else:
         #Check if any time series files are pre-made
         if len(overwrite) == len(case_names):
-            for i,case in enumerate(overwrite):
-                if case is None:
-                    overwrite[i] = None
-        else:
             print("We have a problem, the number of overwrite does not match the number of cases!")
             #adf.error thingy
 
@@ -216,6 +212,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 continue
 
             if len(ts_files) > 1:
+                print(f"\t- processing climo file for '{var}'")
                 process_variable(adf, ts_files, syr, eyr, output_file)
             else:
                 list_of_arguments.append((adf, ts_files, syr, eyr, output_file))

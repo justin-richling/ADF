@@ -102,6 +102,9 @@ def amwg_table(adf):
     # VARIABLE-NAME, RUN VALUE, OBS VALUE, RUN-OBS, RMSE
     #----------------------
 
+    #Notify user that script has started:
+    print("\n  Generating AMWG tables...")
+
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     var_list     = adf.diag_var_list
@@ -141,8 +144,7 @@ def amwg_table(adf):
 
 
     #Check if user wants to skip time series file creation
-    #calc_cam_ts   = adf.get_baseline_info("calc_cam_ts")
-    if not input_locs:
+    '''if not input_locs:
         #print("User indicates no time series files will be used")
         #print()
         emsg = "\n  User indicates no time series files will be used."
@@ -165,15 +167,10 @@ def amwg_table(adf):
                 print('\t  check here:',output_csv_file,"\n")
         #input_locs = []
         pass#return
-    else:
+    else:'''
+    if 1==1:
         input_locs = [None]*len(case_names)
-        #input_locs = input_climo_locs
-        #for loc in input_locs:
-        #    if not loc:
-        #        input_locs.append()
-        #input_locs = []
-        #input_locs = adf.get_cam_info("cam_climo_loc")
-
+    #End if
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -243,15 +240,15 @@ def amwg_table(adf):
 
         #Generate input file path:
         input_location = input_locs[case_idx]
-        print("\n\tTS input_location",input_location,"\n")
+        print("\n\tTS input_location",input_location)
 
         if not input_location:
-            print(f"User supplied climo files for {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+            print(f"\t ** User supplied climo files for {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
             is_climo = True
         else:
             is_climo = False
 
-        print("\n\tis_climo:",is_climo,"\n")
+        #print("\n\tis_climo:",is_climo,"\n")
 
         #Generate input file path:
         if not is_climo:
@@ -267,7 +264,7 @@ def amwg_table(adf):
         #Write to debug log if enabled:
         adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
 
-        #Notify user that script has started:
+        #Notify user as attempting table creation:
         print(f"\n  Calculating AMWG variable table for '{case_name}'...")
 
         #Create output file name:
@@ -303,7 +300,7 @@ def amwg_table(adf):
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not files:
-                errmsg = f"Time series files for variable '{var}' not found.  Script will continue to next variable."
+                errmsg = f"\t    ** Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
             #End if
