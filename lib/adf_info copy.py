@@ -406,6 +406,9 @@ class AdfInfo(AdfConfig):
             eyears = [None]*len(case_names)
         #End if
 
+        #Extract cam history files location:
+        cam_hist_locs = self.get_cam_info('cam_hist_loc')
+
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
 
@@ -418,43 +421,123 @@ class AdfInfo(AdfConfig):
         #Initialize CAM history string nested list
         self.__hist_str = hist_str
 
-        #Grab case history file location(s)
+        """#Check if using pre-made ts files
+        #cam_ts_done   = self.get_cam_info("cam_ts_done")
+        calc_baseline_ts   = self.get_baseline_info("cam_calc_ts")
+        print("calc_baseline_ts",calc_baseline_ts,"\n")
+        if calc_baseline_ts is None:
+            calc_baseline_ts = False
+        #self.__calc_baseline_ts = {data_name:calc_baseline_ts}"""
+
+        '''#Grab case history file location(s)
         ##################################################################
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         cam_hist_locs = self.get_cam_info("cam_hist_loc")
         if cam_hist_locs is None:
-            cam_hist_locs = [None]*len(case_names)
-        """else:
+            cam_hist_locs = {}#[None]*len(case_names)
+            for case in case_names:
+                cam_hist_locs[case] = None
+        else:
             #Check if any time series files are pre-made
             if len(cam_hist_locs) == len(case_names):
+                for i,case in enumerate(cam_hist_locs):
+                    if case is None:
+                        cam_hist_locs[case] = None
+            else:
                 print("We have a problem, the number of locs does not match the number of cases!")
-                #adf.error thingy"""
-        self.__test_hist_locs = cam_hist_locs
+                #adf.error thingy
 
+        #Add check for obs!!!        
+        self.__cam_hist_locs = {}
+        for i,cam_ts in enumerate(cam_hist_locs):
+            self.__cam_hist_locs[case_names[i]] = cam_ts
 
-        #Check if time series files need to be calculated
+        #calc_test_ts = copy.copy(self.__calc_test_ts)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
         ##################################################################
-        calc_test_ts = self.get_cam_info("calc_cam_ts")
-        if calc_test_ts is None:
-            calc_test_ts = [False]*len(case_names)
-        """else:
-            #Check if any time series files are pre-made
-            if len(calc_test_ts) == len(case_names):
-                print("We have a problem, the number of locs does not match the number of cases!")
-                #adf.error thingy"""
-        self.__calc_test_ts = calc_test_ts
+
+
+
+
 
 
         #Grab case time series file location(s)
         ##################################################################
-        test_ts_locs = self.get_cam_info("cam_ts_loc")
-        if test_ts_locs is None:
-            test_ts_locs = [None]*len(case_names)
-        """else:
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        calc_test_ts = self.get_cam_info("cam_ts_done")
+        if calc_test_ts is None:
+            calc_test_ts = {}#[None]*len(case_names)
+            for case in case_names:
+                calc_test_ts[case] = None
+        else:
             #Check if any time series files are pre-made
-            if len(test_ts_locs) == len(case_names):
+            if len(calc_test_ts) == len(case_names):
+                for i,case in enumerate(calc_test_ts):
+                    if case is None:
+                        calc_test_ts[case] = None
+            else:
                 print("We have a problem, the number of locs does not match the number of cases!")
-                #adf.error thingy"""
-        self.__test_ts_locs = test_ts_locs
+                #adf.error thingy
+
+        #Add check for obs!!!        
+        self.__calc_test_ts = {}
+        for i,cam_ts in enumerate(calc_test_ts):
+            self.__calc_test_ts[case_names[i]] = cam_ts
+
+        calc_test_ts = copy.copy(self.__calc_test_ts)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
+
+
+
+        #Grab case time series file location(s)
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        #Grab case time series file location(s)
+        ##################################################################
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        input_ts_locs = self.get_cam_info("cam_ts_loc")
+        if input_ts_locs is None:
+            input_ts_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(input_ts_locs) == len(case_names):
+                for i,case in enumerate(input_ts_locs):
+                    #if case is None:
+                    if case == "None":
+                        input_ts_locs[i] = None
+            else:
+                print("We have a problem, the number of locs does not match the number of cases!")
+                #adf.error thingy
+
+        #Add check for obs!!!        
+        self.__test_ts_locs = {}
+        for i,cam_ts in enumerate(input_ts_locs):
+            self.__test_ts_locs[case_names[i]] = cam_ts
+
+        test_ts_locs = copy.copy(self.__test_ts_locs)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
 
 
         #Check if climatology files need to be calculated
@@ -462,40 +545,233 @@ class AdfInfo(AdfConfig):
         calc_test_climo = self.get_cam_info("calc_cam_climo")
         if calc_test_climo is None:
             calc_test_climo = [False]*len(case_names)
-        """else:
+        else:
             #Check if any time series files are pre-made
             if len(calc_test_climo) == len(case_names):
+                for i,case in enumerate(calc_test_climo):
+                    if case is None:
+                        calc_test_climo[i] = True
+            else:
+                print()
+
+        #Add check for obs!!!        
+        self.__calc_test_climo = {}
+        for i,cam_ts in enumerate(calc_test_climo):
+            self.__calc_test_climo[case_names[i]] = cam_ts
+
+        calc_test_climo = copy.copy(self.__calc_test_climo)
+        #calc_bl_climo = self.__calc_bl_climo
+        """if self.__calc_bl_climo:
+            calc_bl_climo = self.__calc_bl_climo
+        else:
+            calc_bl_climo = True
+        calc_test_climo[data_name] = calc_bl_climo
+        self.__calc_climo_dict = calc_test_climo"""
+        ##################################################################'''
+
+
+
+
+        #Grab case history file location(s)
+        ##################################################################
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        cam_hist_locs = self.get_cam_info("cam_hist_loc")
+        if cam_hist_locs is None:
+            cam_hist_locs = [None]*len(case_names)
+            #for case in case_names:
+            #    cam_hist_locs[case] = None
+        else:
+            #Check if any time series files are pre-made
+            if len(cam_hist_locs) == len(case_names):
+                for i,case in enumerate(cam_hist_locs):
+                    if case is None:
+                        cam_hist_locs[i] = None
+            else:
                 print("We have a problem, the number of locs does not match the number of cases!")
-                #adf.error thingy"""
+                #adf.error thingy
+        self.__test_hist_locs = cam_hist_locs
+        #Add check for obs!!!        
+        #self.__cam_hist_locs = {}
+        #for i,cam_ts in enumerate(cam_hist_locs):
+        #    self.__cam_hist_locs[case_names[i]] = cam_ts
+
+        #calc_test_ts = copy.copy(self.__calc_test_ts)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
+
+
+
+        #Grab case time series file location(s)
+        ##################################################################
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        calc_test_ts = self.get_cam_info("calc_cam_ts")
+        if calc_test_ts is None:
+            calc_test_ts = [None]*len(case_names)
+            #for case in case_names:
+            #    calc_test_ts[case] = None
+        else:
+            #Check if any time series files are pre-made
+            if len(calc_test_ts) == len(case_names):
+                for i,case in enumerate(calc_test_ts):
+                    if case is None:
+                        calc_test_ts[i] = None
+            else:
+                print("We have a problem, the number of locs does not match the number of cases!")
+                #adf.error thingy
+        self.__calc_test_ts = calc_test_ts
+        #Add check for obs!!!        
+        #self.__calc_test_ts = {}
+        #for i,cam_ts in enumerate(calc_test_ts):
+        #    self.__calc_test_ts[case_names[i]] = cam_ts
+
+        #calc_test_ts = copy.copy(self.__calc_test_ts)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
+
+
+
+        #Grab case time series file location(s)
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        #Grab case time series file location(s)
+        ##################################################################
+        #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
+        test_ts_locs = self.get_cam_info("cam_ts_loc")
+        if test_ts_locs is None:
+            test_ts_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(test_ts_locs) == len(case_names):
+                for i,case in enumerate(test_ts_locs):
+                    #if case is None:
+                    if case is None:
+                        test_ts_locs[i] = None
+            else:
+                print("We have a problem, the number of locs does not match the number of cases!")
+                #adf.error thingy
+        self.__test_ts_locs = test_ts_locs
+        #Add check for obs!!!        
+        #self.__test_ts_locs = {}
+        #for i,cam_ts in enumerate(input_ts_locs):
+        #    self.__test_ts_locs[case_names[i]] = cam_ts
+
+        #test_ts_locs = copy.copy(self.__test_ts_locs)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
+
+
+        #Check if climatology files need to be calculated
+        ##################################################################
+        calc_test_climo = self.get_cam_info("calc_cam_climo")
+        if calc_test_climo is None:
+            calc_test_climo = [False]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(calc_test_climo) == len(case_names):
+                for i,case in enumerate(calc_test_climo):
+                    if case is None:
+                        calc_test_climo[i] = True
+            else:
+                print()
         self.__calc_test_climo = calc_test_climo
+        #Add check for obs!!!        
+        #self.__calc_test_climo = {}
+        #for i,cam_ts in enumerate(calc_test_climo):
+        #    self.__calc_test_climo[case_names[i]] = cam_ts
+
+        #calc_test_climo = copy.copy(self.__calc_test_climo)
+        #calc_bl_climo = self.__calc_bl_climo
+        """if self.__calc_bl_climo:
+            calc_bl_climo = self.__calc_bl_climo
+        else:
+            calc_bl_climo = True
+        calc_test_climo[data_name] = calc_bl_climo
+        self.__calc_climo_dict = calc_test_climo"""
+        ##################################################################
 
 
-        #Grab case climatology file location(s)
+
+
+
+        #Grab case time series file location(s)
         ##################################################################
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
         test_climo_locs = self.get_cam_info("cam_climo_loc")
         if test_climo_locs is None:
             test_climo_locs = [None]*len(case_names)
-        """else:
+        else:
             #Check if any time series files are pre-made
-            if len(test_climo_locs) != len(case_names):
+            if len(test_climo_locs) == len(case_names):
+                for i,case in enumerate(test_climo_locs):
+                    #if case is None:
+                    if case is None:
+                        test_climo_locs[i] = None
+            else:
                 print("We have a problem, the number of locs does not match the number of cases!")
-                #adf.error thingy"""
+                #adf.error thingy
         self.__test_climo_locs = test_climo_locs
+        #Add check for obs!!!        
+        #self.__test_ts_locs = {}
+        #for i,cam_ts in enumerate(input_ts_locs):
+        #    self.__test_ts_locs[case_names[i]] = cam_ts
+
+        #test_ts_locs = copy.copy(self.__test_ts_locs)
+        #if self.__input_ts_baseline:
+        #    test_ts_loc = self.__input_ts_baseline
+        #else:
+        #    test_ts_loc = None
+        #test_ts_locs[data_name] = test_ts_loc
+        #self.__ts_locs_dict = test_ts_locs
+        ##################################################################
+
+
+
 
 
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
+        #print("cam_hist_locs",cam_hist_locs,"\n")
         for case_idx, case_name in enumerate(case_names):
             syear = syears[case_idx]
             eyear = eyears[case_idx]
 
             if not calc_test_ts[case_idx]:
+            #if not calc_test_ts[case_name]:
                 cam_hist_locs[case_idx] = None
+                #test_ts_loc = test_ts_locs[case_idx]
 
                 if test_ts_locs[case_idx]:
                     test_ts_loc = test_ts_locs[case_idx]
+                    #syear = syears[case_idx]
+                    #eyear = eyears[case_idx]
+
+                    #Check if time series files exist, if so don't rely on climo years
+                    #if cam_ts_done[case_idx]:
+                    #    cam_hist_locs[case_idx] = None
 
                     #Grab case time series file location
                     input_ts_loc = Path(test_ts_loc)
@@ -536,11 +812,15 @@ class AdfInfo(AdfConfig):
 
             #Check if history file path exists:
             hist_str_case = hist_str[case_idx]
+            #print("cam_hist_locs",cam_hist_locs,"\n")
             if any(cam_hist_locs):
+            #if any(value is not None for value in cam_hist_locs.values()):
+            #if cam_hist_locs[case_idx]:
                 #Grab first possible hist string, just looking for years of run
                 hist_str = hist_str_case[0]
 
                 #Get climo years for verification or assignment if missing
+                #starting_location = Path(cam_hist_locs[case_name])
                 starting_location = Path(cam_hist_locs[case_idx])
                 print(f"Checking history files in '{starting_location}'")
 

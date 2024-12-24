@@ -331,8 +331,6 @@ def amwg_table(adf):
                 #data = data.sel(time=slice())
             else:
                 data = ds[var]
-            #if is_climo:
-            #    data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
@@ -482,15 +480,6 @@ def amwg_table(adf):
 ##################
 # Helper functions
 ##################
-
-def fixcesmtime(dat,syear,eyear):
-    """
-    Fix the CESM timestamp with a simple set of dates
-    """
-    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
-    dat = dat.assign_coords({"time":timefix})
-
-    return dat
 
 def _get_row_vals(data):
     # Now that data is (time,), we can do our simple stats:

@@ -94,26 +94,6 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
-    if not calc_climos:
-        calc_climos = [None]*len(case_names)
-    if not overwrite:
-        overwrite = [None]*len(case_names)
-    #End if
-
-    #If variables weren't provided in config file, then make them a list
-    #containing only None-type entries:
-    if not calc_climos:
-        calc_climos = [None]*len(case_names)
-    else:
-        #Check if any time series files are pre-made
-        if len(calc_climos) == len(case_names):
-            for i,case in enumerate(calc_climos):
-                if case is None:
-                    calc_climos[i] = None
-        else:
-            print("We have a problem, the number of climo locs does not match the number of cases!")
-            #adf.error thingy
-    
     if not overwrite:
         overwrite = [None]*len(case_names)
     else:
@@ -221,9 +201,9 @@ def create_climo_files(adf, clobber=False, search=None):
 
             #Create list of time series files present for variable:
             # Note that we hard-code for h0 because we only want to make climos of monthly output
-            syear = str(start_year[case_idx]).zfill(4)
-            eyear = str(end_year[case_idx]).zfill(4)
-            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var, SYEAR=syr, EYEAR=eyr)
+            #syear = str(start_year[case_idx]).zfill(4)
+            #eyear = str(end_year[case_idx]).zfill(4)
+            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var)
             ts_files = sorted(list(input_location.glob(ts_filenames)))
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
@@ -284,9 +264,8 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     #Retrieve the actual time values from the slice
     actual_time_values = cam_ts_data.time.values
 
-    #Optionally, set a global attribute with the actual time values
+    #Set a global attribute with the actual time values
     cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
-
 
     #Group time series values by month, and average those months together:
     cam_climo_data = cam_ts_data.groupby('time.month').mean(dim='time')
