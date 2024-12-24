@@ -235,6 +235,8 @@ def amwg_table(adf):
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
+        syear = syear_cases[case_idx]
+        eyear = eyear_cases[case_idx]
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
@@ -319,6 +321,10 @@ def amwg_table(adf):
             print("afdasdfs",ds.time,"\n")
             data = ds[var]
             if len(files) > 1:
+                # Slice for years 0500 to 0521
+                # Slice using only the 4-digit year
+                time_slice = slice(syear, eyear)
+                data = data.sel(time=time_slice)
                 data = ds[var].compute()
                 #print(data.time)
                 #data = data.sel(time=slice())
