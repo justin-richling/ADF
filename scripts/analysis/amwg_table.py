@@ -241,6 +241,7 @@ def amwg_table(adf):
 
         #Generate input file path:
         input_location = input_locs[case_idx]
+        print("TS input_location",input_location,"\n")
 
         if not input_location:
             print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
