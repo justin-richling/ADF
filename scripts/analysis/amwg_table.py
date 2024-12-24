@@ -323,7 +323,7 @@ def amwg_table(adf):
             if len(files) > 1:
                 # Slice for years 0500 to 0521
                 # Slice using only the 4-digit year
-                time_slice = slice(syear, eyear)
+                time_slice = slice(str(syear).zfill(4), str(eyear).zfill(4))
                 data = data.sel(time=time_slice)
                 data = ds[var].compute()
                 #print(data.time)
