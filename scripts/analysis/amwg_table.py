@@ -331,7 +331,7 @@ def amwg_table(adf):
                 #data = data.sel(time=slice())
             else:
                 data = ds[var]
-            if not is_climo:
+            if is_climo:
                 data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
 
             #Extract units string, if available:
