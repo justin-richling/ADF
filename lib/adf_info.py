@@ -78,7 +78,6 @@ class AdfInfo(AdfConfig):
         self.__cam_climo_info = self.read_config_var('diag_cam_climo', required=True)
 
         #Expand CAM climo info variable strings:
-        print("HERE?",self.__cam_climo_info)
         self.expand_references(self.__cam_climo_info)
 
         # Add CVDP info to object:
@@ -201,9 +200,7 @@ class AdfInfo(AdfConfig):
             baseline_hist_str = self.get_baseline_info("hist_str")
 
             #Check if any time series files are pre-made
-            #baseline_ts_done   = self.get_baseline_info("cam_ts_done")
             calc_baseline_ts   = self.get_baseline_info("calc_cam_ts")
-            print("calc_baseline_ts",calc_baseline_ts,"\n")
             if calc_baseline_ts is None:
                 calc_baseline_ts = False
             #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
@@ -212,12 +209,10 @@ class AdfInfo(AdfConfig):
             input_ts_baseline = self.get_baseline_info("cam_ts_loc")
             if input_ts_baseline == "None":
                 input_ts_baseline = None
-            print(input_ts_baseline)
             #self.__input_ts_baseline = {data_name:input_ts_baseline}
             self.__input_ts_baseline = input_ts_baseline
 
             calc_base_climo   = self.get_baseline_info("calc_cam_climo")
-            print("calc_base_climo",calc_base_climo,"\n")
             if calc_base_climo is None:
                 calc_base_climo = False
             #self.__calc_base_climo = {data_name:calc_base_climo}
@@ -227,7 +222,6 @@ class AdfInfo(AdfConfig):
             input_climo_baseline = self.get_baseline_info("cam_climo_loc")
             if input_climo_baseline == "None":
                 input_climo_baseline = None
-            print(input_climo_baseline)
             #self.__input_ts_baseline = {data_name:input_ts_baseline}
             self.__input_climo_baseline = input_climo_baseline
 
@@ -273,9 +267,9 @@ class AdfInfo(AdfConfig):
                         msg += f"{data_name}, using first found year: {found_eyear_baseline}\n"
                         print(msg)
                         eyear_baseline = found_eyear_baseline
-                else:
+                #else:
                     #self.__calc_baseline_climo = {data_name:False}
-                    print(f"Ahhh, no time series are supplied/needed for {data_name}? Better be sure of this boi!")
+                    #print(f"Ahhh, no time series are supplied/needed for {data_name}? Better be sure of this boi!")
             # End if
 
             # Check if history file path exists:
@@ -618,7 +612,7 @@ class AdfInfo(AdfConfig):
         #Grab case time series file location(s)
         ##################################################################
         #input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
-        calc_test_ts = self.get_cam_info("cam_ts_done")
+        calc_test_ts = self.get_cam_info("calc_cam_ts")
         if calc_test_ts is None:
             calc_test_ts = [None]*len(case_names)
             #for case in case_names:
@@ -760,7 +754,7 @@ class AdfInfo(AdfConfig):
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
-        print("cam_hist_locs",cam_hist_locs,"\n")
+        #print("cam_hist_locs",cam_hist_locs,"\n")
         for case_idx, case_name in enumerate(case_names):
             syear = syears[case_idx]
             eyear = eyears[case_idx]
@@ -811,14 +805,14 @@ class AdfInfo(AdfConfig):
                         print(msg)
                         eyear = found_eyear
                     #End if
-                else:
-                    print(f"Ahhh, no time series are supplied/needed for {case_name}? Better be sure of this boi!")
+                #else:
+                    #print(f"Ahhh, no time series are supplied/needed for {case_name}? Better be sure of this boi!")
                 #End if
             #End if
 
             #Check if history file path exists:
             hist_str_case = hist_str[case_idx]
-            print("cam_hist_locs",cam_hist_locs,"\n")
+            #print("cam_hist_locs",cam_hist_locs,"\n")
             if any(cam_hist_locs):
             #if any(value is not None for value in cam_hist_locs.values()):
             #if cam_hist_locs[case_idx]:
