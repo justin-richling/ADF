@@ -838,7 +838,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     ax2.text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=ax2.transAxes)
 
     ax3.text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=ax3.transAxes)
-    ax3.set_title("Test % diff Baseline", loc='left', fontsize=8)
+    ax3.set_title("$\mathbf{Test % diff Baseline}", loc='left', fontsize=8)
 
     ax4.text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=ax4.transAxes)
     ax4.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
