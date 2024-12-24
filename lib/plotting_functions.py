@@ -813,7 +813,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         except:
             print("Here?")
             try:
-                print("ADFDFDFDFDF")
                 img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), transform_first=True, cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
             except:
                 print("AHBKJNLM:<")
