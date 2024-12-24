@@ -194,7 +194,8 @@ class AdfInfo(AdfConfig):
             eyear_baseline = self.get_baseline_info('end_year')
 
             #Get climo years for verification or assignment if missing
-            baseline_hist_locs = self.get_baseline_info('cam_hist_loc')
+            baseline_hist_loc = self.get_baseline_info('cam_hist_loc')
+            self.__baseline_hist_loc = baseline_hist_loc
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
@@ -237,7 +238,7 @@ class AdfInfo(AdfConfig):
             #if baseline_ts_done:
             #if (not calc_baseline_ts) and (input_ts_baseline):
             if not calc_baseline_ts:
-                baseline_hist_locs = [None]
+                baseline_hist_loc = [None]
 
                 if input_ts_baseline is not None:
                     #Grab baseline time series file location
@@ -278,7 +279,7 @@ class AdfInfo(AdfConfig):
             # End if
 
             # Check if history file path exists:
-            if any(baseline_hist_locs):
+            if any(baseline_hist_loc):
                 #Check if user provided
                 if not baseline_hist_str:
                     baseline_hist_str = ['cam.h0a']
@@ -291,7 +292,7 @@ class AdfInfo(AdfConfig):
 
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
-                starting_location = Path(baseline_hist_locs)
+                starting_location = Path(baseline_hist_loc)
                 print(f"Checking history files in '{starting_location}'")
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
 
@@ -327,7 +328,7 @@ class AdfInfo(AdfConfig):
                 #  $CASE.cam.h#.YYYY<other date info>.nc
                 base_climo_yrs = [int(str(i).partition(f"{base_hist_str}.")[2][0:4]) for i in file_list]
                 if not base_climo_yrs:
-                    msg = f"No climo years found in {baseline_hist_locs}, "
+                    msg = f"No climo years found in {baseline_hist_loc}, "
                     raise AdfError(msg)
 
                 base_climo_yrs = sorted(np.unique(base_climo_yrs))
@@ -1107,8 +1108,20 @@ class AdfInfo(AdfConfig):
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
 
+    
+    @property
+    def hist_locs(self):
+        """Return the test case and baseline nicknames to the user if requested."""
 
-    @property#self.__calc_baseline_ts
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        test_hist_locs = copy.copy(self.__test_hist_locs)
+        baseline_hist_loc = self.__baseline_hist_loc
+
+        return {"test":test_hist_locs,"baseline":baseline_hist_loc}
+
+
+    @property
     def calc_ts(self):
         """Return the test case and baseline nicknames to the user if requested."""
 
@@ -1120,35 +1133,25 @@ class AdfInfo(AdfConfig):
         return {"test":calc_test_tss,"baseline":calc_baseline_ts}
 
 
-    @property#self.__calc_baseline_ts
+    @property
     def ts_locs(self):
         """Return the test case and baseline nicknames to the user if requested."""
 
         #Note that copies are needed in order to avoid having a script mistakenly
         #modify these variables, as they are mutable and thus passed by reference:
         test_ts_locs = copy.copy(self.__test_ts_locs)
-        #calc_baseline_ts = self.__calc_baseline_ts
-        #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
-
-        #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
         baseline_ts_loc = self.__input_ts_baseline
 
         return {"test":test_ts_locs,"baseline":baseline_ts_loc}
 
     
-    @property#self.__calc_baseline_ts
+    @property
     def calc_climos(self):
         """Return the test case and baseline nicknames to the user if requested."""
 
         #Note that copies are needed in order to avoid having a script mistakenly
         #modify these variables, as they are mutable and thus passed by reference:
-        #test_ts_locs = copy.copy(self.__test_ts_locs)
-        #calc_baseline_ts = self.__calc_baseline_ts
-        #self.__calc_baseline_ts = {data_name:calc_baseline_ts}
-
         calc_test_climo = copy.copy(self.__calc_test_climo)
-
-        #input_ts_baseline = self.get_baseline_info("cam_ts_loc")
         calc_base_climo = self.__calc_base_climo
 
         return {"test":calc_test_climo,"baseline":calc_base_climo}
@@ -1160,11 +1163,10 @@ class AdfInfo(AdfConfig):
 
         #Note that copies are needed in order to avoid having a script mistakenly
         #modify these variables, as they are mutable and thus passed by reference:
-        test_ts_locs = copy.copy(self.__test_climo_locs)
+        test_climo_locs = copy.copy(self.__test_climo_locs)
+        baseline_climo_loc = self.__input_climo_baseline
 
-        baseline_ts_loc = self.__input_climo_baseline
-
-        return {"test":test_ts_locs,"baseline":baseline_ts_loc}
+        return {"test":test_climo_locs,"baseline":baseline_climo_loc}
 
     #########
 
