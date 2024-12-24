@@ -316,10 +316,11 @@ def amwg_table(adf):
 
             #Load model variable data from file:
             ds = pf.load_dataset(files)
+            print("afdasdfs",ds.time,"\n")
             data = ds[var]
             if len(files) > 1:
                 data = ds[var].compute()
-                print(data.time)
+                #print(data.time)
                 #data = data.sel(time=slice())
             else:
                 data = ds[var]
