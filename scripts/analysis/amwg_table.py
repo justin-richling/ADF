@@ -191,7 +191,7 @@ def amwg_table(adf):
 
         syear_cases.append(syear_baseline)
         eyear_cases.append(eyear_baseline)
-        print("AHHH:",input_loc)
+
         #Convert output location string to a Path object:
         output_location = Path(output_locs[0])
         if not input_loc:
@@ -243,22 +243,22 @@ def amwg_table(adf):
 
         #Generate input file path:
         input_location = input_locs[case_idx]
-        print("TS input_location",input_location,"\n")
+        print("\n\tTS input_location",input_location,"\n")
 
         if not input_location:
-            print("User supplied Climo files, will make only global mean for each variable. Thanks and have a nice day.")
+            print(f"User supplied climo files for {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
             is_climo = True
         else:
             is_climo = False
 
-        print("\nis_climo:",is_climo,"\n")
+        print("\n\tis_climo:",is_climo,"\n")
 
         #Generate input file path:
         if not is_climo:
             input_location = Path(input_locs[case_idx])
         if is_climo:
             input_location = Path(input_climo_locs[case_idx])
-        print("input_location",input_location,"\n")
+        print("\tinput_location",input_location)
 
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
