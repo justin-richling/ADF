@@ -287,6 +287,14 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     print("cam_ts_data BEFORE:",cam_ts_data,"\n")
     cam_ts_data = cam_ts_data.isel(time=tslice)
     print("cam_ts_data AFTER:",cam_ts_data,"\n")
+
+    # Retrieve the actual time values from the slice
+    actual_time_values = cam_ts_data.time.values
+
+    # Optionally, set a global attribute with the actual time values
+    cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
+
+
     #Group time series values by month, and average those months together:
     cam_climo_data = cam_ts_data.groupby('time.month').mean(dim='time')
     #Rename "months" to "time":
@@ -302,7 +310,8 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     ts_files_str = ', '.join(ts_files_str)
     attrs_dict = {
         "adf_user": adf.user,
-        "climo_yrs": f"{syr}-{eyr}",
+        "adf_climo_yrs": f"{syr}-{eyr}",
+        "xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
         "time_series_files": ts_files_str,
     }
     cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
