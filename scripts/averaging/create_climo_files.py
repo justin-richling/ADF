@@ -284,7 +284,9 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     #Extract data subset using provided year bounds:
     print("OR HERE???\n")
     tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
+    print("cam_ts_data BEFORE:",cam_ts_data,"\n")
     cam_ts_data = cam_ts_data.isel(time=tslice)
+    print("cam_ts_data AFTER:",cam_ts_data,"\n")
     #Group time series values by month, and average those months together:
     cam_climo_data = cam_ts_data.groupby('time.month').mean(dim='time')
     #Rename "months" to "time":
