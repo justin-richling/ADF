@@ -318,9 +318,11 @@ def amwg_table(adf):
             ds = pf.load_dataset(files)
             data = ds[var]
             if len(files) > 1:
-                data = data.compute()
+                data = ds[var].compute()
                 print(data.time)
                 #data = data.sel(time=slice())
+            else:
+                data = ds[var]
             if not is_climo:
                 data = fixcesmtime(data,syear_cases[case_idx],eyear_cases[case_idx])
 
