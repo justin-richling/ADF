@@ -187,6 +187,8 @@ def amwg_table(adf):
         syear_cases.append(syear_baseline)
         eyear_cases.append(eyear_baseline)
         print("AHHH:",input_loc)
+        #Convert output location string to a Path object:
+        output_location = Path(output_locs[0])
         if not input_loc:
             #print("User indicates no time series files will be used")
             #print()
@@ -196,8 +198,6 @@ def amwg_table(adf):
 
             #if ah:
             #for case_idx, case_name in enumerate(case_names):
-            #Convert output location string to a Path object:
-            output_location = Path(output_locs[0])
             #Create output file name:
             output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
             if Path(output_csv_file).is_file():
