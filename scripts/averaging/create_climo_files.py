@@ -223,7 +223,7 @@ def create_climo_files(adf, clobber=False, search=None):
             # Note that we hard-code for h0 because we only want to make climos of monthly output
             syear = str(start_year[case_idx]).zfill(4)
             eyear = str(end_year[case_idx]).zfill(4)
-            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var, SYEAR=syear, EYEAR=eyear)
+            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var, SYEAR=syr, EYEAR=eyr)
             ts_files = sorted(list(input_location.glob(ts_filenames)))
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
