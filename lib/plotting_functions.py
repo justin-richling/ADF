@@ -805,10 +805,10 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
 
     if len(levs_pctdiff) < 2:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, transform_first=True)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, transform_first=True)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
