@@ -268,13 +268,9 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     else:
-        print("It's coming here, right????")
         cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
-        #print(cam_ts_data.variables,"\n\n\n")
-    print("THIS IS WHERE IT MESSES UP RIGHT???\n")
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
-        print("OR IS THIS WHERE IT MESSES UP???\n")
         time = cam_ts_data['time']
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
         time = xr.DataArray(cam_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
@@ -282,16 +278,13 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
         cam_ts_data.assign_coords(time=time)
         cam_ts_data = xr.decode_cf(cam_ts_data)
     #Extract data subset using provided year bounds:
-    print("OR HERE???\n")
     tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
-    print("cam_ts_data BEFORE:",cam_ts_data,"\n")
     cam_ts_data = cam_ts_data.isel(time=tslice)
-    print("cam_ts_data AFTER:",cam_ts_data,"\n")
 
-    # Retrieve the actual time values from the slice
+    #Retrieve the actual time values from the slice
     actual_time_values = cam_ts_data.time.values
 
-    # Optionally, set a global attribute with the actual time values
+    #Optionally, set a global attribute with the actual time values
     cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
 
 
@@ -304,8 +297,8 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
     enc    = {**enc_c, **enc_dv}
 
-    # Create a dictionary of attributes
-    # Convert the list to a string (join with commas)
+    #Create a dictionary of attributes
+    #Convert the list to a string (join with commas)
     ts_files_str = [str(path) for path in ts_files]
     ts_files_str = ', '.join(ts_files_str)
     attrs_dict = {
