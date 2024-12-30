@@ -816,7 +816,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #pct_cyclic = pct_cyclic.where(pct_cyclic < 100, 100)
         pct_cyclic = pct_cyclic.clip(min=-100, max=100)
         print("\nasdasdadssadasd",pct_cyclic.isel(dim_0=0).isel(dim_1=0))
-        print("QWTF",pct_cyclic)
+        print("QWTF",pct_cyclic,"\n")
         from shapely.errors import GEOSException  # Import shapely
         try:
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
@@ -827,9 +827,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             zero_data[:] = 0  # Set all values to zero
 
             print(zero_data)
-            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, levels=levelspctdiff, transform_first=True)
-        #except TypeError:
-        #   no_cbar = True
+            #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, levels=levelspctdiff, transform_first=True)
+            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+            no_cbar = True
             #ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
         '''try:
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
