@@ -781,7 +781,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #End if
 
     # -- end options
-
+    no_cbar = False
     lons, lats = np.meshgrid(lon_cyclic, d1.lat)
 
     fig = plt.figure(figsize=(10,10))
@@ -828,6 +828,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
             print(zero_data)
             #img3 = ax3.contourf(lons, lats, zero_data, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
+            no_cbar = True
             ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
         '''try:
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
@@ -923,8 +924,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax4.transAxes,
                     borderpad=0,
                     )      
-                    
-    fig.colorbar(img3, cax=cb_pct_ax)
+    if not no_cbar:
+        fig.colorbar(img3, cax=cb_pct_ax)
     
     fig.colorbar(img4, cax=cb_diff_ax)
 
