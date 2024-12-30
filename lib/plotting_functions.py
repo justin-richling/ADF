@@ -810,6 +810,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
+        pct_cyclic = xr.DataArray(pct_cyclic)
         pct_cyclic = pct_cyclic.where(pct_cyclic >= 0.1, 0)
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
         '''try:
