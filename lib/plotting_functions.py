@@ -815,7 +815,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #pct_cyclic = pct_cyclic.where(pct_cyclic > 0, 0)
         #pct_cyclic = pct_cyclic.where(pct_cyclic < 100, 100)
         pct_cyclic = pct_cyclic.clip(min=-100, max=100)
-        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff,transform_first=True)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
         '''try:
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
         except TypeError:
