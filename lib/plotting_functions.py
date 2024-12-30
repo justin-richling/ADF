@@ -759,8 +759,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     if max(np.abs(levelsdiff)) > 10*absmaxdif:
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
-    if max(np.abs(levelspctdiff)) > 10*absmaxpct:
-        levelspctdiff = np.linspace(-1*absmaxpct, absmaxpct, 12)
+    #if max(np.abs(levelspctdiff)) > 10*absmaxpct:
+    #    levelspctdiff = np.linspace(-1*absmaxpct, absmaxpct, 12)
     
     
     #End if
@@ -812,8 +812,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     else:
         pct_cyclic = xr.DataArray(pct_cyclic)
         #print("\nasdasdadssadasd",xr.DataArray(pct_cyclic).isel(dim_0=0).isel(dim_1=0))
-        pct_cyclic = pct_cyclic.where(pct_cyclic < 0, 0)
-        pct_cyclic = pct_cyclic.where(pct_cyclic > 100, 100)
+        pct_cyclic = pct_cyclic.where(pct_cyclic > 0, 0)
+        pct_cyclic = pct_cyclic.where(pct_cyclic < 100, 100)
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
         '''try:
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
