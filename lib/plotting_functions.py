@@ -811,7 +811,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
         pct_cyclic = xr.DataArray(pct_cyclic)
-        print(pct_cyclic)
         #print("\nasdasdadssadasd",xr.DataArray(pct_cyclic).isel(dim_0=0).isel(dim_1=0))
         pct_cyclic = pct_cyclic.where(pct_cyclic < 0, 0)
         pct_cyclic = pct_cyclic.where(pct_cyclic > 100, 100)
