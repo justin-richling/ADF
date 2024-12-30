@@ -809,7 +809,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
         try:
-            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff,transform_first=True)#, transform_first=True
+            img3 = ax3.contourf(pct.lon, pct.lat, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff,transform_first=True)#, transform_first=True
         except TypeError:
             print("Here?")
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
