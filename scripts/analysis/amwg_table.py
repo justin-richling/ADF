@@ -168,8 +168,8 @@ def amwg_table(adf):
         #input_locs = []
         pass#return
     else:'''
-    if 1==1:
-        input_locs = [None]*len(case_names)
+    #if 1==1:
+    #    input_locs = [None]*len(case_names)
     #End if
 
     #Check if a baseline simulation is also being used:
