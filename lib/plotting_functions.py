@@ -938,7 +938,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     try:
         fig.savefig(wks, bbox_inches='tight', dpi=300)
     except (GEOSException, ValueError, TypeError) as e:
-        print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
+        errmsg = "Something is wrong with the geometries, so this plot will be skipped"
+        #adfobj.debug_log(errmsg)
+        #print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
     """except GEOSException as e:
         print("Caught GEOSException:", e)
     except ValueError as e:
