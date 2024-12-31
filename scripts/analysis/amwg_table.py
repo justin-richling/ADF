@@ -238,7 +238,7 @@ def amwg_table(adf):
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
 
-        #Generate input file path:
+        """#Generate input file path:
         input_location = input_locs[case_idx]
         print("\n\tTS input_location",input_location)
 
@@ -262,7 +262,7 @@ def amwg_table(adf):
             errmsg = f"Directory '{input_location}' not found.  Script is exiting."
             raise AdfError(errmsg)
         #Write to debug log if enabled:
-        adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
+        adf.debug_log(f"DEBUG: location of files is {str(input_location)}")"""
 
         #Notify user as attempting table creation:
         print(f"\n  Calculating AMWG variable table for '{case_name}'...")
@@ -281,6 +281,31 @@ def amwg_table(adf):
 
         #Loop over CAM output variables:
         for var in var_list:
+            #Generate input file path:
+            input_location = input_locs[case_idx]
+            print("\n\tTS input_location",input_location)
+
+            if not input_location:
+                print(f"\t ** User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+                is_climo = True
+            else:
+                is_climo = False
+
+            #print("\n\tis_climo:",is_climo,"\n")
+
+            #Generate input file path:
+            if not is_climo:
+                input_location = Path(input_locs[case_idx])
+            if is_climo:
+                input_location = Path(input_climo_locs[case_idx])
+            print("\tinput_location",input_location)
+
+            #Check that time series input directory actually exists:
+            if not input_location.is_dir():
+                errmsg = f"Directory '{input_location}' not found.  Script is exiting."
+                raise AdfError(errmsg)
+            #Write to debug log if enabled:
+            adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
 
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")

@@ -935,7 +935,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     except GEOSException as e:
         print("Caught GEOSException:", e)
     except ValueError as e:
-        print("Caught ValueRrror:", e)
+        print("Caught ValueError:", e)
+    except TypeError as e:
+        print("Caught TypeError:", e)
     #fig.savefig(wks, bbox_inches='tight', dpi=100)
 
     # Close figures to avoid memory issues:
