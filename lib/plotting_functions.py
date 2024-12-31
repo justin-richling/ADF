@@ -821,7 +821,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         
         from shapely.errors import GEOSException  # Import shapely
         try:
-            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, transform_first=True)
+            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
         except GEOSException as e:
             print("Caught GEOSException:", e)
             # Copy the DataArray and set all values to zero
