@@ -281,25 +281,47 @@ def amwg_table(adf):
 
         #Loop over CAM output variables:
         for var in var_list:
-
+            is_climo = False
             #Generate input file path:
             input_location = input_locs[case_idx]
             print("\n\tTS input_location",input_location)
 
-            if not input_location:
+            filenames = f'{case_name}.*.{var}.*nc'
+            files = sorted(input_location.glob(filenames))
+
+            # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+            if not files:
+                # Try for climo files:
+                msg = f"\t    ** Time series files for variable '{var}' not found.  Checking on climo files."
+                print(msg)
+                filenames = f'{case_name}_{var}_climo.nc'
+                try_input_location = Path(input_climo_locs[case_idx])
+                try_files = sorted(try_input_location.glob(filenames))
+                if not try_files:
+                    errmsg = f"\t    ** Time series files for variable '{var}' not found.  Script will continue to next variable."
+                    warnings.warn(errmsg)
+                    continue
+                else:
+                    print(f"\t ** User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+                    files = try_files
+                    input_location = try_input_location
+                    is_climo = True
+            #End if
+
+            """if not input_location:
                 print(f"\t ** User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
                 is_climo = True
             else:
-                is_climo = False
+                is_climo = False"""
 
             #print("\n\tis_climo:",is_climo,"\n")
 
-            #Generate input file path:
+            """#Generate input file path:
             if not is_climo:
                 input_location = Path(input_locs[case_idx])
             if is_climo:
                 input_location = Path(input_climo_locs[case_idx])
-            print("\tinput_location",input_location)
+            print("\tinput_location",input_location)"""
 
             #Check that time series input directory actually exists:
             if not input_location.is_dir():
@@ -318,20 +340,20 @@ def amwg_table(adf):
             #ts_files = sorted(input_location.glob(ts_filenames))
 
 
-            if is_climo:
+            """if is_climo:
                 #Create list of climo files present for variable:
                 filenames = f'{case_name}_{var}_climo.nc'
             else:
                 #Create list of time series files present for variable:
-                filenames = f'{case_name}.*.{var}.*nc'
-            files = sorted(input_location.glob(filenames))
+                filenames = f'{case_name}.*.{var}.*nc'"""
+            """files = sorted(input_location.glob(filenames))
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not files:
                 errmsg = f"\t    ** Time series files for variable '{var}' not found.  Script will continue to next variable."
                 warnings.warn(errmsg)
                 continue
-            #End if
+            #End if"""
 
             """#TEMPORARY:  For now, make sure only one file exists:
             if len(files) != 1:
