@@ -836,6 +836,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         except ValueError as e:
              print("Caught ValueRrror:", e)
              img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+             no_cbar = True
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
