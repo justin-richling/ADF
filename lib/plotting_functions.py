@@ -111,6 +111,8 @@ def my_formatwarning(msg, *args, **kwargs):
     return str(msg) + '\n'
 warnings.formatwarning = my_formatwarning
 
+from shapely.errors import GEOSException  # Import shapely
+
 #Set non-X-window backend for matplotlib:
 mpl.use('Agg')
 
@@ -810,25 +812,28 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
-        pct_cyclic = xr.DataArray(pct_cyclic)
+        #pct_cyclic = xr.DataArray(pct_cyclic)
         #print("\nasdasdadssadasd",xr.DataArray(pct_cyclic).isel(dim_0=0).isel(dim_1=0))
         #pct_cyclic = pct_cyclic.where(pct_cyclic > 0, 0)
         #pct_cyclic = pct_cyclic.where(pct_cyclic < 100, 100)
-        pct_cyclic = pct_cyclic.clip(min=-100, max=100)
-        print("\nasdasdadssadasd",pct_cyclic.isel(dim_0=0).isel(dim_1=0))
+        #pct_cyclic = pct_cyclic.clip(min=-100, max=100)
+        #print("\nasdasdadssadasd",pct_cyclic.isel(dim_0=0).isel(dim_1=0))
         #print("QWTF",pct_cyclic,"\n")
         #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
-        
-        from shapely.errors import GEOSException  # Import shapely
+
         try:
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
-        except GEOSException as e:
+        except (GEOSException, ValueError, TypeError) as e:
+            print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
+            img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+            no_cbar = True
+        """except GEOSException as e:
             print("Caught GEOSException:", e)
             # Copy the DataArray and set all values to zero
-            zero_data = pct_cyclic.copy()
-            zero_data[:] = 0  # Set all values to zero
+            #zero_data = pct_cyclic.copy()
+            #zero_data[:] = 0  # Set all values to zero
 
-            print(zero_data)
+            #print(zero_data)
             #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, levels=levelspctdiff, transform_first=True)
             img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
             no_cbar = True
@@ -840,7 +845,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         except TypeError as e:
              print("Caught MultiPolygon Error:", e)
              img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
-             no_cbar = True
+             no_cbar = True"""
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
@@ -932,12 +937,14 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #fig.savefig(wks, bbox_inches='tight', dpi=300)
     try:
         fig.savefig(wks, bbox_inches='tight', dpi=300)
-    except GEOSException as e:
+    except (GEOSException, ValueError, TypeError) as e:
+        print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
+    """except GEOSException as e:
         print("Caught GEOSException:", e)
     except ValueError as e:
         print("Caught ValueError:", e)
     except TypeError as e:
-        print("Caught TypeError:", e)
+        print("Caught TypeError:", e)"""
     #fig.savefig(wks, bbox_inches='tight', dpi=100)
 
     # Close figures to avoid memory issues:
