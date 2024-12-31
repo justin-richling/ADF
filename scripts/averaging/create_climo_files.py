@@ -351,7 +351,7 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
 
 
     # Create a new dataset
-    restom_dataset = restom_ts_data.to_dataset(name='RESTOM')
+    restom_ts_data = restom_ts_data.to_dataset(name='RESTOM')
 
     # Merge global attributes from one of the original datasets
     #restom_dataset.attrs = cam_fsnt_ts_data.attrs.copy()
