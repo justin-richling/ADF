@@ -298,7 +298,7 @@ def amwg_table(adf):
                 try_input_location = Path(input_climo_locs[case_idx])
                 try_files = sorted(try_input_location.glob(filenames))
                 if not try_files:
-                    errmsg = f"\t    ** Time series files for variable '{var}' not found.  Script will continue to next variable."
+                    errmsg = f"\t    ** Climo files for variable '{var}' not found.  Script will continue to next variable."
                     warnings.warn(errmsg)
                     continue
                 else:
