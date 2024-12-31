@@ -283,7 +283,7 @@ def amwg_table(adf):
         for var in var_list:
             is_climo = False
             #Generate input file path:
-            input_location = input_locs[case_idx]
+            input_location = Path(input_locs[case_idx])
             print("\n\tTS input_location",input_location)
 
             filenames = f'{case_name}.*.{var}.*nc'
