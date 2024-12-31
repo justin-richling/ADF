@@ -204,7 +204,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
-            if not ts_files:
+            if not ts_files and var != 'RESTOM':
                 errmsg = "Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
                 print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
@@ -288,6 +288,108 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     #Output variable climatology to NetCDF-4 file:
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
     return 1  # All funcs return something. Could do error checking with this if needed.
+
+
+
+
+
+def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
+    '''
+    Compute and save the climatology file.
+    '''
+    #Read in files via xarray (xr):
+    if len(fsnt_ts_files) == 1:
+        cam_fsnt_ts_data = xr.open_dataset(fsnt_ts_files[0], decode_times=True)
+    else:
+        cam_fsnt_ts_data = xr.open_mfdataset(fsnt_ts_files, decode_times=True, combine='by_coords')
+
+    if len(flnt_ts_files) == 1:
+        cam_flnt_ts_data = xr.open_dataset(flnt_ts_files[0], decode_times=True)
+    else:
+        cam_flnt_ts_data = xr.open_mfdataset(flnt_ts_files, decode_times=True, combine='by_coords')
+
+    
+
+
+    # Perform the subtraction to create RESTOM
+    restom_ts_data = cam_fsnt_ts_data['FSNT'] - cam_flnt_ts_data['FLNT']
+
+    # Copy attributes from FSNT and update necessary fields
+    restom_ts_data.attrs = cam_fsnt_ts_data['FSNT'].attrs.copy()
+    restom_ts_data.attrs['long_name'] = 'Net Radiative Flux (RESTOM)'
+    restom_ts_data.attrs['description'] = 'Computed as FSNT - FLNT'
+
+    """# Create a new dataset
+    restom_dataset = restom_data.to_dataset(name='RESTOM')
+
+    # Merge global attributes from one of the original datasets
+    restom_dataset.attrs = cam_fsnt_ts_data.attrs.copy()
+
+    # Save the new dataset if needed
+    restom_dataset.to_netcdf('restom_ts_data.nc')"""
+
+
+
+
+
+
+
+    #Average time dimension over time bounds, if bounds exist:
+    if 'time_bnds' in restom_ts_data:
+        time = restom_ts_data['time']
+        # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
+        time = xr.DataArray(restom_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+        restom_ts_data['time'] = time
+        restom_ts_data.assign_coords(time=time)
+        restom_ts_data = xr.decode_cf(restom_ts_data)
+    #Extract data subset using provided year bounds:
+    tslice = get_time_slice_by_year(restom_ts_data.time, int(syr), int(eyr))
+    restom_ts_data = restom_ts_data.isel(time=tslice)
+
+    #Retrieve the actual time values from the slice
+    actual_time_values = restom_ts_data.time.values
+
+
+    # Create a new dataset
+    restom_dataset = restom_ts_data.to_dataset(name='RESTOM')
+
+    # Merge global attributes from one of the original datasets
+    #restom_dataset.attrs = cam_fsnt_ts_data.attrs.copy()
+
+
+
+
+    #Set a global attribute with the actual time values
+    restom_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
+
+    #Group time series values by month, and average those months together:
+    cam_climo_data = restom_ts_data.groupby('time.month').mean(dim='time')
+    #Rename "months" to "time":
+    cam_climo_data = cam_climo_data.rename({'month':'time'})
+    #Set netCDF encoding method (deal with getting non-nan fill values):
+    enc_dv = {xname: {'_FillValue': None, 'zlib': True, 'complevel': 4} for xname in cam_climo_data.data_vars}
+    enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
+    enc    = {**enc_c, **enc_dv}
+
+    #Create a dictionary of attributes
+    #Convert the list to a string (join with commas)
+    ts_files_str = [str(path).replace("FSNT","FS(L)NT") for path in fsnt_ts_files]
+    ts_files_str = ', '.join(ts_files_str)
+    attrs_dict = {
+        "adf_user": adf.user,
+        "adf_climo_yrs": f"{syr}-{eyr}",
+        "xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
+        "time_series_files": ts_files_str,
+    }
+    cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
+
+    #Output variable climatology to NetCDF-4 file:
+    cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
+    #restom_dataset.to_netcdf('restom_ts_data.nc')
+    return 1  # All funcs return something. Could do error checking with this if needed.
+
+
+
 
 
 def check_averaging_interval(syear_in, eyear_in):
