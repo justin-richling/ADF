@@ -454,8 +454,9 @@ def amwg_table(adf):
                 mean_final = f'{data:{formatter}}'
 
                 # create a dataframe:
-                cols = ['variable', 'unit', 'mean']
-                row_values = [var, unit_str] + [mean_final]
+                cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
+                            'standard error', '95% CI', 'trend', 'trend p-value']
+                row_values = [var, unit_str] + [mean_final] + ["-","-","-","-","-","-"]
             else:
                 # In order to get correct statistics, average to annual or seasonal
                 data = pf.annual_mean(data, whole_years=True, time_name='time')
