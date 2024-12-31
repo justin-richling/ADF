@@ -284,7 +284,7 @@ def amwg_table(adf):
             is_climo = False
             #Generate input file path:
             input_location = Path(input_locs[case_idx])
-            print("\n\tTS input_location",input_location)
+            #print("\n\tTS input_location",input_location)
 
             filenames = f'{case_name}.*.{var}.*nc'
             files = sorted(input_location.glob(filenames))
