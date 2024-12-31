@@ -92,7 +92,7 @@ def tape_recorder(adfobj):
     else:
         hist_strs = case_hist_strs
     #End if
-
+    print("hist_strs",hist_strs,"\n")
     if not case_ts_locs:
         exitmsg = "WARNING: No time series files in any case directory."
         exitmsg += " No tape recorder plots will be made."
