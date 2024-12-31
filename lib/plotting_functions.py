@@ -915,9 +915,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax4.transAxes,
                     borderpad=0,
                     )      
-    if not no_cbar:
-        fig.colorbar(img3, cax=cb_pct_ax)
-    
+    #if not no_cbar:
+    #    fig.colorbar(img3, cax=cb_pct_ax)
+    fig.colorbar(img3, cax=cb_pct_ax)
     fig.colorbar(img4, cax=cb_diff_ax)
 
     # Save files
