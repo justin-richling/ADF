@@ -202,13 +202,35 @@ def create_climo_files(adf, clobber=False, search=None):
             ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var)
             ts_files = sorted(list(input_location.glob(ts_filenames)))
 
+            """if var == "RESTOM":
+                fsnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FSNT")
+                fsnt_ts_files = sorted(list(input_location.glob(fsnt_ts_filenames)))
+
+                flnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FLNT")
+                flnt_ts_files = sorted(list(input_location.glob(flnt_ts_filenames)))
+
+                if (len(fsnt_ts_files) > 0) and (len(flnt_ts_files) > 0):
+                    process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file)"""
+
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
-            if not ts_files and var != 'RESTOM':
-                errmsg = "Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
-                print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
-                #  end_diag_script(errmsg) # Previously we would kill the run here.
-                warnings.warn(errmsg)
+            if not ts_files:
+                if var == "RESTOM":
+                    errmsg = "Time series files for variable 'RESTOM' not found.  Script will try and derive."
+                    print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
+                    fsnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FSNT")
+                    fsnt_ts_files = sorted(list(input_location.glob(fsnt_ts_filenames)))
+
+                    flnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FLNT")
+                    flnt_ts_files = sorted(list(input_location.glob(flnt_ts_filenames)))
+
+                    if (len(fsnt_ts_files) > 0) and (len(flnt_ts_files) > 0):
+                        process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file)
+                else:
+                    errmsg = "Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
+                    print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
+                    #  end_diag_script(errmsg) # Previously we would kill the run here.
+                    warnings.warn(errmsg)
                 continue
 
             if len(ts_files) > 1:
