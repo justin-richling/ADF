@@ -830,7 +830,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
             print(zero_data)
             #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, levels=levelspctdiff, transform_first=True)
-            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+            img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
             no_cbar = True
             #ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
 
