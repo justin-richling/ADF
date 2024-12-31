@@ -202,6 +202,7 @@ class AdfInfo(AdfConfig):
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
+            self.__base_hist_str = baseline_hist_str
 
             #Check if any time series files are pre-made
             calc_baseline_ts   = self.get_baseline_info("calc_cam_ts")
