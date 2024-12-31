@@ -360,7 +360,7 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
 
 
     #Average time dimension over time bounds, if bounds exist:
-    if 'time_bnds' in restom_ts_data["RESTOM"]:
+    if 'time_bnds' in restom_ts_data:
         time = restom_ts_data['time']
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
         time = xr.DataArray(restom_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
