@@ -609,7 +609,7 @@ def aod_latlon(adfobj):
     # 4-Panel global lat/lon plots
     #-----------------------------
     # NOTE: This loops over all obs and available cases, so just
-    # make lists to keepo track of details for each case vs obs matchup
+    # make lists to keep track of details for each case vs obs matchup
     #   Plots:
     #      - Difference of seasonal avg of case minus seasonal avg of observation
     #      - Percent Difference of seasonal avg of case minus seasonal avg of observation

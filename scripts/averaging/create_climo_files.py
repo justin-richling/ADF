@@ -351,13 +351,10 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
     restom_dataset.to_netcdf('restom_ts_data.nc')"""
 
 
-
-
     # Create a new dataset
     restom_ts_data = restom_ts_data.to_dataset(name='RESTOM')
     # Merge global attributes from one of the original datasets
     restom_ts_data.attrs = cam_fsnt_ts_data.attrs.copy()
-
 
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in restom_ts_data:
@@ -373,10 +370,6 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
 
     #Retrieve the actual time values from the slice
     actual_time_values = restom_ts_data.time.values
-
-
-
-
 
     #Set a global attribute with the actual time values
     restom_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
@@ -406,9 +399,7 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
     #restom_dataset.to_netcdf('restom_ts_data.nc')
     return 1  # All funcs return something. Could do error checking with this if needed.
-
-
-
+######
 
 
 def check_averaging_interval(syear_in, eyear_in):
