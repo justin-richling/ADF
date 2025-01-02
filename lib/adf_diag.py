@@ -770,7 +770,7 @@ class AdfDiag(AdfWeb):
                     )"""
                     #001001-002012
                     print("time_string",time_string,"\n")
-                    fils = glob.glob(f"{ts_dir}/*{}01-{}12.nc")
+                    fils = glob.glob(f"{ts_dir}/*{start_year}01-{end_year}12.nc")
                     for fil in fils:
                         print("FIL",fil)
                         ts_ds = xr.open_dataset(fil)
