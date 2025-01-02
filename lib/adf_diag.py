@@ -763,7 +763,6 @@ class AdfDiag(AdfWeb):
                     _ = mpool.map(call_ncrcat, list_of_hist_commands)
 
                 for var in diag_var_list:
-                    import xarray as xr
                     """ts_outfil_str = (
                         ts_dir
                         + os.sep
