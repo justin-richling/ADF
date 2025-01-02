@@ -317,7 +317,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
 
 def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
     '''
-    Compute and save the climatology file.
+    Compute and save the RESTOM climatology file from FSNT and FLNT history files.
     '''
     #Read in files via xarray (xr):
     if len(fsnt_ts_files) == 1:
