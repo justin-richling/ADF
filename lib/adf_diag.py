@@ -768,7 +768,7 @@ class AdfDiag(AdfWeb):
                         + os.sep
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
                     )"""
-                    fils = glob(f"{ts_dir}/*")
+                    fils = glob.glob(f"{ts_dir}/*")
                     for fil in fils:
                         print("FIL",fil)
                         ts_ds = xr.open_dataset(fil)
