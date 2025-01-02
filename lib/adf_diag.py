@@ -777,8 +777,8 @@ class AdfDiag(AdfWeb):
                         temp_file_path = fil + ".tmp"
 
                         # Optionally ensure time_bnds units are consistent
-                        if 'time_bnds' in ts_ds_fixed.variables:
-                            ts_ds_fixed['time_bnds'].encoding['units'] = ts_ds_fixed['time'].encoding['units']
+                        #if 'time_bnds' in ts_ds_fixed.variables:
+                        #    ts_ds_fixed['time_bnds'].encoding['units'] = ts_ds_fixed['time'].encoding['units']
                         print("\nHERESIES?")
                         ts_ds_fixed.to_netcdf(temp_file_path)
                         # Replace the original file with the modified file
