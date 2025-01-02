@@ -779,7 +779,7 @@ class AdfDiag(AdfWeb):
                         # Optionally ensure time_bnds units are consistent
                         if 'time_bnds' in ts_ds_fixed.variables:
                             ts_ds_fixed['time_bnds'].encoding['units'] = ts_ds['time'].encoding['units']
-
+                        print("\nHERESIES?")
                         ts_ds_fixed.to_netcdf(temp_file_path)
                         # Replace the original file with the modified file
                         os.replace(temp_file_path, fil)
