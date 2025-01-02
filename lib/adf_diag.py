@@ -761,9 +761,10 @@ class AdfDiag(AdfWeb):
                 # Run ncatted command to remove history attribute after the global attributes are set
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_hist_commands)
-                print("YAHOO")
+                print("YAHOO",ts_dir)
+                print()
                 for var in diag_var_list:
-                    fils = glob.glob(f"{ts_dir}/*{start_year}01-{end_year}12.nc")
+                    fils = glob.glob(f"{ts_dir}/*{time_string}.nc")
                     print("AHHHHHH",fils)
                     for fil in fils:
                         print("FIL",fil)
