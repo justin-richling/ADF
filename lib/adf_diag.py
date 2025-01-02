@@ -763,13 +763,6 @@ class AdfDiag(AdfWeb):
                     _ = mpool.map(call_ncrcat, list_of_hist_commands)
 
                 for var in diag_var_list:
-                    """ts_outfil_str = (
-                        ts_dir
-                        + os.sep
-                        + ".".join([case_name, hist_str, var, time_string, "nc"])
-                    )"""
-                    #001001-002012
-                    print("time_string",time_string,"\n")
                     fils = glob.glob(f"{ts_dir}/*{start_year}01-{end_year}12.nc")
                     for fil in fils:
                         print("FIL",fil)
