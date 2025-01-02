@@ -775,7 +775,12 @@ class AdfDiag(AdfWeb):
                         ts_ds['time'] = time
                         ts_ds.assign_coords(time=time)
                         ts_ds_fixed = xr.decode_cf(ts_ds)
-                        ts_ds_fixed.to_netcdf(fil, format='NETCDF4')
+                        # Save to a temporary file
+                        temp_file_path = fil + ".tmp"
+                        ts_ds_fixed.to_netcdf(temp_file_path)
+                        # Replace the original file with the modified file
+                        os.replace(temp_file_path, fil)
+                        #ts_ds_fixed.to_netcdf(fil, format='NETCDF4')
 
                 if vars_to_derive:
                     self.derive_variables(
