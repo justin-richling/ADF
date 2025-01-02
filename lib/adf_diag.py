@@ -762,6 +762,23 @@ class AdfDiag(AdfWeb):
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_hist_commands)
 
+                for var in diag_var_list:
+                    import xarray as xr
+                    """ts_outfil_str = (
+                        ts_dir
+                        + os.sep
+                        + ".".join([case_name, hist_str, var, time_string, "nc"])
+                    )"""
+                    for fil in ts_dir:
+                        ts_ds = xr.open_dataset(fil)
+                        #if ts_outfil_str:
+                        time = ts_ds['time']
+                        time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                        ts_ds['time'] = time
+                        ts_ds.assign_coords(time=time)
+                        ts_ds_fixed = xr.decode_cf(ts_ds)
+                        ts_ds_fixed.to_netcdf(fil, format='NETCDF4')
+
                 if vars_to_derive:
                     self.derive_variables(
                         res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
