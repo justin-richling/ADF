@@ -202,7 +202,7 @@ def cosweightlat(darray, lat1, lat2):
     if (darray.lat[0] > darray.lat[darray.lat.size -1]):
         print("QBO: flipping latitudes")
         darray = darray.sortby('lat')
-
+    print("slice problems here????????? - cosweightlat()")
     region = darray.sel(lat=slice(lat1, lat2))
     weights=np.cos(np.deg2rad(region.lat))
     regionw = region.weighted(weights)
@@ -240,6 +240,7 @@ def plotqbotimeseries(fig, dat, ny, x1, x2, y1, y2, title):
     """
 
     ax = fig.add_axes([x1, y1, (x2-x1), (y2-y1)])
+    print("slice problems here?")
     datplot = dat.isel(time=slice(0,ny*12)).transpose()
     ci = 1 ; cmax=45
     nlevs = (cmax - (-1*cmax))/ci + 1
