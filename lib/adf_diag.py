@@ -765,9 +765,11 @@ class AdfDiag(AdfWeb):
                 fils = glob.glob(f"{ts_dir}/*{time_string}.nc")
                 for fil in fils:
                     print("FIL",fil)
-                    ts_ds = xr.open_dataset(fil)
+                    ts_ds = xr.open_dataset(fil, decode_times=False)
                     #if ts_outfil_str:
                     if 'time_bnds' in ts_ds:
+                        ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
+                        ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']
                         time = ts_ds['time']
                         time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
                         ts_ds['time'] = time
