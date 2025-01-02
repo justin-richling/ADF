@@ -767,17 +767,23 @@ class AdfDiag(AdfWeb):
                     print("FIL",fil)
                     ts_ds = xr.open_dataset(fil)
                     #if ts_outfil_str:
-                    time = ts_ds['time']
-                    time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
-                    ts_ds['time'] = time
-                    ts_ds.assign_coords(time=time)
-                    ts_ds_fixed = xr.decode_cf(ts_ds)
-                    # Save to a temporary file
-                    temp_file_path = fil + ".tmp"
-                    ts_ds_fixed.to_netcdf(temp_file_path)
-                    # Replace the original file with the modified file
-                    os.replace(temp_file_path, fil)
-                    #ts_ds_fixed.to_netcdf(fil, format='NETCDF4')
+                    if 'time_bnds' in ts_ds:
+                        time = ts_ds['time']
+                        time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                        ts_ds['time'] = time
+                        ts_ds.assign_coords(time=time)
+                        ts_ds_fixed = xr.decode_cf(ts_ds)
+                        # Save to a temporary file
+                        temp_file_path = fil + ".tmp"
+
+                        # Optionally ensure time_bnds units are consistent
+                        if 'time_bnds' in ts_ds_fixed.variables:
+                            ts_ds_fixed['time_bnds'].encoding['units'] = ts_ds['time'].encoding['units']
+
+                        ts_ds_fixed.to_netcdf(temp_file_path)
+                        # Replace the original file with the modified file
+                        os.replace(temp_file_path, fil)
+                        #ts_ds_fixed.to_netcdf(fil, format='NETCDF4')
 
                 if vars_to_derive:
                     self.derive_variables(
