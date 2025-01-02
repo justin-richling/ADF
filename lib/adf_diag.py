@@ -769,6 +769,7 @@ class AdfDiag(AdfWeb):
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
                     )"""
                     for fil in ts_dir:
+                        print("FIL",fil)
                         ts_ds = xr.open_dataset(fil)
                         #if ts_outfil_str:
                         time = ts_ds['time']
