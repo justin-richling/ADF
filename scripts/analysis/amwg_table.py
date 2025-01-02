@@ -443,8 +443,9 @@ def amwg_table(adf):
             # These get written to our output file:
             stats_list = _get_row_vals(data)
             row_values = [var, unit_str] + stats_list"""
-            print("data before annual mean",data,"\n")
-            print(len(data),"\n\n")
+            if var == "RESTOM":
+                print("data before annual mean",data,"\n")
+                print(len(data),"\n\n")
             
 
             if is_climo:
@@ -463,8 +464,9 @@ def amwg_table(adf):
             else:
                 # In order to get correct statistics, average to annual or seasonal
                 data = pf.annual_mean(data, whole_years=True, time_name='time')
-                print("data AFTER annual mean",data,"\n")
-                print(len(data),"\n\n")
+                if var == "RESTOM":
+                    print("data AFTER annual mean",data,"\n")
+                    print(len(data),"\n\n")
                 # create a dataframe:
                 cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                             'standard error', '95% CI', 'trend', 'trend p-value']
