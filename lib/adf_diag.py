@@ -762,11 +762,12 @@ class AdfDiag(AdfWeb):
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_hist_commands)
 
+                # Loop over the created time series files again and fix the time if necessary
+                #NOTE: There is no solution to do this with NCO operators, but there is with CDO operators.
+                #      We can switch to using CDO, but it ewould require the user to have/load CDO as well.
                 fils = glob.glob(f"{ts_dir}/*{time_string}.nc")
                 for fil in fils:
-                    print("FIL",fil)
                     ts_ds = xr.open_dataset(fil, decode_times=False)
-                    #if ts_outfil_str:
                     if 'time_bnds' in ts_ds:
                         ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
                         ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']

@@ -866,7 +866,7 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
 
 def regrid_to_obs(adfobj, model_arr, obs_arr):
     """
-    Check if the model grid needs to be interpolated to the obs grid. If so,
+    Check if the model grid needs to be interpolated to the baseline grid. If so,
     use xesmf to regrid and return new dataset
     """
     test_lons = model_arr.lon
@@ -899,7 +899,7 @@ def regrid_to_obs(adfobj, model_arr, obs_arr):
         same_lats = False
         same_lons = False
         print("\tThe model lat/lon grid does not match the " \
-             "obs grid.\n\t - Regridding to observation lats and lons")
+             "baseline grid.\n\t - Regridding to baseline lats and lons")
 
     # QUESTION: will there ever be a scenario where we need to regrid only lats or lons??
     if (not same_lons) and (not same_lats):
