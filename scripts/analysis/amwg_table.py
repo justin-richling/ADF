@@ -365,6 +365,17 @@ def amwg_table(adf):
 
             #Load model variable data from file:
             ds = pf.load_dataset(files)
+
+            if not is_climo:
+                #Average time dimension over time bounds, if bounds exist:
+                if 'time_bnds' in ds:
+                    time = ds['time']
+                    # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
+                    time = xr.DataArray(ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                    ds['time'] = time
+                    ds.assign_coords(time=time)
+                    ds = xr.decode_cf(ds)
+
             #print("afdasdfs",ds.time,"\n")
             #data = ds[var]
             if len(files) > 1:
