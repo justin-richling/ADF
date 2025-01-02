@@ -693,7 +693,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     d1_cyclic, lon_cyclic = add_cyclic_point(d1, coord=d1.lon)
     d2_cyclic, _ = add_cyclic_point(d2, coord=d2.lon)  # since we can take difference, assume same longitude coord.
     dif_cyclic, _ = add_cyclic_point(dif, coord=dif.lon)
-    pct_cyclic, _ = add_cyclic_point(pct, coord=pct.lon)
+    pct_cyclic, plon_cyclic = add_cyclic_point(pct, coord=pct.lon)
 
     # -- deal with optional plotting arguments that might provide variable-dependent choices
 
@@ -820,9 +820,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #print("\nasdasdadssadasd",pct_cyclic.isel(dim_0=0).isel(dim_1=0))
         #print("QWTF",pct_cyclic,"\n")
         #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
-
+        plons, plats = np.meshgrid(plon_cyclic, pct_cyclic.lat)
         try:
-            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
+            img3 = ax3.contourf(plons, plats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
         except (GEOSException, ValueError, TypeError) as e:
             #print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
             img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
