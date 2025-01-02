@@ -98,7 +98,7 @@ def create_climo_files(adf, clobber=False, search=None):
         overwrite = [None]*len(case_names)
     else:
         #Check if any time series files are pre-made
-        if len(overwrite) == len(case_names):
+        if len(overwrite) != len(case_names):
             print("We have a problem, the number of overwrite does not match the number of cases!")
             #adf.error thingy
 
