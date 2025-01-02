@@ -764,6 +764,7 @@ class AdfDiag(AdfWeb):
 
                 for var in diag_var_list:
                     fils = glob.glob(f"{ts_dir}/*{start_year}01-{end_year}12.nc")
+                    print("AHHHHHH",fils)
                     for fil in fils:
                         print("FIL",fil)
                         ts_ds = xr.open_dataset(fil)
