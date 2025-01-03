@@ -343,10 +343,11 @@ def polar_map(adfobj):
                                 #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
                                 #pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), 0.0)
                                 #pseasons[s] = pseasons[s].fillna(0.0)
-                                print("\nGAGVAHAHBDBJDNKSLKSD",pseasons[s],"\n")
+                                
 
                                 # make plots: northern and southern hemisphere separately:
                                 for hemi_type in ["NHPolar", "SHPolar"]:
+                                    print(f"\n!!!{var} {pres}hp - {hemi_type} - {s}",pseasons[s],"\n")
 
                                     #Create plot name and path:
                                     plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
