@@ -817,7 +817,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
     
-    #plons, plats = np.meshgrid(plon_cyclic, pct.lat)
+    '''#plons, plats = np.meshgrid(plon_cyclic, pct.lat)
     #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
     if len(levs_pctdiff) < 2:
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
@@ -863,7 +863,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
              img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
              no_cbar = True"""
     
-
+    '''
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
         ax4.text(0.4, 0.4, empty_message, transform=ax4.transAxes, bbox=props)
@@ -945,20 +945,20 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax4.transAxes,
                     borderpad=0,
                     )      
-    if not no_cbar:
-        fig.colorbar(img3, cax=cb_pct_ax)
+    #if not no_cbar:
+    #    fig.colorbar(img3, cax=cb_pct_ax)
     #fig.colorbar(img3, cax=cb_pct_ax)
 
     fig.colorbar(img4, cax=cb_diff_ax)
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
-    try:
-        fig.savefig(wks, bbox_inches='tight', dpi=300)
-    except (GEOSException, ValueError, TypeError) as e:
-        errmsg = "Something is wrong with the geometries, so this plot will be skipped"
-        #adfobj.debug_log(errmsg)
-        #print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
+    #try:
+    #    fig.savefig(wks, bbox_inches='tight', dpi=300)
+    #except (GEOSException, ValueError, TypeError) as e:
+    #    errmsg = "Something is wrong with the geometries, so this plot will be skipped"
+    #    #adfobj.debug_log(errmsg)
+    #    #print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
     """except GEOSException as e:
         print("Caught GEOSException:", e)
     except ValueError as e:
