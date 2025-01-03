@@ -776,6 +776,13 @@ class AdfDiag(AdfWeb):
                         ts_ds['time'] = time
                         ts_ds.assign_coords(time=time)
                         ts_ds_fixed = xr.decode_cf(ts_ds)
+
+                        # Add attribute note of time change
+                        attrs_dict = {
+                            "adf_note": "The time values have been modified to middle of month"
+                        }
+                        ts_ds_fixed = ts_ds_fixed.assign_attrs(attrs_dict)
+
                         # Save to a temporary file
                         temp_file_path = fil + ".tmp"
                         ts_ds_fixed.to_netcdf(temp_file_path)
