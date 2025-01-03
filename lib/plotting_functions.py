@@ -820,7 +820,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #print("\nasdasdadssadasd",pct_cyclic.isel(dim_0=0).isel(dim_1=0))
         #print("QWTF",pct_cyclic,"\n")
         #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
-        plons, plats = np.meshgrid(plon_cyclic, pct_cyclic.lat)
+        plons, plats = np.meshgrid(plon_cyclic, pct.lat)
         try:
             img3 = ax3.contourf(plons, plats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
         except (GEOSException, ValueError, TypeError) as e:
