@@ -824,7 +824,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
         plons, plats = np.meshgrid(plon_cyclic, pct.lat)
         try:
-            img3 = ax3.contourf(plons, plats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
+            ax3.contourf(plons, plats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
         except (GEOSException, ValueError, TypeError) as e:
             print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
             img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
