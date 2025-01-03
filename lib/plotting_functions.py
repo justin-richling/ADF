@@ -808,7 +808,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
 
-    '''if len(levs_pctdiff) < 2:
+    if len(levs_pctdiff) < 2:
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
@@ -822,7 +822,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
         plons, plats = np.meshgrid(plon_cyclic, pct.lat)
         try:
-            img3 = ax3.contourf(plons, plats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
+            img3 = ax3.contourf(plon_cyclic, plats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
         except (GEOSException, ValueError, TypeError) as e:
             #print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
             img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
@@ -846,7 +846,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
              print("Caught MultiPolygon Error:", e)
              img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
              no_cbar = True"""
-    '''
+    
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
