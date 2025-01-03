@@ -330,7 +330,8 @@ def amwg_table(adf):
             #Write to debug log if enabled:
             adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
 
-
+            #Notify user that script has started:
+            print(f"\n  Calculating AMWG variable table for '{case_name}'...")
 
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
