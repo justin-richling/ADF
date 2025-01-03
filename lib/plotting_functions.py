@@ -827,8 +827,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             img3 = ax3.contourf(plons, plats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)#, transform_first=True
         except (GEOSException, ValueError, TypeError) as e:
             print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
-            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
-            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+            img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
+            img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
             no_cbar = True
         """except GEOSException as e:
             print("Caught GEOSException:", e)
@@ -878,8 +878,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     ax2.text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=ax2.transAxes)
 
-    ax3.text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=ax3.transAxes)
-    ax3.set_title("$\mathbf{Test % diff Baseline}", loc='left', fontsize=8)
+    #ax3.text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=ax3.transAxes)
+    #ax3.set_title("$\mathbf{Test % diff Baseline}", loc='left', fontsize=8)
 
     ax4.text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=ax4.transAxes)
     ax4.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
@@ -932,14 +932,14 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax4.transAxes,
                     borderpad=0,
                     )      
-    #if not no_cbar:
-    #    fig.colorbar(img3, cax=cb_pct_ax)
-    fig.colorbar(img3, cax=cb_pct_ax)
+    if not no_cbar:
+        fig.colorbar(img3, cax=cb_pct_ax)
+    #fig.colorbar(img3, cax=cb_pct_ax)
 
     fig.colorbar(img4, cax=cb_diff_ax)
 
     # Save files
-    #fig.savefig(wks, bbox_inches='tight', dpi=300)
+    fig.savefig(wks, bbox_inches='tight', dpi=300)
     try:
         fig.savefig(wks, bbox_inches='tight', dpi=300)
     except (GEOSException, ValueError, TypeError) as e:
