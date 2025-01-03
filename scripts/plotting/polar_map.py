@@ -249,7 +249,7 @@ def polar_map(adfobj):
                             
                             # percent change 
                             pseasons[s] = (mseasons[s] - oseasons[s]) / np.abs(oseasons[s]) * 100.0 # relative change
-                            print("\nGAGVAHAHBDBJDNKSLKSD",pseasons[s].where(np.isfinite(pseasons[s]), np.nan),"\n")
+                            #print("\nGAGVAHAHBDBJDNKSLKSD",pseasons[s].where(np.isfinite(pseasons[s]), np.nan),"\n")
                             pseasons[s].attrs['units'] = '%'
                             #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
                             #pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), np.nan)
@@ -341,7 +341,7 @@ def polar_map(adfobj):
                                 pseasons[s].attrs['units'] = '%'
                                 
                                 #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
-                                pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), 0.0)
+                                #pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), 0.0)
                                 #pseasons[s] = pseasons[s].fillna(0.0)
                                 print("\nGAGVAHAHBDBJDNKSLKSD",pseasons[s],"\n")
 
