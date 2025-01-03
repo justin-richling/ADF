@@ -187,6 +187,7 @@ def create_climo_files(adf, clobber=False, search=None):
         list_of_arguments = []
         nums = []
         for var in var_list:
+            print(f"\t- processing climo file for '{var}'")
 
             # Create name of climatology output file (which includes the full path)
             # and check whether it is there (don't do computation if we don't want to overwrite):
@@ -240,7 +241,6 @@ def create_climo_files(adf, clobber=False, search=None):
                 continue
 
             if len(ts_files) > 1:
-                print(f"\t- processing climo file for '{var}'")
                 process_variable(adf, ts_files, syr, eyr, output_file)
             else:
                 list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
