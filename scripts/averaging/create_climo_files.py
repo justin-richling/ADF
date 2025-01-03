@@ -13,6 +13,9 @@ import xarray as xr  # module-level import so all functions can get to it.
 
 import multiprocessing as mp
 
+#Import ADF-specific modules:
+import plotting_functions as pf
+
 def get_time_slice_by_year(time, startyear, endyear):
     if not hasattr(time, 'dt'):
         print("Warning: get_time_slice_by_year requires the `time` parameter to be an xarray time coordinate with a dt accessor. Returning generic slice (which will probably fail).")
@@ -176,8 +179,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Time series file search
         if search is None:
             search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
-            #search = "{CASE}*{HIST_STR}*.{VARIABLE}.{SYEAR}01-{EYEAR}12.nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
-        #000101-009912
+
         #Check model year bounds:
         syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
 
@@ -224,8 +226,12 @@ def create_climo_files(adf, clobber=False, search=None):
                     flnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FLNT")
                     flnt_ts_files = sorted(list(input_location.glob(flnt_ts_filenames)))
 
+                    # Check if FSNT adn FLNT files exist and if they are the same length
                     if (len(fsnt_ts_files) > 0) and (len(flnt_ts_files) > 0):
-                        process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file)
+                        if len(fsnt_ts_files) == len(flnt_ts_files):
+                            process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file)
+                        else:
+                            print("\t ** Number of FSNT files don't match number of FLNT files. Skipping RESTOM")
                 else:
                     errmsg = "Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
                     print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
@@ -238,8 +244,6 @@ def create_climo_files(adf, clobber=False, search=None):
                 process_variable(adf, ts_files, syr, eyr, output_file)
             else:
                 list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
-                nums.append("yes")
-
 
         #End of var_list loop
         #--------------------
@@ -259,15 +263,17 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(adf, ts_files, syr, eyr, output_file):
+def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None):
     '''
     Compute and save the climatology file.
     '''
     #Read in files via xarray (xr):
-    if len(ts_files) == 1:
+    cam_ts_data = pf.load_dataset(ts_files)
+    """if len(ts_files) == 1:
         cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
     else:
-        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+        cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')"""
+
     #Average time dimension over time bounds, if bounds exist:
     if 'time_bnds' in cam_ts_data:
         time = cam_ts_data['time']
@@ -284,7 +290,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     actual_time_values = cam_ts_data.time.values
 
     #Set a global attribute with the actual time values
-    cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
+    #cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
 
     #Group time series values by month, and average those months together:
     cam_climo_data = cam_ts_data.groupby('time.month').mean(dim='time')
@@ -302,7 +308,8 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     attrs_dict = {
         "adf_user": adf.user,
         "adf_climo_yrs": f"{syr}-{eyr}",
-        "xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
+        #"xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
+        "time_slice_values": f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}",
         "time_series_files": ts_files_str,
     }
     cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
@@ -320,7 +327,9 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
     Compute and save the RESTOM climatology file from FSNT and FLNT history files.
     '''
     #Read in files via xarray (xr):
-    if len(fsnt_ts_files) == 1:
+    cam_fsnt_ts_data = pf.load_dataset(fsnt_ts_files)
+    cam_flnt_ts_data = pf.load_dataset(flnt_ts_files)
+    """if len(fsnt_ts_files) == 1:
         cam_fsnt_ts_data = xr.open_dataset(fsnt_ts_files[0], decode_times=True)
     else:
         cam_fsnt_ts_data = xr.open_mfdataset(fsnt_ts_files, decode_times=True, combine='by_coords')
@@ -328,9 +337,7 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
     if len(flnt_ts_files) == 1:
         cam_flnt_ts_data = xr.open_dataset(flnt_ts_files[0], decode_times=True)
     else:
-        cam_flnt_ts_data = xr.open_mfdataset(flnt_ts_files, decode_times=True, combine='by_coords')
-
-    
+        cam_flnt_ts_data = xr.open_mfdataset(flnt_ts_files, decode_times=True, combine='by_coords')"""
 
 
     # Perform the subtraction to create RESTOM
@@ -372,7 +379,7 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
     actual_time_values = restom_ts_data.time.values
 
     #Set a global attribute with the actual time values
-    restom_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
+    #restom_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
 
     #Group time series values by month, and average those months together:
     cam_climo_data = restom_ts_data.groupby('time.month').mean(dim='time')
@@ -390,7 +397,8 @@ def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
     attrs_dict = {
         "adf_user": adf.user,
         "adf_climo_yrs": f"{syr}-{eyr}",
-        "xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
+        #"xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
+        "time_slice_values": f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}",
         "time_series_files": ts_files_str,
     }
     cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
