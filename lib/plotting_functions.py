@@ -664,10 +664,19 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     pct = pct.where(np.isfinite(pct), np.nan)
     pct = pct.fillna(0.0)
 
+    """if hemisphere.upper() == "NH":
+        proj = ccrs.NorthPolarStereo()
+    elif hemisphere.upper() == "SH":
+        proj = ccrs.SouthPolarStereo()
+    else:
+        raise AdfError(f'[make_polar_plot] hemisphere not specified, must be NH or SH; hemisphere set as {hemisphere}')"""
+
+
     if hemisphere.upper() == "NH":
         proj = ccrs.NorthPolarStereo()
     elif hemisphere.upper() == "SH":
         proj = ccrs.SouthPolarStereo()
+        #proj = ccrs.PlateCarree().transform_points(ccrs.SouthPolarStereo(), pct['lon'], pct['lat'])
     else:
         raise AdfError(f'[make_polar_plot] hemisphere not specified, must be NH or SH; hemisphere set as {hemisphere}')
 
