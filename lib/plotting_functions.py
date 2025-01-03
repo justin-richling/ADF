@@ -935,8 +935,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     fig.colorbar(img4, cax=cb_diff_ax)
 
     # Save files
-    #fig.savefig(wks, bbox_inches='tight', dpi=300)
-    try:
+    fig.savefig(wks, bbox_inches='tight', dpi=300)
+    '''try:
         fig.savefig(wks, bbox_inches='tight', dpi=300)
     except (GEOSException, ValueError, TypeError) as e:
         errmsg = "Something is wrong with the geometries, so this plot will be skipped"
@@ -948,7 +948,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         print("Caught ValueError:", e)
     except TypeError as e:
         print("Caught TypeError:", e)"""
-    #fig.savefig(wks, bbox_inches='tight', dpi=100)
+    #fig.savefig(wks, bbox_inches='tight', dpi=100)'''
 
     # Close figures to avoid memory issues:
     plt.close(fig)
