@@ -243,6 +243,7 @@ def create_climo_files(adf, clobber=False, search=None):
             if len(ts_files) > 1:
                 process_variable(adf, ts_files, syr, eyr, output_file)
             else:
+                nums.append("yup")
                 list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
 
         #End of var_list loop
