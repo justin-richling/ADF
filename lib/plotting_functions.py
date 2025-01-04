@@ -817,7 +817,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
         img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
     
-    '''#plons, plats = np.meshgrid(plon_cyclic, pct.lat)
+    #plons, plats = np.meshgrid(plon_cyclic, pct.lat)
     #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
     if len(levs_pctdiff) < 2:
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
@@ -863,7 +863,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
              print("Caught MultiPolygon Error:", e)
              img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
              no_cbar = True"""
-    '''
+    
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
@@ -946,8 +946,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax4.transAxes,
                     borderpad=0,
                     )      
-    #if not no_cbar:
-    #    fig.colorbar(img3, cax=cb_pct_ax)
+    if not no_cbar:
+        fig.colorbar(img3, cax=cb_pct_ax)
     #fig.colorbar(img3, cax=cb_pct_ax)
 
     fig.colorbar(img4, cax=cb_diff_ax)
