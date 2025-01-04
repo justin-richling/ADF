@@ -827,7 +827,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #print("\nasdasdadssadasd",xr.DataArray(pct_cyclic).isel(dim_0=0).isel(dim_1=0))
         #pct_cyclic = pct_cyclic.where(pct_cyclic > 0, 0)
         #pct_cyclic = pct_cyclic.where(pct_cyclic < 100, 100)
-        #pct_cyclic = pct_cyclic.clip(min=-100, max=100)
+        pct_cyclic = pct_cyclic.clip(min=-100, max=100)
         #print("\nasdasdadssadasd",pct_cyclic.isel(dim_0=0).isel(dim_1=0))
         #print("QWTF",pct_cyclic,"\n")
         #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
@@ -841,29 +841,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         except (GEOSException, ValueError, TypeError) as e:
             print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
             ax3.cla()
-            #img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
+            img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
             ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
             no_cbar = True
-        """except GEOSException as e:
-            print("Caught GEOSException:", e)
-            # Copy the DataArray and set all values to zero
-            #zero_data = pct_cyclic.copy()
-            #zero_data[:] = 0  # Set all values to zero
-
-            #print(zero_data)
-            #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, levels=levelspctdiff, transform_first=True)
-            img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
-            no_cbar = True
-            #ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
-        except ValueError as e:
-             print("Caught ValueRrror:", e)
-             img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
-             no_cbar = True
-        except TypeError as e:
-             print("Caught MultiPolygon Error:", e)
-             img3 = ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
-             no_cbar = True"""
-    
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
@@ -954,19 +934,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
-    #try:
-    #    fig.savefig(wks, bbox_inches='tight', dpi=300)
-    #except (GEOSException, ValueError, TypeError) as e:
-    #    errmsg = "Something is wrong with the geometries, so this plot will be skipped"
-    #    #adfobj.debug_log(errmsg)
-    #    #print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
-    """except GEOSException as e:
-        print("Caught GEOSException:", e)
-    except ValueError as e:
-        print("Caught ValueError:", e)
-    except TypeError as e:
-        print("Caught TypeError:", e)"""
-    #fig.savefig(wks, bbox_inches='tight', dpi=100)
 
     # Close figures to avoid memory issues:
     plt.close(fig)
