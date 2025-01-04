@@ -841,7 +841,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         except (GEOSException, ValueError, TypeError) as e:
             print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
             ax3.cla()
-            img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
+            #img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
             ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
             no_cbar = True
         """except GEOSException as e:
@@ -946,9 +946,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     bbox_transform=ax4.transAxes,
                     borderpad=0,
                     )      
-    #if not no_cbar:
-    #    fig.colorbar(img3, cax=cb_pct_ax)
-    fig.colorbar(img3, cax=cb_pct_ax)
+    if not no_cbar:
+        fig.colorbar(img3, cax=cb_pct_ax)
+    #fig.colorbar(img3, cax=cb_pct_ax)
 
     fig.colorbar(img4, cax=cb_diff_ax)
 
