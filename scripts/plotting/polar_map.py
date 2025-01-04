@@ -347,7 +347,16 @@ def polar_map(adfobj):
 
                                 # make plots: northern and southern hemisphere separately:
                                 for hemi_type in ["NHPolar", "SHPolar"]:
-                                    print(f"\n!!!{var} {pres}hp - {hemi_type} - {s}","\n")
+                                    print(f"\n!!!{var} {pres}hp - {hemi_type} - {s}")
+                                    # Find the index of the maximum value
+                                    max_idx = pseasons[s].argmax()
+
+                                    # Get the corresponding latitude and longitude
+                                    max_lat = pseasons[s].lat[max_idx // len(pseasons[s].lon)]  # Integer division for latitude
+                                    max_lon = pseasons[s].lon[max_idx % len(pseasons[s].lon)]   # Modulo for longitude
+
+                                    print(f"Maximum value is at latitude {max_lat.values}, longitude {max_lon.values}")
+                                    print()
 
                                     #Create plot name and path:
                                     plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
