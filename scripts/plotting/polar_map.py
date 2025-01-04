@@ -252,8 +252,8 @@ def polar_map(adfobj):
                             #print("\nGAGVAHAHBDBJDNKSLKSD",pseasons[s].where(np.isfinite(pseasons[s]), np.nan),"\n")
                             pseasons[s].attrs['units'] = '%'
                             #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
-                            pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), np.nan)
-                            pseasons[s] = pseasons[s].fillna(0.0)
+                            #pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), np.nan)
+                            #pseasons[s] = pseasons[s].fillna(0.0)
 
                             # make plots: northern and southern hemisphere separately:
                             for hemi_type in ["NHPolar", "SHPolar"]:
@@ -341,8 +341,8 @@ def polar_map(adfobj):
                                 pseasons[s].attrs['units'] = '%'
                                 
                                 #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
-                                pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), 0.0)
-                                pseasons[s] = pseasons[s].fillna(0.0)
+                                #pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), 0.0)
+                                #pseasons[s] = pseasons[s].fillna(0.0)
                                 
 
                                 # make plots: northern and southern hemisphere separately:
