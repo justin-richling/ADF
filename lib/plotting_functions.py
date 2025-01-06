@@ -2285,7 +2285,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
         
         zonal_plot(adata['lat'], pct, ax=ax[2], color="k")
-        ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=10,fontweight="bold")
+        ax[2].set_title("% Diff ($\mathbf{Test} - \mathbf{Baseline}$)", loc='left', fontsize=10,fontweight="bold")
+        #ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=10,fontweight="bold")
 
         for a in ax:
             try:
