@@ -2153,6 +2153,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
     # Set colorbar padding from plot
     cbar_pad = 0.01
+    cbar_title_pad = 4.0
 
     #Set plot titles
     case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
@@ -2200,13 +2201,13 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             # Control the position of the scientific notation label
             offset_text = cbar0.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
-            offset_text.set_position((2.0, -0.05))  # Adjust the position (x, y) as needed
+            offset_text.set_position((cbar_title_pad, -0.05))  # Adjust the position (x, y) as needed
             
             cbar1 = fig.colorbar(img1, ax=ax[1], location='right', pad=cbar_pad ,**cp_info['colorbar_opt'])
             # Control the position of the scientific notation label
             offset_text = cbar1.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
-            offset_text.set_position((2.0, -0.05))  # Adjust the position (x, y) as needed
+            offset_text.set_position((cbar_title_pad, -0.05))  # Adjust the position (x, y) as needed
         #End if
 
         if len(levs_diff) < 2:
@@ -2218,7 +2219,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             # Control the position of the scientific notation label
             offset_text = cbar2.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
-            offset_text.set_position((2.0, -0.05))  # Adjust the position (x, y) as needed
+            offset_text.set_position((cbar_title_pad, -0.05))  # Adjust the position (x, y) as needed
             
         if len(levs_pct_diff) < 2:
             img3, ax[3] = zonal_plot(adata['lat'], pct, ax=ax[3])
@@ -2229,7 +2230,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             # Control the position of the scientific notation label
             offset_text = cbar3.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
-            offset_text.set_position((2.0, -0.05))  # Adjust the position (x, y) as needed
+            offset_text.set_position((cbar_title_pad, -0.05))  # Adjust the position (x, y) as needed
 
         ax[0].set_title(case_title, loc='left', fontsize=tiFontSize)
         ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)
