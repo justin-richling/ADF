@@ -2252,8 +2252,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
         #                color="#1f77b4") # #1f77b4 -> matplotlib standard blue
         #"$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
-        #test_label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
-        test_label = "$\mathbf{Test}:$"+f"{case_nickname} - "+"$\mathbf{years}"+f": {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+        test_label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+        #test_label = "$\mathbf{Test}:$"+f"{case_nickname} - "+"$\mathbf{years}"+f": {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
         line = Line2D([0], [0], label=test_label,
                         color="#1f77b4") # #1f77b4 -> matplotlib standard blue
 
