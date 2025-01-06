@@ -110,7 +110,7 @@ def zonal_mean(adfobj):
             if var in res:
                 vres = res[var]
                 #If found then notify user, assuming debug log is enabled:
-                adfobj.debug_log(f"global_latlon_map: Found variable defaults for {var}")
+                adfobj.debug_log(f"zonal_mean: Found variable defaults for {var}")
 
                 #Extract category (if available):
                 web_category = vres.get("category", None)
@@ -175,9 +175,12 @@ def zonal_mean(adfobj):
             vres = res[var]
             #If found then notify user, assuming debug log is enabled:
             adfobj.debug_log(f"zonal_mean: Found variable defaults for {var}")
-
+            
+            #Extract category (if available):
+            web_category = vres.get("category", None)
         else:
             vres = {}
+            web_category = None
         #End if
 
         # load reference data (observational or baseline)
