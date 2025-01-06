@@ -877,6 +877,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         img3 = plot_on_axis(ax3, lons, lats, pct_cyclic, cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
         # Handle missing plots with fallback messages
         if img3 is None:
+            ax3.cla()
             ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
         else:
             cb_pct_ax = inset_axes(ax3,
@@ -934,6 +935,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         # Test plotting on the first axis
         img4 = plot_on_axis(ax4, lons, lats, dif_cyclic, cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
         if img4 is None:
+            ax4.cla()
             ax4.text(0.4, 0.4, empty_message, transform=ax4.transAxes, bbox=props)
         else:
             cb_diff_ax = inset_axes(ax4,
