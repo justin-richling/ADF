@@ -2292,7 +2292,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         # Set the width of the legend relative to the figure width
         # You can set the height of the legend as needed (e.g., 0.1 for a small legend height)
         legend_width = fig_width
-        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, legend_width, .102),loc="right",
+        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 2, .102),loc="right",
                    borderaxespad=0.0,fontsize=6,frameon=False)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
