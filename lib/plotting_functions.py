@@ -2294,6 +2294,9 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                 pass
             #End except
         #End for
+
+        # Finally, adjust space between subplots
+        plt.subplots_adjust(hspace=0.5)  # Increase this value for more space
     #End if
 
     #Write the figure to provided workspace/file:
