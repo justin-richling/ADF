@@ -605,6 +605,41 @@ def domain_stats(data, domain):
     x_region_max = x_region.max().item()
     return x_region_mean, x_region_max, x_region_min
 
+
+
+
+
+
+
+
+from functools import wraps
+
+# Define the decorator
+def safe_execution_decorator(fallback=None):
+    """
+    A decorator to handle specified exceptions in a block of code.
+
+    Parameters:
+        fallback: The value to return if an exception is caught.
+
+    Returns:
+        The decorated function.
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except (GEOSException, ValueError, TypeError) as e:
+                print(f"Caught exception: {type(e).__name__}: {e}")
+                return fallback
+        return wrapper
+    return decorator
+
+
+
+
+
 def make_polar_plot(wks, case_nickname, base_nickname,
                     case_climo_yrs, baseline_climo_yrs,
                     d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,pctchange:Optional[xr.DataArray]=None,
@@ -650,6 +685,21 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         + `diff_colormap`
         + `units`
     """
+
+    # Create a function for plotting on a specific axis
+    @safe_execution_decorator(fallback=None)
+    def plot_on_axis(ax, lons, lats, data, cmap, norm, levels):
+        """Plot data on a given axis with error handling."""
+        img = ax.contourf(lons, lats, data, transform=ccrs.PlateCarree(), cmap=cmap, norm=norm, levels=levels)
+        
+        #ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm,
+        #                        levels=levelspctdiff,
+        #                        #transform_first=True
+        #                        )
+        
+        return img
+
+
     if difference is None:
         dif = d2 - d1
     else:
@@ -820,9 +870,27 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #plons, plats = np.meshgrid(plon_cyclic, pct.lat)
     #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
     if len(levs_pctdiff) < 2:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
+        #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
+        # Test plotting on the first axis
+        img3 = plot_on_axis(ax3, lons, lats, pct_cyclic, cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
+        # Handle missing plots with fallback messages
+        if img3 is None:
+            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+        else:
+            cb_pct_ax = inset_axes(ax3,
+                        width="5%",  # width = 5% of parent_bbox width
+                        height="90%",  # height : 90%
+                        loc='lower left',
+                        bbox_to_anchor=(1.05, 0.05, 1, 1),
+                        bbox_transform=ax3.transAxes,
+                        borderpad=0,
+                        ) 
+                
+
+            fig.colorbar(img3, cax=cb_pct_ax)
+    """else:
         #pct_cyclic = xr.DataArray(pct_cyclic)
         #print("\nasdasdadssadasd",xr.DataArray(pct_cyclic).isel(dim_0=0).isel(dim_1=0))
         #pct_cyclic = pct_cyclic.where(pct_cyclic > 0, 0)
@@ -831,25 +899,53 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #print("\nasdasdadssadasd",pct_cyclic.isel(dim_0=0).isel(dim_1=0))
         #print("QWTF",pct_cyclic,"\n")
         #img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
-        plons, plats = np.meshgrid(plon_cyclic, pct.lat)
+        #plons, plats = np.meshgrid(plon_cyclic, pct.lat)
         try:
             img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm,
                                 levels=levelspctdiff,
                                 #transform_first=True
                                 )
 
+            
+            cb_pct_ax = inset_axes(ax3,
+                    width="5%",  # width = 5% of parent_bbox width
+                    height="90%",  # height : 90%
+                    loc='lower left',
+                    bbox_to_anchor=(1.05, 0.05, 1, 1),
+                    bbox_transform=ax3.transAxes,
+                    borderpad=0,
+                    ) 
+            
+
+            fig.colorbar(img3, cax=cb_pct_ax)
+
         except (GEOSException, ValueError, TypeError) as e:
             print(f"YEAH BOI Caught exception: {type(e).__name__}: {e}")
             ax3.cla()
-            img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
+            #img3 = ax3.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w")
             ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
-            no_cbar = True
+            no_cbar = True"""
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
         ax4.text(0.4, 0.4, empty_message, transform=ax4.transAxes, bbox=props)
     else:
-        img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        #img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        # Test plotting on the first axis
+        img4 = plot_on_axis(ax4, lons, lats, dif_cyclic, cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        if img4 is None:
+            ax4.text(0.4, 0.4, empty_message, transform=ax4.transAxes, bbox=props)
+        else:
+            cb_diff_ax = inset_axes(ax4,
+                        width="5%",  # width = 5% of parent_bbox width
+                        height="90%",  # height : 90%
+                        loc='lower left',
+                        bbox_to_anchor=(1.05, 0.05, 1, 1),
+                        bbox_transform=ax4.transAxes,
+                        borderpad=0,
+                        )
+
+            fig.colorbar(img4, cax=cb_diff_ax)
         
     #Set Main title for subplots:
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
@@ -909,28 +1005,28 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     )
     fig.colorbar(img1, cax=cb_mean_ax)
     
-    cb_pct_ax = inset_axes(ax3,
+    """cb_pct_ax = inset_axes(ax3,
                     width="5%",  # width = 5% of parent_bbox width
                     height="90%",  # height : 90%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0.05, 1, 1),
                     bbox_transform=ax3.transAxes,
                     borderpad=0,
-                    )  
+                    ) """ 
 
-    cb_diff_ax = inset_axes(ax4,
+    """cb_diff_ax = inset_axes(ax4,
                     width="5%",  # width = 5% of parent_bbox width
                     height="90%",  # height : 90%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0.05, 1, 1),
                     bbox_transform=ax4.transAxes,
                     borderpad=0,
-                    )      
-    if not no_cbar:
-        fig.colorbar(img3, cax=cb_pct_ax)
+                    )  """    
+    """if not no_cbar:
+        fig.colorbar(img3, cax=cb_pct_ax)"""
     #fig.colorbar(img3, cax=cb_pct_ax)
 
-    fig.colorbar(img4, cax=cb_diff_ax)
+    #fig.colorbar(img4, cax=cb_diff_ax)
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
