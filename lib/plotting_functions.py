@@ -2193,8 +2193,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         else:
             img0, ax[0] = zonal_plot(adata['lat'], azm, ax=ax[0], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
             img1, ax[1] = zonal_plot(bdata['lat'], bzm, ax=ax[1], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
-            fig.colorbar(img0, ax=ax[0], location='right', pad=0.02 ,**cp_info['colorbar_opt'])
-            fig.colorbar(img1, ax=ax[1], location='right', pad=0.02 ,**cp_info['colorbar_opt'])
+            cbar0 = fig.colorbar(img0, ax=ax[0], location='right', pad=0.02 ,**cp_info['colorbar_opt'])
+            cbar0.ax.yaxis.offsetText.set_fontsize(10)
+            cbar1 = fig.colorbar(img1, ax=ax[1], location='right', pad=0.02 ,**cp_info['colorbar_opt'])
+            cbar1.ax.yaxis.offsetText.set_fontsize(10)
         #End if
 
         if len(levs_diff) < 2:
@@ -2202,14 +2204,16 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
         else:
             img2, ax[2] = zonal_plot(adata['lat'], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
-            fig.colorbar(img2, ax=ax[2], location='right', pad=0.02 ,**cp_info['diff_colorbar_opt'])
+            cbar2 = fig.colorbar(img2, ax=ax[2], location='right', pad=0.02 ,**cp_info['diff_colorbar_opt'])
+            cbar2.ax.yaxis.offsetText.set_fontsize(10)
             
         if len(levs_pct_diff) < 2:
             img3, ax[3] = zonal_plot(adata['lat'], pct, ax=ax[3])
             ax[3].text(0.4, 0.4, empty_message, transform=ax[3].transAxes, bbox=props)
         else:
             img3, ax[3] = zonal_plot(adata['lat'], pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],**cp_info['contourf_opt'])
-            fig.colorbar(img3, ax=ax[3], location='right', pad=0.02 ,**cp_info['pct_colorbar_opt'])
+            cbar3 = fig.colorbar(img3, ax=ax[3], location='right', pad=0.02 ,**cp_info['pct_colorbar_opt'])
+            cbar3.ax.yaxis.offsetText.set_fontsize(10)
 
         ax[0].set_title(case_title, loc='left', fontsize=tiFontSize)
         ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)
