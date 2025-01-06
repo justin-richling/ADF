@@ -2252,10 +2252,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
         #                color="#1f77b4") # #1f77b4 -> matplotlib standard blue
         #"$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
-        line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
                         color="#1f77b4") # #1f77b4 -> matplotlib standard blue
 
-        line2 = Line2D([0], [0], label=base_title,
+        line2 = Line2D([0], [0], label=base_title.replace("\n"," - "),#base_title
                         color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
         azm = zonal_mean_xr(adata)
@@ -2278,7 +2278,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(adata['lat'], azm, ax=ax[0],color="#1f77b4") # #1f77b4 -> matplotlib standard blue
         zonal_plot(bdata['lat'], bzm, ax=ax[0],color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
-        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+        fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="left d",
                    borderaxespad=0.0,fontsize=6,frameon=False)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
