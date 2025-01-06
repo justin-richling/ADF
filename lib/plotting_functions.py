@@ -2439,7 +2439,7 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
             img3, ax[3] = pltfunc(adata[xdim], pct, ax=ax[3])
             ax[3].text(0.4, 0.4, empty_message, transform=ax[3].transAxes, bbox=props)
         else:
-            img3, ax[3] = pltfunc(adata[xdim], pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],**cp_info['contourf_opt'])
+            img3, ax[3] = pltfunc(adata[xdim], pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],transform_first=True,**cp_info['contourf_opt'])
             cb3 = fig.colorbar(img3, ax=ax[3], location='right',**cp_info['colorbar_opt'])
 
         #Set plot titles
