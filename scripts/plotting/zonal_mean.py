@@ -104,6 +104,22 @@ def zonal_mean(adfobj):
 
         #Loop over the variables for each season
         for var in var_list:
+
+
+            # Check res for any variable specific options that need to be used BEFORE going to the plot:
+            if var in res:
+                vres = res[var]
+                #If found then notify user, assuming debug log is enabled:
+                adfobj.debug_log(f"global_latlon_map: Found variable defaults for {var}")
+
+                #Extract category (if available):
+                web_category = vres.get("category", None)
+
+            else:
+                vres = {}
+                web_category = None
+            #End if
+
             for s in seasons:
                 #Check zonal log-p:
                 plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
@@ -113,7 +129,7 @@ def zonal_mean(adfobj):
                     logp_zonal_skip.append(plot_name_log)
                     #Continue to next iteration:
                     adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
-                                            plot_type="Zonal")#, category="Log-P"
+                                            plot_type="Zonal", category=web_category)#, category="Log-P"
                     pass
 
                 elif (redo_plot) and plot_name_log.is_file():
@@ -277,7 +293,7 @@ def zonal_mean(adfobj):
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
 
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal")
+                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal",category=web_category)
                 #End if
 
             #End for (seasons loop)
