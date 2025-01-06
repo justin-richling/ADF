@@ -2252,10 +2252,14 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
         #                color="#1f77b4") # #1f77b4 -> matplotlib standard blue
         #"$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
-        line = Line2D([0], [0], label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}",
+        #test_label="$\mathbf{Test}:$"+f"{case_nickname} - years: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+        test_label = "$\mathbf{Test}:$"+f"{case_nickname} - "+"$\mathbf{years}"+f": {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
+        line = Line2D([0], [0], label=test_label,
                         color="#1f77b4") # #1f77b4 -> matplotlib standard blue
 
-        line2 = Line2D([0], [0], label=base_title.replace("\n"," - "),#base_title
+        base_label = "$\mathbf{Baseline}:$"+f"{base_nickname} - "+"$\mathbf{years}"+f": {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+        #"$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+        line2 = Line2D([0], [0], label=base_label,
                         color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
         azm = zonal_mean_xr(adata)
@@ -2289,7 +2293,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         zonal_plot(adata['lat'], pct, ax=ax[2], color="k")
         ax[2].set_title("% Diff ($\mathbf{Test} - \mathbf{Baseline}$)", loc='left', fontsize=10)#,fontweight="bold"
         #ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=10,fontweight="bold")
-
+        #$\mathbf{
         for a in ax:
             try:
                 a.label_outer()
