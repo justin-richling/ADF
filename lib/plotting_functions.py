@@ -2256,7 +2256,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         ax[0].set_title(case_title, loc='left', fontsize=tiFontSize)
         ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)
         ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
-        ax[3].set_title("Test % Diff Baseline", loc='left', fontsize=tiFontSize,fontweight="bold")
+        #ax[3].set_title("Test % Diff Baseline", loc='left', fontsize=tiFontSize,fontweight="bold")
+        ax[3].set_title("$\mathbf{Test} - \mathbf{Baseline}$ "+" ($\mathbf{\% Diff}$)", loc='left', fontsize=tiFontSize)
 
 
         # style the plot:
@@ -2310,7 +2311,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                    #bbox_to_anchor=(-0.15, 0.87, 1.05, .102),
                    loc="upper left",
                    borderaxespad=0.0,fontsize=5,frameon=False,
-                   bbox_to_anchor=(.125, 0.92), bbox_transform=fig.transFigure,
+                   bbox_to_anchor=(.125, 0.9325), bbox_transform=fig.transFigure,
                    labelspacing=0.2)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
@@ -2318,9 +2319,9 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         
         zonal_plot(adata['lat'], pct, ax=ax[2], color="k")
         #ax[2].set_title("$\mathbf{\% Diff}$ "+" ($\mathbf{Test} - \mathbf{Baseline}$)", loc='left', fontsize=6)
-        #ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$ "+" ($\mathbf{\% Diff}$)", loc='left', fontsize=5)
+        ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$ "+" ($\mathbf{\% Diff}$)", loc='left', fontsize=5)
         #ax[2].set_title("Test % Diff Baseline", loc='left', fontweight="bold", fontsize=5)
-        ax[2].set_title("Test - Baseline (% Diff)", loc='left', fontweight="bold", fontsize=5)
+        #ax[2].set_title("Test - Baseline (% Diff)", loc='left', fontweight="bold", fontsize=5)
         #$\mathbf{
         for a in ax:
             try:
