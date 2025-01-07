@@ -1841,7 +1841,7 @@ def _zonal_plot_line(ax, lat, data, color, **kwargs):
     #ax.xaxis.set_major_locator(ticker.MaxNLocator(5))
     #ax.yaxis.set_major_locator(ticker.MaxNLocator(5))
     # Force at least 5 ticks on the y-axis
-    #ax.yaxis.set_major_locator(ticker.MaxNLocator(min_n_ticks=5))
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(min_n_ticks=5))
 
 
     # Change tick label font size
