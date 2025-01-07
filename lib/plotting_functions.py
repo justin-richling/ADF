@@ -1831,10 +1831,18 @@ def _zonal_plot_line(ax, lat, data, color, **kwargs):
         ax.set_ylabel("{units}".format(units=getattr(data,"units")))
     elif "units" in kwargs:
         ax.set_ylabel("{units}".format(kwargs["units"]))
+    data_min = np.min(data)
+    data_max = np.max(data)
+    buffer = 0.05 * (data_max - data_min)  # Add 5% buffer based on data range
+
+    ax.set_ylim([data_min - buffer, data_max + buffer])
     #ax.set_ylim([np.max(data), np.min(data)])
     # Force 5 major ticks on both axes
     #ax.xaxis.set_major_locator(ticker.MaxNLocator(5))
     #ax.yaxis.set_major_locator(ticker.MaxNLocator(5))
+    # Force at least 5 ticks on the y-axis
+    #ax.yaxis.set_major_locator(ticker.MaxNLocator(min_n_ticks=5))
+
 
     # Change tick label font size
     ax.tick_params(axis='y', which='major', labelsize=6)  # Major ticks
