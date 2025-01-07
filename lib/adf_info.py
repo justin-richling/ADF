@@ -199,7 +199,7 @@ class AdfInfo(AdfConfig):
             #Get climo years for verification or assignment if missing
             baseline_hist_loc = self.get_baseline_info('cam_hist_loc')
             self.__baseline_hist_loc = baseline_hist_loc
-            baseline_hist_loc = [baseline_hist_loc]
+            #base_hist_loc = [baseline_hist_loc]
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
@@ -293,7 +293,7 @@ class AdfInfo(AdfConfig):
 
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
-                starting_location = Path(baseline_hist_loc)
+                starting_location = Path(baseline_hist_loc[0])
                 print(f"Checking history files in '{starting_location}'")
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
 
