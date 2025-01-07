@@ -99,6 +99,7 @@ import geocat.comp as gcomp
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.lines import Line2D
 import matplotlib.cm as cm
+import matplotlib.ticker as ticker
 
 from adf_diag import AdfDiag
 from adf_base import AdfError
@@ -1830,7 +1831,18 @@ def _zonal_plot_line(ax, lat, data, color, **kwargs):
         ax.set_ylabel("{units}".format(units=getattr(data,"units")))
     elif "units" in kwargs:
         ax.set_ylabel("{units}".format(kwargs["units"]))
-    ax.set_ylim([np.max(data), np.min(data)])
+    #ax.set_ylim([np.max(data), np.min(data)])
+    # Force 5 major ticks on both axes
+    #ax.xaxis.set_major_locator(ticker.MaxNLocator(5))
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(5))
+
+    # Change tick label font size
+    ax.tick_params(axis='y', which='major', labelsize=12)  # Major ticks
+    ax.tick_params(axis='y', which='minor', labelsize=10)  # Minor ticks
+
+    # Change tick label font size
+    ax.tick_params(axis='x', which='major', labelsize=12)  # Major ticks
+    #ax.tick_params(axis='both', which='minor', labelsize=10)  # Minor ticks
     return ax
 
 def _zonal_plot_preslat(ax, lat, lev, data, **kwargs):
@@ -1847,13 +1859,6 @@ def _zonal_plot_preslat(ax, lat, lev, data, **kwargs):
     ax.yaxis.set_minor_locator(minor_locator)
     ax.tick_params(which='minor', length=4, color='r')
     ax.set_ylim([np.max(lev), np.min(lev)])
-    # Change tick label font size
-    ax.tick_params(axis='y', which='major', labelsize=12)  # Major ticks
-    ax.tick_params(axis='y', which='minor', labelsize=10)  # Minor ticks
-
-    # Change tick label font size
-    ax.tick_params(axis='x', which='major', labelsize=12)  # Major ticks
-    #ax.tick_params(axis='both', which='minor', labelsize=10)  # Minor ticks
     return img, ax
 
 
