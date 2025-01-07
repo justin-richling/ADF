@@ -2302,7 +2302,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                    #bbox_to_anchor=(-0.15, 0.87, 1.05, .102),
                    loc="upper left",
                    borderaxespad=0.0,fontsize=6,frameon=False,
-                   bbox_to_anchor=(.125, 0.92), bbox_transform=fig.transFigure)
+                   bbox_to_anchor=(.125, 0.94), bbox_transform=fig.transFigure)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
         ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=6)
