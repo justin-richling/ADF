@@ -1830,6 +1830,7 @@ def _zonal_plot_line(ax, lat, data, color, **kwargs):
         ax.set_ylabel("{units}".format(units=getattr(data,"units")))
     elif "units" in kwargs:
         ax.set_ylabel("{units}".format(kwargs["units"]))
+    ax.set_ylim([np.max(data), np.min(data)])
     return ax
 
 def _zonal_plot_preslat(ax, lat, lev, data, **kwargs):
@@ -1846,6 +1847,13 @@ def _zonal_plot_preslat(ax, lat, lev, data, **kwargs):
     ax.yaxis.set_minor_locator(minor_locator)
     ax.tick_params(which='minor', length=4, color='r')
     ax.set_ylim([np.max(lev), np.min(lev)])
+    # Change tick label font size
+    ax.tick_params(axis='y', which='major', labelsize=12)  # Major ticks
+    ax.tick_params(axis='y', which='minor', labelsize=10)  # Minor ticks
+
+    # Change tick label font size
+    ax.tick_params(axis='x', which='major', labelsize=12)  # Major ticks
+    #ax.tick_params(axis='both', which='minor', labelsize=10)  # Minor ticks
     return img, ax
 
 
