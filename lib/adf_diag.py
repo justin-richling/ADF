@@ -383,7 +383,7 @@ class AdfDiag(AdfWeb):
             #print("ts_dirs[case_name]",ts_dirs[case_idx],type(ts_dirs[case_idx]))
             #print("calc_ts[case_name]",calc_ts[case_idx],"\n")
             # Check if particular case should be processed:
-            print((calc_ts[case_idx], ts_dirs[case_idx])
+            print(calc_ts[case_idx], ts_dirs[case_idx])
             if (not calc_ts[case_idx]) and (ts_dirs[case_idx]):
                 emsg = " Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
