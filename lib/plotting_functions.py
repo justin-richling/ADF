@@ -2229,6 +2229,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
             # Set a label for the colorbar
             cbar0.set_label(units, fontsize=6)
+            # Force colorbar labels to scientific notation with exponent on top
+            cbar0.formatter = ticker.ScalarFormatter()
+            cbar0.formatter.set_powerlimits((-2, 2))  # Scientific notation for values smaller than 0.01 or greater than 100
+            cbar0.update_ticks()
             # Control the position of the scientific notation label
             offset_text = cbar0.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
@@ -2236,6 +2240,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             
             cbar1 = fig.colorbar(img1, ax=ax[1], location='right', pad=cbar_pad ,**cp_info['colorbar_opt'])
             cbar1.set_label(units, fontsize=6)
+            # Force colorbar labels to scientific notation with exponent on top
+            cbar1.formatter = ticker.ScalarFormatter()
+            cbar1.formatter.set_powerlimits((-2, 2))  # Scientific notation for values smaller than 0.01 or greater than 100
+            cbar1.update_ticks()
             # Control the position of the scientific notation label
             offset_text = cbar1.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
@@ -2249,6 +2257,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             img2, ax[2] = zonal_plot(adata['lat'], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
             cbar2 = fig.colorbar(img2, ax=ax[2], location='right', pad=cbar_pad ,**cp_info['diff_colorbar_opt'])
             cbar2.set_label(units, fontsize=6)
+            # Force colorbar labels to scientific notation with exponent on top
+            cbar2.formatter = ticker.ScalarFormatter()
+            cbar2.formatter.set_powerlimits((-2, 2))  # Scientific notation for values smaller than 0.01 or greater than 100
+            cbar2.update_ticks()
             # Control the position of the scientific notation label
             offset_text = cbar2.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
@@ -2261,6 +2273,10 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
             img3, ax[3] = zonal_plot(adata['lat'], pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],**cp_info['contourf_opt'])
             cbar3 = fig.colorbar(img3, ax=ax[3], location='right', pad=cbar_pad ,**cp_info['pct_colorbar_opt'])
             cbar3.set_label(units, fontsize=6)
+            # Force colorbar labels to scientific notation with exponent on top
+            cbar3.formatter = ticker.ScalarFormatter()
+            cbar3.formatter.set_powerlimits((-2, 2))  # Scientific notation for values smaller than 0.01 or greater than 100
+            cbar3.update_ticks()
             # Control the position of the scientific notation label
             offset_text = cbar3.ax.yaxis.offsetText
             #offset_text.set_fontsize(10)  # Adjust font size if needed
@@ -2312,7 +2328,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
         #Set Main title for subplots:
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
-        st.set_y(1.02)
+        st.set_y(1.00)
 
         ax[0].set_ylabel(units, fontsize=5)
         zonal_plot(adata['lat'], azm, ax=ax[0],color="#1f77b4") # #1f77b4 -> matplotlib standard blue
