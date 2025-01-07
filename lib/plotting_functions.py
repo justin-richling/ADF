@@ -2341,7 +2341,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                    #bbox_to_anchor=(-0.15, 0.87, 1.05, .102),
                    loc="upper left",
                    borderaxespad=0.0,fontsize=5,frameon=False,
-                   bbox_to_anchor=(.125, 0.92), bbox_transform=fig.transFigure,
+                   bbox_to_anchor=(.125, 0.922), bbox_transform=fig.transFigure,
                    labelspacing=0.2)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
