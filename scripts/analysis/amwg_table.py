@@ -286,11 +286,14 @@ def amwg_table(adf):
         for var in var_list:
             is_climo = False
             #Generate input file path:
-            input_location = Path(input_locs[case_idx])
-            #print("\n\tTS input_location",input_location)
+            if input_locs[case_idx]:
+                input_location = Path(input_locs[case_idx])
+                #print("\n\tTS input_location",input_location)
 
-            filenames = f'{case_name}.*.{var}.*nc'
-            files = sorted(input_location.glob(filenames))
+                filenames = f'{case_name}.*.{var}.*nc'
+                files = sorted(input_location.glob(filenames))
+            else:
+                files = None
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not files:
