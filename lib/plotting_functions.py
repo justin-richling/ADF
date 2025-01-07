@@ -1837,11 +1837,11 @@ def _zonal_plot_line(ax, lat, data, color, **kwargs):
     #ax.yaxis.set_major_locator(ticker.MaxNLocator(5))
 
     # Change tick label font size
-    ax.tick_params(axis='y', which='major', labelsize=8)  # Major ticks
-    ax.tick_params(axis='y', which='minor', labelsize=6)  # Minor ticks
+    ax.tick_params(axis='y', which='major', labelsize=6)  # Major ticks
+    ax.tick_params(axis='y', which='minor', labelsize=4)  # Minor ticks
 
     # Change tick label font size
-    ax.tick_params(axis='x', which='major', labelsize=8)  # Major ticks
+    ax.tick_params(axis='x', which='major', labelsize=6)  # Major ticks
     #ax.tick_params(axis='both', which='minor', labelsize=10)  # Minor ticks
     return ax
 
