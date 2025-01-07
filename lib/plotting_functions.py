@@ -2315,11 +2315,11 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                    labelspacing=0.2)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
-        ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=5)
+        ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=5, pad=-10)
         
         zonal_plot(adata['lat'], pct, ax=ax[2], color="k")
         #ax[2].set_title("$\mathbf{\% Diff}$ "+" ($\mathbf{Test} - \mathbf{Baseline}$)", loc='left', fontsize=6)
-        ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$ "+" ($\mathbf{\% Diff}$)", loc='left', fontsize=5)
+        ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$ "+" ($\mathbf{\% Diff}$)", loc='left', fontsize=5, pad=-10)
         #ax[2].set_title("Test % Diff Baseline", loc='left', fontweight="bold", fontsize=5)
         #ax[2].set_title("Test - Baseline (% Diff)", loc='left', fontweight="bold", fontsize=5)
         #$\mathbf{
