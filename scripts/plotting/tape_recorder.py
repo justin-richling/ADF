@@ -85,7 +85,7 @@ def tape_recorder(adfobj):
         end_years = end_years+[data_end_year]
 
         #Grab history string:
-        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+        baseline_hist_strs = [adfobj.hist_string["base_hist_str"]]
         print("baseline_hist_strs",baseline_hist_strs)
         # Filter the list to include only strings that are exactly in the substrings list
         base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
