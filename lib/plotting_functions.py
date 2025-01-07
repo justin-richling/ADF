@@ -1826,7 +1826,7 @@ def _zonal_plot_line(ax, lat, data, color, **kwargs):
     #
     # annotate
     #
-    ax.set_xlabel("LATITUDE")
+    ax.set_xlabel("LATITUDE",fontsize=6)
     if hasattr(data, "units"):
         ax.set_ylabel("{units}".format(units=getattr(data,"units")))
     elif "units" in kwargs:
