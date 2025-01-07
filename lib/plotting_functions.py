@@ -2288,14 +2288,14 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         fig.legend(handles=[line,line2],
                    #bbox_to_anchor=(-0.15, 0.87, 1.05, .102),
                    loc="upper left",
-                   borderaxespad=0.0,fontsize=6,frameon=False,
+                   borderaxespad=0.0,fontsize=4,frameon=False,
                    bbox_to_anchor=(.12, 0.95), bbox_transform=fig.transFigure)
 
         zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
-        ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
+        ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=6)
         
         zonal_plot(adata['lat'], pct, ax=ax[2], color="k")
-        ax[2].set_title("$\mathbf{\% Diff} $"+"($\mathbf{Test} - \mathbf{Baseline}$)", loc='left', fontsize=10)#,fontweight="bold"
+        ax[2].set_title("$\mathbf{\% Diff} $"+"($\mathbf{Test} - \mathbf{Baseline}$)", loc='left', fontsize=6)#,fontweight="bold"
         #ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=10,fontweight="bold")
         #$\mathbf{
         for a in ax:
