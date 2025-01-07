@@ -197,7 +197,7 @@ class AdfInfo(AdfConfig):
             eyear_baseline = self.get_baseline_info('end_year')
 
             #Get climo years for verification or assignment if missing
-            baseline_hist_loc = self.get_baseline_info('cam_hist_loc')
+            baseline_hist_loc = [self.get_baseline_info('cam_hist_loc')]
             self.__baseline_hist_loc = baseline_hist_loc
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
