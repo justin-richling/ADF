@@ -286,7 +286,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None):
     #Extract data subset using provided year bounds:
     tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
     cam_ts_data = cam_ts_data.isel(time=tslice)
-
+    print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",cam_ts_data)
     #Retrieve the actual time values from the slice
     actual_time_values = cam_ts_data.time.values
 
