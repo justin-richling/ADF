@@ -228,7 +228,7 @@ def amwg_table(adf):
     #End if
 
     #-----------------------------------------
-
+    print("input_locs",input_locs,"\n")
     #Loop over CAM cases:
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
@@ -282,7 +282,7 @@ def amwg_table(adf):
 
         #Notify user that script has started:
         print(f"\n  Calculating AMWG variable table for '{case_name}'...")
-
+    
         #Loop over CAM output variables:
         for var in var_list:
             is_climo = False
