@@ -40,7 +40,8 @@ def tape_recorder(adfobj):
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
-    case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
+    #case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
+    case_ts_locs = adfobj.ts_locs["test"]
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
@@ -73,7 +74,10 @@ def tape_recorder(adfobj):
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
         case_names = case_names + [data_name]
         
-        data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
+        #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
+        data_ts_loc = adfobj.ts_locs["baseline"]
+        if not data_ts_loc:
+            pass
         case_ts_locs = case_ts_locs+[data_ts_loc]
 
         base_nickname = adfobj.case_nicknames['base_nickname']
