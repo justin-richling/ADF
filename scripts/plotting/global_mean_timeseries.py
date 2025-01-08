@@ -228,9 +228,19 @@ class Lens2Data:
         self.has_lens, self.lens2 = self._include_lens()
 
     def _include_lens(self):
-        lens2_fil = Path(
+        """lens2_fil = Path(
             f"/glade/campaign/cgd/cas/islas/CESM_DATA/LENS2/global_means/annualmeans/{self.field}_am_LENS2_first50.nc"
+        )"""
+
+
+
+        lens2_path = Path(
+            f"/glade/campaign/cgd/cas/islas/CESM_DATA/LENS2/global_means/annualmeans/"
         )
+
+        lens2_fil = sorted(lens2_path.glob(f"{self.field}*first50*nc"))
+
+
         if lens2_fil.is_file():
             lens2 = xr.open_mfdataset(lens2_fil)
             has_lens = True
