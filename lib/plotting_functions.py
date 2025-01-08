@@ -1782,6 +1782,7 @@ def zm_validate_dims(fld):
         return None
     validate = validate_dims(fld, ['lev','lat'])
     has_lev, has_lat = validate['has_lev'], validate['has_lat']
+    print(has_lev, has_lat)
     if not has_lat:
         return None
     else:
