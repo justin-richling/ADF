@@ -14,6 +14,14 @@ def my_formatwarning(msg, *args, **kwargs):
 
 warnings.formatwarning = my_formatwarning
 
+def get_time_slice_by_year(time, startyear, endyear):
+    if not hasattr(time, 'dt'):
+        print("Warning: get_time_slice_by_year requires the `time` parameter to be an xarray time coordinate with a dt accessor. Returning generic slice (which will probably fail).")
+        return slice(startyear, endyear)
+    start_time_index = np.argwhere((time.dt.year >= startyear).values).flatten().min()
+    end_time_index = np.argwhere((time.dt.year <= endyear).values).flatten().max()
+    return slice(start_time_index, end_time_index+1)
+
 def qbo(adfobj):
     """
     This subroutine plots...
@@ -37,9 +45,16 @@ def qbo(adfobj):
     case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
+    #Extract baseline years:
+    bl_syr = adfobj.climo_yrs["syear_baseline"]
+    bl_eyr = adfobj.climo_yrs["eyear_baseline"]
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
     plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
+
+    #Extract simulation years:
+    start_years = adfobj.climo_yrs["syears"]
+    end_years   = adfobj.climo_yrs["eyears"]
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
@@ -92,6 +107,8 @@ def qbo(adfobj):
     if not adfobj.compare_obs:
         case_loc.append(base_loc)
         case_names.append(base_name)
+        start_years.append(bl_syr)
+        end_years.append(bl_eyr)
     #End if
 
     #----Read in the OBS (ERA5, 5S-5N average already
@@ -99,7 +116,18 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
-    casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+    #casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+
+    casedat = []
+    for i in range(0,ncases,1):
+        cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc")))
+        tslice = get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
+        cam_ts_data = cam_ts_data.isel(time=tslice)
+        casedat.append(cam_ts_data)
+
+    #cam_ts_data = pf.load_dataset(ts_files)
+    #tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
+    #cam_ts_data = cam_ts_data.isel(time=tslice)
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
