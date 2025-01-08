@@ -238,7 +238,7 @@ class Lens2Data:
             f"/glade/campaign/cgd/cas/islas/CESM_DATA/LENS2/global_means/annualmeans/"
         )
 
-        lens2_fil = sorted(lens2_path.glob(f"{self.field}*first50*nc"))
+        lens2_fil = sorted(lens2_path.glob(f"{self.field}*first50*nc"))[0]
 
 
         if lens2_fil.is_file():
