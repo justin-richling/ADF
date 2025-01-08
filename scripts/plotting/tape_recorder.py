@@ -76,25 +76,24 @@ def tape_recorder(adfobj):
         
         #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         data_ts_loc = adfobj.ts_locs["baseline"]
-        if data_ts_loc is None:
-            pass
-        case_ts_locs = case_ts_locs+[data_ts_loc]
+        if data_ts_loc:
+            case_ts_locs = case_ts_locs+[data_ts_loc]
 
-        base_nickname = adfobj.case_nicknames['base_nickname']
-        test_nicknames = test_nicknames+[base_nickname]
+            base_nickname = adfobj.case_nicknames['base_nickname']
+            test_nicknames = test_nicknames+[base_nickname]
 
-        data_start_year = adfobj.climo_yrs["syear_baseline"]
-        data_end_year = adfobj.climo_yrs["eyear_baseline"]
-        start_years = start_years+[data_start_year]
-        end_years = end_years+[data_end_year]
+            data_start_year = adfobj.climo_yrs["syear_baseline"]
+            data_end_year = adfobj.climo_yrs["eyear_baseline"]
+            start_years = start_years+[data_start_year]
+            end_years = end_years+[data_end_year]
 
-        #Grab history string:
-        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
-        print("baseline_hist_strs",baseline_hist_strs)
-        # Filter the list to include only strings that are exactly in the substrings list
-        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
-        print("base_hist_strs",base_hist_strs)
-        hist_strs = case_hist_strs + base_hist_strs
+            #Grab history string:
+            baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+            print("baseline_hist_strs",baseline_hist_strs)
+            # Filter the list to include only strings that are exactly in the substrings list
+            base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+            print("base_hist_strs",base_hist_strs)
+            hist_strs = case_hist_strs + base_hist_strs
     else:
         hist_strs = case_hist_strs
     #End if
