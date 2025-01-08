@@ -1729,6 +1729,7 @@ def validate_dims(fld, list_of_dims):
     """
     if not isinstance(list_of_dims, list):
         list_of_dims = list(list_of_dims)
+    print("fld.dims",fld.dims,"\n")
     print({ "_".join(["has",f"{v}"]):(v in fld.dims) for v in list_of_dims})
     return { "_".join(["has",f"{v}"]):(v in fld.dims) for v in list_of_dims}
 
