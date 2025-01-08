@@ -67,6 +67,7 @@ def global_mean_timeseries(adfobj):
 
             # annually averaged
             ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
+            print("ref_ts_da",ref_ts_da)
 
             # check if this is a "2-d" varaible:
             has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
