@@ -65,17 +65,21 @@ def global_mean_timeseries(adfobj):
             # reference time series global average
             ref_ts_da_ga = pf.spatial_average(ref_ts_da, weights=None, spatial_dims=None)
 
-            # annually averaged
+            """# annually averaged
             ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
-            print("ref_ts_da",ref_ts_da)
+            print("ref_ts_da",ref_ts_da)"""
 
             # check if this is a "2-d" varaible:
-            has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
+            has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da_ga)
             if has_lev_ref:
                 print(
                     f"Variable named {field} has a lev dimension, which does not work with this script."
                 )
                 continue
+
+            # annually averaged
+            ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
+            print("ref_ts_da",ref_ts_da)
 
 
         ## SPECIAL SECTION -- CESM2 LENS DATA:
