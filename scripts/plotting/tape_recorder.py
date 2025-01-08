@@ -109,7 +109,7 @@ def tape_recorder(adfobj):
         adfobj.debug_log(logmsg)
         #End tape recorder plotting script:
         return
-
+    print("case_ts_locs",case_ts_locs)
     # Default colormap
     cmap='precip_nowhite'
 
