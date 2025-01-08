@@ -242,6 +242,8 @@ class Lens2Data:
         if lens2_fil:
             print(self.field,lens2_fil)
             lens2_fil = sorted(lens2_path.glob(f"{self.field}*first50*nc"))[0]
+        else:
+            lens2_fil = ''
 
 
 
