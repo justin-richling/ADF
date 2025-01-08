@@ -94,6 +94,8 @@ def tape_recorder(adfobj):
             base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
             print("base_hist_strs",base_hist_strs)
             hist_strs = case_hist_strs + base_hist_strs
+        else:
+            hist_strs = case_hist_strs
     else:
         hist_strs = case_hist_strs
     #End if
