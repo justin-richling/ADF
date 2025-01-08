@@ -211,6 +211,7 @@ def amwg_table(adf):
             else:
                 print(f"\t - AMWG table for '{baseline_name}' does not exist.")
                 print('\t  check here:',output_csv_file,"\n")
+            input_locs.append(None)
             pass#return
         else:
             #input_loc = adf.get_baseline_info("cam_climo_loc")
