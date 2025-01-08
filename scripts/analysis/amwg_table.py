@@ -171,14 +171,14 @@ def amwg_table(adf):
     #if 1==1:
     #    input_locs = [None]*len(case_names)
     #End if
-
+    print("\nTest input_locs",input_locs,"\n")
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         #input_loc = adf.get_baseline_info("cam_ts_loc", required=True)
         input_loc = adf.ts_locs["baseline"]
-        print("\nBaseline input_locs",input_locs,"\n")
+        print("\nBaseline input_locs",input_loc,"\n")
         #input_climo_loc = adf.get_baseline_info("cam_climo_loc")
         input_climo_loc = adf.climo_locs["baseline"]
         input_climo_locs.append(input_climo_loc)
