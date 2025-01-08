@@ -41,6 +41,7 @@ def global_mean_timeseries(adfobj):
 
     # Loop over variables
     for field in adfobj.diag_var_list:
+        print("field",field)
 
         # Check res for any variable specific options that need to be used BEFORE going to the plot:
         if field in res:
@@ -82,8 +83,6 @@ def global_mean_timeseries(adfobj):
 
             # annually averaged
             ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
-            print("ref_ts_da",ref_ts_da)
-
 
         ## SPECIAL SECTION -- CESM2 LENS DATA:
         lens2_data = Lens2Data(
