@@ -76,7 +76,7 @@ def tape_recorder(adfobj):
         
         #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         data_ts_loc = adfobj.ts_locs["baseline"]
-        if not data_ts_loc:
+        if data_ts_loc is None:
             pass
         case_ts_locs = case_ts_locs+[data_ts_loc]
 
