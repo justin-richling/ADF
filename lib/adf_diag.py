@@ -26,6 +26,8 @@ import json
 from pathlib import Path
 from typing import Optional
 
+import numexpr as nex
+
 # Check if "PyYAML" is present in python path:
 # pylint: disable=unused-import
 try:
@@ -539,6 +541,7 @@ class AdfDiag(AdfWeb):
 
                 # Initialize dictionary for derived variable with needed list of constituents
                 constit_dict = {}
+                derive_eq_dict = {}
 
                 for var in diag_var_list:
                     # Notify user of new time series file:
@@ -610,6 +613,8 @@ class AdfDiag(AdfWeb):
                             vars_to_derive.append(var)
                             # Add constituent list to variable key in dictionary
                             constit_dict[var] = constit_list
+                            derive_eq_dict[var] = vres["derivable_eq"]
+                            
                             continue
                             # Log if variable can be derived but is missing list of constituents
                         elif (derive) and (not constit_list):
@@ -750,7 +755,7 @@ class AdfDiag(AdfWeb):
                 if vars_to_derive:
                     self.derive_variables(
                         res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
-                        constit_dict=constit_dict, ts_dir=ts_dir
+                        constit_dict=constit_dict, ts_dir=ts_dir, derive_eq_dict=derive_eq_dict
                     )
                 # End with
             # End for hist_str
@@ -1133,7 +1138,7 @@ class AdfDiag(AdfWeb):
     #########
 
     def derive_variables(self, res=None, hist_str=None, vars_to_derive=None, ts_dir=None,
-                         constit_dict=None, overwrite=None):
+                         constit_dict=None, derive_eq_dict=None, overwrite=None):
         """
         Derive variables acccording to steps given here.  Since derivations will depend on the
         variable, each variable to derive will need its own set of steps below.
@@ -1205,14 +1210,21 @@ class AdfDiag(AdfWeb):
                         print(msg)
                         continue
 
-                # NOTE: this will need to be changed when derived equations are more complex! - JR
+                
+                #der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
+                derive_eq = derive_eq_dict[var]
+                print(derive_eq)
+                #der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
+                
+                
+                """# NOTE: this will need to be changed when derived equations are more complex! - JR
                 if var == "RESTOM":
                     der_val = ds["FSNT"]-ds["FLNT"]
                 else:
                     # Loop through all constituents and sum
                     der_val = 0
                     for v in constit_list:
-                        der_val += ds[v]
+                        der_val += ds[v]"""
 
                 # Set derived variable name and add to dataset
                 der_val.name = var

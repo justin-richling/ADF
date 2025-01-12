@@ -1928,7 +1928,8 @@ RESTOM:
     colorbar:
       label : "W m$^{-2}$"
   category: "TOA energy flux"
-  derivable_from: ['FLNT','FSNT']
+  derivable_from: ['FSNT','FLNT']
+  derivable_eq: 'FSNT-FLNT'
   pct_diff_contour_levels: [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
   pct_diff_colormap: "PuOr_r"
 
