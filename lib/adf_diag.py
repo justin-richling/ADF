@@ -1214,7 +1214,7 @@ class AdfDiag(AdfWeb):
                 #der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
                 derive_eq = derive_eq_dict[var]
                 print(derive_eq)
-                #der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
+                der_val = nex.evaluate(derive_eq)
                 
                 
                 """# NOTE: this will need to be changed when derived equations are more complex! - JR
