@@ -1211,10 +1211,10 @@ class AdfDiag(AdfWeb):
                         continue
 
                 
-                #der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
+                """#der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
                 derive_eq = derive_eq_dict[var]
                 print(derive_eq)
-                der_val = nex.evaluate(derive_eq)
+                der_val = nex.evaluate(derive_eq)"""
                 
                 
                 """# NOTE: this will need to be changed when derived equations are more complex! - JR
@@ -1225,6 +1225,20 @@ class AdfDiag(AdfWeb):
                     der_val = 0
                     for v in constit_list:
                         der_val += ds[v]"""
+                #formula = 'FSNT - FLNT'
+                #ans = nex.evaluate(formula, {'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']})
+                derive_eq = derive_eq_dict[var]
+                der_dict = {}
+                for v in constit_list:
+                    der_dict[v] = ds[v]
+                    #ds[v]
+                #der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
+                #{'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']}
+                der_val = nex.evaluate(derive_eq, der_dict)
+                #der_val = nex.evaluate(derive_eq, {'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']})
+                
+                print(derive_eq)
+                #der_val = nex.evaluate(derive_eq)
 
                 # Set derived variable name and add to dataset
                 der_val.name = var
