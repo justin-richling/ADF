@@ -1240,6 +1240,17 @@ class AdfDiag(AdfWeb):
                 print(derive_eq)
                 #der_val = nex.evaluate(derive_eq)
 
+                # Automatically restore DataArray with original dims, coords, and attrs
+                der_val = xr.DataArray(
+                    der_val,
+                    dims=ds[constit_list[0]].dims[:der_val.ndim],
+                    coords={k: v for k, v in ds[constit_list[0]].coords.items() if k in ds[constit_list[0]].dims[:der_val.ndim]},
+                    attrs=ds[constit_list[0]].attrs
+                )
+
+                # Set or update the 'long_name' attribute
+                der_val.attrs['long_name'] = "Net energy balance at TOA (Top of the Atmosphere)"
+
                 # Set derived variable name and add to dataset
                 der_val.name = var
                 ds[var] = der_val
