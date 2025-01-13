@@ -11,6 +11,7 @@ plotting methods themselves.
 # Import standard python modules
 # ++++++++++++++++++++++++++++++
 
+from importlib.resources import as_file
 import sys
 import os
 import os.path
@@ -567,6 +568,8 @@ class AdfDiag(AdfWeb):
                         # intialize boolean to check if variable is derivable
                         derive = False # assume it can't be derived and update if it can
 
+                        use_cam_chem_eq = False
+
                         # intialize boolean for regular CAM variable constituents
                         try_cam_constits = True
 
@@ -577,6 +580,7 @@ class AdfDiag(AdfWeb):
                                 if all(item in hist_file_ds.data_vars for item in constit_list):
                                     # Set check to look for regular CAM constituents
                                     try_cam_constits = False
+                                    use_cam_chem_eq = True
                                     derive = True
                                     msg = f"create time series for {case_name}:"
                                     msg += "\n\tLooks like this a CAM-CHEM run, "
@@ -613,7 +617,10 @@ class AdfDiag(AdfWeb):
                             vars_to_derive.append(var)
                             # Add constituent list to variable key in dictionary
                             constit_dict[var] = constit_list
-                            derive_eq_dict[var] = vres["derivable_eq"]
+                            if use_cam_chem_eq:
+                                derive_eq_dict[var] = vres["derivable_eq_cam_chem"]
+                            else:
+                                derive_eq_dict[var] = vres["derivable_eq"]
                             
                             continue
                             # Log if variable can be derived but is missing list of constituents
