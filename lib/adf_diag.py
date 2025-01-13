@@ -1248,7 +1248,7 @@ class AdfDiag(AdfWeb):
                     #attrs=ds[constit_list[0]].attrs
                 )
 
-                # Add attributes for derived equation and processes
+                """# Add attributes for derived equation and processes
                 numexp_docs = "https://numexpr.readthedocs.io/en/latest/index.html"
                 numexpr_github = "https://github.com/pydata/numexpr/tree/master"
                 der_val.attrs['derivation_process'] = (f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}")
@@ -1260,7 +1260,7 @@ class AdfDiag(AdfWeb):
 
                 #print("BEFORE?",type(der_val))
                 #print(der_val.dims, der_val.shape)
-                print("BEFORE?",der_val.attrs,"\n")
+                print("BEFORE?",der_val.attrs,"\n")"""
 
                 # Set derived variable name and add to dataset
                 der_val.name = var
@@ -1318,9 +1318,14 @@ class AdfDiag(AdfWeb):
                 ds[var].attrs['derived_equation'] = derive_eq
 
                 # Set or update the 'long_name' attribute
-                if "long_name" in res:
+                if "long_name" in res[var]:
                     print("IS IT COMING HERE BOI")
-                    ds[var].attrs['long_name'] = res["long_name"]
+                    ds[var].attrs['long_name'] = res[var]["long_name"]
+
+                # Set or update the 'long_name' attribute
+                if "new_unit" in res[var]:
+                    print("IS IT COMING HERE BOI")
+                    ds[var].attrs['units'] = res[var]["new_unit"]
 
                 #print("AFTER?",type(ds_final))
                 #print(ds_final.dims, ds_final.shape)
