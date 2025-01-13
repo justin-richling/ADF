@@ -1238,14 +1238,14 @@ class AdfDiag(AdfWeb):
                 for v in constit_list:
                     der_dict[v] = ds[v]
 
-                der_val = nex.evaluate(derive_eq, der_dict)
+                der_val_array = nex.evaluate(derive_eq, der_dict)
 
                 # Automatically restore DataArray with original dims, coords, and attrs
                 der_val = xr.DataArray(
-                    der_val,
+                    der_val_array,
                     dims=ds[constit_list[0]].dims[:der_val.ndim],
                     coords={k: v for k, v in ds[constit_list[0]].coords.items() if k in ds[constit_list[0]].dims[:der_val.ndim]},
-                    #attrs=ds[constit_list[0]].attrs
+                    attrs=ds[constit_list[0]].attrs
                 )
 
                 # Add attributes for derived equation and processes
