@@ -1258,7 +1258,7 @@ class AdfDiag(AdfWeb):
                 if "long_name" in res:
                     der_val.attrs['long_name'] = res["long_name"]
 
-                print(type("BEFORE?",der_val))
+                print("BEFORE?",type(der_val))
                 print(der_val.dims, der_val.shape)
                 print(der_val.attrs,"\n")
 
@@ -1321,7 +1321,7 @@ class AdfDiag(AdfWeb):
                 if "long_name" in res:
                     der_val.attrs['long_name'] = res["long_name"]
 
-                print(type("AFTER?",der_val))
+                print("AFTER?",type(der_val))
                 print(der_val.dims, der_val.shape)
                 print(der_val.attrs,"\n")
 
