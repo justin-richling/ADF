@@ -1314,16 +1314,16 @@ class AdfDiag(AdfWeb):
                 # Add attributes for derived equation and processes
                 numexp_docs = "https://numexpr.readthedocs.io/en/latest/index.html"
                 numexpr_github = "https://github.com/pydata/numexpr/tree/master"
-                ds_final.attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
-                ds_final.attrs['derived_equation'] = derive_eq
+                ds[var].attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
+                ds[var].attrs['derived_equation'] = derive_eq
 
                 # Set or update the 'long_name' attribute
                 if "long_name" in res:
-                    ds_final.attrs['long_name'] = res["long_name"]
+                    ds[var].attrs['long_name'] = res["long_name"]
 
                 #print("AFTER?",type(ds_final))
                 #print(ds_final.dims, ds_final.shape)
-                print("AFTER?",ds_final.attrs,"\n")
+                print("AFTER?",ds[var].attrs,"\n")
 
 
                 ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
