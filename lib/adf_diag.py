@@ -1204,7 +1204,7 @@ class AdfDiag(AdfWeb):
                 #new_stem = constit_path.stem.replace(constit_list[0], var)
                 last_index = constit_path.stem.rfind(constit_list[0])
                 if last_index != -1:
-                    new_stem = constit_path.stem[:last_index] + "replacement" + constit_path.stem[last_index + len(constit_list[0]):]
+                    new_stem = constit_path.stem[:last_index] + var + constit_path.stem[last_index + len(constit_list[0]):]
                 else:
                     new_stem = constit_path.stem
                 print("new_stem",new_stem,"\n")
