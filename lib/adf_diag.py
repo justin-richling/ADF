@@ -1314,7 +1314,7 @@ class AdfDiag(AdfWeb):
                 # Add attributes for derived equation and processes
                 numexp_docs = "https://numexpr.readthedocs.io/en/latest/index.html"
                 numexpr_github = "https://github.com/pydata/numexpr/tree/master"
-                ds[var].attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
+                ds[var].attrs['derivation_process'] = f"Derived using Numexp: {numexp_docs}  {numexpr_github}"
                 ds[var].attrs['derived_equation'] = derive_eq
 
                 # Set or update the 'long_name' attribute
