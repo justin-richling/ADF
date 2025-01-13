@@ -1251,16 +1251,16 @@ class AdfDiag(AdfWeb):
                 # Add attributes for derived equation and processes
                 numexp_docs = "https://numexpr.readthedocs.io/en/latest/index.html"
                 numexpr_github = "https://github.com/pydata/numexpr/tree/master"
-                der_val.attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
+                der_val.attrs['derivation_process'] = (f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}")
                 der_val.attrs['derived_equation'] = derive_eq
 
                 # Set or update the 'long_name' attribute
                 if "long_name" in res:
                     der_val.attrs['long_name'] = res["long_name"]
 
-                print("BEFORE?",type(der_val))
-                print(der_val.dims, der_val.shape)
-                print(der_val.attrs,"\n")
+                #print("BEFORE?",type(der_val))
+                #print(der_val.dims, der_val.shape)
+                print("BEFORE?",der_val.attrs,"\n")
 
                 # Set derived variable name and add to dataset
                 der_val.name = var
@@ -1314,16 +1314,16 @@ class AdfDiag(AdfWeb):
                 # Add attributes for derived equation and processes
                 numexp_docs = "https://numexpr.readthedocs.io/en/latest/index.html"
                 numexpr_github = "https://github.com/pydata/numexpr/tree/master"
-                der_val.attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
-                der_val.attrs['derived_equation'] = derive_eq
+                ds_final.attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
+                ds_final.attrs['derived_equation'] = derive_eq
 
                 # Set or update the 'long_name' attribute
                 if "long_name" in res:
-                    der_val.attrs['long_name'] = res["long_name"]
+                    ds_final.attrs['long_name'] = res["long_name"]
 
-                print("AFTER?",type(der_val))
-                print(der_val.dims, der_val.shape)
-                print(der_val.attrs,"\n")
+                #print("AFTER?",type(ds_final))
+                #print(ds_final.dims, ds_final.shape)
+                print("AFTER?",ds_final.attrs,"\n")
 
 
                 ds_final.to_netcdf(derived_file, unlimited_dims='time', mode='w')
