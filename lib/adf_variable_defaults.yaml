@@ -1870,6 +1870,7 @@ TDEW:
   #obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
   #obs_name: "ERA5"
   #obs_var_name: "T"
+  long_name: "Dew point temperature"
   derivable_from: ['T','RELHUM']
   derivable_eq: 'T - ((100 - RELHUM)/5)'
   pct_diff_contour_levels: [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
@@ -1880,6 +1881,7 @@ THETA:
   #obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
   #obs_name: "ERA5"
   #obs_var_name: "THETA"
+  long_name: "Net energy balance at TOA (Top of the Atmosphere)"
   derivable_from: ['T','PMID']
   derivable_eq: 'T*(1000.0/PMID*100)**(287/1005)'
   pct_diff_contour_levels: [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]

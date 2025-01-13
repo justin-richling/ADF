@@ -1262,8 +1262,15 @@ class AdfDiag(AdfWeb):
                     attrs=ds[constit_list[0]].attrs
                 )
 
+                # Add attribute for derived equation and processes
+                numexp_docs = "https://numexpr.readthedocs.io/en/latest/index.html"
+                numexpr_github = "https://github.com/pydata/numexpr/tree/master"
+                der_val.attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
+                der_val.attrs['derived_equation'] = derive_eq
+
                 # Set or update the 'long_name' attribute
-                der_val.attrs['long_name'] = "Net energy balance at TOA (Top of the Atmosphere)"
+                if "long_name" in res:
+                    der_val.attrs['long_name'] = res["long_name"]
 
                 # Set derived variable name and add to dataset
                 der_val.name = var
