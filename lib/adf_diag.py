@@ -1198,21 +1198,16 @@ class AdfDiag(AdfWeb):
                 attrs = ds[constit_list[0]].attrs
 
                 # create new file name for derived variable
-                print("\nconstit_files[0]",constit_files[0],"\n")
                 #derived_file = constit_files[0].replace(constit_list[0], var)
                 constit_path = Path(constit_files[0])
-                #new_stem = constit_path.stem.replace(constit_list[0], var)
                 last_index = constit_path.stem.rfind(constit_list[0])
                 if last_index != -1:
                     new_stem = constit_path.stem[:last_index] + var + constit_path.stem[last_index + len(constit_list[0]):]
                 else:
                     new_stem = constit_path.stem
-                print("new_stem",new_stem,"\n")
-                derived_file = constit_path.with_name(new_stem + constit_path.suffix)
 
+                derived_file = constit_path.with_name(new_stem + constit_path.suffix)
                 #derived_file = constit_files[0].replace(constit_list[0], var)
-                
-                print("derived_file",derived_file,"\n")
 
                 # Check if clobber is true for file
                 if Path(derived_file).is_file():
@@ -1224,13 +1219,6 @@ class AdfDiag(AdfWeb):
                         print(msg)
                         continue
 
-                
-                """#der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
-                derive_eq = derive_eq_dict[var]
-                print(derive_eq)
-                der_val = nex.evaluate(derive_eq)"""
-                
-                
                 """# NOTE: this will need to be changed when derived equations are more complex! - JR
                 if var == "RESTOM":
                     der_val = ds["FSNT"]-ds["FLNT"]
@@ -1239,20 +1227,18 @@ class AdfDiag(AdfWeb):
                     der_val = 0
                     for v in constit_list:
                         der_val += ds[v]"""
-                #formula = 'FSNT - FLNT'
-                #ans = nex.evaluate(formula, {'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']})
+
+                #nex.evaluate(formula, {'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']})
                 derive_eq = derive_eq_dict[var]
+                der_msg = "create time series:"
+                der_msg += "\n\tequation for derivation of "
+                self.debug_log(der_msg)
+
                 der_dict = {}
                 for v in constit_list:
                     der_dict[v] = ds[v]
-                    #ds[v]
-                #der_val = nex.evaluate("T_raw*(1000.0/P_raw*100)**(287/1005)")
-                #{'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']}
+
                 der_val = nex.evaluate(derive_eq, der_dict)
-                #der_val = nex.evaluate(derive_eq, {'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']})
-                
-                #print(derive_eq)
-                #der_val = nex.evaluate(derive_eq)
 
                 # Automatically restore DataArray with original dims, coords, and attrs
                 der_val = xr.DataArray(
@@ -1262,7 +1248,7 @@ class AdfDiag(AdfWeb):
                     attrs=ds[constit_list[0]].attrs
                 )
 
-                # Add attribute for derived equation and processes
+                # Add attributes for derived equation and processes
                 numexp_docs = "https://numexpr.readthedocs.io/en/latest/index.html"
                 numexpr_github = "https://github.com/pydata/numexpr/tree/master"
                 der_val.attrs['derivation_process'] = f"Derived using Numexp\n{numexp_docs}\n{numexpr_github}"
