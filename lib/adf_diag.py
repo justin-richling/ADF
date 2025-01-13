@@ -1243,8 +1243,8 @@ class AdfDiag(AdfWeb):
                 # Automatically restore DataArray with original dims, coords, and attrs
                 der_val = xr.DataArray(
                     der_val_array,
-                    dims=ds[constit_list[0]].dims[:der_val.ndim],
-                    coords={k: v for k, v in ds[constit_list[0]].coords.items() if k in ds[constit_list[0]].dims[:der_val.ndim]},
+                    dims=ds[constit_list[0]].dims[:der_val_array.ndim],
+                    coords={k: v for k, v in ds[constit_list[0]].coords.items() if k in ds[constit_list[0]].dims[:der_val_array.ndim]},
                     attrs=ds[constit_list[0]].attrs
                 )
 
