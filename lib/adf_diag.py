@@ -1319,6 +1319,7 @@ class AdfDiag(AdfWeb):
 
                 # Set or update the 'long_name' attribute
                 if "long_name" in res:
+                    print("IS IT COMING HERE BOI")
                     ds[var].attrs['long_name'] = res["long_name"]
 
                 #print("AFTER?",type(ds_final))
