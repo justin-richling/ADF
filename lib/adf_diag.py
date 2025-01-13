@@ -1198,6 +1198,7 @@ class AdfDiag(AdfWeb):
                 attrs = ds[constit_list[0]].attrs
 
                 # create new file name for derived variable
+                print("constit_files[0]",constit_files[0],"\n")
                 derived_file = constit_files[0].replace(constit_list[0], var)
                 print("derived_file",derived_file)
 
