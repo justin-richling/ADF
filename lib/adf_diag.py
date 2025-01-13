@@ -1198,14 +1198,14 @@ class AdfDiag(AdfWeb):
                 attrs = ds[constit_list[0]].attrs
 
                 # create new file name for derived variable
-                print("constit_files[0]",constit_files[0],"\n")
+                #print("constit_files[0]",constit_files[0],"\n")
                 #derived_file = constit_files[0].replace(constit_list[0], var)
                 constit_path = Path(constit_list[0])
                 new_stem = constit_path.stem.replace(constit_list[0], var)
                 derived_file = constit_path.with_name(new_stem + constit_path.suffix)
                 #derived_file = constit_files[0].replace(constit_list[0], var)
                 
-                print("derived_file",derived_file)
+                #print("derived_file",derived_file)
 
                 # Check if clobber is true for file
                 if Path(derived_file).is_file():
@@ -1244,7 +1244,7 @@ class AdfDiag(AdfWeb):
                 der_val = nex.evaluate(derive_eq, der_dict)
                 #der_val = nex.evaluate(derive_eq, {'FSNT':ds['FSNT'], 'FLNT':ds['FLNT']})
                 
-                print(derive_eq)
+                #print(derive_eq)
                 #der_val = nex.evaluate(derive_eq)
 
                 # Automatically restore DataArray with original dims, coords, and attrs
