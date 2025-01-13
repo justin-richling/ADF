@@ -1202,7 +1202,9 @@ class AdfDiag(AdfWeb):
                 #derived_file = constit_files[0].replace(constit_list[0], var)
                 constit_path = Path(constit_list[0])
                 new_stem = constit_path.stem.replace(constit_list[0], var)
+                print("new_stem",new_stem,"\n")
                 derived_file = constit_path.with_name(new_stem + constit_path.suffix)
+
                 derived_file = constit_files[0].replace(constit_list[0], var)
                 
                 print("derived_file",derived_file,"\n")
