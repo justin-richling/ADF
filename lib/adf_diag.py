@@ -1245,7 +1245,7 @@ class AdfDiag(AdfWeb):
                     der_val,
                     dims=ds[constit_list[0]].dims[:der_val.ndim],
                     coords={k: v for k, v in ds[constit_list[0]].coords.items() if k in ds[constit_list[0]].dims[:der_val.ndim]},
-                    attrs=ds[constit_list[0]].attrs
+                    #attrs=ds[constit_list[0]].attrs
                 )
 
                 # Add attributes for derived equation and processes
