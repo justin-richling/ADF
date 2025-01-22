@@ -178,9 +178,9 @@ def zonal_mean(adfobj):
         #Check zonal mean dimensions
         valdims = pf.zm_validate_dims(odata)
         if valdims is not None:
-            has_lat_case, has_lev_case = valdims
+            has_lat_ref, has_lev_ref = valdims
         else:
-            has_lat_case, has_lev_case = False, False
+            has_lat_ref, has_lev_ref = False, False
         # End if
 
         #Loop over model cases:
@@ -250,7 +250,7 @@ def zonal_mean(adfobj):
                     plot_name_log = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
 
                     #Check if reference file has vertical levels
-                    if not has_lev_ref:
+                    if not has_lev:
                         print(f"Error: expecting lev for both case: {has_lev} and ref: {has_lev_ref}")
                         continue
                 #End if
