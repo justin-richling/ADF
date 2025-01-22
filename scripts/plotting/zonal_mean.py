@@ -176,7 +176,12 @@ def zonal_mean(adfobj):
             continue
 
         #Check zonal mean dimensions
-        has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
+        valdims = pf.zm_validate_dims(odata)
+        if valdims is not None:
+            has_lat_case, has_lev_case = valdims
+        else:
+            has_lat_case, has_lev_case = False, False
+        # End if
 
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
@@ -197,8 +202,13 @@ def zonal_mean(adfobj):
 
             # determine whether it's 2D or 3D
             # 3D triggers search for surface pressure
-            has_lat, has_lev = pf.zm_validate_dims(mdata)  # assumes will work for both mdata & odata
-
+            # check data dimensions:
+            valdims = pf.zm_validate_dims(mdata)
+            if valdims is not None:
+                has_lat, has_lev = valdims
+            else:
+                has_lat, has_lev = False, False
+            # End if
             #Notify user of level dimension:
             if has_lev:
                 print(f"\t   {var} has lev dimension.")

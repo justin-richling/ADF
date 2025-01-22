@@ -308,7 +308,11 @@ def global_latlon_vect_map(adfobj):
                 vmdata = vmdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
                 #Check dimensions:
-                has_lat, has_lev = pf.zm_validate_dims(umdata)  # assumes will work for both mdata & odata
+                valdims = pf.zm_validate_dims(umdata)  # assumes will work for both mdata & odata
+                if valdims is not None:
+                    has_lat, has_lev = valdims
+                else:
+                    has_lat, has_lev = False, False
 
                 # update units
                 # NOTE: looks like our climo files don't have all their metadata

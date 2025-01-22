@@ -304,7 +304,11 @@ def polar_map(adfobj):
                 elif pres_levs: #Is the user wanting to interpolate to a specific pressure level?
 
                     #Check that case inputs have the correct dimensions (including "lev"):
-                    _, has_lev = pf.zm_validate_dims(mdata)
+                    valdims = pf.zm_validate_dims(mdata)  # assumes will work for both mdata & odata
+                    if valdims is not None:
+                        has_lat, has_lev = valdims
+                    else:
+                        has_lat, has_lev = False, False
 
                     if has_lev:
 

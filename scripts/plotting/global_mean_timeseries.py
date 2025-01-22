@@ -54,6 +54,8 @@ def global_mean_timeseries(adfobj):
         # reference time series (DataArray)
         ref_ts_da = adfobj.data.load_reference_timeseries_da(field)
 
+        base_name = adfobj.data.ref_case_label
+
         # Check to see if this field is available
         if ref_ts_da is None:
             print(
@@ -63,19 +65,36 @@ def global_mean_timeseries(adfobj):
         else:
             validate_dims = False
 
+            # check data dimensions:
+            valdims = pf.zm_validate_dims(ref_ts_da)
+            if valdims is not None:
+                has_lat_ref, has_lev_ref = valdims
+            else:
+                has_lat_ref, has_lev_ref = False, False
+            # End if
+
             # check if this is a "2-d" varaible:
-            has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
             if has_lev_ref:
                 print(
-                    f"Variable named {field} has a lev dimension, which does not work with this script."
+                    f"Variable named {field} has a lev dimension for '{base_name}', which does not work with this script."
                 )
                 continue
+            # End if
+            
+            # check if there is a lat dimension:
+            if not has_lat_ref:
+                print(
+                    f"Variable named {field} is missing a lat dimension for '{base_name}', cannot continue to plot."
+                )
+                continue
+            # End if
 
             # reference time series global average
             ref_ts_da_ga = pf.spatial_average(ref_ts_da, weights=None, spatial_dims=None)
 
             # annually averaged
             ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
+        # End if
 
         ## SPECIAL SECTION -- CESM2 LENS DATA:
         lens2_data = Lens2Data(
@@ -94,7 +113,7 @@ def global_mean_timeseries(adfobj):
         ref_label = (
             adfobj.data.ref_nickname
             if adfobj.data.ref_nickname
-            else adfobj.data.ref_case_label
+            else base_name
         )
 
         skip_var = False
@@ -107,19 +126,32 @@ def global_mean_timeseries(adfobj):
                 )
                 skip_var = True
                 continue
+            # End if
 
             # If no reference, we still need to check if this is a "2-d" varaible:
-            if validate_dims:
-                has_lat_ref, has_lev_ref = pf.zm_validate_dims(c_ts_da)
+            # check data dimensions:
+            valdims = pf.zm_validate_dims(c_ts_da)
+            if valdims is not None:
+                has_lat_case, has_lev_case = valdims
+            else:
+                has_lat_case, has_lev_case = False, False
             # End if
 
             # If 3-d variable, notify user, flag and move to next test case
-            if has_lev_ref:
+            if has_lev_case:
                 print(
                     f"Variable named {field} has a lev dimension for '{case_name}', which does not work with this script."
                 )
 
                 skip_var = True
+                continue
+            # End if
+
+            # check if there is a lat dimension:
+            if not has_lat_case:
+                print(
+                    f"Variable named {field} is missing a lat dimension for '{case_name}', cannot continue to plot."
+                )
                 continue
             # End if
 
