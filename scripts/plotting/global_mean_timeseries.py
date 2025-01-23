@@ -39,6 +39,14 @@ def global_mean_timeseries(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
+    #Grab case years
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
+
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+
     # Loop over variables
     for field in adfobj.diag_var_list:
 
@@ -61,10 +69,7 @@ def global_mean_timeseries(adfobj):
             print(
                 f"\t Variable named {field} provides Nonetype. Skipping this variable"
             )
-            validate_dims = True
         else:
-            validate_dims = False
-
             # check data dimensions:
             valdims = pf.zm_validate_dims(ref_ts_da)
             if valdims is not None:
@@ -96,10 +101,13 @@ def global_mean_timeseries(adfobj):
             ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
         # End if
 
-        ## SPECIAL SECTION -- CESM2 LENS DATA:
-        lens2_data = Lens2Data(
-            field
-        )  # Provides access to LENS2 dataset when available (class defined below)
+        """## SPECIAL SECTION -- CESM2 LENS DATA:
+        if (syear_cases[] and syear_baseline[]) < 1800:
+            lens2_data = Lens2Data(
+                field
+            )  # Provides access to LENS2 dataset when available (class defined below)
+        else:
+            lens2_data = None"""
 
         # Loop over model cases:
         case_ts = {}  # dictionary of annual mean, global mean time series
@@ -117,7 +125,15 @@ def global_mean_timeseries(adfobj):
         )
 
         skip_var = False
-        for case_name in adfobj.data.case_names:
+        for case_idx,case_name in enumerate(adfobj.data.case_names):
+            ## SPECIAL SECTION -- CESM2 LENS DATA:
+            if (syear_cases[case_idx] and syear_baseline[0]) > 1800:
+                lens2_data = Lens2Data(
+                    field
+                )  # Provides access to LENS2 dataset when available (class defined below)
+            else:
+                lens2_data = None
+
             c_ts_da = adfobj.data.load_timeseries_da(case_name, field)
 
             if c_ts_da is None:
@@ -269,9 +285,9 @@ class Lens2Data:
 ######
 
 
-def make_plot(case_ts, lens2, label=None, ref_ts_da=None):
+def make_plot(case_ts, lens2=None, label=None, ref_ts_da=None):
     """plot yearly values of ref_ts_da"""
-    field = lens2.field  # this will be defined even if no LENS2 data
+    #field = lens2.field  # this will be defined even if no LENS2 data
     fig, ax = plt.subplots()
     
     # Plot reference/baseline if available
@@ -279,17 +295,19 @@ def make_plot(case_ts, lens2, label=None, ref_ts_da=None):
         ax.plot(ref_ts_da.year, ref_ts_da, label=label)
     for c, cdata in case_ts.items():
         ax.plot(cdata.year, cdata, label=c)
-    if lens2.has_lens:
-        lensmin = lens2.lens2[field].min("M")  # note: "M" is the member dimension
-        lensmax = lens2.lens2[field].max("M")
-        ax.fill_between(lensmin.year, lensmin, lensmax, color="lightgray", alpha=0.5)
-        ax.plot(
-            lens2.lens2[field].year,
-            lens2.lens2[field].mean("M"),
-            color="darkgray",
-            linewidth=2,
-            label="LENS2",
-        )
+    if lens2:
+        field = lens2.field  # this will be defined even if no LENS2 data
+        if lens2.has_lens:
+            lensmin = lens2.lens2[field].min("M")  # note: "M" is the member dimension
+            lensmax = lens2.lens2[field].max("M")
+            ax.fill_between(lensmin.year, lensmin, lensmax, color="lightgray", alpha=0.5)
+            ax.plot(
+                lens2.lens2[field].year,
+                lens2.lens2[field].mean("M"),
+                color="darkgray",
+                linewidth=2,
+                label="LENS2",
+            )
     # Get the current y-axis limits
     ymin, ymax = ax.get_ylim()
     # Check if the y-axis crosses zero
