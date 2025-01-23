@@ -181,7 +181,7 @@ def global_mean_timeseries(adfobj):
 
         # Plot the timeseries
         fig, ax = make_plot(
-            case_ts, lens2_data, label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
+            field, case_ts, lens2_data, label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
         )
 
         unit = vres.get("new_unit","[-]")
@@ -285,9 +285,9 @@ class Lens2Data:
 ######
 
 
-def make_plot(case_ts, lens2=None, label=None, ref_ts_da=None):
+def make_plot(field, case_ts, lens2=None, label=None, ref_ts_da=None):
     """plot yearly values of ref_ts_da"""
-    field = lens2.field  # this will be defined even if no LENS2 data
+    #field = lens2.field  # this will be defined even if no LENS2 data
     fig, ax = plt.subplots()
     
     # Plot reference/baseline if available
@@ -296,7 +296,7 @@ def make_plot(case_ts, lens2=None, label=None, ref_ts_da=None):
     for c, cdata in case_ts.items():
         ax.plot(cdata.year, cdata, label=c)
     if lens2:
-        #field = lens2.field  # this will be defined even if no LENS2 data
+        field = lens2.field  # this will be defined even if no LENS2 data
         if lens2.has_lens:
             lensmin = lens2.lens2[field].min("M")  # note: "M" is the member dimension
             lensmax = lens2.lens2[field].max("M")
