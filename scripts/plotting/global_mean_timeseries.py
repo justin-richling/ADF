@@ -127,7 +127,7 @@ def global_mean_timeseries(adfobj):
         skip_var = False
         for case_idx,case_name in enumerate(adfobj.data.case_names):
             ## SPECIAL SECTION -- CESM2 LENS DATA:
-            if (syear_cases[case_idx] and syear_baseline[0]) > 1800:
+            if (syear_cases[case_idx] and syear_baseline) > 1800:
                 lens2_data = Lens2Data(
                     field
                 )  # Provides access to LENS2 dataset when available (class defined below)
