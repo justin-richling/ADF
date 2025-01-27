@@ -183,6 +183,15 @@ def zonal_mean(adfobj):
             has_lat_ref, has_lev_ref = False, False
         # End if
 
+        # check if there is a lat dimension:
+        # if not, skip test cases and move to next variable
+        if not has_lat_ref:
+            print(
+                f"Variable named {var} is missing a lat dimension for '{base_name}', cannot continue to plot."
+            )
+            continue
+        # End if
+
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
 
@@ -209,9 +218,26 @@ def zonal_mean(adfobj):
             else:
                 has_lat, has_lev = False, False
             # End if
+
+            # check if there is a lat dimension:
+            if not has_lat:
+                print(
+                    f"Variable named {var} is missing a lat dimension for '{case_name}', cannot continue to plot."
+                )
+                continue
+            # End if
+
+            #Check if reference file has vertical levels
             #Notify user of level dimension:
             if has_lev:
                 print(f"\t   {var} has lev dimension.")
+
+            if (has_lev) and (not has_lev_ref):
+                print(f"Error: expecting lev boolean for both case: {has_lev} and ref: {has_lev_ref}")
+                continue
+            if (has_lev_ref) and (not has_lev):
+                print(f"Error: expecting lev boolean for both case: {has_lev} and ref: {has_lev_ref}")
+                continue
 
             #
             # Seasonal Averages
@@ -249,10 +275,11 @@ def zonal_mean(adfobj):
                     #Set the file name for log-pressure plots
                     plot_name_log = plot_loc / f"{var}_logp_{s}_Zonal_Mean.{plot_type}"
 
-                    #Check if reference file has vertical levels
-                    if not has_lev:
+                    # Will this ever happen? If ref has not levs, it skips this nested loop...
+                    """#Check if reference file has vertical levels
+                    if not has_lev_ref:
                         print(f"Error: expecting lev for both case: {has_lev} and ref: {has_lev_ref}")
-                        continue
+                        continue"""
                 #End if
 
                 #Create plots
