@@ -11,6 +11,7 @@ import warnings  # use to warn user about missing files.
 import xarray as xr
 import matplotlib.pyplot as plt
 import plotting_functions as pf
+import matplotlib.ticker as ticker
 
 
 def my_formatwarning(msg, *args, **kwargs):
@@ -314,11 +315,10 @@ def make_plot(field, case_ts, lens2=None, label=None, ref_ts_da=None):
     if ymin < 0 < ymax:
         ax.axhline(y=0, color="lightgray", linestyle="-", linewidth=1)
     ax.set_title(field, loc="left")
+
     # Force x-axis to use only integer labels
-    import matplotlib.ticker as ticker
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    # Set x-axis ticks manually to integer values
-    #plt.xticks(range(int(min(x)), int(max(x)) + 1))
+
     ax.set_xlabel("YEAR")
     # Place the legend
     ax.legend(
