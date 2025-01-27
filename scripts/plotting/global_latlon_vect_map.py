@@ -209,6 +209,9 @@ def global_latlon_vect_map(adfobj):
         else:
             #Set "data_var" for consistent use below:
             data_var = [var, var_pair]
+
+            # reference (baseline) name
+            base_name = adfobj.data.ref_case_label
         #End if
 
         #Notify user of variable being plotted:
