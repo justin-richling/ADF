@@ -259,6 +259,22 @@ def global_latlon_vect_map(adfobj):
             uodata = uodata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
             vodata = vodata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
+            #Check zonal mean dimensions
+            valdims = pf.zm_validate_dims(uodata)
+            if valdims is not None:
+                has_lat_ref, has_lev_ref = valdims
+            else:
+                has_lat_ref, has_lev_ref = False, False
+            # End if
+
+            # check if there is a lat dimension:
+            if not has_lat_ref:
+                print(
+                    f"Variable named {var} is missing a lat dimension for '{base_name}', cannot continue to plot."
+                )
+                continue
+            # End if
+
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
 
@@ -314,6 +330,15 @@ def global_latlon_vect_map(adfobj):
                 else:
                     has_lat, has_lev = False, False
 
+
+                # check if there is a lat dimension:
+                if not has_lat:
+                    print(
+                        f"Variable named {var} is missing a lat dimension for '{case_name}', cannot continue to plot."
+                    )
+                    continue
+                # End if
+
                 # update units
                 # NOTE: looks like our climo files don't have all their metadata
                 uodata.attrs['units'] = vres.get("new_unit", uodata.attrs.get('units', 'none'))
@@ -332,7 +357,7 @@ def global_latlon_vect_map(adfobj):
                     #If observations/baseline CAM have the correct
                     #dimensions, does the input CAM run have correct
                     #dimensions as well?
-                    if has_lev:
+                    if has_lev_ref:
                         has_dims_cam = pf.lat_lon_validate_dims(umdata.isel(lev=0))
                     else:
                         has_dims_cam = pf.lat_lon_validate_dims(umdata)
