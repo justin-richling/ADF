@@ -310,7 +310,40 @@ def polar_map(adfobj):
                     else:
                         has_lat, has_lev = False, False
 
-                    if has_lev:
+                    # check if there is a lat dimension:
+                    if not has_lat:
+                        print(
+                            f"Variable named {var} is missing a lat dimension for '{case_name}', cannot continue to plot."
+                        )
+                        continue
+                    # End if
+
+                    """#Check if reference file has vertical levels
+                    if not has_lev:
+                        print(f"Error: expecting lev for both case: {has_lev} and ref: {has_lev_ref}")
+                        continue
+
+                    # check if there is a lat dimension:
+                    if not has_lat:
+                        print(f"Error: expecting lat for both case: {has_lat} and ref: {has_lat_ref}")
+                        continue
+                    # End if"""
+
+                    #Check that case inputs have the correct dimensions (including "lev"):
+                    valdims_ref = pf.zm_validate_dims(odata)  # assumes will work for both mdata & odata
+                    if valdims_ref is not None:
+                        has_lat_ref, has_lev_ref = valdims_ref
+                    else:
+                        has_lat_ref, has_lev_ref = False, False
+
+                    # check if there is a lat dimension:
+                    if not has_lat_ref:
+                        print(
+                            f"Variable named {var} is missing a lat dimension for '{data_name}', cannot continue to plot."
+                        )
+                        continue
+
+                    if (has_lev) and (has_lev_ref):
 
                         #Loop over pressure levels:
                         for pres in pres_levs:
