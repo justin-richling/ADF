@@ -157,15 +157,15 @@ class AdfData:
         
         return xr.decode_cf(ds)
 
-    def load_timeseries_da(self, case, variablename):
+    def load_timeseries_da(self, case, variablename, syr, eyr):
         """Return DataArray from time series file(s).
            Uses defaults file to convert units.
         """
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_timeseries_file(case, variablename)
-        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, variablename, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
     
-    def load_reference_timeseries_da(self, field):
+    def load_reference_timeseries_da(self, field, syr, eyr):
         """Return a DataArray time series to be used as reference 
           (aka baseline) for variable field.
         """
@@ -182,7 +182,7 @@ class AdfData:
         else:
             add_offset, scale_factor = self.get_value_converters(self.ref_case_label, field)
 
-        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
 
     #------------------
@@ -192,20 +192,20 @@ class AdfData:
     #------------------
 
     # Test case(s)
-    def load_climo_da(self, case, variablename):
+    def load_climo_da(self, case, variablename, syr, eyr):
         """Return DataArray from climo file"""
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_climo_file(case, variablename)
-        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, variablename, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
 
-    def load_climo_file(self, case, variablename):
+    def load_climo_file(self, case, variablename, syr, eyr):
         """Return Dataset for climo of variablename"""
         fils = self.get_climo_file(case, variablename)
         if not fils:
             warnings.warn(f"WARNING: Did not find climo file for variable: {variablename}. Will try to skip.")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, syr, eyr)
     
 
     def get_climo_file(self, case, variablename):
@@ -217,11 +217,11 @@ class AdfData:
 
 
     # Reference case (baseline/obs)
-    def load_reference_climo_da(self, case, variablename):
+    def load_reference_climo_da(self, case, variablename, syr, eyr):
         """Return DataArray from reference (aka baseline) climo file"""
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_reference_climo_file(variablename)
-        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, variablename, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
     def get_reference_climo_file(self, var):
         """Return a list of files to be used as reference (aka baseline) for variable var."""
@@ -249,23 +249,23 @@ class AdfData:
         return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_regridded.nc"))
 
 
-    def load_regrid_dataset(self, case, field):
+    def load_regrid_dataset(self, case, field, syr, eyr):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"WARNING: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, syr, eyr)
 
     
-    def load_regrid_da(self, case, field):
+    def load_regrid_da(self, case, field, syr, eyr):
         """Return a data array to be used as reference (aka baseline) for variable field."""
         add_offset, scale_factor = self.get_value_converters(case, field)
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"WARNING: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
 
     # Reference case (baseline/obs)
@@ -283,16 +283,16 @@ class AdfData:
         return fils
 
 
-    def load_reference_regrid_dataset(self, case, field):
+    def load_reference_regrid_dataset(self, case, field, syr, eyr):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, syr, eyr)
 
     
-    def load_reference_regrid_da(self, case, field):
+    def load_reference_regrid_da(self, case, field, syr, eyr):
         """Return a data array to be used as reference (aka baseline) for variable field."""
         add_offset, scale_factor = self.get_value_converters(case, field)
         fils = self.get_ref_regrid_file(case, field)
@@ -303,7 +303,7 @@ class AdfData:
         # listed in variable defaults for this observation field
         if self.adf.compare_obs:
             field = self.ref_var_nam[field]
-        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
     #------------------
 
@@ -339,9 +339,9 @@ class AdfData:
         return ds
 
     # Load DataArray
-    def load_da(self, fils, variablename, **kwargs):
+    def load_da(self, fils, variablename, syr, eyr, **kwargs):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
-        ds = self.load_dataset(fils)
+        ds = self.load_dataset(fils, syr, eyr)
         if ds is None:
             warnings.warn(f"WARNING: Load failed for {variablename}")
             return None
