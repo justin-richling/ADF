@@ -140,8 +140,9 @@ def global_mean_timeseries(adfobj):
             else:
                 print("Model years are outside LENS, will skip plotting LENS data for clarity boi")
                 lens2_data = None"""
-
-            if (syear_cases[case_idx] and syear_baseline) > 1800:
+            #adfobj.compare_obs
+            #if (syear_cases[case_idx] and syear_baseline) > 1800:
+            if (syear_cases[case_idx] > 1800) and ((syear_baseline > 1800) or (adfobj.compare_obs)):
                 lens2_data = Lens2Data(
                     field
                 )  # Provides access to LENS2 dataset when available (class defined below)
