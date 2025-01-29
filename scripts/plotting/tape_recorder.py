@@ -6,6 +6,8 @@ import matplotlib as mpl
 import xarray as xr
 import pandas as pd
 
+from types import NoneType
+
 from dateutil.relativedelta import relativedelta
 import glob
 from pathlib import Path
@@ -196,7 +198,7 @@ def tape_recorder(adfobj):
         #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
         dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx])
         print("\n\n",dat,"\n\n")
-        if not dat:
+        if dat is NoneType:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
             adfobj.debug_log(dmsg)
