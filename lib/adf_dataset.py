@@ -328,14 +328,14 @@ class AdfData:
             ds = xr.open_dataset(sfil)
         if ds is None:
             warnings.warn(f"invalid data on load_dataset")
-        else:
+        """else:
             #Extract data subset using provided year bounds:
             tslice = self.get_time_slice_by_year(ds.time, int(syr), int(eyr))
             ds = ds.isel(time=tslice)
             #Retrieve the actual time values from the slice
             actual_time_values = ds.time.values
 
-            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
+            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)"""
 
         return ds
 
