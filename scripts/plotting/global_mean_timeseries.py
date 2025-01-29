@@ -46,6 +46,9 @@ def global_mean_timeseries(adfobj):
 
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    #Check if this is an obs case and arbitrarily set start year to 0 for LENS plot check
+    if not syear_baseline:
+        syear_baseline = 0
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
     # Loop over variables
@@ -128,12 +131,22 @@ def global_mean_timeseries(adfobj):
         skip_var = False
         for case_idx,case_name in enumerate(adfobj.data.case_names):
             ## SPECIAL SECTION -- CESM2 LENS DATA:
+            #if (syear_cases[case_idx] and syear_baseline) > 1800:
+            """if syear_cases[case_idx] > 1800:
+                if (syear_baseline) and (syear_baseline > 1800):
+                    lens2_data = Lens2Data(
+                        field
+                    )  # Provides access to LENS2 dataset when available (class defined below)
+            else:
+                print("Model years are outside LENS, will skip plotting LENS data for clarity boi")
+                lens2_data = None"""
+
             if (syear_cases[case_idx] and syear_baseline) > 1800:
                 lens2_data = Lens2Data(
                     field
                 )  # Provides access to LENS2 dataset when available (class defined below)
             else:
-                print("Model years are outside LENS, will skip plotting LENS data for clarity boi")
+                print(f"Model years for '{field}' are outside LENS, will skip plotting LENS data for clarity boi")
                 lens2_data = None
 
             c_ts_da = adfobj.data.load_timeseries_da(case_name, field)
