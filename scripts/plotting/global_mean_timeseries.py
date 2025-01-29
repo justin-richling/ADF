@@ -305,7 +305,7 @@ def make_plot(field, case_ts, lens2=None, label=None, ref_ts_da=None):
     """plot yearly values of ref_ts_da"""
     #field = lens2.field  # this will be defined even if no LENS2 data
     fig, ax = plt.subplots()
-    
+
     # Plot reference/baseline if available
     if type(ref_ts_da) != NoneType:
         ax.plot(ref_ts_da.year, ref_ts_da, label=label)
@@ -334,6 +334,7 @@ def make_plot(field, case_ts, lens2=None, label=None, ref_ts_da=None):
     ax.set_xlim(min(cdata.year), max(cdata.year))
     # Force x-axis to use only integer labels
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+    ax.set_xticks(np.arange(int(min(cdata.year)), int(max(cdata.year)) + 1, 1))
 
     ax.set_xlabel("YEAR")
     # Place the legend
