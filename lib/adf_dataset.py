@@ -385,6 +385,7 @@ class AdfData:
     #------------------
 
     def get_time_slice_by_year(time, startyear, endyear):
+        import numpy as np
         if not hasattr(time, 'dt'):
             print("Warning: get_time_slice_by_year requires the `time` parameter to be an xarray time coordinate with a dt accessor. Returning generic slice (which will probably fail).")
             return slice(startyear, endyear)
