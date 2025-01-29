@@ -9,7 +9,7 @@ from pathlib import Path
 from types import NoneType
 import warnings  # use to warn user about missing files.
 import xarray as xr
-import np
+import numpy as np
 import matplotlib.pyplot as plt
 import plotting_functions as pf
 import matplotlib.ticker as ticker
