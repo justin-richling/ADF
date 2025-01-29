@@ -71,7 +71,7 @@ def global_mean_timeseries(adfobj):
         # Check to see if this field is available
         if ref_ts_da is None:
             print(
-                f"\t Variable named {field} provides Nonetype. Skipping this variable"
+                f"\t Variable named {field} for case '{base_name}' provides Nonetype. Skipping this variable"
             )
         else:
             # check data dimensions:
@@ -146,14 +146,14 @@ def global_mean_timeseries(adfobj):
                     field
                 )  # Provides access to LENS2 dataset when available (class defined below)
             else:
-                print(f"Model years for '{field}' are outside LENS, will skip plotting LENS data for clarity boi")
+                print(f"Model years for '{field}' are outside LENS years, will skip plotting LENS data for clarity boi")
                 lens2_data = None
 
             c_ts_da = adfobj.data.load_timeseries_da(case_name, field)
 
             if c_ts_da is None:
                 print(
-                    f"\t Variable named {field} provides Nonetype. Skipping this variable"
+                    f"\t Variable named {field} for case '{case_name}' provides Nonetype. Skipping this variable"
                 )
                 skip_var = True
                 continue
