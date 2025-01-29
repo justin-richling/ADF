@@ -148,10 +148,10 @@ class AdfData:
             #ds = ds.isel(time=tslice)
             
             #Extract data subset using provided year bounds:
-            tslice = self.get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
-            cam_ts_data = cam_ts_data.isel(time=tslice)
+            tslice = self.get_time_slice_by_year(ds.time, int(syr), int(eyr))
+            ds = ds.isel(time=tslice)
             #Retrieve the actual time values from the slice
-            actual_time_values = cam_ts_data.time.values
+            actual_time_values = ds.time.values
 
             print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
         
