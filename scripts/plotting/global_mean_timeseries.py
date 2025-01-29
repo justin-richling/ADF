@@ -331,6 +331,7 @@ def make_plot(field, case_ts, lens2=None, label=None, ref_ts_da=None):
         ax.axhline(y=0, color="lightgray", linestyle="-", linewidth=1)
     ax.set_title(field, loc="left")
 
+    ax.set_xlim(min(cdata.year), max(cdata.year))
     # Force x-axis to use only integer labels
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 
