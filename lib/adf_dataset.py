@@ -143,7 +143,7 @@ class AdfData:
         else:
             warnings.warn("Timeseries file does not have time bounds info.")
         print("\n\n",ds,"\n\n")
-        if ds is not None:
+        """if ds is not None:
             #Extract data subset using provided year bounds:
             #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
             #ds = ds.isel(time=tslice)
@@ -154,7 +154,7 @@ class AdfData:
             #Retrieve the actual time values from the slice
             actual_time_values = ds.time.values
 
-            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
+            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)"""
         
         return xr.decode_cf(ds)
 
@@ -347,6 +347,17 @@ class AdfData:
             warnings.warn(f"WARNING: Load failed for {variablename}")
             return None
         da = (ds[variablename]).squeeze()
+        #Extract data subset using provided year bounds:
+        #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
+        #ds = ds.isel(time=tslice)
+            
+        #Extract data subset using provided year bounds:
+        tslice = self.get_time_slice_by_year(da.time, int(syr), int(eyr))
+        da = da.isel(time=tslice)
+        #Retrieve the actual time values from the slice
+        actual_time_values = da.time.values
+
+        print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
         scale_factor = kwargs.get('scale_factor', 1)
         add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset
