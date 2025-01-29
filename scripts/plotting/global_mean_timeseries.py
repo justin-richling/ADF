@@ -133,6 +133,7 @@ def global_mean_timeseries(adfobj):
                     field
                 )  # Provides access to LENS2 dataset when available (class defined below)
             else:
+                print("Model years are outside LENS, will skip plotting LENS data for clarity boi")
                 lens2_data = None
 
             c_ts_da = adfobj.data.load_timeseries_da(case_name, field)
