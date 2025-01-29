@@ -148,7 +148,7 @@ class AdfData:
             #ds = ds.isel(time=tslice)
             
             #Extract data subset using provided year bounds:
-            tslice = self.get_time_slice_by_year(self, ds.time, int(syr), int(eyr))
+            tslice = self.get_time_slice_by_year(ds.time, int(syr), int(eyr))
             ds = ds.isel(time=tslice)
             #Retrieve the actual time values from the slice
             actual_time_values = ds.time.values
