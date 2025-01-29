@@ -197,8 +197,9 @@ def tape_recorder(adfobj):
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
         dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx])
-        print("\n\n",dat,"\n\n")
-        if dat is NoneType:
+        print("\n\n",type(dat),dat,"\n\n")
+        #if dat is NoneType:
+        if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
             adfobj.debug_log(dmsg)
