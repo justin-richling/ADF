@@ -335,7 +335,7 @@ def make_plot(field, case_ts, lens2=None, label=None, ref_ts_da=None):
     ax.set_xlim(min(cdata.year), max(cdata.year))
     # Force x-axis to use only integer labels
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax.set_xticks(np.arange(int(min(cdata.year)), int(max(cdata.year)) + 1, 1))
+    #ax.set_xticks(np.arange(int(min(cdata.year)), int(max(cdata.year)) + 1, 1))
 
     ax.set_xlabel("YEAR")
     # Place the legend
