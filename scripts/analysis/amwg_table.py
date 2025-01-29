@@ -286,7 +286,7 @@ def amwg_table(adf):
     
         #Loop over CAM output variables:
         for var in var_list:
-            is_climo = False
+            is_climo = False # default to time series
             #Generate input file path:
             if input_locs[case_idx]:
                 input_location = Path(input_locs[case_idx])
