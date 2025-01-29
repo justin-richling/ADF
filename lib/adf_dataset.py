@@ -115,7 +115,7 @@ class AdfData:
             return ts_files
 
 
-    def load_timeseries_dataset(self, fils):
+    def load_timeseries_dataset(self, fils, syr, eyr):
         """Return DataSet from time series file(s) and assign time to midpoint of interval"""
         if (len(fils) == 0):
             warnings.warn("Input file list is empty.")
@@ -141,6 +141,20 @@ class AdfData:
             ds = ds.assign_coords({'time':t})
         else:
             warnings.warn("Timeseries file does not have time bounds info.")
+        
+        if ds is not None:
+            #Extract data subset using provided year bounds:
+            #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
+            #ds = ds.isel(time=tslice)
+            
+            #Extract data subset using provided year bounds:
+            tslice = self.get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
+            cam_ts_data = cam_ts_data.isel(time=tslice)
+            #Retrieve the actual time values from the slice
+            actual_time_values = cam_ts_data.time.values
+
+            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
+        
         return xr.decode_cf(ds)
 
     def load_timeseries_da(self, case, variablename):
@@ -298,7 +312,7 @@ class AdfData:
     #---------------------------
 
     # Load DataSet
-    def load_dataset(self, fils):
+    def load_dataset(self, fils, syr, eyr):
         """Return xarray DataSet from file(s)"""
         if (len(fils) == 0):
             warnings.warn("Input file list is empty.")
@@ -313,6 +327,15 @@ class AdfData:
             ds = xr.open_dataset(sfil)
         if ds is None:
             warnings.warn(f"invalid data on load_dataset")
+        else:
+            #Extract data subset using provided year bounds:
+            tslice = self.get_time_slice_by_year(ds.time, int(syr), int(eyr))
+            ds = ds.isel(time=tslice)
+            #Retrieve the actual time values from the slice
+            actual_time_values = ds.time.values
+
+            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
+
         return ds
 
     # Load DataArray
@@ -361,6 +384,10 @@ class AdfData:
 
     #------------------
 
-
-
-    
+    def get_time_slice_by_year(time, startyear, endyear):
+        if not hasattr(time, 'dt'):
+            print("Warning: get_time_slice_by_year requires the `time` parameter to be an xarray time coordinate with a dt accessor. Returning generic slice (which will probably fail).")
+            return slice(startyear, endyear)
+        start_time_index = np.argwhere((time.dt.year >= startyear).values).flatten().min()
+        end_time_index = np.argwhere((time.dt.year <= endyear).values).flatten().max()
+        return slice(start_time_index, end_time_index+1)

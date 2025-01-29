@@ -286,9 +286,10 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None):
     #Extract data subset using provided year bounds:
     tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
     cam_ts_data = cam_ts_data.isel(time=tslice)
-    print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",cam_ts_data)
     #Retrieve the actual time values from the slice
     actual_time_values = cam_ts_data.time.values
+
+    print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
 
     #Set a global attribute with the actual time values
     #cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"

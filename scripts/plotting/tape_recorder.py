@@ -191,8 +191,8 @@ def tape_recorder(adfobj):
         hist_str = hist_strs[idx]
         print("ts_loc",ts_loc,"\n")
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        dat = adfobj.data.load_timeseries_dataset(fils)
-
+        dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
+        print("\n\n",dat,"\n\n")
         if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
@@ -200,7 +200,7 @@ def tape_recorder(adfobj):
             continue
 
         #Grab time slice based on requested years (if applicable)
-        dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
+        #dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
