@@ -4,15 +4,6 @@ from pathlib import Path  # python standard library
 import xarray as xr
 import numpy as np
 
-# plotting
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-import cartopy.crs as ccrs
-import cartopy.feature
-from cartopy.util import add_cyclic_point
-
 # ADF library
 import plotting_functions as pf
 
@@ -330,7 +321,7 @@ def polar_map(adfobj):
                     # End if"""
 
                     #Check that case inputs have the correct dimensions (including "lev"):
-                    valdims_ref = pf.zm_validate_dims(odata)  # assumes will work for both mdata & odata
+                    valdims_ref = pf.zm_validate_dims(odata)
                     if valdims_ref is not None:
                         has_lat_ref, has_lev_ref = valdims_ref
                     else:
@@ -343,6 +334,7 @@ def polar_map(adfobj):
                         )
                         continue
 
+                    #Check if both cases have vertical levels to continue
                     if (has_lev) and (has_lev_ref):
 
                         #Loop over pressure levels:
