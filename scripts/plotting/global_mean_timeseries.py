@@ -47,7 +47,7 @@ def global_mean_timeseries(adfobj):
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     #Check if this is an obs case and arbitrarily set start year to 0 for LENS plot check
-    if (syear_baseline=="") or (not syear_baseline):
+    if syear_baseline == "":
         syear_baseline = 0
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
