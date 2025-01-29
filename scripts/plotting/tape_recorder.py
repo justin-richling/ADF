@@ -199,7 +199,8 @@ def tape_recorder(adfobj):
         dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx])
         print("\n\n",type(dat),dat,"\n\n")
         #if dat is NoneType:
-        if not dat:
+        #if not dat:
+        if not isinstance(dat, xr.DataArray):
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
             print(dmsg)
             adfobj.debug_log(dmsg)
