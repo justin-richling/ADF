@@ -209,7 +209,8 @@ def tape_recorder(adfobj):
         #Grab time slice based on requested years (if applicable)
         #dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
         datzm = dat.mean('lon')
-        dat_tropics = cosweightlat(datzm[var], -10, 10)
+        dat_tropics = cosweightlat(datzm, -10, 10)
+        #dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         ax = plot_pre_mon(fig, dat_mon,
                           plot_step, plot_min, plot_max, key,
