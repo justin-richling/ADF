@@ -190,6 +190,8 @@ def tape_recorder(adfobj):
         ts_loc = Path(case_ts_locs[idx])
         hist_str = hist_strs[idx]
         print("ts_loc",ts_loc,"\n")
+        print("ts_loc",hist_str,"\n")
+        print("ts_loc",var,"\n")
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
         print("\n\n",dat,"\n\n")
