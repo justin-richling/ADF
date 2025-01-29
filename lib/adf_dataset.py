@@ -121,6 +121,7 @@ class AdfData:
             warnings.warn("Input file list is empty.")
             return None
         elif (len(fils) > 1):
+            print("here right?")
             ds = xr.open_mfdataset(fils, decode_times=False)
         else:
             sfil = str(fils[0])
@@ -141,7 +142,7 @@ class AdfData:
             ds = ds.assign_coords({'time':t})
         else:
             warnings.warn("Timeseries file does not have time bounds info.")
-        
+        print("\n\n",ds,"\n\n")
         if ds is not None:
             #Extract data subset using provided year bounds:
             #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
