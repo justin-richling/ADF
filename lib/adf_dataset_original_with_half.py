@@ -164,7 +164,7 @@ class AdfData:
         """
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_timeseries_file(case, variablename)
-        return self.load_da(fils, variablename, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, variablename, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
     
     def load_reference_timeseries_da(self, field, syr, eyr):
         """Return a DataArray time series to be used as reference 
@@ -183,7 +183,7 @@ class AdfData:
         else:
             add_offset, scale_factor = self.get_value_converters(self.ref_case_label, field)
 
-        return self.load_da(fils, field, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
 
     #------------------
@@ -340,26 +340,24 @@ class AdfData:
         return ds
 
     # Load DataArray
-    def load_da(self, fils, variablename, syr, eyr, type="timeseries", **kwargs):
+    def load_da(self, fils, variablename, syr, eyr, **kwargs):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
         ds = self.load_dataset(fils, syr, eyr)
         if ds is None:
             warnings.warn(f"WARNING: Load failed for {variablename}")
             return None
         da = (ds[variablename]).squeeze()
-        if type == "timeseries":
-            #Extract data subset using provided year bounds:
-            #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
-            #ds = ds.isel(time=tslice)
-            print("\n\nda:",da,"\n\n")
-            #Extract data subset using provided year bounds:
-            tslice = self.get_time_slice_by_year(da.time, int(syr), int(eyr))
-            da = da.isel(time=tslice)
-            #Retrieve the actual time values from the slice
-            actual_time_values = da.time.values
+        #Extract data subset using provided year bounds:
+        #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
+        #ds = ds.isel(time=tslice)
+        print("\n\nda:",da,"\n\n")
+        #Extract data subset using provided year bounds:
+        tslice = self.get_time_slice_by_year(da.time, int(syr), int(eyr))
+        da = da.isel(time=tslice)
+        #Retrieve the actual time values from the slice
+        actual_time_values = da.time.values
 
-            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
-        
+        print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
         scale_factor = kwargs.get('scale_factor', 1)
         add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset
