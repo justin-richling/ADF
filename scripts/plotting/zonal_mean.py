@@ -190,7 +190,7 @@ def zonal_mean(adfobj):
             base_name = adfobj.data.ref_labels[var]
 
         # Gather reference variable data
-        odata = adfobj.data.load_reference_regrid_da(base_name, var)
+        odata = adfobj.data.load_reference_regrid_da(base_name, var, syear_baseline, eyear_baseline)
 
         #Check if regridded file exists, if not skip zonal plot for this var
         if odata is None:
@@ -211,7 +211,7 @@ def zonal_mean(adfobj):
             plot_loc = Path(plot_locations[case_idx])
 
             # load re-gridded model files:
-            mdata = adfobj.data.load_regrid_da(case_name, var)
+            mdata = adfobj.data.load_regrid_da(case_name, var, eyear_cases[case_idx], eyear_cases[case_idx])
 
             if mdata is None:
                 dmsg = f"No regridded test file for {case_name} for variable `{var}`, zonal mean plotting skipped."

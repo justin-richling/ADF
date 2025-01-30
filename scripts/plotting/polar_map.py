@@ -156,14 +156,16 @@ def polar_map(adfobj):
             # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
             if adfobj.compare_obs:
                 #For now, only grab one file (but convert to list for use below)
-                oclim_fils = [dclimo_loc]
+            #    oclim_fils = [dclimo_loc]
                 #Set data name:
                 data_name = data_src
-            else:
-                oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
+            #else:
+            #    oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
            
-            oclim_ds = pf.load_dataset(oclim_fils)
-            if oclim_ds is None:
+            #oclim_ds = pf.load_dataset(oclim_fils)
+            # Gather reference variable data
+            odata = adfobj.data.load_reference_regrid_da(data_name, var, syear_baseline, eyear_baseline)
+            if odata is None:
                 print("WARNING: Did not find any oclim_fils. Will try to skip.")
                 print(f"INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"INFO: The glob is: {data_src}_{var}_*.nc")
@@ -183,20 +185,26 @@ def polar_map(adfobj):
                     print(f"    {plot_loc} not found, making new directory")
                     plot_loc.mkdir(parents=True)
 
-                # load re-gridded model files:
+                """# load re-gridded model files:
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
 
-                mclim_ds = pf.load_dataset(mclim_fils)
-                if mclim_ds is None:
+                mclim_ds = pf.load_dataset(mclim_fils)"""
+                mdata = adfobj.data.load_regrid_da(case_name, var, eyear_cases[case_idx], eyear_cases[case_idx])
+                if mdata is None:
                     print("WARNING: Did not find any regridded climo files. Will try to skip.")
                     print(f"INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
                     print(f"INFO: The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
                 #End if
 
-                #Extract variable of interest
+                """#Load re-gridded model files:
+                mdata = adfobj.data.load_regrid_da(case_name, var, eyear_cases[case_idx], eyear_cases[case_idx])
+                # Gather reference variable data
+                odata = adfobj.data.load_reference_regrid_da(base_name, var, syear_baseline, eyear_baseline)"""
+
+                """#Extract variable of interest
                 odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
-                mdata = mclim_ds[var].squeeze()
+                mdata = mclim_ds[var].squeeze()"""
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
