@@ -182,7 +182,7 @@ def global_latlon_map(adfobj):
             base_name = adfobj.data.ref_labels[var]
 
         # Gather reference variable data
-        odata = adfobj.data.load_reference_regrid_da(base_name, var)
+        odata = adfobj.data.load_reference_regrid_da(base_name, var, syear_baseline, eyear_baseline)
 
         if odata is None:
             dmsg = f"No regridded test file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
@@ -209,7 +209,7 @@ def global_latlon_map(adfobj):
                 plot_loc.mkdir(parents=True)
 
             #Load re-gridded model files:
-            mdata = adfobj.data.load_regrid_da(case_name, var)
+            mdata = adfobj.data.load_regrid_da(case_name, var, eyear_cases[case_idx], eyear_cases[case_idx])
 
             #Skip this variable/case if the regridded climo file doesn't exist:
             if mdata is None:
