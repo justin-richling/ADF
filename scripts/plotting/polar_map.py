@@ -324,7 +324,7 @@ def polar_map(adfobj):
                             #exists in the model data, which should already
                             #have been interpolated to the standard reference
                             #pressure levels:
-                            if not (pres in mclim_ds['lev']):
+                            if not (pres in mdata['lev']):
                                 #Move on to the next pressure level:
                                 print(f"plot_press_levels value '{pres}' not a standard reference pressure, so skipping.")
                                 continue
