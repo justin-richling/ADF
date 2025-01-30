@@ -445,8 +445,11 @@ def aod_latlon(adfobj):
     eyear_cases = adfobj.climo_yrs["eyears"]
 
     #Grab baseline years (which may be empty strings if using Obs):
-    syears = syear_cases + [adfobj.climo_yrs["syear_baseline"]]
-    eyears = eyear_cases + [adfobj.climo_yrs["eyear_baseline"]]
+    syears_baseline = adfobj.climo_yrs["syear_baseline"]
+    eyears_baseline = adfobj.climo_yrs["eyear_baseline"]
+
+    #syears = syear_cases + [adfobj.climo_yrs["syear_baseline"]]
+    #eyears = eyear_cases + [adfobj.climo_yrs["eyear_baseline"]]
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -497,7 +500,7 @@ def aod_latlon(adfobj):
 
     for idx, case in enumerate(test_case_names):
         #Load re-gridded model files:
-        ds_case = adfobj.data.load_climo_da(case, var, syears[idx], eyears[idx])
+        ds_case = adfobj.data.load_climo_da(case, var, syear_cases[idx], eyear_cases[idx])
 
         #Skip this variable/case if the climo file doesn't exist:
         if ds_case is None:
@@ -566,7 +569,7 @@ def aod_latlon(adfobj):
         base_name = adfobj.data.ref_case_label
     
         # Gather reference variable data
-        ds_base = adfobj.data.load_reference_climo_da(base_name, var)
+        ds_base = adfobj.data.load_reference_climo_da(base_name, var, syears_baseline, eyears_baseline)
         if ds_base is None:
             dmsg = f"No baseline climo file for {base_name} for variable `{var}`, global lat/lon plots skipped."
             adfobj.debug_log(dmsg)
