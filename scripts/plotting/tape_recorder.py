@@ -196,7 +196,7 @@ def tape_recorder(adfobj):
         print("ts_loc",var,"\n")
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
-        dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx])
+        dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
         print("\n\n",type(dat),dat,"\n\n")
         #if dat is NoneType:
         #if not dat:
