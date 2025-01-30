@@ -340,7 +340,7 @@ class AdfData:
         return ds
 
     # Load DataArray
-    def load_da(self, fils, variablename, syr, eyr, type="timeseries", **kwargs):
+    def load_da(self, fils, variablename, syr, eyr, type=None, **kwargs):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
         ds = self.load_dataset(fils, syr, eyr)
         if ds is None:
