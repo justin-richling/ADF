@@ -445,7 +445,7 @@ def aod_latlon(adfobj):
     eyear_cases = adfobj.climo_yrs["eyears"]
 
     #Grab baseline years (which may be empty strings if using Obs):
-    syears = + [adfobj.climo_yrs["syear_baseline"]]
+    syears = syear_cases + [adfobj.climo_yrs["syear_baseline"]]
     eyears = eyear_cases + [adfobj.climo_yrs["eyear_baseline"]]
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
