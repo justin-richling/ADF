@@ -350,7 +350,7 @@ class AdfData:
         #Extract data subset using provided year bounds:
         #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
         #ds = ds.isel(time=tslice)
-            
+        print("\n\nda:",da,"\n\n")
         #Extract data subset using provided year bounds:
         tslice = self.get_time_slice_by_year(da.time, int(syr), int(eyr))
         da = da.isel(time=tslice)
