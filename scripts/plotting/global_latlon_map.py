@@ -334,6 +334,14 @@ def global_latlon_map(adfobj):
         #End for (case loop)
     #End for (variable loop)
 
+    """#Grab case years
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
+
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]"""
+
     # Check for AOD, and run the 4-panel diagnostics against MERRA and MODIS
     if "AODVISdn" in var_list:
         print("\tRunning AOD panel diagnostics against MERRA and MODIS...")
@@ -432,6 +440,14 @@ def aod_latlon(adfobj):
     base_nickname = adfobj.case_nicknames["base_nickname"]
     case_nicknames = test_nicknames + [base_nickname]
 
+    #Grab case years
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
+
+    #Grab baseline years (which may be empty strings if using Obs):
+    syears = + [adfobj.climo_yrs["syear_baseline"]]
+    eyears = eyear_cases + [adfobj.climo_yrs["eyear_baseline"]]
+
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
     res_aod_diags = res["aod_diags"]
@@ -479,9 +495,9 @@ def aod_latlon(adfobj):
     #-----------------------
     ds_cases = []
 
-    for case in test_case_names:
+    for idx, case in enumerate(test_case_names):
         #Load re-gridded model files:
-        ds_case = adfobj.data.load_climo_da(case, var)
+        ds_case = adfobj.data.load_climo_da(case, var, syears[idx], eyears[idx])
 
         #Skip this variable/case if the climo file doesn't exist:
         if ds_case is None:
