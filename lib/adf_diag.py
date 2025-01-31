@@ -548,6 +548,24 @@ class AdfDiag(AdfWeb):
                     # Notify user of new time series file:
                     print(f"\t - time series for {var}")
 
+
+                    ts_outfil_str = (
+                        ts_dir
+                        + os.sep
+                        + ".".join([case_name, hist_str, var, time_string, "nc"])
+                    )
+
+                    # Check if clobber is true for file
+                    if Path(ts_outfil_str).is_file():
+                        if overwrite_ts[case_idx]:
+                            Path(ts_outfil_str).unlink()
+                        else:
+                            #msg = f"[{__name__}] Warning: '{var}' file was found "
+                            msg = f"\t    INFO: '{var}' file was found "
+                            msg += "and overwrite is False. Will use existing file."
+                            print(msg)
+                            continue
+
                     # Set error messages for printing/debugging
                     # Derived variable, but missing constituent list
                     constit_errmsg = f"create time series for {case_name}:"
@@ -636,11 +654,11 @@ class AdfDiag(AdfWeb):
                     # Create full path name, file name template:
                     # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
 
-                    ts_outfil_str = (
+                    """ts_outfil_str = (
                         ts_dir
                         + os.sep
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
-                    )
+                    )"""
 
                     # Check if files already exist in time series directory:
                     ts_file_list = glob.glob(ts_outfil_str)
@@ -1201,7 +1219,8 @@ class AdfDiag(AdfWeb):
                     if overwrite:
                         Path(derived_file).unlink()
                     else:
-                        msg = f"[{__name__}] Warning: '{var}' file was found "
+                        #msg = f"[{__name__}] Warning: '{var}' file was found "
+                        msg = f"\t    INFO: '{var}' file was found "
                         msg += "and overwrite is False. Will use existing file."
                         print(msg)
                         continue
