@@ -211,7 +211,7 @@ def tape_recorder(adfobj):
 
     #Check to see if any cases were successful
     if not runname_LT:
-        msg = f"WARNING: No cases seem to be available, please check time series files for {var}."
+        msg = f"\t  WARNING: No cases seem to be available, please check time series files for {var}."
         msg += "\n\tNo tape recorder plots will be made."
         print(msg)
         #End tape recorder plotting script:
