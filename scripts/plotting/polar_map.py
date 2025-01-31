@@ -104,6 +104,8 @@ def polar_map(adfobj):
 
     # probably want to do this one variable at a time:
     for var in var_list:
+        #Notify user of variable being plotted:
+        print(f"\t - polar maps for {var}")
 
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
@@ -124,9 +126,6 @@ def polar_map(adfobj):
             #Set "data_var" for consistent use below:
             data_var = var
         #End if
-
-        #Notify user of variable being plotted:
-        print(f"\t - polar maps for {var}")
 
         # Check res for any variable specific options that need to be used BEFORE going to the plot:
         if var in res:

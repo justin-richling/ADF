@@ -138,6 +138,8 @@ def global_latlon_vect_map(adfobj):
 
     # probably want to do this one variable at a time:
     for var in var_list:
+        #Notify user of variable being plotted:
+        print(f"\t - lat/lon vector maps for {var},{var_pair}")
 
         #Don't process variable if already used in vector:
         if var in skip_vars:
@@ -214,9 +216,6 @@ def global_latlon_vect_map(adfobj):
             # reference (baseline) name
             base_name = adfobj.data.ref_case_label
         #End if
-
-        #Notify user of variable being plotted:
-        print(f"\t - lat/lon vector maps for {var},{var_pair}")
 
         #loop over different data sets to plot model against:
         for data_src in data_list:
