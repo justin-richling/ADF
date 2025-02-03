@@ -223,7 +223,7 @@ def global_latlon_vect_map(adfobj):
             # reference (baseline) name
             base_name = adfobj.data.ref_case_label
         #End if
-        pritn("data_list",data_list,"\n")
+        print("data_list",data_list,"\n")
         #loop over different data sets to plot model against:
         for data_src in data_list:
 
