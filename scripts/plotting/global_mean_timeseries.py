@@ -172,6 +172,7 @@ def global_mean_timeseries(adfobj):
                 print(
                     f"\t    WARNING: Variable {field} is missing a lat dimension for '{case_name}', cannot continue to plot."
                 )
+                skip_var = True
                 continue
             # End if
 
