@@ -138,8 +138,6 @@ def global_latlon_vect_map(adfobj):
 
     # probably want to do this one variable at a time:
     for var in var_list:
-        #Notify user of variable being plotted:
-        print(f"\t - lat/lon vector maps for {var},{var_pair}")
 
         #Don't process variable if already used in vector:
         if var in skip_vars:
@@ -168,6 +166,9 @@ def global_latlon_vect_map(adfobj):
             adfobj.debug_log(f"variable '{var}' not a vector pair")
             continue
         #End if
+
+        #Notify user of variable being plotted:
+        print(f"\t - lat/lon vector maps for {var},{var_pair}")
 
         #Add variables to "skipped vars" set:
         skip_vars.add(var)

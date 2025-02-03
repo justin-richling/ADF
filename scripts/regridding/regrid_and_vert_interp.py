@@ -158,6 +158,8 @@ def regrid_and_vert_interp(adf):
 
         # probably want to do this one variable at a time:
         for var in var_list:
+            #Notify user of variable being regridded:
+            print(f"\t - regridding {var} (known targets: {target_list})")
 
             if adf.compare_obs:
                 #Check if obs exist for the variable:
@@ -169,14 +171,12 @@ def regrid_and_vert_interp(adf):
                     #Extract target list (eventually will be a list, for now need to convert):
                     target_list = [var_obs_dict[var]["obs_name"]]
                 else:
-                    dmsg = f"No obs found for variable `{var}`, regridding skipped."
+                    dmsg = f"\t INFO: No obs found for variable `{var}`, regridding skipped."
                     adf.debug_log(dmsg)
+                    print(dmsg)
                     continue
                 #End if
             #End if
-
-            #Notify user of variable being regridded:
-            print(f"\t - regridding {var} (known targets: {target_list})")
 
             #loop over regridding targets:
             for target in target_list:
