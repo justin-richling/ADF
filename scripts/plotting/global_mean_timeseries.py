@@ -125,7 +125,7 @@ def global_mean_timeseries(adfobj):
 
         skip_var = False
         for case_idx,case_name in enumerate(adfobj.data.case_names):
-            ## SPECIAL SECTION -- CESM2 LENS DATA:
+            """## SPECIAL SECTION -- CESM2 LENS DATA:
             #Check if case years are close to LENS, if not don't plot the LENS data
             if (syear_cases[case_idx] > 1800) and ((syear_baseline > 1800) or (adfobj.compare_obs)):
                 lens2_data = Lens2Data(
@@ -134,7 +134,7 @@ def global_mean_timeseries(adfobj):
             else:
                 print(f"\t ** Some model years for {field} are outside LENS years, will skip plotting LENS data for clarity")
                 lens2_data = None
-            # End if - LENS
+            # End if - LENS"""
 
             c_ts_da = adfobj.data.load_timeseries_da(case_name, field)
 
@@ -180,6 +180,17 @@ def global_mean_timeseries(adfobj):
         # If this case is 3-d or missing variable, then break the loop and go to next variable
         if skip_var:
             continue
+
+        ## SPECIAL SECTION -- CESM2 LENS DATA:
+        #Check if case years are close to LENS, if not don't plot the LENS data
+        if (syear_cases[case_idx] > 1800) and ((syear_baseline > 1800) or (adfobj.compare_obs)):
+            lens2_data = Lens2Data(
+                field
+            )  # Provides access to LENS2 dataset when available (class defined below)
+        else:
+            print(f"\t ** Some model years for {field} are outside LENS years, will skip plotting LENS data for clarity")
+            lens2_data = None
+        # End if - LENS
 
         # Plot the timeseries
         fig, ax = make_plot(

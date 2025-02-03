@@ -171,7 +171,7 @@ def regrid_and_vert_interp(adf):
                     #Extract target list (eventually will be a list, for now need to convert):
                     target_list = [var_obs_dict[var]["obs_name"]]
                 else:
-                    dmsg = f"\t INFO: No obs found for variable `{var}`, regridding skipped."
+                    dmsg = f"\t    INFO: No obs found for variable `{var}`, regridding skipped."
                     adf.debug_log(dmsg)
                     print(dmsg)
                     continue
