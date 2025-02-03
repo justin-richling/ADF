@@ -209,7 +209,7 @@ def regrid_and_vert_interp(adf):
                     msg += "and overwrite is False. Will use existing file."
                     print(msg)
                     continue
-                elif (overwrite_regrid) and (regridded_file_loc.is_file()):
+                elif (overwrite_regrid) and (regridded_file_loc.is_file()) or ((not overwrite_regrid) and (not regridded_file_loc.is_file())):
                     print(f"\t    INFO: Regrid file exists for {var}, but clobber is {overwrite_regrid}, so will OVERWRITE it.")
 
                     #Create list of regridding target files (we should explore intake as an alternative to having this kind of repeated code)
