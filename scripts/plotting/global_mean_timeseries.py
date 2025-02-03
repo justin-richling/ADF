@@ -72,11 +72,11 @@ def global_mean_timeseries(adfobj):
         base_name = adfobj.data.ref_case_label
 
         # Check to see if this field is available
-        if (ref_ts_da is None) and (not adfobj.compare_obs):
+        if ref_ts_da is None:
             print(
                 f"\t    WARNING: Variable {field} for case '{base_name}' provides Nonetype. Skipping this variable"
             )
-            #continue
+            continue
         else:
             # check data dimensions:
             valdims = pf.zm_validate_dims(ref_ts_da)
