@@ -175,7 +175,7 @@ def create_climo_files(adf, clobber=False, search=None):
             ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var)
             ts_files = sorted(list(input_location.glob(ts_filenames)))
 
-            print("AH", case_name, ts_files,"\n")
+            print("AH", case_name, type(ts_files), ts_files,len(ts_files),"\n")
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
