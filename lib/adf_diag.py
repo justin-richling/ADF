@@ -642,7 +642,7 @@ class AdfDiag(AdfWeb):
                         else:
                             msg = f"\t    WARNING: {var} is not in the file {hist_files[0]} "
                             msg += "nor can it be derived.\n"
-                            msg += "\t  ** No time series will be generated."
+                            msg += "\t      ** No time series will be generated."
                             print(msg)
                             continue
                         # End if
