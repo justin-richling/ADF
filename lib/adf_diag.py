@@ -640,10 +640,17 @@ class AdfDiag(AdfWeb):
                         # Lastly, raise error if the variable is not a derived quanitity
                         # but is also not in the history file(s)
                         else:
-                            msg = f"\t    WARNING: {var} is not in the file {hist_files[0]} "
+                            """msg = f"\t    WARNING: {var} is not in the file {hist_files[0]} "
                             msg += "nor can it be derived.\n"
                             msg += "\t      ** No time series will be generated."
+                            print(msg)"""
+                            msg = f"\t    WARNING: {var} is not in the history file for case '{case_name}' "
+                            msg += "nor can it be derived. Script will continue to next variable."
+                            #msg += "\t      ** No time series will be generated."
                             print(msg)
+                            logmsg = f"create time series for {case_name}:"
+                            logmsg += f"\n {var} is not in the file {hist_files[0]} "
+                            self.debug_log(logmsg)
                             continue
                         # End if
                     # End if (var in var_diag_list)
