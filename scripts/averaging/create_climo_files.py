@@ -58,9 +58,9 @@ def create_climo_files(adf, clobber=False, search=None):
     from pathlib import Path
     from adf_base import AdfError
 
-    #Notify user that script has started:
+    """#Notify user that script has started:
     msg = "\n  Calculating CAM climatologies..."
-    print(f"{msg}\n  {'-' * (len(msg)-3)}")
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")"""
 
     # Set up multiprocessing pool to parallelize writing climo files.
     number_of_cpu = adf.num_procs  # Get number of available processors from the ADF
