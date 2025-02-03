@@ -107,6 +107,12 @@ def polar_map(adfobj):
         #Notify user of variable being plotted:
         print(f"\t - polar maps for {var}")
 
+        if var not in adfobj.data.ref_var_nam:
+            dmsg = f"\t    WARNING: No reference data found for variable `{var}`, polar lat/lon mean plotting skipped."
+            adfobj.debug_log(dmsg)
+            print(dmsg)
+            continue
+
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
             if var in var_obs_dict:

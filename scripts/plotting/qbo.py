@@ -128,12 +128,12 @@ def qbo(adfobj):
             casedatzm.append(casedat[i].U.mean("lon"))
     if len(casedatzm) == 0:
         print(f"\t  WARNING: No available cases found, exiting script.")
-        exitmsg += " No QBO plots will be made."
+        exitmsg = " No QBO plots will be made."
         print(exitmsg)
         return
     if len(casedatzm) != len(ncases):
         print(f"\t  WARNING: Number of available cases does not match number of cases. Will exit script for now.")
-        exitmsg += " No QBO plots will be made."
+        exitmsg = " No QBO plots will be made."
         print(exitmsg)
         return
 
