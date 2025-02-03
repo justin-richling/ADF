@@ -150,7 +150,7 @@ class AdfData:
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_timeseries_file(case, variablename)
         if not fils:
-            warnings.warn(f"\t    WARNING: Did not find ccase time series file(s), variable: {variablename}")
+            warnings.warn(f"\t    WARNING: Did not find case time series file(s), variable: {variablename}")
             return None
         return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor)
     
