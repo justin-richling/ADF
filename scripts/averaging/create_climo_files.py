@@ -181,11 +181,11 @@ def create_climo_files(adf, clobber=False, search=None):
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
             if not ts_files:
                 errmsg = f"\t    WARNING: Time series files for variable '{var}' not found.  Script will continue to next variable."
+                warnings.warn(errmsg)
                 logmsg = f"climo file generation: The input location searched was: {input_location}. The glob pattern was {ts_filenames}."
                 #Write to debug log if enabled:
                 adf.debug_log(logmsg)
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
-                warnings.warn(errmsg)
                 continue
 
             list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
