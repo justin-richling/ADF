@@ -169,7 +169,6 @@ def global_latlon_vect_map(adfobj):
 
         #Notify user of variable being plotted:
         print(f"\t - lat/lon vector maps for {var},{var_pair}")
-        print("adfobj.data.ref_var_nam",adfobj.data.ref_var_nam,"\n")
 
         if var not in adfobj.data.ref_var_nam:
             dmsg = f"\t    WARNING: No reference data found for variable `{var}`, polar lat/lon mean plotting skipped."
@@ -199,7 +198,7 @@ def global_latlon_vect_map(adfobj):
                 #Extract target variable name:
                 data_var = [var_obs_dict[var]["obs_var"]]
             else:
-                dmsg = f"\t    WARNING: No obs found for variable `{var}`, lat/lon vector map plotting skipped."
+                dmsg = f"\t    WARNING: No reference found for variable `{var}`, lat/lon vector map plotting skipped."
                 adfobj.debug_log(dmsg)
                 print(dmsg)
                 continue
@@ -213,7 +212,7 @@ def global_latlon_vect_map(adfobj):
                 #Extract target variable name:
                 data_var.append(var_obs_dict[var_pair]["obs_var"])
             else:
-                dmsg = f"\t    WARNING: No obs found for variable `{var}`, lat/lon vector map plotting skipped."
+                dmsg = f"\t    WARNING: No reference found for variable `{var}`, lat/lon vector map plotting skipped."
                 adfobj.debug_log(dmsg)
                 print(dmsg)
                 continue
@@ -226,7 +225,7 @@ def global_latlon_vect_map(adfobj):
             # reference (baseline) name
             base_name = adfobj.data.ref_case_label
         #End if
-        print("data_list",data_list,"\n")
+
         #loop over different data sets to plot model against:
         for data_src in data_list:
 
