@@ -131,7 +131,7 @@ def qbo(adfobj):
         exitmsg = "\tNo QBO plots will be made."
         print(exitmsg)
         return
-    if len(casedatzm) != len(ncases):
+    if len(casedatzm) != ncases:
         print(f"\t  WARNING: Number of available cases does not match number of cases. Will exit script for now.")
         exitmsg = "\tNo QBO plots will be made."
         print(exitmsg)

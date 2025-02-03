@@ -46,8 +46,7 @@ def regrid_and_vert_interp(adf):
     # - regrid one to the other (probably should be a choice)
 
     #Notify user that script has started:
-    msg = "\n  Regridding CAM climatologies..."
-    print(f"{msg}\n  {'-' * (len(msg)-3)}")
+    print("\n  Regridding CAM climatologies...")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
@@ -142,7 +141,7 @@ def regrid_and_vert_interp(adf):
     for case_idx, case_name in enumerate(case_names):
 
         #Notify user of model case being processed:
-        print(f"\n\t Regridding case '{case_name}' to '{target_list[0]}' :")
+        print(f"\t Regridding case '{case_name}' :")
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
@@ -158,8 +157,6 @@ def regrid_and_vert_interp(adf):
 
         # probably want to do this one variable at a time:
         for var in var_list:
-            #Notify user of variable being regridded:
-            print(f"\t - regridding {var} (known targets: {target_list})")
 
             if adf.compare_obs:
                 #Check if obs exist for the variable:
@@ -171,12 +168,14 @@ def regrid_and_vert_interp(adf):
                     #Extract target list (eventually will be a list, for now need to convert):
                     target_list = [var_obs_dict[var]["obs_name"]]
                 else:
-                    dmsg = f"\t    INFO: No obs found for variable `{var}`, regridding skipped."
+                    dmsg = f"No obs found for variable `{var}`, regridding skipped."
                     adf.debug_log(dmsg)
-                    print(dmsg)
                     continue
                 #End if
             #End if
+
+            #Notify user of variable being regridded:
+            print(f"\t - regridding {var} (known targets: {target_list})")
 
             #loop over regridding targets:
             for target in target_list:
@@ -194,23 +193,14 @@ def regrid_and_vert_interp(adf):
                     pmid_loc_dict[target] = regridded_file_loc
                 #End if
 
-                """#Check if re-gridded file already exists and over-writing is allowed:
+                #Check if re-gridded file already exists and over-writing is allowed:
                 if regridded_file_loc.is_file() and overwrite_regrid:
                     #If so, then delete current file:
                     regridded_file_loc.unlink()
-                #End if"""
-
+                #End if
 
                 #Check again if re-gridded file already exists:
-                #if not regridded_file_loc.is_file():
-                if (not overwrite_regrid) and (regridded_file_loc.is_file()):
-                    #print(f"\t    INFO: Found climo file and clobber is False, so skipping {var} and moving to next variable.")
-                    msg = f"\t    INFO: '{var}' file was found "
-                    msg += "and overwrite is False. Will use existing file."
-                    print(msg)
-                    continue
-                elif (overwrite_regrid) and (regridded_file_loc.is_file()) or ((not overwrite_regrid) and (not regridded_file_loc.is_file())):
-                    print(f"\t    INFO: Regrid file exists for {var}, but clobber is {overwrite_regrid}, so will OVERWRITE it.")
+                if not regridded_file_loc.is_file():
 
                     #Create list of regridding target files (we should explore intake as an alternative to having this kind of repeated code)
                     # NOTE: This breaks if you have files from different cases in same directory!
@@ -390,8 +380,8 @@ def regrid_and_vert_interp(adf):
                         #Write interpolated baseline climatology to file:
                         save_to_nc(tgdata_interp, interp_bl_file)
                     #End if
-                """else:
-                    print("\t    INFO: Regridded file already exists, so skipping...")"""
+                else:
+                    print("\t Regridded file already exists, so skipping...")
                 #End if (file check)
             #End do (target list)
         #End do (variable list)
