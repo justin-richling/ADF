@@ -76,7 +76,7 @@ def global_mean_timeseries(adfobj):
             print(
                 f"\t    WARNING: Variable {field} for case '{base_name}' provides Nonetype. Skipping this variable"
             )
-            continue
+            #continue
         else:
             # check data dimensions:
             valdims = pf.zm_validate_dims(ref_ts_da)
