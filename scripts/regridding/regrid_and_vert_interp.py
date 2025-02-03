@@ -218,7 +218,7 @@ def regrid_and_vert_interp(adf):
                         #Combine all target files together into a single data set:
                         tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
                     elif len(tclim_fils) == 0:
-                        print(f"\t    WARNING: regridding {var} failed, no file. Continuing to next variable.")
+                        print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
                     else:
                         #Open single file as new xarray dataset:
@@ -232,8 +232,9 @@ def regrid_and_vert_interp(adf):
                         #Combine all cam files together into a single data set:
                         mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
                     elif len(mclim_fils) == 0:
-                        wmsg = f"\t    WARNING: Unable to find climo file for '{var}'."
-                        wmsg += " Continuing to next variable."
+                        #wmsg = f"\t    WARNING: Unable to find climo file for '{var}'."
+                        #wmsg += " Continuing to next variable."
+                        wmsg= f"\t    WARNING: regridding {var} failed, no climo file for case '{case_name}'. Continuing to next variable."
                         print(wmsg)
                         continue
                     else:
