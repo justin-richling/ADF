@@ -170,6 +170,12 @@ def global_latlon_vect_map(adfobj):
         #Notify user of variable being plotted:
         print(f"\t - lat/lon vector maps for {var},{var_pair}")
 
+        if var not in adfobj.data.ref_var_nam:
+            dmsg = f"\t    WARNING: No reference data found for variable `{var}`, polar lat/lon mean plotting skipped."
+            adfobj.debug_log(dmsg)
+            print(dmsg)
+            continue
+
         #Add variables to "skipped vars" set:
         skip_vars.add(var)
         skip_vars.add(var_pair)
