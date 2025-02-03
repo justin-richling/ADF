@@ -202,6 +202,7 @@ def global_latlon_vect_map(adfobj):
             else:
                 dmsg = f"\t    WARNING: No obs found for variable `{var}`, lat/lon vector map plotting skipped."
                 adfobj.debug_log(dmsg)
+                print(dmsg)
                 continue
             #End if
             #Check if obs exist for vector pair variable:
@@ -215,6 +216,7 @@ def global_latlon_vect_map(adfobj):
             else:
                 dmsg = f"\t    WARNING: No obs found for variable `{var}`, lat/lon vector map plotting skipped."
                 adfobj.debug_log(dmsg)
+                print(dmsg)
                 continue
             #End if
 
