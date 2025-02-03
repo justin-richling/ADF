@@ -101,7 +101,7 @@ def polar_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    print(var_list,"\n")
+
     # probably want to do this one variable at a time:
     for var in var_list:
         #Notify user of variable being plotted:
