@@ -6,8 +6,6 @@ import matplotlib as mpl
 import xarray as xr
 import pandas as pd
 
-from types import NoneType
-
 from dateutil.relativedelta import relativedelta
 import glob
 from pathlib import Path
@@ -39,11 +37,19 @@ def tape_recorder(adfobj):
     plot_loc = Path(plot_location[0])
 
     #Grab test case name(s)
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
-    #case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
-    case_ts_locs = adfobj.ts_locs["test"]
+    case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
+    if case_ts_locs is None:
+        print("\tNo time series locations found for any test cases")
+        case_ts_locs = []
+        #return
+        #exit
+    else:
+        for i,case_ts_loc in enumerate(case_ts_locs):
+            if case_ts_loc is None:
+                print(f"Case '{test_case_names[i]}' is missing time series location, skipping case boi! case_ts_loc: {case_ts_loc}")
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
@@ -74,32 +80,33 @@ def tape_recorder(adfobj):
 
         #Append all baseline objects to test case lists
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
-        case_names = case_names + [data_name]
+        case_names = test_case_names + [data_name]
         
         #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         data_ts_loc = adfobj.ts_locs["baseline"]
-        if data_ts_loc:
-            case_ts_locs = case_ts_locs+[data_ts_loc]
-
-            base_nickname = adfobj.case_nicknames['base_nickname']
-            test_nicknames = test_nicknames+[base_nickname]
-
-            data_start_year = adfobj.climo_yrs["syear_baseline"]
-            data_end_year = adfobj.climo_yrs["eyear_baseline"]
-            start_years = start_years+[data_start_year]
-            end_years = end_years+[data_end_year]
-
-            #Grab history string:
-            baseline_hist_strs = adfobj.hist_string["base_hist_str"]
-            print("baseline_hist_strs",baseline_hist_strs)
-            # Filter the list to include only strings that are exactly in the substrings list
-            base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
-            print("base_hist_strs",base_hist_strs)
-            hist_strs = case_hist_strs + base_hist_strs
+        if data_ts_loc is None:
+            print("\tNo time series location found for baseline case")
+            #case_ts_locs = ""
         else:
-            hist_strs = case_hist_strs
+            case_ts_locs = case_ts_locs+[data_ts_loc]
+        print("case_ts_locs",case_ts_locs)
+
+        base_nickname = adfobj.case_nicknames['base_nickname']
+        test_nicknames = test_nicknames+[base_nickname]
+
+        #data_start_year = adfobj.climo_yrs["syear_baseline"]
+        #data_end_year = adfobj.climo_yrs["eyear_baseline"]
+        #start_years = start_years+[data_start_year]
+        #end_years = end_years+[data_end_year]
+
+        #Grab history string:
+        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
+        # Filter the list to include only strings that are exactly in the substrings list
+        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+        hist_strs = case_hist_strs + base_hist_strs
     else:
         hist_strs = case_hist_strs
+        data_name = "Obs"
     #End if
     print("hist_strs",hist_strs,"\n")
     if not case_ts_locs:
