@@ -59,6 +59,13 @@ def qbo(adfobj):
     if not case_loc:
         exitmsg = "WARNING: No time series files in any case directory."
         exitmsg += " No QBO plots will be made."
+        print(exitmsg)
+        logmsg = "create qbo:"
+        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
+        logmsg += f"\n None were found for any case. Please check the time series paths."
+        adfobj.debug_log(logmsg)
+        #End QBO plotting script:
+        return
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
