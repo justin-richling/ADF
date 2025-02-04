@@ -154,6 +154,20 @@ def create_climo_files(adf, clobber=False, search=None):
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
         if not calc_climos[case_idx]:
+            #if (not calc_ts[case_idx]) and (ts_dirs[case_idx]):
+            if 1==1:
+                emsg = " Configuration file indicates climo files have been pre-computed"
+                emsg += f" for case '{case_name}'.  Will rely on those files directly."
+                print(emsg)
+                continue
+            # End if
+            
+            """if (not calc_ts[case_idx]) and (not ts_dirs[case_idx]):
+                emsg = f" Configuration file indicates time series files for case '{case_name}'"
+                emsg += f" don't need to be used."
+                print(emsg)
+                continue
+            # End if"""
             continue
 
         #Notify user of model case being processed:
