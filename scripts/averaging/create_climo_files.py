@@ -239,12 +239,14 @@ def create_climo_files(adf, clobber=False, search=None):
                     #  end_diag_script(errmsg) # Previously we would kill the run here.
                     warnings.warn(errmsg)
                 continue
-
+            
+            if var == var_list[0]:
+                first=True
             if len(ts_files) > 1:
-                process_variable(adf, ts_files, syr, eyr, output_file)
+                process_variable(adf, ts_files, syr, eyr, output_file,first=first)
             else:
                 nums.append("yup")
-                list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
+                list_of_arguments.append((adf, ts_files, syr, eyr, output_file,None,first))
 
         #End of var_list loop
         #--------------------
@@ -264,7 +266,7 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None):
+def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first=False):
     '''
     Compute and save the climatology file.
     '''
@@ -288,8 +290,8 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None):
     cam_ts_data = cam_ts_data.isel(time=tslice)
     #Retrieve the actual time values from the slice
     actual_time_values = cam_ts_data.time.values
-
-    print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
+    if first:
+        print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
 
     #Set a global attribute with the actual time values
     #cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
