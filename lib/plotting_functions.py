@@ -1460,7 +1460,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     # set rmse title:
     ax[3].set_title(f"RMSE: {d_rmse:.3f}", fontsize=tiFontSize)
     ax[3].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
-    ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=tiFontSize,fontweight="bold")
+    #ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=tiFontSize,fontweight="bold")
+    ax[2].set_title("$\mathbf{Test % diff Baseline}", loc='left', fontsize=tiFontSize)
 
     for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
