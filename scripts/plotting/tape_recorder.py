@@ -87,7 +87,7 @@ def tape_recorder(adfobj):
         data_ts_loc = adfobj.ts_locs["baseline"]
         if data_ts_loc is None:
             print("\tNo time series location found for baseline case")
-            #case_ts_locs = ""
+            case_ts_locs = None
         else:
             case_ts_locs = case_ts_locs+[data_ts_loc]
         print("case_ts_locs",case_ts_locs)
