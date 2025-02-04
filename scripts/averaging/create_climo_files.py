@@ -242,6 +242,8 @@ def create_climo_files(adf, clobber=False, search=None):
             
             if var == var_list[0]:
                 first=True
+            else:
+                first=False
             if len(ts_files) > 1:
                 process_variable(adf, ts_files, syr, eyr, output_file,first=first)
             else:
