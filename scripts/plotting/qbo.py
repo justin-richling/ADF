@@ -14,14 +14,6 @@ def my_formatwarning(msg, *args, **kwargs):
 
 warnings.formatwarning = my_formatwarning
 
-def get_time_slice_by_year(time, startyear, endyear):
-    if not hasattr(time, 'dt'):
-        print("Warning: get_time_slice_by_year requires the `time` parameter to be an xarray time coordinate with a dt accessor. Returning generic slice (which will probably fail).")
-        return slice(startyear, endyear)
-    start_time_index = np.argwhere((time.dt.year >= startyear).values).flatten().min()
-    end_time_index = np.argwhere((time.dt.year <= endyear).values).flatten().max()
-    return slice(start_time_index, end_time_index+1)
-
 def qbo(adfobj):
     """
     This subroutine plots...
@@ -42,7 +34,16 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
+    case_loc = adfobj.get_cam_info('cam_ts_loc')
+    if case_loc is None:
+        print("\tNo time series locations found for any test cases")
+        case_loc = []
+        #return
+        #exit
+    else:
+        for i,case_ts_loc in enumerate(case_loc):
+            if case_ts_loc is None:
+                print(f"Case '{case_names[i]}' is missing time series location, skipping case case_ts_loc: {case_ts_loc}")
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
     #Extract baseline years:
@@ -55,6 +56,9 @@ def qbo(adfobj):
     #Extract simulation years:
     start_years = adfobj.climo_yrs["syears"]
     end_years   = adfobj.climo_yrs["eyears"]
+    if not case_loc:
+        exitmsg = "WARNING: No time series files in any case directory."
+        exitmsg += " No QBO plots will be made."
 
     #Grab all case nickname(s)
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
