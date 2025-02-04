@@ -186,9 +186,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Loop over CAM output variables:
         list_of_arguments = []
         nums = []
-        for idx,var in enumerate(var_list):
-            if idx == 0:
-                first = True
+        for var in var_list:
             print(f"\t- processing climo file for '{var}'")
 
             # Create name of climatology output file (which includes the full path)
@@ -243,10 +241,10 @@ def create_climo_files(adf, clobber=False, search=None):
                 continue
 
             if len(ts_files) > 1:
-                process_variable(adf, ts_files, syr, eyr, output_file,first=first)
+                process_variable(adf, ts_files, syr, eyr, output_file)
             else:
                 nums.append("yup")
-                list_of_arguments.append((adf, ts_files, syr, eyr, output_file,first))
+                list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
 
         #End of var_list loop
         #--------------------
@@ -266,7 +264,7 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first=False):
+def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None):
     '''
     Compute and save the climatology file.
     '''
@@ -290,8 +288,8 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first
     cam_ts_data = cam_ts_data.isel(time=tslice)
     #Retrieve the actual time values from the slice
     actual_time_values = cam_ts_data.time.values
-    if first:
-        print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
+
+    print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
 
     #Set a global attribute with the actual time values
     #cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
