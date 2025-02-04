@@ -95,10 +95,10 @@ def tape_recorder(adfobj):
         base_nickname = adfobj.case_nicknames['base_nickname']
         test_nicknames = test_nicknames+[base_nickname]
 
-        #data_start_year = adfobj.climo_yrs["syear_baseline"]
-        #data_end_year = adfobj.climo_yrs["eyear_baseline"]
-        #start_years = start_years+[data_start_year]
-        #end_years = end_years+[data_end_year]
+        data_start_year = adfobj.climo_yrs["syear_baseline"]
+        data_end_year = adfobj.climo_yrs["eyear_baseline"]
+        start_years = start_years+[data_start_year]
+        end_years = end_years+[data_end_year]
 
         #Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
