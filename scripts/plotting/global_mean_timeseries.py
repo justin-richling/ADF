@@ -186,7 +186,7 @@ def global_mean_timeseries(adfobj):
         if skip_var:
             continue
 
-        ## SPECIAL SECTION -- CESM2 LENS DATA:
+        """## SPECIAL SECTION -- CESM2 LENS DATA:
         #Check if case years are close to LENS, if not don't grab the LENS data
         if (syear_cases[case_idx] > 1800) and ((syear_baseline > 1800) or (adfobj.compare_obs)):
             lens2_data = Lens2Data(
@@ -197,6 +197,11 @@ def global_mean_timeseries(adfobj):
             lens2_data = None
         # End if - LENS
 
+        lens2_data = Lens2Data(
+                field
+            )  # Provides access to LENS2 dataset when available (class defined below)"""
+
+        ## SPECIAL SECTION -- CESM2 LENS DATA:
         # Plot the timeseries
         fig, ax = make_plot(
             field, case_ts, lens2_data, label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
