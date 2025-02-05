@@ -252,7 +252,7 @@ def global_latlon_vect_map(adfobj):
             else:
                 print("\t    WARNING: Did not find any oclim_fils. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
-                print(f"\t    INFO: The glob is: {data_src}_{data_var[0]}_*.nc")
+                print(f"\t          The glob is: {data_src}_{data_var[0]}_*.nc")
                 continue
             #End if
 
@@ -264,7 +264,7 @@ def global_latlon_vect_map(adfobj):
             else:
                 print("\t    WARNING: Did not find any oclim_fils. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
-                print(f"\t    INFO: The glob is: {data_src}_{data_var[1]}_*.nc")
+                print(f"\t          The glob is: {data_src}_{data_var[1]}_*.nc")
                 continue
             #End if
 
