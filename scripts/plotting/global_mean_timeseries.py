@@ -80,12 +80,13 @@ def global_mean_timeseries(adfobj):
             continue
         else:
             # check data dimensions:
-            valdims = pf.zm_validate_dims(ref_ts_da)
+            has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
+            """valdims = pf.zm_validate_dims(ref_ts_da)
             if valdims is not None:
                 has_lat_ref, has_lev_ref = valdims
             else:
                 has_lat_ref, has_lev_ref = False, False
-            # End if
+            # End if"""
 
             # check if this is a "2-d" varaible:
             if has_lev_ref:
@@ -150,12 +151,13 @@ def global_mean_timeseries(adfobj):
 
             # If no reference, we still need to check if this is a "2-d" varaible:
             # check data dimensions:
-            valdims = pf.zm_validate_dims(c_ts_da)
+            has_lat_case, has_lev_case = pf.zm_validate_dims(c_ts_da)
+            """valdims = pf.zm_validate_dims(c_ts_da)
             if valdims is not None:
                 has_lat_case, has_lev_case = valdims
             else:
                 has_lat_case, has_lev_case = False, False
-            # End if
+            # End if"""
 
             # If 3-d variable, notify user, flag and move to next test case
             if has_lev_case:

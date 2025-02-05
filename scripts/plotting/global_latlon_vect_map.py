@@ -272,12 +272,13 @@ def global_latlon_vect_map(adfobj):
             vodata = vodata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
             #Check zonal mean dimensions
-            valdims = pf.zm_validate_dims(uodata)
+            has_lat_ref, has_lev_ref = pf.zm_validate_dims(uodata)
+            """valdims = pf.zm_validate_dims(uodata)
             if valdims is not None:
                 has_lat_ref, has_lev_ref = valdims
             else:
                 has_lat_ref, has_lev_ref = False, False
-            # End if
+            # End if"""
 
             # check if there is a lat dimension:
             if not has_lat_ref:
@@ -336,11 +337,12 @@ def global_latlon_vect_map(adfobj):
                 vmdata = vmdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
                 #Check dimensions:
-                valdims = pf.zm_validate_dims(umdata)  # assumes will work for both mdata & odata
+                has_lat, has_lev = pf.zm_validate_dims(umdata)
+                """valdims = pf.zm_validate_dims(umdata)  # assumes will work for both mdata & odata
                 if valdims is not None:
                     has_lat, has_lev = valdims
                 else:
-                    has_lat, has_lev = False, False
+                    has_lat, has_lev = False, False"""
 
                 # check if there is a lat dimension:
                 if not has_lat:

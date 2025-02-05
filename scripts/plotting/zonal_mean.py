@@ -178,12 +178,13 @@ def zonal_mean(adfobj):
             continue
 
         #Check zonal mean dimensions
-        valdims = pf.zm_validate_dims(odata)
+        has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
+        """valdims = pf.zm_validate_dims(odata)
         if valdims is not None:
             has_lat_ref, has_lev_ref = valdims
         else:
             has_lat_ref, has_lev_ref = False, False
-        # End if
+        # End if"""
 
         # check if there is a lat dimension:
         # if not, skip test cases and move to next variable
@@ -214,12 +215,13 @@ def zonal_mean(adfobj):
             # determine whether it's 2D or 3D
             # 3D triggers search for surface pressure
             # check data dimensions:
-            valdims = pf.zm_validate_dims(mdata)
+            has_lat, has_lev = pf.zm_validate_dims(mdata)
+            """valdims = pf.zm_validate_dims(mdata)
             if valdims is not None:
                 has_lat, has_lev = valdims
             else:
                 has_lat, has_lev = False, False
-            # End if
+            # End if"""
 
             # check if there is a lat dimension:
             if not has_lat:
