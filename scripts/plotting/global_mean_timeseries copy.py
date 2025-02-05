@@ -32,7 +32,6 @@ def global_mean_timeseries(adfobj):
     """
 
     #Notify user that script has started:
-    msg = "\n  Generating global mean time series plots..."
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     # Gather ADF configurations
@@ -113,8 +112,6 @@ def global_mean_timeseries(adfobj):
 
         # Loop over model cases:
         case_ts = {}  # dictionary of annual mean, global mean time series
-        case_syr = []
-        case_eyr = []
         # use case nicknames instead of full case names if supplied:
         labels = {
             case_name: nickname if nickname else case_name
@@ -184,9 +181,6 @@ def global_mean_timeseries(adfobj):
             c_ts_da_ga = pf.spatial_average(c_ts_da)
             case_ts[labels[case_name]] = pf.annual_mean(c_ts_da_ga)
 
-            case_syr.append(min(c_ts_da.year))
-            case_eyr.append(max(c_ts_da.year))
-
         # If this case is 3-d or missing variable, then break the loop and go to next variable
         if skip_var:
             continue
@@ -209,8 +203,7 @@ def global_mean_timeseries(adfobj):
         ## SPECIAL SECTION -- CESM2 LENS DATA:
         # Plot the timeseries
         fig, ax = make_plot(
-            field, case_ts, lens2_data, case_syr, case_eyr,
-            label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
+            field, case_ts, lens2_data, label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
         )
 
         unit = vres.get("new_unit","[-]")
@@ -314,7 +307,7 @@ class Lens2Data:
 ######
 
 
-def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=None):
+def make_plot(field, case_ts, lens2=None, label=None, ref_ts_da=None):
     """plot yearly values of ref_ts_da"""
     fig, ax = plt.subplots()
 
@@ -326,27 +319,27 @@ def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=N
         return fig, ax
     for c, cdata in case_ts.items():
         ax.plot(cdata.year, cdata, label=c)
-    #if lens2:
-    field = lens2.field  # this will be defined even if no LENS2 data
-    if lens2.has_lens:
-        lensmin = lens2.lens2[field].min("M")  # note: "M" is the member dimension
-        lensmax = lens2.lens2[field].max("M")
-        ax.fill_between(lensmin.year, lensmin, lensmax, color="lightgray", alpha=0.5)
-        ax.plot(
-            lens2.lens2[field].year,
-            lens2.lens2[field].mean("M"),
-            color="darkgray",
-            linewidth=2,
-            label="LENS2",
-        )
+    if lens2:
+        field = lens2.field  # this will be defined even if no LENS2 data
+        if lens2.has_lens:
+            lensmin = lens2.lens2[field].min("M")  # note: "M" is the member dimension
+            lensmax = lens2.lens2[field].max("M")
+            ax.fill_between(lensmin.year, lensmin, lensmax, color="lightgray", alpha=0.5)
+            ax.plot(
+                lens2.lens2[field].year,
+                lens2.lens2[field].mean("M"),
+                color="darkgray",
+                linewidth=2,
+                label="LENS2",
+            )
     # Get the current y-axis limits
     ymin, ymax = ax.get_ylim()
     # Check if the y-axis crosses zero
     if ymin < 0 < ymax:
         ax.axhline(y=0, color="lightgray", linestyle="-", linewidth=1)
     ax.set_title(field, loc="left")
-    #case_syr, case_eyr,
-    ax.set_xlim(min(case_syr), max(case_eyr))
+
+    ax.set_xlim(min(cdata.year), max(cdata.year))
     # Force x-axis to use only integer labels
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 
