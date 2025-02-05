@@ -195,11 +195,11 @@ def global_mean_timeseries(adfobj):
         else:
             print(f"\t ** Model years for {field} are outside LENS years, will skip plotting LENS data for clarity")
             lens2_data = None
-        # End if - LENS
+        # End if - LENS"""
 
         lens2_data = Lens2Data(
                 field
-            )  # Provides access to LENS2 dataset when available (class defined below)"""
+            )  # Provides access to LENS2 dataset when available (class defined below)
 
         ## SPECIAL SECTION -- CESM2 LENS DATA:
         # Plot the timeseries
