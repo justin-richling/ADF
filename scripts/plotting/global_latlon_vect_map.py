@@ -170,11 +170,11 @@ def global_latlon_vect_map(adfobj):
         #Notify user of variable being plotted:
         print(f"\t - lat/lon vector maps for {var},{var_pair}")
 
-        if var not in adfobj.data.ref_var_nam:
-            dmsg = f"\t    WARNING: No reference data found for variable `{var}`, lat/lon vector map plotting skipped."
+        """if var not in adfobj.data.ref_var_nam:
+            dmsg = f"\t    WARNING: No reference data found for variable `{var}`, lat/lon vector map skipped."
             adfobj.debug_log(dmsg)
             print(dmsg)
-            continue
+            continue"""
 
         #Add variables to "skipped vars" set:
         skip_vars.add(var)
@@ -187,6 +187,11 @@ def global_latlon_vect_map(adfobj):
 
         #Determine observations to compare against:
         if adfobj.compare_obs:
+            if var not in adfobj.data.ref_var_nam:
+                dmsg = f"\t    WARNING: No reference data found for variable `{var}`, lat/lon vector map skipped."
+                adfobj.debug_log(dmsg)
+                print(dmsg)
+                continue
             #Check if obs exist for the variable:
             if var in var_obs_dict:
                 #Note: In the future these may all be lists, but for
@@ -198,7 +203,7 @@ def global_latlon_vect_map(adfobj):
                 #Extract target variable name:
                 data_var = [var_obs_dict[var]["obs_var"]]
             else:
-                dmsg = f"\t    WARNING: No reference found for variable `{var}`, lat/lon vector map plotting skipped."
+                dmsg = f"\t    WARNING: No reference data found for variable `{var}`, lat/lon vector map skipped."
                 adfobj.debug_log(dmsg)
                 print(dmsg)
                 continue
@@ -212,7 +217,7 @@ def global_latlon_vect_map(adfobj):
                 #Extract target variable name:
                 data_var.append(var_obs_dict[var_pair]["obs_var"])
             else:
-                dmsg = f"\t    WARNING: No reference found for variable `{var}`, lat/lon vector map plotting skipped."
+                dmsg = f"\t    WARNING: No reference data found for variable `{var}`, lat/lon vector map skipped."
                 adfobj.debug_log(dmsg)
                 print(dmsg)
                 continue

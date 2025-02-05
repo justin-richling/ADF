@@ -125,7 +125,7 @@ def polar_map(adfobj):
                 #Extract target variable name:
                 data_var = var_obs_dict[var]["obs_var"]
             else:
-                dmsg = f"\t    WARNING: No obs found for variable `{var}`, polar map plotting skipped."
+                dmsg = f"\t    WARNING: No obs found for variable `{var}`, polar map skipped."
                 adfobj.debug_log(dmsg)
                 continue
         else:
@@ -161,7 +161,7 @@ def polar_map(adfobj):
            
             oclim_ds = pf.load_dataset(oclim_fils)
             if oclim_ds is None:
-                print("\t    WARNING: Did not find any oclim_fils. Will try to skip.")
+                print("\t    WARNING: Did not find any regridded climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"\t    INFO: The glob is: {data_src}_{var}_*.nc")
                 continue
@@ -185,7 +185,7 @@ def polar_map(adfobj):
 
                 mclim_ds = pf.load_dataset(mclim_fils)
                 if mclim_ds is None:
-                    print("\t  any regridded climo files. Will try to skip.")
+                    print("\t    WARNING: Did not find any regridded climo files. Will try to skip.")
                     print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
                     print(f"\t    INFO: The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
