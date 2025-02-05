@@ -187,13 +187,13 @@ def global_mean_timeseries(adfobj):
             continue
 
         ## SPECIAL SECTION -- CESM2 LENS DATA:
-        #Check if case years are close to LENS, if not don't plot the LENS data
+        #Check if case years are close to LENS, if not don't grab the LENS data
         if (syear_cases[case_idx] > 1800) and ((syear_baseline > 1800) or (adfobj.compare_obs)):
             lens2_data = Lens2Data(
                 field
             )  # Provides access to LENS2 dataset when available (class defined below)
         else:
-            print(f"\t ** Some model years for {field} are outside LENS years, will skip plotting LENS data for clarity")
+            print(f"\t ** Model years for {field} are outside LENS years, will skip plotting LENS data for clarity")
             lens2_data = None
         # End if - LENS
 
