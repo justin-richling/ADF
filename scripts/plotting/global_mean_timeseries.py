@@ -330,7 +330,7 @@ def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=N
     else:
         f"\t    WARNING: Variable {field} has a data."
         return fig, ax
-    for idx, c, cdata in enumerate(case_ts.items()):
+    for idx, (c, cdata) in enumerate(case_ts.items()):
         ax.plot(cdata.year, cdata, label=c)
         if idx == 0:
             syr = min(cdata.year)
