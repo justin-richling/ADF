@@ -332,6 +332,7 @@ def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=N
         return fig, ax
     for idx, (c, cdata) in enumerate(case_ts.items()):
         ax.plot(cdata.year, cdata, label=c)
+        # Force the plot axis to always plot the test case years
         if idx == 0:
             syr = min(cdata.year)
             eyr = max(cdata.year)
@@ -355,6 +356,7 @@ def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=N
         ax.axhline(y=0, color="lightgray", linestyle="-", linewidth=1)
     ax.set_title(field, loc="left")
 
+    # Set the x-axis limits to the first test case climo years
     ax.set_xlim(syr, eyr)
     # Force x-axis to use only integer labels
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
