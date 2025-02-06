@@ -9,6 +9,7 @@ from pathlib import Path
 from types import NoneType
 import warnings  # use to warn user about missing files.
 import xarray as xr
+import numpy as np
 import matplotlib.pyplot as plt
 import plotting_functions as pf
 import matplotlib.ticker as ticker
@@ -115,8 +116,8 @@ def global_mean_timeseries(adfobj):
 
         # Loop over model cases:
         case_ts = {}  # dictionary of annual mean, global mean time series
-        #case_syr = []
-        #case_eyr = []
+        case_syr = []
+        case_eyr = []
         # use case nicknames instead of full case names if supplied:
         labels = {
             case_name: nickname if nickname else case_name
@@ -189,6 +190,9 @@ def global_mean_timeseries(adfobj):
             #case_syr.append(min(c_ts_da.year))
             #case_eyr.append(max(c_ts_da.year))
 
+            case_syr.append(np.arange(syears[case_idx], eyears[case_idx]))
+            case_eyr.append(np.arange(syears[case_idx], eyears[case_idx]))
+
         # If this case is 3-d or missing variable, then break the loop and go to next variable
         if skip_var:
             continue
@@ -211,7 +215,7 @@ def global_mean_timeseries(adfobj):
         ## SPECIAL SECTION -- CESM2 LENS DATA:
         # Plot the timeseries
         fig, ax = make_plot(
-            field, case_ts, lens2_data, syears, eyears,
+            field, case_ts, lens2_data, case_syr, case_eyr,
             label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
         )
 
@@ -326,8 +330,11 @@ def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=N
     else:
         f"\t    WARNING: Variable {field} has a data."
         return fig, ax
-    for c, cdata in case_ts.items():
+    for idx, c, cdata in enumerate(case_ts.items()):
         ax.plot(cdata.year, cdata, label=c)
+        if idx == 0:
+            syr = min(cdata.year)
+            eyr = max(cdata.year)
     #if lens2:
     field = lens2.field  # this will be defined even if no LENS2 data
     if lens2.has_lens:
@@ -347,8 +354,8 @@ def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=N
     if ymin < 0 < ymax:
         ax.axhline(y=0, color="lightgray", linestyle="-", linewidth=1)
     ax.set_title(field, loc="left")
-    #case_syr, case_eyr,
-    ax.set_xlim(min(case_syr), max(case_eyr))
+
+    ax.set_xlim(syr, eyr)
     # Force x-axis to use only integer labels
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 
