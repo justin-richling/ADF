@@ -43,17 +43,17 @@ def global_mean_timeseries(adfobj):
     # or an empty dictionary if use_defaults was not specified in YAML.
 
     #Grab case years
-    syears = adfobj.climo_yrs["syears"]
-    eyears = adfobj.climo_yrs["eyears"]
+    #syears = adfobj.climo_yrs["syears"]
+    #eyears = adfobj.climo_yrs["eyears"]
 
     #Grab baseline years (which may be empty strings if using Obs):
     #syear_baseline = adfobj.climo_yrs["syear_baseline"]
     #Check if this is an obs case and arbitrarily set start year to 0 for LENS plot check
     #if syear_baseline == "":
     #    syear_baseline = 0
-    syears += [adfobj.climo_yrs["syear_baseline"]]
+    #syears += [adfobj.climo_yrs["syear_baseline"]]
     #eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
-    eyears += [adfobj.climo_yrs["eyear_baseline"]]
+    #eyears += [adfobj.climo_yrs["eyear_baseline"]]
 
     # Loop over variables
     for field in adfobj.diag_var_list:
@@ -116,8 +116,8 @@ def global_mean_timeseries(adfobj):
 
         # Loop over model cases:
         case_ts = {}  # dictionary of annual mean, global mean time series
-        case_syr = []
-        case_eyr = []
+        #case_syr = []
+        #case_eyr = []
         # use case nicknames instead of full case names if supplied:
         labels = {
             case_name: nickname if nickname else case_name
@@ -190,8 +190,8 @@ def global_mean_timeseries(adfobj):
             #case_syr.append(min(c_ts_da.year))
             #case_eyr.append(max(c_ts_da.year))
 
-            case_syr.append(np.arange(syears[case_idx], eyears[case_idx]))
-            case_eyr.append(np.arange(syears[case_idx], eyears[case_idx]))
+            #case_syr.append(np.arange(syears[case_idx], eyears[case_idx]))
+            #case_eyr.append(np.arange(syears[case_idx], eyears[case_idx]))
 
         # If this case is 3-d or missing variable, then break the loop and go to next variable
         if skip_var:
