@@ -215,8 +215,7 @@ def global_mean_timeseries(adfobj):
         ## SPECIAL SECTION -- CESM2 LENS DATA:
         # Plot the timeseries
         fig, ax = make_plot(
-            field, case_ts, lens2_data, case_syr, case_eyr,
-            label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
+            field, case_ts, lens2_data, label=adfobj.data.ref_nickname, ref_ts_da=ref_ts_da
         )
 
         unit = vres.get("new_unit","[-]")
@@ -320,7 +319,7 @@ class Lens2Data:
 ######
 
 
-def make_plot(field, case_ts, lens2, case_syr, case_eyr, label=None, ref_ts_da=None):
+def make_plot(field, case_ts, lens2, label=None, ref_ts_da=None):
     """plot yearly values of ref_ts_da"""
     fig, ax = plt.subplots()
 
