@@ -327,7 +327,7 @@ def make_plot(field, case_ts, lens2, label=None, ref_ts_da=None):
     if type(ref_ts_da) != NoneType:
         ax.plot(ref_ts_da.year, ref_ts_da, label=label)
     else:
-        f"\t    WARNING: Variable {field} has a data."
+        f"\t    WARNING: Variable {field} has no data."
         return fig, ax
     for idx, (c, cdata) in enumerate(case_ts.items()):
         ax.plot(cdata.year, cdata, label=c)
