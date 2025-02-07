@@ -9,6 +9,9 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import pandas as pd
 from scipy.interpolate import RegularGridInterpolator
+import metpy.calc.thermo as thermo
+from metpy.units import units
+#import metpy.constants as mconst
 
 import plotting_functions as pf
 
@@ -302,9 +305,8 @@ def tem(adf):
                         oseasons = oseasons / wgt_denom_base
 
                 if var == "thzm":
-                    import metpy.calc.thermo as thermo
-                    from metpy.units import units
-                    import metpy.constants as mconst
+                    print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
+
 
                     """
                     from metpy.calc import temperature_from_potential_temperature
