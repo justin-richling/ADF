@@ -527,8 +527,6 @@ def tem(adf):
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
                 # mesh for plots:
-                #lat = mseasons['zalat']
-                #lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Find the next value below highest vertical level
