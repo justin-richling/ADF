@@ -58,9 +58,12 @@ def regrid_and_vert_interp_tem(adf):
         #            'psitem','utendepfd','utendvtem','utendwtem']
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
+        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
+                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM"]
     else:
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
     var_defaults     = adf.variable_defaults
 
     #CAM simulation variables (these quantities are always lists):
@@ -174,7 +177,7 @@ def regrid_and_vert_interp_tem(adf):
         # probably want to do this one variable at a time:
         for var in var_list:
 
-            """if adf.compare_obs:
+            if adf.compare_obs:
                 print("adfsdfg",var_obs_dict)
                 #Check if obs exist for the variable:
                 if var in var_obs_dict:
@@ -191,8 +194,8 @@ def regrid_and_vert_interp_tem(adf):
                     adf.debug_log(dmsg)
                     continue
                 #End if
-            #End if"""
-            if adf.compare_obs:
+            #End if
+            """if adf.compare_obs:
                 #Check if obs exist for the variable:
                 #if var in var_obs_dict:
                 print("VAR",var)
@@ -203,7 +206,7 @@ def regrid_and_vert_interp_tem(adf):
                 #Extract target list (eventually will be a list, for now need to convert):
                 target_list = [var_obs_dict[var.upper()]["obs_name"]]
                 #End if
-            #End if
+            #End if"""
 
             #Notify user of variable being regridded:
             print(f"\t - regridding {var} (known targets: {target_list})")
