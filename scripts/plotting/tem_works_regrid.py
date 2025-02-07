@@ -546,7 +546,7 @@ def tem(adf):
 
 
 
-                    """from scipy.interpolate import RegularGridInterpolator
+                    from scipy.interpolate import RegularGridInterpolator
 
                     # Compare the number of levels in the 'lev' coordinate
                     # Find the case that has the fewest levels and make that the source grid
@@ -645,44 +645,7 @@ def tem(adf):
                         print(target_regridded_data, "\n\n")
                 else:
                     lat = mseasons['zalat']
-                    lev = mseasons['lev']"""
-
-
-                
-
-
-                # Determine which dataset has more vertical levels ('lev')
-                if len(mseasons["lev"]) > len(oseasons["lev"]):
-                    ds_high, ds_low = mseasons, oseasons  # ds_high has more levels, ds_low has fewer
-                else:
-                    ds_high, ds_low = oseasons, mseasons
-
-                if len(mseasons.lev) > len(oseasons.lev):
-                    if s ==list(seasons.keys())[0] and var==var_list[0]:
-                        print("source data is oseasons")
-                    source_data = oseasons
-                    target_data = mseasons
-                else:
-                    if s ==list(seasons.keys())[0] and var==var_list[0]:
-                        print("source data is mseasons")
-                    source_data = mseasons
-                    target_data = oseasons
-
-                # Print confirmation
-                print(f"Interpolating from {len(target_data['lev'])} levels to {len(ds_low['lev'])} levels")
-
-                # Define horizontal grids
-                grid_in = {"lat": target_data["zalat"], "lon": target_data["lon"]}
-                grid_out = {"lat": source_data["zalat"], "lon": source_data["lon"]}
-
-                # Create regridder
-                regridder = xe.Regridder(target_data, source_data, method="bilinear")
-
-                # Apply horizontal regridding
-                ds_horiz = regridder(target_data)
-
-                target_data = ds_horiz.interp(lev=source_data["lev"])
-
+                    lev = mseasons['lev']
                     
 
                 #difference: each entry should be (lat, lon)
@@ -697,8 +660,8 @@ def tem(adf):
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
                 # mesh for plots:
-                lat = source_data['zalat']
-                lev = source_data['lev']
+                #lat = mseasons['zalat']
+                #lev = mseasons['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Find the next value below highest vertical level
