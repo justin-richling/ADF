@@ -175,8 +175,10 @@ def regrid_and_vert_interp_tem(adf):
         for var in var_list:
 
             if adf.compare_obs:
+                print("adfsdfg",var_obs_dict)
                 #Check if obs exist for the variable:
                 if var in var_obs_dict:
+                    print("VAR",var)
                     #Note: In the future these may all be lists, but for
                     #now just convert the target_list.
                     #Extract target file:
@@ -185,6 +187,7 @@ def regrid_and_vert_interp_tem(adf):
                     target_list = [var_obs_dict[var]["obs_name"]]
                 else:
                     dmsg = f"No obs found for variable `{var}`, regridding skipped."
+                    print(dmsg)
                     adf.debug_log(dmsg)
                     continue
                 #End if
