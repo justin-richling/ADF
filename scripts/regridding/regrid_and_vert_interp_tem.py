@@ -46,7 +46,7 @@ def regrid_and_vert_interp_tem(adf):
     # - regrid one to the other (probably should be a choice)
 
     #Notify user that script has started:
-    print("\n  Regridding CAM climatologies...")
+    print("\n  Regridding CAM TEM climatologies...")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
