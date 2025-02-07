@@ -528,6 +528,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
     #Check if variable has a vertical levels dimension:
     if has_lev:
+        print("mdata",mdata)
 
         if vert_coord_type == "hybrid":
             # Need hyam, hybm, and P0 for vertical interpolation of hybrid levels:
