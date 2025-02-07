@@ -802,7 +802,7 @@ def tem(adf):
                 
                 #Set main title for difference plots column
                 ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$",fontsize=10)
-                print("saving plot? why...")
+                print("saving plot? why...",plot_name,"\n")
 
                 #Write the figure to provided workspace/file:
                 fig.savefig(plot_name, bbox_inches='tight', dpi=300)
