@@ -66,7 +66,7 @@ def create_TEM_files(adf):
     #Set default to h4
     hist_nums = adf.get_cam_info("tem_hist_str")
     if hist_nums is None:
-        hist_nums = ["h4"]*len(case_names)
+        hist_nums = ["h4a"]*len(case_names)
 
     #Get test case(s) tem over-write boolean and force to list if not by default
     overwrite_tem_cases = adf.get_cam_info("overwrite_tem")
@@ -156,7 +156,7 @@ def create_TEM_files(adf):
             #Set default to h4
             hist_num = adf.get_baseline_info("tem_hist_str")
             if hist_num is None:
-                hist_num = "h4"
+                hist_num = "h4a"
 
             #Extract baseline years (which may be empty strings if using Obs):
             syear_baseline = adf.climo_yrs["syear_baseline"]

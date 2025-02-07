@@ -380,7 +380,7 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
-                if s ==seasons[0] and var==var_list[0]:
+                if s ==list(seasons.keys())[0] and var==var_list[0]:
                     print("\n\nmseasons",mseasons,"\n\n")
 
                     print("mseasons.shape",mseasons.shape)
