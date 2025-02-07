@@ -174,7 +174,7 @@ def regrid_and_vert_interp_tem(adf):
         # probably want to do this one variable at a time:
         for var in var_list:
 
-            if adf.compare_obs:
+            """if adf.compare_obs:
                 print("adfsdfg",var_obs_dict)
                 #Check if obs exist for the variable:
                 if var in var_obs_dict:
@@ -190,6 +190,18 @@ def regrid_and_vert_interp_tem(adf):
                     print(dmsg)
                     adf.debug_log(dmsg)
                     continue
+                #End if
+            #End if"""
+            if adf.compare_obs:
+                #Check if obs exist for the variable:
+                #if var in var_obs_dict:
+                print("VAR",var)
+                #Note: In the future these may all be lists, but for
+                #now just convert the target_list.
+                #Extract target file:
+                tclimo_loc = var_obs_dict[var]["obs_file"]
+                #Extract target list (eventually will be a list, for now need to convert):
+                target_list = [var_obs_dict[var]["obs_name"]]
                 #End if
             #End if
 
