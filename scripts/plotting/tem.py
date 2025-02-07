@@ -421,9 +421,6 @@ def tem(adf):
 
 
                 if (not same_lats) and (not same_lons):
-                    import numpy as np
-                    import xarray as xr
-                    from scipy.interpolate import RegularGridInterpolator
 
                     # Define standard pressure levels (vertical target levels)
                     standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
