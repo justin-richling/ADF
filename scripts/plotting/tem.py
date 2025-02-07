@@ -440,6 +440,9 @@ def tem(adf):
                         source_data = mseasons
                         target_data = oseasons
 
+                    source_data = oseasons
+                    target_data = mseasons
+
                     # Extract source and target coordinates
                     source_lat = source_data.zalat.values
                     source_lev = source_data.lev.values
