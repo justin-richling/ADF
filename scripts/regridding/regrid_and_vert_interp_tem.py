@@ -188,7 +188,7 @@ def regrid_and_vert_interp_tem(adf):
                     #tclimo_loc = var_obs_dict[var]["obs_file"]
                     #Extract target list (eventually will be a list, for now need to convert):
                     #target_list = [var_obs_dict[var]["obs_name"]]
-                    tclimo_loc = adf.get_cam_baseline_info("cam_tem_loc", required=True)
+                    tclimo_loc = adf.get_baseline_info("cam_tem_loc", required=True)
                     target_list = var
                 else:
                     dmsg = f"No obs found for variable `{var}`, regridding skipped."
