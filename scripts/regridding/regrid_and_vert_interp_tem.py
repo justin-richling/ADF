@@ -262,7 +262,7 @@ def regrid_and_vert_interp_tem(adf):
                     #End if
 
                     #Generate CAM climatology (climo) file list:
-                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag_*.nc"))
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
