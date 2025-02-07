@@ -117,7 +117,7 @@ class AdfObs(AdfInfo):
 
         #Loop over variable list:
         for var in self.diag_var_list+["UZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]:
-
+            print("adf_obs",var)
             #Check if variable is in defaults dictionary:
             if var in _variable_defaults:
                 #Extract variable sub-dictionary:
