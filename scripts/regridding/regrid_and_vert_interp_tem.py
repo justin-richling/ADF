@@ -472,7 +472,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     #End if
 
     #Extract variable info from model data (and remove any degenerate dimensions):
-    mdata = model_dataset[var_name].squeeze()
+    mdata = model_dataset[var_name.lower()].squeeze()
     mdat_ofrac = None
     #if regrid_ofrac:
     #    if 'OCNFRAC' in model_dataset:
