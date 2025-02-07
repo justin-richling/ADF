@@ -421,23 +421,55 @@ def tem(adf):
 
 
                 if (not same_lats) and (not same_lons):
-                    import numpy as np
-                    import xarray as xr
-                    from scipy.interpolate import RegularGridInterpolator
+                    """if obs_lons > test_lons:
+                        source_lons = test_lons
+                    else:
+                        source_lons = obs_lons
 
-                    # Define standard pressure levels (vertical target levels)
-                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
-                                            30, 20, 10, 7, 5, 3, 2, 1])
+                    # Check if the data arrays need to be regridded
+                    mseasons = mseasons.rename(lev="lon", zalat="lat")
+                    oseasons = oseasons.rename(lev="lon", zalat="lat")
+                    #mseasons = interp_tem(mseasons, oseasons)
+                    #mseasons = mseasons.transpose("lev", "zalat")
+                    #lat = mseasons['zalat']
+                    #lev = mseasons['lev']
 
-                    # Determine which dataset has more vertical levels
+                    oseasons = interp_tem(oseasons, mseasons)
+                    oseasons = oseasons.transpose("lev", "zalat")
+                    lat = oseasons['zalat']
+                    lev = oseasons['lev']
+
+                    mseasons = mseasons.rename(lon="lev", lat="zalat")
+                    oseasons = oseasons.rename(lon="lev", lat="zalat")"""
+
+
+
+                    """from scipy.interpolate import interp1d
+
+                    # Assuming source_data has dimensions ('lev', 'lat')
+                    source_lev = source_data.lev.values
+                    target_lev = np.linspace(source_lev.min(), source_lev.max(), 50)
+
+                    # Apply 1D interpolation along the vertical dimension
+                    vertical_interp = interp1d(source_lev, source_data.values, axis=0, kind='linear')
+                    vertical_result = vertical_interp(target_lev)"""
+
+
+
+                    #import numpy as np
+                    #import xarray as xr
+
+                    # Assuming you have two datasets: data1 and data2
+                    # data1 and data2 are xarray DataArrays with 'lev' and 'lat' dimensions
+
+                    '''
+                    # Compare the number of levels in the 'lev' coordinate
                     if len(mseasons.lev) > len(oseasons.lev):
-                        if s == list(seasons.keys())[0] and var == var_list[0]:
-                            print("Source data is oseasons")
+                        print("source data is oseasons")
                         source_data = oseasons
                         target_data = mseasons
                     else:
-                        if s == list(seasons.keys())[0] and var == var_list[0]:
-                            print("Source data is mseasons")
+                        print("source data is mseasons")
                         source_data = mseasons
                         target_data = oseasons
 
@@ -446,63 +478,166 @@ def tem(adf):
                     source_lev = source_data.lev.values
                     source_values = source_data.values
 
-                    target_lat = target_data.zalat.values
-                    target_lev = target_data.lev.values
-                    target_values = target_data.values
+                    target_lat = target_data.zalat.values  # Assuming lat is consistent; modify if needed
+                    target_lev = target_data.lev.values  # Use the smaller lev grid as the target
 
-                    ### Step 1: Interpolate Source Data to Standard Vertical Levels ###
-                    source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
+                    # Define standard pressure levels (target levels)
+                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
+                                            30, 20, 10, 7, 5, 3, 2, 1])
 
-                    # Generate meshgrid points for interpolation
-                    source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
-                    source_regridded_values_vert = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
+                    """# Create the interpolator based on the source data grid
+                    interpolator = RegularGridInterpolator((source_lev, source_lat), source_values)
 
-                    ### Step 2: Interpolate Target Data to Standard Vertical Levels ###
-                    target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
-
-                    # Generate meshgrid points for interpolation
+                    # Define target points for interpolation to the standard levels
                     target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
-                    target_regridded_values_vert = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
 
-                    ### Step 3: Interpolate Source Data Horizontally ###
+                    # Perform the interpolation to the standard levels
+                    regridded_values = interpolator(target_points).reshape(len(standard_lev), len(target_lat))"""
+
+                    # Step 1: Interpolate source data to the new vertical levels
+                    source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
+                    source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
+                    source_regridded_values = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
+
+                    # Step 2: Interpolate target data to the new vertical levels
+                    target_values = target_data.values
+                    target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
+                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    target_regridded_values = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+
+                    # Step 3: Convert regridded values back into xarray.DataArray
+                    source_regridded_data = xr.DataArray(
+                        data=source_regridded_values,
+                        dims=["lev", "lat"],
+                        coords={"lev": standard_lev, "lat": source_lat},
+                        name="source_regridded_data"
+                    )
+
+                    target_regridded_data = xr.DataArray(
+                        data=target_regridded_values,
+                        dims=["lev", "lat"],
+                        coords={"lev": standard_lev, "lat": target_lat},
+                        name="target_regridded_data"
+                    )
+
+                    # Output the regridded data
+                    print("Source Regridded Data:")
+                    print(source_regridded_data,"\n\n")
+
+                    print("\nTarget Regridded Data:")
+                    print(target_regridded_data,"\n\n")'''
+                    """if len(source_data.lev) > len(target_data.lev):
+                        #source_data = mseasons
+                        mseasons = regridded_data
+                        lat = mseasons['zalat']
+                        lev = mseasons['lev']
+                    else:
+                        oseasons = regridded_data
+                        lat = oseasons['zalat']
+                        lev = oseasons['lev']"""
+
+
+
+
+
+
+
+
+
+
+
+                    """from scipy.interpolate import RegularGridInterpolator
+
+                    # Compare the number of levels in the 'lev' coordinate
+                    # Find the case that has the fewest levels and make that the source grid
+                    if len(mseasons.lev) > len(oseasons.lev):
+                        if s ==list(seasons.keys())[0] and var==var_list[0]:
+                            print("source data is oseasons")
+                        source_data = oseasons
+                        target_data = mseasons
+                    else:
+                        if s ==list(seasons.keys())[0] and var==var_list[0]:
+                            print("source data is mseasons")
+                        source_data = mseasons
+                        target_data = oseasons
+
+                    # Extract source and target coordinates
+                    source_lat = source_data.zalat.values  # Latitude for source data
+                    source_lev = source_data.lev.values   # Vertical levels for source data
+                    source_values = source_data.values
+
+                    target_lat = target_data.zalat.values  # Latitude for target data
+                    target_lev = target_data.lev.values    # Vertical levels for target data
+
+                    # Define standard pressure levels (vertical target levels)
+                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
+                                            30, 20, 10, 7, 5, 3, 2, 1])
+
+                    # Step 1: Interpolate source data to the new vertical levels
+                    source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
+                    #source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
+                    #source_regridded_values_vert = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
+
+                    source_points = np.array(np.meshgrid(source_lev, source_lat, indexing='ij')).reshape(2, -1).T
+                    source_regridded_values_vert = source_interpolator(source_points).reshape(len(source_lev), len(source_lat))
+
+                    # Step 2: Interpolate target data to the new vertical levels
+                    target_values = target_data.values
+                    target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
+                    #target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    #target_regridded_values_vert = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
+
+                    target_points = np.array(np.meshgrid(source_lev, target_lat, indexing='ij')).reshape(2, -1).T
+                    target_regridded_values_vert = target_interpolator(target_points).reshape(len(source_lev), len(target_lat))
+
+                    # Step 3: Interpolate source data to the new horizontal latitude grid
                     source_regridded_values_horiz = []
-                    for i, lev in enumerate(standard_lev):
+                    #for i, lev in enumerate(standard_lev):
+                    for i, lev in enumerate(source_lev):
                         interpolator = RegularGridInterpolator((source_lat,), source_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                        regridded_values = interpolator(source_lat)
+                        regridded_values = interpolator(source_lat)#new_lat
                         source_regridded_values_horiz.append(regridded_values)
                     source_regridded_values_horiz = np.array(source_regridded_values_horiz)
 
-                    ### Step 4: Interpolate Target Data Horizontally ###
+                    # Step 4: Interpolate target data to the new horizontal latitude grid
                     target_regridded_values_horiz = []
-                    for i, lev in enumerate(standard_lev):
+                    #for i, lev in enumerate(standard_lev):
+                    for i, lev in enumerate(source_lev):
                         interpolator = RegularGridInterpolator((target_lat,), target_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                        regridded_values = interpolator(source_lat)
+                        regridded_values = interpolator(source_lat)#new_lat
                         target_regridded_values_horiz.append(regridded_values)
                     target_regridded_values_horiz = np.array(target_regridded_values_horiz)
 
-                    ### Step 5: Convert Regridded Data Back into xarray.DataArray ###
+                    #print("source_regridded_values_horiz",source_regridded_values_horiz,"\n\n")
+
+                    # Step 5: Convert regridded values back into xarray.DataArray
                     source_regridded_data = xr.DataArray(
                         data=source_regridded_values_horiz,
                         dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": source_lat},
+                        #coords={"lev": standard_lev, "zalat": source_lat},
+                        coords={"lev": source_lev, "zalat": source_lat},
                         name="source_regridded_data"
                     )
 
                     target_regridded_data = xr.DataArray(
                         data=target_regridded_values_horiz,
                         dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": source_lat},
+                        #coords={"lev": standard_lev, "zalat": source_lat},
+                        coords={"lev": source_lev, "zalat": source_lat},
                         name="target_regridded_data"
                     )
 
-                    ### Step 6: Assign Back to Variables ###
+                    # Output the regridded data
+                    #print("Source Regridded Data:")
+                    #print(source_regridded_data, "\n\n")
+
+                    #print("Target Regridded Data:")
+                    #print(target_regridded_data, "\n\n")
                     oseasons = source_regridded_data
                     mseasons = target_regridded_data
-                    lat = mseasons["zalat"]
-                    lev = mseasons["lev"]
-
-                    ### Debug Output ###
-                    if s == list(seasons.keys())[0] and var == var_list[0]:
+                    lat = mseasons['zalat']
+                    lev = mseasons['lev']
+                    if s ==list(seasons.keys())[0] and var==var_list[0]:
                         print("Source Regridded Data:")
                         print(source_regridded_data, "\n\n")
 
@@ -510,7 +645,44 @@ def tem(adf):
                         print(target_regridded_data, "\n\n")
                 else:
                     lat = mseasons['zalat']
-                    lev = mseasons['lev']
+                    lev = mseasons['lev']"""
+
+
+                
+
+
+                # Determine which dataset has more vertical levels ('lev')
+                if len(mseasons["lev"]) > len(oseasons["lev"]):
+                    ds_high, ds_low = mseasons, oseasons  # ds_high has more levels, ds_low has fewer
+                else:
+                    ds_high, ds_low = oseasons, mseasons
+
+                if len(mseasons.lev) > len(oseasons.lev):
+                    if s ==list(seasons.keys())[0] and var==var_list[0]:
+                        print("source data is oseasons")
+                    source_data = oseasons
+                    target_data = mseasons
+                else:
+                    if s ==list(seasons.keys())[0] and var==var_list[0]:
+                        print("source data is mseasons")
+                    source_data = mseasons
+                    target_data = oseasons
+
+                # Print confirmation
+                print(f"Interpolating from {len(target_data['lev'])} levels to {len(ds_low['lev'])} levels")
+
+                # Define horizontal grids
+                #grid_in = {"lat": target_data["zalat"], "lon": target_data["lon"]}
+                #grid_out = {"lat": source_data["zalat"], "lon": source_data["lon"]}
+
+                # Create regridder
+                regridder = xe.Regridder(target_data, source_data, method="bilinear")
+
+                # Apply horizontal regridding
+                ds_horiz = regridder(target_data)
+
+                target_data = ds_horiz.interp(lev=source_data["lev"])
+
                     
 
                 #difference: each entry should be (lat, lon)
@@ -525,8 +697,8 @@ def tem(adf):
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
                 # mesh for plots:
-                #lat = mseasons['zalat']
-                #lev = mseasons['lev']
+                lat = source_data['zalat']
+                lev = source_data['lev']
                 lats, levs = np.meshgrid(lat, lev)
 
                 # Find the next value below highest vertical level
