@@ -672,8 +672,8 @@ def tem(adf):
                 print(f"Interpolating from {len(target_data['lev'])} levels to {len(ds_low['lev'])} levels")
 
                 # Define horizontal grids
-                grid_in = {"lat": target_data["zalat"], "lon": target_data["lon"]}
-                grid_out = {"lat": source_data["zalat"], "lon": source_data["lon"]}
+                #grid_in = {"lat": target_data["zalat"], "lon": target_data["lon"]}
+                #grid_out = {"lat": source_data["zalat"], "lon": source_data["lon"]}
 
                 # Create regridder
                 regridder = xe.Regridder(target_data, source_data, method="bilinear")
