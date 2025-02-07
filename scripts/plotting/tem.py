@@ -394,7 +394,7 @@ def tem(adf):
                 obs_lons = oseasons.lev
                 obs_lats = oseasons.zalat
 
-                if obs_lons.shape == test_lons.shape:
+                """if obs_lons.shape == test_lons.shape:
                     try:
                         xr.testing.assert_equal(test_lons, obs_lons)
                         same_lats = True
@@ -418,11 +418,12 @@ def tem(adf):
                     same_lons = False
                     if s ==list(seasons.keys())[0] and var==var_list[0]:
                         print("The ensemble array lat/lon shape does not match the " \
-                            "obs mask array.\nRegridding to ensemble lats and lons")
+                            "obs mask array.\nRegridding to ensemble lats and lons")"""
 
 
 
-                if (not same_lats) and (not same_lons):
+                """#if (not same_lats) and (not same_lons):
+                if 0 == 1:
 
                     # Define standard pressure levels (vertical target levels)
                     standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
@@ -512,9 +513,10 @@ def tem(adf):
                         print(target_regridded_data, "\n\n")
                 else:
                     lat = mseasons['zalat']
-                    lev = mseasons['lev']
+                    lev = mseasons['lev']"""
                     
-
+                lat = mseasons['zalat']
+                lev = mseasons['lev']
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
                 
