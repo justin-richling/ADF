@@ -178,7 +178,7 @@ def regrid_and_vert_interp_tem(adf):
         for var in var_list:
 
             if adf.compare_obs:
-                print("adfsdfg",var_obs_dict)
+                #print("adfsdfg",var_obs_dict)
                 #Check if obs exist for the variable:
                 if var in var_obs_dict:
                     print("VAR",var)
