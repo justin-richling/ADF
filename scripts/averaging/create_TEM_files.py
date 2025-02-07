@@ -244,7 +244,7 @@ def create_TEM_files(adf):
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
 
-            ds = xr.open_mfdataset(hist_files)
+            ds = xr.open_mfdataset(hist_files, compat='override')
 
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
