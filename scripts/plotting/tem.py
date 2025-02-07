@@ -395,24 +395,24 @@ def tem(adf):
                 if obs_lons.shape == test_lons.shape:
                     try:
                         xr.testing.assert_equal(test_lons, obs_lons)
-                        if s ==seasons[0] and var==var_list[0]:
+                        if s ==list(seasons.keys())[0] and var==var_list[0]:
                             print("the lons ARE the same")
                     except AssertionError as e:
                         same_lons = False
-                        if s ==seasons[0] and var==var_list[0]:
+                        if s ==list(seasons.keys())[0] and var==var_list[0]:
                             print("the lons aren't the same")
                     try:
                         xr.testing.assert_equal(test_lats, obs_lats)
-                        if s ==seasons[0] and var==var_list[0]:
+                        if s ==list(seasons.keys())[0] and var==var_list[0]:
                             print("the lats ARE the same")
                     except AssertionError as e:
                         same_lats = False
-                        if s ==seasons[0] and var==var_list[0]:
+                        if s ==list(seasons.keys())[0] and var==var_list[0]:
                             print("the lats aren't the same")
                 else:
                     same_lats = False
                     same_lons = False
-                    if s ==seasons[0] and var==var_list[0]:
+                    if s ==list(seasons.keys())[0] and var==var_list[0]:
                         print("The ensemble array lat/lon shape does not match the " \
                             "obs mask array.\nRegridding to ensemble lats and lons")
 
@@ -632,7 +632,7 @@ def tem(adf):
                     mseasons = target_regridded_data
                     lat = mseasons['zalat']
                     lev = mseasons['lev']
-                    if s ==seasons[0] and var==var_list[0]:
+                    if s ==list(seasons.keys())[0] and var==var_list[0]:
                         print("Source Regridded Data:")
                         print(source_regridded_data, "\n\n")
 
