@@ -93,6 +93,8 @@ def tem(adf):
     #Extract TEM file save locations
     tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
     tem_base_loc = adf.get_baseline_info("cam_tem_loc")
+    output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
+    Path(output_loc) / "tem"
 
     #If path not specified, skip TEM calculation?
     if tem_case_locs is None:
