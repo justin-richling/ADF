@@ -94,8 +94,8 @@ def tem(adf):
     tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
     tem_base_loc = adf.get_baseline_info("cam_tem_loc")
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
-    tem_case_locs = Path(output_loc) / "tem"
-    tem_base_loc = Path(output_loc) / "tem"
+    tem_case_locs = f"{output_loc}/tem"
+    tem_base_loc = f"{output_loc}/tem"
 
     #If path not specified, skip TEM calculation?
     if tem_case_locs is None:
