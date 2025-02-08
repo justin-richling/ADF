@@ -156,6 +156,8 @@ def regrid_and_vert_interp_tem(adf):
         rgclimo_loc.mkdir(parents=True)
     #End if
 
+    res = adf.variable_defaults # will be dict of variable-specific plot preferences
+
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
 
@@ -164,6 +166,10 @@ def regrid_and_vert_interp_tem(adf):
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
+
+        #Grab h4 history files locations
+        cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+        mhist_loc = Path(cam_hist_locs[case_idx])
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
@@ -189,6 +195,10 @@ def regrid_and_vert_interp_tem(adf):
                     #Extract target list (eventually will be a list, for now need to convert):
                     #target_list = [var_obs_dict[var]["obs_name"]]
                     tclimo_loc = adf.get_cam_info("cam_tem_loc", required=True)[case_idx]+"/"+"Obs.TEMdiag.nc"
+                    obs_data_loc = adf.get_basic_info("obs_data_loc")
+                    obs_file_path = Path(res[var]["obs_file"])
+                    obs_file_path = Path(obs_data_loc)/obs_file_path
+                    thist_loc = adf.get_cam_info("cam_tem_loc", required=True)[case_idx]+"/"+"Obs.TEMdiag.nc"
                     target_list = "ERA5"
                 else:
                     dmsg = f"No obs found for variable `{var}`, regridding skipped."
@@ -243,6 +253,7 @@ def regrid_and_vert_interp_tem(adf):
                     if adf.compare_obs:
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
+                        thist_fils = [thist_loc]
                     else:
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
@@ -261,6 +272,21 @@ def regrid_and_vert_interp_tem(adf):
                         tclim_ds = xr.open_dataset(tclim_fils[0])
                     #End if
 
+
+
+                    if len(thist_fils) > 1:
+                        #Combine all target files together into a single data set:
+                        tclim_ds = xr.open_mfdataset(thist_fils, combine='by_coords')
+                    elif len(thist_fils) == 0:
+                        print(f"\t - regridding {var} failed, no file. Continuing to next variable.")
+                        continue
+                    else:
+                        #Open single file as new xarray dataset:
+                        thist_ds = xr.open_dataset(thist_fils[0])
+                    #End if
+
+
+
                     #Generate CAM climatology (climo) file list:
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag_*.nc"))
 
@@ -277,6 +303,24 @@ def regrid_and_vert_interp_tem(adf):
                         mclim_ds = xr.open_dataset(mclim_fils[0])
                     #End if
 
+                    #Generate CAM climatology (climo) file list:
+                    mhist_fils = sorted(mhist_loc.glob(f"{case_name}.TEMdiag_*.nc"))
+
+                    if len(mhist_fils) > 1:
+                        #Combine all cam files together into a single data set:
+                        mclim_ds = xr.open_mfdataset(mhist_fils, combine='by_coords')
+                    elif len(mhist_fils) == 0:
+                        wmsg = f"\t - Unable to find climo file for '{var}'."
+                        wmsg += " Continuing to next variable."
+                        print(wmsg)
+                        continue
+                    else:
+                        #Open single file as new xarray dataset:
+                        mhist_ds = xr.open_dataset(mhist_fils[0])
+                    #End if
+
+                    mhist_loc
+
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
 
@@ -289,7 +333,7 @@ def regrid_and_vert_interp_tem(adf):
                     #End if
 
                     #Perform regridding and interpolation of variable:
-                    rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
+                    rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, mhist_ds, var,
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
 
@@ -366,7 +410,7 @@ def regrid_and_vert_interp_tem(adf):
                         #End if
 
                         #Generate vertically-interpolated baseline dataset:
-                        tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
+                        tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, thist_ds, var,
                                                                      **regrid_kwargs)
 
                         if tgdata_interp is None:
@@ -430,7 +474,7 @@ def regrid_and_vert_interp_tem(adf):
 #Helper functions
 #################
 
-def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
+def _regrid_and_interpolate_levs(model_dataset, raw_model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -533,12 +577,15 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
         if vert_coord_type == "hybrid":
             # Need hyam, hybm, and P0 for vertical interpolation of hybrid levels:
             if 'lev' in mdata.dims:
-                if ('hyam' not in model_dataset) or ('hybm' not in model_dataset):
+                #if ('hyam' not in model_dataset) or ('hybm' not in model_dataset):
+                if ('hyam' not in raw_model_dataset) or ('hybm' not in raw_model_dataset):
                     print(f"!! PROBLEM -- NO hyam or hybm for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None #Return None to skip to next variable.
                 #End if
-                mhya = model_dataset['hyam']
-                mhyb = model_dataset['hybm']
+                #mhya = model_dataset['hyam']
+                #mhyb = model_dataset['hybm']
+                mhya = raw_model_dataset['hyam']
+                mhyb = raw_model_dataset['hybm']
             elif 'ilev' in mdata.dims:
                 if ('hyai' not in model_dataset) or ('hybi' not in model_dataset):
                     print(f"!! PROBLEM -- NO hyai or hybi for 3-D variable {var_name}, so it will not be re-gridded.")
