@@ -307,6 +307,7 @@ def regrid_and_vert_interp_tem(adf):
                     #Generate CAM climatology (climo) file list:
                     mhist_fils = sorted(mhist_loc.glob(f"{case_name}.cam.h4.*.nc"))
                     print("mhist_fils",mhist_fils[-1])
+                    mhist_ds = xr.open_dataset(mhist_fils[0])
 
                     if len(mhist_fils) > 1:
                         #Combine all cam files together into a single data set:
