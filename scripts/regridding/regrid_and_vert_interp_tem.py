@@ -305,7 +305,7 @@ def regrid_and_vert_interp_tem(adf):
 
                     print("mhist_loc",mhist_loc)
                     #Generate CAM climatology (climo) file list:
-                    mhist_fils = sorted(mhist_loc.glob(f"{case_name}.cam.h4.*.nc"))
+                    mhist_fils = sorted(mhist_loc.glob(f"{case_name}.cam.h4.*.nc"))[0]
                     print("mhist_fils",mhist_fils)
 
                     if len(mhist_fils) > 1:
