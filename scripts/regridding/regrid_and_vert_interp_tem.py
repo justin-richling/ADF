@@ -385,7 +385,8 @@ def regrid_and_vert_interp_tem(adf):
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
                             "climatology_files": climatology_files_str,
                         }
-                    rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
+                    #rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
+                    print("\n",rgdata_interp,"\n")
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
