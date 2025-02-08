@@ -303,6 +303,7 @@ def regrid_and_vert_interp_tem(adf):
                         mclim_ds = xr.open_dataset(mclim_fils[0])
                     #End if
 
+                    print("mhist_loc",mhist_loc)
                     #Generate CAM climatology (climo) file list:
                     mhist_fils = sorted(mhist_loc.glob(f"{case_name}.TEMdiag_*.nc"))
 
@@ -310,7 +311,7 @@ def regrid_and_vert_interp_tem(adf):
                         #Combine all cam files together into a single data set:
                         mclim_ds = xr.open_mfdataset(mhist_fils, combine='by_coords')
                     elif len(mhist_fils) == 0:
-                        wmsg = f"\t - Unable to find climo file for '{var}'."
+                        wmsg = f"\t - Unable to find hist file for '{var}'."
                         wmsg += " Continuing to next variable."
                         print(wmsg)
                         continue
