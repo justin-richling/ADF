@@ -317,6 +317,7 @@ def regrid_and_vert_interp_tem(adf):
                         print(wmsg)
                         continue
                     else:
+                        print("I GUESS NOT HERE")
                         #Open single file as new xarray dataset:
                         mhist_ds = xr.open_dataset(mhist_fils[0])
                     #End if
