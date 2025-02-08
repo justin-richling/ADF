@@ -64,6 +64,7 @@ def regrid_and_vert_interp_tem(adf):
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
         #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
         var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
+        var_cor_list = ["Uzm","THzm","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
     var_defaults     = adf.variable_defaults
 
     #CAM simulation variables (these quantities are always lists):
@@ -311,7 +312,7 @@ def regrid_and_vert_interp_tem(adf):
 
                     if len(mhist_fils) > 1:
                         #Combine all cam files together into a single data set:
-                        mclim_ds = xr.open_mfdataset(mhist_fils, combine='by_coords')
+                        mhist_ds = xr.open_mfdataset(mhist_fils, combine='by_coords')
                     elif len(mhist_fils) == 0:
                         wmsg = f"\t - Unable to find hist file for '{var}'."
                         wmsg += " Continuing to next variable."
