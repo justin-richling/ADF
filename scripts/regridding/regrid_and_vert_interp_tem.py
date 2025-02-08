@@ -342,34 +342,10 @@ def regrid_and_vert_interp_tem(adf):
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
 
+                    print("\n",rgdata_interp,"\n")
+
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
-
-                    if 'mask' in var_default_dict:
-                        if var_default_dict['mask'].lower() == 'ocean':
-                            #Check if the ocean fraction has already been regridded
-                            #and saved:
-                            if ocn_frc_ds:
-                                ofrac = ocn_frc_ds['OCNFRAC']
-                                # set the bounds of regridded ocnfrac to 0 to 1
-                                ofrac = xr.where(ofrac>1,1,ofrac)
-                                ofrac = xr.where(ofrac<0,0,ofrac)
-
-                                # apply ocean fraction mask to variable
-                                rgdata_interp['OCNFRAC'] = ofrac
-                                var_tmp = rgdata_interp[var]
-                                var_tmp = pf.mask_land_or_ocean(var_tmp,ofrac)
-                                rgdata_interp[var] = var_tmp
-                            else:
-                                print(f"OCNFRAC not found, unable to apply mask to '{var}'")
-                            #End if
-                        else:
-                            #Currently only an ocean mask is supported, so print warning here:
-                            wmsg = "Currently the only variable mask option is 'ocean',"
-                            wmsg += f"not '{var_default_dict['mask'].lower()}'"
-                            print(wmsg)
-                        #End if
-                    #End if
 
                     #If the variable is ocean fraction, then save the dataset for use later:
                     if var == 'OCNFRAC':
