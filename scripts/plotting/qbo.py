@@ -132,7 +132,7 @@ def qbo(adfobj):
     casedat = []
     for i in range(0,ncases,1):
         cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc")))
-        tslice = get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
+        tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
         cam_ts_data = cam_ts_data.isel(time=tslice)
         casedat.append(cam_ts_data)
 
