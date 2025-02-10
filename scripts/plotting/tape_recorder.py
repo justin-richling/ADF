@@ -226,11 +226,11 @@ def tape_recorder(adfobj):
         #dat_tropics = cosweightlat(datzm[var], -10, 10)
         dat_mon = dat_tropics.groupby('time.month').mean('time').load()
         ax = plot_pre_mon(fig, dat_mon,
-                        plot_step, plot_min, plot_max, key,
+                        plot_step, plot_min, plot_max, base_nickname,
                         x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
                         taxis='month',climo_yrs=f"{data_start_year}-{data_end_year}")
         count=count+1
-        runname_LT.append(key)
+        runname_LT.append(base_nickname)
     else:
         print("No time series files, skipping case.")
 
