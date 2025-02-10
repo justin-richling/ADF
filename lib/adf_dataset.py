@@ -111,7 +111,7 @@ class AdfData:
             return None
         else:
             #ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
-            ts_loc = self.adf.ts_locs["baseline"]
+            ts_loc = Path(self.adf.ts_locs["baseline"])
             ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
@@ -233,9 +233,9 @@ class AdfData:
             fils = self.ref_var_loc.get(var, None)
             return [fils] if fils is not None else None
         #ref_loc = self.adf.get_baseline_info("cam_climo_loc")
-        ref_loc = self.adf.climo_locs["baseline"]
+        ref_loc = Path(self.adf.climo_locs["baseline"])
         # NOTE: originally had this looking for *_baseline.nc
-        fils = sorted(Path(ref_loc).glob(f"{self.ref_case_label}_{var}_climo.nc"))
+        fils = sorted(ref_loc.glob(f"{self.ref_case_label}_{var}_climo.nc"))
         if fils:
             return fils
         return []#None
