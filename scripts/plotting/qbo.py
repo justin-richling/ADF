@@ -34,7 +34,8 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.get_cam_info('cam_ts_loc')
+    #case_loc = adfobj.get_cam_info('cam_ts_loc')
+    case_loc = adfobj.ts_locs["test"]
     if case_loc is None:
         print("\tNo time series locations found for any test cases")
         case_loc = []
@@ -115,26 +116,41 @@ def qbo(adfobj):
     #End if
 
     #Check if model vs model run, and if so, append baseline to case lists:
-    if not adfobj.compare_obs:
-        case_loc.append(base_loc)
-        case_names.append(base_name)
-        start_years.append(bl_syr)
-        end_years.append(bl_eyr)
+    #if not adfobj.compare_obs:
+    #    case_loc.append(base_loc)
+    #    case_names.append(base_name)
+    #    start_years.append(bl_syr)
+    #    end_years.append(bl_eyr)
     #End if
 
     #----Read in the OBS (ERA5, 5S-5N average already
     obs = xr.open_dataset(obsdir+"/U_ERA5_5S_5N_1979_2019.nc").U_5S_5N
 
     #----Read in the case data and baseline
-    ncases = len(case_loc)
+    #ncases = len(case_loc)
     #casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
 
     casedat = []
-    for i in range(0,ncases,1):
-        cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc")))
-        tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
+    # Get baseline data
+    cam_ts_data = pf.load_dataset(sorted(Path(base_loc).glob(f"{base_name}.*.U.*.nc")))
+    if cam_ts_data:
+        ncases = 1
+
+        tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(bl_syr), int(bl_eyr))
         cam_ts_data = cam_ts_data.isel(time=tslice)
         casedat.append(cam_ts_data)
+    else:
+        ncases = 0
+
+    # Loop over test case data
+    #for i in range(0,ncases,1):
+    for i in range(0,len(case_loc),1):    
+        cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc")))
+        if cam_ts_data:
+            tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
+            cam_ts_data = cam_ts_data.isel(time=tslice)
+            casedat.append(cam_ts_data)
+            ncases += 1
 
     #cam_ts_data = pf.load_dataset(ts_files)
     #tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
