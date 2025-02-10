@@ -81,7 +81,7 @@ def tape_recorder(adfobj):
 
         #Append all baseline objects to test case lists
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
-        case_names = test_case_names + [data_name]
+        #case_names = test_case_names + [data_name]
         
         #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         data_ts_loc = adfobj.ts_locs["baseline"]
@@ -232,7 +232,7 @@ def tape_recorder(adfobj):
         count=count+1
         runname_LT.append(base_nickname)
     else:
-        print("No time series files, skipping case.")
+        print(f"No time series files for test '{data_name}', skipping case.")
 
 
 
@@ -247,7 +247,7 @@ def tape_recorder(adfobj):
             fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
             #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
             #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
-            dat = adfobj.data.load_timeseries_da(case_names[idx], var, start_years[idx], end_years[idx])
+            dat = adfobj.data.load_timeseries_da(test_case_names[idx], var, start_years[idx], end_years[idx])
             print("\n\n",type(dat),dat,"\n\n")
             #if dat is NoneType:
             #if not dat:
@@ -270,7 +270,7 @@ def tape_recorder(adfobj):
             count=count+1
             runname_LT.append(key)
         else:
-            print("No time series files, skipping case.")
+            print(f"No time series files for test '{test_case_names[idx]}', skipping case.")
 
     #Check to see if any cases were successful
     if not runname_LT:
