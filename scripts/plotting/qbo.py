@@ -137,10 +137,13 @@ def qbo(adfobj):
         cam_ts_data = pf.load_dataset(sorted(Path(base_loc).glob(f"{base_name}.*.U.*.nc")))
         if cam_ts_data:
             ncases += 1
+            case_names.append(base_name)
 
             tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(bl_syr), int(bl_eyr))
             cam_ts_data = cam_ts_data.isel(time=tslice)
             casedat.append(cam_ts_data)
+        else:
+            print("No ts files?")
 
     # Loop over test case data
     #for i in range(0,ncases,1):
