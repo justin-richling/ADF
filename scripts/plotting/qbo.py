@@ -192,6 +192,9 @@ def qbo(adfobj):
     x1, x2, y1, y2 = plotpos()
     ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
+
+    print("case_names",case_names,len(case_names))
+    print(ncases)
     casecount=0
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
