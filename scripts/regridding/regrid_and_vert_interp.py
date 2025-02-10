@@ -57,7 +57,8 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    input_climo_locs = adf.climo_locs["test"]
 
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
@@ -111,7 +112,8 @@ def regrid_and_vert_interp(adf):
     else:
 
         #Extract model baseline variables:
-        target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        #target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        target_loc = adf.climo_locs["baseline"]
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
 

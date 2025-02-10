@@ -95,7 +95,8 @@ class AdfData:
     # Test case(s)
     def get_timeseries_file(self, case, field):
         """Return list of test time series files"""
-        ts_locs = self.adf.get_cam_info("cam_ts_loc", required=True) # list of paths (could be multiple cases)
+        #ts_locs = self.adf.get_cam_info("cam_ts_loc", required=True) # list of paths (could be multiple cases)
+        ts_locs = self.ts_locs["test"]
         caseindex = (self.case_names).index(case)
         ts_loc = Path(ts_locs[caseindex])
         ts_filenames = f'{case}.*.{field}.*nc'
@@ -211,7 +212,8 @@ class AdfData:
 
     def get_climo_file(self, case, variablename):
         """Retrieve the climo file path(s) for variablename for a specific case."""
-        a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
+        #a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
+        a = self.adf.climo_locs["test"]
         caseindex = (self.case_names).index(case) # the entry for specified case
         model_cl_loc = Path(a[caseindex])
         return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
@@ -229,7 +231,8 @@ class AdfData:
         if self.adf.compare_obs:
             fils = self.ref_var_loc.get(var, None)
             return [fils] if fils is not None else None
-        ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        #ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        ref_loc = self.adf.climo_locs["baseline"]
         # NOTE: originally had this looking for *_baseline.nc
         fils = sorted(Path(ref_loc).glob(f"{self.ref_case_label}_{var}_climo.nc"))
         if fils:
