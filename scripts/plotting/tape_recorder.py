@@ -85,12 +85,12 @@ def tape_recorder(adfobj):
         
         #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
         data_ts_loc = adfobj.ts_locs["baseline"]
-        if data_ts_loc is None:
-            print("\tNo time series location found for baseline case")
-            case_ts_locs = case_ts_locs+[None]
-        else:
-            case_ts_locs = case_ts_locs+[data_ts_loc]
-        print("case_ts_locs",case_ts_locs)
+        #if data_ts_loc is None:
+        #    print("\tNo time series location found for baseline case")
+        #    case_ts_locs = case_ts_locs+[None]
+        #else:
+        #    case_ts_locs = case_ts_locs+[data_ts_loc]
+        print("case_ts_locs",data_ts_loc)
 
         base_nickname = adfobj.case_nicknames['base_nickname']
         #test_nicknames = test_nicknames+[base_nickname]
@@ -110,7 +110,7 @@ def tape_recorder(adfobj):
         data_ts_loc = None
         data_name = "Obs"
     #End if
-    print("hist_strs",hist_strs,"\n")
+    #print("hist_strs",hist_strs,"\n")
     if not case_ts_locs:
         exitmsg = "WARNING: No time series files in any case directory."
         exitmsg += " No tape recorder plots will be made."
@@ -239,7 +239,7 @@ def tape_recorder(adfobj):
         # Search for files
         if case_ts_locs[idx]:
             ts_loc = Path(case_ts_locs[idx])
-            hist_str = hist_strs[idx]
+            hist_str = case_hist_strs[idx]
             print("ts_loc",ts_loc,"\n")
             print("ts_loc",hist_str,"\n")
             print("ts_loc",var,"\n")
