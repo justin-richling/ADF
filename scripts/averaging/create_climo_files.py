@@ -305,9 +305,10 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first
     tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
     cam_ts_data = cam_ts_data.isel(time=tslice)
     #Retrieve the actual time values from the slice
+    #NOTE: This is in place in case of premade climo files to make sure it is grabbing the correct time slice
     actual_time_values = cam_ts_data.time.values
     if first:
-        print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
+        print("create_climo_files: Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
 
     #Set a global attribute with the actual time values
     #cam_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
