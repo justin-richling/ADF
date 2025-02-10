@@ -96,7 +96,7 @@ class AdfData:
     def get_timeseries_file(self, case, field):
         """Return list of test time series files"""
         #ts_locs = self.adf.get_cam_info("cam_ts_loc", required=True) # list of paths (could be multiple cases)
-        ts_locs = self.ts_locs["test"]
+        ts_locs = self.adf.ts_locs["test"]
         caseindex = (self.case_names).index(case)
         ts_loc = Path(ts_locs[caseindex])
         ts_filenames = f'{case}.*.{field}.*nc'
@@ -110,7 +110,8 @@ class AdfData:
             warnings.warn("ADF does not currently expect observational time series files.")
             return None
         else:
-            ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
+            #ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
+            ts_loc = self.adf.ts_locs["baseline"]
             ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
