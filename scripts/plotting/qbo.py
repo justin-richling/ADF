@@ -145,7 +145,7 @@ def qbo(adfobj):
     # Loop over test case data
     #for i in range(0,ncases,1):
     for i in range(0,len(case_loc),1): 
-        if Path(case_loc[i]).is_dir():
+        if case_loc[i]:
             cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc")))
             if cam_ts_data:
                 tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
