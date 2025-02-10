@@ -136,7 +136,7 @@ def qbo(adfobj):
     if not adfobj.compare_obs:
         cam_ts_data = pf.load_dataset(sorted(Path(base_loc).glob(f"{base_name}.*.U.*.nc")))
         if cam_ts_data:
-            ncases = 1
+            ncases += 1
 
             tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(bl_syr), int(bl_eyr))
             cam_ts_data = cam_ts_data.isel(time=tslice)
@@ -152,6 +152,7 @@ def qbo(adfobj):
                 cam_ts_data = cam_ts_data.isel(time=tslice)
                 casedat.append(cam_ts_data)
                 ncases += 1
+        print(ncases)
 
     #cam_ts_data = pf.load_dataset(ts_files)
     #tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
