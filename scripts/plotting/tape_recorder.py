@@ -652,6 +652,7 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
 def auto_fontsize(ax, title, max_fontsize=16, min_fontsize=8):
     """Dynamically adjust font size to fit title within the plot width."""
     for fontsize in range(max_fontsize, min_fontsize, -1):
+        print("fontsize",fontsize)
         ax.set_title(title, fontsize=fontsize)
         ax.figure.canvas.draw()  # Render figure to get text size
         renderer = ax.figure.canvas.get_renderer()
