@@ -33,7 +33,7 @@ def qbo(adfobj):
     print("\n  Generating qbo plots...")
 
     #Extract relevant info from the ADF:
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
     #case_loc = adfobj.get_cam_info('cam_ts_loc')
     case_loc = adfobj.ts_locs["test"]
     if case_loc is None:
@@ -44,7 +44,7 @@ def qbo(adfobj):
     else:
         for i,case_ts_loc in enumerate(case_loc):
             if case_ts_loc is None:
-                print(f"Case '{case_names[i]}' is missing time series location, skipping case case_ts_loc: {case_ts_loc}")
+                print(f"Case '{test_case_names[i]}' is missing time series location, skipping case case_ts_loc: {case_ts_loc}")
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
     #Extract baseline years:
@@ -131,6 +131,7 @@ def qbo(adfobj):
     #casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
 
     casedat = []
+    case_names = []
     ncases = 0
     # Get baseline data if applicable
     if not adfobj.compare_obs:
@@ -149,7 +150,7 @@ def qbo(adfobj):
     #for i in range(0,ncases,1):
     for i in range(0,len(case_loc),1): 
         if case_loc[i]:
-            cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc")))
+            cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{test_case_names[i]}.*.U.*.nc")))
             if cam_ts_data:
                 tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
                 cam_ts_data = cam_ts_data.isel(time=tslice)
