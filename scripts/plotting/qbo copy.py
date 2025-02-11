@@ -36,19 +36,27 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    #case_loc = adfobj.get_cam_info('cam_ts_loc')
     case_loc = adfobj.ts_locs["test"]
     if case_loc is None:
         print("\tNo time series locations found for any test cases")
         case_loc = []
-
-    # Gather obs data location
+        #return
+        #exit
+    else:
+        for i,case_ts_loc in enumerate(case_loc):
+            if case_ts_loc is None:
+                print(f"Case '{test_case_names[i]}' is missing time series location, skipping case case_ts_loc: {case_ts_loc}")
+    base_name = adfobj.get_baseline_info('cam_case_name')
+    base_loc = adfobj.get_baseline_info('cam_ts_loc')
+    #Extract baseline years:
+    bl_syr = adfobj.climo_yrs["syear_baseline"]
+    bl_eyr = adfobj.climo_yrs["eyear_baseline"]
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
-
-    # Plot location
     plot_locations = adfobj.plot_location
     plot_type = adfobj.get_basic_info('plot_type')
 
-    # Extract simulation years:
+    #Extract simulation years:
     start_years = adfobj.climo_yrs["syears"]
     end_years   = adfobj.climo_yrs["eyears"]
     if not case_loc:
@@ -109,36 +117,54 @@ def qbo(adfobj):
             plot_loc_amp.unlink()
     #End if
 
+    #Check if model vs model run, and if so, append baseline to case lists:
+    #if not adfobj.compare_obs:
+    #    case_loc.append(base_loc)
+    #    case_names.append(base_name)
+    #    start_years.append(bl_syr)
+    #    end_years.append(bl_eyr)
+    #End if
+
     #----Read in the OBS (ERA5, 5S-5N average already
     obs = xr.open_dataset(obsdir+"/U_ERA5_5S_5N_1979_2019.nc").U_5S_5N
 
     #----Read in the case data and baseline
+    #ncases = len(case_loc)
+    #casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+
     casedat = []
     case_names = []
     ncases = 0
 
     # Loop over test case data
+    #for i in range(0,ncases,1):
     for i in range(0,len(case_loc),1): 
         if case_loc[i]:
+            #cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{test_case_names[i]}.*.U.*.nc")))
             cam_ts_data = adfds.load_timeseries_da(test_case_names[idx], "U", start_years[idx], end_years[idx])
             if cam_ts_data:
+                #tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
+                #cam_ts_data = cam_ts_data.isel(time=tslice)
                 casedat.append(cam_ts_data)
                 case_names.append(test_case_names[i])
                 ncases += 1    
     # Get baseline data if applicable
     if not adfobj.compare_obs:
-        base_name = adfobj.get_baseline_info('cam_case_name')
-        #base_loc = adfobj.ts_locs["baseline"]
-        #Extract baseline years:
-        bl_syr = adfobj.climo_yrs["syear_baseline"]
-        bl_eyr = adfobj.climo_yrs["eyear_baseline"]
+        cam_ts_data = pf.load_dataset(sorted(Path(base_loc).glob(f"{base_name}.*.U.*.nc")))
         ref_ts_data = adfds.load_reference_timeseries_da("U", bl_syr, bl_eyr)
         if ref_ts_data:
             ncases += 1
             case_names.append(base_name)
+
+            #tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(bl_syr), int(bl_eyr))
+            #cam_ts_data = cam_ts_data.isel(time=tslice)
             casedat.append(ref_ts_data)
         else:
             print("No ts data")
+
+    #cam_ts_data = pf.load_dataset(ts_files)
+    #tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
+    #cam_ts_data = cam_ts_data.isel(time=tslice)
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
@@ -157,8 +183,7 @@ def qbo(adfobj):
     #End if
 
     #----Calculate the zonal mean
-    #casedatzm = [ casedat[i].U.mean("lon") for i in range(0,ncases,1) ]
-    casedatzm = [ casedat[i].mean("lon") for i in range(0,ncases,1) ]
+    casedatzm = [ casedat[i].U.mean("lon") for i in range(0,ncases,1) ]
 
     #----Calculate the 5S-5N average
     casedat_5S_5N = [ cosweightlat(casedatzm[i],-5,5) for i in range(0,ncases,1) ]
