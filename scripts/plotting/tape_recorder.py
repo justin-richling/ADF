@@ -582,6 +582,12 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     # move the time axis to the first
     if (data.dims[1] != taxis):
         data = data.transpose(..., taxis)
+    
+    #Make 24 months so we can have Jan-Dec repeated twice
+    case_seas = np.zeros((25,len(data[paxis])))
+    case_seas = xr.DataArray(case_seas, dims=[taxis,paxis],
+                                     coords={taxis: np.arange(1,26,1),
+                                             paxis: data[paxis]})
 
     nlevs = (cmax - cmin)/ci + 1
     clevs = np.arange(cmin, cmax+ci, ci)
