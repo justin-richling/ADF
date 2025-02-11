@@ -9,7 +9,6 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 import glob
 from pathlib import Path
-import plotting_functions as pf
 
 def tape_recorder(adfobj):
     """
@@ -29,6 +28,10 @@ def tape_recorder(adfobj):
     NOTE: If the baseline case is observations, it will be ignored
         since a defualt set of obs are already being compared against in the tape recorder.
     """
+
+    #CAM diagnostic plotting functions:
+    import plotting_functions as pf
+
     #Notify user that script has started:
     print("\n  Generating tape recorder plots...")
 
@@ -37,41 +40,19 @@ def tape_recorder(adfobj):
     plot_loc = Path(plot_location[0])
 
     #Grab test case name(s)
-    test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    case_names = adfobj.get_cam_info('cam_case_name', required=True)
 
     #Grab test case time series locs(s)
-    #case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
-    case_ts_locs = adfobj.ts_locs["test"]
-    if case_ts_locs is None:
-        print("\tNo time series locations found for any test cases")
-        case_ts_locs = [None]*len(test_case_names)
-        #return
-        #exit
-    """else:
-        for i,case_ts_loc in enumerate(case_ts_locs):
-            if case_ts_loc is None:
-                print(f"Case '{test_case_names[i]}' is missing time series location, skipping case boi! case_ts_loc: {case_ts_loc}")"""
-
-    #Grab history strings:
-    cam_hist_strs = adfobj.hist_string["test_hist_str"]
-
-    # Filter the list to include only strings that are exactly in the possible h0 strings
-    # - Search for either h0 or h0a
-    substrings = {"cam.h0","cam.h0a"}
-    case_hist_strs = []
-    for cam_case_str in cam_hist_strs:
-        # Check each possible h0 string
-        for string in cam_case_str:
-            if string in substrings:
-               case_hist_strs.append(string)
-               break
+    case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
 
     #Grab test case climo years
     start_years = adfobj.climo_yrs["syears"]
     end_years = adfobj.climo_yrs["eyears"]
 
     #Grab test case nickname(s)
-    test_nicknames = adfobj.case_nicknames['test_nicknames']
+    test_nicknames = adfobj.get_cam_info('case_nickname')
+    if test_nicknames == None:
+        test_nicknames = case_names
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -81,47 +62,28 @@ def tape_recorder(adfobj):
 
         #Append all baseline objects to test case lists
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
-        #case_names = test_case_names + [data_name]
+        case_names = case_names + [data_name]
         
-        #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
-        data_ts_loc = adfobj.ts_locs["baseline"]
-        #if data_ts_loc is None:
-        #    print("\tNo time series location found for baseline case")
-        #    case_ts_locs = case_ts_locs+[None]
-        #else:
-        #    case_ts_locs = case_ts_locs+[data_ts_loc]
-        print("case_ts_locs",data_ts_loc)
+        data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
+        case_ts_locs = case_ts_locs+[data_ts_loc]
 
-        base_nickname = adfobj.case_nicknames['base_nickname']
-        #test_nicknames = test_nicknames+[base_nickname]
+        base_nickname = adfobj.get_baseline_info('case_nickname')
+        if base_nickname == None:
+            base_nickname = data_name
+        test_nicknames = test_nicknames+[base_nickname]
 
         data_start_year = adfobj.climo_yrs["syear_baseline"]
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
-        #start_years = start_years+[data_start_year]
-        #end_years = end_years+[data_end_year]
-
-        #Grab history string:
-        baseline_hist_strs = adfobj.hist_string["base_hist_str"]
-        # Filter the list to include only strings that are exactly in the substrings list
-        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
-        #hist_strs = case_hist_strs + base_hist_strs
-    else:
-        #hist_strs = case_hist_strs
-        data_ts_loc = None
-        data_name = "Obs"
+        start_years = start_years+[data_start_year]
+        end_years = end_years+[data_end_year]
     #End if
-    #print("hist_strs",hist_strs,"\n")
-    if not case_ts_locs:
-        exitmsg = "WARNING: No time series files in any case directory."
-        exitmsg += " No tape recorder plots will be made."
-        print(exitmsg)
-        logmsg = "create tape recorder:"
-        logmsg += f"\n Tape recorder plots require monthly mean h0 time series files."
-        logmsg += f"\n None were found for any case. Please check the time series paths."
-        adfobj.debug_log(logmsg)
-        #End tape recorder plotting script:
-        return
-    print("case_ts_locs",case_ts_locs)
+
+    res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
+    # or an empty dictionary if use_defaults was not specified in the config YAML file.
+
+    #Grab location of ADF default obs files
+    adf_obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
+
     # Default colormap
     cmap='precip_nowhite'
 
@@ -135,192 +97,146 @@ def tape_recorder(adfobj):
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
-
-    #Set location for observations
-    obs_loc = Path(adfobj.get_basic_info("obs_data_loc"))
     #-----------------------------------------
 
-    #Set var to Q for now
-    #TODO: add option to look for H2O if Q is not available, and vice-versa
-    var = "Q"
-
     #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
-
-    print(f"\t - Plotting annual tape recorder for {var}")
+    plot_name = plot_loc / f"Q_TapeRecorder_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+    print(f"\t - Plotting annual tape recorder for Q")
 
     # Check redo_plot. If set to True: remove old plot, if it already exists:
     if (not redo_plot) and plot_name.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
+        adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM", ext="SeasonalCycle_Mean",multi_case=True,category="Seasonal Cycle")
         return
 
-    elif (redo_plot) and plot_name.is_file():
-        plot_name.unlink()
+    elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
+        if plot_name.is_file():
+            plot_name.unlink()
     
-    # Plotting
-    #---------
+    #Make dictionary for case names and associated timeseries file locations
+    runs_LT2={}
+    for i,val in enumerate(test_nicknames):
+        runs_LT2[val] = case_ts_locs[i]
+
     # MLS data
-    mls = xr.open_dataset(obs_loc / "mls_h2o_latNpressNtime_3d_monthly_v5.nc")
-    mls = mls.rename(x='lat', y='lev', t='time')
-    time = pd.date_range("2004-09","2021-11",freq='M')
-    mls['time'] = time
-    mls = cosweightlat(mls.H2O,-10,10)
-    mls = mls.groupby('time.month').mean('time')
-    # Convert mixing ratio values from ppmv to kg/kg
-    mls = mls*18.015280/(1e6*28.964)
+    #mls_filename = res['tape_recorder']['mls']['obs_file']
+    mls_filename = "mls_h2o_latNpressNtime_3d_monthly_v5.nc"
+    mls_file = adf_obs_loc / mls_filename
+    #saber_filename = seas_cyc_res['saber_file']
+    #saber_file = adf_obs_loc / saber_filename
+    #merra_filename = seas_cyc_res['merra2_file']
+    #merra_file = adf_obs_loc / merra_filename
+
+
+
+    #mls_file = pf.check_obs_file(adfobj, Path(mls_file))
+
+    mls = pf.load_dataset(str(mls_file))
+    if mls:
+        #mls = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/MLS/mls_h2o_latNpressNtime_3d_monthly_v5.nc")
+        mls = mls.rename(x='lat', y='lev', t='time')
+        time = pd.date_range("2004-09","2021-11",freq='M')
+        mls['time'] = time
+        mls = pf.coslat_average(mls.H2O,-10,10)
+        mls = mls.groupby('time.month').mean('time')
+        # Convert mixing ratio values from ppmv to kg/kg
+        mls = mls*18.015280/(1e6*28.964)
+    else:
+        no_mls = True
+        print("Incorrect MLS file/path provided, so MLS won't be plotted. ")
+        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
+
 
     # ERA5 data
-    era5 = xr.open_dataset(obs_loc / "ERA5_Q_10Sto10N_1980to2020.nc")
-    era5 = era5.groupby('time.month').mean('time')
-    era5_data = era5.Q
+    #era5_filename = res['tape_recorder']['era5']['obs_file']
+    era5_filename = "ERA5_Q_10Sto10N_1980to2020.nc"
+    era5_file = adf_obs_loc / era5_filename
+    #era5_file = pf.check_obs_file(adfobj, Path(era5_file))
 
-    #Set up figure and plot MLS and ERA5 data
-    fig = plt.figure(figsize=(16,16))
+
+    era5 = pf.load_dataset([str(era5_file)])
+    if era5:
+        #era5 = xr.open_dataset("/glade/campaign/cgd/cas/islas/CAM7validation/ERA5/ERA5_Q_10Sto10N_1980to2020.nc")
+        era5 = era5.groupby('time.month').mean('time')
+    else:
+        no_era5 = True
+        print("Incorrect ERA5 file/path provided, so ERA5 won't be plotted. ")
+        print("Please check your location in the 'tape_recorder' section of the variable defaults yaml file.\n")
+
+
+    alldat=[]
+    runname_LT=[]
+    for idx,key in enumerate(runs_LT2):
+        fils= sorted(Path(runs_LT2[key]).glob(f'*{adfobj.hist_str}*.Q.*.nc'))
+        print(fils,"\n")
+        print(len(fils))
+        dat = pf.load_dataset(str(fils))
+
+        #Check if data files exist, skip current case if not
+        if not dat:
+            errmsg = f"No files for '{key}'\n"
+            errmsg += "Please make sure Q is in the CAM output"
+            print(errmsg)
+            continue
+
+        dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        datzm = dat.mean('lon')
+        dat_tropics = pf.coslat_average(datzm.Q, -10, 10)
+        dat_mon = dat_tropics.groupby('time.month').mean('time').load()
+        alldat.append(dat_mon)
+        runname_LT.append(key)
+
+    runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
+    
+    #Check if any CAM cases were made, if none, kill this script and have ADF continue on
+    if len(alldat) == 0:
+        print("No CAM cases for Q, so tape recorder plots will not be made. Moving on.")
+        return
+
+    #Combine all case data arrays
+    alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
+
+    #Total number of plots
+    case_num = alldat_concat_LT.run.size+2
+
+    #Calculate the number of rows needed
+    rows = (case_num + 5 - 1) // 5
+
+    #Setup plots
+    fig = plt.figure(figsize=(25,rows*16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
     plot_step = 0.5e-7
     plot_min = 1.5e-6
-    plot_max = 3.5e-6
+    plot_max = 3e-6
 
-    ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
-                      x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
-                      taxis='month',climo_yrs="2004-2021")
+    if not no_mls:
+        ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+                        x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
+                        taxis='month',climo_yrs="2004-2021")
 
-    ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
-                      'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
-                      taxis='month',climo_yrs="1980-2020")
+    if not no_era5:
+        ax = plot_pre_mon(fig, era5.Q, plot_step,plot_min,plot_max,
+                        'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
+                        taxis='month',climo_yrs="1980-2020")
 
-
-    #Loop over case(s) and start count at 2 to account for MLS and ERA5 plots above
-    runname_LT=[]
+    #Start count at 2 to account for MLS and ERA5 plots above
     count=2
-
-    #for idx,key in enumerate(test_nicknames):
-        # Search for files
-    """if data_ts_loc:
-        ts_loc = Path(data_ts_loc)
-        hist_str = base_hist_strs
-        print("ts_loc",ts_loc,"\n")
-        print("ts_loc",hist_str,"\n")
-        print("ts_loc",var,"\n")
-        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
-        #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
-        #dat = adfobj.data.load_timeseries_da(data_name, var, data_start_year, data_end_year)
-        dat = adfobj.data.load_reference_timeseries_da(var, data_start_year, data_end_year)
-        print("\n\n",type(dat),dat,"\n\n")
-        #if dat is NoneType:
-        #if not dat:
-        if not isinstance(dat, xr.DataArray):
-            dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
-            print(dmsg)
-            adfobj.debug_log(dmsg)
-            pass
-
-        #Grab time slice based on requested years (if applicable)
-        #dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
-        datzm = dat.mean('lon')
-        dat_tropics = cosweightlat(datzm, -10, 10)
-        #dat_tropics = cosweightlat(datzm[var], -10, 10)
-        dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-        ax = plot_pre_mon(fig, dat_mon,
-                        plot_step, plot_min, plot_max, base_nickname,
-                        x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                        taxis='month',climo_yrs=f"{data_start_year}-{data_end_year}")
+    for irun in np.arange(0,alldat_concat_LT.run.size,1):
+        title = f"{alldat_concat_LT.run.isel(run=irun).values}"
+        ax = plot_pre_mon(fig, alldat_concat_LT.isel(run=irun),
+                          plot_step, plot_min, plot_max, title,
+                          x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
+                          taxis='month',climo_yrs=f"{start_years[irun]}-{end_years[irun]}")
         count=count+1
-        runname_LT.append(base_nickname)
-    else:
-        print(f"No time series files for test '{data_name}', skipping case.")"""
-
-
-
-    for idx,key in enumerate(test_nicknames):
-        # Search for files
-        if case_ts_locs[idx]:
-            ts_loc = Path(case_ts_locs[idx])
-            hist_str = case_hist_strs[idx]
-            print("ts_loc",ts_loc,"\n")
-            print("ts_loc",hist_str,"\n")
-            print("ts_loc",var,"\n")
-            fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-            #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
-            #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
-            dat = adfobj.data.load_timeseries_da(test_case_names[idx], var, start_years[idx], end_years[idx])
-            print("\n\n",type(dat),dat,"\n\n")
-            #if dat is NoneType:
-            #if not dat:
-            if not isinstance(dat, xr.DataArray):
-                dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
-                print(dmsg)
-                adfobj.debug_log(dmsg)
-                continue
-
-            #Grab time slice based on requested years (if applicable)
-            #dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
-            datzm = dat.mean('lon')
-            dat_tropics = cosweightlat(datzm, -10, 10)
-            #dat_tropics = cosweightlat(datzm[var], -10, 10)
-            dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-            ax = plot_pre_mon(fig, dat_mon,
-                            plot_step, plot_min, plot_max, key,
-                            x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
-            count=count+1
-            runname_LT.append(key)
-        else:
-            print(f"No time series files for test '{test_case_names[idx]}', skipping case.")
-
-    if data_ts_loc:
-        ts_loc = Path(data_ts_loc)
-        hist_str = base_hist_strs
-        print("ts_loc",ts_loc,"\n")
-        print("ts_loc",hist_str,"\n")
-        print("ts_loc",var,"\n")
-        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
-        #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
-        #dat = adfobj.data.load_timeseries_da(data_name, var, data_start_year, data_end_year)
-        dat = adfobj.data.load_reference_timeseries_da(var, data_start_year, data_end_year)
-        print("\n\n",type(dat),dat,"\n\n")
-        #if dat is NoneType:
-        #if not dat:
-        if not isinstance(dat, xr.DataArray):
-            dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
-            print(dmsg)
-            adfobj.debug_log(dmsg)
-            pass
-
-        #Grab time slice based on requested years (if applicable)
-        #dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
-        datzm = dat.mean('lon')
-        dat_tropics = cosweightlat(datzm, -10, 10)
-        #dat_tropics = cosweightlat(datzm[var], -10, 10)
-        dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-        ax = plot_pre_mon(fig, dat_mon,
-                        plot_step, plot_min, plot_max, base_nickname,
-                        x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                        taxis='month',climo_yrs=f"{data_start_year}-{data_end_year}")
-        count=count+1
-        runname_LT.append(base_nickname)
-    else:
-        print(f"No time series files for test '{data_name}', skipping case.")
-
-    #Check to see if any cases were successful
-    if not runname_LT:
-        msg = f"WARNING: No cases seem to be available, please check time series files for {var}."
-        msg += "\n\tNo tape recorder plots will be made."
-        print(msg)
-        #End tape recorder plotting script:
-        return
-
+    
     #Shift colorbar if there are less than 5 subplots
     # There will always be at least 2 (MLS and ERA5)
-    if len(runname_LT) == 1:
+    if len(case_ts_locs) == 1:
         x1_loc = (x1[1]-x1[0])/2
         x2_loc = ((x2[2]-x2[1])/2)+x2[1]
-    elif len(runname_LT) == 2:
+    elif len(case_ts_locs) == 2:
         x1_loc = (x1[1]-x1[0])/2
         x2_loc = ((x2[3]-x2[2])/2)+x2[2]
     else:
@@ -330,7 +246,7 @@ def tape_recorder(adfobj):
     y1_loc = y1[count]-0.03
     y2_loc = y1[count]-0.02
 
-    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, 'Q', #'Q (vmr)'
                       x1_loc, x2_loc, y1_loc, y2_loc,
                       cmap=cmap)
 
@@ -338,7 +254,8 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
+    adfobj.add_website_data(plot_name, "Q_TapeRecorder", None, season="ANN", plot_type="WACCM",
+                            ext="SeasonalCycle_Mean", multi_case=True, category="Seasonal Cycle")
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
@@ -445,6 +362,17 @@ def precip_cmap(n, nowhite=False):
     mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap', colors)
 
     return mymap
+
+#########
+
+def fixcesmtime(dat,syear,eyear):
+    """
+    Fix the CESM timestamp with a simple set of dates
+    """
+    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
+    dat = dat.assign_coords({"time":timefix})
+
+    return dat
 
 #########
 
@@ -583,6 +511,21 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     if (data.dims[1] != taxis):
         data = data.transpose(..., taxis)
 
+    #Make 24 months so we can have Jan-Dec repeated twice
+    case_seas = np.zeros((25,len(data[paxis])))
+    case_seas = xr.DataArray(case_seas, dims=[taxis,paxis],
+                                     coords={taxis: np.arange(1,26,1),
+                                             paxis: data[paxis]})
+    #Make array of monthly temp data
+    for m in range(0,25):
+        month = m
+    
+        if m > 11:
+            month = m-12
+        if month == 12:
+            month = 0    
+        case_seas[m] = data.sel(month=month+1)
+
     nlevs = (cmax - cmin)/ci + 1
     clevs = np.arange(cmin, cmax+ci, ci)
 
@@ -602,63 +545,37 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
 
     plt.rcParams['font.size'] = '14'
 
-    monticks_temp = np.arange(0,12,1)
-    monticks2_temp = np.arange(0,12,1)+0.5
+    case_seas = case_seas.transpose(..., taxis)
 
+    monticks_temp = np.arange(0,25,1)
     monticks = monticks_temp
-    monticks2 = np.zeros([len(monticks2_temp)+2])
-    monticks2[0] = -0.5 ; monticks2[len(monticks2)-1] = 12.5
-    monticks2[1:len(monticks2)-1] = monticks2_temp
 
-    dataplot = np.zeros([data[paxis].size,len(monticks2)])
-    dataplot[:,0] = data[:,11]
-    dataplot[:,len(monticks2)-1] = data[:,0]
-    dataplot[:,1:len(monticks2)-1] = data[:,:]
-
-    #Check for over plotting
     if not oplot:
         if (x1):
             ax = fig.add_axes([x1, y1, x2-x1, y2-y1])
         else:
             ax = fig.add_axes()
-
-    #Set up axis
     ax.xaxis.set_label_position('top')
     if climo_yrs:
         ax.set_xlabel(f"{climo_yrs}", loc='center',
                            fontsize=8)
-    ax.contourf(monticks2, -np.log10(data[paxis]), dataplot, levels=clevs, cmap=mymap, extend='max')
+    
+    #ax.contourf(monticks_temp, -np.log10(case_seas[paxis]), case_seas*(29/18), levels=clevs*(29/18), cmap=mymap, extend='max')
+    #c= ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas*(29/18), levels=clevs[::3]*(29/18), colors="k", extend='max',linewidths=0.25)
+
+    ax.contourf(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, cmap=mymap, extend='max')
+    c= ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, colors="k", extend='max',linewidths=0.25) #clevs[::3]
+    fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
+    ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
     ax.set_ylim(-np.log10(100),-np.log10(3))
     ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3)])
     ax.set_yticklabels(['100','30','10','3'])
-    ax.set_xlim([0,12])
-    ax.tick_params(which='minor', length=0)
-    ax.set_xticks(monticks)
-    ax.set_xticklabels([])
-    ax.set_xticks(monticks2[1:13], minor=True)
-    ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], minor=True, fontsize=14)
-    #ax.set_title(expname, fontsize=16)
-    ax = auto_fontsize(ax, expname)
+    ax.set_xticks(monticks[0:25:3])
+    ax.set_xticklabels(['Jan','Apr','Jul','Oct']*2+["Jan"], fontsize=10)
+    ax.set_title(expname, fontsize=16)
 
     return ax
 
 #########
-
-
-def auto_fontsize(ax, title, max_fontsize=16, min_fontsize=8):
-    """Dynamically adjust font size to fit title within the plot width."""
-    for fontsize in range(max_fontsize, min_fontsize, -1):
-        ax.set_title(title, fontsize=fontsize)
-        ax.figure.canvas.draw()  # Render figure to get text size
-        renderer = ax.figure.canvas.get_renderer()
-        bbox = ax.title.get_window_extent(renderer)
-        ax_width = ax.bbox.width
-
-        if bbox.width <= ax_width:  # If title fits, break
-            break
-    return ax
-
-#########
-
 
 ###############
