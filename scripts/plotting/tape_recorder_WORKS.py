@@ -32,6 +32,8 @@ def tape_recorder(adfobj):
     #Notify user that script has started:
     print("\n  Generating tape recorder plots...")
 
+    adfds = adfobj.data
+
     #Special ADF variable which contains the output paths for plots:
     plot_location = adfobj.plot_location
     plot_loc = Path(plot_location[0])
@@ -247,7 +249,8 @@ def tape_recorder(adfobj):
             fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
             #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
             #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
-            dat = adfobj.data.load_timeseries_da(test_case_names[idx], var, start_years[idx], end_years[idx])
+            #dat = adfobj.data.load_timeseries_da(test_case_names[idx], var, start_years[idx], end_years[idx])
+            dat = adfds.load_timeseries_da(test_case_names[idx], var, start_years[idx], end_years[idx])
             print("\n\n",type(dat),dat,"\n\n")
             #if dat is NoneType:
             #if not dat:
@@ -282,7 +285,8 @@ def tape_recorder(adfobj):
         #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
         #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
         #dat = adfobj.data.load_timeseries_da(data_name, var, data_start_year, data_end_year)
-        dat = adfobj.data.load_reference_timeseries_da(var, data_start_year, data_end_year)
+        #dat = adfobj.data.load_reference_timeseries_da(var, data_start_year, data_end_year)
+        dat = adfds.load_reference_timeseries_da(var, data_start_year, data_end_year)
         print("\n\n",type(dat),dat,"\n\n")
         #if dat is NoneType:
         #if not dat:
