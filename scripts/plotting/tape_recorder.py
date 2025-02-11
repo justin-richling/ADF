@@ -582,12 +582,6 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     # move the time axis to the first
     if (data.dims[1] != taxis):
         data = data.transpose(..., taxis)
-    
-    #Make 24 months so we can have Jan-Dec repeated twice
-    case_seas = np.zeros((25,len(data[paxis])))
-    case_seas = xr.DataArray(case_seas, dims=[taxis,paxis],
-                                     coords={taxis: np.arange(1,26,1),
-                                             paxis: data[paxis]})
 
     nlevs = (cmax - cmin)/ci + 1
     clevs = np.arange(cmin, cmax+ci, ci)
@@ -608,7 +602,7 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
 
     plt.rcParams['font.size'] = '14'
 
-    """monticks_temp = np.arange(0,12,1)
+    monticks_temp = np.arange(0,12,1)
     monticks2_temp = np.arange(0,12,1)+0.5
 
     monticks = monticks_temp
@@ -642,32 +636,7 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     ax.set_xticks(monticks)
     ax.set_xticklabels([])
     ax.set_xticks(monticks2[1:13], minor=True)
-    ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], minor=True, fontsize=14)"""
-    monticks_temp = np.arange(0,25,1)
-    monticks = monticks_temp
-
-    if not oplot:
-        if (x1):
-            ax = fig.add_axes([x1, y1, x2-x1, y2-y1])
-        else:
-            ax = fig.add_axes()
-    ax.xaxis.set_label_position('top')
-    if climo_yrs:
-        ax.set_xlabel(f"{climo_yrs}", loc='center',
-                           fontsize=8)
-    
-    #ax.contourf(monticks_temp, -np.log10(case_seas[paxis]), case_seas*(29/18), levels=clevs*(29/18), cmap=mymap, extend='max')
-    #c= ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas*(29/18), levels=clevs[::3]*(29/18), colors="k", extend='max',linewidths=0.25)
-
-    ax.contourf(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, cmap=mymap, extend='max')
-    c= ax.contour(monticks_temp, -np.log10(case_seas[paxis]), case_seas, levels=clevs, colors="k", extend='max',linewidths=0.25) #clevs[::3]
-    fmt = {lev: '{:.1f}'.format(lev) for lev in c.levels}
-    ax.clabel(c, c.levels, inline=True, fmt=fmt, fontsize=8)
-    ax.set_ylim(-np.log10(100),-np.log10(3))
-    ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3)])
-    ax.set_yticklabels(['100','30','10','3'])
-    ax.set_xticks(monticks[0:25:3])
-    ax.set_xticklabels(['Jan','Apr','Jul','Oct']*2+["Jan"], fontsize=10)
+    ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], minor=True, fontsize=14)
     #ax.set_title(expname, fontsize=16)
     ax = auto_fontsize(ax, expname)
 
