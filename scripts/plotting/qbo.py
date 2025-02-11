@@ -144,7 +144,7 @@ def qbo(adfobj):
             cam_ts_data = cam_ts_data.isel(time=tslice)
             casedat.append(cam_ts_data)
         else:
-            print("No ts files?")
+            print("No ts data")
 
     # Loop over test case data
     #for i in range(0,ncases,1):
@@ -155,6 +155,7 @@ def qbo(adfobj):
                 tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
                 cam_ts_data = cam_ts_data.isel(time=tslice)
                 casedat.append(cam_ts_data)
+                case_names.append(test_case_names[i])
                 ncases += 1
         print(ncases)
 
