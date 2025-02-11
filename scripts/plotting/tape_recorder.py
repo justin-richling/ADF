@@ -637,10 +637,28 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     ax.set_xticklabels([])
     ax.set_xticks(monticks2[1:13], minor=True)
     ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], minor=True, fontsize=14)
-    ax.set_title(expname, fontsize=16)
+    #ax.set_title(expname, fontsize=16)
+    ax = auto_fontsize(ax, expname)
 
     return ax
 
 #########
+
+
+def auto_fontsize(ax, title, max_fontsize=16, min_fontsize=8):
+    """Dynamically adjust font size to fit title within the plot width."""
+    for fontsize in range(max_fontsize, min_fontsize, -1):
+        ax.set_title(title, fontsize=fontsize)
+        ax.figure.canvas.draw()  # Render figure to get text size
+        renderer = ax.figure.canvas.get_renderer()
+        bbox = ax.title.get_window_extent(renderer)
+        ax_width = ax.bbox.width
+
+        if bbox.width <= ax_width:  # If title fits, break
+            break
+    return ax
+
+#########
+
 
 ###############
