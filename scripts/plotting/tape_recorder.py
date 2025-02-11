@@ -199,7 +199,7 @@ def tape_recorder(adfobj):
 
     #for idx,key in enumerate(test_nicknames):
         # Search for files
-    if data_ts_loc:
+    """if data_ts_loc:
         ts_loc = Path(data_ts_loc)
         hist_str = base_hist_strs
         print("ts_loc",ts_loc,"\n")
@@ -232,7 +232,7 @@ def tape_recorder(adfobj):
         count=count+1
         runname_LT.append(base_nickname)
     else:
-        print(f"No time series files for test '{data_name}', skipping case.")
+        print(f"No time series files for test '{data_name}', skipping case.")"""
 
 
 
@@ -271,6 +271,41 @@ def tape_recorder(adfobj):
             runname_LT.append(key)
         else:
             print(f"No time series files for test '{test_case_names[idx]}', skipping case.")
+
+    if data_ts_loc:
+        ts_loc = Path(data_ts_loc)
+        hist_str = base_hist_strs
+        print("ts_loc",ts_loc,"\n")
+        print("ts_loc",hist_str,"\n")
+        print("ts_loc",var,"\n")
+        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
+        #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
+        #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
+        #dat = adfobj.data.load_timeseries_da(data_name, var, data_start_year, data_end_year)
+        dat = adfobj.data.load_reference_timeseries_da(var, data_start_year, data_end_year)
+        print("\n\n",type(dat),dat,"\n\n")
+        #if dat is NoneType:
+        #if not dat:
+        if not isinstance(dat, xr.DataArray):
+            dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
+            print(dmsg)
+            adfobj.debug_log(dmsg)
+            pass
+
+        #Grab time slice based on requested years (if applicable)
+        #dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
+        datzm = dat.mean('lon')
+        dat_tropics = cosweightlat(datzm, -10, 10)
+        #dat_tropics = cosweightlat(datzm[var], -10, 10)
+        dat_mon = dat_tropics.groupby('time.month').mean('time').load()
+        ax = plot_pre_mon(fig, dat_mon,
+                        plot_step, plot_min, plot_max, base_nickname,
+                        x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
+                        taxis='month',climo_yrs=f"{data_start_year}-{data_end_year}")
+        count=count+1
+        runname_LT.append(base_nickname)
+    else:
+        print(f"No time series files for test '{data_name}', skipping case.")
 
     #Check to see if any cases were successful
     if not runname_LT:

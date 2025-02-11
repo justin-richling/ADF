@@ -133,6 +133,18 @@ def qbo(adfobj):
     casedat = []
     case_names = []
     ncases = 0
+
+    # Loop over test case data
+    #for i in range(0,ncases,1):
+    for i in range(0,len(case_loc),1): 
+        if case_loc[i]:
+            cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{test_case_names[i]}.*.U.*.nc")))
+            if cam_ts_data:
+                tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
+                cam_ts_data = cam_ts_data.isel(time=tslice)
+                casedat.append(cam_ts_data)
+                case_names.append(test_case_names[i])
+                ncases += 1    
     # Get baseline data if applicable
     if not adfobj.compare_obs:
         cam_ts_data = pf.load_dataset(sorted(Path(base_loc).glob(f"{base_name}.*.U.*.nc")))
@@ -145,19 +157,6 @@ def qbo(adfobj):
             casedat.append(cam_ts_data)
         else:
             print("No ts data")
-
-    # Loop over test case data
-    #for i in range(0,ncases,1):
-    for i in range(0,len(case_loc),1): 
-        if case_loc[i]:
-            cam_ts_data = pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{test_case_names[i]}.*.U.*.nc")))
-            if cam_ts_data:
-                tslice = adfobj.data.get_time_slice_by_year(cam_ts_data.time, int(start_years[i]), int(end_years[i]))
-                cam_ts_data = cam_ts_data.isel(time=tslice)
-                casedat.append(cam_ts_data)
-                case_names.append(test_case_names[i])
-                ncases += 1
-        print(ncases)
 
     #cam_ts_data = pf.load_dataset(ts_files)
     #tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
