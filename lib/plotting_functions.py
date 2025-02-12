@@ -155,7 +155,7 @@ def load_dataset(fils):
     When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
     """
     if len(fils) == 0:
-        warnings.warn(f"Input file list is empty.")
+        warnings.warn(f"\t    WARNING: Input file list is empty.")
         return None
     elif len(fils) > 1:
         return xr.open_mfdataset(fils, combine='by_coords')
@@ -380,7 +380,7 @@ def spatial_average(indata, weights=None, spatial_dims=None):
                 warnings.warn("area variable being used to generated normalized weights.")
                 weights = indata['area'] / indata['area'].sum()
             else:
-                warnings.warn("We need a way to get area variable. Using equal weights.")
+                warnings.warn("\t  We need a way to get area variable. Using equal weights.")
                 weights = xr.DataArray(1.)
             weights.name = "weights"
         else:
@@ -727,7 +727,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         dif = difference
         
     if  pctchange is None:
-        pct = ((d2 - d1) / np.abs(d1)) * 100.0
+        pct = (d2 - d1) / np.abs(d1) * 100.0
     else:
         pct = pctchange
         
@@ -747,7 +747,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         proj = ccrs.NorthPolarStereo()
     elif hemisphere.upper() == "SH":
         proj = ccrs.SouthPolarStereo()
-        #proj = ccrs.PlateCarree().transform_points(ccrs.SouthPolarStereo(), pct['lon'], pct['lat'])
     else:
         raise AdfError(f'[make_polar_plot] hemisphere not specified, must be NH or SH; hemisphere set as {hemisphere}')
 
@@ -1803,11 +1802,7 @@ def zm_validate_dims(fld):
         return None
     validate = validate_dims(fld, ['lev','lat'])
     has_lev, has_lat = validate['has_lev'], validate['has_lat']
-    print(has_lev, has_lat)
-    if not has_lat:
-        return None
-    else:
-        return has_lat, has_lev
+    return has_lat, has_lev
 
 def _plot_line(axobject, xdata, ydata, color, **kwargs):
     """Create a generic line plot and check for some ways to annotate."""

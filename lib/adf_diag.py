@@ -327,6 +327,10 @@ class AdfDiag(AdfWeb):
         Generate time series versions of the CAM history file data.
         """
 
+        #Notify user that script has started:
+        msg = "\n  Calculating CAM time series..."
+        print(f"{msg}\n  {'-' * (len(msg)-3)}")
+
         global call_ncrcat
 
         def call_ncrcat(cmd):
@@ -346,9 +350,7 @@ class AdfDiag(AdfWeb):
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             calc_ts = [self.calc_ts["baseline"]]
-            #cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
             cam_hist_locs = [self.hist_locs["baseline"]]
-            #ts_dirs = [self.get_baseline_info("cam_ts_loc", required=True)]
             ts_dirs = [self.ts_locs["baseline"]]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
             start_years = [self.climo_yrs["syear_baseline"]]
@@ -360,9 +362,7 @@ class AdfDiag(AdfWeb):
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
             calc_ts = self.calc_ts["test"]
-            #cam_hist_locs = self.get_cam_info("cam_hist_loc")
             cam_hist_locs = self.hist_locs["test"]
-            #ts_dirs = self.get_cam_info("cam_ts_loc", required=True)
             ts_dirs = self.ts_locs["test"]
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
@@ -377,22 +377,20 @@ class AdfDiag(AdfWeb):
 
         # get info about variable defaults
         res = self.variable_defaults
+
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
-            #print(f"{case_name}\n-------------------------------------")
-            #print("ts_dirs[case_name]",ts_dirs[case_idx],type(ts_dirs[case_idx]))
-            #print("calc_ts[case_name]",calc_ts[case_idx],"\n")
             # Check if particular case should be processed:
             print(calc_ts[case_idx], ts_dirs[case_idx],"\n")
             if (not calc_ts[case_idx]) and (ts_dirs[case_idx]):
-                emsg = " Configuration file indicates time series files have been pre-computed"
+                emsg = "\tNOTE: Configuration file indicates time series files have been pre-computed"
                 emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
                 continue
             # End if
             
             if (not calc_ts[case_idx]) and (not ts_dirs[case_idx]):
-                emsg = f" Configuration file indicates time series files for case '{case_name}'"
+                emsg = f"\tNOTE: Configuration file indicates time series files for case '{case_name}'"
                 emsg += f" don't need to be used."
                 print(emsg)
                 continue
@@ -403,7 +401,6 @@ class AdfDiag(AdfWeb):
             end_year = end_years[case_idx]
 
             # Create path object for the CAM history file(s) location:
-            #starting_location = Path(cam_hist_locs[case_name])
             starting_location = Path(cam_hist_locs[case_idx])
 
             # Check that path actually exists:
@@ -430,7 +427,7 @@ class AdfDiag(AdfWeb):
                 # End if
 
                 # Notify user that script has started:
-                print(f"\n  Writing time series files to {ts_dir}")
+                print(f"\n\t Writing time series files to:\n\t{ts_dir}")
 
                 # Create empty list:
                 files_list = []
@@ -484,7 +481,7 @@ class AdfDiag(AdfWeb):
                                 # Print a warning, and assume that no vertical
                                 # level information is needed.
                                 wmsg = (
-                                    "WARNING! Unable to determine the vertical coordinate"
+                                    "\t    WARNING: Unable to determine the vertical coordinate"
                                 )
                                 wmsg = " type from the 'lev' long name,"
                                 wmsg += f" which is:\n'{lev_long_name}'."
@@ -496,7 +493,7 @@ class AdfDiag(AdfWeb):
                             # End if
                         else:
                             # Print a warning, and assume hybrid levels (for now):
-                            wmsg = "WARNING!  No long name found for the 'lev' dimension,"
+                            wmsg = "\t    WARNING:  No long name found for the 'lev' dimension,"
                             wmsg += (
                                 " so no additional vertical coordinate information will be"
                             )
@@ -558,6 +555,24 @@ class AdfDiag(AdfWeb):
                 for var in diag_var_list:
                     # Notify user of new time series file:
                     print(f"\t - time series for {var}")
+
+                    # Create full path name, file name template:
+                    # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
+                    ts_outfil_str = (
+                        ts_dir
+                        + os.sep
+                        + ".".join([case_name, hist_str, var, time_string, "nc"])
+                    )
+
+                    # Check if clobber is true for file
+                    if Path(ts_outfil_str).is_file():
+                        if overwrite_ts[case_idx]:
+                            Path(ts_outfil_str).unlink()
+                        else:
+                            msg = f"\t    INFO: '{var}' file was found "
+                            msg += "and overwrite is False. Will use existing file."
+                            print(msg)
+                            continue
 
                     # Set error messages for printing/debugging
                     # Derived variable, but missing constituent list
@@ -633,10 +648,12 @@ class AdfDiag(AdfWeb):
                         # Lastly, raise error if the variable is not a derived quanitity
                         # but is also not in the history file(s)
                         else:
-                            msg = f"WARNING: {var} is not in the file {hist_files[0]} "
-                            msg += "nor can it be derived.\n"
-                            msg += "\t  ** No time series will be generated."
+                            msg = f"\t    WARNING: {var} is not in the history file for case '{case_name}' "
+                            msg += "nor can it be derived. Script will continue to next variable."
                             print(msg)
+                            logmsg = f"create time series for {case_name}:"
+                            logmsg += f"\n {var} is not in the file {hist_files[0]} "
+                            self.debug_log(logmsg)
                             continue
                         # End if
                     # End if (var in var_diag_list)
@@ -679,7 +696,7 @@ class AdfDiag(AdfWeb):
 
                             if "PS" in hist_file_var_list:
                                 ncrcat_var_list = ncrcat_var_list + ",PS"
-                                print("Adding PS to file")
+                                print(f"\t    INFO: Adding PS to file for '{var}'")
                             else:
                                 wmsg = "WARNING: PS not found in history file."
                                 wmsg += " It might be needed at some point."
@@ -716,7 +733,6 @@ class AdfDiag(AdfWeb):
                     # Step 1: Convert Path objects to strings and concatenate the list of historical files into a single string
                     hist_files_str = ', '.join(str(f.name) for f in hist_files)
                     hist_locs_str = ', '.join(str(loc) for loc in cam_hist_locs)
-                    #hist_locs_str = ', '.join(str(value) for value in cam_hist_locs.values())
 
                     # Step 2: Create the ncatted command to add both global attributes
                     cmd_ncatted = [
@@ -1207,7 +1223,7 @@ class AdfDiag(AdfWeb):
 
             # Check if all the necessary constituent files were found
             if len(constit_files) != len(constit_list):
-                ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated."
+                ermsg = f"\t    WARNING: Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from 'diag_var_list' or find the "
                 ermsg += "relevant CAM files.\n"
                 print(ermsg)
@@ -1241,7 +1257,7 @@ class AdfDiag(AdfWeb):
                     if overwrite:
                         Path(derived_file).unlink()
                     else:
-                        msg = f"[{__name__}] Warning: '{var}' file was found "
+                        msg = f"\t    INFO: '{var}' file was found "
                         msg += "and overwrite is False. Will use existing file."
                         print(msg)
                         continue
@@ -1273,9 +1289,9 @@ class AdfDiag(AdfWeb):
                         ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
                         ds_pmid_done = True
                         if not ds_pmid:
-                            errmsg = "Missing necessary files for dry air density"
+                            errmsg = "\t    WARNING: Missing necessary files for dry air density"
                             errmsg += " (rho) calculation.\n"
-                            errmsg += "Please make sure 'PMID' is in the CAM run"
+                            errmsg += "\t     Please make sure 'PMID' is in the CAM run"
                             errmsg += " for aerosol calculations"
                             print(errmsg)
                             continue
@@ -1283,9 +1299,9 @@ class AdfDiag(AdfWeb):
                         ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
                         ds_t_done = True
                         if not ds_t:
-                            errmsg = "Missing necessary files for dry air density"
+                            errmsg = "\t    WARNING: Missing necessary files for dry air density"
                             errmsg += " (rho) calculation.\n"
-                            errmsg += "Please make sure 'T' is in the CAM run"
+                            errmsg += "\t     Please make sure 'T' is in the CAM run"
                             errmsg += " for aerosol calculations"
                             print(errmsg)
                             continue

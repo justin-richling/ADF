@@ -46,7 +46,8 @@ def regrid_and_vert_interp(adf):
     # - regrid one to the other (probably should be a choice)
 
     #Notify user that script has started:
-    print("\n  Regridding CAM climatologies...")
+    msg = "\n  Regridding CAM climatologies..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
@@ -57,7 +58,6 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
     input_climo_locs = adf.climo_locs["test"]
 
     #Grab case years
@@ -112,7 +112,6 @@ def regrid_and_vert_interp(adf):
     else:
 
         #Extract model baseline variables:
-        #target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_loc = adf.climo_locs["baseline"]
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
@@ -220,7 +219,7 @@ def regrid_and_vert_interp(adf):
                         #Combine all target files together into a single data set:
                         tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
                     elif len(tclim_fils) == 0:
-                        print(f"\t - regridding {var} failed, no file. Continuing to next variable.")
+                        print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
                     else:
                         #Open single file as new xarray dataset:
@@ -234,8 +233,7 @@ def regrid_and_vert_interp(adf):
                         #Combine all cam files together into a single data set:
                         mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
                     elif len(mclim_fils) == 0:
-                        wmsg = f"\t - Unable to find climo file for '{var}'."
-                        wmsg += " Continuing to next variable."
+                        wmsg= f"\t    WARNING: regridding {var} failed, no climo file for case '{case_name}'. Continuing to next variable."
                         print(wmsg)
                         continue
                     else:
@@ -278,11 +276,11 @@ def regrid_and_vert_interp(adf):
                                 var_tmp = pf.mask_land_or_ocean(var_tmp,ofrac)
                                 rgdata_interp[var] = var_tmp
                             else:
-                                print(f"OCNFRAC not found, unable to apply mask to '{var}'")
+                                print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
                             #End if
                         else:
                             #Currently only an ocean mask is supported, so print warning here:
-                            wmsg = "Currently the only variable mask option is 'ocean',"
+                            wmsg = "\t    INFO: Currently the only variable mask option is 'ocean',"
                             wmsg += f"not '{var_default_dict['mask'].lower()}'"
                             print(wmsg)
                         #End if
@@ -370,7 +368,7 @@ def regrid_and_vert_interp(adf):
                                     ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
                                     tgdata_interp[var] = ts_tmp
                                 else:
-                                    wmsg = "OCNFRAC not found in target,"
+                                    wmsg = "\t    WARNING: OCNFRAC not found in target,"
                                     wmsg += f" unable to apply mask to '{var}'"
                                     print(wmsg)
                                 #End if
@@ -393,7 +391,7 @@ def regrid_and_vert_interp(adf):
                         save_to_nc(tgdata_interp, interp_bl_file)
                     #End if
                 else:
-                    print("\t Regridded file already exists, so skipping...")
+                    print("\t    INFO: Regridded file already exists, so skipping...")
                 #End if (file check)
             #End do (target list)
         #End do (variable list)
@@ -483,7 +481,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                     vert_coord_type = "height"
                 else:
                     #Print a warning, and skip variable re-gridding/interpolation:
-                    wmsg = "WARNING! Unable to determine the vertical coordinate"
+                    wmsg = "\t    WARNING: Unable to determine the vertical coordinate"
                     wmsg +=f" type from the 'lev' long name, which is:\n'{lev_long_name}'"
                     print(wmsg)
                     return None
@@ -491,7 +489,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
             else:
                 #Print a warning, and assume hybrid levels (for now):
-                wmsg = "WARNING!  No long name found for the 'lev' dimension,"
+                wmsg = "\t    WARNING: No long name found for the 'lev' dimension,"
                 wmsg += f" so no re-gridding/interpolation will be done."
                 print(wmsg)
                 return None
@@ -509,14 +507,14 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
             # Need hyam, hybm, and P0 for vertical interpolation of hybrid levels:
             if 'lev' in mdata.dims:
                 if ('hyam' not in model_dataset) or ('hybm' not in model_dataset):
-                    print(f"!! PROBLEM -- NO hyam or hybm for 3-D variable {var_name}, so it will not be re-gridded.")
+                    print(f"\t    ERROR: NO hyam or hybm for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None #Return None to skip to next variable.
                 #End if
                 mhya = model_dataset['hyam']
                 mhyb = model_dataset['hybm']
             elif 'ilev' in mdata.dims:
                 if ('hyai' not in model_dataset) or ('hybi' not in model_dataset):
-                    print(f"!! PROBLEM -- NO hyai or hybi for 3-D variable {var_name}, so it will not be re-gridded.")
+                    print(f"\t    ERROR:  NO hyai or hybi for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None #Return None to skip to next variable.
                 #End if
                 mhya = model_dataset['hyai']
@@ -554,7 +552,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                     #This mid-level pressure field has already been regridded:
                     regridded_pmid = True
                 else:
-                    print(f"!! PROBLEM -- NO PMID for 3-D variable {var_name}, so it will not be re-gridded.")
+                    print(f"\t    ERROR: NO PMID for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None
                 #End if
             #End if
@@ -572,7 +570,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                 #This surface pressure field has already been regridded:
                 regridded_ps = True
             else:
-                print(f"!! PROBLEM -- NO PS for 3-D variable {var_name}, so it will not be re-gridded.")
+                print(f"\t    ERROR: NO PS for 3-D variable {var_name}, so it will not be re-gridded.")
                 return None
             #End if
         #End if
@@ -637,7 +635,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
         else:
             #The vertical coordinate type is un-recognized, so print warning and
             #skip vertical interpolation:
-            wmsg = f"WARNING! Un-recognized vertical coordinate type: '{vert_coord_type}',"
+            wmsg = f"\t    WARNING: Un-recognized vertical coordinate type: '{vert_coord_type}',"
             wmsg += f" for variable '{var_name}'.  Skipping vertical interpolation."
             print(wmsg)
             #Don't process variable:

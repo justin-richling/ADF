@@ -103,7 +103,8 @@ def amwg_table(adf):
     #----------------------
 
     #Notify user that script has started:
-    print("\n  Generating AMWG tables...")
+    msg = "\n  Calculating AMWG variable tables..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
@@ -300,17 +301,17 @@ def amwg_table(adf):
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not files:
                 # Try for climo files:
-                msg = f"\t    ** Time series files for variable '{var}' not found.  Checking on climo files."
+                msg = f"\t    INFO: Time series files for variable '{var}' not found.  Checking on climo files."
                 print(msg)
                 filenames = f'{case_name}_{var}_climo.nc'
                 try_input_location = Path(input_climo_locs[case_idx])
                 try_files = sorted(try_input_location.glob(filenames))
                 if not try_files:
-                    errmsg = f"\t    ** Climo files for variable '{var}' not found.  Script will continue to next variable."
-                    warnings.warn(errmsg)
+                    errmsg = f"\t    WARNING: Climo files for variable '{var}' not found.  Script will continue to next variable."
+                    print(errmsg)
                     continue
                 else:
-                    print(f"\t ** User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+                    print(f"\t    INFO: User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
                     files = try_files
                     input_location = try_input_location
                     is_climo = True
@@ -333,7 +334,7 @@ def amwg_table(adf):
 
             #Check that time series input directory actually exists:
             if not input_location.is_dir():
-                errmsg = f"Directory '{input_location}' not found.  Script is exiting."
+                errmsg = f"amwg_table: Time series directory '{input_location}' not found.  Script is exiting."
                 raise AdfError(errmsg)
             #Write to debug log if enabled:
             adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
@@ -404,7 +405,7 @@ def amwg_table(adf):
 
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
-                print(f"\t    ** Variable '{var}' has a vertical dimension, "+\
+                print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\
                       "which is currently not supported for the AMWG Table. Skipping...")
                 #Skip this variable and move to the next variable in var_list:
                 continue
@@ -428,11 +429,11 @@ def amwg_table(adf):
                         data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
                         #data = var_tmp
                     else:
-                        print(f"OCNFRAC not found, unable to apply mask to '{var}'")
+                        print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
                     #End if
                 else:
                     #Currently only an ocean mask is supported, so print warning here:
-                    wmsg = "Currently the only variable mask option is 'ocean',"
+                    wmsg = "\t    INFO: Currently the only variable mask option is 'ocean',"
                     wmsg += f"not '{var_default_dict['mask'].lower()}'"
                     print(wmsg)
                 #End if
@@ -460,9 +461,9 @@ def amwg_table(adf):
             # These get written to our output file:
             stats_list = _get_row_vals(data)
             row_values = [var, unit_str] + stats_list"""
-            if var == "RESTOM":
-                print("data before annual mean",data,"\n")
-                print(len(data),"\n\n")
+            #if var == "RESTOM":
+            #    print("data before annual mean",data,"\n")
+            #    print(len(data),"\n\n")
             
 
             if is_climo:
@@ -481,9 +482,9 @@ def amwg_table(adf):
             else:
                 # In order to get correct statistics, average to annual or seasonal
                 data = pf.annual_mean(data, whole_years=True, time_name='time')
-                if var == "RESTOM":
-                    print("data AFTER annual mean",data,"\n")
-                    print(len(data),"\n\n")
+                #if var == "RESTOM":
+                #    print("data AFTER annual mean",data,"\n")
+                #    print(len(data),"\n\n")
                 # create a dataframe:
                 cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                             'standard error', '95% CI', 'trend', 'trend p-value']

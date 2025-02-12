@@ -62,7 +62,8 @@ def create_climo_files(adf, clobber=False, search=None):
     from adf_base import AdfError
 
     #Notify user that script has started:
-    print("\n  Calculating CAM climatologies...")
+    msg = "\n  Calculating CAM climatologies..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     # Set up multiprocessing pool to parallelize writing climo files.
     number_of_cpu = adf.num_procs  # Get number of available processors from the ADF
@@ -154,24 +155,17 @@ def create_climo_files(adf, clobber=False, search=None):
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
         if not calc_climos[case_idx]:
-            #if (not calc_ts[case_idx]) and (ts_dirs[case_idx]):
-            if 1==1:
-                emsg = " Configuration file indicates climo files have been pre-computed"
-                emsg += f" for case '{case_name}'.  Will rely on those files directly."
-                print(emsg)
-                continue
-            # End if
-            
-            """if (not calc_ts[case_idx]) and (not ts_dirs[case_idx]):
-                emsg = f" Configuration file indicates time series files for case '{case_name}'"
-                emsg += f" don't need to be used."
-                print(emsg)
-                continue
-            # End if"""
+            emsg = "\t    INFO: Configuration file indicates climo files have been pre-computed"
+            emsg += f" for case '{case_name}'.  Will rely on those files directly."
+            print(emsg)
             continue
 
         #Notify user of model case being processed:
-        print(f"\t Calculating climatologies for case '{case_name}' :")
+        print(f"\n\t Calculating climatologies for case '{case_name}' :")
+
+        is_baseline = False
+        if (not adf.get_basic_info("compare_obs")) and (case_name == baseline_name):
+            is_baseline = True
 
         #Create "Path" objects:
         input_location  = Path(input_ts_locs[case_idx])
@@ -190,9 +184,10 @@ def create_climo_files(adf, clobber=False, search=None):
             print(f"\t    {output_location} not found, making new directory")
             output_location.mkdir(parents=True)
 
-        #Time series file search
-        if search is None:
-            search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
+        # If we need to allow custom search, could put it into adf.data
+        # #Time series file search
+        # if search is None:
+        #     search = "{CASE}*{HIST_STR}*.{VARIABLE}.*nc"  # NOTE: maybe we should not care about the file extension part at all, but check file type later?
 
         #Check model year bounds:
         syr, eyr = check_averaging_interval(start_year[case_idx], end_year[case_idx])
@@ -201,76 +196,56 @@ def create_climo_files(adf, clobber=False, search=None):
         list_of_arguments = []
         nums = []
         for var in var_list:
-            print(f"\t- processing climo file for '{var}'")
+            # Notify user of new climo file:
+            print(f"\t - climatology for {var}")
 
             # Create name of climatology output file (which includes the full path)
             # and check whether it is there (don't do computation if we don't want to overwrite):
             output_file = output_location / f"{case_name}_{var}_climo.nc"
             if (not clobber) and (output_file.is_file()):
-                print(f"\t    INFO: Found climo file and clobber is False, so skipping {var} and moving to next variable.")
+                msg = f"\t    INFO: '{var}' file was found "
+                msg += "and overwrite is False. Will use existing file."
+                print(msg)
                 continue
             elif (clobber) and (output_file.is_file()):
                 print(f"\t    INFO: Climo file exists for {var}, but clobber is {clobber}, so will OVERWRITE it.")
 
             #Create list of time series files present for variable:
             # Note that we hard-code for h0 because we only want to make climos of monthly output
-            #syear = str(start_year[case_idx]).zfill(4)
-            #eyear = str(end_year[case_idx]).zfill(4)
-            ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE=var)
-            ts_files = sorted(list(input_location.glob(ts_filenames)))
-
-            """if var == "RESTOM":
-                fsnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FSNT")
-                fsnt_ts_files = sorted(list(input_location.glob(fsnt_ts_filenames)))
-
-                flnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FLNT")
-                flnt_ts_files = sorted(list(input_location.glob(flnt_ts_filenames)))
-
-                if (len(fsnt_ts_files) > 0) and (len(flnt_ts_files) > 0):
-                    process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file)"""
+            if is_baseline:
+                ts_files = adf.data.get_ref_timeseries_file(var)
+            else:
+                ts_files = adf.data.get_timeseries_file(case_name, var)
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
             if not ts_files:
-                if var == "RESTOM":
-                    print("Time series files for variable 'RESTOM' not found.  Script will try and derive.")
-                    print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
-                    fsnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FSNT")
-                    fsnt_ts_files = sorted(list(input_location.glob(fsnt_ts_filenames)))
-
-                    flnt_ts_filenames = search.format(CASE=case_name, HIST_STR="h0", VARIABLE="FLNT")
-                    flnt_ts_files = sorted(list(input_location.glob(flnt_ts_filenames)))
-
-                    # Check if FSNT adn FLNT files exist and if they are the same length
-                    if (len(fsnt_ts_files) > 0) and (len(flnt_ts_files) > 0):
-                        if len(fsnt_ts_files) == len(flnt_ts_files):
-                            process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file)
-                        else:
-                            print("\t ** Number of FSNT files don't match number of FLNT files. Skipping RESTOM")
-                else:
-                    errmsg = "Time series files for variable '{}' not found.  Script will continue to next variable.".format(var)
-                    print(f"The input location searched was: {input_location}. The glob pattern was {ts_filenames}.")
-                    #  end_diag_script(errmsg) # Previously we would kill the run here.
-                    warnings.warn(errmsg)
+                errmsg = f"\t    WARNING: Time series files for variable '{var}' not found.  Script will continue to next variable.\n"
+                errmsg += f"\t      The input location searched was: {input_location}."
+                print(errmsg)
+                logmsg = f"climo file generation: The input location searched was: {input_location}. The glob pattern was {ts_files}."
+                #Write to debug log if enabled:
+                adf.debug_log(logmsg)
+                #  end_diag_script(errmsg) # Previously we would kill the run here.
                 continue
-            
-            if var == var_list[0]:
-                first=True
-            else:
-                first=False
             if len(ts_files) > 1:
-                process_variable(adf, ts_files, syr, eyr, output_file,first=first)
+                process_variable(adf, ts_files, syr, eyr, output_file)
             else:
                 nums.append("yup")
-                list_of_arguments.append((adf, ts_files, syr, eyr, output_file,None,first))
+                list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
+            list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
+
 
         #End of var_list loop
         #--------------------
-        print("nums:",nums)
         if len(nums) > 0: 
             # Parallelize the computation using multiprocessing pool:
             with mp.Pool(processes=number_of_cpu) as p:
                 result = p.starmap(process_variable, list_of_arguments)
+
+        ## Parallelize the computation using multiprocessing pool:
+        #with mp.Pool(processes=number_of_cpu) as p:
+        #    result = p.starmap(process_variable, list_of_arguments)
 
     #End of model case loop
     #----------------------
@@ -282,7 +257,7 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first=False):
+def process_variable(adf, ts_files, syr, eyr, output_file):
     '''
     Compute and save the climatology file.
     '''
@@ -292,7 +267,6 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first
 
     # Exit function if data array is None
     if not cam_ts_data:
-        print("AJJJ")
         return 0
     #Create a dictionary of attributes
     #Convert the list to a string (join with commas)
@@ -323,8 +297,6 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first
     #NOTE: This is in place in case of premade climo files to make sure it is grabbing the correct time slice
     actual_time_values = cam_ts_data.time.values
     attrs_dict["xarray_time_slice_values"] = actual_time_values
-    if first:
-        print("create_climo_files: Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
     msg = f"Checking to make sure dataarray is being sliced in the time dimension correctly: {actual_time_values}"
     #print(msg)
     adf.debug_log(f"create_climo_files: {msg}")
@@ -340,115 +312,11 @@ def process_variable(adf, ts_files, syr, eyr, output_file, derive_var=None,first
     enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
     enc    = {**enc_c, **enc_dv}
 
-    """#Create a dictionary of attributes
-    #Convert the list to a string (join with commas)
-    ts_files_str = [str(path) for path in ts_files]
-    ts_files_str = ', '.join(ts_files_str)
-    attrs_dict = {
-        "adf_user": adf.user,
-        "adf_climo_yrs": f"{syr}-{eyr}",
-        "adf_climo_generation_source": "Climo file was generated by xarray 'groupby' and averaged over time dimension",
-        "climatology_info": "'time' dimension is actually in months (1-12)",
-        #"xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
-        "xarray_time_slice_values": f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}",
-        "time_series_files": ts_files_str,
-    }"""
     cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
 
     #Output variable climatology to NetCDF-4 file:
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
     return 1  # All funcs return something. Could do error checking with this if needed.
-
-
-
-
-
-def process_RESTOM(adf, fsnt_ts_files, flnt_ts_files, syr, eyr, output_file):
-    '''
-    Compute and save the RESTOM climatology file from FSNT and FLNT history files.
-    '''
-    #Read in files via xarray (xr):
-    cam_fsnt_ts_data = pf.load_dataset(fsnt_ts_files)
-    cam_flnt_ts_data = pf.load_dataset(flnt_ts_files)
-    """if len(fsnt_ts_files) == 1:
-        cam_fsnt_ts_data = xr.open_dataset(fsnt_ts_files[0], decode_times=True)
-    else:
-        cam_fsnt_ts_data = xr.open_mfdataset(fsnt_ts_files, decode_times=True, combine='by_coords')
-
-    if len(flnt_ts_files) == 1:
-        cam_flnt_ts_data = xr.open_dataset(flnt_ts_files[0], decode_times=True)
-    else:
-        cam_flnt_ts_data = xr.open_mfdataset(flnt_ts_files, decode_times=True, combine='by_coords')"""
-
-
-    # Perform the subtraction to create RESTOM
-    restom_ts_data = cam_fsnt_ts_data['FSNT'] - cam_flnt_ts_data['FLNT']
-
-    # Copy attributes from FSNT and update necessary fields
-    restom_ts_data.attrs = cam_fsnt_ts_data['FSNT'].attrs.copy()
-    restom_ts_data.attrs['long_name'] = 'Net Radiative Flux (RESTOM)'
-    restom_ts_data.attrs['description'] = 'Computed as FSNT - FLNT'
-
-    """# Create a new dataset
-    restom_dataset = restom_data.to_dataset(name='RESTOM')
-
-    # Merge global attributes from one of the original datasets
-    restom_dataset.attrs = cam_fsnt_ts_data.attrs.copy()
-
-    # Save the new dataset if needed
-    restom_dataset.to_netcdf('restom_ts_data.nc')"""
-
-
-    # Create a new dataset
-    restom_ts_data = restom_ts_data.to_dataset(name='RESTOM')
-    # Merge global attributes from one of the original datasets
-    restom_ts_data.attrs = cam_fsnt_ts_data.attrs.copy()
-
-    #Average time dimension over time bounds, if bounds exist:
-    if 'time_bnds' in restom_ts_data:
-        time = restom_ts_data['time']
-        # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
-        time = xr.DataArray(restom_ts_data['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
-        restom_ts_data['time'] = time
-        restom_ts_data.assign_coords(time=time)
-        restom_ts_data = xr.decode_cf(restom_ts_data)
-    #Extract data subset using provided year bounds:
-    tslice = get_time_slice_by_year(restom_ts_data.time, int(syr), int(eyr))
-    restom_ts_data = restom_ts_data.isel(time=tslice)
-
-    #Retrieve the actual time values from the slice
-    actual_time_values = restom_ts_data.time.values
-
-    #Set a global attribute with the actual time values
-    #restom_ts_data.attrs["time_slice_values"] = f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}"
-
-    #Group time series values by month, and average those months together:
-    cam_climo_data = restom_ts_data.groupby('time.month').mean(dim='time')
-    #Rename "months" to "time":
-    cam_climo_data = cam_climo_data.rename({'month':'time'})
-    #Set netCDF encoding method (deal with getting non-nan fill values):
-    enc_dv = {xname: {'_FillValue': None, 'zlib': True, 'complevel': 4} for xname in cam_climo_data.data_vars}
-    enc_c  = {xname: {'_FillValue': None} for xname in cam_climo_data.coords}
-    enc    = {**enc_c, **enc_dv}
-
-    #Create a dictionary of attributes
-    #Convert the list to a string (join with commas)
-    ts_files_str = [str(path).replace("FSNT","FS(L)NT") for path in fsnt_ts_files]
-    ts_files_str = ', '.join(ts_files_str)
-    attrs_dict = {
-        "adf_user": adf.user,
-        "adf_climo_yrs": f"{syr}-{eyr}",
-        #"xarray_slice_climo_yrs": f"{actual_time_values[0]}-{actual_time_values[-1]}",
-        "time_slice_values": f"Subset includes time values: {actual_time_values[0]} to {actual_time_values[-1]}",
-        "time_series_files": ts_files_str,
-    }
-    cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
-
-    #Output variable climatology to NetCDF-4 file:
-    cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
-    #restom_dataset.to_netcdf('restom_ts_data.nc')
-    return 1  # All funcs return something. Could do error checking with this if needed.
-######
 
 
 def check_averaging_interval(syear_in, eyear_in):

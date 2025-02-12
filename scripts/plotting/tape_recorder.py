@@ -30,7 +30,8 @@ def tape_recorder(adfobj):
         since a defualt set of obs are already being compared against in the tape recorder.
     """
     #Notify user that script has started:
-    print("\n  Generating tape recorder plots...")
+    msg = "\n  Generating tape recorder plots..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     adfds = adfobj.data
 
@@ -77,7 +78,7 @@ def tape_recorder(adfobj):
 
     #print("hist_strs",hist_strs,"\n")
     if not case_ts_locs:
-        exitmsg = "WARNING: No time series files in any case directory."
+        exitmsg = "\tWARNING: No time series files in any case directory."
         exitmsg += " No tape recorder plots will be made."
         print(exitmsg)
         logmsg = "create tape recorder:"
@@ -86,7 +87,7 @@ def tape_recorder(adfobj):
         adfobj.debug_log(logmsg)
         #End tape recorder plotting script:
         return
-    print("case_ts_locs",case_ts_locs)
+
     # Default colormap
     cmap='precip_nowhite'
 
@@ -225,16 +226,20 @@ def tape_recorder(adfobj):
 
             #Grab time slice based on requested years (if applicable)
             #dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
-            datzm = dat.mean('lon')
-            dat_tropics = cosweightlat(datzm, -10, 10)
-            #dat_tropics = cosweightlat(datzm[var], -10, 10)
-            dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-            ax = plot_pre_mon(fig, dat_mon,
-                            plot_step, plot_min, plot_max, key,
-                            x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
-            count=count+1
-            runname_LT.append(key)
+            has_dims = pf.validate_dims(dat[var], ['lon'])
+            if not has_dims['has_lon']:
+                print(f"\t    WARNING: Variable {var} is missing a lat dimension for '{key}', cannot continue to plot.")
+            else:
+                datzm = dat.mean('lon')
+                dat_tropics = cosweightlat(datzm, -10, 10)
+                #dat_tropics = cosweightlat(datzm[var], -10, 10)
+                dat_mon = dat_tropics.groupby('time.month').mean('time').load()
+                ax = plot_pre_mon(fig, dat_mon,
+                                plot_step, plot_min, plot_max, key,
+                                x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
+                                taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+                count=count+1
+                runname_LT.append(key)
         else:
             print(f"No time series files for test '{test_case_names[idx]}', skipping case.")
 
@@ -345,7 +350,7 @@ def tape_recorder(adfobj):
 
     #Check to see if any cases were successful
     if not runname_LT:
-        msg = f"WARNING: No cases seem to be available, please check time series files for {var}."
+        msg = f"\t  WARNING: No cases seem to be available, please check time series files for {var}."
         msg += "\n\tNo tape recorder plots will be made."
         print(msg)
         #End tape recorder plotting script:
@@ -674,28 +679,9 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     ax.set_xticks(monticks2[1:13], minor=True)
     ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], minor=True, fontsize=14)
     ax.set_title(expname, fontsize=9)
-    #ax = auto_fontsize(ax, expname)
 
     return ax
 
 #########
-
-
-def auto_fontsize(ax, title, max_fontsize=16, min_fontsize=8):
-    """Dynamically adjust font size to fit title within the plot width."""
-    for fontsize in range(max_fontsize, min_fontsize, -1):
-        print("fontsize",fontsize)
-        ax.set_title(title, fontsize=fontsize)
-        ax.figure.canvas.draw()  # Render figure to get text size
-        renderer = ax.figure.canvas.get_renderer()
-        bbox = ax.title.get_window_extent(renderer)
-        ax_width = ax.bbox.width
-
-        if bbox.width <= ax_width:  # If title fits, break
-            break
-    return ax
-
-#########
-
 
 ###############
