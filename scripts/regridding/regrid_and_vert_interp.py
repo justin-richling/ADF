@@ -297,8 +297,17 @@ def regrid_and_vert_interp(adf):
                     #Convert the list of Path objects to a list of strings
                     climatology_files_str = [str(path) for path in mclim_fils]
                     climatology_files_str = ', '.join(climatology_files_str)
+                    
+                    #Interpolate from hybrid sigma-pressure to the standard pressure levels:
+                    #pf.lev_to_plev -> geocat.comp.interpolation.interp_hybrid_to_pressure
+
+                    #Interpolate variable using mid-level pressure (PMID):
+                    #pf.pmid_to_plev -> numpy.interp
+                    vert_regrid_info = "hybrid sigma-pressure to the standard pressure levels"
                     test_attrs_dict = {
                             "adf_user": adf.user,
+                            "adf_horizontal_regrid_info": "Climatology files have been regridded in the horizontal using xarray's 'interp_like'",
+                            "adf_vertical_regrid_info": "Climatology files have been interpolated in the vertical using numpy's 'interp'. ",
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
                             "climatology_files": climatology_files_str,
                         }
@@ -374,6 +383,7 @@ def regrid_and_vert_interp(adf):
                         # Create a dictionary of attributes
                         base_attrs_dict = {
                             "adf_user": adf.user,
+                            "adf_horizontal_regrid_info": "Climatology files have been regridded in the horizontal using xarray's 'interp_like'",
                             "climo_yrs": f"{case_name}: {syear}-{eyear}; {base_climo_yrs_attr}",
                             "climatology_files": climatology_files_str,
                         }

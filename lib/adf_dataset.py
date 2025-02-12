@@ -116,7 +116,7 @@ class AdfData:
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
 
-
+    '''# NOT CURRENTLY USED ANYWHERE
     def load_timeseries_dataset(self, fils, syr, eyr):
         """Return DataSet from time series file(s) and assign time to midpoint of interval"""
         if (len(fils) == 0):
@@ -158,7 +158,8 @@ class AdfData:
 
             print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)"""
         
-        return xr.decode_cf(ds)
+        return xr.decode_cf(ds)'''
+
 
     def load_timeseries_da(self, case, variablename, syr, eyr):
         """Return DataArray from time series file(s).
@@ -195,50 +196,51 @@ class AdfData:
     #------------------
 
     # Test case(s)
+    def get_climo_file(self, case, variablename):
+        """Retrieve the climo file path(s) for variablename for a specific case."""
+        #a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
+        climo_locs = self.adf.climo_locs.test
+        caseindex = (self.case_names).index(case) # the entry for specified case
+        model_cl_loc = Path(climo_locs[caseindex])
+        return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
+
+
     def load_climo_da(self, case, variablename, syr, eyr):
         """Return DataArray from climo file"""
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_climo_file(case, variablename)
         return self.load_da(fils, variablename, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
-
-    def load_climo_file(self, case, variablename, syr, eyr):
+    '''# NOT USED ANYWHERE CURRENTLY
+    def load_climo_dataset(self, case, variablename, syr, eyr):
         """Return Dataset for climo of variablename"""
         fils = self.get_climo_file(case, variablename)
         if not fils:
             warnings.warn(f"WARNING: Did not find climo file for variable: {variablename}. Will try to skip.")
             return None
-        return self.load_dataset(fils, syr, eyr)
-    
-
-    def get_climo_file(self, case, variablename):
-        """Retrieve the climo file path(s) for variablename for a specific case."""
-        #a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
-        a = self.adf.climo_locs["test"]
-        caseindex = (self.case_names).index(case) # the entry for specified case
-        model_cl_loc = Path(a[caseindex])
-        return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
+        return self.load_dataset(fils, syr, eyr)'''
 
 
     # Reference case (baseline/obs)
-    def load_reference_climo_da(self, case, variablename, syr, eyr):
-        """Return DataArray from reference (aka baseline) climo file"""
-        add_offset, scale_factor = self.get_value_converters(case, variablename)
-        fils = self.get_reference_climo_file(variablename)
-        return self.load_da(fils, variablename, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
-
     def get_reference_climo_file(self, var):
         """Return a list of files to be used as reference (aka baseline) for variable var."""
         if self.adf.compare_obs:
             fils = self.ref_var_loc.get(var, None)
             return [fils] if fils is not None else None
         #ref_loc = self.adf.get_baseline_info("cam_climo_loc")
-        ref_loc = Path(self.adf.climo_locs["baseline"])
+        ref_loc = Path(self.adf.climo_locs.baseline)
         # NOTE: originally had this looking for *_baseline.nc
         fils = sorted(ref_loc.glob(f"{self.ref_case_label}_{var}_climo.nc"))
         if fils:
             return fils
         return []#None
+    
+
+    def load_reference_climo_da(self, case, variablename, syr, eyr):
+        """Return DataArray from reference (aka baseline) climo file"""
+        add_offset, scale_factor = self.get_value_converters(case, variablename)
+        fils = self.get_reference_climo_file(variablename)
+        return self.load_da(fils, variablename, syr, eyr, add_offset=add_offset, scale_factor=scale_factor)
 
     #------------------
 
@@ -253,14 +255,14 @@ class AdfData:
         rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
         return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_regridded.nc"))
 
-
+    '''# NOT USED ANYWHERE CURRENTLY
     def load_regrid_dataset(self, case, field, syr, eyr):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"WARNING: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils, syr, eyr)
+        return self.load_dataset(fils, syr, eyr)'''
 
     
     def load_regrid_da(self, case, field, syr, eyr):
@@ -287,14 +289,14 @@ class AdfData:
             fils = sorted(model_rg_loc.glob(f"{case}_{field}_baseline.nc"))
         return fils
 
-
+    '''# NOT USED ANYWHERE CURRENTLY
     def load_reference_regrid_dataset(self, case, field, syr, eyr):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils, syr, eyr)
+        return self.load_dataset(fils, syr, eyr)'''
 
     
     def load_reference_regrid_da(self, case, field, syr, eyr):
@@ -317,7 +319,7 @@ class AdfData:
     #---------------------------
 
     # Load DataSet
-    def load_dataset(self, fils, syr, eyr):
+    def load_dataset(self, fils):
         """Return xarray DataSet from file(s)"""
         if (len(fils) == 0):
             warnings.warn("Input file list is empty.")
@@ -339,31 +341,31 @@ class AdfData:
             #Retrieve the actual time values from the slice
             actual_time_values = ds.time.values
 
-            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)"""
+            msg = "Checking to make sure dataset is being sliced in the time dimension correctly: ",actual_time_values
+            print(msg)
+            self.debug_log(msg)"""
 
         return ds
 
     # Load DataArray
-    def load_da(self, fils, variablename, syr, eyr, type=None, **kwargs):
+    def load_da(self, fils, variablename, syr, eyr, **kwargs):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
-        ds = self.load_dataset(fils, syr, eyr)
+        ds = self.load_dataset(fils)
         if ds is None:
             warnings.warn(f"WARNING: Load failed for {variablename}")
             return None
         da = (ds[variablename]).squeeze()
+        type = kwargs.get('type', None)
         if type == "timeseries":
-            #Extract data subset using provided year bounds:
-            #tslice = get_time_slice_by_year(ds.time, int(syr), int(eyr))
-            #ds = ds.isel(time=tslice)
             print("\n\nda:",da,"\n\n")
             #Extract data subset using provided year bounds:
             tslice = self.get_time_slice_by_year(da.time, int(syr), int(eyr))
             da = da.isel(time=tslice)
             #Retrieve the actual time values from the slice
             actual_time_values = da.time.values
-
-            print("Checking to make sure 'cam_ts_data' is being sliced in the time dimension correctly: ",actual_time_values)
-        
+            msg = "Checking to make sure dataarray is being sliced in the time dimension correctly: ",actual_time_values
+            print(msg)
+            self.debug_log(msg)
         scale_factor = kwargs.get('scale_factor', 1)
         add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset

@@ -780,6 +780,7 @@ class AdfDiag(AdfWeb):
 
                         # Add attribute note of time change
                         attrs_dict = {
+                            "adf_timeseries_info": "Time series files have been computed using 'ncrcat'",
                             "adf_note": "The time values have been modified to middle of month"
                         }
                         ts_ds_fixed = ts_ds_fixed.assign_attrs(attrs_dict)
