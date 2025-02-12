@@ -715,9 +715,6 @@ class AdfDiag(AdfWeb):
                     #cmd_ncatted = ["ncatted", "-O", "-a", f"adf_user,global,a,c,{self.user}", ts_outfil_str]
                     # Step 1: Convert Path objects to strings and concatenate the list of historical files into a single string
                     hist_files_str = ', '.join(str(f.name) for f in hist_files)
-                    #3parent
-                    #hist_locs = []
-                    #for f in hist_files:
                     hist_locs_str = ', '.join(str(loc) for loc in cam_hist_locs)
                     #hist_locs_str = ', '.join(str(value) for value in cam_hist_locs.values())
 
@@ -765,7 +762,7 @@ class AdfDiag(AdfWeb):
 
                 # Loop over the created time series files again and fix the time if necessary
                 #NOTE: There is no solution to do this with NCO operators, but there is with CDO operators.
-                #      We can switch to using CDO, but it ewould require the user to have/load CDO as well.
+                #      We can switch to using CDO, but it would require the user to have/load CDO as well.
                 fils = glob.glob(f"{ts_dir}/*{time_string}.nc")
                 for fil in fils:
                     ts_ds = xr.open_dataset(fil, decode_times=False)
