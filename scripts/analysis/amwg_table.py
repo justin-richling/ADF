@@ -342,6 +342,7 @@ def amwg_table(adf):
                 try_input_location = Path(input_climo_locs[case_idx])
                 try_files = sorted(try_input_location.glob(filenames))
                 if not try_files:
+                    set_warning_filter(enable=True)  # Suppress warnings
                     errmsg = f"\t    WARNING: Climo files for variable '{var}' not found.  Script will continue to next variable."
                     print(errmsg)
                     continue
@@ -440,6 +441,7 @@ def amwg_table(adf):
 
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
+                set_warning_filter(enable=True)  # Suppress warnings
                 print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\
                       "which is currently not supported for the AMWG Table. Skipping...")
                 #Skip this variable and move to the next variable in var_list:
@@ -464,6 +466,7 @@ def amwg_table(adf):
                         data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
                         #data = var_tmp
                     else:
+                        set_warning_filter(enable=True)  # Suppress warnings
                         print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
                     #End if
                 else:
@@ -758,7 +761,19 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
 
+import builtins
 
-set_warning_filter(enable=True)  # Suppress warnings
+def set_warning_filter(enable=True):
+    """Enable or disable filtering of print statements containing 'WARNING'."""
+    original_print = builtins.print
+
+    def filtered_print(*args, **kwargs):
+        message = " ".join(map(str, args))
+        if enable and "WARNING" in message:
+            return  # Skip printing warnings
+        original_print(*args, **kwargs)
+
+    builtins.print = filtered_print if enable else original_print
+
 ##############
 #END OF SCRIPT
