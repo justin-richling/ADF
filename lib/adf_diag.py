@@ -373,6 +373,7 @@ class AdfDiag(AdfWeb):
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         dmsg = f"reading from {hist_str_list} files"
+        print(dmsg)
         self.debug_log(dmsg)
 
         # get info about variable defaults
