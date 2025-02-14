@@ -314,6 +314,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     cam_climo_data = cam_climo_data.assign_attrs(attrs_dict)
 
     #Output variable climatology to NetCDF-4 file:
+    print("output_file",output_file)
     cam_climo_data.to_netcdf(output_file, format='NETCDF4', encoding=enc)
     return 1  # All funcs return something. Could do error checking with this if needed.
 
