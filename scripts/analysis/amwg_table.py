@@ -129,7 +129,9 @@ def amwg_table(adf):
     output_locs = adf.plot_location
 
     #CAM simulation variables (these quantities are always lists):
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
+    #case_names    = adf.get_cam_info("cam_case_name", required=True)
+    #CAM simulation variables (these quantities are always lists):
+    test_case_names = adf.get_cam_info("cam_case_name", required=True)
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     input_locs = adf.ts_locs["test"]
 
@@ -251,7 +253,8 @@ def amwg_table(adf):
 
         #case_names.append(baseline_name)
         #if input_loc:
-        case_names.append(baseline_name)
+        #case_names.append(baseline_name)
+        case_names = test_case_names + [baseline_name]
             #input_locs.append(input_loc)
 
         #Save the baseline to the first case's plots directory:
