@@ -356,7 +356,7 @@ class AdfDiag(AdfWeb):
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
             case_type_string = "baseline"
-            hist_str_list = [self.hist_string["base_hist_str"]]
+            hist_str_list = self.hist_string["base_hist_str"]
 
         else:
             # Use test case settings, which are already lists:
@@ -368,7 +368,7 @@ class AdfDiag(AdfWeb):
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
-            hist_str_list = self.hist_string["test_hist_str"]
+            hist_str_list = self.hist_string["test_hist_str"][0]
         # End if
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
