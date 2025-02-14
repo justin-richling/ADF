@@ -426,6 +426,8 @@ class AdfInfo(AdfConfig):
         #Initialize CAM history string nested list
         self.__hist_str = hist_str
 
+        print("hist_str",hist_str)
+
         #Grab case history file location(s)
         ##################################################################
         cam_hist_locs = self.get_cam_info("cam_hist_loc")
