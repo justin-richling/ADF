@@ -242,10 +242,12 @@ def create_climo_files(adf, clobber=False, search=None):
             # Parallelize the computation using multiprocessing pool:
             with mp.Pool(processes=number_of_cpu) as p:
                 result = p.starmap(process_variable, list_of_arguments)
+        else:
+            
 
-        # Parallelize the computation using multiprocessing pool:
-        with mp.Pool(processes=number_of_cpu) as p:
-            result = p.starmap(process_variable, list_of_arguments)
+        ## Parallelize the computation using multiprocessing pool:
+        #with mp.Pool(processes=number_of_cpu) as p:
+        #    result = p.starmap(process_variable, list_of_arguments)
 
     #End of model case loop
     #----------------------
