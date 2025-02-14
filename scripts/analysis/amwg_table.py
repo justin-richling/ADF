@@ -146,6 +146,32 @@ def amwg_table(adf):
     nicknames = test_nicknames + [base_nickname]
 
 
+
+
+
+    """
+    #Check if a baseline simulation is also being used:
+    if not adf.get_basic_info("compare_obs"):
+        #Extract CAM baseline variaables:
+        baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+
+        case_names.append(baseline_name)
+        input_ts_locs.append(input_ts_baseline)
+
+        #Save the baseline to the test case's plots directory:
+        if len(test_case_names) == 1:
+            output_locs.append(output_locs[0])
+    else:
+        print("AMWG table doesn't currently work with obs, so obs table won't be created.")
+    #End if
+    """
+
+
+
+
+
+
     #Check if user wants to skip time series file creation
     '''if not input_locs:
         #print("User indicates no time series files will be used")
