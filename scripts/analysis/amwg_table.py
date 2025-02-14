@@ -61,7 +61,8 @@ def amwg_table(adf):
 
     #Import necessary modules:
     from adf_base import AdfError
-    from adf_dataset import SuppressWarningsPrint
+    #from adf_dataset import SuppressWarningsPrint
+    
 
     #Additional information:
     #----------------------
@@ -109,7 +110,7 @@ def amwg_table(adf):
     msg = "\n  Calculating AMWG variable tables..."
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
-    with SuppressWarningsPrint(suppress=True):  # Suppress warnings inside this block
+    with adf.data.SuppressWarningsPrint(suppress=True):  # Suppress warnings inside this block
 
         #Extract needed quantities from ADF object:
         #-----------------------------------------
