@@ -532,7 +532,7 @@ def amwg_table(adf):
     #End of model case loop
     #----------------------
 
-    #Start case comparison tables
+    """#Start case comparison tables
     #----------------------------
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
@@ -550,7 +550,42 @@ def amwg_table(adf):
     #End if
 
     #Notify user that script has ended:
-    print("  ...AMWG variable table(s) have been generated successfully.")
+    print("  ...AMWG variable table(s) have been generated successfully.")"""
+
+
+
+    #Start case comparison tables
+    #----------------------------
+    # Copy the file to all individual directories
+    if len(test_case_names) > 1:
+        base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
+        for i,case in enumerate(test_case_names):
+            shutil.copy(base_csv[0], output_locs[i])
+        base_csv[0].unlink()
+
+    #Check if observations are being compared to, if so skip table comparison...
+    if not adf.get_basic_info("compare_obs"):
+        #Check if all tables were created to compare against, if not, skip table comparison...
+        if len(csv_list) != len(case_names):
+            print("\tNot enough cases to compare, skipping comparison table...")
+        else:
+            if len(test_case_names) == 1:
+                #Create comparison table for both cases
+                print("\n  Making comparison table...")
+                _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
+                print("  ... Comparison table has been generated successfully")
+
+            if len(test_case_names) > 1:
+                print("\n  Making comparison table for multiple cases...")
+                _df_multi_comp_table(adf, csv_locs, case_names, nicknames)
+                print("\n  Making comparison table for each case...")
+                for idx,case in enumerate(case_names[0:-1]):
+                    _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
+                print("  ... Multi-case comparison table has been generated successfully")
+        #End if
+    else:
+        print(" No comparison table will be generated due to running against obs.")
+    #End if
 
 
 ##################
