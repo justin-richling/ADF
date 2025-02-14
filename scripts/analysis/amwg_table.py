@@ -141,7 +141,9 @@ def amwg_table(adf):
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
 
-    
+    test_nicknames = adf.case_nicknames["test_nicknames"]
+    base_nickname = adf.case_nicknames["base_nickname"]
+    nicknames = test_nicknames + [base_nickname]
 
 
     #Check if user wants to skip time series file creation
