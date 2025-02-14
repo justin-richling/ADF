@@ -131,7 +131,7 @@ def amwg_table(adf):
 
     #CAM simulation variables (these quantities are always lists):
     test_case_names = adf.get_cam_info("cam_case_name", required=True)
-    case_names = adf.get_cam_info("cam_case_name", required=True)
+    #case_names = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     test_nicknames = adf.case_nicknames["test_nicknames"]
     base_nickname = adf.case_nicknames["base_nickname"]
@@ -143,13 +143,14 @@ def amwg_table(adf):
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
 
-        case_names.append(baseline_name)
+        case_names = test_case_names + [baseline_name]
         input_ts_locs.append(input_ts_baseline)
 
         #Save the baseline to the test case's plots directory:
         if len(test_case_names) == 1:
             output_locs.append(output_locs[0])
     else:
+        case_names = test_case_names
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
