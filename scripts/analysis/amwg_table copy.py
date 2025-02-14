@@ -59,6 +59,7 @@ def amwg_table(adf):
 
     #Import necessary modules:
     from adf_base import AdfError
+    from adf_dataset import SuppressWarningsPrint
 
     #Additional information:
     #----------------------
