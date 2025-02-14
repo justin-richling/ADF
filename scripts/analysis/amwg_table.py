@@ -756,5 +756,6 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
 
 
+set_warning_filter(enable=True)  # Suppress warnings
 ##############
 #END OF SCRIPT
