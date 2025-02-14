@@ -144,6 +144,7 @@ def amwg_table(adf):
     test_nicknames = adf.case_nicknames["test_nicknames"]
     base_nickname = adf.case_nicknames["base_nickname"]
     nicknames = test_nicknames + [base_nickname]
+    
 
 
 
