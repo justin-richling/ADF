@@ -233,7 +233,7 @@ def create_climo_files(adf, clobber=False, search=None):
             else:
                 nums.append("yup")
                 list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
-            list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
+            #list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
 
 
         #End of var_list loop
