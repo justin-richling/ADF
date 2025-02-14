@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 import xarray as xr
 
@@ -409,3 +410,29 @@ class AdfData:
         start_time_index = np.argwhere((time.dt.year >= startyear).values).flatten().min()
         end_time_index = np.argwhere((time.dt.year <= endyear).values).flatten().max()
         return slice(start_time_index, end_time_index+1)
+
+
+
+    
+
+    class SuppressWarningsPrint:
+        """Context manager to suppress print statements containing 'WARNING'."""
+        
+        def __init__(self, suppress=True):
+            self.suppress = suppress
+            self.original_print = print  # Store the original print function
+
+        def filtered_print(self, *args, **kwargs):
+            """Custom print function that filters out 'WARNING' messages."""
+            message = " ".join(map(str, args))
+            if not self.suppress or "WARNING" not in message:
+                self.original_print(*args, **kwargs)
+
+        def __enter__(self):
+            """Override the print function globally."""
+            if self.suppress:
+                sys.modules['builtins'].print = self.filtered_print
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            """Restore the original print function."""
+            sys.modules['builtins'].print = self.original_print
