@@ -173,6 +173,7 @@ def amwg_table(adf):
     #    input_locs = [None]*len(case_names)
     #End if
     print("\nTest input_locs",input_locs,"\n")
+    csv_locs = {}
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
@@ -204,6 +205,7 @@ def amwg_table(adf):
             #for case_idx, case_name in enumerate(case_names):
             #Create output file name:
             output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
+            csv_locs[baseline_name] = output_csv_file
             if Path(output_csv_file).is_file():
                 print(f"\t - AMWG table for '{baseline_name}' exists, adding to website.")
                 table_df = pd.read_csv(output_csv_file)
@@ -272,6 +274,7 @@ def amwg_table(adf):
 
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+        csv_locs[case_name] = output_csv_file
 
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
         if Path(output_csv_file).is_file():
@@ -539,7 +542,7 @@ def amwg_table(adf):
         else:
             #Create comparison table for both cases
             print("\n  Making comparison table...")
-            _df_comp_table(adf, output_location, case_names)
+            _df_comp_table(adf, csv_locs, case_names)
             print("  ... Comparison table has been generated successfully")
         #End if
     else:
@@ -580,6 +583,50 @@ def _get_row_vals(data):
 
 #####
 
+
+def _df_comp_table(adf, output_location, csv_locs, case_names):
+    import pandas as pd
+
+    output_csv_file_comp = output_location / "amwg_table_comp.csv"
+    
+    baseline = output_location/f"amwg_table_{case_names[-1]}.csv"
+    df_base = pd.read_csv(baseline)
+
+    # * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    #This will be for single-case for now (case_names[0]),
+    #will need to change to loop as multi-case is introduced
+    for case in case_names[:-1]:
+        case = output_location/f"amwg_table_{case_names[0]}.csv"
+        #Read in test case and baseline dataframes:
+        df_case = pd.read_csv(case)
+    #baseline = output_location/f"amwg_table_{case_names[-1]}.csv"
+
+        #Read in test case and baseline dataframes:
+        #df_case = pd.read_csv(case)
+        #df_base = pd.read_csv(baseline)
+
+        #Create a merged dataframe that contains only the variables
+        #contained within both the test case and the baseline:
+        df_merge = pd.merge(df_case, df_base, how='inner', on=['variable'])
+
+        #Create the "comparison" dataframe:
+        df_comp = pd.DataFrame(dtype=object)
+        df_comp[['variable','unit','case']] = df_merge[['variable','unit_x','mean_x']]
+        df_comp['baseline'] = df_merge[['mean_y']]
+
+        diffs = df_comp['case'].values-df_comp['baseline'].values
+        df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
+
+        #Write the comparison dataframe to a new CSV file:
+        cols_comp = ['variable', 'unit', 'test', 'control', 'diff']
+        df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
+
+    #Add comparison table dataframe to website (if enabled):
+    adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+
+
+
+"""
 def _df_comp_table(adf, output_location, case_names):
     import pandas as pd
 
@@ -613,6 +660,7 @@ def _df_comp_table(adf, output_location, case_names):
 
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+"""
 
 ##############
 #END OF SCRIPT
