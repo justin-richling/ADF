@@ -12,6 +12,7 @@ plotting methods themselves.
 # ++++++++++++++++++++++++++++++
 
 import sys
+import builtins
 import os
 import os.path
 import glob
@@ -101,6 +102,18 @@ from adf_dataset import AdfData
 #################
 # Helper functions
 #################
+
+def set_warning_filter(enable=True):
+    """Enable or disable filtering of print statements containing 'WARNING'."""
+    original_print = builtins.print
+
+    def filtered_print(*args, **kwargs):
+        message = " ".join(map(str, args))
+        if enable and "WARNING" in message:
+            return  # Skip printing warnings
+        original_print(*args, **kwargs)
+
+    builtins.print = filtered_print if enable else original_print
 
 
 def construct_index_info(page_dict, fnam, opf):
@@ -321,7 +334,8 @@ class AdfDiag(AdfWeb):
         return func(self)
 
     #########
-
+    #adf.set_warning_filter
+    set_warning_filter(enable=True)  # Suppress warnings
     def create_time_series(self, baseline=False):
         """
         Generate time series versions of the CAM history file data.
