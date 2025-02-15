@@ -335,7 +335,7 @@ class AdfDiag(AdfWeb):
 
     #########
     #adf.set_warning_filter
-    set_warning_filter(enable=True)  # Suppress warnings
+    #set_warning_filter(enable=True)  # Suppress warnings
     def create_time_series(self, baseline=False):
         """
         Generate time series versions of the CAM history file data.
