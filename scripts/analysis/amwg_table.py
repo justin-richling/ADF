@@ -27,7 +27,7 @@ except ImportError:
 import plotting_functions as pf
 
 #adf.set_warning_filter
-from adf_diag import set_warning_filter
+from adf_diag.AdfInfo import set_warning_filter
 set_warning_filter(enable=True)  # Suppress warnings
 
 import adf_info
