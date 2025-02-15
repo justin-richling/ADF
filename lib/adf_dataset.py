@@ -1,4 +1,5 @@
-import sys
+import sys, builtins
+
 from pathlib import Path
 import xarray as xr
 
@@ -413,6 +414,26 @@ class AdfData:
 
 
 
+
+
+
+
+
+
+
+
+
+    def set_warning_filter(enable=True):
+        """Enable or disable filtering of print statements containing 'WARNING'."""
+        original_print = builtins.print
+
+        def filtered_print(*args, **kwargs):
+            message = " ".join(map(str, args))
+            if enable and "WARNING" in message:
+                return  # Skip printing warnings
+            original_print(*args, **kwargs)
+
+        builtins.print = filtered_print if enable else original_print
 
 
     class SuppressWarningsPrint:
