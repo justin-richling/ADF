@@ -98,6 +98,9 @@ class AdfInfo(AdfConfig):
         # Get the current system user
         self.__user = getpass.getuser()
 
+        # Get warning verbose bool
+        self.__verbose = self.read_config_var("verbose")
+
         # Check if inputs are of the correct type:
         # -------------------------------------------
 
@@ -744,6 +747,12 @@ class AdfInfo(AdfConfig):
     def user(self):
         """Return the "user" name if requested."""
         return self.__user
+
+    # Create property needed to return "user" name to user:
+    @property
+    def verbose(self):
+        """Return the "user" name if requested."""
+        return self.__verbose
 
     # Create property needed to return "compare_obs" logical to user:
     @property

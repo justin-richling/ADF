@@ -110,7 +110,8 @@ def amwg_table(adf):
     msg = "\n  Calculating AMWG variable tables..."
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
-    with adf.data.SuppressWarningsPrint(suppress=True):  # Suppress warnings inside this block
+    #with adf.data.SuppressWarningsPrint(suppress=True):  # Suppress warnings inside this block
+    with adf.data.SuppressWarningsPrint(suppress=adf.verbose):  # Suppress warnings inside this block
 
         #Extract needed quantities from ADF object:
         #-----------------------------------------
@@ -348,7 +349,7 @@ def amwg_table(adf):
                     try_input_location = Path(input_climo_locs[case_idx])
                     try_files = sorted(try_input_location.glob(filenames))
                     if not try_files:
-                        set_warning_filter(enable=True)  # Suppress warnings
+                        #set_warning_filter(enable=True)  # Suppress warnings
                         errmsg = f"\t    WARNING: Climo files for variable '{var}' not found.  Script will continue to next variable."
                         print(errmsg)
                         continue
@@ -447,7 +448,7 @@ def amwg_table(adf):
 
                 #Check if variable has a vertical coordinate:
                 if 'lev' in data.coords or 'ilev' in data.coords:
-                    set_warning_filter(enable=True)  # Suppress warnings
+                    #set_warning_filter(enable=True)  # Suppress warnings
                     print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\
                         "which is currently not supported for the AMWG Table. Skipping...")
                     #Skip this variable and move to the next variable in var_list:
@@ -472,7 +473,7 @@ def amwg_table(adf):
                             data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
                             #data = var_tmp
                         else:
-                            set_warning_filter(enable=True)  # Suppress warnings
+                            #set_warning_filter(enable=True)  # Suppress warnings
                             print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
                         #End if
                     else:

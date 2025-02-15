@@ -418,7 +418,7 @@ class AdfData:
     class SuppressWarningsPrint:
         """Context manager to suppress print statements containing 'WARNING'."""
         
-        def __init__(self, suppress=True):
+        def __init__(self, suppress=False):
             self.suppress = suppress
             self.original_print = print  # Store the original print function
 
