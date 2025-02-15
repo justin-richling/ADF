@@ -28,7 +28,7 @@ import plotting_functions as pf
 
 #adf.set_warning_filter
 from adf_diag import set_warning_filter
-set_warning_filter(enable=True)  # Suppress warnings
+#set_warning_filter(enable=True)  # Suppress warnings
 def amwg_table(adf):
 
     """
