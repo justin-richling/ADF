@@ -601,7 +601,7 @@ def amwg_table(adf):
         #----------------------------
         # Copy the file to all individual directories
         if len(test_case_names) > 1:
-            base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
+            base_csv = sorted(Path(output_locs[0]).glob(f"amwg_table_{baseline_name}.csv"))
             for i,case in enumerate(test_case_names):
                 shutil.copy(base_csv[0], output_locs[i])
             base_csv[0].unlink()

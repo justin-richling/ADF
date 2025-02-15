@@ -413,19 +413,25 @@ class AdfData:
 
 
 
-    
+
 
     class SuppressWarningsPrint:
-        """Context manager to suppress print statements containing 'WARNING'."""
+        """Context manager to suppress print statements containing specific keywords."""
         
-        def __init__(self, suppress=True):
+        def __init__(self, suppress=True, keywords=None):
+            """
+            Parameters:
+            - suppress (bool): Whether to suppress matching print statements.
+            - keywords (list): List of keywords to filter (default: ["INFO", "WARNING", "ERROR"]).
+            """
             self.suppress = suppress
             self.original_print = print  # Store the original print function
+            self.keywords = keywords if keywords is not None else ["INFO", "WARNING", "ERROR"]
 
         def filtered_print(self, *args, **kwargs):
-            """Custom print function that filters out 'WARNING' messages."""
+            """Custom print function that filters out messages containing specified keywords."""
             message = " ".join(map(str, args))
-            if not self.suppress or "WARNING" not in message:
+            if not self.suppress or not any(keyword in message for keyword in self.keywords):
                 self.original_print(*args, **kwargs)
 
         def __enter__(self):
@@ -436,3 +442,4 @@ class AdfData:
         def __exit__(self, exc_type, exc_value, traceback):
             """Restore the original print function."""
             sys.modules['builtins'].print = self.original_print
+
