@@ -111,8 +111,8 @@ def amwg_table(adf):
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     #with adf.data.SuppressWarningsPrint(suppress=True):  # Suppress warnings inside this block
-    #with adf.data.SuppressWarningsPrint(suppress=adf.verbose):  # Suppress warnings inside this block
-    with adf.data.SuppressWarningsPrint(suppress=False):  # Suppress warnings inside this block
+    with adf.data.SuppressWarningsPrint(suppress=adf.verbose):  # Suppress warnings inside this block
+    #with adf.data.SuppressWarningsPrint(suppress=False):  # Suppress warnings inside this block
 
         #Extract needed quantities from ADF object:
         #-----------------------------------------
