@@ -28,7 +28,11 @@ import plotting_functions as pf
 
 #adf.set_warning_filter
 import adf_diag as ad
-print(ad.AdfInfo.set_warning_filter)
+
+AdfInfo = ad()
+
+
+print(AdfInfo.set_warning_filter)
 set_warning_filter(enable=True)  # Suppress warnings
 
 import adf_info
