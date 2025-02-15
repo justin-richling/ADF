@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 import warnings  # use to warn user about missing files.
 
+
+
 #Import "special" modules:
 try:
     import scipy.stats as stats # for easy linear regression and testing
@@ -24,6 +26,9 @@ except ImportError:
 #Import ADF-specific modules:
 import plotting_functions as pf
 
+#adf.set_warning_filter
+from adf_diag import set_warning_filter
+set_warning_filter(enable=True)  # Suppress warnings
 def amwg_table(adf):
 
     """
@@ -761,19 +766,17 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
 
-import builtins
 
-def set_warning_filter(enable=True):
-    """Enable or disable filtering of print statements containing 'WARNING'."""
-    original_print = builtins.print
 
-    def filtered_print(*args, **kwargs):
-        message = " ".join(map(str, args))
-        if enable and "WARNING" in message:
-            return  # Skip printing warnings
-        original_print(*args, **kwargs)
 
-    builtins.print = filtered_print if enable else original_print
+
+
+
+
+
+
+
+
 
 ##############
 #END OF SCRIPT
