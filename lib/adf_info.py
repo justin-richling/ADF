@@ -99,6 +99,7 @@ class AdfInfo(AdfConfig):
         self.__user = getpass.getuser()
 
         # Get warning verbose bool
+        self.verbose = self.read_config_var("verbose")
         self.__verbose = self.read_config_var("verbose")
 
         # Check if inputs are of the correct type:
