@@ -36,7 +36,7 @@ print(ad.set_warning_filter)
 set_warning_filter(enable=True)  # Suppress warnings
 
 import adf_info
-print(adf_info.verbose)
+print(adf_info.__verbose)
 
 def amwg_table(adf):
 
