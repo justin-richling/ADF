@@ -29,7 +29,7 @@ import plotting_functions as pf
 #adf.set_warning_filter
 from adf_diag import AdfInfo#
 
-ad = AdfInfo()
+ad = AdfInfo(name="MyADF", version="1.0")
 
 
 print(ad.set_warning_filter)
