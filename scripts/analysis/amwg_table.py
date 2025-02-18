@@ -26,7 +26,7 @@ except ImportError:
 #Import ADF-specific modules:
 import plotting_functions as pf
 
-#adf.set_warning_filter
+"""#adf.set_warning_filter
 from adf_diag import AdfInfo#
 
 ad = AdfInfo(name="MyADF", version="1.0")
@@ -36,7 +36,7 @@ print(ad.set_warning_filter)
 set_warning_filter(enable=True)  # Suppress warnings
 
 import adf_info
-print(adf_info.__verbose)
+print(adf_info.__verbose)"""
 
 def amwg_table(adf):
 

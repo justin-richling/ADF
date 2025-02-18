@@ -2,7 +2,7 @@
 import xarray as xr
 #adf.set_warning_filter
 from adf_diag import set_warning_filter
-set_warning_filter(enable=True)  # Suppress warnings
+#set_warning_filter(enable=True)  # Suppress warnings
 def regrid_and_vert_interp(adf):
 
     """
