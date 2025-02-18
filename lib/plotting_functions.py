@@ -1654,6 +1654,7 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
     # trouble downstream with numpy functions, so call compute() here.
     if hasattr(data_interp, "compute"):
         data_interp = data_interp.compute()
+    print("asf 2\n")
 
     #Rename vertical dimension back to "lev" in order to work with
     #the ADF plotting functions:
