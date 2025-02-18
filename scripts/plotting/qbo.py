@@ -122,7 +122,7 @@ def qbo(adfobj):
     for i in range(0,len(case_loc),1): 
         if case_loc[i]:
             cam_ts_data = adfds.load_timeseries_da(test_case_names[i], "U", start_years[i], end_years[i], adfobj=adfobj)
-            print("cam_ts_data",cam_ts_data)
+            #print("cam_ts_data",cam_ts_data)
             if isinstance(cam_ts_data, xr.DataArray):
                 casedat.append(cam_ts_data)
                 case_names.append(test_case_names[i])
@@ -163,11 +163,11 @@ def qbo(adfobj):
     #casedatzm = [ casedat[i].mean("lon") for i in range(0,ncases,1) ]
     casedatzm = []
     for i in range(0,ncases,1):
-        has_dims = pf.validate_dims(casedat[i].U, ['lon'])
+        has_dims = pf.validate_dims(casedat[i], ['lon'])
         if not has_dims['has_lon']:
             print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_loc[i]}', cannot continue to plot.")
         else:
-            casedatzm.append(casedat[i].U.mean("lon"))
+            casedatzm.append(casedat[i].mean("lon"))
     if len(casedatzm) == 0:
         print(f"\t  WARNING: No available cases found, exiting script.")
         exitmsg = "\tNo QBO plots will be made."
