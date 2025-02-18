@@ -509,14 +509,14 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
             # Need hyam, hybm, and P0 for vertical interpolation of hybrid levels:
             if 'lev' in mdata.dims:
                 if ('hyam' not in model_dataset) or ('hybm' not in model_dataset):
-                    print(f"\t    ERROR: NO hyam or hybm for 3-D variable {var_name}, so it will not be re-gridded.")
+                    print(f"\t    WARNING: NO hyam or hybm for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None #Return None to skip to next variable.
                 #End if
                 mhya = model_dataset['hyam']
                 mhyb = model_dataset['hybm']
             elif 'ilev' in mdata.dims:
                 if ('hyai' not in model_dataset) or ('hybi' not in model_dataset):
-                    print(f"\t    ERROR:  NO hyai or hybi for 3-D variable {var_name}, so it will not be re-gridded.")
+                    print(f"\t    WARNING:  NO hyai or hybi for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None #Return None to skip to next variable.
                 #End if
                 mhya = model_dataset['hyai']
@@ -554,7 +554,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                     #This mid-level pressure field has already been regridded:
                     regridded_pmid = True
                 else:
-                    print(f"\t    ERROR: NO PMID for 3-D variable {var_name}, so it will not be re-gridded.")
+                    print(f"\t    WARNING: NO PMID for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None
                 #End if
             #End if
@@ -572,7 +572,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                 #This surface pressure field has already been regridded:
                 regridded_ps = True
             else:
-                print(f"\t    ERROR: NO PS for 3-D variable {var_name}, so it will not be re-gridded.")
+                print(f"\t    WARNING: NO PS for 3-D variable {var_name}, so it will not be re-gridded.")
                 return None
             #End if
         #End if
