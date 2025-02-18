@@ -367,7 +367,7 @@ class AdfData:
             #Retrieve the actual time values from the slice
             actual_time_values = da.time.values
             msg = "Checking to make sure dataarray is being sliced in the time dimension correctly: ",actual_time_values
-            adfBase.debug_log(msg)
+            adfBase.AdfBase.debug_log(msg)
         scale_factor = kwargs.get('scale_factor', 1)
         add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset
