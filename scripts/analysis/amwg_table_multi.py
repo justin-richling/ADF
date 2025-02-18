@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 import warnings  # use to warn user about missing files.
 
+
+
 #Import "special" modules:
 try:
     import scipy.stats as stats # for easy linear regression and testing
@@ -23,6 +25,18 @@ except ImportError:
 
 #Import ADF-specific modules:
 import plotting_functions as pf
+
+"""#adf.set_warning_filter
+from adf_diag import AdfInfo#
+
+ad = AdfInfo(name="MyADF", version="1.0")
+
+
+print(ad.set_warning_filter)
+set_warning_filter(enable=True)  # Suppress warnings
+
+import adf_info
+print(adf_info.__verbose)"""
 
 def amwg_table(adf):
 
@@ -129,15 +143,50 @@ def amwg_table(adf):
     output_locs = adf.plot_location
 
     #CAM simulation variables (these quantities are always lists):
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
+    #case_names    = adf.get_cam_info("cam_case_name", required=True)
+    #CAM simulation variables (these quantities are always lists):
+    test_case_names = adf.get_cam_info("cam_case_name", required=True)
+    #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
     input_locs = adf.ts_locs["test"]
+
+    #adf.get_baseline_info("cam_climo_loc")
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc")
     input_climo_locs = adf.climo_locs["test"]
 
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
 
+    test_nicknames = adf.case_nicknames["test_nicknames"]
+    base_nickname = adf.case_nicknames["base_nickname"]
+    nicknames = test_nicknames + [base_nickname]
     
+
+
+
+
+
+    """
+    #Check if a baseline simulation is also being used:
+    if not adf.get_basic_info("compare_obs"):
+        #Extract CAM baseline variaables:
+        baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
+        input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+
+        case_names.append(baseline_name)
+        input_ts_locs.append(input_ts_baseline)
+
+        #Save the baseline to the test case's plots directory:
+        if len(test_case_names) == 1:
+            output_locs.append(output_locs[0])
+    else:
+        print("AMWG table doesn't currently work with obs, so obs table won't be created.")
+    #End if
+    """
+
+
+
+
 
 
     #Check if user wants to skip time series file creation
@@ -165,14 +214,19 @@ def amwg_table(adf):
         #input_locs = []
         pass#return
     else:'''
-
+    #if 1==1:
+    #    input_locs = [None]*len(case_names)
     #End if
-
+    print("\nTest input_locs",input_locs,"\n")
+    csv_locs = {}
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
+        #input_loc = adf.get_baseline_info("cam_ts_loc", required=True)
         input_loc = adf.ts_locs["baseline"]
+        print("\nBaseline input_locs",input_loc,"\n")
+        #input_climo_loc = adf.get_baseline_info("cam_climo_loc")
         input_climo_loc = adf.climo_locs["baseline"]
         input_climo_locs.append(input_climo_loc)
 
@@ -186,6 +240,8 @@ def amwg_table(adf):
         #Convert output location string to a Path object:
         output_location = Path(output_locs[0])
         if not input_loc:
+            #print("User indicates no time series files will be used")
+            #print()
             emsg = "\n  User indicates no time series files will be used."
             emsg += " Looking if table already exisits:"
             print(emsg)
@@ -194,6 +250,7 @@ def amwg_table(adf):
             #for case_idx, case_name in enumerate(case_names):
             #Create output file name:
             output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
+            csv_locs[baseline_name] = output_csv_file
             if Path(output_csv_file).is_file():
                 print(f"\t - AMWG table for '{baseline_name}' exists, adding to website.")
                 table_df = pd.read_csv(output_csv_file)
@@ -205,9 +262,14 @@ def amwg_table(adf):
             input_locs.append(None)
             pass#return
         else:
+            #input_loc = adf.get_baseline_info("cam_climo_loc")
             input_locs.append(input_loc)
 
-        case_names.append(baseline_name)
+        #case_names.append(baseline_name)
+        #if input_loc:
+        #case_names.append(baseline_name)
+        case_names = test_case_names + [baseline_name]
+            #input_locs.append(input_loc)
 
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_location)
@@ -216,6 +278,7 @@ def amwg_table(adf):
     #End if
 
     #-----------------------------------------
+    print("input_locs",input_locs,"\n")
     #Loop over CAM cases:
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
@@ -226,8 +289,38 @@ def amwg_table(adf):
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
 
+        """#Generate input file path:
+        input_location = input_locs[case_idx]
+        print("\n\tTS input_location",input_location)
+
+        if not input_location:
+            print(f"\t ** User supplied climo files for {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+            is_climo = True
+        else:
+            is_climo = False
+
+        #print("\n\tis_climo:",is_climo,"\n")
+
+        #Generate input file path:
+        if not is_climo:
+            input_location = Path(input_locs[case_idx])
+        if is_climo:
+            input_location = Path(input_climo_locs[case_idx])
+        print("\tinput_location",input_location)
+
+        #Check that time series input directory actually exists:
+        if not input_location.is_dir():
+            errmsg = f"Directory '{input_location}' not found.  Script is exiting."
+            raise AdfError(errmsg)
+        #Write to debug log if enabled:
+        adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
+
+        #Notify user as attempting table creation:
+        print(f"\n  Calculating AMWG variable table for '{case_name}'...")"""
+
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+        csv_locs[case_name] = output_csv_file
 
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
         if Path(output_csv_file).is_file():
@@ -247,6 +340,7 @@ def amwg_table(adf):
             #Generate input file path:
             if input_locs[case_idx]:
                 input_location = Path(input_locs[case_idx])
+                #print("\n\tTS input_location",input_location)
 
                 filenames = f'{case_name}.*.{var}.*nc'
                 files = sorted(input_location.glob(filenames))
@@ -262,6 +356,7 @@ def amwg_table(adf):
                 try_input_location = Path(input_climo_locs[case_idx])
                 try_files = sorted(try_input_location.glob(filenames))
                 if not try_files:
+                    #set_warning_filter(enable=True)  # Suppress warnings
                     errmsg = f"\t    WARNING: Climo files for variable '{var}' not found.  Script will continue to next variable."
                     print(errmsg)
                     continue
@@ -272,6 +367,21 @@ def amwg_table(adf):
                     is_climo = True
             #End if
 
+            """if not input_location:
+                print(f"\t ** User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+                is_climo = True
+            else:
+                is_climo = False"""
+
+            #print("\n\tis_climo:",is_climo,"\n")
+
+            """#Generate input file path:
+            if not is_climo:
+                input_location = Path(input_locs[case_idx])
+            if is_climo:
+                input_location = Path(input_climo_locs[case_idx])
+            print("\tinput_location",input_location)"""
+
             #Check that time series input directory actually exists:
             if not input_location.is_dir():
                 errmsg = f"amwg_table: Time series directory '{input_location}' not found.  Script is exiting."
@@ -281,6 +391,34 @@ def amwg_table(adf):
 
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
+
+            #Create list of time series files present for variable:
+            #ts_filenames = f'{case_name}.*.{var}.*nc'
+            #ts_files = sorted(input_location.glob(ts_filenames))
+
+
+            """if is_climo:
+                #Create list of climo files present for variable:
+                filenames = f'{case_name}_{var}_climo.nc'
+            else:
+                #Create list of time series files present for variable:
+                filenames = f'{case_name}.*.{var}.*nc'"""
+            """files = sorted(input_location.glob(filenames))
+
+            # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
+            if not files:
+                errmsg = f"\t    ** Time series files for variable '{var}' not found.  Script will continue to next variable."
+                warnings.warn(errmsg)
+                continue
+            #End if"""
+
+            """#TEMPORARY:  For now, make sure only one file exists:
+            if len(files) != 1:
+                errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
+                errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
+                print(errmsg)
+                continue
+            #End if"""
 
             #Load model variable data from file:
             ds = pf.load_dataset(files)
@@ -295,12 +433,17 @@ def amwg_table(adf):
                     ds.assign_coords(time=time)
                     ds = xr.decode_cf(ds)
 
+            #print("afdasdfs",ds.time,"\n")
+            #data = ds[var]
             if len(files) > 1:
                 # Slice for years 0500 to 0521
                 # Slice using only the 4-digit year
                 time_slice = slice(str(syear).zfill(4), str(eyear).zfill(4))
                 ds = ds.sel(time=time_slice)
+                #print("afdasdfs",ds.time,"\n")
                 data = ds[var].compute()
+                #print(data.time)
+                #data = data.sel(time=slice())
             else:
                 data = ds[var]
 
@@ -312,6 +455,7 @@ def amwg_table(adf):
 
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
+                #set_warning_filter(enable=True)  # Suppress warnings
                 print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\
                       "which is currently not supported for the AMWG Table. Skipping...")
                 #Skip this variable and move to the next variable in var_list:
@@ -334,7 +478,9 @@ def amwg_table(adf):
 
                         # apply ocean fraction mask to variable
                         data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
+                        #data = var_tmp
                     else:
+                        #set_warning_filter(enable=True)  # Suppress warnings
                         print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
                     #End if
                 else:
@@ -357,6 +503,21 @@ def amwg_table(adf):
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
                 data = pf.spatial_average(data)  # changes data "in place"
 
+            """# In order to get correct statistics, average to annual or seasonal
+            data = pf.annual_mean(data, whole_years=True, time_name='time')
+
+            # create a dataframe:
+            cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
+                    'standard error', '95% CI', 'trend', 'trend p-value']
+
+            # These get written to our output file:
+            stats_list = _get_row_vals(data)
+            row_values = [var, unit_str] + stats_list"""
+            #if var == "RESTOM":
+            #    print("data before annual mean",data,"\n")
+            #    print(len(data),"\n\n")
+            
+
             if is_climo:
                 data = pf.seasonal_mean(data, season="ANN", is_climo=True)
                 #Conditional Formatting depending on type of float
@@ -373,7 +534,9 @@ def amwg_table(adf):
             else:
                 # In order to get correct statistics, average to annual or seasonal
                 data = pf.annual_mean(data, whole_years=True, time_name='time')
-
+                #if var == "RESTOM":
+                #    print("data AFTER annual mean",data,"\n")
+                #    print(len(data),"\n\n")
                 # create a dataframe:
                 cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                             'standard error', '95% CI', 'trend', 'trend p-value']
@@ -418,7 +581,7 @@ def amwg_table(adf):
     #End of model case loop
     #----------------------
 
-    #Start case comparison tables
+    """#Start case comparison tables
     #----------------------------
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
@@ -428,7 +591,7 @@ def amwg_table(adf):
         else:
             #Create comparison table for both cases
             print("\n  Making comparison table...")
-            _df_comp_table(adf, output_location, case_names)
+            _df_comp_table(adf, csv_locs, case_names)
             print("  ... Comparison table has been generated successfully")
         #End if
     else:
@@ -436,7 +599,42 @@ def amwg_table(adf):
     #End if
 
     #Notify user that script has ended:
-    print("  ...AMWG variable table(s) have been generated successfully.")
+    print("  ...AMWG variable table(s) have been generated successfully.")"""
+
+
+
+    #Start case comparison tables
+    #----------------------------
+    # Copy the file to all individual directories
+    if len(test_case_names) > 1:
+        base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
+        for i,case in enumerate(test_case_names):
+            shutil.copy(base_csv[0], output_locs[i])
+        base_csv[0].unlink()
+
+    #Check if observations are being compared to, if so skip table comparison...
+    if not adf.get_basic_info("compare_obs"):
+        #Check if all tables were created to compare against, if not, skip table comparison...
+        if len(csv_list) != len(case_names):
+            print("\tNot enough cases to compare, skipping comparison table...")
+        else:
+            if len(test_case_names) == 1:
+                #Create comparison table for both cases
+                print("\n  Making comparison table...")
+                _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
+                print("  ... Comparison table has been generated successfully")
+
+            if len(test_case_names) > 1:
+                print("\n  Making comparison table for multiple cases...")
+                _df_multi_comp_table(adf, csv_locs, case_names, nicknames)
+                print("\n  Making comparison table for each case...")
+                for idx,case in enumerate(case_names[0:-1]):
+                    _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
+                print("  ... Multi-case comparison table has been generated successfully")
+        #End if
+    else:
+        print(" No comparison table will be generated due to running against obs.")
+    #End if
 
 
 ##################
@@ -468,6 +666,8 @@ def _get_row_vals(data):
     return [f'{data_mean:{formatter}}', data_sample, stdev, sem, ci, slope_int, pval]
 
 #####
+
+
 
 def _df_comp_table(adf, output_location, case_names):
     import pandas as pd
@@ -502,6 +702,90 @@ def _df_comp_table(adf, output_location, case_names):
 
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "Case Comparison", case_names[0], plot_type="Tables")
+
+
+
+
+
+
+def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
+    """
+    Function to build comparison AMWG table for all cases
+    ------
+        - Read in each previously made table from file
+          and compile full comparison.
+    """
+
+    #Create path to main website in mutli-case directory
+    main_site_path = Path(adf.get_basic_info('cam_diag_plot_loc', required=True))
+    output_csv_file_comp = main_site_path / "amwg_table_comp_all.csv"
+
+    #Create the "comparison" dataframe:
+    df_comp = pd.DataFrame(dtype=object)
+
+    #Create new colummns
+    cols_comp = ['variable', 'unit']
+
+    #Read baseline case
+    baseline = str(csv_locs[0])+f"/amwg_table_{case_names[-1]}.csv"
+    df_base = pd.read_csv(baseline)
+
+    #Read all test cases and add to table
+    for i,val in enumerate(csv_locs[:-1]):
+        case = str(val)+f"/amwg_table_{case_names[i]}.csv"
+        df_case = pd.read_csv(case)
+
+        #If no custom nicknames, shorten column name to case number
+        if test_nicknames[i] == case_names[i]:
+            df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
+            cols_comp.append(f"case {i+1}")
+        #Else, name columns after nicknames
+        else:
+            df_comp[['variable','unit',f"{test_nicknames[i]}"]] = df_case[['variable','unit','mean']]
+            cols_comp.append(test_nicknames[i])
+
+    #Add baseline cases to end of the table
+    if test_nicknames[-1] == case_names[-1]:
+        df_comp["baseline"] = df_base[['mean']]
+        cols_comp.append("baseline")
+    else:
+        df_comp[f"{test_nicknames[-1]} ( baseline )"] = df_base[['mean']]
+        cols_comp.append(f"{test_nicknames[-1]} ( baseline )")
+
+    #Format the floats:
+    for col in df_comp.columns:
+        #Ignore columns that don't contain floats
+        if (col != 'variable') and (col != "unit"):
+            if "baseline" not in col:
+
+                #Iterate over rows and check magnitude of value
+                for idx,row in enumerate(df_comp[col]):
+                    #Check if value is less than one, keep 3 non-zero decimal values
+                    #Else, keep 3 main digits, including decimal values
+                    if np.abs(df_comp[col][idx]) < 1:
+                        formatter = ".3g"
+                    else:
+                        formatter = ".3f"
+                    #Replace value in dataframe
+                    df_comp.at[idx,col]= f'{df_comp[col][idx]:{formatter}}   ({(df_comp[col][idx]-df_base["mean"][idx]):{formatter}})'
+
+    #Finally, write data to csv
+    df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
+
+    #Add comparison table dataframe to website (if enabled):
+    adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##############
 #END OF SCRIPT

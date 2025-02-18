@@ -1649,7 +1649,7 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
                                                                     hybm,
                                                                     p0=P0
                                                                    )
-
+    print("asf\n")
     # data_interp may contain a dask array, which can cause
     # trouble downstream with numpy functions, so call compute() here.
     if hasattr(data_interp, "compute"):
