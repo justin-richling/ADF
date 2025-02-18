@@ -243,6 +243,9 @@ def amwg_table(adf):
     
         #Loop over CAM output variables:
         for var in var_list:
+            #Notify users of variable being added to table:
+            print(f"\t - Variable '{var}' being added to table")
+
             is_climo = False # default to time series
             #Generate input file path:
             if input_locs[case_idx]:
@@ -278,9 +281,6 @@ def amwg_table(adf):
                 raise AdfError(errmsg)
             #Write to debug log if enabled:
             adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
-
-            #Notify users of variable being added to table:
-            print(f"\t - Variable '{var}' being added to table")
 
             #Load model variable data from file:
             ds = pf.load_dataset(files)
