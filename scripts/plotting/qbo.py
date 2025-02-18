@@ -134,8 +134,8 @@ def qbo(adfobj):
         #Extract baseline years:
         bl_syr = adfobj.climo_yrs["syear_baseline"]
         bl_eyr = adfobj.climo_yrs["eyear_baseline"]
-        ref_ts_data = adfds.load_reference_timeseries_da("U", bl_syr, bl_eyr)
-        if ref_ts_data:
+        ref_ts_data = adfds.load_reference_timeseries_da("U", bl_syr, bl_eyr, adfobj=adfobj)
+        if isinstance(ref_ts_data, xr.DataArray):
             ncases += 1
             case_names.append(base_name)
             casedat.append(ref_ts_data)

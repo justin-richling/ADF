@@ -173,7 +173,7 @@ class AdfData:
         fils = self.get_timeseries_file(case, variablename)
         return self.load_da(fils, variablename, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor, **kwargs)
     
-    def load_reference_timeseries_da(self, field, syr, eyr):
+    def load_reference_timeseries_da(self, field, syr, eyr, **kwargs)):
         """Return a DataArray time series to be used as reference 
           (aka baseline) for variable field.
         """
@@ -190,7 +190,7 @@ class AdfData:
         else:
             add_offset, scale_factor = self.get_value_converters(self.ref_case_label, field)
 
-        return self.load_da(fils, field, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor, **kwargs))
 
 
     #------------------
