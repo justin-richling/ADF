@@ -269,7 +269,7 @@ def cosweightlat(darray, lat1, lat2):
         darray = darray.sortby('lat')
     print("slice problems here? cosweightlat")
     region = darray.sel(lat=slice(lat1, lat2))
-    print("region",region,"\n")
+    print("region",region.lat.values,"\n")
     print("slice problems here? cosweightlat END")
     weights=np.cos(np.deg2rad(region.lat))
     regionw = region.weighted(weights)
