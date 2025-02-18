@@ -368,7 +368,7 @@ class AdfData:
             actual_time_values = da.time.values
             msg = "Checking to make sure dataarray is being sliced in the time dimension correctly: ",actual_time_values
             if "adfobj" in kwargs:
-                kwargs["adfobj"].debug_log(self,msg)
+                kwargs["adfobj"].debug_log(msg)
         scale_factor = kwargs.get('scale_factor', 1)
         add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset
