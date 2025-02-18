@@ -12,6 +12,9 @@ def my_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
     return str(msg) + '\n'
 
+import warnings
+warnings.simplefilter("error")  # Treat warnings as errors
+
 warnings.formatwarning = my_formatwarning
 
 def qbo(adfobj):
