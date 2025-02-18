@@ -390,6 +390,8 @@ class AdfDiag(AdfWeb):
         # get info about variable defaults
         res = self.variable_defaults
 
+        print("AH",cam_hist_locs)
+
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
