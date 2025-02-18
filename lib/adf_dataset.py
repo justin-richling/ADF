@@ -3,6 +3,9 @@ import sys, builtins
 from pathlib import Path
 import xarray as xr
 
+import adf_base as adfBase
+print(dir(adfBase))
+
 import warnings # use to warn user about missing files
 
 def my_formatwarning(msg, *args, **kwargs):
