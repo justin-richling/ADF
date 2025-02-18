@@ -121,7 +121,7 @@ def qbo(adfobj):
     # Loop over test case data
     for i in range(0,len(case_loc),1): 
         if case_loc[i]:
-            cam_ts_data = adfds.load_timeseries_da(test_case_names[i], "U", start_years[i], end_years[i])
+            cam_ts_data = adfds.load_timeseries_da(test_case_names[i], "U", start_years[i], end_years[i], adfobj)
             if cam_ts_data:
                 casedat.append(cam_ts_data)
                 case_names.append(test_case_names[i])
