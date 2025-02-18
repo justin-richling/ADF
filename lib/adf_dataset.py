@@ -165,13 +165,13 @@ class AdfData:
         return xr.decode_cf(ds)'''
 
 
-    def load_timeseries_da(self, case, variablename, syr, eyr):
+    def load_timeseries_da(self, case, variablename, syr, eyr, **kwargs):
         """Return DataArray from time series file(s).
            Uses defaults file to convert units.
         """
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_timeseries_file(case, variablename)
-        return self.load_da(fils, variablename, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, variablename, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor, **kwargs)
     
     def load_reference_timeseries_da(self, field, syr, eyr):
         """Return a DataArray time series to be used as reference 
