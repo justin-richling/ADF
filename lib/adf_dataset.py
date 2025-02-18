@@ -190,7 +190,7 @@ class AdfData:
         else:
             add_offset, scale_factor = self.get_value_converters(self.ref_case_label, field)
 
-        return self.load_da(fils, field, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor, **kwargs))
+        return self.load_da(fils, field, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor, **kwargs)
 
 
     #------------------
