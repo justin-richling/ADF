@@ -142,7 +142,7 @@ def qbo(adfobj):
         else:
             print("No ts data")
 
-    #Find indices for all case datasets that don't contain a zonal wind field (U):
+    """#Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
     for idx, dat in enumerate(casedat):
         if 'U' not in dat.variables:
@@ -156,7 +156,7 @@ def qbo(adfobj):
         for bad_idx in bad_idxs:
             casedat.pop(bad_idx)
         #End for
-    #End if
+    #End if"""
 
     #----Calculate the zonal mean
     #casedatzm = [ casedat[i].U.mean("lon") for i in range(0,ncases,1) ]
