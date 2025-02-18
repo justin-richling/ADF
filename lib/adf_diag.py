@@ -12,7 +12,6 @@ plotting methods themselves.
 # ++++++++++++++++++++++++++++++
 
 import sys
-import builtins
 import os
 import os.path
 import glob
@@ -334,8 +333,7 @@ class AdfDiag(AdfWeb):
         return func(self)
 
     #########
-    #adf.set_warning_filter
-    #set_warning_filter(enable=True)  # Suppress warnings
+
     def create_time_series(self, baseline=False):
         """
         Generate time series versions of the CAM history file data.
@@ -382,12 +380,11 @@ class AdfDiag(AdfWeb):
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
-            hist_str_list = self.hist_string["test_hist_str"][0]
+            hist_str_list = self.hist_string["test_hist_str"]
         # End if
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         dmsg = f"reading from {hist_str_list} files"
-        print(dmsg)
         self.debug_log(dmsg)
 
         # get info about variable defaults
@@ -579,6 +576,15 @@ class AdfDiag(AdfWeb):
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
                     )
 
+                    # Check if files already exist in time series directory:
+                    ts_file_list = glob.glob(ts_outfil_str)
+
+                    # If files exist, then check if over-writing is allowed:
+                    if ts_file_list:
+                        if not overwrite_ts[case_idx]:
+                            # If not, then simply skip this variable:
+                            continue
+
                     # Check if clobber is true for file
                     if Path(ts_outfil_str).is_file():
                         if overwrite_ts[case_idx]:
@@ -676,24 +682,6 @@ class AdfDiag(AdfWeb):
                     # Check if variable has a "lev" dimension according to first file:
                     has_lev = bool("lev" in hist_file_ds[var].dims or "ilev" in hist_file_ds[var].dims)
 
-                    # Create full path name, file name template:
-                    # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
-
-                    ts_outfil_str = (
-                        ts_dir
-                        + os.sep
-                        + ".".join([case_name, hist_str, var, time_string, "nc"])
-                    )
-
-                    # Check if files already exist in time series directory:
-                    ts_file_list = glob.glob(ts_outfil_str)
-
-                    # If files exist, then check if over-writing is allowed:
-                    if ts_file_list:
-                        if not overwrite_ts[case_idx]:
-                            # If not, then simply skip this variable:
-                            continue
-
                     # Variable list starts with just the variable
                     ncrcat_var_list = f"{var}"
 
@@ -713,7 +701,7 @@ class AdfDiag(AdfWeb):
                                 ncrcat_var_list = ncrcat_var_list + ",PS"
                                 print(f"\t    INFO: Adding PS to file for '{var}'")
                             else:
-                                wmsg = "WARNING: PS not found in history file."
+                                wmsg = "\t    WARNING: PS not found in history file."
                                 wmsg += " It might be needed at some point."
                                 print(wmsg)
                             # End if
@@ -727,9 +715,9 @@ class AdfDiag(AdfWeb):
                                 # PMID file to each one of those targets separately. -JN
                                 if "PMID" in hist_file_var_list:
                                     ncrcat_var_list = ncrcat_var_list + ",PMID"
-                                    print("Adding PMID to file")
+                                    print("\t    INFO: Adding PMID to file")
                                 else:
-                                    wmsg = "WARNING: PMID not found in history file."
+                                    wmsg = "\t    WARNING: PMID not found in history file."
                                     wmsg += " It might be needed at some point."
                                     print(wmsg)
                                 # End if PMID
@@ -847,7 +835,7 @@ class AdfDiag(AdfWeb):
         """
 
         # Extract climatology calculation config options:
-        calc_climo = self.get_cam_info("calc_cam_climo")
+        calc_climo = self.climo_locs["test"]
 
         # Check if climo calculation config option is a list:
         if isinstance(calc_climo, list):
@@ -858,7 +846,7 @@ class AdfDiag(AdfWeb):
         # Next check if a baseline simulation is being used
         # and no other model cases need climatologies calculated:
         if not self.compare_obs and not calc_climo:
-            calc_bl_climo = self.get_baseline_info("calc_cam_climo")
+            calc_bl_climo = self.calc_climos["baseline"]
 
             # Check if baseline climo calculation config option is a list,
             # although it really never should be:
