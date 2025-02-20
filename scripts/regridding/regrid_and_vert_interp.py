@@ -52,7 +52,7 @@ def regrid_and_vert_interp(adf):
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
-    output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
+    test_output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
 
@@ -112,9 +112,10 @@ def regrid_and_vert_interp(adf):
     else:
 
         #Extract model baseline variables:
-        target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        target_loc = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
+    #base_output_loc       = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
 
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adf.climo_yrs["syear_baseline"]
@@ -127,7 +128,7 @@ def regrid_and_vert_interp(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgclimo_loc = Path(output_loc)
+    rgclimo_loc = Path(test_output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
