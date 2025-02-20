@@ -114,7 +114,7 @@ def regrid_and_vert_interp(adf):
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
-        trgclimo_loc = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
+        trgclimo_loc = Path(adf.get_baseline_info("cam_climo_regrid_loc", required=True))
     #End if
     #base_output_loc       = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
 
