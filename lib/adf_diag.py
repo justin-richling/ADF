@@ -751,19 +751,20 @@ class AdfDiag(AdfWeb):
                         ts_outfil_str
                     ]
 
-                    # Step 3a: Optional, add additional variables to clm2.h0 files 
-                    cmd_add_clm_h0_fields = [
-                        "ncks", "-A", "-v", "area,landfrac,landmask",
-                        hist_files[0],
-                        ts_outfil_str
-                    ]
+                    if "clm" in hist_str:
+                        # Step 3a: Optional, add additional variables to clm2.h0 files 
+                        cmd_add_clm_h0_fields = [
+                            "ncks", "-A", "-v", "area,landfrac,landmask",
+                            hist_files[0],
+                            ts_outfil_str
+                        ]
 
-                    # Step 3b: Optional, add additional variables to clm2.h1 files 
-                    cmd_add_clm_h1_fields = [
-                        "ncrcat", "-A", "-v", "pfts1d_ixy,pfts1d_jxy,pfts1d_itype_veg,lat,lon",
-                        hist_files,
-                        ts_outfil_str
-                    ]
+                        # Step 3b: Optional, add additional variables to clm2.h1 files 
+                        cmd_add_clm_h1_fields = [
+                            "ncrcat", "-A", "-v", "pfts1d_ixy,pfts1d_jxy,pfts1d_itype_veg,lat,lon",
+                            hist_files,
+                            ts_outfil_str
+                        ]
 
                      # Step 3c: Create the ncatted command to remove the history attribute
                     cmd_remove_history = [
