@@ -112,8 +112,9 @@ def regrid_and_vert_interp(adf):
     else:
 
         #Extract model baseline variables:
-        target_loc = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
+        target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
+        trgclimo_loc = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
     #End if
     #base_output_loc       = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
 
@@ -129,6 +130,7 @@ def regrid_and_vert_interp(adf):
     #Set output/target data path variables:
     #------------------------------------
     #rgclimo_loc = Path(test_output_loc)
+
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
@@ -318,7 +320,7 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
+                    interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
