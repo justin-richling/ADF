@@ -128,22 +128,29 @@ def regrid_and_vert_interp(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgclimo_loc = Path(test_output_loc)
+    #rgclimo_loc = Path(test_output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
 
-    #Check if re-gridded directory exists, and if not, then create it:
-    if not rgclimo_loc.is_dir():
-        print(f"    {rgclimo_loc} not found, making new directory")
-        rgclimo_loc.mkdir(parents=True)
-    #End if
+    ##Check if re-gridded directory exists, and if not, then create it:
+    #if not rgclimo_loc.is_dir():
+    #    print(f"    {rgclimo_loc} not found, making new directory")
+    #    rgclimo_loc.mkdir(parents=True)
+    ##End if
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
+
+        rgclimo_loc = Path(test_output_loc[case_idx])
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not rgclimo_loc.is_dir():
+            print(f"    {rgclimo_loc} not found, making new directory")
+            rgclimo_loc.mkdir(parents=True)
+        #End if
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
