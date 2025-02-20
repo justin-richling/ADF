@@ -81,7 +81,16 @@ diag_basic_info:
     obs_data_loc: /glade/campaign/cgd/amp/amwg/ADF_obs
 
     #Location where re-gridded and interpolated CAM climatology files are stored:
-    cam_regrid_loc: /glade/derecho/scratch/${user}/ADF/regrid
+    #cam_regrid_loc: /glade/derecho/scratch/${user}/ADF/regrid
+
+    #Location where CAM climatology files are stored:
+    cam_climo_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/climo
+
+    #Location where re-gridded and interpolated CAM climatology files are stored:
+    cam_climo_regrid_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/climo/regrid
+
+    #Location where re-gridded and interpolated timeseries files are stored:
+    cam_ts_regrid_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/ts/regrid
 
     #Overwrite CAM re-gridded files?
     #If false, or missing, then regridding will be skipped for regridded variables
