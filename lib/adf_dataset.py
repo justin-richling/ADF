@@ -296,10 +296,10 @@ class AdfData:
                 fils = []
         else:
             #model_rg_loc = Path(self.adf.get_basic_info("cam_climo_regrid_loc", required=True))
-            ref_rg_locs = self.adf.get_baseline_info("cam_climo_regrid_loc", required=True)
-            print("self.ref_case_label",self.ref_case_label,'\n"')
-            caseindex = (self.ref_case_label).index(case) # the entry for specified case
-            ref_rg_loc = Path(ref_rg_locs[caseindex])
+            ref_rg_loc = self.adf.get_baseline_info("cam_climo_regrid_loc", required=True)
+            #print("self.ref_case_label",self.ref_case_label,'\n"')
+            #caseindex = (self.ref_case_label).index(case) # the entry for specified case
+            #ref_rg_loc = Path(ref_rg_locs[caseindex])
             fils = sorted(ref_rg_loc.glob(f"{case}_{field}_baseline.nc"))
         return fils
 
