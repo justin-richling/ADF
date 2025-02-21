@@ -170,7 +170,7 @@ def polar_map(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
-                model_rgrid_loc = Path(model_rgrid_locs[case_idx])
+                mclimo_rg_loc = Path(model_rgrid_locs[case_idx])
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
