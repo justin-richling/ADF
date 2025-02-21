@@ -200,7 +200,6 @@ class AdfInfo(AdfConfig):
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
-            print("baseline_ts_done",baseline_ts_done)
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
