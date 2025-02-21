@@ -90,7 +90,7 @@ def global_mean_timeseries(adfobj):
 
             # reference time series global average
             ref_ts_da_ga = pf.spatial_average(ref_ts_da, weights=None, spatial_dims=None)
-
+            print("ref_ts_da_ga",type(ref_ts_da_ga),ref_ts_da_ga,"\n")
             # annually averaged
             ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
         # End if
