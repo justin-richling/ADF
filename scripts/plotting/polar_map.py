@@ -25,7 +25,7 @@ def polar_map(adfobj):
     #
     var_list = adfobj.diag_var_list
     #model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
-    model_rgrid_loc = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
+    model_rgrid_locs = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
@@ -87,7 +87,7 @@ def polar_map(adfobj):
 
     #Set data path variables:
     #-----------------------
-    mclimo_rg_loc = Path(model_rgrid_loc)
+    #mclimo_rg_loc = Path(model_rgrid_loc)
     if not adfobj.compare_obs:
         dclimo_loc  = Path(data_loc)
     #-----------------------
@@ -170,6 +170,7 @@ def polar_map(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+                model_rgrid_loc = Path(model_rgrid_locs[case_idx])
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
