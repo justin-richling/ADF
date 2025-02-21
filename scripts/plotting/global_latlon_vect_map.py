@@ -53,7 +53,8 @@ def global_latlon_vect_map(adfobj):
     # Use ADF api to get all necessary information
     #
     var_list = adfobj.diag_var_list
-    model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
+    #model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
+    model_rgrid_locs = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
 
     #Special ADF variable which contains the output path for
     #all generated plots and tables:
@@ -86,7 +87,8 @@ def global_latlon_vect_map(adfobj):
         obs = False
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
-        data_loc  = model_rgrid_loc #Just use the re-gridded model data path
+        #data_loc  = model_rgrid_loc #Just use the re-gridded model data path
+        data_loc = Path(adfobj.get_baseline_info("cam_climo_regrid_loc", required=True))
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
@@ -115,7 +117,7 @@ def global_latlon_vect_map(adfobj):
 
     #Set input/output data path variables:
     #------------------------------------
-    mclimo_rg_loc = Path(model_rgrid_loc)
+    #mclimo_rg_loc = Path(model_rgrid_loc)
     if not adfobj.compare_obs:
         dclimo_loc = Path(data_loc)
     #End if
@@ -283,6 +285,7 @@ def global_latlon_vect_map(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
+                mclimo_rg_loc = Path(model_rgrid_locs[case_idx])
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
