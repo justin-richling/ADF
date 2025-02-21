@@ -577,6 +577,7 @@ def annual_mean(data, whole_years=False, time_name='time'):
     # -- do it for each year to allow for non-standard calendars (360-day)
     # -- and also to provision for data with leap years
     days_gb = data_to_avg.time.dt.daysinmonth.groupby('time.year').map(lambda x: x / x.sum())
+    print(len(days_gb.values))
     # weighted average with normalized weights: <x> = SUM x_i * w_i  (implied division by SUM w_i)
     result =  (data_to_avg * days_gb).groupby('time.year').sum(dim='time')
     result.attrs['averaging_period'] = date_range_string
