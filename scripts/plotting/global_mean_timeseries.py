@@ -149,7 +149,7 @@ def global_mean_timeseries(adfobj):
 
             # Gather spatial avg for test case
             c_ts_da_ga = pf.spatial_average(c_ts_da)
-            case_ts[labels[case_name]] = pf.annual_mean(c_ts_da_ga)
+            case_ts[labels[case_name]] = pf.annual_mean(c_ts_da_ga,use_ux=True)
 
         # If this case is 3-d or missing variable, then break the loop and go to next variable
         if skip_var:
