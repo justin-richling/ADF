@@ -433,9 +433,9 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
     if variable not in v_to_derive:
         fils = sorted(Path(location).glob(f"{casename}*_{variable}_*.nc"))
         if len(fils) == 0:
-            #raise ValueError(f"something went wrong for variable: {variable}")
-            print(f"something went wrong for variable: {variable}")
-            return
+            raise ValueError(f"something went wrong for variable: {variable}")
+            #print(f"something went wrong for variable: {variable}")
+            #return
         elif len(fils) > 1:
             ds = xr.open_mfdataset(fils)  # do we ever expect climo files split into pieces?
         else:
