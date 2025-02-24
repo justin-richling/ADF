@@ -474,7 +474,6 @@ class AdfInfo(AdfConfig):
         #Check if climatology files need to be calculated
         ##################################################################
         calc_test_climo = self.get_cam_info("calc_cam_climo")
-        print("START calc_test_climo",calc_test_climo)
         if calc_test_climo is None:
             calc_test_climo = [False]*len(case_names)
         """else:
@@ -891,7 +890,6 @@ class AdfInfo(AdfConfig):
         #Note that copies are needed in order to avoid having a script mistakenly
         #modify these variables, as they are mutable and thus passed by reference:
         calc_test_climo = copy.copy(self.__calc_test_climo)
-        print("self.__calc_test_climo",self.__calc_test_climo)
         calc_base_climo = self.__calc_base_climo
 
         return {"test":calc_test_climo,"baseline":calc_base_climo}

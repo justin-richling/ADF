@@ -168,9 +168,8 @@ def cam_taylor_diagram(adfobj):
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
                 case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber])
                 # ASSUMING `time` is 1-12, get the current season:
-                if isinstance(case_x,xr.DataArray):
-                    case_x = case_x.sel(time=seasons[s]).mean(dim='time')
-                    result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
+                case_x = case_x.sel(time=seasons[s]).mean(dim='time')
+                result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
         #
         # -- PLOTTING (one per season) --
         #
@@ -229,9 +228,7 @@ def find_landmask(adf, casename, location):
             hloc = adf.get_baseline_info('cam_hist_loc')
         hfils = Path(hloc).glob((f"*{casename}*.nc"))
         if not hfils:
-            #raise IOError(f"No history files in expected location: {hloc}")
-            print(f"No history files in expected location: {hloc}")
-            return
+            raise IOError(f"No history files in expected location: {hloc}")
         k = 0
         for h in hfils:
             dstmp = xr.open_dataset(h)
@@ -241,9 +238,7 @@ def find_landmask(adf, casename, location):
             else:
                 k += 1
         else:
-            #raise IOError(f"Checked {k} files, but did not find LANDFRAC in any of them.")
-            print(f"Checked {k} files, but did not find LANDFRAC in any of them.")
-            return
+            raise IOError(f"Checked {k} files, but did not find LANDFRAC in any of them.")
     # should not reach past the `if` statement without returning landfrac or raising exception.
 
 def get_prect(casename, location, **kwargs):
@@ -254,9 +249,7 @@ def get_prect(casename, location, **kwargs):
         fils1 = sorted(Path(location).glob(f"{casename}*_PRECC_*.nc"))
         fils2 = sorted(Path(location).glob(f"{casename}*_PRECL_*.nc"))
         if (len(fils1) == 0) or (len(fils2) == 0):
-            #raise IOError("Could not find PRECC or PRECL")
-            print("Could not find PRECC or PRECL")
-            return
+            raise IOError("Could not find PRECC or PRECL")
         else:
             if len(fils1) == 1:
                 precc = xr.open_dataset(fils1[0])['PRECC']
@@ -274,9 +267,7 @@ def get_prect(casename, location, **kwargs):
 def get_tropical_land_precip(adf, casename, location, **kwargs):
     landfrac = find_landmask(adf, casename, location)
     if landfrac is None:
-        #raise ValueError("\t No landfrac returned")
-        print("\t No landfrac returned")
-        return
+        raise ValueError("\t No landfrac returned")
     prect = get_prect(casename, location)
     # mask to only keep land locations
     prect = xr.DataArray(np.where(landfrac >= .95, prect, np.nan),
@@ -289,9 +280,7 @@ def get_tropical_land_precip(adf, casename, location, **kwargs):
 def get_tropical_ocean_precip(adf, casename, location, **kwargs):
     landfrac = find_landmask(adf, casename, location)
     if landfrac is None:
-        #raise ValueError("No landfrac returned")
-        print("\t No landfrac returned")
-        return
+        raise ValueError("No landfrac returned")
     prect = get_prect(casename, location)
     # mask to only keep ocean locations
     prect = xr.DataArray(np.where(landfrac <= 0.05, prect, np.nan),
@@ -312,9 +301,7 @@ def get_surface_pressure(dset, casename, location):
         if (len(fils) == 0):
             emsg = f"Could not find PS. This is needed as a separate variable if"
             emsg += " reading time series files directly."
-            print(emsg)
-            return
-            #raise IOError(emsg)
+            raise IOError(emsg)
         else:
             if len(fils) == 1:
                 ps_ds = xr.open_dataset(fils[0])
@@ -350,9 +337,7 @@ def get_vertical_average(adf, casename, location, varname):
     '''Collect data from case and use `vertical_average` to get result.'''
     fils = sorted(Path(location).glob(f"{casename}*_{varname}_*.nc"))
     if (len(fils) == 0):
-        print(f"Could not find {varname}")
-        return
-        #raise IOError(f"Could not find {varname}")
+        raise IOError(f"Could not find {varname}")
     else:
         if len(fils) == 1:
             ds = xr.open_dataset(fils[0])
@@ -378,9 +363,7 @@ def get_landt2m(adf, casename, location):
     """Gets TREFHT (T_2m) and removes non-land points."""
     fils = sorted(Path(location).glob(f"{casename}*_TREFHT_*.nc"))
     if len(fils) == 0:
-        #raise IOError(f"TREFHT could not be found in the files.")
-        print(f"TREFHT could not be found in the files.")
-        return
+        raise IOError(f"TREFHT could not be found in the files.")
     elif len(fils) > 1:
         t = xr.open_mfdataset(fils)['TREFHT'].load()  # do we ever expect climo files split into pieces?
     else:
@@ -397,9 +380,7 @@ def get_eqpactaux(adf, casename, location):
     """Gets zonal surface wind stress 5S to 5N."""
     fils = sorted(Path(location).glob(f"{casename}*_TAUX_*.nc"))
     if len(fils) == 0:
-        #raise IOError(f"TAUX could not be found in the files.")
-        print(f"TAUX could not be found in the files.")
-        return
+        raise IOError(f"TAUX could not be found in the files.")
     elif len(fils) > 1:
         taux = xr.open_mfdataset(fils)['TAUX'].load()  # do we ever expect climo files split into pieces?
     else:
@@ -434,9 +415,7 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
     if variable not in v_to_derive:
         fils = sorted(Path(location).glob(f"{casename}*_{variable}_*.nc"))
         if len(fils) == 0:
-            #raise ValueError(f"something went wrong for variable: {variable}")
-            #print(f"something went wrong for variable: {variable}")
-            return
+            raise ValueError(f"something went wrong for variable: {variable}")
         elif len(fils) > 1:
             ds = xr.open_mfdataset(fils)  # do we ever expect climo files split into pieces?
         else:
