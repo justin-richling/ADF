@@ -251,6 +251,7 @@ def regrid_and_vert_interp(adf):
                     if target in pmid_loc_dict:
                         regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
                     #End if
+                    print("FIRST AHH",regrid_kwargs['ps_file'],"\n")
 
                     #Perform regridding and interpolation of variable:
                     rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
@@ -337,7 +338,7 @@ def regrid_and_vert_interp(adf):
                         if bl_pmid_fil.is_file():
                             regrid_kwargs.update({'pmid_file': bl_pmid_fil})
                         #End if
-
+                        print("\nAHHH",regrid_kwargs['ps_file'])
                         #Generate vertically-interpolated baseline dataset:
                         tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
                                                                      **regrid_kwargs)
