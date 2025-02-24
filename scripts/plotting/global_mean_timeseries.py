@@ -122,8 +122,8 @@ def global_mean_timeseries(adfobj):
         skip_var = False
         for case_name in adfobj.data.case_names:
 
-            syr = syear_cases[(adfobj.case_names).index(case_name)]
-            eyr = eyear_cases[(adfobj.case_names).index(case_name)]
+            syr = syear_cases[(adfobj.data.case_names).index(case_name)]
+            eyr = eyear_cases[(adfobj.data.case_names).index(case_name)]
 
             c_ts_da = adfobj.data.load_timeseries_da(case_name, field, syr, eyr)
 
