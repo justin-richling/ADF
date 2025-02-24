@@ -120,6 +120,7 @@ def cam_taylor_diagram(adfobj):
             precl = sorted(ref_path.glob(f"*_PRECL_climo*"))
         if (not precl) or (not precc):
             print(f"Variable 'PRECT' is missing '{data_name}' climo file, so Taylor diagrams will be skipped.")
+            return
 
 
     found_test_vars = []
@@ -139,6 +140,7 @@ def cam_taylor_diagram(adfobj):
             precl = sorted(case_path.glob(f"*_PRECL_climo*"))
         if (not precl) or (not precc):
             print(f"Variable 'PRECT' is missing '{case_names[0]}' climo file, so Taylor diagrams will be skipped.")
+            return
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
