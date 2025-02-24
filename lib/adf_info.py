@@ -890,6 +890,7 @@ class AdfInfo(AdfConfig):
         #Note that copies are needed in order to avoid having a script mistakenly
         #modify these variables, as they are mutable and thus passed by reference:
         calc_test_climo = copy.copy(self.__calc_test_climo)
+        print("calc_test_climo",calc_test_climo)
         calc_base_climo = self.__calc_base_climo
 
         return {"test":calc_test_climo,"baseline":calc_base_climo}
