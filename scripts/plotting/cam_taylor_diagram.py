@@ -109,7 +109,7 @@ def cam_taylor_diagram(adfobj):
     for var in taylor_var_set:
         ref_var = sorted(ref_path.glob(f"*_{var}_climo*"))
         if not ref_var:
-            print(f"Variable '{ref_var}' is missing '{data_name}' climo file, so Taylor diagrams will be skipped.")
+            print(f"Variable '{var}' is missing '{data_name}' climo file, so Taylor diagrams will be skipped.")
             return
             #found_ref_vars.append(ref_var)
 
@@ -131,7 +131,7 @@ def cam_taylor_diagram(adfobj):
     for var in taylor_var_set:
         case_var = sorted(case_path.glob(f"*_{var}_climo*"))
         if not case_var:
-            print(f"Variable '{case_var}' is missing '{case_names[0]}' climo file, so Taylor diagrams will be skipped.")
+            print(f"Variable '{var}' is missing '{case_names[0]}' climo file, so Taylor diagrams will be skipped.")
             return
             #found_test_vars.append(case_var)
 
