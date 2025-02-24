@@ -42,6 +42,14 @@ def global_mean_timeseries(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
+    #Grab case years
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
+
+    #Grab baseline years (which may be empty strings if using Obs):
+    syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+
     # Loop over variables
     for field in adfobj.diag_var_list:
         #Notify user of variable being plotted:
@@ -57,7 +65,7 @@ def global_mean_timeseries(adfobj):
         #End if
 
         # reference time series (DataArray)
-        ref_ts_da = adfobj.data.load_reference_timeseries_da(field)
+        ref_ts_da = adfobj.data.load_reference_timeseries_da(field, syear_baseline, eyear_baseline)
 
         base_name = adfobj.data.ref_case_label
 
@@ -114,7 +122,10 @@ def global_mean_timeseries(adfobj):
         skip_var = False
         for case_name in adfobj.data.case_names:
 
-            c_ts_da = adfobj.data.load_timeseries_da(case_name, field)
+            syr = syear_cases[(adfobj.case_names).index(case_name)]
+            eyr = eyear_cases[(adfobj.case_names).index(case_name)]
+
+            c_ts_da = adfobj.data.load_timeseries_da(case_name, field, syr, eyr)
 
             if c_ts_da is None:
                 print(
