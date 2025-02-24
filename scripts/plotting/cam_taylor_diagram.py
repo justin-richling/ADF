@@ -43,7 +43,7 @@ def cam_taylor_diagram(adfobj):
         print("\tTaylor diagrams don't work when doing model vs obs, so Taylor diagrams will be skipped.")
         return
 
-    taylor_var_set = {'U', 'PS','PSL', 'SWCF', 'LWCF', 'LANDFRAC', 'TREFHT', 'TAUX', 'RELHUM', 'T'}
+    taylor_var_set = {'U','PSL', 'SWCF', 'LWCF', 'LANDFRAC', 'TREFHT', 'TAUX', 'RELHUM', 'T'}
 
     """#Check if the variables needed for the Taylor diags are present,
     #If not then skip this script:
