@@ -355,7 +355,6 @@ def get_var_at_plev(adf, casename, location, variable, plev):
     """
     Get `variable` from the data and then interpolate it to isobaric level `plev` (units of hPa).
     """
-    print("get_var_at_plev")
     dset = _retrieve(adf, variable, casename, location, return_dataset=True)
 
     # Try and extract surface pressure:
