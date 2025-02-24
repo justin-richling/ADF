@@ -474,6 +474,7 @@ class AdfInfo(AdfConfig):
         #Check if climatology files need to be calculated
         ##################################################################
         calc_test_climo = self.get_cam_info("calc_cam_climo")
+        print("START calc_test_climo",calc_test_climo)
         if calc_test_climo is None:
             calc_test_climo = [False]*len(case_names)
         """else:
