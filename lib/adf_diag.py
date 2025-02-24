@@ -845,7 +845,7 @@ class AdfDiag(AdfWeb):
             calc_climo = any(calc_climo)
         # End if
 
-        # Next check if a baseline simulation is being used
+        """# Next check if a baseline simulation is being used
         # and no other model cases need climatologies calculated:
         if not self.compare_obs and not calc_climo:
             calc_bl_climo = self.calc_climos["baseline"]
@@ -859,7 +859,19 @@ class AdfDiag(AdfWeb):
         else:
             # Just set to False:
             calc_bl_climo = False
+        # End if"""
+
+
+
+        calc_bl_climo = self.calc_climos["baseline"]
+
+        # Check if baseline climo calculation config option is a list,
+        # although it really never should be:
+        if isinstance(calc_bl_climo, list):
+            # If so, then check if any of the entries are "True":
+            calc_bl_climo = any(calc_bl_climo)
         # End if
+
         print("calc_bl_climo",calc_bl_climo)
         print("calc_climo",calc_climo)
         # Check if a user wants any climatologies to be calculated:
