@@ -168,8 +168,9 @@ def cam_taylor_diagram(adfobj):
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
                 case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber])
                 # ASSUMING `time` is 1-12, get the current season:
-                case_x = case_x.sel(time=seasons[s]).mean(dim='time')
-                result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
+                if isinstance(case_x,xr.DataArray):
+                    case_x = case_x.sel(time=seasons[s]).mean(dim='time')
+                    result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
         #
         # -- PLOTTING (one per season) --
         #
@@ -433,9 +434,9 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
     if variable not in v_to_derive:
         fils = sorted(Path(location).glob(f"{casename}*_{variable}_*.nc"))
         if len(fils) == 0:
-            raise ValueError(f"something went wrong for variable: {variable}")
+            #raise ValueError(f"something went wrong for variable: {variable}")
             #print(f"something went wrong for variable: {variable}")
-            #return
+            return
         elif len(fils) > 1:
             ds = xr.open_mfdataset(fils)  # do we ever expect climo files split into pieces?
         else:
