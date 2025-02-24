@@ -110,20 +110,20 @@ def cam_taylor_diagram(adfobj):
         ref_var = sorted(ref_path.glob(f"*_{var}_climo*"))
         if not ref_var:
             print(f"Variable '{var}' is missing '{data_name}' climo file, so Taylor diagrams will be skipped.")
+            found_ref_vars.append(ref_var)
             return
-            #found_ref_vars.append(ref_var)
 
-    """if len(found_ref_vars) != len(taylor_var_set):
-        print(f"\tSome variables are missing for case '{data_name}' so Taylor diagrams will be skipped.")
-        return
+    if len(found_ref_vars) == len(taylor_var_set):
+        #print(f"\tSome variables are missing for case '{data_name}' so Taylor diagrams will be skipped.")
+        #return
+        print()
     else:
-        try:
-            sorted(ref_path.glob(f"*_PRECT_climo*"))
-        except:
+        prect = sorted(ref_path.glob(f"*_PRECT_climo*"))
+        if not prect:
             precc = sorted(ref_path.glob(f"*_PRECC_climo*"))
             precl = sorted(ref_path.glob(f"*_PRECL_climo*"))
-        if precl and precc:
-            print("AHHHHH")"""
+        if (not precl) or (not precc):
+            print(f"Variable 'PRECT' is missing '{data_name}' climo file, so Taylor diagrams will be skipped.")
 
 
     found_test_vars = []
@@ -132,20 +132,21 @@ def cam_taylor_diagram(adfobj):
         case_var = sorted(case_path.glob(f"*_{var}_climo*"))
         if not case_var:
             print(f"Variable '{var}' is missing '{case_names[0]}' climo file, so Taylor diagrams will be skipped.")
+            found_test_vars.append(case_var)
             return
-            #found_test_vars.append(case_var)
 
-    """if len(found_test_vars) != len(taylor_var_set):
-        print(f"\tSome variables are missing for case '{case_names[0]}' so Taylor diagrams will be skipped.")
-        return
+
+    if len(found_test_vars) == len(taylor_var_set):
+        #print(f"\tSome variables are missing for case '{case_names[0]}' so Taylor diagrams will be skipped.")
+        #return
+        print()
     else:
-        try:
-            sorted(case_path.glob(f"*_PRECT_climo*"))
-        except:
+        prect = sorted(case_path.glob(f"*_PRECT_climo*"))
+        if not prect:
             precc = sorted(case_path.glob(f"*_PRECC_climo*"))
             precl = sorted(case_path.glob(f"*_PRECL_climo*"))
-        if precl and precc:
-            print("AHHHHH")"""
+        if (not precl) or (not precc):
+            print(f"Variable 'PRECT' is missing '{case_names[0]}' climo file, so Taylor diagrams will be skipped.")
 
 
 
