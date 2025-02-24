@@ -106,8 +106,6 @@ def cam_taylor_diagram(adfobj):
 
     found_ref_vars = []
     ref_path = Path(data_loc)
-    miss_test_vars = []
-    case_path = Path(case_climo_loc)
     for var in taylor_var_set:
         ref_var = sorted(ref_path.glob(f"*_{var}_climo*"))
         if not ref_var:
