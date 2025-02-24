@@ -114,10 +114,6 @@ def cam_taylor_diagram(adfobj):
             return
 
     if len(found_ref_vars) == len(taylor_var_set):
-        #print(f"\tSome variables are missing for case '{data_name}' so Taylor diagrams will be skipped.")
-        #return
-        print()
-    else:
         prect = sorted(ref_path.glob(f"*_PRECT_climo*"))
         if not prect:
             precc = sorted(ref_path.glob(f"*_PRECC_climo*"))
@@ -137,20 +133,12 @@ def cam_taylor_diagram(adfobj):
 
 
     if len(found_test_vars) == len(taylor_var_set):
-        #print(f"\tSome variables are missing for case '{case_names[0]}' so Taylor diagrams will be skipped.")
-        #return
-        print()
-    else:
         prect = sorted(case_path.glob(f"*_PRECT_climo*"))
         if not prect:
             precc = sorted(case_path.glob(f"*_PRECC_climo*"))
             precl = sorted(case_path.glob(f"*_PRECL_climo*"))
         if (not precl) or (not precc):
             print(f"Variable 'PRECT' is missing '{case_names[0]}' climo file, so Taylor diagrams will be skipped.")
-
-
-
-
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
