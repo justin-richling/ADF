@@ -570,11 +570,8 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                 #This surface pressure field has already been regridded:
                 regridded_ps = True
             else:
-                if 0==1:
-                    print()
-                else:
-                    print(f"\t    WARNING: NO PS for 3-D variable {var_name}, so it will not be re-gridded.")
-                    return None
+                print(f"\t    WARNING: NO PS for 3-D variable {var_name}, so it will not be re-gridded.")
+                return None
             #End if
         #End if
     #End if (has_lev)
