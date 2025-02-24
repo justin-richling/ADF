@@ -43,7 +43,9 @@ def cam_taylor_diagram(adfobj):
         print("\tTaylor diagrams don't work when doing model vs obs, so Taylor diagrams will be skipped.")
         return
 
-    #Check if the variables needed for the Taylor diags are present,
+    taylor_var_set = {'U', 'PSL', 'SWCF', 'LWCF', 'LANDFRAC', 'TREFHT', 'TAUX', 'RELHUM', 'T'}
+
+    """#Check if the variables needed for the Taylor diags are present,
     #If not then skip this script:
     taylor_var_set = {'U', 'PSL', 'SWCF', 'LWCF', 'LANDFRAC', 'TREFHT', 'TAUX', 'RELHUM', 'T'}
     if not taylor_var_set.issubset(adfobj.diag_var_list) or \
@@ -52,7 +54,7 @@ def cam_taylor_diagram(adfobj):
         print("\tU, PSL, SWCF, LWCF, PRECT (or PRECL and PRECC), LANDFRAC, TREFHT, TAUX, RELHUM,T")
         print("\tSome variables are missing so Taylor diagrams will be skipped.")
         return
-    #End if
+    #End if"""
 
     # Extract needed quantities from ADF object:
     # -----------------------------------------
@@ -104,6 +106,7 @@ def cam_taylor_diagram(adfobj):
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
+    #Check if the variables needed for the Taylor diags are present, if not, skip this script
     found_ref_vars = []
     ref_path = Path(data_loc)
     for var in taylor_var_set:
@@ -112,7 +115,6 @@ def cam_taylor_diagram(adfobj):
             print(f"Variable '{var}' is missing '{data_name}' climo file, so Taylor diagrams will be skipped.")
             found_ref_vars.append(ref_var)
             return
-
     if len(found_ref_vars) == len(taylor_var_set):
         prect = sorted(ref_path.glob(f"*_PRECT_climo*"))
         if not prect:
@@ -122,7 +124,6 @@ def cam_taylor_diagram(adfobj):
             print(f"Variable 'PRECT' is missing '{data_name}' climo file, so Taylor diagrams will be skipped.")
             return
 
-
     found_test_vars = []
     case_path = Path(case_climo_loc[0])
     for var in taylor_var_set:
@@ -131,8 +132,6 @@ def cam_taylor_diagram(adfobj):
             print(f"Variable '{var}' is missing '{case_names[0]}' climo file, so Taylor diagrams will be skipped.")
             found_test_vars.append(case_var)
             return
-
-
     if len(found_test_vars) == len(taylor_var_set):
         prect = sorted(case_path.glob(f"*_PRECT_climo*"))
         if not prect:

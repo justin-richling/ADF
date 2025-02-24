@@ -207,15 +207,15 @@ def tape_recorder(adfobj):
         if case_ts_locs[idx]:
             ts_loc = Path(case_ts_locs[idx])
             hist_str = case_hist_strs[idx]
-            print("ts_loc",ts_loc,"\n")
-            print("ts_loc",hist_str,"\n")
-            print("ts_loc",var,"\n")
+            #print("ts_loc",ts_loc,"\n")
+            #print("ts_loc",hist_str,"\n")
+            #print("ts_loc",var,"\n")
             fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
             #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
             #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
             #dat = adfobj.data.load_timeseries_da(test_case_names[idx], var, start_years[idx], end_years[idx])
             dat = adfds.load_timeseries_da(test_case_names[idx], var, start_years[idx], end_years[idx])
-            print("\n\n",type(dat),dat,"\n\n")
+            #print("\n\n",type(dat),dat,"\n\n")
             #if dat is NoneType:
             #if not dat:
             if not isinstance(dat, xr.DataArray):
@@ -262,7 +262,7 @@ def tape_recorder(adfobj):
         #    case_ts_locs = case_ts_locs+[None]
         #else:
         #    case_ts_locs = case_ts_locs+[data_ts_loc]
-        print("case_ts_locs",data_ts_loc)
+        #print("case_ts_locs",data_ts_loc)
 
         base_nickname = adfobj.case_nicknames['base_nickname']
         #test_nicknames = test_nicknames+[base_nickname]
@@ -280,16 +280,16 @@ def tape_recorder(adfobj):
         if data_ts_loc:
             ts_loc = Path(data_ts_loc)
             hist_str = base_hist_strs
-            print("ts_loc",ts_loc,"\n")
-            print("ts_loc",hist_str,"\n")
-            print("ts_loc",var,"\n")
+            #print("ts_loc",ts_loc,"\n")
+            #print("ts_loc",hist_str,"\n")
+            #print("ts_loc",var,"\n")
             fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
             #dat = adfobj.data.load_timeseries_dataset(fils, start_years[idx], end_years[idx])
             #dat = adfobj.data.load_da(fils, var, start_years[idx], end_years[idx], type="timeseries")
             #dat = adfobj.data.load_timeseries_da(data_name, var, data_start_year, data_end_year)
             #dat = adfobj.data.load_reference_timeseries_da(var, data_start_year, data_end_year)
             dat = adfds.load_reference_timeseries_da(var, data_start_year, data_end_year)
-            print("\n\n",type(dat),dat,"\n\n")
+            #print("\n\n",type(dat),dat,"\n\n")
             #if dat is NoneType:
             #if not dat:
             if not isinstance(dat, xr.DataArray):
