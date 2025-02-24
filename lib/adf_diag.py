@@ -838,6 +838,7 @@ class AdfDiag(AdfWeb):
 
         # Extract climatology calculation config options:
         calc_climo = self.calc_climos["test"]
+        print("calc_climo",calc_climo)
 
         # Check if climo calculation config option is a list:
         if isinstance(calc_climo, list):
