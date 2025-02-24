@@ -72,7 +72,7 @@ def create_climo_files(adf, clobber=False, search=None):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    var_list = adf.diag_var_list
+    var_list = ["PS"] + adf.diag_var_list
 
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
