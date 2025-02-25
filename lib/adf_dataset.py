@@ -175,8 +175,11 @@ class AdfData:
         """Return DataArray from time series file(s).
            Uses defaults file to convert units.
         """
-        add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_timeseries_file(case, variablename)
+        if not fils:
+            warnings.warn(f"\t    WARNING: Did not find test time series file(s), variable: {variablename}")
+            return None
+        add_offset, scale_factor = self.get_value_converters(case, variablename)
         return self.load_da(fils, variablename, syr, eyr, type="timeseries", add_offset=add_offset, scale_factor=scale_factor, **kwargs)
     
     def load_reference_timeseries_da(self, field, syr, eyr, **kwargs):
