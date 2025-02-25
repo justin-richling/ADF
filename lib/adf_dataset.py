@@ -176,7 +176,6 @@ class AdfData:
            Uses defaults file to convert units.
         """
         fils = self.get_timeseries_file(case, variablename)
-        print("load_timeseries_da FILS",fils)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find test time series file(s), variable: {variablename}")
             return None
