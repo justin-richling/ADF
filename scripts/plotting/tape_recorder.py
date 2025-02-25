@@ -45,11 +45,13 @@ def tape_recorder(adfobj):
     #Grab test case time series locs(s)
     #case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
     case_ts_locs = adfobj.ts_locs["test"]
-    if case_ts_locs is None:
-        print("\tNo time series locations found for any test cases")
-        case_ts_locs = [None]*len(test_case_names)
-        #return
-        #exit
+    base_ts_loc = adfobj.ts_locs["baseline"]
+    ts_locs = case_ts_locs + [base_ts_loc]
+    #if case_ts_locs is None:
+    #    print("\tNo time series locations found for any test cases")
+    #    case_ts_locs = [None]*len(test_case_names)
+    #    #return
+    #    #exit
     """else:
         for i,case_ts_loc in enumerate(case_ts_locs):
             if case_ts_loc is None:
@@ -77,7 +79,7 @@ def tape_recorder(adfobj):
     test_nicknames = adfobj.case_nicknames['test_nicknames']
 
     #print("hist_strs",hist_strs,"\n")
-    if not case_ts_locs:
+    if all(item is None for item in ts_locs):
         exitmsg = "\tWARNING: No time series files in any case directory."
         exitmsg += " No tape recorder plots will be made."
         print(exitmsg)
@@ -256,7 +258,7 @@ def tape_recorder(adfobj):
         #case_names = test_case_names + [data_name]
         
         #data_ts_loc = adfobj.get_baseline_info("cam_ts_loc")
-        data_ts_loc = adfobj.ts_locs["baseline"]
+        #data_ts_loc = adfobj.ts_locs["baseline"]
         #if data_ts_loc is None:
         #    print("\tNo time series location found for baseline case")
         #    case_ts_locs = case_ts_locs+[None]
@@ -277,8 +279,8 @@ def tape_recorder(adfobj):
         # Filter the list to include only strings that are exactly in the substrings list
         base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
         #hist_strs = case_hist_strs + base_hist_strs
-        if data_ts_loc:
-            ts_loc = Path(data_ts_loc)
+        if base_ts_loc:
+            ts_loc = Path(base_ts_loc)
             hist_str = base_hist_strs
             #print("ts_loc",ts_loc,"\n")
             #print("ts_loc",hist_str,"\n")

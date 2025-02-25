@@ -269,7 +269,7 @@ def amwg_table(adf):
                     print(errmsg)
                     continue
                 else:
-                    print(f"\t    INFO: User supplied climo files for {var}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+                    print(f"\t         - User supplied climo files for {var}, will make only global mean (no other stats).")
                     files = try_files
                     input_location = try_input_location
                     is_climo = True

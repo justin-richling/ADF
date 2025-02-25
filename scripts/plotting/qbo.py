@@ -40,10 +40,11 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     test_case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.ts_locs["test"]
-    if case_loc is None:
-        print("\tNo time series locations found for any test cases")
-        case_loc = []
+    case_ts_locs = adfobj.ts_locs["test"]
+    ts_locs = case_ts_locs + [adfobj.ts_locs["baseline"]]
+    #if case_loc is None:
+    #    print("\tNo time series locations found for any test cases")
+    #    case_loc = []
 
     # Gather obs data location
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
@@ -55,7 +56,7 @@ def qbo(adfobj):
     # Extract simulation years:
     start_years = adfobj.climo_yrs["syears"]
     end_years   = adfobj.climo_yrs["eyears"]
-    if not case_loc:
+    if all(item is None for item in ts_locs):
         exitmsg = "WARNING: No time series files in any case directory."
         exitmsg += " No QBO plots will be made."
         print(exitmsg)
@@ -142,8 +143,8 @@ def qbo(adfobj):
             ncases += 1
             case_names.append(base_name)
             casedat.append(ref_ts_data)
-        else:
-            print("No ts data")
+        #else:
+        #    print("No ts data")
 
     """#Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
