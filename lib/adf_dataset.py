@@ -103,10 +103,13 @@ class AdfData:
         #ts_locs = self.adf.get_cam_info("cam_ts_loc", required=True) # list of paths (could be multiple cases)
         ts_locs = self.adf.ts_locs["test"]
         caseindex = (self.case_names).index(case)
-        ts_loc = Path(ts_locs[caseindex])
-        ts_filenames = f'{case}.*.{field}.*nc'
-        ts_files = sorted(ts_loc.glob(ts_filenames))
-        return ts_files
+        if ts_locs[caseindex]:
+            ts_loc = Path(ts_locs[caseindex])
+            ts_filenames = f'{case}.*.{field}.*nc'
+            ts_files = sorted(ts_loc.glob(ts_filenames))
+            return ts_files
+        else:
+            return None
 
     # Reference case (baseline/obs)
     def get_ref_timeseries_file(self, field):
@@ -116,10 +119,13 @@ class AdfData:
             return None
         else:
             #ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
-            ts_loc = Path(self.adf.ts_locs["baseline"])
-            ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
-            ts_files = sorted(ts_loc.glob(ts_filenames))
-            return ts_files
+            if self.adf.ts_locs["baseline"]:
+                ts_loc = Path(self.adf.ts_locs["baseline"])
+                ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
+                ts_files = sorted(ts_loc.glob(ts_filenames))
+                return ts_files
+            else:
+                return None
 
     '''# NOT CURRENTLY USED ANYWHERE
     def load_timeseries_dataset(self, fils, syr, eyr):
@@ -205,8 +211,12 @@ class AdfData:
         #a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
         climo_locs = self.adf.climo_locs["test"]
         caseindex = (self.case_names).index(case) # the entry for specified case
-        model_cl_loc = Path(climo_locs[caseindex])
-        return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
+        if climo_locs[caseindex]:
+            model_cl_loc = Path(climo_locs[caseindex])
+            fils = sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
+            if fils:
+                return fils
+            return []
 
 
     def load_climo_da(self, case, variablename, syr, eyr):

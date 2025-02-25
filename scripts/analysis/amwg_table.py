@@ -259,7 +259,7 @@ def amwg_table(adf):
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not files:
                 # Try for climo files:
-                msg = f"\t    INFO: Time series files for variable '{var}' not found.  Checking on climo files."
+                msg = f"\t    INFO: Time series files for variable '{var}' in {case_name} not found.  Checking on climo files."
                 print(msg)
                 filenames = f'{case_name}_{var}_climo.nc'
                 try_input_location = Path(input_climo_locs[case_idx])
@@ -269,7 +269,7 @@ def amwg_table(adf):
                     print(errmsg)
                     continue
                 else:
-                    print(f"\t    INFO: User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+                    print(f"\t    INFO: User supplied climo files for {var}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
                     files = try_files
                     input_location = try_input_location
                     is_climo = True
