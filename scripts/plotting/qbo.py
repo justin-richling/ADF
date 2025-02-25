@@ -169,7 +169,7 @@ def qbo(adfobj):
     for i in range(0,ncases,1):
         has_dims = pf.validate_dims(casedat[i], ['lon'])
         if not has_dims['has_lon']:
-            print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_loc[i]}', cannot continue to plot.")
+            print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_ts_locs[i]}', cannot continue to plot.")
         else:
             casedatzm.append(casedat[i].mean("lon"))
     if len(casedatzm) == 0:
