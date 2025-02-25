@@ -284,6 +284,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
         }
 
     #Average time dimension over time bounds, if bounds exist:
+    #TODO: add check if this was an ADF generated file and if the time has already been fixed
     if 'time_bnds' in cam_ts_data:
         time = cam_ts_data['time']
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
@@ -298,7 +299,7 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
     #NOTE: This is in place in case of premade climo files to make sure it is grabbing the correct time slice
     actual_time_values = cam_ts_data.time.values
     attrs_dict["xarray_time_slice_values"] = f"{actual_time_values[0]}-{actual_time_values[-1]}"
-    msg = f"Checking to make sure dataarray is being sliced in the time dimension correctly: {actual_time_values}"
+    msg = f"Checking if data array is being sliced in the time dimension correctly: {actual_time_values}"
     #print(msg)
     adf.debug_log(f"create_climo_files: {msg}")
     #Set a global attribute with the actual time values
