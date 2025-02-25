@@ -109,7 +109,7 @@ class AdfData:
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
         else:
-            return None
+            return []
 
     # Reference case (baseline/obs)
     def get_ref_timeseries_file(self, field):
@@ -125,7 +125,7 @@ class AdfData:
                 ts_files = sorted(ts_loc.glob(ts_filenames))
                 return ts_files
             else:
-                return None
+                return []
 
     '''# NOT CURRENTLY USED ANYWHERE
     def load_timeseries_dataset(self, fils, syr, eyr):
@@ -335,8 +335,8 @@ class AdfData:
     # Load DataSet
     def load_dataset(self, fils):
         """Return xarray DataSet from file(s)"""
-        #if (len(fils) == 0):
-        if not fils:
+        if (len(fils) == 0):
+        #if not fils:
             warnings.warn("\t    WARNING: Input file list is empty.")
             return None
         elif (len(fils) > 1):
