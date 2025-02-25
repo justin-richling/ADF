@@ -123,8 +123,8 @@ def qbo(adfobj):
     ncases = 0
 
     # Loop over test case data
-    for i in range(0,len(case_loc),1): 
-        if case_loc[i]:
+    for i in range(0,len(case_ts_locs),1): 
+        if case_ts_locs[i]:
             cam_ts_data = adfds.load_timeseries_da(test_case_names[i], "U", start_years[i], end_years[i], adfobj=adfobj)
             #print("cam_ts_data",cam_ts_data)
             if isinstance(cam_ts_data, xr.DataArray):
