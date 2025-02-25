@@ -366,7 +366,7 @@ class AdfData:
             da = da.isel(time=tslice)
             #Retrieve the actual time values from the slice
             actual_time_values = da.time.values
-            msg = "Checking to make sure dataarray is being sliced in the time dimension correctly: ",actual_time_values
+            msg = "Checking if data array is being sliced in the time dimension correctly: ",actual_time_values
             if "adfobj" in kwargs:
                 kwargs["adfobj"].debug_log(msg)
         scale_factor = kwargs.get('scale_factor', 1)
