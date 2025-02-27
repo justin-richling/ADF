@@ -230,6 +230,14 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
         cam_ts_data['time'] = time
         cam_ts_data.assign_coords(time=time)
         cam_ts_data = xr.decode_cf(cam_ts_data)
+    elif 'time_bounds' in cam_ts_data:
+        time = cam_ts_data['time']
+        # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
+        time = xr.DataArray(cam_ts_data['time_bounds'].load().mean(dim='hist_interval').values, 
+                            dims=time.dims, attrs=time.attrs)
+        cam_ts_data['time'] = time
+        cam_ts_data.assign_coords(time=time)
+        cam_ts_data = xr.decode_cf(cam_ts_data)
     #Extract data subset using provided year bounds:
     tslice = get_time_slice_by_year(cam_ts_data.time, int(syr), int(eyr))
     cam_ts_data = cam_ts_data.isel(time=tslice)
