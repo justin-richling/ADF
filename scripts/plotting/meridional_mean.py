@@ -101,151 +101,221 @@ def meridional_mean(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
 
+    #Check if plots already exist and redo_plot boolean
+    #If redo_plot is false and file exists, keep track and attempt to skip calcs to
+    #speed up preformance a bit if re-running the ADF
+    zonal_skip = []
+    logp_zonal_skip = []
+
+    #Loop over model cases:
+    for case_idx, case_name in enumerate(adfobj.data.case_names):
+        #Set output plot location:
+        plot_loc = Path(plot_locations[case_idx])
+
+        #Check if plot output directory exists, and if not, then create it:
+        if not plot_loc.is_dir():
+            print(f"    {plot_loc} not found, making new directory")
+            plot_loc.mkdir(parents=True)
+        #End if
+
+        #Loop over the variables for each season
+        for var in var_list:
+            for s in seasons:
+                #Check zonal log-p:
+                plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name_log.is_file():
+                    logp_zonal_skip.append(plot_name_log)
+                    #Continue to next iteration:
+                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
+                                            plot_type="Zonal", category="Log-P")
+                    pass
+
+                elif (redo_plot) and plot_name_log.is_file():
+                    plot_name_log.unlink()
+                #End if
+                
+                #Check regular zonal
+                plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                # Check redo_plot. If set to True: remove old plot, if it already exists:
+                if (not redo_plot) and plot_name.is_file():
+                    zonal_skip.append(plot_name)
+                    #Add already-existing plot to website (if enabled):
+                    adfobj.add_website_data(plot_name, var, case_name, season=s,
+                                                        plot_type="Zonal")
+
+                    continue
+                elif (redo_plot) and plot_name.is_file():
+                    plot_name.unlink()
+                #End if
+            #End for (seasons)
+        #End for (variables)
+    #End for (cases)
+    #
+    # End redo plots check
+    #
+
+    #
+    # Setup Plotting
+    #
     #Loop over variables:
     for var in var_list:
         #Notify user of variable being plotted:
         print(f"\t - meridional mean plots for {var}")
 
-        if adfobj.compare_obs:
-            #Check if obs exist for the variable:
-            if var in var_obs_dict:
-                #Note: In the future these may all be lists, but for
-                #now just convert the target_list.
-                #Extract target file:
-                dclimo_loc = var_obs_dict[var]["obs_file"]
-                #Extract target list (eventually will be a list, for now need to convert):
-                data_list = [var_obs_dict[var]["obs_name"]]
-                #Extract target variable name:
-                data_var = var_obs_dict[var]["obs_var"]
-            else:
-                dmsg = f"No obs found for variable `{var}`, meridional mean plotting skipped."
-                adfobj.debug_log(dmsg)
-                continue
-            #End if
-        else:
-            #Set "data_var" for consistent use below:
-            data_var = var
-        #End if
+        if var not in adfobj.data.ref_var_nam:
+            dmsg = f"\t    WARNING: No reference data found for variable `{var}`, meridional mean plotting skipped."
+            adfobj.debug_log(dmsg)
+            print(dmsg)
+            continue
 
         # Check res for any variable specific options that need to be used BEFORE going to the plot:
         if var in res:
             vres = res[var]
             #If found then notify user, assuming debug log is enabled:
-            adfobj.debug_log(f"meridional_mean: Found variable defaults for {var}")
+            adfobj.debug_log(f"\t    INFO: meridional_mean: Found variable defaults for {var}")
 
         else:
             vres = {}
         #End if
 
-        #loop over different data sets to plot model against:
-        for data_src in data_list:
-            # load data (observational) comparison files
-            # (we should explore intake as an alternative to having this kind of repeated code):
-            if adfobj.compare_obs:
-                #For now, only grab one file (but convert to list for use below)
-                oclim_fils = [dclimo_loc]
-            else:
-                oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
-            #End if
-            oclim_ds = pf.load_dataset(oclim_fils)
+        # load reference data (observational or baseline)
+        if not adfobj.compare_obs:
+            base_name = adfobj.data.ref_case_label
+        else:
+            base_name = adfobj.data.ref_labels[var]
 
-            #Loop over model cases:
-            for case_idx, case_name in enumerate(case_names):
+        # Gather reference variable data
+        odata = adfobj.data.load_reference_regrid_da(base_name, var)
 
-                #Set case nickname:
-                case_nickname = test_nicknames[case_idx]
+        #Check if regridded file exists, if not skip zonal plot for this var
+        if odata is None:
+            dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, meridional mean plotting skipped."
+            adfobj.debug_log(dmsg)
+            continue
 
-                #Set output plot location:
-                plot_loc = Path(plot_locations[case_idx])
+        #Check meridional mean dimensions
+        #has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
+        has_lat_ref, has_lev_ref = pf.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
 
-                #Check if plot output directory exists, and if not, then create it:
-                if not plot_loc.is_dir():
-                    print(f"    {plot_loc} not found, making new directory")
-                    plot_loc.mkdir(parents=True)
+        # check if there is a lat dimension:
+        # if not, skip test cases and move to next variable
+        if not has_lat_ref:
+            print(
+                f"\t    WARNING: Variable {var} is missing a lat dimension for '{base_name}', cannot continue to plot."
+            )
+            continue
+        # End if
 
-                # load re-gridded model files:
-                mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
-                mclim_ds = pf.load_dataset(mclim_fils)
+        #Loop over model cases:
+        for case_idx, case_name in enumerate(adfobj.data.case_names):
 
-                # stop if data is invalid:
-                if (oclim_ds is None) or (mclim_ds is None):
-                    warnings.warn(f"invalid data, skipping meridional mean plot of {var}")
-                    continue
+            #Set case nickname:
+            case_nickname = adfobj.data.test_nicknames[case_idx]
 
-                #Extract variable of interest
-                odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
-                mdata = mclim_ds[var].squeeze()
+            #Set output plot location:
+            plot_loc = Path(plot_locations[case_idx])
 
-                # APPLY UNITS TRANSFORMATION IF SPECIFIED:
-                # NOTE: looks like our climo files don't have all their metadata
-                mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                # update units
-                mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
+            # load re-gridded model files:
+            mdata = adfobj.data.load_regrid_da(case_name, var)
 
-                # Do the same for the baseline case if need be:
-                if not adfobj.compare_obs:
-                    odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                    # update units
-                    odata.attrs['units'] = vres.get("new_unit", odata.attrs.get('units', 'none'))
-                # Or for observations
-                else:
-                    odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
-                    # Note: we are going to assume that the specification ensures the conversion makes the units the same.
-                    #       Doesn't make sense to add a different unit.
+            if mdata is None:
+                dmsg = f"\t    WARNING: No regridded test file for {case_name} for variable `{var}`, zonal mean plotting skipped."
+                adfobj.debug_log(dmsg)
+                continue
 
-                # determine whether it's 2D or 3D
-                # 3D triggers search for surface pressure
-                validate_lat_lev = pf.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
+            # determine whether it's 2D or 3D
+            # 3D triggers search for surface pressure
+            # check data dimensions:
+            #has_lat, has_lev = pf.zm_validate_dims(mdata)
+            has_lat, has_lev = pf.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
 
-                #Notify user of level dimension:
-                if validate_lat_lev['has_lev']:
-                    print(f"\t    INFO: {var} has lev dimension.")
-                    has_lev = True
-                else:
-                    has_lev = False
+            # check if there is a lat dimension:
+            if not has_lat:
+                print(
+                    f"\t    WARNING: Variable {var} is missing a lat dimension for '{case_name}', cannot continue to plot."
+                )
+                continue
+            # End if
 
+            #Check if reference file has vertical levels
+            #Notify user of level dimension:
+            if has_lev:
+                print(f"\t    INFO: {var} has lev dimension.")
+
+            #Check to make sure each case has vertical levels if one of the cases does
+            if (has_lev) and (not has_lev_ref):
+                print(f"\t    WARNING: expecting lev boolean for both case: {has_lev} and ref: {has_lev_ref}")
+                continue
+            if (has_lev_ref) and (not has_lev):
+                print(f"\t    WARNING: expecting lev boolean for both case: {has_lev} and ref: {has_lev_ref}")
+                continue
+
+            #
+            # Seasonal Averages
+            #
+
+            #Create new dictionaries:
+            mseasons = {}
+            oseasons = {}
+
+            #Loop over season dictionary:
+            for s in seasons:
+
+                # time to make plot; here we'd probably loop over whatever plots we want for this variable
+                # I'll just call this one "Zonal_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
+                # NOTE: Up to this point, nothing really differs from global_latlon_map,
+                #       so we could have made one script instead of two.
+                #       Merging would make overall timing better because looping twice will double I/O steps.
                 #
-                # Seasonal Averages
-                # Note: xarray can do seasonal averaging, but depends on having time accessor,
-                # which these prototype climo files don't.
-                #
 
-                #Create new dictionaries:
-                mseasons = {}
-                oseasons = {}
+                # difference: each entry should be (lat, lon) or (plev, lat, lon)
+                # dseasons[s] = mseasons[s]    oseasons[s]
+                # difference will be calculated in plot_zonal_mean_and_save;
+                # because we can let any pressure-level interpolation happen there
+                # This could be re-visited for efficiency or improved code structure.
 
-                #Loop over season dictionary:
-                for s in seasons:
-                    plot_name = plot_loc / f"{var}_{s}_Meridional_Mean.{plot_type}"
+                #Seasonal Averages
+                mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
+                oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
 
-                    # Check redo_plot. If set to True: remove old plot, if it already exists:
-                    if (not redo_plot) and plot_name.is_file():
-                        #Add already-existing plot to website (if enabled):
-                        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-                        adfobj.add_website_data(plot_name, var, case_name, season=s,
-                                                plot_type="Meridional")
-                        #Continue to next iteration:
-                        continue
-                    elif (redo_plot) and plot_name.is_file():
-                        plot_name.unlink()
+                #Set the file name
+                plot_name = plot_loc / f"{var}_{s}_Meridional_Mean.{plot_type}"
+                plot_name_log = None
 
-                    mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                    oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                if has_lev:
+                    #Set the file name for log-pressure plots
+                    plot_name_log = plot_loc / f"{var}_logp_{s}_Meridional_Mean.{plot_type}"
+                #End if
 
+                #Create plots
+                if plot_name not in zonal_skip:
 
                     #Create new plot:
-                    pf.plot_meridional_mean_and_save(plot_name, case_nickname, base_nickname,
-                                                [syear_cases[case_idx],eyear_cases[case_idx]],
-                                                [syear_baseline,eyear_baseline],
-                                                mseasons[s], oseasons[s], has_lev, latbounds=slice(-5,5), obs=obs, **vres)
+                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+                                                    [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                    [syear_baseline,eyear_baseline],
+                                                    mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
 
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_name, var, case_name, season=s,
-                                            plot_type="Meridional")
+                    adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Meridional")
+                #End if
 
-                #End for (seasons loop)
-            #End for (case names loop)
-        #End for (obs/baseline loop)
+                #Create log-pressure plots as well (if applicable)
+                if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
+
+                    pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
+                                                        [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                        [syear_baseline,eyear_baseline],
+                                                        mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
+                    
+                    #Add plot to website (if enabled):
+                    adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Meridional", category="Log-P")
+                #End if
+
+            #End for (seasons loop)
+        #End for (case names loop)
     #End for (variables loop)
 
     #Notify user that script has ended:
