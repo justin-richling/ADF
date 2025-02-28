@@ -51,7 +51,7 @@ def regrid_and_vert_interp(adf):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    overwrite_regrid_locs = adf.get_cam_info("cam_overwrite_regrid", required=True)
+    overwrite_regrid_locs = adf.get_cam_info("cam_overwrite_climo_regrid", required=True)
     test_output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
