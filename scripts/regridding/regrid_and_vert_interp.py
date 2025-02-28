@@ -51,7 +51,7 @@ def regrid_and_vert_interp(adf):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
+    overwrite_regrid_locs = adf.get_cam_info("cam_overwrite_regrid", required=True)
     test_output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
@@ -158,6 +158,8 @@ def regrid_and_vert_interp(adf):
             print(f"    {rgclimo_loc} not found, making new directory")
             rgclimo_loc.mkdir(parents=True)
         #End if
+
+        overwrite_regrid = overwrite_regrid_locs[case_idx]
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
