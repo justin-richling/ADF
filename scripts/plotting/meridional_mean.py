@@ -157,7 +157,7 @@ def meridional_mean(adfobj):
 
         #Check meridional mean dimensions
         #has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
-        has_lat_ref, has_lev_ref = pf.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
+        has_lat_ref, has_lev_ref = pf.validate_dims(odata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
 
         # check if there is a lat dimension:
         # if not, skip test cases and move to next variable
