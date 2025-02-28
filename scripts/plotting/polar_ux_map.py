@@ -101,7 +101,7 @@ def polar_ux_map(adfobj):
     """
 
     #Notify user that script has started:
-    print("\n  Generating lat/lon maps...")
+    print("\n  Generating unstructured polar maps...")
 
     #
     # Use ADF api to get all necessary information
