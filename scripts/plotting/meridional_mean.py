@@ -157,16 +157,14 @@ def meridional_mean(adfobj):
 
         #Check meridional mean dimensions
         #has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
-        has_lat_ref, has_lev_ref = pf.validate_dims(odata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
+        validate_lat_lev = pf.validate_dims(odata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
 
-        # check if there is a lat dimension:
-        # if not, skip test cases and move to next variable
-        if not has_lat_ref:
-            print(
-                f"\t    WARNING: Variable {var} is missing a lat dimension for '{base_name}', cannot continue to plot."
-            )
-            continue
-        # End if
+        #Notify user of level dimension:
+        if validate_lat_lev['has_lev']:
+            print(f"\t    INFO: {var} has lev dimension.")
+            has_lev = True
+        else:
+            has_lev = False
 
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
@@ -189,28 +187,16 @@ def meridional_mean(adfobj):
             # 3D triggers search for surface pressure
             # check data dimensions:
             #has_lat, has_lev = pf.zm_validate_dims(mdata)
-            has_lat, has_lev = pf.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
+            # determine whether it's 2D or 3D
+            # 3D triggers search for surface pressure
+            validate_lat_lev = pf.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
 
-            # check if there is a lat dimension:
-            if not has_lat:
-                print(
-                    f"\t    WARNING: Variable {var} is missing a lat dimension for '{case_name}', cannot continue to plot."
-                )
-                continue
-            # End if
-
-            #Check if reference file has vertical levels
             #Notify user of level dimension:
-            if has_lev:
+            if validate_lat_lev['has_lev']:
                 print(f"\t    INFO: {var} has lev dimension.")
-
-            #Check to make sure each case has vertical levels if one of the cases does
-            if (has_lev) and (not has_lev_ref):
-                print(f"\t    WARNING: expecting lev boolean for both case: {has_lev} and ref: {has_lev_ref}")
-                continue
-            if (has_lev_ref) and (not has_lev):
-                print(f"\t    WARNING: expecting lev boolean for both case: {has_lev} and ref: {has_lev_ref}")
-                continue
+                has_lev = True
+            else:
+                has_lev = False
 
             #
             # Seasonal Averages
