@@ -232,7 +232,7 @@ def meridional_mean(adfobj):
 
                 # difference: each entry should be (lat, lon) or (plev, lat, lon)
                 # dseasons[s] = mseasons[s]    oseasons[s]
-                # difference will be calculated in plot_zonal_mean_and_save;
+                # difference will be calculated in plot_meridional_mean_and_save;
                 # because we can let any pressure-level interpolation happen there
                 # This could be re-visited for efficiency or improved code structure.
 
@@ -253,7 +253,7 @@ def meridional_mean(adfobj):
                 if plot_name not in zonal_skip:
 
                     #Create new plot:
-                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+                    pf.plot_meridional_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
                                                     [syear_baseline,eyear_baseline],
                                                     mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
@@ -265,7 +265,7 @@ def meridional_mean(adfobj):
                 #Create log-pressure plots as well (if applicable)
                 if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
 
-                    pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
+                    pf.plot_meridional_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
                                                         [syear_baseline,eyear_baseline],
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
