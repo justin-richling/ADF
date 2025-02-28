@@ -41,7 +41,7 @@ def regrid_climo_wrapper(adf):
     #Extract needed quantities from ADF object:
     #-----------------------------------------
     overwrite_regrid = adf.get_cam_info("cam_overwrite_climo_regrid", required=True)
-    output_loc       = adf.get_basic_info("cam_climo_regrid_loc", required=True)
+    output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
 
@@ -105,16 +105,17 @@ def regrid_climo_wrapper(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgclimo_loc = Path(output_loc)
+    #rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
 
+    """rgclimo_loc = Path(output_loc)
     #Check if re-gridded directory exists, and if not, then create it:
     if not rgclimo_loc.is_dir():
         print(f"    {rgclimo_loc} not found, making new directory")
         rgclimo_loc.mkdir(parents=True)
-    #End if
+    #End if"""
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
@@ -123,6 +124,13 @@ def regrid_climo_wrapper(adf):
         print(f"\t Regridding case '{case_name}' :")
 
         overwrite_mregrid = overwrite_regrid[case_idx]
+
+        rgclimo_loc = Path(output_loc[case_idx])
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not rgclimo_loc.is_dir():
+            print(f"    {rgclimo_loc} not found, making new directory")
+            rgclimo_loc.mkdir(parents=True)
+        #End if
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
