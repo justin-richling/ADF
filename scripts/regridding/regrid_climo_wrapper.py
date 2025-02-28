@@ -40,7 +40,7 @@ def regrid_climo_wrapper(adf):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    overwrite_regrid = adf.get_basic_info("cam_overwrite_climo_regrid", required=True)
+    overwrite_regrid = adf.get_cam_info("cam_overwrite_climo_regrid", required=True)
     output_loc       = adf.get_basic_info("cam_climo_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
@@ -91,6 +91,7 @@ def regrid_climo_wrapper(adf):
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
+        overwrite_tregrid = adf.get_baseline_info("cam_overwrite_climo_regrid", required=True)
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
@@ -120,6 +121,8 @@ def regrid_climo_wrapper(adf):
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
+
+        overwrite_mregrid = overwrite_regrid[case_idx]
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
@@ -153,6 +156,10 @@ def regrid_climo_wrapper(adf):
             #loop over regridding targets:
             for target in target_list:
 
+                #Set interpolated baseline file name:
+                #interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
+
+
                 #Write to debug log if enabled:
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
@@ -160,7 +167,7 @@ def regrid_climo_wrapper(adf):
                 regridded_file_loc = rgclimo_loc / f'{case_name}_{var}_regridded.nc'
 
                 #Check if re-gridded file already exists and over-writing is allowed:
-                if regridded_file_loc.is_file() and overwrite_regrid:
+                if regridded_file_loc.is_file() and overwrite_mregrid:
                     #If so, then delete current file:
                     regridded_file_loc.unlink()
                 #End if
