@@ -256,7 +256,7 @@ def meridional_mean(adfobj):
                     pf.plot_meridional_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
                                                     [syear_baseline,eyear_baseline],
-                                                    mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
+                                                    mseasons[s], oseasons[s], has_lev, log_p=False, latbounds=slice(-5,5), obs=adfobj.compare_obs, **vres)
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Meridional")
@@ -268,7 +268,7 @@ def meridional_mean(adfobj):
                     pf.plot_meridional_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
                                                         [syear_baseline,eyear_baseline],
-                                                        mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
+                                                        mseasons[s], oseasons[s], has_lev, log_p=True, latbounds=slice(-5,5), obs=adfobj.compare_obs, **vres)
                     
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Meridional", category="Log-P")
