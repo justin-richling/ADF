@@ -82,14 +82,14 @@ def meridional_mean(adfobj):
         for var in var_list:
             for s in seasons:
                 #Check zonal log-p:
-                plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
+                plot_name_log = plot_loc / f"{var}_{s}_Meridional_logp_Mean.{plot_type}"
 
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 if (not redo_plot) and plot_name_log.is_file():
                     logp_zonal_skip.append(plot_name_log)
                     #Continue to next iteration:
                     adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
-                                            plot_type="Zonal", category="Log-P")
+                                            plot_type="Meridional", category="Log-P")
                     pass
 
                 elif (redo_plot) and plot_name_log.is_file():
@@ -97,13 +97,13 @@ def meridional_mean(adfobj):
                 #End if
                 
                 #Check regular zonal
-                plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
+                plot_name = plot_loc / f"{var}_{s}_Meridional_Mean.{plot_type}"
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 if (not redo_plot) and plot_name.is_file():
                     zonal_skip.append(plot_name)
                     #Add already-existing plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s,
-                                                        plot_type="Zonal")
+                                                        plot_type="Meridional")
 
                     continue
                 elif (redo_plot) and plot_name.is_file():
