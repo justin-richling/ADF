@@ -345,7 +345,7 @@ def polar_map(adfobj):
 
                             #Loop over season dictionary:
                             for s in seasons:
-                                print("\AHHHH",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
+
                                 mseasons[s] = (pf.seasonal_mean(mdata, season=s, is_climo=True)).sel(lev=pres)
                                 oseasons[s] = (pf.seasonal_mean(odata, season=s, is_climo=True)).sel(lev=pres)
                                 # difference: each entry should be (lat, lon)
@@ -361,7 +361,7 @@ def polar_map(adfobj):
 
                                 # make plots: northern and southern hemisphere separately:
                                 for hemi_type in ["NHPolar", "SHPolar"]:
-
+                                    print("\AHHHH",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
                                     #Create plot name and path:
                                     plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
 
