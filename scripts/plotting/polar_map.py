@@ -326,7 +326,6 @@ def polar_map(adfobj):
 
                         #Loop over pressure levels:
                         for pres in pres_levs:
-                            print("\AHHHH",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
 
                             #Check that the user-requested pressure level
                             #exists in the model data, which should already
@@ -346,6 +345,7 @@ def polar_map(adfobj):
 
                             #Loop over season dictionary:
                             for s in seasons:
+                                print("\AHHHH",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
                                 mseasons[s] = (pf.seasonal_mean(mdata, season=s, is_climo=True)).sel(lev=pres)
                                 oseasons[s] = (pf.seasonal_mean(odata, season=s, is_climo=True)).sel(lev=pres)
                                 # difference: each entry should be (lat, lon)
