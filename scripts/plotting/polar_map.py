@@ -253,7 +253,7 @@ def polar_map(adfobj):
 
                             # make plots: northern and southern hemisphere separately:
                             for hemi_type in ["NHPolar", "SHPolar"]:
-
+                                print("AHH",f"season: {s}",f"hemi: {hemi_type}")
                                 #Create plot name and path:
                                 plot_name = plot_loc / f"{var}_{s}_{hemi_type}_Mean.{plot_type}"
 
@@ -289,7 +289,7 @@ def polar_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], pseasons[s], hemisphere=hemi, obs=obs, **vres)
-
+                                    print("\nAFTER",f"season: {s}",f"hemi: {hemi_type}")
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
                                                             season=s, plot_type=hemi_type)
@@ -326,6 +326,7 @@ def polar_map(adfobj):
 
                         #Loop over pressure levels:
                         for pres in pres_levs:
+                            print("\AHHHH",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
 
                             #Check that the user-requested pressure level
                             #exists in the model data, which should already
@@ -397,7 +398,7 @@ def polar_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], pseasons[s], hemisphere=hemi, obs=obs, **vres)
-
+                                        print("\nAHHHHHFTER",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
                                                                 case_name, category=web_category,
