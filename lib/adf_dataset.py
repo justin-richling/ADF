@@ -337,7 +337,8 @@ class AdfData:
     # Load DataSet
     def load_dataset(self, fils):
         """Return xarray DataSet from file(s)"""
-        if (len(fils) == 0):
+        #if (len(fils) == 0):
+        if not fils:
             warnings.warn("\t    WARNING: Input file list is empty.")
             return None
         elif (len(fils) > 1):
