@@ -83,7 +83,7 @@ TSA:    # 2m air temperature
 
 PREC:   # RAIN + SNOW
   category: "Atmosphere"
-  colormap: "managua"
+  colormap: "coolwarm"
   derivable_from: ["RAIN","SNOW"]
   scale_factor: 86400
   add_offset: 0
@@ -134,7 +134,7 @@ TREFMNAV: # daily minimum of average 2m temperature
 
 TREFMXAV: # daily maximum of average 2m temperature
   category: "Atmosphere"
-  colormap: "cool warm"
+  colormap: "coolwarm"
   contour_levels_range: [250, 310, 10]
 
 
