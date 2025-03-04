@@ -361,7 +361,7 @@ def polar_map(adfobj):
 
                                 # make plots: northern and southern hemisphere separately:
                                 for hemi_type in ["NHPolar", "SHPolar"]:
-                                    print("\AHHHH",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
+                                    print("AHHHH",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
                                     #Create plot name and path:
                                     plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
 
@@ -398,7 +398,7 @@ def polar_map(adfobj):
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], pseasons[s], hemisphere=hemi, obs=obs, **vres)
-                                        print("\nAHHHHHFTER",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}")
+                                        print("AHHHHHFTER",f"season: {s}",f"hemi: {hemi_type}",f"press lev: {pres}\n")
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
                                                                 case_name, category=web_category,
