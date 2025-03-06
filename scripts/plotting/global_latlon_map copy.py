@@ -188,7 +188,6 @@ def global_latlon_map(adfobj):
         o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
         if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
             print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
-            #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
             continue
 
         #Loop over model cases:
