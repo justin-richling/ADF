@@ -269,10 +269,10 @@ class AdfInfo(AdfConfig):
                 #ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
                 base_ds = xr.open_dataset(file_list[0], decode_times=True)
                 print("\n\n",base_ds,"\n\n")
-                if 'ncols' in base_ds:
+                if 'ncols' in base_ds.dims:
                     print('Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
-                elif 'lndgrid' in base_ds:
+                elif 'lndgrid' in base_ds.dims:
                     print('Looks like this is a land unstructured grid, yeah')
                     unstruct = True
                 else:
