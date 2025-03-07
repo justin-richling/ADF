@@ -234,6 +234,7 @@ def global_latlon_map(adfobj):
 
 
             unstruct_case = unstruct_cases[case_idx]
+            print("unstruct_case",unstruct_case)
             if unstruct_case == False:
                 mdata = adfobj.data.load_regrid_da(case_name, var)
 
