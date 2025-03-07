@@ -271,7 +271,7 @@ class AdfInfo(AdfConfig):
                 if 'ncols' in base_ds:
                     print('Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
-                if 'lndgrid' in base_ds:
+                elif 'lndgrid' in base_ds:
                     print('Looks like this is a land unstructured grid, yeah')
                     unstruct = True
                 else:
