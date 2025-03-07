@@ -127,6 +127,7 @@ def global_latlon_map(adfobj):
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
     comp = adfobj.model_component
+    unstructured = False
     #-----------------------------------------
 
     #Determine if user wants to plot 3-D variables on
