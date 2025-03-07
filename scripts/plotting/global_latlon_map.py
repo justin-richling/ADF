@@ -178,6 +178,7 @@ def global_latlon_map(adfobj):
                 base_name = adfobj.data.ref_labels[var]
 
         unstruct_base = adfobj.unstructs['unstruct_base']
+        print("unstruct_base",unstruct_base)
         # Gather reference variable data
         if unstruct_base == False:
             odata = adfobj.data.load_reference_regrid_da(base_name, var)
