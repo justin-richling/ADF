@@ -231,7 +231,7 @@ class AdfData:
 
     def load_reference_climo_dataset(self, case, field):
         """Return a data set to be used as reference (aka baseline) for variable field."""
-        fils = self.get_reference_climo_file(self, field)
+        fils = self.get_reference_climo_file(field)
         if not fils:
             warnings.warn(f"WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
             return None
