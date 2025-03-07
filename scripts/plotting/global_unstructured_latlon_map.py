@@ -218,6 +218,9 @@ def global_unstructured_latlon_map(adfobj):
             mdata = adfobj.data.load_climo_da(case_name, var)
             #odata.attrs = mdata.attrs # copy attributes back to base case
 
+            # calculate weights
+            wts = area * landfrac / (area * landfrac).sum()
+
             #Skip this variable/case if the climo file doesn't exist:
             if mdata is None:
                 dmsg = f"No climo file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
@@ -272,8 +275,8 @@ def global_unstructured_latlon_map(adfobj):
                     # percent change
                     pseasons[s] = (mseasons[s] - oseasons[s]) / np.abs(oseasons[s]) * 100.0 #relative change
 
-                    # calculate weights
-                    wts = area * landfrac / (area * landfrac).sum()
+                    ## calculate weights
+                    #wts = area * landfrac / (area * landfrac).sum()
 
                     pf.plot_unstructured_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                       [syear_cases[case_idx],eyear_cases[case_idx]],

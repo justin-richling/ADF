@@ -258,6 +258,27 @@ class AdfInfo(AdfConfig):
                 print(f"\tChecking history files in '{starting_location}'")
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
 
+
+                """ #Create "Path" objects:
+                input_location  = Path(input_ts_loc)
+
+                #Check that time series input directory actually exists:
+                if not input_location.is_dir():
+                    errmsg = f"\t ERROR: Time series directory '{input_ts_loc}' not found.  Script is exiting."
+                    raise AdfError(errmsg)"""
+                #ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
+                base_ds = xr.open_dataset(file_list[0], decode_times=True)
+                if 'ncols' in base_ds:
+                    print('Looks like this is an atmosphere unstructured grid, yeah')
+                    unstruct = True
+                if 'lndgrid' in base_ds:
+                    print('Looks like this is a land unstructured grid, yeah')
+                    unstruct = True
+                else:
+                    print('Looks like this is a structured lat/lon grid?')
+                    unstruct = False
+                self.__unstruct_base = unstruct
+
                 #Check if the history file location exists
                 if not starting_location.is_dir():
                     msg = "Checking history file location:\n"
@@ -398,6 +419,7 @@ class AdfInfo(AdfConfig):
         #Loop over cases:
         syears_fixed = []
         eyears_fixed = []
+        unstructs = []
         for case_idx, case_name in enumerate(case_names):
 
             syear = syears[case_idx]
@@ -452,6 +474,17 @@ class AdfInfo(AdfConfig):
                 print(f"\tChecking history files in '{starting_location}'")
 
                 file_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
+                case_ds = xr.open_dataset(file_list[0], decode_times=True)
+                if 'ncols' in case_ds:
+                    print('Looks like this is an atmosphere unstructured grid, yeah')
+                    unstruct = True
+                if 'lndgrid' in case_ds:
+                    print('Looks like this is a land unstructured grid, yeah')
+                    unstruct = True
+                else:
+                    print('Looks like this is a structured lat/lon grid?')
+                    unstruct = False
+                unstructs.append(unstruct)
 
                 #Check if the history file location exists
                 if not starting_location.is_dir():
@@ -548,6 +581,8 @@ class AdfInfo(AdfConfig):
 
         self.__syears = syears_fixed
         self.__eyears = eyears_fixed
+
+        self.__unstruct_test = unstructs
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
@@ -695,6 +730,20 @@ class AdfInfo(AdfConfig):
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable:
         return copy.copy(self.__plot_location)
+
+
+    # Create property needed to return the case nicknames to user:
+    @property
+    def unstructs(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        unstruct_tests = copy.copy(self.__unstruct_test)
+        unstruct_base = self.__unstruct_base
+
+        return {"unstruct_tests":unstruct_tests,"unstruct_base":unstruct_base}
+
 
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
