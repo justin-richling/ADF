@@ -57,6 +57,7 @@ def regrid_and_vert_interp(adf):
     var_defaults     = adf.variable_defaults
 
     comp = adf.model_component
+    print("comp",comp)
     if comp == "atm":
         spec_vars = ["PMID", "OCNFRAC", "LANDFRAC"]
     if comp == "lnd":
