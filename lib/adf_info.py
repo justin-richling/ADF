@@ -268,6 +268,7 @@ class AdfInfo(AdfConfig):
                     raise AdfError(errmsg)"""
                 #ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
                 base_ds = xr.open_dataset(file_list[0], decode_times=True)
+                print("\n\n",base_ds,"\n\n")
                 if 'ncols' in base_ds:
                     print('Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
