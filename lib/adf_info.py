@@ -711,7 +711,7 @@ class AdfInfo(AdfConfig):
     @property
     def model_component(self):
         """Return the test case and baseline nicknames to the user if requested."""
-        return {"model_component":self.__model_component}
+        return self.__model_component
 
 
     # Create property needed to return "diag_var_list" list to user:
