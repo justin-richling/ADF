@@ -1095,7 +1095,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     pct = pct.where(np.isfinite(pct), np.nan)
     pct = pct.fillna(0.0)
 
-    if hemisphere.upper() == "NH":
+    if (hemisphere.upper() == "NH") or (hemisphere == "Arctic"):
         proj = ccrs.NorthPolarStereo()
     elif hemisphere.upper() == "SH":
         proj = ccrs.SouthPolarStereo()
@@ -1103,7 +1103,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         raise AdfError(f'[make_polar_plot] hemisphere not specified, must be NH or SH; hemisphere set as {hemisphere}')
 
     if domain is None:
-        if hemisphere.upper() == "NH":
+        if (hemisphere.upper() == "NH") or (hemisphere == "Arctic"):
             domain = [-180, 180, 45, 90]
         else:
             domain = [-180, 180, -90, -45]
