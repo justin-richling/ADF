@@ -273,7 +273,7 @@ def global_latlon_map(adfobj):
                 # calculate weights
                 wgt = area * landfrac / (area * landfrac).sum()
                 print("\n\n",len(wgt_base.n_face),"\n\n")
-                if wgt == wgt_base:
+                if len(wgt.n_face) == len(wgt_base.n_face):
                     vres["wgt"] = wgt
                 else:
                     print("The weights are different between test and baseline. Won't continue, eh.")
