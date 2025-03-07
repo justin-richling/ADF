@@ -197,6 +197,12 @@ class AdfInfo(AdfConfig):
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
+            if "cam" in baseline_hist_str:
+                base_comp = "atm"
+            if "clm" in baseline_hist_str:
+                base_comp = "lnd"
+
+            self.__base_comp = base_comp
 
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
@@ -465,6 +471,13 @@ class AdfInfo(AdfConfig):
 
             #Check if history file path exists:
             hist_str_case = hist_str[case_idx]
+            case_comps = []
+            if "cam" in hist_str_case:
+                #case_comp = "atm"
+                case_comps.append("atm")
+            if "clm" in hist_str_case:
+                #case_comp = "lnd"
+                case_comps.append("lnd")
             if any(cam_hist_locs):
                 #Grab first possible hist string, just looking for years of run
                 hist_str = hist_str_case[0]
@@ -583,6 +596,7 @@ class AdfInfo(AdfConfig):
         self.__eyears = eyears_fixed
 
         self.__unstruct_test = unstructs
+        self.__case_comps = case_comps
 
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
@@ -743,6 +757,19 @@ class AdfInfo(AdfConfig):
         unstruct_base = self.__unstruct_base
 
         return {"unstruct_tests":unstruct_tests,"unstruct_base":unstruct_base}
+
+
+    # Create property needed to return the case nicknames to user:
+    @property
+    def model_component(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        comp_tests = copy.copy(self.__case_comps)
+        comp_base = self.__base_comp
+
+        return {"comp_tests":comp_tests,"comp_base":comp_base}
 
 
     # Create property needed to return the climo start (syear) and end (eyear) years to user:

@@ -92,6 +92,11 @@ def regrid_climo_wrapper(adf):
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
         overwrite_tregrid = adf.get_baseline_info("cam_overwrite_climo_regrid", required=True)
+        trgclimo_loc = Path(adf.get_baseline_info("cam_climo_regrid_loc", required=True))
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not trgclimo_loc.is_dir():
+            print(f"    {trgclimo_loc} not found, making new directory")
+            trgclimo_loc.mkdir(parents=True)
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
@@ -105,17 +110,10 @@ def regrid_climo_wrapper(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    #rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
 
-    """rgclimo_loc = Path(output_loc)
-    #Check if re-gridded directory exists, and if not, then create it:
-    if not rgclimo_loc.is_dir():
-        print(f"    {rgclimo_loc} not found, making new directory")
-        rgclimo_loc.mkdir(parents=True)
-    #End if"""
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
@@ -123,14 +121,14 @@ def regrid_climo_wrapper(adf):
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
 
-        overwrite_mregrid = overwrite_regrid[case_idx]
-
         rgclimo_loc = Path(output_loc[case_idx])
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
             print(f"    {rgclimo_loc} not found, making new directory")
             rgclimo_loc.mkdir(parents=True)
         #End if
+
+        overwrite_mregrid = overwrite_regrid[case_idx]
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
@@ -163,10 +161,6 @@ def regrid_climo_wrapper(adf):
 
             #loop over regridding targets:
             for target in target_list:
-
-                #Set interpolated baseline file name:
-                #interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
-
 
                 #Write to debug log if enabled:
                 adf.debug_log(f"regrid_example: regrid target = {target}")
@@ -277,8 +271,74 @@ def regrid_climo_wrapper(adf):
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
+                    #Set interpolated baseline file name:
+                    interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
+
+                    if not adf.compare_obs and not interp_bl_file.is_file():
+
+                        
+                        #Generate vertically-interpolated baseline dataset:
+                        #tgdata = _regrid_and_interpolate_levs(tclim_ds, var,
+                        #                                             **regrid_kwargs)
+
+                        #Perform regridding of variable:
+                        tgdata_interp = _regrid(mclim_ds, var,
+                                                regrid_dataset=tclim_ds,
+                                                **regrid_kwargs)
+
+                        if tgdata_interp is None:
+                            #Something went wrong during interpolation, so just cycle through
+                            #for now:
+                            continue
+                        #End if
+
+                        #If the variable is land fraction, then save the dataset for use later:
+                        if var == 'LANDFRAC':
+                            lnd_frc_ds = tgdata_interp
+                        #End if
+
+                        if 'mask' in var_default_dict:
+                            if var_default_dict['mask'].lower() == 'land':
+                                #Check if the land fraction has already been regridded
+                                #and saved:
+                                if lnd_frc_ds:
+                                    lfrac = lnd_frc_ds['LANDFRAC']
+                                    # set the bounds of regridded lndfrac to 0 to 1
+                                    lfrac = xr.where(lfrac>1,1,lfrac)
+                                    lfrac = xr.where(lfrac<0,0,lfrac)
+
+                                    # apply land fraction mask to variable
+                                    rgdata_interp['LANDFRAC'] = lfrac
+                                    var_tmp = rgdata_interp[var]
+                                    var_tmp = pf.mask_land(var_tmp,lfrac)
+                                    rgdata_interp[var] = var_tmp
+                                else:
+                                    print(f"LANDFRAC not found, unable to apply mask to '{var}'")
+                                #End if
+                            else:
+                                #Currently only a land mask is supported, so print warning here:
+                                wmsg = "Currently the only variable mask option is 'land',"
+                                wmsg += f"not '{var_default_dict['mask'].lower()}'"
+                                print(wmsg)
+                            #End if
+                        #End if
+
+                        # Convert the list to a string (join with commas or another separator)
+                        climatology_files_str = [str(path) for path in tclim_fils]
+                        climatology_files_str = ', '.join(climatology_files_str)
+                        # Create a dictionary of attributes
+                        base_attrs_dict = {
+                            "adf_user": adf.user,
+                            "climo_yrs": f"{case_name}: {syear}-{eyear}; {base_climo_yrs_attr}",
+                            "climatology_files": climatology_files_str,
+                        }
+                        tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
+
+                        #Write interpolated baseline climatology to file:
+                        save_to_nc(tgdata_interp, interp_bl_file)
+                    #End if
                 else:
-                    print("\t Regridded file already exists, so skipping...")
+                    print("\t    INFO: Regridded file already exists, so skipping...")
                 #End if (file check)
             #End do (target list)
         #End do (variable list)

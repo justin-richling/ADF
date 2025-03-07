@@ -56,6 +56,12 @@ def regrid_and_vert_interp(adf):
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
 
+    comp = adf.model_component
+    if comp == "atm":
+        spec_vars = ["PMID", "OCNFRAC", "LANDFRAC"]
+    if comp == "lnd":
+        spec_vars = ["LANDFRAC"]
+
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
@@ -66,7 +72,7 @@ def regrid_and_vert_interp(adf):
 
     #Check if mid-level pressure, ocean fraction or land fraction exist
     #in the variable list:
-    for var in ["PMID", "OCNFRAC", "LANDFRAC"]:
+    for var in spec_vars:
         if var in var_list:
             #If so, then move them to the front of variable list so
             #that they can be used to mask or vertically interpolate
@@ -79,8 +85,8 @@ def regrid_and_vert_interp(adf):
 
     #Create new variables that potentially stores the re-gridded
     #ocean/land fraction dataset:
-    ocn_frc_ds = None
-    tgt_ocn_frc_ds = None
+    frc_ds = None
+    tgt_frc_ds = None
 
     #Check if surface pressure exists in variable list:
     if "PS" in var_list:
@@ -121,7 +127,6 @@ def regrid_and_vert_interp(adf):
             trgclimo_loc.mkdir(parents=True)
         #End if
     #End if
-    #base_output_loc       = adf.get_baseline_info("cam_climo_regrid_loc", required=True)
 
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adf.climo_yrs["syear_baseline"]
@@ -134,17 +139,10 @@ def regrid_and_vert_interp(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    #rgclimo_loc = Path(test_output_loc)
-
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
 
-    ##Check if re-gridded directory exists, and if not, then create it:
-    #if not rgclimo_loc.is_dir():
-    #    print(f"    {rgclimo_loc} not found, making new directory")
-    #    rgclimo_loc.mkdir(parents=True)
-    ##End if
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
@@ -159,13 +157,13 @@ def regrid_and_vert_interp(adf):
             rgclimo_loc.mkdir(parents=True)
         #End if
 
-        overwrite_regrid = overwrite_regrid_locs[case_idx]
+        overwrite_mregrid = overwrite_regrid_locs[case_idx]
 
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
 
         #Create empty dictionaries which store the locations of regridded surface
-        #pressure and mid-level pressure fields:
+        #pressure and mid-level pressure fields if needed:
         ps_loc_dict = {}
         pmid_loc_dict = {}
 
@@ -204,15 +202,16 @@ def regrid_and_vert_interp(adf):
                 #Determine regridded variable file name:
                 regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
 
-                #If surface or mid-level pressure, then save for potential use by other variables:
-                if var == "PS":
-                    ps_loc_dict[target] = regridded_file_loc
-                elif var == "PMID":
-                    pmid_loc_dict[target] = regridded_file_loc
-                #End if
+                if comp == "atm":
+                    #If surface or mid-level pressure, then save for potential use by other variables:
+                    if var == "PS":
+                        ps_loc_dict[target] = regridded_file_loc
+                    elif var == "PMID":
+                        pmid_loc_dict[target] = regridded_file_loc
+                    #End if
 
                 #Check if re-gridded file already exists and over-writing is allowed:
-                if regridded_file_loc.is_file() and overwrite_regrid:
+                if regridded_file_loc.is_file() and overwrite_mregrid:
                     #If so, then delete current file:
                     regridded_file_loc.unlink()
                 #End if
@@ -263,51 +262,63 @@ def regrid_and_vert_interp(adf):
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
 
-                    #Check if target in relevant pressure variable dictionaries:
-                    if target in ps_loc_dict:
-                        regrid_kwargs.update({'ps_file': ps_loc_dict[target]})
-                    #End if
-                    if target in pmid_loc_dict:
-                        regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
-                    #End if
+                    if comp == "atm":
+                        #Check if target in relevant pressure variable dictionaries:
+                        if target in ps_loc_dict:
+                            regrid_kwargs.update({'ps_file': ps_loc_dict[target]})
+                        #End if
+                        if target in pmid_loc_dict:
+                            regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
+                        #End if
 
-                    #Perform regridding and interpolation of variable:
-                    rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
+                        #Perform regridding and interpolation of variable:
+                        rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
+                    if comp == "lnd":
+                        #Perform regridding of variable:
+                        rgdata_interp = _regrid(mclim_ds, var,
+                                            regrid_dataset=tclim_ds,
+                                            **regrid_kwargs)
+
 
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
-
+                    if comp == "atm":
+                        mask_var = "OCNFRAC"
+                        mask_name = "ocean"
+                    if comp == "lnd":
+                        mask_var = "LANDFRAC"
+                        mask_name = "land"
                     if 'mask' in var_default_dict:
-                        if var_default_dict['mask'].lower() == 'ocean':
+                        if var_default_dict['mask'].lower() == mask_name:
                             #Check if the ocean fraction has already been regridded
                             #and saved:
-                            if ocn_frc_ds:
-                                ofrac = ocn_frc_ds['OCNFRAC']
+                            if frc_ds:
+                                frac = frc_ds[mask_var]
                                 # set the bounds of regridded ocnfrac to 0 to 1
-                                ofrac = xr.where(ofrac>1,1,ofrac)
-                                ofrac = xr.where(ofrac<0,0,ofrac)
+                                frac = xr.where(frac>1,1,frac)
+                                frac = xr.where(frac<0,0,frac)
 
                                 # apply ocean fraction mask to variable
-                                rgdata_interp['OCNFRAC'] = ofrac
+                                rgdata_interp[mask_var] = frac
                                 var_tmp = rgdata_interp[var]
-                                var_tmp = pf.mask_land_or_ocean(var_tmp,ofrac)
+                                var_tmp = pf.mask_land_or_ocean(var_tmp,frac)
                                 rgdata_interp[var] = var_tmp
                             else:
-                                print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
+                                print(f"\t    WARNING: {mask_var} not found, unable to apply mask to '{var}'")
                             #End if
                         else:
-                            #Currently only an ocean mask is supported, so print warning here:
-                            wmsg = "\t    WARNING: Currently the only variable mask option is 'ocean',"
+                            #Currently only ocean or land masks are supported, so print warning here:
+                            wmsg = f"\t    WARNING: Currently the only variable mask option is '{mask_name}',"
                             wmsg += f"not '{var_default_dict['mask'].lower()}'"
                             print(wmsg)
                         #End if
                     #End if
 
-                    #If the variable is ocean fraction, then save the dataset for use later:
-                    if var == 'OCNFRAC':
-                        ocn_frc_ds = rgdata_interp
+                    #If the variable is the mask fraction, then save the dataset for use later:
+                    if var == mask_var:
+                        frc_ds = rgdata_interp
                     #End if
 
                     #Finally, write re-gridded data to output file:
@@ -330,27 +341,33 @@ def regrid_and_vert_interp(adf):
                     interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
+                        if comp == "atm":
+                            #Look for a baseline climo file for surface pressure (PS):
+                            bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
 
-                        #Look for a baseline climo file for surface pressure (PS):
-                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
+                            #Also look for a baseline climo file for mid-level pressure (PMID):
+                            bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
 
-                        #Also look for a baseline climo file for mid-level pressure (PMID):
-                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
+                            #Create new keyword arguments dictionary for regridding function:
+                            regrid_kwargs = {}
 
-                        #Create new keyword arguments dictionary for regridding function:
-                        regrid_kwargs = {}
+                            #Check if PS and PMID files exist:
+                            if bl_ps_fil.is_file():
+                                regrid_kwargs.update({'ps_file': bl_ps_fil})
+                            #End if
+                            if bl_pmid_fil.is_file():
+                                regrid_kwargs.update({'pmid_file': bl_pmid_fil})
+                            #End if
 
-                        #Check if PS and PMID files exist:
-                        if bl_ps_fil.is_file():
-                            regrid_kwargs.update({'ps_file': bl_ps_fil})
-                        #End if
-                        if bl_pmid_fil.is_file():
-                            regrid_kwargs.update({'pmid_file': bl_pmid_fil})
-                        #End if
-
-                        #Generate vertically-interpolated baseline dataset:
-                        tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
+                            #Generate vertically-interpolated baseline dataset:
+                            tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
                                                                      **regrid_kwargs)
+                        if comp == "lnd":
+                            #Perform regridding of variable:
+                            tgdata_interp = _regrid(mclim_ds, var,
+                                                regrid_dataset=tclim_ds,
+                                                **regrid_kwargs)
+
 
                         if tgdata_interp is None:
                             #Something went wrong during interpolation, so just cycle through
@@ -358,30 +375,39 @@ def regrid_and_vert_interp(adf):
                             continue
                         #End if
 
+                        if comp == "atm":
+                            mask_var = "OCNFRAC"
+                            mask_name = "ocean"
+                        if comp == "lnd":
+                            mask_var = "LANDFRAC"
+                            mask_name = "land"
                         #If the variable is ocean fraction, then save the dataset for use later:
-                        if var == 'OCNFRAC':
-                            tgt_ocn_frc_ds = tgdata_interp
+                        if var == mask_var:
+                            frc_ds = tgdata_interp
                         #End if
-
                         if 'mask' in var_default_dict:
-                            if var_default_dict['mask'].lower() == 'ocean':
+                            if var_default_dict['mask'].lower() == mask_name:
                                 #Check if the ocean fraction has already been regridded
                                 #and saved:
-                                if tgt_ocn_frc_ds:
-                                    ofrac = tgt_ocn_frc_ds['OCNFRAC']
+                                if frc_ds:
+                                    frac = frc_ds[mask_var]
                                     # set the bounds of regridded ocnfrac to 0 to 1
-                                    ofrac = xr.where(ofrac>1,1,ofrac)
-                                    ofrac = xr.where(ofrac<0,0,ofrac)
-                                    # mask the land in TS for global means
-                                    tgdata_interp['OCNFRAC'] = ofrac
-                                    ts_tmp = tgdata_interp[var]
-                                    ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
-                                    tgdata_interp[var] = ts_tmp
+                                    frac = xr.where(frac>1,1,frac)
+                                    frac = xr.where(frac<0,0,frac)
+
+                                    # apply ocean fraction mask to variable
+                                    rgdata_interp[mask_var] = frac
+                                    var_tmp = rgdata_interp[var]
+                                    var_tmp = pf.mask_land_or_ocean(var_tmp,frac)
+                                    rgdata_interp[var] = var_tmp
                                 else:
-                                    wmsg = "\t    WARNING: OCNFRAC not found in target,"
-                                    wmsg += f" unable to apply mask to '{var}'"
-                                    print(wmsg)
+                                    print(f"\t    WARNING: {mask_var} not found, unable to apply mask to '{var}'")
                                 #End if
+                            else:
+                                #Currently only ocean or land masks are supported, so print warning here:
+                                wmsg = f"\t    WARNING: Currently the only variable mask option is '{mask_name}',"
+                                wmsg += f"not '{var_default_dict['mask'].lower()}'"
+                                print(wmsg)
                             #End if
                         #End if
 
@@ -441,6 +467,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
     #Import ADF-specific functions:
     import plotting_functions as pf
+    from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative
 
     #Extract keyword arguments:
     if 'ps_file' in kwargs:
@@ -596,7 +623,60 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                 tgrid = regrid_dataset.isel(time=0).squeeze()
             #End if
         #End if
+        '''if ('lat' not in mdata.dims) and ('lon' not in mdata.dims):
+            # Hardwiring for now
+            con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
 
+            fv_t232_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+            fv_t232 = xr.open_dataset(fv_t232_file)
+
+            model_dataset[var_name] = model_dataset[var_name].fillna(0)
+            model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+            #Regrid model data to match target grid:
+            # These two functions come with import regrid_se_to_fv
+            regridder = make_se_regridder(weight_file=con_weight_file,
+                                        s_data = model_dataset.landmask.isel(time=0),
+                                        d_data = fv_t232.landmask,
+                                        Method = 'coservative',  # Bug in xesmf needs this without "n"
+                                        )
+            rgdata = regrid_se_data_conservative(regridder, model_dataset)
+
+            rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+
+            rgdata['lat'] = fv_t232.lat
+            rgdata['landmask'] = fv_t232.landmask
+            rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+
+            yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+            xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+            yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+            xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+
+            # calculate area
+            area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
+            earth_radius_km = 6.37122e3  # in meters
+
+            yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+            xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+            yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+            xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+
+            dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
+            phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
+
+            # grid cell area
+            for j in range(len(rgdata['lat'])):
+                for i in range(len(rgdata['lon'])):
+                    dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
+                    area_km2[j,i] = dy_km[j] * dx_km
+
+            rgdata['area'] = xr.DataArray(area_km2,
+                                        coords={'lat': rgdata.lat, 'lon': rgdata.lon},
+                                        dims=["lat", "lon"])
+            rgdata['area'].attrs['units'] = 'km2'
+            rgdata['area'].attrs['long_name'] = 'Grid cell area'
+        '''
         #Regrid model data to match target grid:
         rgdata = regrid_data(mdata, tgrid, method=1)
         if mdat_ofrac:
@@ -727,3 +807,118 @@ def regrid_data(fromthis, tothis, method=1):
     #End if
 
 #####
+
+
+
+
+def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
+
+    """
+    Function that takes a variable from a model xarray
+    dataset, regrids it to another dataset's lat/lon
+    coordinates (if applicable)
+    ----------
+    model_dataset -> The xarray dataset which contains the model variable data
+    var_name      -> The name of the variable to be regridded/interpolated.
+
+    Optional inputs:
+
+    ps_file        -> NOT APPLICABLE: A NetCDF file containing already re-gridded surface pressure
+    regrid_dataset -> The xarray dataset that contains the lat/lon grid that
+                      "var_name" will be regridded to.  If not present then
+                      only the vertical interpolation will be done.
+
+    kwargs         -> Keyword arguments that contain paths to THE REST IS NOT APPLICABLE: surface pressure
+                      and mid-level pressure files, which are necessary for
+                      certain types of vertical interpolation.
+
+    This function returns a new xarray dataset that contains the regridded
+    model variable.
+    """
+
+    #Import ADF-specific functions:
+    import numpy as np
+    import plotting_functions as pf
+    from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative 
+
+    #Extract keyword arguments:
+    if 'ps_file' in kwargs:
+        ps_file = kwargs['ps_file']
+    else:
+        ps_file = None
+    #End if
+
+    #Extract variable info from model data (and remove any degenerate dimensions):
+    mdata = model_dataset[var_name].squeeze()
+    mdat_ofrac = None
+    #if regrid_lfrac:
+    #    if 'LANDFRAC' in model_dataset:
+    #        mdat_lfrac = model_dataset['LANDFRAC'].squeeze()
+
+    #Regrid variable to target dataset (if available):
+    if regrid_dataset:
+
+        #Extract grid info from target data:
+        if 'time' in regrid_dataset.coords:
+            if 'lev' in regrid_dataset.coords:
+                tgrid = regrid_dataset.isel(time=0, lev=0).squeeze()
+            else:
+                tgrid = regrid_dataset.isel(time=0).squeeze()
+            #End if
+        #End if
+
+        # Hardwiring for now
+        con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
+
+        fv_t232_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+        fv_t232 = xr.open_dataset(fv_t232_file)
+
+        model_dataset[var_name] = model_dataset[var_name].fillna(0)
+        model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+        model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+
+        #Regrid model data to match target grid:
+        # These two functions come with import regrid_se_to_fv
+        regridder = make_se_regridder(weight_file=con_weight_file,
+                                      s_data = model_dataset.landmask.isel(time=0),
+                                      d_data = fv_t232.landmask,
+                                      Method = 'coservative',  # Bug in xesmf needs this without "n"
+                                      )
+        rgdata = regrid_se_data_conservative(regridder, model_dataset)
+
+        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+
+        rgdata['lat'] = fv_t232.lat
+        rgdata['landmask'] = fv_t232.landmask
+        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+
+        # calculate area
+        area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
+        earth_radius_km = 6.37122e3  # in meters
+
+        yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+        xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+        yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+        xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+
+        dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
+        phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
+
+        # grid cell area
+        for j in range(len(rgdata['lat'])):
+            for i in range(len(rgdata['lon'])):
+              dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
+              area_km2[j,i] = dy_km[j] * dx_km
+
+        rgdata['area'] = xr.DataArray(area_km2,
+                                      coords={'lat': rgdata.lat, 'lon': rgdata.lon},
+                                      dims=["lat", "lon"])
+        rgdata['area'].attrs['units'] = 'km2'
+        rgdata['area'].attrs['long_name'] = 'Grid cell area'
+    else:
+        #Just rename variables:
+        rgdata = mdata
+    #End if
+
+    #Return dataset:
+    return rgdata
