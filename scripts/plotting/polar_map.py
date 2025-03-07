@@ -294,8 +294,8 @@ def polar_map(adfobj):
                                         else:
                                             hemi = "SH"
                                         #End if
-                                    #if comp == "lnd":
-                                    #    hemi
+                                    if comp == "lnd":
+                                        hemi = hemi_type
 
                                     pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
@@ -405,6 +405,8 @@ def polar_map(adfobj):
                                             else:
                                                 hemi = "SH"
                                             #End if
+                                        if comp == "lnd":
+                                            hemi = hemi_type
 
                                         pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
