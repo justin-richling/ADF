@@ -1667,6 +1667,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             #configure for polycollection plotting
             #TODO, would be nice to have levels set from the info, above
             ac = a.to_polycollection(projection=proj)
+            img.append(ac)
             #ac.norm(norm)
             ac.set_cmap(cmap)
             ac.set_antialiased(False)
