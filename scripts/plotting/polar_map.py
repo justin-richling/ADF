@@ -70,6 +70,12 @@ def polar_map(adfobj):
     test_nicknames = adfobj.case_nicknames["test_nicknames"]
     base_nickname = adfobj.case_nicknames["base_nickname"]
 
+    comp = adfobj.model_component
+    if comp == "atm":
+        hemis = ["NHPolar", "SHPolar"]
+    if comp == "lnd":
+        hemis = ["Arctic"]
+
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
@@ -255,7 +261,7 @@ def polar_map(adfobj):
                             pseasons[s] = pseasons[s].fillna(0.0)
 
                             # make plots: northern and southern hemisphere separately:
-                            for hemi_type in ["NHPolar", "SHPolar"]:
+                            for hemi_type in hemis:
 
                                 #Create plot name and path:
                                 plot_name = plot_loc / f"{var}_{s}_{hemi_type}_Mean.{plot_type}"
@@ -281,12 +287,15 @@ def polar_map(adfobj):
                                     #   *Any other entries will be ignored.
                                     # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
 
-                                    #Determine hemisphere to plot based on plot file name:
-                                    if hemi_type == "NHPolar":
-                                        hemi = "NH"
-                                    else:
-                                        hemi = "SH"
-                                    #End if
+                                    if comp == "atm":
+                                        #Determine hemisphere to plot based on plot file name:
+                                        if hemi_type == "NHPolar":
+                                            hemi = "NH"
+                                        else:
+                                            hemi = "SH"
+                                        #End if
+                                    #if comp == "lnd":
+                                    #    hemi
 
                                     pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
@@ -362,7 +371,7 @@ def polar_map(adfobj):
                                 pseasons[s] = pseasons[s].fillna(0.0)
 
                                 # make plots: northern and southern hemisphere separately:
-                                for hemi_type in ["NHPolar", "SHPolar"]:
+                                for hemi_type in hemis:
 
                                     #Create plot name and path:
                                     plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
@@ -389,12 +398,13 @@ def polar_map(adfobj):
                                         #   *Any other entries will be ignored.
                                         # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
 
-                                        #Determine hemisphere to plot based on plot file name:
-                                        if hemi_type == "NHPolar":
-                                            hemi = "NH"
-                                        else:
-                                            hemi = "SH"
-                                        #End if
+                                        if comp == "atm":
+                                            #Determine hemisphere to plot based on plot file name:
+                                            if hemi_type == "NHPolar":
+                                                hemi = "NH"
+                                            else:
+                                                hemi = "SH"
+                                            #End if
 
                                         pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
