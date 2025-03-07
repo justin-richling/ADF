@@ -275,6 +275,7 @@ def global_latlon_map(adfobj):
                 print("\n\n",len(wgt_base.n_face),"\n\n")
                 if len(wgt.n_face) == len(wgt_base.n_face):
                     vres["wgt"] = wgt
+                    has_dims = {}
                     has_dims['has_lev'] = False
                 else:
                     print("The weights are different between test and baseline. Won't continue, eh.")
