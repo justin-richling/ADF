@@ -235,7 +235,7 @@ def global_latlon_map(adfobj):
 
             unstruct_case = unstruct_cases[case_idx]
             if unstruct_case == False:
-                mdata = adfobj.data.load_regrid_da(base_name, var)
+                mdata = adfobj.data.load_regrid_da(case_name, var)
 
                 #Skip this variable/case if the regridded climo file doesn't exist:
                 if mdata is None:
