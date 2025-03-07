@@ -1613,6 +1613,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         tiFontSize = 8
     #End if
 
+    central_longitude = kwargs.get('central_longitude', 180)
+
     # generate dictionary of contour plot settings:
     cp_info = prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
 
