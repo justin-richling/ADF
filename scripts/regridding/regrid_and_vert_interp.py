@@ -65,6 +65,7 @@ def regrid_and_vert_interp(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    unstruct_cases = adf.unstructs['unstruct_tests']
 
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
@@ -121,6 +122,7 @@ def regrid_and_vert_interp(adf):
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
         trgclimo_loc = Path(adf.get_baseline_info("cam_climo_regrid_loc", required=True))
+        unstruct_base = adf.unstructs['unstruct_base']
         #Check if re-gridded directory exists, and if not, then create it:
         if not trgclimo_loc.is_dir():
             print(f"    {trgclimo_loc} not found, making new directory")
@@ -271,17 +273,26 @@ def regrid_and_vert_interp(adf):
                             regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
                         #End if
 
-                        #Perform regridding and interpolation of variable:
-                        rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
-                                                                 regrid_dataset=tclim_ds,
-                                                                 **regrid_kwargs)
-                    if comp == "lnd":
-                        #Perform regridding of variable:
+                        ##Perform regridding and interpolation of variable:
+                        #rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
+                        #                                         regrid_dataset=tclim_ds,
+                        #                                         **regrid_kwargs)
+                    #if comp == "lnd":
+                    #    #Perform regridding of variable:
+                    #    rgdata_interp = _regrid(mclim_ds, var,
+                    #                        regrid_dataset=tclim_ds,
+                    #                        **regrid_kwargs)
+                    if unstruct_cases[case_idx]:
+                        print(f"Looks like test case '{case_name}' is unstructured, eh?")
                         rgdata_interp = _regrid(mclim_ds, var,
                                             regrid_dataset=tclim_ds,
                                             **regrid_kwargs)
-
-
+                    else:
+                        rgdata_interp = mclim_ds
+                    #else:
+                    rgdata_interp = _regrid_and_interpolate_levs(rgdata_interp, var,
+                                                                 regrid_dataset=tclim_ds,
+                                                                 **regrid_kwargs)
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
                     if comp == "atm":
@@ -360,15 +371,25 @@ def regrid_and_vert_interp(adf):
                             #End if
 
                             #Generate vertically-interpolated baseline dataset:
-                            tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
-                                                                     **regrid_kwargs)
-                        if comp == "lnd":
-                            #Perform regridding of variable:
-                            tgdata_interp = _regrid(mclim_ds, var,
-                                                regrid_dataset=tclim_ds,
-                                                **regrid_kwargs)
+                            #tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
+                            #                                         **regrid_kwargs)
+                        #if comp == "lnd":
+                        #    #Perform regridding of variable:
+                        #    tgdata_interp = _regrid(mclim_ds, var,
+                        #                        regrid_dataset=tclim_ds,
+                        #                        **regrid_kwargs)
+            
+                        if unstruct_base:
+                            print(f"Looks like baseline case '{target}' is unstructured, eh?")
+                            tgdata_interp = _regrid(tclim_ds, var,
+                                            regrid_dataset=tclim_ds,
+                                            **regrid_kwargs)
+                        else:
+                            tgdata_interp = tclim_ds
 
-
+                        tgdata_interp = _regrid_and_interpolate_levs(tgdata_interp, var,
+                                                                    regrid_dataset=tclim_ds,
+                                                                    **regrid_kwargs)
                         if tgdata_interp is None:
                             #Something went wrong during interpolation, so just cycle through
                             #for now:
