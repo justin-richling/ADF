@@ -203,6 +203,7 @@ def regrid_and_vert_interp(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
+                print("target",target,"\n")
                 regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
 
                 if comp == "atm":
