@@ -600,7 +600,7 @@ class AdfInfo(AdfConfig):
 
         if all(item == base_comp for item in case_comps):
             print("All values in the list are the same as the string variable")
-            self.__model_component
+            self.__model_component = base_comp
         else:
             print("Looks like the model components are not the same:")
             print(f"Test case(s): {case_comps}; Baseline case: {base_comp}")
