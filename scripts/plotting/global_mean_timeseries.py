@@ -140,11 +140,18 @@ def global_mean_timeseries(adfobj):
 
             # check if there is a lat dimension:
             if not has_lat_case:
-                print(
-                    f"\t    WARNING: Variable {field} is missing a lat dimension for '{case_name}', cannot continue to plot."
-                )
-                skip_var = True
-                continue
+                #has_dims = pf.validate_dims(c_ts_da, ['lat','lon'])
+                #if ('lat' and 'lon') in has_dims:
+                #    print()
+                #    c_ts_da = 
+                if 1 == 0:
+                    print()
+                else:
+                    print(
+                        f"\t    WARNING: Variable {field} is missing a lat dimension for '{case_name}', cannot continue to plot."
+                    )
+                    skip_var = True
+                    continue
             # End if
 
             # Gather spatial avg for test case

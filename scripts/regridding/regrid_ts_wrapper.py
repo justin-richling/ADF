@@ -44,6 +44,12 @@ def regrid_ts_wrapper(adf):
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
 
+    comp = adf.model_component
+    if comp == "atm":
+        spec_vars = ["PMID", "OCNFRAC", "LANDFRAC"]
+    if comp == "lnd":
+        spec_vars = ["LANDFRAC"]
+
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
@@ -91,6 +97,7 @@ def regrid_ts_wrapper(adf):
         #Extract model basic variables:  #WW previously baseline, not basic
         target_loc = adf.get_cam_info("cam_ts_loc", required=True)
         target_list = [adf.get_cam_info("cam_case_name", required=True)]
+        case_names.append()
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
@@ -172,40 +179,47 @@ def regrid_ts_wrapper(adf):
                     #Perform regridding of variable:
                     rgdata_interp = _regrid(mts_ds, var,
                                             regrid_dataset=None,#tclim_ds,
+                                            comp=comp,
                                             **regrid_kwargs)
 
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
 
+                    if comp == "atm":
+                        mask_var = "OCNFRAC"
+                        mask_name = "ocean"
+                    if comp == "lnd":
+                        mask_var = "LANDFRAC"
+                        mask_name = "land"
                     if 'mask' in var_default_dict:
-                        if var_default_dict['mask'].lower() == 'land':
-                            #Check if the land fraction has already been regridded
+                        if var_default_dict['mask'].lower() == mask_name:
+                            #Check if the ocean fraction has already been regridded
                             #and saved:
-                            if lnd_frc_ds:
-                                lfrac = lnd_frc_ds['LANDFRAC']
-                                # set the bounds of regridded lndfrac to 0 to 1
-                                lfrac = xr.where(lfrac>1,1,lfrac)
-                                lfrac = xr.where(lfrac<0,0,lfrac)
+                            if frc_ds:
+                                frac = frc_ds[mask_var]
+                                # set the bounds of regridded ocnfrac to 0 to 1
+                                frac = xr.where(frac>1,1,frac)
+                                frac = xr.where(frac<0,0,frac)
 
-                                # apply land fraction mask to variable
-                                rgdata_interp['LANDFRAC'] = lfrac
+                                # apply ocean fraction mask to variable
+                                rgdata_interp[mask_var] = frac
                                 var_tmp = rgdata_interp[var]
-                                var_tmp = pf.mask_land(var_tmp,lfrac)
+                                var_tmp = pf.mask_land_or_ocean(var_tmp,frac)
                                 rgdata_interp[var] = var_tmp
                             else:
-                                print(f"LANDFRAC not found, unable to apply mask to '{var}'")
+                                print(f"\t    WARNING: {mask_var} not found, unable to apply mask to '{var}'")
                             #End if
                         else:
-                            #Currently only a land mask is supported, so print warning here:
-                            wmsg = "Currently the only variable mask option is 'land',"
+                            #Currently only ocean or land masks are supported, so print warning here:
+                            wmsg = f"\t    WARNING: Currently the only variable mask option is '{mask_name}',"
                             wmsg += f"not '{var_default_dict['mask'].lower()}'"
                             print(wmsg)
                         #End if
                     #End if
 
-                    #If the variable is land fraction, then save the dataset for use later:
-                    if var == 'LANDFRAC':
-                        lnd_frc_ds = rgdata_interp
+                    #If the variable is the mask fraction, then save the dataset for use later:
+                    if var == mask_var:
+                        frc_ds = rgdata_interp
                     #End if
 
                     #Finally, write re-gridded data to output file:
@@ -235,7 +249,7 @@ def regrid_ts_wrapper(adf):
 #Helper functions
 #################
 
-def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
+def _regrid(model_dataset, var_name, comp, regrid_dataset=None, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -265,12 +279,12 @@ def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **
     import plotting_functions as pf
     from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative 
 
-    #Extract keyword arguments:
+    """#Extract keyword arguments:
     if 'ps_file' in kwargs:
         ps_file = kwargs['ps_file']
     else:
         ps_file = None
-    #End if
+    #End if"""
 
     #Extract variable info from model data (and remove any degenerate dimensions):
     mdata = model_dataset[var_name].squeeze()
@@ -281,68 +295,77 @@ def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **
 
     #Regrid variable to target dataset (if available):
     if regrid_dataset:
+    #if 1==1:
 
-        #Extract grid info from target data:
+        """#Extract grid info from target data:
         if 'time' in regrid_dataset.coords:
             if 'lev' in regrid_dataset.coords:
                 tgrid = regrid_dataset.isel(time=0, lev=0).squeeze()
             else:
                 tgrid = regrid_dataset.isel(time=0).squeeze()
             #End if
-        #End if
+        #End if"""
 
-    # Hardwiring for now
-    con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
+        # Hardwiring for now
+        con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
 
-    fv_t232_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-    fv_t232 = xr.open_dataset(fv_t232_file)
+        fv_t232_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+        fv_t232 = xr.open_dataset(fv_t232_file)
 
-    model_dataset[var_name] = model_dataset[var_name].fillna(0)
-    model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-    model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+        model_dataset[var_name] = model_dataset[var_name].fillna(0)
 
-    if 'time' in model_dataset.landmask:
-         model_dataset['landmask'] = model_dataset.landmask.isel(time=0)
+        if comp == "lnd":
+            model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
+            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+            s_data = model_dataset.landmask.isel(time=0)
+            d_data = fv_t232.landmask
+        else:
+            s_data = model_dataset[var_name].isel(time=0)
+            d_data = fv_t232[var_name]
 
-    #Regrid model data to match target grid:
-    # These two functions come with import regrid_se_to_fv
-    regridder = make_se_regridder(weight_file=con_weight_file,
-                                  s_data = model_dataset.landmask,
-                                  d_data = fv_t232.landmask,
-                                  Method = 'coservative',  # Bug in xesmf needs this without "n"
-                                  )
-    rgdata = regrid_se_data_conservative(regridder, model_dataset)
+        #Regrid model data to match target grid:
+        # These two functions come with import regrid_se_to_fv
+        regridder = make_se_regridder(weight_file=con_weight_file,
+                                      s_data = s_data, #model_dataset.landmask.isel(time=0),
+                                      d_data = d_data, #fv_t232.landmask,
+                                      Method = 'coservative',  # Bug in xesmf needs this without "n"
+                                      )
+        rgdata = regrid_se_data_conservative(regridder, model_dataset)
 
-    rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
 
-    rgdata['lat'] = fv_t232.lat
-    rgdata['landmask'] = fv_t232.landmask
-    if 'time' in rgdata.landfrac: 
-        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+        rgdata['lat'] = fv_t232.lat
+        if comp == "lnd":
+            rgdata['landmask'] = fv_t232.landmask
+            rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
-    # calculate area
-    area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
-    earth_radius_km = 6.37122e3  # in meters
+        # calculate area
+        area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
+        earth_radius_km = 6.37122e3  # in meters
 
-    yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
-    xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
-    yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
-    xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+        yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+        xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+        yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+        xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
 
-    dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
-    phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
+        dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
+        phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
 
-    # grid cell area
-    for j in range(len(rgdata['lat'])):
-        for i in range(len(rgdata['lon'])):
-          dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
-          area_km2[j,i] = dy_km[j] * dx_km
+        # grid cell area
+        for j in range(len(rgdata['lat'])):
+            for i in range(len(rgdata['lon'])):
+              dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
+              area_km2[j,i] = dy_km[j] * dx_km
 
-    rgdata['area'] = xr.DataArray(area_km2,
-                                  coords={'lat': rgdata.lat, 'lon': rgdata.lon},
-                                  dims=["lat", "lon"])
-    rgdata['area'].attrs['units'] = 'km2'
-    rgdata['area'].attrs['long_name'] = 'Grid cell area'
+        rgdata['area'] = xr.DataArray(area_km2,
+                                      coords={'lat': rgdata.lat, 'lon': rgdata.lon},
+                                      dims=["lat", "lon"])
+        rgdata['area'].attrs['units'] = 'km2'
+        rgdata['area'].attrs['long_name'] = 'Grid cell area'
+    else:
+        #Just rename variables:
+        rgdata = mdata
+    #End if
 
     #Return dataset:
     return rgdata
