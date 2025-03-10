@@ -442,7 +442,7 @@ class AdfDiag(AdfWeb):
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
 
-            unstruct = unstructed[case_idx]
+            #unstruct = unstructed[case_idx]
 
             # Check that path actually exists:
             if not starting_location.is_dir():
