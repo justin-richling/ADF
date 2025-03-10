@@ -111,7 +111,7 @@ def regrid_ts_wrapper(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgts_loc = Path(output_loc)
+    #rgts_loc = Path(output_loc)
     #------------------------------------
 
     #Check if re-gridded directory exists, and if not, then create it:
@@ -122,6 +122,8 @@ def regrid_ts_wrapper(adf):
 
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
+
+        rgts_loc = Path(output_loc[case_idx])
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
