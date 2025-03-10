@@ -26,6 +26,8 @@ import json
 from pathlib import Path
 from typing import Optional
 
+import utils as adf_utils
+
 # Check if "PyYAML" is present in python path:
 # pylint: disable=unused-import
 try:
@@ -382,6 +384,10 @@ class AdfDiag(AdfWeb):
             case_type_string = "baseline"
             hist_str_list = [self.hist_string["base_hist_str"]]
 
+            overwrite_regrid_locs = [self.get_cam_info("cam_overwrite_ts_regrid", required=True)]
+            test_output_loc       = [self.get_cam_info("cam_ts_regrid_loc", required=True)]
+            unstructed = [adfobj.unstructs['unstruct_base']]
+
         else:
             # Use test case settings, which are already lists:
             case_names = self.get_cam_info("cam_case_name", required=True)
@@ -393,7 +399,22 @@ class AdfDiag(AdfWeb):
             end_years = self.climo_yrs["eyears"]
             case_type_string="case"
             hist_str_list = self.hist_string["test_hist_str"]
+
+            overwrite_regrid_locs = self.get_cam_info("cam_overwrite_ts_regrid", required=True)
+            test_output_loc       = self.get_cam_info("cam_ts_regrid_loc", required=True)
+            unstructed = self.unstructs['unstruct_tests']
         # End if
+
+        """if (not unstruct_case) and (unstruct_base):
+                print("Base is unstructured but Test is lat/lon. Can't continue?")
+                return
+            if (unstruct_case) and (not unstruct_base):
+                print("Base is lat/lon but Test is unstructured. Can't continue?")
+                return
+            if (unstruct_case) and (unstruct_base):
+                unstructured=True
+            if (not unstruct_case) and (not unstruct_base):
+                unstructured=False"""
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         dmsg = f"reading from {hist_str_list} files"
@@ -416,8 +437,12 @@ class AdfDiag(AdfWeb):
             start_year = start_years[case_idx]
             end_year = end_years[case_idx]
 
+            regrd_ts_loc = test_output_loc[case_idx]
+
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
+
+            unstruct = unstructed[case_idx]
 
             # Check that path actually exists:
             if not starting_location.is_dir():
@@ -820,6 +845,49 @@ class AdfDiag(AdfWeb):
                         constit_dict=constit_dict, ts_dir=ts_dir
                     )
                 # End with
+
+                """
+                #Generate CAM climatology (climo) file list:
+                mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+
+                if len(mclim_fils) > 1:
+                    #Combine all cam files together into a single data set:
+                    mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
+                elif len(mclim_fils) == 0:
+                    #wmsg = f"\t    WARNING: Unable to find climo file for '{var}'."
+                    #wmsg += " Continuing to next variable."
+                    wmsg= f"\t    WARNING: regridding {var} failed, no climo file for case '{case_name}'. Continuing to next variable."
+                    print(wmsg)
+                    continue
+                else:
+                    #Open single file as new xarray dataset:
+                    mclim_ds = xr.open_dataset(mclim_fils[0])
+                #End if
+                """
+
+                if ('lat' not in hist_file_ds.dims) and ('lon' not in hist_file_ds.dims):
+                    ts_dirr = Path(ts_dir)
+                    #for ts_file in ts_dir:
+                    #    print(ts_file)
+                    #    adf_utils.unstructure_regrid(model_dataset, var_name, comp="atm")
+                    for var in diag_var_list:
+                        var_file = sorted(ts_dirr.glob(f"*.{var}.*nc"))
+                        ds = self.data.load_dataset(var_file)
+                        if ds is None:
+                            #warnings.warn(f"\t    WARNING: Load failed for {variablename}")
+                            #return None
+                            print("AHHHHH")
+                        #da = (ds[var]).squeeze()
+                        rgdata = adf_utils.unstructure_regrid(ds, var, comp="atm")
+                        attrs_dict = {
+                                #"adf_user": adf.user,
+                                #"climo_yrs": f"{case_name}: {syear}-{eyear}",
+                                #"climatology_files": climatology_files_str,
+                                "native_grid_to_latlon":"xesmf"
+                            }
+                        rgdata = rgdata.assign_attrs(attrs_dict)
+                        save_to_nc(rgdata, regrd_ts_loc)
+
             # End for hist_str
         # End cases loop
 
@@ -1596,4 +1664,24 @@ def _load_dataset(fils):
         return xr.open_dataset(fils[0])
     #End if
 # End def
+
+def save_to_nc(tosave, outname, attrs=None, proc=None):
+    """Saves xarray variable to new netCDF file"""
+
+    xo = tosave  # used to have more stuff here.
+    # deal with getting non-nan fill values.
+    if isinstance(xo, xr.Dataset):
+        enc_dv = {xname: {'_FillValue': None} for xname in xo.data_vars}
+    else:
+        enc_dv = {}
+    #End if
+    enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
+    enc = {**enc_c, **enc_dv}
+    if attrs is not None:
+        xo.attrs = attrs
+    if proc is not None:
+        xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+    xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
+
+#####
 ########
