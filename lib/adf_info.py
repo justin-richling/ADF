@@ -263,7 +263,10 @@ class AdfInfo(AdfConfig):
                 starting_location = Path(baseline_hist_locs)
                 print(f"\tChecking history files in '{starting_location}'")
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
-
+                
+                print("We're gonna try this...")
+                from scripts import regrid_and_vert_interp
+                print("... Huh, must've worked??")
 
                 """ #Create "Path" objects:
                 input_location  = Path(input_ts_loc)
@@ -710,7 +713,7 @@ class AdfInfo(AdfConfig):
     # Create property needed to return the case nicknames to user:
     @property
     def model_component(self):
-        """Return the test case and baseline nicknames to the user if requested."""
+        """Return the assumed model component to the user if requested, ie atm or lnd"""
         return self.__model_component
 
 
