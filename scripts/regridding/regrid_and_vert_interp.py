@@ -386,7 +386,7 @@ def regrid_and_vert_interp(adf):
             
                         #if unstruct_base:
                         if ('lat' not in tclim_ds.dims) and ('lat' not in tclim_ds.dims):
-                            if 'ncol' in tclim_ds.dims:
+                            if ('ncol' in tclim_ds.dims) or ('lndgrid' in tclim_ds.dims):
                                 print(f"Looks like baseline case '{target}' is unstructured, eh?")
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                 regrid_dataset=tclim_ds,
