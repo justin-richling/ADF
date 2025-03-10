@@ -290,6 +290,7 @@ def regrid_and_vert_interp(adf):
                             print(f"Looks like test case '{case_name}' is unstructured, eh?")
                             rgdata_interp = _regrid(mclim_ds, var,
                                                 regrid_dataset=mclim_ds,
+                                                comp=comp,
                                                 **regrid_kwargs)
                     else:
                         rgdata_interp = mclim_ds
@@ -389,6 +390,7 @@ def regrid_and_vert_interp(adf):
                                 print(f"Looks like baseline case '{target}' is unstructured, eh?")
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                 regrid_dataset=tclim_ds,
+                                                comp=comp,
                                                 **regrid_kwargs)
                         else:
                             tgdata_interp = tclim_ds
