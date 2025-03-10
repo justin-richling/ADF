@@ -102,6 +102,13 @@ def qbo(adfobj):
     ncases = len(case_loc)
     casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
 
+    if casedat:
+        has_dims = pf.validate_dims(casedat[i].U, ['lat','lon'])
+        if ('lat' not in has_dims) and ('lat' not in has_dims):
+            if 'ncol' in casedat[i].dims:
+                import utils as adf_utils
+                data = adf_utils.unstructure_regrid(casedat[i], "U", comp="atm")
+                casedat = [data]
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
     for idx, dat in enumerate(casedat):
