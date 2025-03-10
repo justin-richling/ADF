@@ -39,8 +39,8 @@ def regrid_ts_wrapper(adf):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    overwrite_regrid = adf.get_basic_info("cam_overwrite_ts_regrid", required=True)
-    output_loc       = adf.get_basic_info("cam_ts_regrid_loc", required=True)
+    overwrite_regrid = adf.get_cam_info("cam_overwrite_ts_regrid")
+    output_loc       = adf.get_cam_info("cam_ts_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
 
@@ -97,7 +97,7 @@ def regrid_ts_wrapper(adf):
         #Extract model basic variables:  #WW previously baseline, not basic
         target_loc = adf.get_cam_info("cam_ts_loc", required=True)
         target_list = [adf.get_cam_info("cam_case_name", required=True)]
-        case_names.append()
+        #case_names.append()
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
