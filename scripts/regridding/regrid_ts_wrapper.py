@@ -114,16 +114,15 @@ def regrid_ts_wrapper(adf):
     #rgts_loc = Path(output_loc)
     #------------------------------------
 
-    #Check if re-gridded directory exists, and if not, then create it:
-    if not rgts_loc.is_dir():
-        print(f"    {rgts_loc} not found, making new directory")
-        rgts_loc.mkdir(parents=True)
-    #End if
-
     #Loop over CAM cases:
     for case_idx, case_name in enumerate(case_names):
 
         rgts_loc = Path(output_loc[case_idx])
+            #Check if re-gridded directory exists, and if not, then create it:
+        if not rgts_loc.is_dir():
+            print(f"    {rgts_loc} not found, making new directory")
+            rgts_loc.mkdir(parents=True)
+        #End if
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
