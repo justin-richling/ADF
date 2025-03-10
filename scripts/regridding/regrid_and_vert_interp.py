@@ -283,11 +283,14 @@ def regrid_and_vert_interp(adf):
                     #    rgdata_interp = _regrid(mclim_ds, var,
                     #                        regrid_dataset=tclim_ds,
                     #                        **regrid_kwargs)
-                    if unstruct_cases[case_idx]:
-                        print(f"Looks like test case '{case_name}' is unstructured, eh?")
-                        rgdata_interp = _regrid(mclim_ds, var,
-                                            regrid_dataset=tclim_ds,
-                                            **regrid_kwargs)
+                    #if unstruct_cases[case_idx]:
+                    if ('lat' not in mclim_ds.dims) and ('lat' not in mclim_ds.dims):
+                        if 'ncol' in mclim_ds.dims:
+                            #mclim_ds
+                            print(f"Looks like test case '{case_name}' is unstructured, eh?")
+                            rgdata_interp = _regrid(mclim_ds, var,
+                                                regrid_dataset=mclim_ds,
+                                                **regrid_kwargs)
                     else:
                         rgdata_interp = mclim_ds
                     #else:
@@ -380,11 +383,13 @@ def regrid_and_vert_interp(adf):
                         #                        regrid_dataset=tclim_ds,
                         #                        **regrid_kwargs)
             
-                        if unstruct_base:
-                            print(f"Looks like baseline case '{target}' is unstructured, eh?")
-                            tgdata_interp = _regrid(tclim_ds, var,
-                                            regrid_dataset=tclim_ds,
-                                            **regrid_kwargs)
+                        #if unstruct_base:
+                        if ('lat' not in tclim_ds.dims) and ('lat' not in tclim_ds.dims):
+                            if 'ncol' in tclim_ds.dims:
+                                print(f"Looks like baseline case '{target}' is unstructured, eh?")
+                                tgdata_interp = _regrid(tclim_ds, var,
+                                                regrid_dataset=tclim_ds,
+                                                **regrid_kwargs)
                         else:
                             tgdata_interp = tclim_ds
 
@@ -833,7 +838,7 @@ def regrid_data(fromthis, tothis, method=1):
 
 
 
-def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
+def _regrid(model_dataset, var_name, comp, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -863,12 +868,12 @@ def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **
     import plotting_functions as pf
     from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative 
 
-    #Extract keyword arguments:
+    """#Extract keyword arguments:
     if 'ps_file' in kwargs:
         ps_file = kwargs['ps_file']
     else:
         ps_file = None
-    #End if
+    #End if"""
 
     #Extract variable info from model data (and remove any degenerate dimensions):
     mdata = model_dataset[var_name].squeeze()
@@ -878,16 +883,17 @@ def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **
     #        mdat_lfrac = model_dataset['LANDFRAC'].squeeze()
 
     #Regrid variable to target dataset (if available):
-    if regrid_dataset:
+    #if regrid_dataset:
+    if 1==1:
 
-        #Extract grid info from target data:
+        """#Extract grid info from target data:
         if 'time' in regrid_dataset.coords:
             if 'lev' in regrid_dataset.coords:
                 tgrid = regrid_dataset.isel(time=0, lev=0).squeeze()
             else:
                 tgrid = regrid_dataset.isel(time=0).squeeze()
             #End if
-        #End if
+        #End if"""
 
         # Hardwiring for now
         con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
@@ -896,14 +902,20 @@ def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **
         fv_t232 = xr.open_dataset(fv_t232_file)
 
         model_dataset[var_name] = model_dataset[var_name].fillna(0)
-        model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-        model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+        if comp == "lnd":
+            model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+            s_data = model_dataset.landmask.isel(time=0)
+            d_data = fv_t232.landmask
+        else:
+            s_data = model_dataset[var_name].isel(time=0)
+            d_data = fv_t232[var_name]
 
         #Regrid model data to match target grid:
         # These two functions come with import regrid_se_to_fv
         regridder = make_se_regridder(weight_file=con_weight_file,
-                                      s_data = model_dataset.landmask.isel(time=0),
-                                      d_data = fv_t232.landmask,
+                                      s_data = s_data, #model_dataset.landmask.isel(time=0),
+                                      d_data = d_data, #fv_t232.landmask,
                                       Method = 'coservative',  # Bug in xesmf needs this without "n"
                                       )
         rgdata = regrid_se_data_conservative(regridder, model_dataset)
@@ -911,8 +923,9 @@ def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **
         rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
 
         rgdata['lat'] = fv_t232.lat
-        rgdata['landmask'] = fv_t232.landmask
-        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+        if comp == "lnd":
+            rgdata['landmask'] = fv_t232.landmask
+            rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
         # calculate area
         area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
@@ -937,9 +950,9 @@ def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **
                                       dims=["lat", "lon"])
         rgdata['area'].attrs['units'] = 'km2'
         rgdata['area'].attrs['long_name'] = 'Grid cell area'
-    else:
-        #Just rename variables:
-        rgdata = mdata
+    #else:
+    #    #Just rename variables:
+    #    rgdata = mdata
     #End if
 
     #Return dataset:
