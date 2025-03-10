@@ -285,7 +285,7 @@ def regrid_and_vert_interp(adf):
                     #                        **regrid_kwargs)
                     #if unstruct_cases[case_idx]:
                     if ('lat' not in mclim_ds.dims) and ('lat' not in mclim_ds.dims):
-                        if 'ncol' in mclim_ds.dims:
+                        if ('ncol' in mclim_ds.dims) or ('lndgrid' in mclim_ds.dims):
                             #mclim_ds
                             print(f"Looks like test case '{case_name}' is unstructured, eh?")
                             rgdata_interp = _regrid(mclim_ds, var,
