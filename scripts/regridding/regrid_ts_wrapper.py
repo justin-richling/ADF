@@ -182,7 +182,7 @@ def regrid_ts_wrapper(adf):
                                             regrid_dataset=None,#tclim_ds,
                                             comp=comp,
                                             **regrid_kwargs)
-
+                    print("\n\nrgdata_interp",rgdata_interp,"\n\n")
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
 
