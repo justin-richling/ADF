@@ -289,7 +289,7 @@ def regrid_and_vert_interp(adf):
                             #mclim_ds
                             print(f"Looks like test case '{case_name}' is unstructured, eh?")
                             rgdata_interp = _regrid(mclim_ds, var,
-                                                regrid_dataset=mclim_ds,
+                                                regrid_dataset=tclim_ds,
                                                 comp=comp,
                                                 **regrid_kwargs)
                     else:
@@ -840,7 +840,7 @@ def regrid_data(fromthis, tothis, method=1):
 
 
 
-def _regrid(model_dataset, var_name, comp, **kwargs):
+def _regrid(model_dataset, var_name, comp, regrid_dataset=None, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -885,8 +885,8 @@ def _regrid(model_dataset, var_name, comp, **kwargs):
     #        mdat_lfrac = model_dataset['LANDFRAC'].squeeze()
 
     #Regrid variable to target dataset (if available):
-    #if regrid_dataset:
-    if 1==1:
+    if regrid_dataset:
+    #if 1==1:
 
         """#Extract grid info from target data:
         if 'time' in regrid_dataset.coords:
@@ -953,9 +953,9 @@ def _regrid(model_dataset, var_name, comp, **kwargs):
                                       dims=["lat", "lon"])
         rgdata['area'].attrs['units'] = 'km2'
         rgdata['area'].attrs['long_name'] = 'Grid cell area'
-    #else:
-    #    #Just rename variables:
-    #    rgdata = mdata
+    else:
+        #Just rename variables:
+        rgdata = mdata
     #End if
 
     #Return dataset:
