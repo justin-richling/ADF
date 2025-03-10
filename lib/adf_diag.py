@@ -865,7 +865,7 @@ class AdfDiag(AdfWeb):
                 #End if
                 """
 
-                if ('lat' not in hist_file_ds.dims) and ('lon' not in hist_file_ds.dims):
+                """if ('lat' not in hist_file_ds.dims) and ('lon' not in hist_file_ds.dims):
                     ts_dirr = Path(ts_dir)
                     #for ts_file in ts_dir:
                     #    print(ts_file)
@@ -886,7 +886,7 @@ class AdfDiag(AdfWeb):
                                 "native_grid_to_latlon":"xesmf"
                             }
                         rgdata = rgdata.assign_attrs(attrs_dict)
-                        save_to_nc(rgdata, regrd_ts_loc)
+                        save_to_nc(rgdata, regrd_ts_loc)"""
 
             # End for hist_str
         # End cases loop
