@@ -384,9 +384,9 @@ class AdfDiag(AdfWeb):
             case_type_string = "baseline"
             hist_str_list = [self.hist_string["base_hist_str"]]
 
-            overwrite_regrid_locs = [self.get_cam_info("cam_overwrite_ts_regrid", required=True)]
+            overwrite_regrid_locs = [self.get_cam_info("cam_overwrite_ts_regrid")]
             test_output_loc       = [self.get_cam_info("cam_ts_regrid_loc", required=True)]
-            unstructed = [adfobj.unstructs['unstruct_base']]
+            #unstructed = [adfobj.unstructs['unstruct_base']]
 
         else:
             # Use test case settings, which are already lists:
@@ -400,9 +400,9 @@ class AdfDiag(AdfWeb):
             case_type_string="case"
             hist_str_list = self.hist_string["test_hist_str"]
 
-            overwrite_regrid_locs = self.get_cam_info("cam_overwrite_ts_regrid", required=True)
+            overwrite_regrid_locs = self.get_cam_info("cam_overwrite_ts_regrid")
             test_output_loc       = self.get_cam_info("cam_ts_regrid_loc", required=True)
-            unstructed = self.unstructs['unstruct_tests']
+            #unstructed = self.unstructs['unstruct_tests']
         # End if
 
         """if (not unstruct_case) and (unstruct_base):
