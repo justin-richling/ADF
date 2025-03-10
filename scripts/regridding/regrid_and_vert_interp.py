@@ -904,6 +904,7 @@ def _regrid(model_dataset, var_name, comp, **kwargs):
         fv_t232 = xr.open_dataset(fv_t232_file)
 
         model_dataset[var_name] = model_dataset[var_name].fillna(0)
+        print("\n\n",model_dataset.landfrac,"\n\n")
         if comp == "lnd":
             model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
             model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
