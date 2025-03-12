@@ -80,6 +80,9 @@ def create_climo_files(adf, clobber=False, search=None):
     start_year = adf.climo_yrs["syears"]
     end_year   = adf.climo_yrs["eyears"]
 
+    comp = adf.model_component
+    print("\ncomp",comp,"\n")
+
     #If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
     if not calc_climos:
@@ -193,7 +196,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
                 continue
 
-            list_of_arguments.append((adf, ts_files, syr, eyr, output_file))
+            list_of_arguments.append((adf, ts_files, syr, eyr, output_file, comp))
 
 
         #End of var_list loop
@@ -213,7 +216,7 @@ def create_climo_files(adf, clobber=False, search=None):
 #
 # Local functions
 #
-def process_variable(adf, ts_files, syr, eyr, output_file):
+def process_variable(adf, ts_files, syr, eyr, output_file, comp):
     '''
     Compute and save the climatology file.
     '''
@@ -232,8 +235,12 @@ def process_variable(adf, ts_files, syr, eyr, output_file):
         cam_ts_data = xr.decode_cf(cam_ts_data)
     elif 'time_bounds' in cam_ts_data:
         time = cam_ts_data['time']
+        if comp == "lnd":
+            dim = 'hist_interval'
+        if comp == "atm":
+            dim = 'nbnd'
         # NOTE: force `load` here b/c if dask & time is cftime, throws a NotImplementedError:
-        time = xr.DataArray(cam_ts_data['time_bounds'].load().mean(dim='hist_interval').values, 
+        time = xr.DataArray(cam_ts_data['time_bounds'].load().mean(dim=dim).values, 
                             dims=time.dims, attrs=time.attrs)
         cam_ts_data['time'] = time
         cam_ts_data.assign_coords(time=time)
