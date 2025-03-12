@@ -1081,6 +1081,8 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
         else:
             print("Well, it looks like you're missing a target grid file for regridding!")
             #adferror thing
+
+        print("\nlatlon_file",latlon_file,"\n")
         fv_ds = xr.open_dataset(latlon_file)
 
         model_dataset[var_name] = model_dataset[var_name].fillna(0)
