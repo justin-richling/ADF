@@ -209,10 +209,15 @@ class AdfInfo(AdfConfig):
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
 
             #Check if any a FV file exists if using native grid
-            baseline_fv_file   = self.get_baseline_info("fv_file")
+            baseline_latlon_file   = self.get_baseline_info("latlon_file")
+            self.__baseline_latlon_file = baseline_latlon_file
 
             #Check if any a weights file exists if using native grid, OPTIONAL
             baseline_wgts_file   = self.get_baseline_info("weights_file")
+            self.__baseline_wgts_file = baseline_wgts_file
+
+            baseline_regrid_method = self.get_baseline_info("regrid_method") 
+            self.__baseline_regrid_method = baseline_regrid_method
 
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
@@ -425,8 +430,8 @@ class AdfInfo(AdfConfig):
                         regrid_kwargs = {}
                         if baseline_wgts_file:
                             regrid_kwargs["wgt_file"] = baseline_wgts_file
-                        if baseline_fv_file:
-                            regrid_kwargs["fv_file"] = baseline_fv_file
+                        if baseline_latlon_file:
+                            regrid_kwargs["latlon_file"] = baseline_latlon_file
                         for file in hist_files:
                             #hist_ds = sorted(input_ts_loc.glob(f"*{baseline_hist_str}.{var}.{syear_baseline}01-{eyear_baseline}12.nc"))
                             hist_ds = xr.open_dataset(file)
@@ -526,10 +531,21 @@ class AdfInfo(AdfConfig):
         cam_ts_done   = self.get_cam_info("cam_ts_done")
 
         #Check if any a FV file exists if using native grid
-        cam_fv_files   = self.get_cam_info("fv_file")
+        cam_latlon_files   = self.get_cam_info("latlon_file")
+        self.__cam_latlon_files = cam_latlon_files
 
         #Check if any a weights file exists if using native grid, OPTIONAL
         cam_wgts_files   = self.get_cam_info("weights_file")
+        self.__cam_wgts_files = cam_wgts_files
+
+        cam_regrid_method = self.get_cam_info("regrid_method")
+        cam_regrid_methods = []
+        for regr_method in cam_regrid_method:
+            if regr_method == 'conservative':
+                cam_regrid_methods.append('coservative')
+            else:
+                cam_regrid_methods.append(regr_method)
+        self.__cam_regrid_method = cam_regrid_method
 
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
@@ -723,8 +739,8 @@ class AdfInfo(AdfConfig):
                         regrid_kwargs = {}
                         if cam_wgts_files[case_idx]:
                             regrid_kwargs["wgt_file"] = cam_wgts_files[case_idx]
-                        if cam_fv_files[case_idx]:
-                            regrid_kwargs["fv_file"] = cam_fv_files[case_idx]
+                        if cam_latlon_files[case_idx]:
+                            regrid_kwargs["latlon_file"] = cam_latlon_files[case_idx]
                         for file in hist_files:
                             #hist_ds = sorted(input_ts_loc.glob(f"*{baseline_hist_str}.{var}.{syear_baseline}01-{eyear_baseline}12.nc"))
                             hist_ds = xr.open_dataset(file)
@@ -940,7 +956,48 @@ class AdfInfo(AdfConfig):
         #modify this variable:
         return copy.copy(self.__plot_location)
 
+    
+    # Create property needed to return the case nicknames to user:
+    @property
+    def latlon_files(self):
+        """Return the test case and baseline nicknames to the user if requested."""
 
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        cam_latlon_files = copy.copy(self.__cam_latlon_files)
+        
+        baseline_latlon_file = self.__baseline_latlon_file
+
+        return {"test_latlon_file":cam_latlon_files,"base_latlon_file":baseline_latlon_file}
+
+    # Create property needed to return the case nicknames to user:
+    @property
+    def latlon_wgt_files(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        cam_wgts_files = copy.copy(self.__cam_wgts_files)
+        
+        baseline_wgts_file = self.__baseline_wgts_file
+
+        return {"test_wgts_file":cam_wgts_files,"base_wgts_file":baseline_wgts_file}
+
+    # Create property needed to return the case nicknames to user:
+    @property
+    def latlon_regrid_method(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        cam_regrid_method = copy.copy(self.__cam_regrid_method)
+
+        baseline_regrid_method = self.__baseline_regrid_method
+
+        return {"test_regrid_method":cam_regrid_method,"base_regrid_method":baseline_regrid_method}
+    
+
+    
     # Create property needed to return the case nicknames to user:
     @property
     def unstructs(self):

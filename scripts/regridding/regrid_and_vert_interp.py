@@ -67,6 +67,12 @@ def regrid_and_vert_interp(adf):
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
     unstruct_cases = adf.unstructs['unstruct_tests']
 
+    case_latlon_files   = adf.latlon_files("test_latlon_file")
+    #print("case_latlon_file",case_latlon_file,"\n")
+    #Check if any a weights file exists if using native grid, OPTIONAL
+    case_wgts_files   = adf.latlon_wgt_files("test_wgts_file")
+    case_methods = adf.latlon_regrid_method("test_regrid_method")
+
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
@@ -172,6 +178,8 @@ def regrid_and_vert_interp(adf):
         #Get climo years for case
         syear = syear_cases[case_idx]
         eyear = eyear_cases[case_idx]
+
+        
 
         # probably want to do this one variable at a time:
         for var in var_list:
@@ -290,17 +298,24 @@ def regrid_and_vert_interp(adf):
                             #mclim_ds
                             print(f"Looks like test case '{case_name}' is unstructured, eh?")
                             #Check if any a FV file exists if using native grid
-                            baseline_fv_file   = adf.get_cam_info("fv_file")
-                            print("baseline_fv_file",baseline_fv_file,"\n")
+                            #case_latlon_file   = adf.latlon_files("test_latlon_file")
+                            case_latlon_file = case_latlon_files[case_idx]
+                            print("case_latlon_file",case_latlon_file,"\n")
                             #Check if any a weights file exists if using native grid, OPTIONAL
-                            baseline_wgts_file   = adf.get_cam_info("weights_file")
-                            if baseline_wgts_file:
-                                native_regrid_kwargs["wgt_file"] = baseline_wgts_file[0]
-                            if baseline_fv_file:
-                                native_regrid_kwargs["fv_file"] = baseline_fv_file[0]
+                            case_wgts_file   = case_wgts_files[case_idx]
+                            case_method = case_methods[case_idx]
+                            if case_wgts_file:
+                                native_regrid_kwargs["wgt_file"] = case_wgts_file[0]
+                            else:
+                                print("This looks like an unstructured case, but missing weights file")
+                            if case_latlon_file:
+                                native_regrid_kwargs["latlon_file"] = case_latlon_file[0]
+                            else:
+                                print("This looks like an unstructured case, but missing lat/lon file")
+                                #adf error thingy
                             rgdata_interp = _regrid(mclim_ds, var,
-                                                regrid_dataset=tclim_ds,
                                                 comp=comp,
+                                                method=case_method,
                                                 **native_regrid_kwargs)
                         else:
                             print("Trying everything and nothing is working. I guess this really is a problem!")
@@ -402,17 +417,23 @@ def regrid_and_vert_interp(adf):
                                 print(f"Looks like baseline case '{target}' is unstructured, eh?")
                                 native_regrid_kwargs = {}
                                 #Check if any a FV file exists if using native grid
-                                baseline_fv_file   = adf.get_baseline_info("fv_file")
+                                baseline_latlon_file   = adf.latlon_files("base_latlon_file")
 
                                 #Check if any a weights file exists if using native grid, OPTIONAL
-                                baseline_wgts_file   = adf.get_baseline_info("weights_file")
+                                baseline_wgts_file   = adf.latlon_wgt_files("base_wgts_file")
+                                base_method = adf.latlon_regrid_method("base_regrid_method")
                                 if baseline_wgts_file:
                                     native_regrid_kwargs["wgt_file"] = baseline_wgts_file
-                                if baseline_fv_file:
-                                    native_regrid_kwargs["fv_file"] = baseline_fv_file
+                                else:
+                                    print("This looks like an unstructured case, but missing weights file")
+                                if baseline_latlon_file:
+                                    native_regrid_kwargs["latlon_file"] = baseline_latlon_file
+                                else:
+                                    print("This looks like an unstructured case, but missing lat/lon file")
+                                    #adf error thingy
                                 tgdata_interp = _regrid(tclim_ds, var,
-                                                regrid_dataset=tclim_ds,
                                                 comp=comp,
+                                                method=base_method,
                                                 **native_regrid_kwargs)
                             else:
                                 print("Trying everything and nothing is working. I guess this really is a problem!")
@@ -986,7 +1007,7 @@ def regrid_data(fromthis, tothis, method=1):
     return rgdata'''
 
 
-def _regrid(model_dataset, var_name, comp, regrid_dataset=None, **kwargs):
+def _regrid(model_dataset, var_name, comp, method, **kwargs):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -1054,15 +1075,13 @@ def _regrid(model_dataset, var_name, comp, regrid_dataset=None, **kwargs):
         #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
         if "wgt_file" in kwargs:
             weight_file = kwargs["wgt_file"]
-
-
-        #fv_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-        if "fv_file" in kwargs:
-            fv_file = kwargs["fv_file"]
+        #latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+        if "latlon_file" in kwargs:
+            latlon_file = kwargs["latlon_file"]
         else:
             print("Well, it looks like you're missing a target grid file for regridding!")
             #adferror thing
-        fv_ds = xr.open_dataset(fv_file)
+        fv_ds = xr.open_dataset(latlon_file)
 
         model_dataset[var_name] = model_dataset[var_name].fillna(0)
         if comp == "lnd":
@@ -1084,10 +1103,10 @@ def _regrid(model_dataset, var_name, comp, regrid_dataset=None, **kwargs):
         regridder = make_se_regridder(weight_file=weight_file,
                                       s_data = s_data, #model_dataset.landmask.isel(time=0),
                                       d_data = d_data, #fv_ds.landmask,
-                                      Method = 'coservative',  # Bug in xesmf needs this without "n"
+                                      Method = method,  # Bug in xesmf needs this without "n"
                                       )
-
-        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+        if method == 'coservative':
+            rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
 
         if comp == "lnd":
             rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
