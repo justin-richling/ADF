@@ -264,6 +264,7 @@ def regrid_and_vert_interp(adf):
 
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
+                    native_regrid_kwargs = {}
 
                     if comp == "atm":
                         #Check if target in relevant pressure variable dictionaries:
@@ -294,13 +295,13 @@ def regrid_and_vert_interp(adf):
                             #Check if any a weights file exists if using native grid, OPTIONAL
                             baseline_wgts_file   = adf.get_cam_info("weights_file")
                             if baseline_wgts_file:
-                                regrid_kwargs["wgt_file"] = baseline_wgts_file
+                                native_regrid_kwargs["wgt_file"] = baseline_wgts_file
                             if baseline_fv_file:
-                                regrid_kwargs["fv_file"] = baseline_fv_file
+                                native_regrid_kwargs["fv_file"] = baseline_fv_file
                             rgdata_interp = _regrid(mclim_ds, var,
                                                 regrid_dataset=tclim_ds,
                                                 comp=comp,
-                                                **regrid_kwargs)
+                                                **native_regrid_kwargs)
                         else:
                             print("Trying everything and nothing is working. I guess this really is a problem!")
                     else:
@@ -399,19 +400,20 @@ def regrid_and_vert_interp(adf):
                         if ('lat' not in tclim_ds.dims) and ('lat' not in tclim_ds.dims):
                             if ('ncol' in tclim_ds.dims) or ('lndgrid' in tclim_ds.dims):
                                 print(f"Looks like baseline case '{target}' is unstructured, eh?")
+                                native_regrid_kwargs = {}
                                 #Check if any a FV file exists if using native grid
                                 baseline_fv_file   = adf.get_baseline_info("fv_file")
 
                                 #Check if any a weights file exists if using native grid, OPTIONAL
                                 baseline_wgts_file   = adf.get_baseline_info("weights_file")
                                 if baseline_wgts_file:
-                                    regrid_kwargs["wgt_file"] = baseline_wgts_file
+                                    native_regrid_kwargs["wgt_file"] = baseline_wgts_file
                                 if baseline_fv_file:
-                                    regrid_kwargs["fv_file"] = baseline_fv_file
+                                    native_regrid_kwargs["fv_file"] = baseline_fv_file
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                 regrid_dataset=tclim_ds,
                                                 comp=comp,
-                                                **regrid_kwargs)
+                                                **native_regrid_kwargs)
                             else:
                                 print("Trying everything and nothing is working. I guess this really is a problem!")
                         else:
