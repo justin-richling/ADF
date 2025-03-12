@@ -67,11 +67,11 @@ def regrid_and_vert_interp(adf):
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
     unstruct_cases = adf.unstructs['unstruct_tests']
 
-    case_latlon_files   = adf.latlon_files("test_latlon_file")
+    case_latlon_files   = adf.latlon_files["test_latlon_file"]
     #print("case_latlon_file",case_latlon_file,"\n")
     #Check if any a weights file exists if using native grid, OPTIONAL
-    case_wgts_files   = adf.latlon_wgt_files("test_wgts_file")
-    case_methods = adf.latlon_regrid_method("test_regrid_method")
+    case_wgts_files   = adf.latlon_wgt_files["test_wgts_file"]
+    case_methods = adf.latlon_regrid_method["test_regrid_method"]
 
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
@@ -417,11 +417,11 @@ def regrid_and_vert_interp(adf):
                                 print(f"Looks like baseline case '{target}' is unstructured, eh?")
                                 native_regrid_kwargs = {}
                                 #Check if any a FV file exists if using native grid
-                                baseline_latlon_file   = adf.latlon_files("base_latlon_file")
+                                baseline_latlon_file   = adf.latlon_files["base_latlon_file"]
 
                                 #Check if any a weights file exists if using native grid, OPTIONAL
-                                baseline_wgts_file   = adf.latlon_wgt_files("base_wgts_file")
-                                base_method = adf.latlon_regrid_method("base_regrid_method")
+                                baseline_wgts_file   = adf.latlon_wgt_files["base_wgts_file"]
+                                base_method = adf.latlon_regrid_method["base_regrid_method"]
                                 if baseline_wgts_file:
                                     native_regrid_kwargs["wgt_file"] = baseline_wgts_file
                                 else:
