@@ -291,7 +291,7 @@ def regrid_and_vert_interp(adf):
                             print(f"Looks like test case '{case_name}' is unstructured, eh?")
                             #Check if any a FV file exists if using native grid
                             baseline_fv_file   = adf.get_cam_info("fv_file")
-
+                            print("baseline_fv_file",baseline_fv_file,"\n")
                             #Check if any a weights file exists if using native grid, OPTIONAL
                             baseline_wgts_file   = adf.get_cam_info("weights_file")
                             if baseline_wgts_file:
