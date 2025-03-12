@@ -44,7 +44,11 @@ def unstructure_regrid(model_dataset, var_name, comp="atm", **kwargs):
         comp_grid = "lndgrid"
 
     #Extract variable info from model data (and remove any degenerate dimensions):
-    mdata = model_dataset[var_name].squeeze()
+    if var_name:
+        mdata = model_dataset[var_name].squeeze()
+    else:
+        #if isinstance(xo, xr.Dataset):
+        mdata = model_dataset
     mdat_ofrac = None
     #if regrid_lfrac:
     #    if 'LANDFRAC' in model_dataset:
@@ -64,31 +68,50 @@ def unstructure_regrid(model_dataset, var_name, comp="atm", **kwargs):
         #End if"""
 
         # Hardwiring for now
-        con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
+        #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
+        if "wgt_file" in kwargs:
+            weight_file = kwargs["wgt_file"]
 
-        fv_t232_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-        fv_t232 = xr.open_dataset(fv_t232_file)
+
+        #fv_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+        if "latlon_file" in kwargs:
+            fv_file = kwargs["latlon_file"]
+        else:
+            print("Well, it looks like you're missing a target grid file for regridding!")
+            #adferror thing
+        fv_ds = xr.open_dataset(fv_file)
 
         model_dataset[var_name] = model_dataset[var_name].fillna(0)
         if comp == "lnd":
             model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+            if var_name:
+                model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+            s_data = model_dataset.landmask.isel(time=0)
+            d_data = fv_ds.landmask
+        else:
+            if var_name:
+                s_data = model_dataset[var_name].isel(time=0)
+                d_data = fv_ds[var_name]
+            else:
+                s_data = model_dataset.isel(time=0)
+                d_data = fv_ds
 
         #Regrid model data to match target grid:
         # These two functions come with import regrid_se_to_fv
-        regridder = make_se_regridder(weight_file=con_weight_file,
-                                      s_data = model_dataset.landmask.isel(time=0),
-                                      d_data = fv_t232.landmask,
+        regridder = make_se_regridder(weight_file=weight_file,
+                                      s_data = s_data, #model_dataset.landmask.isel(time=0),
+                                      d_data = d_data, #fv_ds.landmask,
                                       Method = 'coservative',  # Bug in xesmf needs this without "n"
                                       )
+
         rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
 
         if comp == "lnd":
             rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
-            rgdata['landmask'] = fv_t232.landmask
+            rgdata['landmask'] = fv_ds.landmask
             rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
-        rgdata['lat'] = fv_t232.lat
+        rgdata['lat'] = fv_ds.lat
         #rgdata['landmask'] = fv_t232.landmask
         #rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
@@ -137,7 +160,16 @@ import numpy as np
 def make_se_regridder(weight_file, s_data, d_data,
                       Method='coservative'
                       ):
-    weights = xr.open_dataset(weight_file)
+    # Intialize dict for xesmf.Regridder
+    regridder_kwargs = {}
+
+    if weight_file:
+        weights = xr.open_dataset(weight_file)
+        regridder_kwargs['weights'] = weights
+    else:
+        print("No weights file given, so I'm gonna need to make one. Please have a seat and the next associate will be with you shortly. Please don't tap the glass!")
+        regridder_kwargs['method'] = 'coservative'
+    
     in_shape = weights.src_grid_dims.load().data
 
     # Since xESMF expects 2D vars, we'll insert a dummy dimension of size-1
@@ -171,12 +203,13 @@ def make_se_regridder(weight_file, s_data, d_data,
     regridder = xesmf.Regridder(
         dummy_in,
         dummy_out,
-        weights=weight_file,
+        #weights=weight_file,
         # results seem insensitive to this method choice
         # choices are coservative_normed, coservative, and bilinear
-        method=Method,
+        #method=Method,
         reuse_weights=True,
         periodic=True,
+        **regridder_kwargs
     )
     return regridder
 
@@ -191,3 +224,24 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
     return regridded
+
+
+
+
+def save_to_nc(tosave, outname, attrs=None, proc=None):
+    """Saves xarray variable to new netCDF file"""
+
+    xo = tosave  # used to have more stuff here.
+    # deal with getting non-nan fill values.
+    if isinstance(xo, xr.Dataset):
+        enc_dv = {xname: {'_FillValue': None} for xname in xo.data_vars}
+    else:
+        enc_dv = {}
+    #End if
+    enc_c = {xname: {'_FillValue': None} for xname in xo.coords}
+    enc = {**enc_c, **enc_dv}
+    if attrs is not None:
+        xo.attrs = attrs
+    if proc is not None:
+        xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
+    xo.to_netcdf(outname, format='NETCDF4', encoding=enc)

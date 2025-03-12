@@ -292,6 +292,8 @@ def regrid_and_vert_interp(adf):
                                                 regrid_dataset=tclim_ds,
                                                 comp=comp,
                                                 **regrid_kwargs)
+                        else:
+                            print("Trying everything and nothing is working. I guess this really is a problem!")
                     else:
                         rgdata_interp = mclim_ds
                     #else:
@@ -392,6 +394,8 @@ def regrid_and_vert_interp(adf):
                                                 regrid_dataset=tclim_ds,
                                                 comp=comp,
                                                 **regrid_kwargs)
+                            else:
+                                print("Trying everything and nothing is working. I guess this really is a problem!")
                         else:
                             tgdata_interp = tclim_ds
 
