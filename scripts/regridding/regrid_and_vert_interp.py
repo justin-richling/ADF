@@ -295,9 +295,9 @@ def regrid_and_vert_interp(adf):
                             #Check if any a weights file exists if using native grid, OPTIONAL
                             baseline_wgts_file   = adf.get_cam_info("weights_file")
                             if baseline_wgts_file:
-                                native_regrid_kwargs["wgt_file"] = baseline_wgts_file
+                                native_regrid_kwargs["wgt_file"] = baseline_wgts_file[0]
                             if baseline_fv_file:
-                                native_regrid_kwargs["fv_file"] = baseline_fv_file
+                                native_regrid_kwargs["fv_file"] = baseline_fv_file[0]
                             rgdata_interp = _regrid(mclim_ds, var,
                                                 regrid_dataset=tclim_ds,
                                                 comp=comp,
