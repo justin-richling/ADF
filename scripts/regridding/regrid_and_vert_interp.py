@@ -1057,8 +1057,8 @@ def _regrid(model_dataset, var_name, comp, regrid_dataset=None, **kwargs):
 
 
         #fv_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-        if "latlon_file" in kwargs:
-            fv_file = kwargs["latlon_file"]
+        if "fv_file" in kwargs:
+            fv_file = kwargs["fv_file"]
         else:
             print("Well, it looks like you're missing a target grid file for regridding!")
             #adferror thing
