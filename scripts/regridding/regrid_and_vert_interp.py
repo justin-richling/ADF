@@ -305,11 +305,11 @@ def regrid_and_vert_interp(adf):
                             case_wgts_file   = case_wgts_files[case_idx]
                             case_method = case_methods[case_idx]
                             if case_wgts_file:
-                                native_regrid_kwargs["wgt_file"] = case_wgts_file[0]
+                                native_regrid_kwargs["wgt_file"] = case_wgts_file
                             else:
                                 print("This looks like an unstructured case, but missing weights file")
                             if case_latlon_file:
-                                native_regrid_kwargs["latlon_file"] = case_latlon_file[0]
+                                native_regrid_kwargs["latlon_file"] = case_latlon_file
                             else:
                                 print("This looks like an unstructured case, but missing lat/lon file")
                                 #adf error thingy
