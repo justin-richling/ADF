@@ -542,6 +542,7 @@ class AdfInfo(AdfConfig):
         cam_regrid_methods = []
         for regr_method in cam_regrid_method:
             if regr_method == 'conservative':
+                print("user defined 'conservative', but xesmf has a typo, changing to 'coservative'")
                 cam_regrid_methods.append('coservative')
             else:
                 cam_regrid_methods.append(regr_method)
