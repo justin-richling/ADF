@@ -1183,7 +1183,7 @@ def make_se_regridder(weight_file, s_data, d_data,
         #weights=weight_file,
         # results seem insensitive to this method choice
         # choices are coservative_normed, coservative, and bilinear
-        #method=Method,
+        method=Method,
         reuse_weights=True,
         periodic=True,
         **regridder_kwargs
