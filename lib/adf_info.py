@@ -615,19 +615,6 @@ class AdfInfo(AdfConfig):
                 starting_location = Path(cam_hist_locs[case_idx])
                 print(f"\tChecking history files in '{starting_location}'")
 
-                file_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                case_ds = xr.open_dataset(file_list[0], decode_times=True)
-                if 'ncols' in case_ds.dims:
-                    print('Looks like this is an atmosphere unstructured grid, yeah')
-                    unstruct = True
-                if 'lndgrid' in case_ds.dims:
-                    print('Looks like this is a land unstructured grid, yeah')
-                    unstruct = True
-                else:
-                    print('Looks like this is a structured lat/lon grid?')
-                    unstruct = False
-                unstructs.append(unstruct)
-
                 #Check if the history file location exists
                 if not starting_location.is_dir():
                     msg = "Checking history file location:\n"
@@ -650,6 +637,18 @@ class AdfInfo(AdfConfig):
                     emsg += "in 'diag_cam_climo' "
                     emsg += "section in your config file are correct..."
                     self.end_diag_fail(emsg)
+                
+                case_ds = xr.open_dataset(file_list[0], decode_times=True)
+                if 'ncols' in case_ds.dims:
+                    print('Looks like this is an atmosphere unstructured grid, yeah')
+                    unstruct = True
+                if 'lndgrid' in case_ds.dims:
+                    print('Looks like this is a land unstructured grid, yeah')
+                    unstruct = True
+                else:
+                    print('Looks like this is a structured lat/lon grid?')
+                    unstruct = False
+                unstructs.append(unstruct)
 
                 #Partition string to find exactly where h-number is
                 #This cuts the string before and after the `{hist_str}.` sub-string
