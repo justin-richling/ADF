@@ -308,7 +308,7 @@ class AdfInfo(AdfConfig):
                     errmsg = f"\t ERROR: Time series directory '{input_ts_loc}' not found.  Script is exiting."
                     raise AdfError(errmsg)"""
                 #ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
-                base_ds = xr.open_dataset(file_list[0], decode_times=True)
+                
 
                 #Check if the history file location exists
                 if not starting_location.is_dir():
@@ -331,6 +331,7 @@ class AdfInfo(AdfConfig):
                     emsg += " in 'diag_cam_baseline_climo' "
                     emsg += "section in your config file are correct..."
                     self.end_diag_fail(emsg)
+                base_ds = xr.open_dataset(file_list[0], decode_times=True)
 
                 # Partition string to find exactly where h-number is
                 # This cuts the string before and after the `{hist_str}.` sub-string
