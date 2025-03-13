@@ -1217,7 +1217,7 @@ def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
         else:
             raise ValueError("Unable to determine input shape from s_data.")
 
-    in_shape = weights.src_grid_dims.load().data
+    #in_shape = weights.src_grid_dims.load().data
 
     # Ensure 2D compatibility for xESMF (reshape if needed)
     if len(in_shape) == 1:
