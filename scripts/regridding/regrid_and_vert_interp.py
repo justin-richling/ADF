@@ -319,7 +319,7 @@ def regrid_and_vert_interp(adf):
                             #                    **native_regrid_kwargs)
                             #case_latlon_file
                             fv_ds = xr.open_dataset(case_latlon_file)
-                            rgdata_interp = regrid_unstructured_to_latlon(mclim_ds, fv_ds.lat, fv_ds.lon, fv_ds)
+                            rgdata_interp = regrid_unstructured_to_latlon(mclim_ds, fv_ds.data.lat, fv_ds.data.lon, fv_ds)
                         else:
                             print("Trying everything and nothing is working. I guess this really is a problem!")
                     else:
