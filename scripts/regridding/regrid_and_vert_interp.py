@@ -1090,7 +1090,7 @@ def make_se_regridder(weight_file, s_data, d_data,
 
 
 
-
+'''
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
@@ -1102,7 +1102,7 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
     return regridded
-'''
+
 
 
 
@@ -1141,6 +1141,8 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
 
     # Identify source and destination data for regridding
     if comp == "lnd":
+        model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+        model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
         s_data = model_dataset.landmask.isel(time=0)
         d_data = fv_ds.landmask
     else:
@@ -1223,11 +1225,12 @@ def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
 
     return regridder
 
-def regrid_se_data_conservative(regridder, model_dataset, comp_grid):
+'''def regrid_se_data_conservative(regridder, model_dataset, comp_grid):
     """
     Apply conservative regridding to the dataset.
     """
     return regridder(model_dataset)
+'''
 
 def _calculate_area(rgdata):
     """
