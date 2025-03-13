@@ -1221,6 +1221,7 @@ def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     s_mask = xr.DataArray(s_data.data.reshape(in_shape[0], in_shape[1]), dims=("lat", "lon"))
     dummy_in['mask'] = s_mask
 
+    print("AHHHH",d_data,"\n\n")
     d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))
     dummy_out['mask'] = d_mask
 
