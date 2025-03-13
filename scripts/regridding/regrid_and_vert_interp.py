@@ -1157,8 +1157,12 @@ def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     regridder_kwargs = {}
 
     # Load weights if available
-    weights = xr.open_dataset(weight_file)
-    regridder_kwargs['weights'] = weights
+    if weight_file:
+        weights = xr.open_dataset(weight_file)
+        regridder_kwargs['weights'] = weights
+    else:
+        print("No weights file given, so I'm gonna need to make one. Please have a seat and the next associate will be with you shortly. Please don't tap the glass!")
+        regridder_kwargs['method'] = 'coservative'
 
     in_shape = weights.src_grid_dims.load().data
 
