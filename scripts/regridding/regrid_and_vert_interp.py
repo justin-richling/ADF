@@ -1223,15 +1223,22 @@ def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     if len(in_shape) == 1:
         in_shape = [1, in_shape.item()]
 
-    out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
+    #out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
 
     dummy_in = xr.Dataset({
         "lat": ("lat", np.empty((in_shape[0],))),
         "lon": ("lon", np.empty((in_shape[1],))),
     })
+    
+    #dummy_out = xr.Dataset({
+    #    "lat": ("lat", weights.yc_b.data.reshape(out_shape)[:, 0]),
+    #    "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
+    #})
+
+    # Create destination grid from d_data (lat/lon grid)
     dummy_out = xr.Dataset({
-        "lat": ("lat", weights.yc_b.data.reshape(out_shape)[:, 0]),
-        "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
+        "lat": d_data['lat'],
+        "lon": d_data['lon']
     })
 
     # Handle source and destination masks
