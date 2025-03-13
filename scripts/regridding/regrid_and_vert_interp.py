@@ -319,7 +319,8 @@ def regrid_and_vert_interp(adf):
                                                 method=case_method,
                                                 **native_regrid_kwargs)
                             print("\n\nrgdata_interp WORKS",rgdata_interp,"\n\n")
-                            rgdata_interp = _regrid_BAD(mclim_ds, var, comp, case_method, 
+                            rgdata_interp = _regrid_BAD(mclim_ds, var, comp=comp,
+                                                method=case_method, 
                                                         **native_regrid_kwargs)
                             print("\n\nrgdata_interp BAD",rgdata_interp,"\n\n")
                             #case_latlon_file
