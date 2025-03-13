@@ -1189,7 +1189,7 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
 
 
 
-def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
+'''def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     """
     Create xESMF regridder for spectral element grids.
     """
@@ -1263,6 +1263,93 @@ def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     )
 
     return regridder
+'''
+
+
+
+
+
+def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
+    """
+    Create an xESMF regridder for spectral element grids (with or without weights).
+    """
+    regridder_kwargs = {}
+    weights = None
+
+    # Load weights if provided
+    if weight_file:
+        try:
+            weights = xr.open_dataset(weight_file)
+            regridder_kwargs['weights'] = weights
+            print(f"Using weights from: {weight_file}")
+        except Exception as e:
+            print(f"Error loading weights: {e}. Proceeding without weights.")
+
+    # Determine input and output grid shapes
+    if weights:
+        in_shape = weights.src_grid_dims.load().data
+        if len(in_shape) == 1:
+            in_shape = [1, in_shape.item()]
+        out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
+
+        # Use spectral grid coordinates if weights are present
+        src_lat = weights.yc_a.data
+        src_lon = weights.xc_a.data
+        dst_lat = weights.yc_b.data
+        dst_lon = weights.xc_b.data
+
+    else:
+        # Infer from source and destination data (if no weights)
+        if 'time' in s_data.dims:
+            s_data = s_data.isel(time=0)
+        in_shape = (1, s_data.sizes[s_data.dims[-1]])
+
+        dst_lat = d_data.lat.values
+        dst_lon = d_data.lon.values
+
+        # Handle unstructured source grid if no weights
+        src_lat = np.full((in_shape[1],), np.nan)
+        src_lon = np.full((in_shape[1],), np.nan)
+
+    # Create the source grid (dummy for unstructured)
+    dummy_in = xr.Dataset({
+        "lat": (("ncol",), src_lat),
+        "lon": (("ncol",), src_lon),
+    })
+
+    # Create the destination grid from d_data
+    dummy_out = xr.Dataset({
+        "lat": (("lat",), dst_lat),
+        "lon": (("lon",), dst_lon),
+    })
+
+    # Mask handling for conservative methods
+    s_mask = xr.DataArray(s_data.values.reshape(in_shape), dims=("ncol",))
+    dummy_in['mask'] = s_mask
+
+    if 'time' in d_data.dims:
+        d_data = d_data.isel(time=0)
+    d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))
+    dummy_out['mask'] = d_mask
+
+    # If no weights are provided, compute on-the-fly
+    if not weights:
+        print("No weights provided—computing on-the-fly. This may take time!")
+        regridder_kwargs['filename'] = "generated_weights.nc"
+
+    # Create xESMF regridder
+    regridder = xesmf.Regridder(
+        dummy_in,
+        dummy_out,
+        method=Method,
+        reuse_weights=True,
+        periodic=True,
+        **regridder_kwargs
+    )
+
+    return regridder
+
+
 
 '''def regrid_se_data_conservative(regridder, model_dataset, comp_grid):
     """
