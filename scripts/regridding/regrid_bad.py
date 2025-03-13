@@ -82,7 +82,6 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
     rgdata["lon"] = fv_ds.lon
 
     # Compute grid cell area (optional but useful for post-processing)
-    rgdata["area"] = _calculate_area(rgdata)
+    #rgdata["area"] = _calculate_area(rgdata)
 
     return rgdata
-
