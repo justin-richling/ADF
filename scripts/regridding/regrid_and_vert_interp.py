@@ -1280,7 +1280,7 @@ import xarray as xr
 import xesmf
 import numpy as np
 
-def make_se_regridder(weight_file, s_data, d_data,
+'''def make_se_regridder(weight_file, s_data, d_data,
                       Method='coservative'
                       ):
     # Intialize dict for xesmf.Regridder
@@ -1334,7 +1334,66 @@ def make_se_regridder(weight_file, s_data, d_data,
         periodic=True,
         **regridder_kwargs
     )
+    return regridder'''
+
+
+
+def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
+    import xarray as xr
+    import numpy as np
+    import xesmf as xe
+
+    regridder_kwargs = {}
+
+    # Load weights if provided
+    if weight_file:
+        weights = xr.open_dataset(weight_file)
+        regridder_kwargs["weights"] = weights
+    else:
+        print("No weights file provided. Generating new weights...")
+        regridder_kwargs["method"] = Method
+
+    # Ensure s_data is 2D (for regridder initialization)
+    if s_data.ndim == 3:
+        lev_dim = [dim for dim in s_data.dims if dim not in ['lat', 'lon']][0]
+        s_data_2d = s_data.isel({lev_dim: 0})  # Use one level for regridder setup
+    else:
+        s_data_2d = s_data
+
+    # Extract grid shapes from weights (or fallback to data shape)
+    in_shape = weights.src_grid_dims.load().data if "weights" in regridder_kwargs else s_data_2d.shape
+    out_shape = weights.dst_grid_dims.load().data.tolist()[::-1] if "weights" in regridder_kwargs else d_data.shape
+
+    # Create dummy lat/lon for xESMF initialization
+    dummy_in = xr.Dataset({
+        "lat": ("lat", np.empty((in_shape[0],))),
+        "lon": ("lon", np.empty((in_shape[1],))),
+    })
+
+    dummy_out = xr.Dataset({
+        "lat": ("lat", d_data.lat.data),
+        "lon": ("lon", d_data.lon.data),
+    })
+
+    # Apply mask (if needed for regridding)
+    s_mask = xr.DataArray(s_data_2d.data, dims=("lat", "lon"))
+    dummy_in["mask"] = s_mask
+
+    d_mask = xr.DataArray(d_data.data, dims=("lat", "lon"))
+    dummy_out["mask"] = d_mask
+
+    # Initialize the xESMF regridder
+    regridder = xe.Regridder(
+        dummy_in,
+        dummy_out,
+        method=Method,
+        reuse_weights=True,
+        periodic=True,
+        **regridder_kwargs
+    )
+
     return regridder
+
 
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
