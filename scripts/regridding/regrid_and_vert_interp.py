@@ -1126,7 +1126,7 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
 
     return rgdata
 
-def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
+def make_se_regridder_BAD(weight_file, s_data, d_data, Method='coservative'):
     """
     Create xESMF regridder for spectral element grids.
     """
