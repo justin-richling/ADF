@@ -313,13 +313,13 @@ def regrid_and_vert_interp(adf):
                             else:
                                 print("This looks like an unstructured case, but missing lat/lon file")
                                 #adf error thingy
-                            #rgdata_interp = _regrid(mclim_ds, var,
-                            #                    comp=comp,
-                            #                    method=case_method,
-                            #                    **native_regrid_kwargs)
+                            rgdata_interp = _regrid(mclim_ds, var,
+                                                comp=comp,
+                                                method=case_method,
+                                                **native_regrid_kwargs)
                             #case_latlon_file
-                            fv_ds = xr.open_dataset(case_latlon_file)
-                            rgdata_interp = regrid_unstructured_to_latlon(mclim_ds, fv_ds.lat, fv_ds.lon, fv_ds)
+                            #fv_ds = xr.open_dataset(case_latlon_file)
+                            #rgdata_interp = regrid_unstructured_to_latlon(mclim_ds, fv_ds.lat, fv_ds.lon, fv_ds)
                         else:
                             print("Trying everything and nothing is working. I guess this really is a problem!")
                     else:
@@ -1241,33 +1241,6 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
     return rgdata'''
 
 
-def _calculate_area(rgdata):
-    import numpy as np
-    import xarray as xr
-
-    area_km2 = np.zeros((len(rgdata["lat"]), len(rgdata["lon"])))
-    earth_radius_km = 6.37122e3
-
-    yres_degN = np.abs(np.diff(rgdata["lat"].data))
-    xres_degE = np.abs(np.diff(rgdata["lon"].data))
-
-    yres_degN = np.append(yres_degN, yres_degN[-1])
-    xres_degE = np.append(xres_degE, xres_degE[-1])
-
-    dy_km = yres_degN * earth_radius_km * np.pi / 180
-    phi_rad = rgdata["lat"].data * np.pi / 180
-
-    for j in range(len(rgdata["lat"])):
-        for i in range(len(rgdata["lon"])):
-            dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180
-            area_km2[j, i] = dy_km[j] * dx_km
-
-    area_da = xr.DataArray(area_km2, coords={"lat": rgdata.lat, "lon": rgdata.lon}, dims=["lat", "lon"])
-    area_da.attrs.update({"units": "km2", "long_name": "Grid cell area"})
-
-    return area_da
-
-
 
 
 
@@ -1356,82 +1329,3 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
 
 
 
-import xarray as xr
-import numpy as np
-import xesmf as xe
-
-def regrid_unstructured_to_latlon(data_array, lat, lon, target_grid, method="conservative"):
-    """
-    Regrid CESM unstructured grid DataArray (2D or 3D) to a lat/lon grid.
-
-    Parameters:
-    -----------
-    data_array : xarray.DataArray
-        Input DataArray with dimensions ('ncol',) or ('lev', 'ncol').
-    lat : xarray.DataArray or np.array
-        Latitude values corresponding to the 'ncol' dimension.
-    lon : xarray.DataArray or np.array
-        Longitude values corresponding to the 'ncol' dimension.
-    target_grid : xarray.Dataset
-        Target lat/lon grid with 'lat' and 'lon' dimensions.
-    method : str
-        Regridding method ('conservative', 'bilinear', 'nearest_s2d', etc.).
-
-    Returns:
-    --------
-    regridded_data : xarray.DataArray
-        Regridded data on the target lat/lon grid.
-    """
-
-    # Ensure lat and lon are 1D arrays matching 'ncol'
-    if "ncol" not in data_array.dims:
-        raise ValueError("Input DataArray must contain 'ncol' dimension for unstructured grid.")
-
-    # Handle 2D Data (ncol) or 3D Data (lev, ncol)
-    is_3d = "lev" in data_array.dims
-
-    # Handle xarray.DataArray or np.array inputs by extracting raw data
-    # Ensure lat/lon are plain numpy arrays
-    lat = to_numpy(lat)
-    lon = to_numpy(lon)
-
-    # Prepare source grid dataset for xESMF
-    source_grid = xr.Dataset({
-        "lat": (("ncol",), lat),
-        "lon": (("ncol",), lon),
-    })
-
-    # Ensure target grid has 'lat' and 'lon'
-    if "lat" not in target_grid or "lon" not in target_grid:
-        raise ValueError("Target grid must contain 'lat' and 'lon' dimensions.")
-
-    # Create the regridder
-    regridder = xe.Regridder(source_grid, target_grid, method, periodic=True)
-
-    # Handle 3D Data (Loop over levels)
-    if is_3d:
-        # Regrid each vertical level and stack back
-        regridded_levels = []
-        for lev in data_array.lev.values:
-            regridded_level = regridder(data_array.sel(lev=lev))
-            regridded_levels.append(regridded_level)
-
-        # Combine all levels back into a new DataArray
-        regridded_data = xr.concat(regridded_levels, dim="lev")
-        regridded_data["lev"] = data_array["lev"]
-
-    else:
-        # Handle 2D Data (ncol)
-        regridded_data = regridder(data_array)
-
-    # Cleanup the regridder to free memory
-    regridder.clean_weight_file()
-
-    return regridded_data
-
-
-def to_numpy(array):
-    """Convert DataArray to numpy array if needed."""
-    if isinstance(array, xr.DataArray):
-        return array.data
-    return np.asarray(array)  # Handles lists too
