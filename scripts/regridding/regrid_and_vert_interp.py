@@ -1029,7 +1029,7 @@ def make_se_regridder(weight_file, s_data, d_data,
         method=Method,
         reuse_weights=True,
         periodic=True,
-        **regridder_kwargs
+        #**regridder_kwargs
     )
     return regridder
 
