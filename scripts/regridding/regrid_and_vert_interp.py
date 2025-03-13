@@ -1117,7 +1117,7 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
         d_data = fv_ds.landmask
     else:
         s_data = mdata.isel(time=0)
-        d_data = fv_ds[var_name].isel(time=0)
+        d_data = fv_ds[var_name]
         #d_data = fv_ds[var_name] if var_name in fv_ds else fv_ds
 
     # Create regridder
@@ -1222,6 +1222,8 @@ def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     dummy_in['mask'] = s_mask
 
     print("AHHHH",d_data,"\n\n")
+    if 'time' in d_data.dims:
+        d_data = d_data.isel(time=0)
     d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))
     dummy_out['mask'] = d_mask
 
