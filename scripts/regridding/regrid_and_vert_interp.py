@@ -303,7 +303,10 @@ def regrid_and_vert_interp(adf):
                             case_latlon_file = case_latlon_files[case_idx]
                             print("case_latlon_file",case_latlon_file,"\n")
                             #Check if any a weights file exists if using native grid, OPTIONAL
-                            case_wgts_file   = case_wgts_files[case_idx]
+                            if case_wgts_files:
+                                case_wgts_file = case_wgts_files[case_idx]
+                            else:
+                                case_wgts_file = None
                             case_method = case_methods[case_idx]
                             if case_wgts_file:
                                 native_regrid_kwargs["wgt_file"] = case_wgts_file
@@ -431,6 +434,8 @@ def regrid_and_vert_interp(adf):
 
                                 #Check if any a weights file exists if using native grid, OPTIONAL
                                 baseline_wgts_file   = adf.latlon_wgt_files["base_wgts_file"]
+                                if not baseline_wgts_file:
+                                    baseline_wgts_file = None
                                 base_method = adf.latlon_regrid_method["base_regrid_method"]
                                 if baseline_wgts_file:
                                     native_regrid_kwargs["wgt_file"] = baseline_wgts_file
