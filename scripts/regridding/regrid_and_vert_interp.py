@@ -564,6 +564,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     #End if
 
     #Extract variable info from model data (and remove any degenerate dimensions):
+    #mdata = model_dataset[var_name].squeeze()
     mdata = model_dataset[var_name].squeeze()
     mdat_ofrac = None
     #if regrid_ofrac:
@@ -705,60 +706,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
                 tgrid = regrid_dataset.isel(time=0).squeeze()
             #End if
         #End if
-        '''if ('lat' not in mdata.dims) and ('lon' not in mdata.dims):
-            # Hardwiring for now
-            con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
 
-            fv_t232_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-            fv_t232 = xr.open_dataset(fv_t232_file)
-
-            model_dataset[var_name] = model_dataset[var_name].fillna(0)
-            model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
-            #Regrid model data to match target grid:
-            # These two functions come with import regrid_se_to_fv
-            regridder = make_se_regridder(weight_file=con_weight_file,
-                                        s_data = model_dataset.landmask.isel(time=0),
-                                        d_data = fv_t232.landmask,
-                                        Method = 'coservative',  # Bug in xesmf needs this without "n"
-                                        )
-            rgdata = regrid_se_data_conservative(regridder, model_dataset)
-
-            rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
-
-            rgdata['lat'] = fv_t232.lat
-            rgdata['landmask'] = fv_t232.landmask
-            rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
-
-            yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
-            xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
-            yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
-            xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
-
-            # calculate area
-            area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
-            earth_radius_km = 6.37122e3  # in meters
-
-            yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
-            xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
-            yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
-            xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
-
-            dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
-            phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
-
-            # grid cell area
-            for j in range(len(rgdata['lat'])):
-                for i in range(len(rgdata['lon'])):
-                    dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
-                    area_km2[j,i] = dy_km[j] * dx_km
-
-            rgdata['area'] = xr.DataArray(area_km2,
-                                        coords={'lat': rgdata.lat, 'lon': rgdata.lon},
-                                        dims=["lat", "lon"])
-            rgdata['area'].attrs['units'] = 'km2'
-            rgdata['area'].attrs['long_name'] = 'Grid cell area'
-        '''
         #Regrid model data to match target grid:
         rgdata = regrid_data(mdata, tgrid, method=1)
         if mdat_ofrac:
