@@ -1182,6 +1182,8 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
 
     if "wgt_file" in kwargs:
         weight_file = kwargs["wgt_file"]
+    else:
+        weight_file = None
     if "latlon_file" in kwargs:
         latlon_file = kwargs["latlon_file"]
     else:
@@ -1206,8 +1208,17 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
     # Create regridder
     regridder = make_se_regridder(weight_file=weight_file,
                                   s_data=mdata.isel(time=0), 
-                                  d_data=fv_ds[var_name] if var_name in fv_ds else fv_ds,
+                                  d_data=fv_ds[var_name],
                                   Method=method)
+
+    # Apply regridding across levels for 3D DataArray
+    rgdata = xr.concat(
+        [regridder(mdata.isel(lev=i)) for i in range(mdata.sizes["lev"])],
+        dim="lev"
+    )
+
+    # Restore the level dimension
+    rgdata["lev"] = mdata["lev"]
 
     # If 3D, loop through levels
     if lev_dim:
