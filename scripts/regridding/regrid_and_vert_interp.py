@@ -1062,25 +1062,46 @@ import xesmf
 
 def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
     """
-    Regrid model data (with optional vertical levels) to a lat/lon grid.
+    Function that takes a variable from a model xarray
+    dataset, regrids it to another dataset's lat/lon
+    coordinates (if applicable)
+    ----------
+    model_dataset -> The xarray dataset which contains the model variable data
+    var_name      -> The name of the variable to be regridded/interpolated.
+
+    Optional inputs:
+
+    ps_file        -> NOT APPLICABLE: A NetCDF file containing already re-gridded surface pressure
+    regrid_dataset -> The xarray dataset that contains the lat/lon grid that
+                      "var_name" will be regridded to.  If not present then
+                      only the vertical interpolation will be done.
+
+    kwargs         -> Keyword arguments that contain paths to THE REST IS NOT APPLICABLE: surface pressure
+                      and mid-level pressure files, which are necessary for
+                      certain types of vertical interpolation.
+
+    This function returns a new xarray dataset that contains the regridded
+    model variable.
     """
+
+    #Import ADF-specific functions:
+    import numpy as np
+    import plotting_functions as pf
     if comp == "atm":
         comp_grid = "ncol"
     if comp == "lnd":
         comp_grid = "lndgrid"
 
-    # Extract and squeeze variable
+    #Extract variable info from model data (and remove any degenerate dimensions):
     mdata = model_dataset[var_name].squeeze()
 
     if "wgt_file" in kwargs:
         weight_file = kwargs["wgt_file"]
-    else:
-        raise ValueError("Missing regridder weight file (wgt_file).")
-
     if "latlon_file" in kwargs:
         latlon_file = kwargs["latlon_file"]
     else:
-        raise ValueError("Missing target lat/lon grid file (latlon_file).")
+        print("Well, it looks like you're missing a target grid file for regridding!")
+        #adferror thing
 
     # Load target grid (lat/lon) from the provided dataset
     fv_ds = xr.open_dataset(latlon_file)
@@ -1095,7 +1116,8 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
         d_data = fv_ds.landmask
     else:
         s_data = mdata.isel(time=0)
-        d_data = fv_ds[var_name] if var_name in fv_ds else fv_ds
+        d_data = fv_ds[var_name]
+        #d_data = fv_ds[var_name] if var_name in fv_ds else fv_ds
 
     # Create regridder
     regridder = make_se_regridder_BAD(weight_file, s_data, d_data, method)
@@ -1126,7 +1148,9 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
 
     return rgdata
 
-def make_se_regridder_BAD(weight_file, s_data, d_data, Method='coservative'):
+
+
+def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     """
     Create xESMF regridder for spectral element grids.
     """
