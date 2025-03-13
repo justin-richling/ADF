@@ -1097,6 +1097,8 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
 
     if "wgt_file" in kwargs:
         weight_file = kwargs["wgt_file"]
+    else:
+        weight_file = None
     if "latlon_file" in kwargs:
         latlon_file = kwargs["latlon_file"]
     else:
