@@ -1126,9 +1126,6 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
                                       d_data = d_data, #fv_ds.landmask,
                                       Method = method,  # Bug in xesmf needs this without "n"
                                       )
-    if method == 'coservative':
-        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
-
 
     # Handle 2D vs 3D data (with or without 'lev')
     if "lev" in mdata.dims:
