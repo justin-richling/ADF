@@ -1391,8 +1391,9 @@ def regrid_unstructured_to_latlon(data_array, lat, lon, target_grid, method="con
     is_3d = "lev" in data_array.dims
 
     # Handle xarray.DataArray or np.array inputs by extracting raw data
-    lat = lat.data if isinstance(lat, xr.DataArray) else lat
-    lon = lon.data if isinstance(lon, xr.DataArray) else lon
+    # Ensure lat/lon are plain numpy arrays
+    lat = to_numpy(lat)
+    lon = to_numpy(lon)
 
     # Prepare source grid dataset for xESMF
     source_grid = xr.Dataset({
@@ -1427,3 +1428,10 @@ def regrid_unstructured_to_latlon(data_array, lat, lon, target_grid, method="con
     regridder.clean_weight_file()
 
     return regridded_data
+
+
+def to_numpy(array):
+    """Convert DataArray to numpy array if needed."""
+    if isinstance(array, xr.DataArray):
+        return array.data
+    return np.asarray(array)  # Handles lists too
