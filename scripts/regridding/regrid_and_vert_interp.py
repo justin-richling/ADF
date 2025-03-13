@@ -314,14 +314,13 @@ def regrid_and_vert_interp(adf):
                             else:
                                 print("This looks like an unstructured case, but missing lat/lon file")
                                 #adf error thingy
-                            rgdata_interp = _regrid(mclim_ds, var,
-                                                comp=comp,
-                                                method=case_method,
-                                                **native_regrid_kwargs)
+                            #rgdata_interp = _regrid(mclim_ds, var,
+                            #                    comp=comp,
+                            #                    method=case_method,
+                            #                    **native_regrid_kwargs)
 
-                            #rgdata_interp = _regrid_BAD(mclim_ds, var, comp, case_method, 
-                            #        wgt_file=case_wgts_file, 
-                            #        latlon_file=case_latlon_file)
+                            rgdata_interp = _regrid_BAD(mclim_ds, var, comp, case_method, 
+                                                        **native_regrid_kwargs)
                             #case_latlon_file
                             #fv_ds = xr.open_dataset(case_latlon_file)
                             #rgdata_interp = regrid_unstructured_to_latlon(mclim_ds, fv_ds.lat, fv_ds.lon, fv_ds)
