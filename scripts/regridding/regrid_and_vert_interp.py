@@ -1117,7 +1117,7 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
         d_data = fv_ds.landmask
     else:
         s_data = mdata.isel(time=0)
-        d_data = fv_ds[var_name]
+        d_data = fv_ds[var_name].isel(time=0)
         #d_data = fv_ds[var_name] if var_name in fv_ds else fv_ds
 
     # Create regridder
