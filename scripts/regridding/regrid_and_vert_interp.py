@@ -1121,6 +1121,8 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
         #d_data = fv_ds[var_name] if var_name in fv_ds else fv_ds
 
     # Create regridder
+    print("s_data.shape",s_data.shape)
+    print("d_data.shape",d_data.shape)
     regridder = make_se_regridder_BAD(weight_file=weight_file,
                                       s_data = s_data, #model_dataset.landmask.isel(time=0),
                                       d_data = d_data, #fv_ds.landmask,
