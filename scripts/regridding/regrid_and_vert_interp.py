@@ -1356,27 +1356,38 @@ def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
     # Ensure s_data is 2D (for regridder initialization)
     if s_data.ndim == 3:
         lev_dim = [dim for dim in s_data.dims if dim not in ['lat', 'lon']][0]
-        s_data_2d = s_data.isel({lev_dim: 0})  # Use one level for regridder setup
+        s_data_2d = s_data.isel({lev_dim: 0})  # Take a slice for regridder setup
     else:
         s_data_2d = s_data
 
-    # Extract grid shapes from weights (or fallback to data shape)
-    in_shape = weights.src_grid_dims.load().data if "weights" in regridder_kwargs else s_data_2d.shape
-    out_shape = weights.dst_grid_dims.load().data.tolist()[::-1] if "weights" in regridder_kwargs else d_data.shape
+    # Handle unstructured grids (1D case)
+    if "weights" in regridder_kwargs:
+        in_shape = weights.src_grid_dims.load().data
+        out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
+    else:
+        in_shape = s_data_2d.shape
+        out_shape = d_data.shape
 
-    # Create dummy lat/lon for xESMF initialization
-    dummy_in = xr.Dataset({
-        "lat": ("lat", np.empty((in_shape[0],))),
-        "lon": ("lon", np.empty((in_shape[1],))),
-    })
+    if len(in_shape) == 1:
+        # Handle unstructured input (ncol, 1D grid)
+        dummy_in = xr.Dataset({
+            "ncol": ("ncol", np.arange(in_shape[0]))  # Dummy for 1D unstructured grid
+        })
+    else:
+        # Regular lat/lon grid (2D)
+        dummy_in = xr.Dataset({
+            "lat": ("lat", np.empty((in_shape[0],))),
+            "lon": ("lon", np.empty((in_shape[1],))),
+        })
 
+    # Create dummy output grid
     dummy_out = xr.Dataset({
         "lat": ("lat", d_data.lat.data),
         "lon": ("lon", d_data.lon.data),
     })
 
     # Apply mask (if needed for regridding)
-    s_mask = xr.DataArray(s_data_2d.data, dims=("lat", "lon"))
+    s_mask = xr.DataArray(s_data_2d.data, dims=s_data_2d.dims)
     dummy_in["mask"] = s_mask
 
     d_mask = xr.DataArray(d_data.data, dims=("lat", "lon"))
@@ -1393,6 +1404,7 @@ def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
     )
 
     return regridder
+
 
 
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
