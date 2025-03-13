@@ -1129,6 +1129,7 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
 
     # Handle 2D vs 3D data (with or without 'lev')
     if "lev" in mdata.dims:
+        print("LEV!!! It's not here right????")
         # Iterate through each level, regrid separately
         regridded_data = []
         for lev in mdata.lev.values:
@@ -1141,6 +1142,7 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
         # Combine all levels
         rgdata = xr.concat(regridded_data, dim="lev")
     else:
+        print("2D here right????")
         # 2D regridding (no vertical levels)
         rgdata = regrid_se_data_conservative(regridder, mdata, comp_grid)
 
