@@ -1390,6 +1390,10 @@ def regrid_unstructured_to_latlon(data_array, lat, lon, target_grid, method="con
     # Handle 2D Data (ncol) or 3D Data (lev, ncol)
     is_3d = "lev" in data_array.dims
 
+    # Handle xarray.DataArray or np.array inputs by extracting raw data
+    lat = lat.data if isinstance(lat, xr.DataArray) else lat
+    lon = lon.data if isinstance(lon, xr.DataArray) else lon
+
     # Prepare source grid dataset for xESMF
     source_grid = xr.Dataset({
         "lat": (("ncol",), lat),
