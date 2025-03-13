@@ -1356,7 +1356,7 @@ def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
     # Ensure s_data is 2D (for regridder initialization)
     if s_data.ndim == 3:
         lev_dim = [dim for dim in s_data.dims if dim not in ['lat', 'lon']][0]
-        s_data_2d = s_data.isel({lev_dim: 0})  # Take a slice for regridder setup
+        s_data_2d = s_data.isel({lev_dim: 0})  # Use a single level to build regridder
     else:
         s_data_2d = s_data
 
@@ -1366,31 +1366,37 @@ def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
         out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
     else:
         in_shape = s_data_2d.shape
-        out_shape = d_data.shape
+        out_shape = d_data.shape[-2:]  # Ensure we only take the spatial dimensions
 
+    # Check for 1D (unstructured) grid and adjust accordingly
     if len(in_shape) == 1:
-        # Handle unstructured input (ncol, 1D grid)
         dummy_in = xr.Dataset({
-            "ncol": ("ncol", np.arange(in_shape[0]))  # Dummy for 1D unstructured grid
+            "ncol": ("ncol", np.arange(in_shape[0]))
         })
     else:
-        # Regular lat/lon grid (2D)
         dummy_in = xr.Dataset({
             "lat": ("lat", np.empty((in_shape[0],))),
             "lon": ("lon", np.empty((in_shape[1],))),
         })
 
+    # Handle 3D destination grids
+    if d_data.ndim == 3:
+        lev_dim = [dim for dim in d_data.dims if dim not in ["lat", "lon"]][0]
+        d_data_2d = d_data.isel({lev_dim: 0})
+    else:
+        d_data_2d = d_data
+
     # Create dummy output grid
     dummy_out = xr.Dataset({
-        "lat": ("lat", d_data.lat.data),
-        "lon": ("lon", d_data.lon.data),
+        "lat": ("lat", d_data_2d.lat.data),
+        "lon": ("lon", d_data_2d.lon.data),
     })
 
-    # Apply mask (if needed for regridding)
+    # Apply mask for regridding if applicable (ensure same shape)
     s_mask = xr.DataArray(s_data_2d.data, dims=s_data_2d.dims)
     dummy_in["mask"] = s_mask
 
-    d_mask = xr.DataArray(d_data.data, dims=("lat", "lon"))
+    d_mask = xr.DataArray(d_data_2d.data, dims=("lat", "lon"))
     dummy_out["mask"] = d_mask
 
     # Initialize the xESMF regridder
@@ -1404,6 +1410,7 @@ def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
     )
 
     return regridder
+
 
 
 
