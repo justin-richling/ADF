@@ -1007,7 +1007,7 @@ def regrid_data(fromthis, tothis, method=1):
     return rgdata'''
 
 
-def _regrid(model_dataset, var_name, comp, method, **kwargs):
+'''def _regrid(model_dataset, var_name, comp, method, **kwargs):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -1148,7 +1148,132 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
     #End if
 
     #Return dataset:
+    return rgdata'''
+
+
+
+
+
+
+def _regrid(model_dataset, var_name, comp, method, **kwargs):
+    import numpy as np
+    import xarray as xr
+
+    # Set component grid type
+    if comp == "atm":
+        comp_grid = "ncol"
+    elif comp == "lnd":
+        comp_grid = "lndgrid"
+    else:
+        raise ValueError(f"Unsupported component: {comp}")
+
+    # Extract variable
+    if var_name:
+        mdata = model_dataset[var_name].squeeze()
+    else:
+        mdata = model_dataset
+
+    """# Ensure required inputs exist
+    if "wgt_file" not in kwargs or "latlon_file" not in kwargs:
+        raise ValueError("Missing 'wgt_file' or 'latlon_file' in kwargs.")
+
+    weight_file = kwargs["wgt_file"]
+    latlon_file = kwargs["latlon_file"]"""
+
+    if "wgt_file" in kwargs:
+        weight_file = kwargs["wgt_file"]
+    if "latlon_file" in kwargs:
+        latlon_file = kwargs["latlon_file"]
+    else:
+        print("Well, it looks like you're missing a target grid file for regridding!")
+        #adferror thing
+
+    # Load target grid
+    fv_ds = xr.open_dataset(latlon_file)
+
+    # Fill NaNs in the source data
+    mdata = mdata.fillna(0)
+
+    # Handle land fraction (if applicable)
+    if comp == "lnd":
+        model_dataset["landfrac"] = model_dataset["landfrac"].fillna(0)
+        if var_name:
+            mdata *= model_dataset["landfrac"]
+
+    # Identify vertical level (for 3D data)
+    lev_dim = "lev" if "lev" in mdata.dims else None
+
+    # Create regridder
+    regridder = make_se_regridder(weight_file=weight_file,
+                                  s_data=mdata.isel(time=0), 
+                                  d_data=fv_ds[var_name] if var_name in fv_ds else fv_ds,
+                                  Method=method)
+
+    # If 3D, loop through levels
+    if lev_dim:
+        regridded_slices = []
+        for lev in mdata[lev_dim]:
+            slice_data = mdata.sel({lev_dim: lev})
+            regridded_slice = regrid_se_data_conservative(regridder, slice_data, comp_grid)
+            regridded_slices.append(regridded_slice)
+
+        # Combine slices back into a 3D DataArray
+        rgdata = xr.concat(regridded_slices, dim=lev_dim)
+
+        # Restore vertical coordinate
+        rgdata[lev_dim] = mdata[lev_dim]
+    else:
+        # Regrid the 2D data directly
+        rgdata = regrid_se_data_conservative(regridder, mdata, comp_grid)
+
+    # Post-process land component
+    if comp == "lnd":
+        rgdata[var_name] = rgdata[var_name] / rgdata.landfrac
+        rgdata["landmask"] = fv_ds.landmask
+        rgdata["landfrac"] = rgdata.landfrac.isel(time=0)
+
+    # Attach lat/lon from the target dataset
+    rgdata["lat"] = fv_ds.lat
+    rgdata["lon"] = fv_ds.lon
+
+    # Calculate grid cell area
+    rgdata["area"] = _calculate_area(rgdata)
+
     return rgdata
+
+
+def _calculate_area(rgdata):
+    import numpy as np
+    import xarray as xr
+
+    area_km2 = np.zeros((len(rgdata["lat"]), len(rgdata["lon"])))
+    earth_radius_km = 6.37122e3
+
+    yres_degN = np.abs(np.diff(rgdata["lat"].data))
+    xres_degE = np.abs(np.diff(rgdata["lon"].data))
+
+    yres_degN = np.append(yres_degN, yres_degN[-1])
+    xres_degE = np.append(xres_degE, xres_degE[-1])
+
+    dy_km = yres_degN * earth_radius_km * np.pi / 180
+    phi_rad = rgdata["lat"].data * np.pi / 180
+
+    for j in range(len(rgdata["lat"])):
+        for i in range(len(rgdata["lon"])):
+            dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180
+            area_km2[j, i] = dy_km[j] * dx_km
+
+    area_da = xr.DataArray(area_km2, coords={"lat": rgdata.lat, "lon": rgdata.lon}, dims=["lat", "lon"])
+    area_da.attrs.update({"units": "km2", "long_name": "Grid cell area"})
+
+    return area_da
+
+
+
+
+
+
+
 
 
 import xarray as xr
