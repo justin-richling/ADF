@@ -314,14 +314,14 @@ def regrid_and_vert_interp(adf):
                             else:
                                 print("This looks like an unstructured case, but missing lat/lon file")
                                 #adf error thingy
-                            #rgdata_interp = _regrid(mclim_ds, var,
-                            #                    comp=comp,
-                            #                    method=case_method,
-                            #                    **native_regrid_kwargs)
+                            rgdata_interp = _regrid(mclim_ds, var,
+                                                comp=comp,
+                                                method=case_method,
+                                                **native_regrid_kwargs)
 
-                            rgdata_interp = _regrid(mclim_ds, var, comp, case_method, 
-                                    wgt_file=case_wgts_file, 
-                                    latlon_file=case_latlon_file)
+                            #rgdata_interp = _regrid_BAD(mclim_ds, var, comp, case_method, 
+                            #        wgt_file=case_wgts_file, 
+                            #        latlon_file=case_latlon_file)
                             #case_latlon_file
                             #fv_ds = xr.open_dataset(case_latlon_file)
                             #rgdata_interp = regrid_unstructured_to_latlon(mclim_ds, fv_ds.lat, fv_ds.lon, fv_ds)
@@ -844,7 +844,7 @@ def regrid_data(fromthis, tothis, method=1):
 
 
 
-'''def _regrid(model_dataset, var_name, comp, method, **kwargs):
+def _regrid(model_dataset, var_name, comp, method, **kwargs):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -1038,7 +1038,7 @@ def make_se_regridder(weight_file, s_data, d_data,
 
 
 
-'''
+
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
@@ -1060,7 +1060,7 @@ import xarray as xr
 import numpy as np
 import xesmf
 
-def _regrid(model_dataset, var_name, comp, method, **kwargs):
+def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
     """
     Regrid model data (with optional vertical levels) to a lat/lon grid.
     """
@@ -1098,7 +1098,7 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
         d_data = fv_ds[var_name] if var_name in fv_ds else fv_ds
 
     # Create regridder
-    regridder = make_se_regridder(weight_file, s_data, d_data, method)
+    regridder = make_se_regridder_BAD(weight_file, s_data, d_data, method)
 
     # Handle 2D vs 3D data (with or without 'lev')
     if "lev" in mdata.dims:
@@ -1126,7 +1126,7 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
 
     return rgdata
 
-def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
+def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     """
     Create xESMF regridder for spectral element grids.
     """
