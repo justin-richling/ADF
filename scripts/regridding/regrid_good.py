@@ -51,26 +51,30 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
         #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
         if "wgt_file" in kwargs:
             weight_file = kwargs["wgt_file"]
+        #latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
         if "latlon_file" in kwargs:
             latlon_file = kwargs["latlon_file"]
         else:
             print("Well, it looks like you're missing a target grid file for regridding!")
             #adferror thing
-        # Load target grid (lat/lon) from the provided dataset
+
+        print("\nlatlon_file",latlon_file,"\n")
         fv_ds = xr.open_dataset(latlon_file)
 
         model_dataset[var_name] = model_dataset[var_name].fillna(0)
-
-        # Identify source and destination data for regridding
         if comp == "lnd":
             model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+            if var_name:
+                model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
             s_data = model_dataset.landmask.isel(time=0)
             d_data = fv_ds.landmask
         else:
-            s_data = mdata.isel(time=0)
-            d_data = fv_ds[var_name]
-
+            if var_name:
+                s_data = model_dataset[var_name].isel(time=0)
+                d_data = fv_ds[var_name]
+            else:
+                s_data = model_dataset.isel(time=0)
+                d_data = fv_ds
 
         #Regrid model data to match target grid:
         # These two functions come with import regrid_se_to_fv

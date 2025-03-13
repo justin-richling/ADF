@@ -1120,7 +1120,14 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
         #d_data = fv_ds[var_name] if var_name in fv_ds else fv_ds
 
     # Create regridder
-    regridder = make_se_regridder_BAD(weight_file, s_data, d_data, method)
+    regridder = make_se_regridder_BAD(weight_file=weight_file,
+                                      s_data = s_data, #model_dataset.landmask.isel(time=0),
+                                      d_data = d_data, #fv_ds.landmask,
+                                      Method = method,  # Bug in xesmf needs this without "n"
+                                      )
+    if method == 'coservative':
+        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+
 
     # Handle 2D vs 3D data (with or without 'lev')
     if "lev" in mdata.dims:
@@ -1139,13 +1146,42 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
         # 2D regridding (no vertical levels)
         rgdata = regrid_se_data_conservative(regridder, mdata, comp_grid)
 
+    if comp == "lnd":
+        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+        rgdata['landmask'] = fv_ds.landmask
+        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+
     # Ensure output matches the target grid dimensions
     rgdata["lat"] = fv_ds.lat
     rgdata["lon"] = fv_ds.lon
 
     # Compute grid cell area (optional but useful for post-processing)
-    #rgdata["area"] = _calculate_area(rgdata)
+    # calculate area
+    area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
+    earth_radius_km = 6.37122e3  # in meters
 
+    yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+    xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+    yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+    xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+
+    dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
+    phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
+
+    # grid cell area
+    for j in range(len(rgdata['lat'])):
+        for i in range(len(rgdata['lon'])):
+            dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
+            area_km2[j,i] = dy_km[j] * dx_km
+
+    rgdata['area'] = xr.DataArray(area_km2,
+                                      coords={'lat': rgdata.lat, 'lon': rgdata.lon},
+                                      dims=["lat", "lon"])
+    rgdata['area'].attrs['units'] = 'km2'
+    rgdata['area'].attrs['long_name'] = 'Grid cell area'
+
+
+    #Return dataset:
     return rgdata
 
 
