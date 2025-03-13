@@ -1144,7 +1144,7 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
     else:
         print("2D here right????")
         # 2D regridding (no vertical levels)
-        rgdata = regrid_se_data_conservative(regridder, mdata, comp_grid)
+        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
 
     if comp == "lnd":
         rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
