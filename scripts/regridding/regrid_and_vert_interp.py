@@ -313,10 +313,13 @@ def regrid_and_vert_interp(adf):
                             else:
                                 print("This looks like an unstructured case, but missing lat/lon file")
                                 #adf error thingy
-                            rgdata_interp = _regrid(mclim_ds, var,
-                                                comp=comp,
-                                                method=case_method,
-                                                **native_regrid_kwargs)
+                            #rgdata_interp = _regrid(mclim_ds, var,
+                            #                    comp=comp,
+                            #                    method=case_method,
+                            #                    **native_regrid_kwargs)
+                            #case_latlon_file
+                            fv_ds = xr.open_dataset(case_latlon_file)
+                            rgdata_interp = regrid_unstructured_to_latlon(mclim_ds, fv_ds.lat, fv_ds.lon, fv_ds)
                         else:
                             print("Trying everything and nothing is working. I guess this really is a problem!")
                     else:
@@ -1007,7 +1010,7 @@ def regrid_data(fromthis, tothis, method=1):
     return rgdata'''
 
 
-'''def _regrid(model_dataset, var_name, comp, method, **kwargs):
+def _regrid(model_dataset, var_name, comp, method, **kwargs):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -1037,12 +1040,6 @@ def regrid_data(fromthis, tothis, method=1):
 
     #comp = adf.model_component
     if comp == "atm":
-        """#Extract keyword arguments:
-        if 'ps_file' in kwargs:
-            ps_file = kwargs['ps_file']
-        else:
-            ps_file = None
-        #End if"""
         comp_grid = "ncol"
     if comp == "lnd":
         comp_grid = "lndgrid"
@@ -1061,15 +1058,6 @@ def regrid_data(fromthis, tothis, method=1):
     #Regrid variable to target dataset (if available):
     #if regrid_dataset:
     if 1==1:
-
-        """#Extract grid info from target data:
-        if 'time' in regrid_dataset.coords:
-            if 'lev' in regrid_dataset.coords:
-                tgrid = regrid_dataset.isel(time=0, lev=0).squeeze()
-            else:
-                tgrid = regrid_dataset.isel(time=0).squeeze()
-            #End if
-        #End if"""
 
         # Hardwiring for now
         #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
@@ -1148,14 +1136,14 @@ def regrid_data(fromthis, tothis, method=1):
     #End if
 
     #Return dataset:
-    return rgdata'''
+    return rgdata
 
 
 
 
 
 
-def _regrid(model_dataset, var_name, comp, method, **kwargs):
+'''def _regrid(model_dataset, var_name, comp, method, **kwargs):
     import numpy as np
     import xarray as xr
 
@@ -1250,7 +1238,7 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
     # Calculate grid cell area
     rgdata["area"] = _calculate_area(rgdata)
 
-    return rgdata
+    return rgdata'''
 
 
 def _calculate_area(rgdata):
@@ -1291,7 +1279,7 @@ import xarray as xr
 import xesmf
 import numpy as np
 
-'''def make_se_regridder(weight_file, s_data, d_data,
+def make_se_regridder(weight_file, s_data, d_data,
                       Method='coservative'
                       ):
     # Intialize dict for xesmf.Regridder
@@ -1345,82 +1333,10 @@ import numpy as np
         periodic=True,
         **regridder_kwargs
     )
-    return regridder'''
-
-
-
-def make_se_regridder(weight_file, s_data, d_data, Method='conservative'):
-    import xarray as xr
-    import numpy as np
-    import xesmf as xe
-
-    regridder_kwargs = {}
-
-    # Load weights if provided
-    if weight_file:
-        weights = xr.open_dataset(weight_file)
-        regridder_kwargs["weights"] = weights
-    else:
-        print("No weights file provided. Generating new weights...")
-        regridder_kwargs["method"] = Method
-
-    # Ensure s_data is 2D (for regridder initialization)
-    if s_data.ndim == 3:
-        lev_dim = [dim for dim in s_data.dims if dim not in ['lat', 'lon']][0]
-        s_data_2d = s_data.isel({lev_dim: 0})  # Use a single level to build regridder
-    else:
-        s_data_2d = s_data
-
-    # Handle unstructured grids (1D case)
-    if "weights" in regridder_kwargs:
-        in_shape = weights.src_grid_dims.load().data
-        out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
-    else:
-        in_shape = s_data_2d.shape
-        out_shape = d_data.shape[-2:]  # Ensure we only take the spatial dimensions
-
-    # Check for 1D (unstructured) grid and adjust accordingly
-    if len(in_shape) == 1:
-        dummy_in = xr.Dataset({
-            "ncol": ("ncol", np.arange(in_shape[0]))
-        })
-    else:
-        dummy_in = xr.Dataset({
-            "lat": ("lat", np.empty((in_shape[0],))),
-            "lon": ("lon", np.empty((in_shape[1],))),
-        })
-
-    # Handle 3D destination grids
-    if d_data.ndim == 3:
-        lev_dim = [dim for dim in d_data.dims if dim not in ["lat", "lon"]][0]
-        d_data_2d = d_data.isel({lev_dim: 0})
-    else:
-        d_data_2d = d_data
-
-    # Create dummy output grid
-    dummy_out = xr.Dataset({
-        "lat": ("lat", d_data_2d.lat.data),
-        "lon": ("lon", d_data_2d.lon.data),
-    })
-
-    # Apply mask for regridding if applicable (ensure same shape)
-    s_mask = xr.DataArray(s_data_2d.data, dims=s_data_2d.dims)
-    dummy_in["mask"] = s_mask
-
-    d_mask = xr.DataArray(d_data_2d.data, dims=("lat", "lon"))
-    dummy_out["mask"] = d_mask
-
-    # Initialize the xESMF regridder
-    regridder = xe.Regridder(
-        dummy_in,
-        dummy_out,
-        method=Method,
-        reuse_weights=True,
-        periodic=True,
-        **regridder_kwargs
-    )
-
     return regridder
+
+
+
 
 
 
@@ -1436,3 +1352,74 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
     return regridded
+
+
+
+
+import xarray as xr
+import numpy as np
+import xesmf as xe
+
+def regrid_unstructured_to_latlon(data_array, lat, lon, target_grid, method="conservative"):
+    """
+    Regrid CESM unstructured grid DataArray (2D or 3D) to a lat/lon grid.
+
+    Parameters:
+    -----------
+    data_array : xarray.DataArray
+        Input DataArray with dimensions ('ncol',) or ('lev', 'ncol').
+    lat : xarray.DataArray or np.array
+        Latitude values corresponding to the 'ncol' dimension.
+    lon : xarray.DataArray or np.array
+        Longitude values corresponding to the 'ncol' dimension.
+    target_grid : xarray.Dataset
+        Target lat/lon grid with 'lat' and 'lon' dimensions.
+    method : str
+        Regridding method ('conservative', 'bilinear', 'nearest_s2d', etc.).
+
+    Returns:
+    --------
+    regridded_data : xarray.DataArray
+        Regridded data on the target lat/lon grid.
+    """
+
+    # Ensure lat and lon are 1D arrays matching 'ncol'
+    if "ncol" not in data_array.dims:
+        raise ValueError("Input DataArray must contain 'ncol' dimension for unstructured grid.")
+
+    # Handle 2D Data (ncol) or 3D Data (lev, ncol)
+    is_3d = "lev" in data_array.dims
+
+    # Prepare source grid dataset for xESMF
+    source_grid = xr.Dataset({
+        "lat": (("ncol",), lat),
+        "lon": (("ncol",), lon),
+    })
+
+    # Ensure target grid has 'lat' and 'lon'
+    if "lat" not in target_grid or "lon" not in target_grid:
+        raise ValueError("Target grid must contain 'lat' and 'lon' dimensions.")
+
+    # Create the regridder
+    regridder = xe.Regridder(source_grid, target_grid, method, periodic=True)
+
+    # Handle 3D Data (Loop over levels)
+    if is_3d:
+        # Regrid each vertical level and stack back
+        regridded_levels = []
+        for lev in data_array.lev.values:
+            regridded_level = regridder(data_array.sel(lev=lev))
+            regridded_levels.append(regridded_level)
+
+        # Combine all levels back into a new DataArray
+        regridded_data = xr.concat(regridded_levels, dim="lev")
+        regridded_data["lev"] = data_array["lev"]
+
+    else:
+        # Handle 2D Data (ncol)
+        regridded_data = regridder(data_array)
+
+    # Cleanup the regridder to free memory
+    regridder.clean_weight_file()
+
+    return regridded_data
