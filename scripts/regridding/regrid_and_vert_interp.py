@@ -1202,6 +1202,20 @@ def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
     else:
         print("No weights file given, so I'm gonna need to make one. Please have a seat and the next associate will be with you shortly. Please don't tap the glass!")
         regridder_kwargs['method'] = 'coservative'
+        weights = None
+
+    # Detect input grid shape (1D for unstructured grids)
+    if weights:
+        in_shape = weights.src_grid_dims.load().data
+        if len(in_shape) == 1:
+            in_shape = [1, in_shape.item()]
+        out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
+    else:
+        # Infer from input data if no weights are provided
+        if comp_grid := [dim for dim in s_data.dims if dim != 'time'][0]:
+            in_shape = [1, s_data.sizes[comp_grid]]
+        else:
+            raise ValueError("Unable to determine input shape from s_data.")
 
     in_shape = weights.src_grid_dims.load().data
 
