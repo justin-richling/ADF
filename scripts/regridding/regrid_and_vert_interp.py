@@ -71,6 +71,7 @@ def regrid_and_vert_interp(adf):
     #print("case_latlon_file",case_latlon_file,"\n")
     #Check if any a weights file exists if using native grid, OPTIONAL
     case_wgts_files   = adf.latlon_wgt_files["test_wgts_file"]
+    print("case_wgts_files",case_wgts_files,"\n")
     case_methods = adf.latlon_regrid_method["test_regrid_method"]
 
     #Grab case years
@@ -891,84 +892,77 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
     #        mdat_lfrac = model_dataset['LANDFRAC'].squeeze()
 
     #Regrid variable to target dataset (if available):
-    #if regrid_dataset:
-    if 1==1:
+    # Hardwiring for now
+    #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
+    if "wgt_file" in kwargs:
+        weight_file = kwargs["wgt_file"]
+    #latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+    if "latlon_file" in kwargs:
+        latlon_file = kwargs["latlon_file"]
+    else:
+        print("Well, it looks like you're missing a target grid file for regridding!")
+        #adferror thing
 
-        # Hardwiring for now
-        #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
-        if "wgt_file" in kwargs:
-            weight_file = kwargs["wgt_file"]
-        #latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-        if "latlon_file" in kwargs:
-            latlon_file = kwargs["latlon_file"]
+    print("\nlatlon_file",latlon_file,"\n")
+    fv_ds = xr.open_dataset(latlon_file)
+
+    model_dataset[var_name] = model_dataset[var_name].fillna(0)
+    if comp == "lnd":
+        model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+        if var_name:
+            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+        s_data = model_dataset.landmask.isel(time=0)
+        d_data = fv_ds.landmask
+    else:
+        if var_name:
+            s_data = model_dataset[var_name].isel(time=0)
+            d_data = fv_ds[var_name]
         else:
-            print("Well, it looks like you're missing a target grid file for regridding!")
-            #adferror thing
+            s_data = model_dataset.isel(time=0)
+            d_data = fv_ds
 
-        print("\nlatlon_file",latlon_file,"\n")
-        fv_ds = xr.open_dataset(latlon_file)
+    #Regrid model data to match target grid:
+    # These two functions come with import regrid_se_to_fv
+    regridder = make_se_regridder(weight_file=weight_file,
+                                    s_data = s_data, #model_dataset.landmask.isel(time=0),
+                                    d_data = d_data, #fv_ds.landmask,
+                                    Method = method,  # Bug in xesmf needs this without "n"
+                                    )
+    if method == 'coservative':
+        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
 
-        model_dataset[var_name] = model_dataset[var_name].fillna(0)
-        if comp == "lnd":
-            model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-            if var_name:
-                model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
-            s_data = model_dataset.landmask.isel(time=0)
-            d_data = fv_ds.landmask
-        else:
-            if var_name:
-                s_data = model_dataset[var_name].isel(time=0)
-                d_data = fv_ds[var_name]
-            else:
-                s_data = model_dataset.isel(time=0)
-                d_data = fv_ds
+    if comp == "lnd":
+        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+        rgdata['landmask'] = fv_ds.landmask
+        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
-        #Regrid model data to match target grid:
-        # These two functions come with import regrid_se_to_fv
-        regridder = make_se_regridder(weight_file=weight_file,
-                                      s_data = s_data, #model_dataset.landmask.isel(time=0),
-                                      d_data = d_data, #fv_ds.landmask,
-                                      Method = method,  # Bug in xesmf needs this without "n"
-                                      )
-        if method == 'coservative':
-            rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+    rgdata['lat'] = fv_ds.lat
+    #rgdata['landmask'] = fv_t232.landmask
+    #rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
-        if comp == "lnd":
-            rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
-            rgdata['landmask'] = fv_ds.landmask
-            rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+    # calculate area
+    area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
+    earth_radius_km = 6.37122e3  # in meters
 
-        rgdata['lat'] = fv_ds.lat
-        #rgdata['landmask'] = fv_t232.landmask
-        #rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+    yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+    xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+    yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+    xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
 
-        # calculate area
-        area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
-        earth_radius_km = 6.37122e3  # in meters
+    dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
+    phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
 
-        yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
-        xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
-        yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
-        xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+    # grid cell area
+    for j in range(len(rgdata['lat'])):
+        for i in range(len(rgdata['lon'])):
+            dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
+            area_km2[j,i] = dy_km[j] * dx_km
 
-        dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
-        phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
-
-        # grid cell area
-        for j in range(len(rgdata['lat'])):
-            for i in range(len(rgdata['lon'])):
-              dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
-              area_km2[j,i] = dy_km[j] * dx_km
-
-        rgdata['area'] = xr.DataArray(area_km2,
+    rgdata['area'] = xr.DataArray(area_km2,
                                       coords={'lat': rgdata.lat, 'lon': rgdata.lon},
                                       dims=["lat", "lon"])
-        rgdata['area'].attrs['units'] = 'km2'
-        rgdata['area'].attrs['long_name'] = 'Grid cell area'
-    else:
-        #Just rename variables:
-        rgdata = mdata
-    #End if
+    rgdata['area'].attrs['units'] = 'km2'
+    rgdata['area'].attrs['long_name'] = 'Grid cell area'
 
     #Return dataset:
     return rgdata
