@@ -1,6 +1,9 @@
 def make_se_regridder(weight_file, s_data, d_data,
                       Method='coservative'
                       ):
+    """
+    Create xESMF regridder for spectral element grids.
+    """
     # Intialize dict for xesmf.Regridder
     regridder_kwargs = {}
 
@@ -32,21 +35,21 @@ def make_se_regridder(weight_file, s_data, d_data,
             "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
         }
     )
-    # Hard code masks for now, not sure this does anything?
+    # Handle source and destination masks
     s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
     dummy_in['mask']= s_mask
     
     d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
     dummy_out['mask']= d_mask                
 
-    # do source and destination grids need masks here?
+    # QUESTION: Do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
     regridder = xesmf.Regridder(
         dummy_in,
         dummy_out,
         weights=weight_file,
-        # results seem insensitive to this method choice
-        # choices are coservative_normed, coservative, and bilinear
+        # NOTE: results seem insensitive to this method choice
+        # INFO: choices are coservative_normed, coservative, and bilinear
         method=Method,
         reuse_weights=True,
         periodic=True,

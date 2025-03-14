@@ -332,7 +332,7 @@ def regrid_and_vert_interp(adf):
                             #                    method=case_method,
                             #                    **native_regrid_kwargs)
                             #print("\n\nrgdata_interp WORKS",rgdata_interp,"\n\n")
-                            rgdata_interp = _regrid_BAD(mclim_ds, var, comp=comp,
+                            rgdata_interp = _regrid(mclim_ds, var, comp=comp,
                                                 method=case_method, 
                                                         **native_regrid_kwargs)
                             print("\n\nrgdata_interp BAD",rgdata_interp,"\n\n")
@@ -845,10 +845,12 @@ def regrid_data(fromthis, tothis, method=1):
 
 
 
+import xarray as xr
+import numpy as np
+import xesmf
 
 
-
-def _regrid(model_dataset, var_name, comp, method, **kwargs):
+def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -883,55 +885,31 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
         comp_grid = "lndgrid"
 
     #Extract variable info from model data (and remove any degenerate dimensions):
-    if var_name:
-        mdata = model_dataset[var_name].squeeze()
-    else:
-        #if isinstance(xo, xr.Dataset):
-        mdata = model_dataset
-    mdat_ofrac = None
-    #if regrid_lfrac:
-    #    if 'LANDFRAC' in model_dataset:
-    #        mdat_lfrac = model_dataset['LANDFRAC'].squeeze()
+    mdata = model_dataset[var_name].squeeze()
 
-    #Regrid variable to target dataset (if available):
-    # Hardwiring for now
-    #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
-    if "wgt_file" in kwargs:
-        weight_file = kwargs["wgt_file"]
-    #latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-    if "latlon_file" in kwargs:
-        latlon_file = kwargs["latlon_file"]
-    else:
-        print("Well, it looks like you're missing a target grid file for regridding!")
-        #adferror thing
-
-    print("\nlatlon_file",latlon_file,"\n")
+    # Load target grid (lat/lon) from the provided dataset
     fv_ds = xr.open_dataset(latlon_file)
 
-    model_dataset[var_name] = model_dataset[var_name].fillna(0)
+    mdata = mdata.fillna(0)
     if comp == "lnd":
         model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-        if var_name:
-            model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+        mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         s_data = model_dataset.landmask.isel(time=0)
         d_data = fv_ds.landmask
     else:
-        if var_name:
-            s_data = model_dataset[var_name].isel(time=0)
-            d_data = fv_ds[var_name]
-        else:
-            s_data = model_dataset.isel(time=0)
-            d_data = fv_ds
+        s_data = mdata.isel(time=0)
+        d_data = fv_ds[var_name]
 
     #Regrid model data to match target grid:
-    # These two functions come with import regrid_se_to_fv
     regridder = make_se_regridder(weight_file=weight_file,
-                                    s_data = s_data, #model_dataset.landmask.isel(time=0),
-                                    d_data = d_data, #fv_ds.landmask,
-                                    Method = method,  # Bug in xesmf needs this without "n"
+                                    s_data = s_data,
+                                    d_data = d_data,
+                                    Method = method,
                                     )
     if method == 'coservative':
         rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+    if method == 'bilinear':
+        rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
 
     if comp == "lnd":
         rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
@@ -939,8 +917,7 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
     rgdata['lat'] = fv_ds.lat
-    #rgdata['landmask'] = fv_t232.landmask
-    #rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+    rgdata['lon'] = fv_ds.lon
 
     # calculate area
     area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
@@ -970,22 +947,16 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
     return rgdata
 
 
-import xarray as xr
-import xesmf
-import numpy as np
 
 def make_se_regridder(weight_file, s_data, d_data,
                       Method='coservative'
                       ):
-    # Intialize dict for xesmf.Regridder
-    regridder_kwargs = {}
+    """
+    Create xESMF regridder for spectral element grids.
+    """
 
     if weight_file:
         weights = xr.open_dataset(weight_file)
-        regridder_kwargs['weights'] = weights
-    else:
-        print("No weights file given, so I'm gonna need to make one. Please have a seat and the next associate will be with you shortly. Please don't tap the glass!")
-        regridder_kwargs['method'] = 'coservative'
     
     in_shape = weights.src_grid_dims.load().data
 
@@ -1008,32 +979,26 @@ def make_se_regridder(weight_file, s_data, d_data,
             "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
         }
     )
-    # Hard code masks for now, not sure this does anything?
+    # Handle source and destination masks
     s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
     dummy_in['mask']= s_mask
     
     d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
     dummy_out['mask']= d_mask                
 
-    # do source and destination grids need masks here?
+    # QUESTION: Do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
     regridder = xesmf.Regridder(
         dummy_in,
         dummy_out,
         weights=weight_file,
-        # results seem insensitive to this method choice
-        # choices are coservative_normed, coservative, and bilinear
+        # NOTE: results seem insensitive to this method choice
+        # INFO: choices are coservative_normed, coservative, and bilinear
         method=Method,
         reuse_weights=True,
         periodic=True,
-        #**regridder_kwargs
     )
     return regridder
-
-
-
-
-
 
 
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
@@ -1053,10 +1018,8 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
 
 
 
-import xarray as xr
-import numpy as np
-import xesmf
 
+'''
 def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
     """
     Function that takes a variable from a model xarray
@@ -1183,69 +1146,8 @@ def _regrid_BAD(model_dataset, var_name, comp, method, **kwargs):
 
     #Return dataset:
     return rgdata
-
-
-
-def make_se_regridder_BAD(weight_file, s_data, d_data, Method='conservative'):
-    """
-    Create xESMF regridder for spectral element grids.
-    """
-    regridder_kwargs = {}
-
-    # Load weights if available
-    if weight_file:
-        weights = xr.open_dataset(weight_file)
-        regridder_kwargs['weights'] = weights
-    else:
-        print("No weights file given, so I'm gonna need to make one. Please have a seat and the next associate will be with you shortly. Please don't tap the glass!")
-        regridder_kwargs['method'] = 'coservative'
-
-    in_shape = weights.src_grid_dims.load().data
-
-    # Ensure 2D compatibility for xESMF (reshape if needed)
-    if len(in_shape) == 1:
-        in_shape = [1, in_shape.item()]
-
-    out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
-
-    dummy_in = xr.Dataset({
-        "lat": ("lat", np.empty((in_shape[0],))),
-        "lon": ("lon", np.empty((in_shape[1],))),
-    })
-    dummy_out = xr.Dataset({
-        "lat": ("lat", weights.yc_b.data.reshape(out_shape)[:, 0]),
-        "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
-    })
-
-    # Handle source and destination masks
-    s_mask = xr.DataArray(s_data.data.reshape(in_shape[0], in_shape[1]), dims=("lat", "lon"))
-    dummy_in['mask'] = s_mask
-
-    print("AHHHH",d_data,"\n\n")
-    if 'time' in d_data.dims:
-        d_data = d_data.isel(time=0)
-    d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))
-    dummy_out['mask'] = d_mask
-
-    # Create xESMF regridder
-    regridder = xesmf.Regridder(
-        dummy_in,
-        dummy_out,
-        weights=weight_file,
-        method=Method,
-        reuse_weights=True,
-        periodic=True,
-        #**regridder_kwargs
-    )
-
-    return regridder
-
-'''def regrid_se_data_conservative(regridder, model_dataset, comp_grid):
-    """
-    Apply conservative regridding to the dataset.
-    """
-    return regridder(model_dataset)
 '''
+
 
 def _calculate_area(rgdata):
     """
