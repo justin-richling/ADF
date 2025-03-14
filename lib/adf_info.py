@@ -540,6 +540,8 @@ class AdfInfo(AdfConfig):
 
         #Check if any a weights file exists if using native grid, OPTIONAL
         cam_wgts_files   = self.get_cam_info("weights_file")
+        if cam_wgts_files is None:
+            cam_wgts_files = [None]*len(case_names)
         self.__cam_wgts_files = cam_wgts_files
 
         cam_regrid_method = self.get_cam_info("regrid_method")
