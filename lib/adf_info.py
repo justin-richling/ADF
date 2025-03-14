@@ -216,7 +216,10 @@ class AdfInfo(AdfConfig):
             baseline_wgts_file   = self.get_baseline_info("weights_file")
             self.__baseline_wgts_file = baseline_wgts_file
 
-            baseline_regrid_method = self.get_baseline_info("regrid_method") 
+            baseline_regrid_method = self.get_baseline_info("regrid_method")
+            if baseline_regrid_method == 'conservative':
+                print("user defined 'conservative', but xesmf has a typo, changing to 'coservative'")
+                baseline_regrid_method = 'coservative'
             self.__baseline_regrid_method = baseline_regrid_method
 
             #Check if time series files already exist,
@@ -540,13 +543,18 @@ class AdfInfo(AdfConfig):
         self.__cam_wgts_files = cam_wgts_files
 
         cam_regrid_method = self.get_cam_info("regrid_method")
-        cam_regrid_methods = []
-        for regr_method in cam_regrid_method:
-            if regr_method == 'conservative':
-                print("user defined 'conservative', but xesmf has a typo, changing to 'coservative'")
-                cam_regrid_methods.append('coservative')
-            else:
-                cam_regrid_methods.append(regr_method)
+        if cam_regrid_method:
+            cam_regrid_methods = []
+            for regr_method in cam_regrid_method:
+                if regr_method == 'conservative':
+                    print("user defined 'conservative', but xesmf has a typo, changing to 'coservative'")
+                    cam_regrid_methods.append('coservative')
+                if regr_method is None:
+                    cam_regrid_methods.append('coservative')
+                else:
+                    cam_regrid_methods.append(regr_method)
+        if cam_regrid_method is None:
+            cam_regrid_method = [None]*len(case_names)
         self.__cam_regrid_method = cam_regrid_method
 
         #Grab case time series file location(s)
