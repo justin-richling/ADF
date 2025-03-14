@@ -59,8 +59,12 @@ def regrid_and_vert_interp(adf):
     comp = adf.model_component
     if comp == "atm":
         spec_vars = ["PMID", "OCNFRAC", "LANDFRAC"]
+        mask_var = "OCNFRAC"
+        mask_name = "ocean"
     if comp == "lnd":
         spec_vars = ["LANDFRAC"]
+        mask_var = "LANDFRAC"
+        mask_name = "land"
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
@@ -340,12 +344,7 @@ def regrid_and_vert_interp(adf):
                                                                  **regrid_kwargs)
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
-                    if comp == "atm":
-                        mask_var = "OCNFRAC"
-                        mask_name = "ocean"
-                    if comp == "lnd":
-                        mask_var = "LANDFRAC"
-                        mask_name = "land"
+
                     if 'mask' in var_default_dict:
                         if var_default_dict['mask'].lower() == mask_name:
                             #Check if the ocean fraction has already been regridded
@@ -428,6 +427,7 @@ def regrid_and_vert_interp(adf):
                         if ('lat' not in tclim_ds.dims) and ('lat' not in tclim_ds.dims):
                             if ('ncol' in tclim_ds.dims) or ('lndgrid' in tclim_ds.dims):
                                 print(f"Looks like baseline case '{target}' is unstructured, eh?")
+                                #if regrid_to_latlon:
                                 native_regrid_kwargs = {}
                                 #Check if any a FV file exists if using native grid
                                 baseline_latlon_file   = adf.latlon_files["base_latlon_file"]
@@ -464,12 +464,6 @@ def regrid_and_vert_interp(adf):
                             continue
                         #End if
 
-                        if comp == "atm":
-                            mask_var = "OCNFRAC"
-                            mask_name = "ocean"
-                        if comp == "lnd":
-                            mask_var = "LANDFRAC"
-                            mask_name = "land"
                         #If the variable is ocean fraction, then save the dataset for use later:
                         if var == mask_var:
                             frc_ds = tgdata_interp
