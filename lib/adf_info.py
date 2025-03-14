@@ -349,7 +349,7 @@ class AdfInfo(AdfConfig):
                     base_nickname = data_name
 
                 if 'ncols' in base_ds.dims:
-                    print('Looks like this is an atmosphere unstructured grid, yeah')
+                    print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
                     year_range = [str(year) for year in range(int(syear_baseline), int(eyear_baseline))]
 
@@ -357,10 +357,10 @@ class AdfInfo(AdfConfig):
                     filtered_file_list = [f for f in file_list if any(year in f.name for year in year_range)]
                     
                 elif 'lndgrid' in base_ds.dims:
-                    print('Looks like this is a land unstructured grid, yeah')
+                    print('\t  Looks like this is a land unstructured grid, yeah')
                     unstruct = True
                 else:
-                    print('Looks like this is a structured lat/lon grid?')
+                    print('\t  Looks like this is a structured lat/lon grid?')
                     unstruct = False
                 self.__unstruct_base = unstruct
             #End if
@@ -546,13 +546,13 @@ class AdfInfo(AdfConfig):
                 
                 case_ds = xr.open_dataset(file_list[0], decode_times=True)
                 if 'ncols' in case_ds.dims:
-                    print('\tLooks like this is an atmosphere unstructured grid, yeah')
+                    print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
                 if 'lndgrid' in case_ds.dims:
-                    print('\tLooks like this is a land unstructured grid, yeah')
+                    print('\t  Looks like this is a land unstructured grid, yeah')
                     unstruct = True
                 else:
-                    print('\tLooks like this is a structured lat/lon grid, eh?')
+                    print('\t  Looks like this is a structured lat/lon grid, eh?')
                     unstruct = False
                 unstructs.append(unstruct)
 
