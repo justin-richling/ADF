@@ -280,6 +280,8 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, 
         s_data = mdata.isel(time=0)
         d_data = fv_ds[list(fv_ds.variables)[0]]
 
+    print("\nWeights file? ",weight_file,"\n")
+
     #Regrid model data to match target grid:
     regridder = make_se_regridder(weight_file=weight_file,
                                     s_data = s_data,
