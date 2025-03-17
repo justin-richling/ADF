@@ -840,7 +840,7 @@ class AdfDiag(AdfWeb):
                 # End with
 
                 # TEMPORARY: do a quick check if this on native grid and regrid
-                ts_0 = sorted(ts_dir.glob("*.nc"))[0]
+                ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                 ts_file_ds = xr.open_dataset(
                         ts_0, decode_cf=False, decode_times=False
                     )
