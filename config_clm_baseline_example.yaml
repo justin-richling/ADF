@@ -152,18 +152,6 @@ diag_cam_climo:
     #If false, or not prsent, then already existing climatology files will be skipped:
     cam_overwrite_climo: false
 
-    # SE to FV regridding options
-    #-----------------------------
-    # Optional: weights file. If not supplied, than XESMF will calculate these
-    weights_file: /glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc
-    # Required: File with appropriate lat/lon values for regridding native to FV 
-    latlon_file: /glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc
-    regrid_method: 'conservative'
-
-    #Location where re-gridded and interpolated CAM climatology files are stored:
-    cam_climo_regrid_loc: ${diag_cam_climo.cam_climo_loc}/regrid/
-    cam_overwrite_climo_regrid: false
-
     #model year when time series files should start:
     #Note:  Leaving this entry blank will make time series
     #       start at earliest available year.
@@ -193,8 +181,19 @@ diag_cam_climo:
     cam_ts_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/ts
 
     # SE to FV regridding options
+    #------------------------------------------------------
     # Remove or leave these blank if not on the native grid
-    #-----------------------------
+    # Weights file location
+    weights_file: /glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc
+    # Set the regridding method
+    regrid_method: 'conservative'
+    # File with appropriate lat/lon values for regridding native to lat/lon grid 
+    latlon_file: /glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc
+
+    #Location where re-gridded and interpolated CAM climatology files are stored:
+    cam_climo_regrid_loc: ${diag_cam_climo.cam_climo_loc}/regrid/
+    cam_overwrite_climo_regrid: false
+    
     #Location where re-gridded and interpolated timeseries files if needed:
     cam_ts_regrid_done: true
     cam_ts_regrid_loc: ${diag_cam_climo.cam_ts_loc}/regrid/
@@ -323,13 +322,13 @@ diag_cam_baseline_climo:
     cam_climo_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/climo
 
     # SE to FV regridding options
+    #------------------------------------------------------
     # Remove or leave these blank if not on the native grid
-    #-----------------------------
-    # Optional: weights file. If not supplied, than XESMF will calculate these
+    # Weights file location
     weights_file: /glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc
-    # If not supplyinh weights file, set this regridding method please!
+    # Set the regridding method
     regrid_method: 'coservative' #xesmf bug, missing 'n'!
-    # Required: File with appropriate lat/lon values for regridding native to FV 
+    # File with appropriate lat/lon values for regridding native to lat/lon grid 
     latlon_file: /glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc
 
     #Location where re-gridded and interpolated CAM climatology files are stored:
@@ -364,10 +363,20 @@ diag_cam_baseline_climo:
 
     #Location where time series files are (or will be) stored:
     cam_ts_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/ts
-    
+
     # SE to FV regridding options
     # Remove or leave these blank if not on the native grid
     #-----------------------------
+    # Optional: weights file. If not supplied, than XESMF will calculate these
+    weights_file: /glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc
+    # Required: File with appropriate lat/lon values for regridding native to lat/lon grid
+    latlon_file: /glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc
+    regrid_method: 'conservative'
+
+    #Location where re-gridded and interpolated CAM climatology files are stored:
+    cam_climo_regrid_loc: ${diag_cam_baseline_climo.cam_climo_loc}/regrid/
+    cam_overwrite_climo_regrid: false
+    
     #Location where re-gridded and interpolated timeseries files if needed:
     cam_ts_regrid_done: true
     cam_ts_regrid_loc: ${diag_cam_baseline_climo.cam_ts_loc}/regrid/
