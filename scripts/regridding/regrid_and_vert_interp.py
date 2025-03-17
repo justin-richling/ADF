@@ -401,18 +401,18 @@ def regrid_and_vert_interp(adf):
                                 print(f"Looks like baseline case '{target}' is unstructured, eh?")
 
                                 #Check if any a FV file exists if using native grid
-                                baseline_latlon_file   = adf.latlon_files["base_latlon_file"]
+                                baseline_latlon_file   = adf.latlon_files["baseline_latlon_file"]
                                 if not baseline_latlon_file:
                                     msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
                                     raise AdfError(msg)
 
                                 #Check if any a weights file exists if using native grid, OPTIONAL
-                                baseline_wgts_file   = adf.latlon_wgt_files["base_wgts_file"]
+                                baseline_wgts_file   = adf.latlon_wgt_files["baseline_wgts_file"]
                                 if not baseline_wgts_file:
                                     msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
                                     raise AdfError(msg)
 
-                                base_method = adf.latlon_regrid_method["base_regrid_method"]
+                                base_method = adf.latlon_regrid_method["baseline_regrid_method"]
 
                                 #(model_dataset, var_name, comp, weight_file, latlon_file, method)
                                 tgdata_interp = _regrid(tclim_ds, var,
