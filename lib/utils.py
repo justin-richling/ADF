@@ -268,6 +268,7 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, 
 
     # Load target grid (lat/lon) from the provided dataset
     fv_ds = xr.open_dataset(latlon_file)
+    print("\nfv_ds.vairables: ",fv_ds.variables,"\n")
 
     mdata = mdata.fillna(0)
     if comp == "lnd":
