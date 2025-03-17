@@ -229,7 +229,7 @@ import xarray as xr
 import xesmf
 import numpy as np
 
-def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
+def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
