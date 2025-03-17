@@ -820,7 +820,7 @@ class AdfInfo(AdfConfig):
         
         baseline_wgts_file = self.__baseline_wgts_file
 
-        return {"test_wgts_file":cam_wgts_files,"base_wgts_file":baseline_wgts_file}
+        return {"test_wgts_file":cam_wgts_files,"baseline_wgts_file":baseline_wgts_file}
 
     # Create property needed to return the case nicknames to user:
     @property
@@ -833,7 +833,7 @@ class AdfInfo(AdfConfig):
 
         baseline_regrid_method = self.__baseline_regrid_method
 
-        return {"test_regrid_method":cam_regrid_method,"base_regrid_method":baseline_regrid_method}
+        return {"test_regrid_method":cam_regrid_method,"baseline_regrid_method":baseline_regrid_method}
     
 
     
