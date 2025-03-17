@@ -839,7 +839,7 @@ class AdfDiag(AdfWeb):
                     )
                 # End with
 
-                '''# TEMPORARY: do a quick check if this on native grid and regrid
+                # TEMPORARY: do a quick check if this on native grid and regrid
                 ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                 ts_file_ds = xr.open_dataset(
                         ts_0, decode_cf=False, decode_times=False
@@ -883,7 +883,7 @@ class AdfDiag(AdfWeb):
                             msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
                             raise AdfError(msg)
 
-                        for var in diag_var_list:
+                        for var in self.diag_var_list:
                             ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0],
                                                       decode_cf=False,
                                                       decode_times=False
@@ -906,7 +906,7 @@ class AdfDiag(AdfWeb):
                                 }
                             rgdata = rgdata.assign_attrs(attrs_dict)
                             print("regridded_file_loc",regridded_file_loc)
-                            save_to_nc(rgdata, regridded_file_loc)'''
+                            save_to_nc(rgdata, regridded_file_loc)
 
                     
 
