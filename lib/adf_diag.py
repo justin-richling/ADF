@@ -841,7 +841,7 @@ class AdfDiag(AdfWeb):
                     )
                 # End with
 
-                '''# TEMPORARY: do a quick check if this on native grid and regrid
+                # TEMPORARY: do a quick check if this on native grid and regrid
                 ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                 ts_file_ds = xr.open_dataset(
                         ts_0, decode_cf=False, decode_times=False
@@ -853,13 +853,14 @@ class AdfDiag(AdfWeb):
                        
                         print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
 
-                        #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
-                        latlon_file   = ts_0
+                        latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                        #latlon_file   = ts_0
                         wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
                         method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
                         if not baseline:
                             wgts_file = wgts_file[case_idx]
                             method = method[case_idx]
+                            latlon_file = latlon_file[case_idx]
                         if not latlon_file:
                             msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
                             raise AdfError(msg)
@@ -891,7 +892,7 @@ class AdfDiag(AdfWeb):
                                     "native_grid_to_latlon":"xesmf"
                                 }
                             rgdata = rgdata.assign_attrs(attrs_dict)
-                            save_to_nc(rgdata, regrd_ts_loc)'''
+                            save_to_nc(rgdata, regrd_ts_loc)
 
                     
 
