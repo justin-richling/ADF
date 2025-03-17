@@ -264,7 +264,7 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, 
         comp_grid = "lndgrid"
 
     #Extract variable info from model data (and remove any degenerate dimensions):
-    print("\n\nmodel_dataset and var:",var_name,model_dataset,"\n\n")
+    #print("\n\nmodel_dataset and var:",var_name,model_dataset,"\n\n")
     mdata = model_dataset[var_name].squeeze()
 
     # Load target grid (lat/lon) from the provided dataset
@@ -272,17 +272,13 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, 
 
     mdata = mdata.fillna(0)
     if comp == "lnd":
-        if 'landfrac' in model_dataset:
-            model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-            mdata = mdata * model_dataset.landfrac  # weight flux by land frac
-        print("\n\nmodel_dataset.landmask:",model_dataset.landmask,"\n\n")
-        if 'landmask' in model_dataset:
-            if 'time' in model_dataset.landmask.variable.dims:
-                s_data = model_dataset.landmask.isel(time=0)
-            else:
-                s_data = model_dataset.landmask
+        model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+        mdata = mdata * model_dataset.landfrac  # weight flux by land frac
+        #print("\n\nmodel_dataset.landmask:",model_dataset.landmask,"\n\n")
+        if 'time' in model_dataset.landmask.variable.dims:
+            s_data = model_dataset.landmask.isel(time=0)
         else:
-            s_data = mdata
+            s_data = model_dataset.landmask
         d_data = fv_ds.landmask
     else:
         print("comp",comp)
