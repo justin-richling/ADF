@@ -853,6 +853,13 @@ class AdfDiag(AdfWeb):
                             print(f"    {regrd_ts_loc} not found, making new directory")
                             regrd_ts_loc.mkdir(parents=True)
                         # End if
+
+                        regridded_file_loc = regrd_ts_loc / ts_outfil_str.replace(".nc","_regridded.nc")
+                        #Check if re-gridded file already exists and over-writing is allowed:
+                        #if regridded_file_loc.is_file() and overwrite_mregrid:
+                        #    #If so, then delete current file:
+                        #    regridded_file_loc.unlink()
+                        ##End if
                         
                         ts_dir = Path(ts_dir)
 
@@ -898,7 +905,7 @@ class AdfDiag(AdfWeb):
                                     "native_grid_to_latlon":"xesmf"
                                 }
                             rgdata = rgdata.assign_attrs(attrs_dict)
-                            save_to_nc(rgdata, regrd_ts_loc)
+                            save_to_nc(rgdata, regridded_file_loc)
 
                     
 
