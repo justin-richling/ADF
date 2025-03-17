@@ -910,8 +910,8 @@ class AdfDiag(AdfWeb):
 
                             #file_path = os.path.join(dir_path, file_name)
                             #os.remove(ts_outfil_str)
-                            print("ts_outfil_str before death: ",ts_outfil_str,"\n")
-                            Path(ts_outfil_str).unlink()
+                            #print("ts_outfil_str before death: ",ts_outfil_str,"\n")
+                            sorted(ts_dir.glob(f"*.{var}.*nc"))[0].unlink()
                     
 
             # End for hist_str
