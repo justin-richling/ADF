@@ -848,7 +848,7 @@ class AdfDiag(AdfWeb):
                         ts_dir = Path(ts_dir)
 
                        
-                        print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured, eh?")
+                        print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
 
                         #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
                         latlon_file   = ts_dir[0]
