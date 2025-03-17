@@ -807,7 +807,7 @@ class AdfInfo(AdfConfig):
         
         baseline_latlon_file = self.__baseline_latlon_file
 
-        return {"test_latlon_file":cam_latlon_files,"base_latlon_file":baseline_latlon_file}
+        return {"test_latlon_file":cam_latlon_files,"baseline_latlon_file":baseline_latlon_file}
 
     # Create property needed to return the case nicknames to user:
     @property
