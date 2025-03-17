@@ -909,7 +909,7 @@ class AdfDiag(AdfWeb):
                             save_to_nc(rgdata, regridded_file_loc)
 
                             #file_path = os.path.join(dir_path, file_name)
-                            os.remove(Path(ts_outfil_str).parts[-1])
+                            os.remove(ts_outfil_str)
                     
 
             # End for hist_str
