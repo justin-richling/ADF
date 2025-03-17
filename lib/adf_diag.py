@@ -70,12 +70,12 @@ except ImportError:
     sys.exit(1)
 
 # Check if "uxarray" is present in python path:
-try:
-    import uxarray as ux
-except ImportError:
-    print("uxarray module does not exist in python path.")
-    print("Please install module, e.g. 'pip install uxarray'.")
-    sys.exit(1)
+#try:
+#    import uxarray as ux
+#except ImportError:
+#    print("uxarray module does not exist in python path.")
+#    print("Please install module, e.g. 'pip install uxarray'.")
+#    sys.exit(1)
 
 # Check if "esmpy" is present in python path:
 try:
@@ -840,8 +840,9 @@ class AdfDiag(AdfWeb):
                 # End with
 
                 # TEMPORARY: do a quick check if this on native grid and regrid
+                ts_0 = sorted(ts_dir.glob("*.nc"))[0]
                 ts_file_ds = xr.open_dataset(
-                        ts_dir[0], decode_cf=False, decode_times=False
+                        ts_0, decode_cf=False, decode_times=False
                     )
                 if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
                     if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
@@ -851,7 +852,7 @@ class AdfDiag(AdfWeb):
                         print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
 
                         #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
-                        latlon_file   = ts_dir[0]
+                        latlon_file   = ts_0
                         wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
                         method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
                         
