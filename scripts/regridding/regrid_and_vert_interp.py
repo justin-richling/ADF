@@ -953,7 +953,7 @@ def make_se_regridder(weight_file, s_data, d_data,
     # Handle source and destination masks
     s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
     dummy_in['mask']= s_mask
-    
+    print("\n\n d_data: ",d_data,"\n\n")
     d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
     dummy_out['mask']= d_mask                
 
