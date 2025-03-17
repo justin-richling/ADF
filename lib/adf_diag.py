@@ -423,6 +423,8 @@ class AdfDiag(AdfWeb):
         # get info about variable defaults
         res = self.variable_defaults
 
+        comp = self.model_component
+
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
@@ -878,7 +880,7 @@ class AdfDiag(AdfWeb):
                             #    #return None
                             #    print("AHHHHH")
                             #da = (ds[var]).squeeze()
-                            rgdata = adf_utils.unstructure_regrid(ts_ds, var, comp="atm",
+                            rgdata = adf_utils.unstructure_regrid(ts_ds, var, comp=comp,
                                                          weight_file=wgts_file,
                                                          latlon_file=latlon_file,
                                                          method=method)
