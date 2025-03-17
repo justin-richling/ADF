@@ -854,7 +854,7 @@ class AdfDiag(AdfWeb):
                             regrd_ts_loc.mkdir(parents=True)
                         # End if
                         print("ts_outfil_str",ts_outfil_str)
-                        regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
+                        #regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
                         #Check if re-gridded file already exists and over-writing is allowed:
                         #if regridded_file_loc.is_file() and overwrite_mregrid:
                         #    #If so, then delete current file:
@@ -904,6 +904,12 @@ class AdfDiag(AdfWeb):
                                     #"climatology_files": climatology_files_str,
                                     "native_grid_to_latlon":"xesmf"
                                 }
+                            ts_outfil_str = (
+                                                ts_dir
+                                                + os.sep
+                                                + ".".join([case_name, hist_str, var, time_string, "nc"])
+                                            )
+                            regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
                             rgdata = rgdata.assign_attrs(attrs_dict)
                             print("regridded_file_loc",regridded_file_loc)
                             save_to_nc(rgdata, regridded_file_loc)
