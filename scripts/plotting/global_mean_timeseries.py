@@ -42,6 +42,8 @@ def global_mean_timeseries(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
+    regrd_case_ts_locs = adfobj.get_cam_info("cam_ts_regrid_loc")
+
     # Loop over variables
     for field in adfobj.diag_var_list:
         #Notify user of variable being plotted:
@@ -82,10 +84,14 @@ def global_mean_timeseries(adfobj):
             
             # check if there is a lat dimension:
             if not has_lat_ref:
-                print(
-                    f"\t    WARNING: Variable {field} is missing a lat dimension for '{base_name}', cannot continue to plot."
-                )
-                continue
+                regrd_ts_loc = adfobj.get_baseline_info("cam_ts_regrid_loc")
+                ref_ts_da = xr.opend_dataset(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc"))[0])
+                has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
+                if not has_lat_ref:
+                    print(
+                        f"\t    WARNING: Variable {field} is missing a lat dimension for '{base_name}', cannot continue to plot."
+                    )
+                    continue
             # End if
 
             # reference time series global average
@@ -112,7 +118,7 @@ def global_mean_timeseries(adfobj):
         )
 
         skip_var = False
-        for case_name in adfobj.data.case_names:
+        for idx, case_name in enumerate(adfobj.data.case_names):
 
             c_ts_da = adfobj.data.load_timeseries_da(case_name, field)
 
@@ -140,13 +146,10 @@ def global_mean_timeseries(adfobj):
 
             # check if there is a lat dimension:
             if not has_lat_case:
-                #has_dims = pf.validate_dims(c_ts_da, ['lat','lon'])
-                #if ('lat' and 'lon') in has_dims:
-                #    print()
-                #    c_ts_da = 
-                if 1 == 0:
-                    print()
-                else:
+                regrd_case_ts_loc = regrd_case_ts_locs[idx]
+                c_ts_da = xr.opend_dataset(sorted(Path(regrd_case_ts_loc).glob(f"*{field}*.nc"))[0])
+                has_lat_case, has_lev_case = pf.zm_validate_dims(c_ts_da)
+                if not has_lat_case:
                     print(
                         f"\t    WARNING: Variable {field} is missing a lat dimension for '{case_name}', cannot continue to plot."
                     )
