@@ -855,7 +855,9 @@ class AdfDiag(AdfWeb):
                         latlon_file   = ts_0
                         wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
                         method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
-                        
+                        if not baseline:
+                            wgts_file = wgts_file[case_idx]
+                            method = method[case_idx]
                         if not latlon_file:
                             msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
                             raise AdfError(msg)
