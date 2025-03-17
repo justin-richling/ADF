@@ -905,7 +905,7 @@ class AdfDiag(AdfWeb):
                                     "native_grid_to_latlon":"xesmf"
                                 }
                             ts_outfil_str = (
-                                                ts_dir
+                                                str(ts_dir)
                                                 + os.sep
                                                 + ".".join([case_name, hist_str, var, time_string, "nc"])
                                             )
