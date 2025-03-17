@@ -905,6 +905,7 @@ class AdfDiag(AdfWeb):
                                     "native_grid_to_latlon":"xesmf"
                                 }
                             rgdata = rgdata.assign_attrs(attrs_dict)
+                            print("regridded_file_loc",regridded_file_loc)
                             save_to_nc(rgdata, regridded_file_loc)
 
                     
