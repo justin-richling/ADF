@@ -284,6 +284,7 @@ def regrid_and_vert_interp(adf):
                             regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
                         #End if
 
+                    # Check if this is on the native grid
                     if ('lat' not in mclim_ds.dims) and ('lat' not in mclim_ds.dims):
                         if ('ncol' in mclim_ds.dims) or ('lndgrid' in mclim_ds.dims):
                             #mclim_ds

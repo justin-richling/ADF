@@ -2,7 +2,7 @@
 
 
 
-def unstructure_regrid(model_dataset, var_name, comp="atm", **kwargs):
+'''def unstructure_regrid(model_dataset, var_name, comp="atm", **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -224,7 +224,173 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
     return regridded
+'''
+import xarray as xr
+import xesmf
+import numpy as np
 
+def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
+    """
+    Function that takes a variable from a model xarray
+    dataset, regrids it to another dataset's lat/lon
+    coordinates (if applicable)
+    ----------
+    model_dataset -> The xarray dataset which contains the model variable data
+    var_name      -> The name of the variable to be regridded/interpolated.
+
+    Optional inputs:
+
+    ps_file        -> NOT APPLICABLE: A NetCDF file containing already re-gridded surface pressure
+    regrid_dataset -> The xarray dataset that contains the lat/lon grid that
+                      "var_name" will be regridded to.  If not present then
+                      only the vertical interpolation will be done.
+
+    kwargs         -> Keyword arguments that contain paths to THE REST IS NOT APPLICABLE: surface pressure
+                      and mid-level pressure files, which are necessary for
+                      certain types of vertical interpolation.
+
+    This function returns a new xarray dataset that contains the regridded
+    model variable.
+    """
+
+    #Import ADF-specific functions:
+    import numpy as np
+    import plotting_functions as pf
+
+    #comp = adf.model_component
+    if comp == "atm":
+        comp_grid = "ncol"
+    if comp == "lnd":
+        comp_grid = "lndgrid"
+
+    #Extract variable info from model data (and remove any degenerate dimensions):
+    mdata = model_dataset[var_name].squeeze()
+
+    # Load target grid (lat/lon) from the provided dataset
+    fv_ds = xr.open_dataset(latlon_file)
+
+    mdata = mdata.fillna(0)
+    if comp == "lnd":
+        model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+        mdata = mdata * model_dataset.landfrac  # weight flux by land frac
+        s_data = model_dataset.landmask.isel(time=0)
+        d_data = fv_ds.landmask
+    else:
+        s_data = mdata.isel(time=0)
+        d_data = fv_ds[var_name]
+
+    #Regrid model data to match target grid:
+    regridder = make_se_regridder(weight_file=weight_file,
+                                    s_data = s_data,
+                                    d_data = d_data,
+                                    Method = method,
+                                    )
+    if method == 'coservative':
+        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+    if method == 'bilinear':
+        rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
+
+    if comp == "lnd":
+        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+        rgdata['landmask'] = fv_ds.landmask
+        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+
+    rgdata['lat'] = fv_ds.lat
+    rgdata['lon'] = fv_ds.lon
+
+    # calculate area
+    area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
+    earth_radius_km = 6.37122e3  # in meters
+
+    yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+    xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+    yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+    xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+
+    dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
+    phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
+
+    # grid cell area
+    for j in range(len(rgdata['lat'])):
+        for i in range(len(rgdata['lon'])):
+            dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
+            area_km2[j,i] = dy_km[j] * dx_km
+
+    rgdata['area'] = xr.DataArray(area_km2,
+                                      coords={'lat': rgdata.lat, 'lon': rgdata.lon},
+                                      dims=["lat", "lon"])
+    rgdata['area'].attrs['units'] = 'km2'
+    rgdata['area'].attrs['long_name'] = 'Grid cell area'
+
+    #Return dataset:
+    return rgdata
+
+
+
+def make_se_regridder(weight_file, s_data, d_data,
+                      Method='coservative'
+                      ):
+    """
+    Create xESMF regridder for spectral element grids.
+    """
+
+    if weight_file:
+        weights = xr.open_dataset(weight_file)
+    
+    in_shape = weights.src_grid_dims.load().data
+
+    # Since xESMF expects 2D vars, we'll insert a dummy dimension of size-1
+    if len(in_shape) == 1:
+        in_shape = [1, in_shape.item()]
+
+    # output variable shape
+    out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
+
+    dummy_in = xr.Dataset(
+        {
+            "lat": ("lat", np.empty((in_shape[0],))),
+            "lon": ("lon", np.empty((in_shape[1],))),
+        }
+    )
+    dummy_out = xr.Dataset(
+        {
+            "lat": ("lat", weights.yc_b.data.reshape(out_shape)[:, 0]),
+            "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
+        }
+    )
+    # Handle source and destination masks
+    s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
+    dummy_in['mask']= s_mask
+    
+    d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
+    dummy_out['mask']= d_mask                
+
+    # QUESTION: Do source and destination grids need masks here?
+    # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
+    regridder = xesmf.Regridder(
+        dummy_in,
+        dummy_out,
+        weights=weight_file,
+        # NOTE: results seem insensitive to this method choice
+        # INFO: choices are coservative_normed, coservative, and bilinear
+        method=Method,
+        reuse_weights=True,
+        periodic=True,
+    )
+    return regridder
+
+
+def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
+                         skipna=True, na_thres=1,
+                         )
+    return regridded
+
+def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
+    return regridded
 
 
 

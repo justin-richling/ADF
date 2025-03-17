@@ -397,7 +397,7 @@ class AdfDiag(AdfWeb):
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
-            case_type_string="case"
+            case_type_string = "test"
             hist_str_list = self.hist_string["test_hist_str"]
 
             overwrite_regrid_locs = self.get_cam_info("cam_overwrite_ts_regrid")
@@ -446,7 +446,7 @@ class AdfDiag(AdfWeb):
 
             # Check that path actually exists:
             if not starting_location.is_dir():
-                emsg = f"Provided {case_type_string} 'cam_hist_loc' directory"
+                emsg = f"Provided {case_type_string} case 'cam_hist_loc' directory"
                 emsg += f" '{starting_location}' not found.  Script is ending here."
                 self.end_diag_fail(emsg)
             # End if
@@ -458,7 +458,7 @@ class AdfDiag(AdfWeb):
             hist_str_case = hist_str_list[case_idx]
             for hist_str in hist_str_case:
 
-                print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
+                print(f"\t Processing time series for {case_type_string} case '{case_name}', {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
                     emsg = (
                         f"No history *{hist_str}.*.nc files found in '{starting_location}'."
@@ -777,26 +777,25 @@ class AdfDiag(AdfWeb):
                     ]
 
                     if "clm" in hist_str:
-                        # Step 3a: Optional, add additional variables to clm2.h0 files 
-                        cmd_add_clm_h0_fields = [
-                            "ncks", "-A", "-v", "area,landfrac,landmask",
-                            hist_files[0],
-                            ts_outfil_str
-                        ]
+                        # Step 3a: Optional, add additional variables to clm2.h0 files
+                        if  "h0" in hist_str:
+                            cmd_add_clm_h0_fields = [
+                                "ncks", "-A", "-v", "area,landfrac,landmask",
+                                hist_files[0],
+                                ts_outfil_str
+                            ]
+                            # add time invariant information to clm2.h0 fields
+                            list_of_hist_commands.append(cmd_add_clm_h0_fields)
 
                         # Step 3b: Optional, add additional variables to clm2.h1 files 
-                        cmd_add_clm_h1_fields = [
-                            "ncrcat", "-A", "-v", "pfts1d_ixy,pfts1d_jxy,pfts1d_itype_veg,lat,lon",
-                            hist_files,
-                            ts_outfil_str
-                        ]
-
-                        # TODO, add some logic to control if these are done
-                        # add time invariant information to clm2.h0 fields
-                        list_of_hist_commands.append(cmd_add_clm_h0_fields)
-                        # add time varrying information to clm2.h1 fields
-                        #list_of_hist_commands.append(cmd_add_clm_h1_fields)
-
+                        if  "h1" in hist_str:
+                            cmd_add_clm_h1_fields = [
+                                "ncrcat", "-A", "-v", "pfts1d_ixy,pfts1d_jxy,pfts1d_itype_veg,lat,lon",
+                                hist_files,
+                                ts_outfil_str
+                            ]
+                            # add time varrying information to clm2.h1 fields
+                            list_of_hist_commands.append(cmd_add_clm_h1_fields)
 
                      # Step 3c: Create the ncatted command to remove the history attribute
                     cmd_remove_history = [
@@ -813,14 +812,8 @@ class AdfDiag(AdfWeb):
                     # Add global attributes: user, original hist file loc(s) and all filenames
                     list_of_ncattend_commands.append(cmd_ncatted)
 
-                    """# TODO, add some logic to control if these are done
-                    # add time invariant information to clm2.h0 fields
-                    list_of_hist_commands.append(cmd_add_clm_h0_fields)
-                    # add time varrying information to clm2.h1 fields
-                    #list_of_hist_commands.append(cmd_add_clm_h1_fields)
-                    """
                     # Remove the `history` attr that gets tacked on (for clean up)
-                    # NOTE: this may not be best practice, but it the history attr repeats
+                    # NOTE: this may not be best practice, but if the history attr repeats
                     #       the files attrs so the global attrs become obtrusive...
                     list_of_hist_commands.append(cmd_remove_history)
 
@@ -846,47 +839,56 @@ class AdfDiag(AdfWeb):
                     )
                 # End with
 
-                """
-                #Generate CAM climatology (climo) file list:
-                mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                # TEMPORARY: do a quick check if this on native grid and regrid
+                ts_file_ds = xr.open_dataset(
+                        ts_dir[0], decode_cf=False, decode_times=False
+                    )
+                if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
+                    if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
+                        ts_dir = Path(ts_dir)
 
-                if len(mclim_fils) > 1:
-                    #Combine all cam files together into a single data set:
-                    mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
-                elif len(mclim_fils) == 0:
-                    #wmsg = f"\t    WARNING: Unable to find climo file for '{var}'."
-                    #wmsg += " Continuing to next variable."
-                    wmsg= f"\t    WARNING: regridding {var} failed, no climo file for case '{case_name}'. Continuing to next variable."
-                    print(wmsg)
-                    continue
-                else:
-                    #Open single file as new xarray dataset:
-                    mclim_ds = xr.open_dataset(mclim_fils[0])
-                #End if
-                """
+                       
+                        print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured, eh?")
 
-                """if ('lat' not in hist_file_ds.dims) and ('lon' not in hist_file_ds.dims):
-                    ts_dirr = Path(ts_dir)
-                    #for ts_file in ts_dir:
-                    #    print(ts_file)
-                    #    adf_utils.unstructure_regrid(model_dataset, var_name, comp="atm")
-                    for var in diag_var_list:
-                        var_file = sorted(ts_dirr.glob(f"*.{var}.*nc"))
-                        ds = self.data.load_dataset(var_file)
-                        if ds is None:
-                            #warnings.warn(f"\t    WARNING: Load failed for {variablename}")
-                            #return None
-                            print("AHHHHH")
-                        #da = (ds[var]).squeeze()
-                        rgdata = adf_utils.unstructure_regrid(ds, var, comp="atm")
-                        attrs_dict = {
-                                #"adf_user": adf.user,
-                                #"climo_yrs": f"{case_name}: {syear}-{eyear}",
-                                #"climatology_files": climatology_files_str,
-                                "native_grid_to_latlon":"xesmf"
-                            }
-                        rgdata = rgdata.assign_attrs(attrs_dict)
-                        save_to_nc(rgdata, regrd_ts_loc)"""
+                        #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                        latlon_file   = ts_dir[0]
+                        wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
+                        method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
+                        
+                        if not latlon_file:
+                            msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
+                            raise AdfError(msg)
+
+                        #Check if any a weights file exists if using native grid, OPTIONAL
+                        if not wgts_file:
+                            msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
+                            raise AdfError(msg)
+
+                        for var in diag_var_list:
+                            ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0],
+                                                      decode_cf=False,
+                                                      decode_times=False
+                                                     )
+                            #ds = self.data.load_dataset(var_file)
+                            #if ds is None:
+                            #    #warnings.warn(f"\t    WARNING: Load failed for {variablename}")
+                            #    #return None
+                            #    print("AHHHHH")
+                            #da = (ds[var]).squeeze()
+                            rgdata = adf_utils.unstructure_regrid(ts_ds, var, comp="atm",
+                                                         weight_file=wgts_file,
+                                                         latlon_file=latlon_file,
+                                                         method=method)
+                            attrs_dict = {
+                                    #"adf_user": adf.user,
+                                    #"climo_yrs": f"{case_name}: {syear}-{eyear}",
+                                    #"climatology_files": climatology_files_str,
+                                    "native_grid_to_latlon":"xesmf"
+                                }
+                            rgdata = rgdata.assign_attrs(attrs_dict)
+                            save_to_nc(rgdata, regrd_ts_loc)
+
+                    
 
             # End for hist_str
         # End cases loop
