@@ -439,8 +439,6 @@ class AdfDiag(AdfWeb):
             start_year = start_years[case_idx]
             end_year = end_years[case_idx]
 
-            regrd_ts_loc = test_output_loc[case_idx]
-
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
 
@@ -848,6 +846,14 @@ class AdfDiag(AdfWeb):
                     )
                 if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
                     if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
+                        
+                        regrd_ts_loc = Path(test_output_loc[case_idx])
+                        # Check that path actually exists:
+                        if not regrd_ts_loc.is_dir():
+                            print(f"    {regrd_ts_loc} not found, making new directory")
+                            regrd_ts_loc.mkdir(parents=True)
+                        # End if
+                        
                         ts_dir = Path(ts_dir)
 
                        
