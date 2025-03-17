@@ -85,7 +85,7 @@ def global_mean_timeseries(adfobj):
             # check if there is a lat dimension:
             if not has_lat_ref:
                 regrd_ts_loc = adfobj.get_baseline_info("cam_ts_regrid_loc")
-                print(Path(regrd_ts_loc).glob(f"*{field}*.nc"),"\n\n")
+                print(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc")),"\n\n")
                 ref_ts_da = xr.open_dataset(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc"))[0])
                 has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
                 if not has_lat_ref:
