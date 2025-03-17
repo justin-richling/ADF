@@ -264,6 +264,7 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, 
         comp_grid = "lndgrid"
 
     #Extract variable info from model data (and remove any degenerate dimensions):
+    print("\n\nmodel_dataset and var:",var_name,model_dataset,"\n\n")
     mdata = model_dataset[var_name].squeeze()
 
     # Load target grid (lat/lon) from the provided dataset
