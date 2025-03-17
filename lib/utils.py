@@ -279,13 +279,13 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, 
     else:
         s_data = mdata.isel(time=0)
         # Get the first data variable with 'time' and 'ncol' dimensions
-        matching_vars = [var for var in ds.data_vars if set(ds[var].dims) == {'time', 'lndgrid'}]
+        matching_vars = [var for var in d_data.data_vars if set(d_data[var].dims) == {'time', 'lndgrid'}]
 
         if matching_vars:
             first_matching_var = matching_vars[0]
             print(f"First matching variable: {first_matching_var}")
-            first_var_data = ds[first_matching_var]
-            print(first_var_data.name)
+            #first_var_data = d_data[first_matching_var]
+            #print(first_var_data.name)
         d_data = fv_ds[first_matching_var]
 
     print("\nWeights file? ",weight_file,"\n")
