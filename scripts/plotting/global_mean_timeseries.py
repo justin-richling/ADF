@@ -84,8 +84,9 @@ def global_mean_timeseries(adfobj):
             
             # check if there is a lat dimension:
             if not has_lat_ref:
+                print("the first try is fail, look for gridded time series files?")
                 regrd_ts_loc = adfobj.get_baseline_info("cam_ts_regrid_loc")
-                print(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc")),"\n\n")
+                #print(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc")),"\n\n")
                 ref_ts_da = xr.open_dataset(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc"))[0])
                 has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
                 if not has_lat_ref:
@@ -99,7 +100,7 @@ def global_mean_timeseries(adfobj):
             ref_ts_da_ga = pf.spatial_average(ref_ts_da, weights=None, spatial_dims=None)
             print("ref_ts_da_ga",type(ref_ts_da_ga),ref_ts_da_ga,"\n")
             # annually averaged
-            ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time",use_ux=True)
+            ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time",use_ux=False)
         # End if
 
         # Loop over model cases:
@@ -160,7 +161,7 @@ def global_mean_timeseries(adfobj):
 
             # Gather spatial avg for test case
             c_ts_da_ga = pf.spatial_average(c_ts_da)
-            case_ts[labels[case_name]] = pf.annual_mean(c_ts_da_ga,use_ux=True)
+            case_ts[labels[case_name]] = pf.annual_mean(c_ts_da_ga,use_ux=False)
 
         # If this case is 3-d or missing variable, then break the loop and go to next variable
         if skip_var:
