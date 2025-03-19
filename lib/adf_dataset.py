@@ -122,10 +122,12 @@ class AdfData:
             #native_grid = self.adf.get_baseline_info("native_grid")
             native_grid = self.adf.native_grid["baseline_native_grid"]
             #ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
+            print("timeseries native_grid:",native_grid)
             if native_grid:
                 ts_loc = Path(self.adf.get_baseline_info("cam_ts_regrid_loc"))
             else:
                 ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc"))
+            ts_loc
             ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
