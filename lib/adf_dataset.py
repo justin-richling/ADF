@@ -127,7 +127,7 @@ class AdfData:
                 ts_loc = Path(self.adf.get_baseline_info("cam_ts_regrid_loc"))
             else:
                 ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc"))
-            ts_loc
+            print("ts_loc referencre",ts_loc)
             ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
