@@ -76,10 +76,10 @@ def regrid_and_vert_interp(adf):
     
 
 
-    if is_baseline:
-        ts_files = adf.data.get_ref_timeseries_file(var)
-    else:
-        ts_files = adf.data.get_timeseries_file(case_name, var)
+    #if is_baseline:
+    #    ts_files = adf.data.get_ref_timeseries_file(var)
+    #else:
+    #    ts_files = adf.data.get_timeseries_file(case_name, var)
 
     case_latlon_files   = adf.latlon_files["test_latlon_file"]
     #print("case_latlon_file",case_latlon_file,"\n")
