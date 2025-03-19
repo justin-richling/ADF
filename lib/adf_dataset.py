@@ -272,6 +272,7 @@ class AdfData:
             ref_loc = Path(self.adf.get_baseline_info("cam_climo_regrid_loc"))
         else:
             ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        print("\nref_loc",ref_loc,"\n")
         # NOTE: originally had this looking for *_baseline.nc
         fils = sorted(Path(ref_loc).glob(f"{self.ref_case_label}_{var}_climo.nc"))
         if fils:
