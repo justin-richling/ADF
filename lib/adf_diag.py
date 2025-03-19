@@ -842,7 +842,7 @@ class AdfDiag(AdfWeb):
                 # TEMPORARY: do a quick check if this on native grid and regrid
                 ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                 ts_file_ds = xr.open_dataset(
-                        ts_0, decode_cf=False, decode_times=False
+                        ts_0,
                     )
                 if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
                     if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
