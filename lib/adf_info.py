@@ -865,7 +865,7 @@ class AdfInfo(AdfConfig):
 
         #Note that copies are needed in order to avoid having a script mistakenly
         #modify these variables, as they are mutable and thus passed by reference:
-        test_native_grid = copy.copy(self.__test_native_grid)
+        test_native_grid = self.__test_native_grid
         base_native_grid = self.__baseline_native_grid
 
         return {"test_native_grid":test_native_grid,"baseline_native_grid":base_native_grid}
