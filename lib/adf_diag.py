@@ -914,7 +914,7 @@ class AdfDiag(AdfWeb):
                                                 + ".".join([case_name, hist_str, var, time_string, "nc"])
                                             )
                             regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
-                            rgdata = rgdata.assign_attrs(attrs_dict)
+                            #rgdata = rgdata.assign_attrs(attrs_dict)
                             # Restore the original cftime time values
                             rgdata = rgdata.assign_coords(time=('time', original_time))
                             print("regridded_file_loc",rgdata.time,"\n\n")
