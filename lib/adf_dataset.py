@@ -270,6 +270,7 @@ class AdfData:
         #native_grid = self.adf.get_baseline_info("native_grid")
         native_grid = self.adf.native_grid["baseline_native_grid"]
         #ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        print("\nnative_grid",native_grid)
         if native_grid:
             ref_loc = Path(self.adf.get_baseline_info("cam_climo_regrid_loc"))
         else:
