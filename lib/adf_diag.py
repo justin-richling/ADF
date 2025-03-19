@@ -889,6 +889,7 @@ class AdfDiag(AdfWeb):
                                                       decode_times=False
                                                      )
                             # Store the original cftime time values
+                            print("ts_ds['time']",ts_ds['time'],"\n\n")
                             original_time = ts_ds['time'].values
                             #ds = self.data.load_dataset(var_file)
                             #if ds is None:
@@ -915,7 +916,7 @@ class AdfDiag(AdfWeb):
                             rgdata = rgdata.assign_attrs(attrs_dict)
                             # Restore the original cftime time values
                             rgdata = rgdata.assign_coords(time=('time', original_time))
-                            print("regridded_file_loc",regridded_file_loc)
+                            print("regridded_file_loc",rgdata.time,"\n\n")
                             save_to_nc(rgdata, regridded_file_loc)
                             self.native_grid[f"{case_type_string}_native_grid"] = False
 
