@@ -97,9 +97,17 @@ class AdfData:
     # Test case(s)
     def get_timeseries_file(self, case, field):
         """Return list of test time series files"""
-        ts_locs = self.adf.get_cam_info("cam_ts_loc", required=True) # list of paths (could be multiple cases)
         caseindex = (self.case_names).index(case)
-        ts_loc = Path(ts_locs[caseindex])
+        #native_grids = self.adf.get_cam_info("native_grid")
+        native_grids = self.adf.native_grid["test_native_grid"]
+        # list of possible timeseries paths (could be multiple cases)
+        ts_regrid_locs = self.adf.get_cam_info("cam_ts_regrid_loc")
+        ts_locs = self.adf.get_cam_info("cam_ts_loc")
+        if native_grids[caseindex]:
+            ts_loc = Path(ts_regrid_locs[caseindex])
+        else:
+            ts_loc = Path(ts_locs[caseindex])
+        #ts_loc = Path(ts_locs[caseindex])
         ts_filenames = f'{case}.*.{field}.*nc'
         ts_files = sorted(ts_loc.glob(ts_filenames))
         return ts_files
@@ -111,7 +119,13 @@ class AdfData:
             warnings.warn("\t    WARNING: ADF does not currently expect observational time series files.")
             return None
         else:
-            ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
+            #native_grid = self.adf.get_baseline_info("native_grid")
+            native_grid = self.adf.native_grid["baseline_native_grid"]
+            #ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
+            if native_grid:
+                ts_loc = Path(self.adf.get_baseline_info("cam_ts_regrid_loc"))
+            else:
+                ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc"))
             ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
@@ -216,8 +230,16 @@ class AdfData:
     
     def get_climo_file(self, case, variablename):
         """Retrieve the climo file path(s) for variablename for a specific case."""
-        a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
+        #native_grids = self.adf.get_cam_info("native_grid")
+        native_grids = self.adf.native_grid["test_native_grid"]
         caseindex = (self.case_names).index(case) # the entry for specified case
+        climo_regrid_locs = self.adf.get_cam_info("cam_ts_regrid_loc")
+        climo_locs = self.adf.get_cam_info("cam_climo_loc")
+        if native_grids[caseindex]:
+            a = Path(climo_regrid_locs[caseindex])
+        else:
+            a = Path(climo_locs[caseindex])
+        #a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
         model_cl_loc = Path(a[caseindex])
         return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
 
@@ -243,7 +265,13 @@ class AdfData:
         if self.adf.compare_obs:
             fils = self.ref_var_loc.get(var, None)
             return [fils] if fils is not None else None
-        ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        #native_grid = self.adf.get_baseline_info("native_grid")
+        native_grid = self.adf.native_grid["baseline_native_grid"]
+        #ref_loc = self.adf.get_baseline_info("cam_climo_loc")
+        if native_grid:
+            ref_loc = Path(self.adf.get_baseline_info("cam_climo_regrid_loc"))
+        else:
+            ref_loc = self.adf.get_baseline_info("cam_climo_loc")
         # NOTE: originally had this looking for *_baseline.nc
         fils = sorted(Path(ref_loc).glob(f"{self.ref_case_label}_{var}_climo.nc"))
         if fils:
@@ -295,12 +323,13 @@ class AdfData:
             else:
                 fils = []
         else:
-            #model_rg_loc = Path(self.adf.get_basic_info("cam_climo_regrid_loc", required=True))
-            ref_rg_loc = Path(self.adf.get_baseline_info("cam_climo_regrid_loc", required=True))
+            model_rg_loc = Path(self.adf.get_basic_info("cam_climo_regrid_loc", required=True))
+            native_grid = self.adf.get_baseline_info("native_grid")
+            #ref_rg_loc = Path(self.adf.get_baseline_info("cam_climo_regrid_loc", required=True))
             #print("self.ref_case_label",self.ref_case_label,'\n"')
             #caseindex = (self.ref_case_label).index(case) # the entry for specified case
             #ref_rg_loc = Path(ref_rg_locs[caseindex])
-            fils = sorted(ref_rg_loc.glob(f"{case}_{field}_baseline.nc"))
+            fils = sorted(model_rg_loc.glob(f"{case}_{field}_baseline.nc"))
         return fils
 
 

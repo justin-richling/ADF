@@ -222,6 +222,9 @@ class AdfInfo(AdfConfig):
                 baseline_regrid_method = 'coservative'
             self.__baseline_regrid_method = baseline_regrid_method
 
+            baseline_native_grid = self.get_baseline_info("native_grid")
+            self.__baseline_native_grid = baseline_native_grid
+
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if baseline_ts_done:
@@ -453,6 +456,11 @@ class AdfInfo(AdfConfig):
         if cam_regrid_method is None:
             cam_regrid_method = [None]*len(case_names)
         self.__cam_regrid_method = cam_regrid_method
+
+        cam_native_grid = self.get_cam_info("native_grid")
+        if cam_native_grid is None:
+            cam_native_grid = [None]*len(case_names)
+        self.__test_native_grid = cam_native_grid
 
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
@@ -848,6 +856,19 @@ class AdfInfo(AdfConfig):
         unstruct_base = self.__unstruct_base
 
         return {"unstruct_tests":unstruct_tests,"unstruct_base":unstruct_base}
+
+
+    # Create property needed to return the case nicknames to user:
+    @property
+    def native_grid(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        test_native_grid = copy.copy(self.__test_native_grid)
+        base_native_grid = self.__baseline_native_grid
+
+        return {"test_native_grid":test_native_grid,"baseline_native_grid":base_native_grid}
 
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property

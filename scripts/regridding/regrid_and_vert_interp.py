@@ -53,8 +53,10 @@ def regrid_and_vert_interp(adf):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    overwrite_regrid_locs = adf.get_cam_info("cam_overwrite_climo_regrid", required=True)
-    test_output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
+    #overwrite_regrid_locs = adf.get_cam_info("cam_overwrite_climo_regrid", required=True)
+    #test_output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
+    overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
+    output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
 
@@ -70,7 +72,14 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    
+
+
+    if is_baseline:
+        ts_files = adf.data.get_ref_timeseries_file(var)
+    else:
+        ts_files = adf.data.get_timeseries_file(case_name, var)
 
     case_latlon_files   = adf.latlon_files["test_latlon_file"]
     #print("case_latlon_file",case_latlon_file,"\n")
@@ -152,6 +161,7 @@ def regrid_and_vert_interp(adf):
 
     #Set output/target data path variables:
     #------------------------------------
+    rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
@@ -163,7 +173,7 @@ def regrid_and_vert_interp(adf):
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
 
-        rgclimo_loc = Path(test_output_loc[case_idx])
+        """rgclimo_loc = Path(test_output_loc[case_idx])
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
             print(f"    {rgclimo_loc} not found, making new directory")
@@ -173,7 +183,7 @@ def regrid_and_vert_interp(adf):
         overwrite_mregrid = overwrite_regrid_locs[case_idx]
 
         #Set case climo data path:
-        mclimo_loc  = Path(input_climo_locs[case_idx])
+        mclimo_loc  = Path(input_climo_locs[case_idx])"""
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields if needed:
@@ -206,6 +216,8 @@ def regrid_and_vert_interp(adf):
             #Notify user of variable being regridded:
             print(f"\t - regridding {var} (known targets: {target_list})")
 
+            #input_climo_locs = adf.data.load_climo_dataset(case_name, var)
+
             #loop over regridding targets:
             for target in target_list:
 
@@ -225,7 +237,7 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                 #Check if re-gridded file already exists and over-writing is allowed:
-                if regridded_file_loc.is_file() and overwrite_mregrid:
+                if regridded_file_loc.is_file() and overwrite_regrid:
                     #If so, then delete current file:
                     regridded_file_loc.unlink()
                 #End if
@@ -239,7 +251,8 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       tclim_fils = adf.data.get_reference_climo_file(var)
                     #End if
 
                     #Write to debug log if enabled:
@@ -257,7 +270,9 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Generate CAM climatology (climo) file list:
-                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    #input_climo_locs = adf.data.load_climo_dataset(case_name, var)
+                    mclim_fils = adf.data.get_climo_file(case_name, var)
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
@@ -863,7 +878,7 @@ def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
 
     mdata = mdata.fillna(0)
     if comp == "lnd":
-        model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+        model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
         mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         s_data = model_dataset.landmask.isel(time=0)
         d_data = fv_ds.landmask

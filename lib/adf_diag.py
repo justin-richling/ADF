@@ -913,6 +913,7 @@ class AdfDiag(AdfWeb):
                             rgdata = rgdata.assign_attrs(attrs_dict)
                             print("regridded_file_loc",regridded_file_loc)
                             save_to_nc(rgdata, regridded_file_loc)
+                            self.native_grid[f"{case_type_string}_native_grid"] = False
 
                             #file_path = os.path.join(dir_path, file_name)
                             #os.remove(ts_outfil_str)
