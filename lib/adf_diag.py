@@ -885,8 +885,7 @@ class AdfDiag(AdfWeb):
 
                         for var in self.diag_var_list:
                             ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0],
-                                                      decode_cf=False,
-                                                      decode_times=False
+                                                      
                                                      )
                             # Store the original cftime time values
                             print("ts_ds['time']",ts_ds['time'],"\n\n")
@@ -901,6 +900,8 @@ class AdfDiag(AdfWeb):
                                                          weight_file=wgts_file,
                                                          latlon_file=latlon_file,
                                                          method=method)
+                            # Copy global attributes
+                            rgdata.attrs = ts_ds.attrs.copy()
                             attrs_dict = {
                                     #"adf_user": adf.user,
                                     #"climo_yrs": f"{case_name}: {syear}-{eyear}",
