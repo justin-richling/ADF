@@ -832,6 +832,34 @@ class AdfDiag(AdfWeb):
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_hist_commands)
 
+                # Loop over the created time series files again and fix the time if necessary
+                #NOTE: There is no solution to do this with NCO operators, but there is with CDO operators.
+                #      We can switch to using CDO, but it would require the user to have/load CDO as well.
+                fils = glob.glob(f"{ts_dir}/*{time_string}.nc")
+                for fil in fils:
+                    ts_ds = xr.open_dataset(fil, decode_times=False)
+                    if 'time_bnds' in ts_ds:
+                        ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
+                        ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                        time = ts_ds['time']
+                        time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                        ts_ds['time'] = time
+                        ts_ds.assign_coords(time=time)
+                        ts_ds_fixed = xr.decode_cf(ts_ds)
+
+                        # Add attribute note of time change
+                        attrs_dict = {
+                            "adf_timeseries_info": "Time series files have been computed using 'ncrcat'",
+                            "adf_note": "The time values have been modified to middle of month"
+                        }
+                        ts_ds_fixed = ts_ds_fixed.assign_attrs(attrs_dict)
+
+                        # Save to a temporary file
+                        temp_file_path = fil + ".tmp"
+                        ts_ds_fixed.to_netcdf(temp_file_path)
+                        # Replace the original file with the modified file
+                        os.replace(temp_file_path, fil)
+
                 if vars_to_derive:
                     self.derive_variables(
                         res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
