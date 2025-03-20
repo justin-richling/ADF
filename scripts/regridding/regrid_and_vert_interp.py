@@ -144,9 +144,9 @@ def regrid_and_vert_interp(adf):
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
         trgclimo_loc = Path(adf.get_baseline_info("cam_climo_regrid_loc", required=True))
         #Check if re-gridded directory exists, and if not, then create it:
-        if not trgclimo_loc.is_dir():
-            print(f"    {trgclimo_loc} not found, making new directory")
-            trgclimo_loc.mkdir(parents=True)
+        #if not trgclimo_loc.is_dir():
+        #    print(f"    {trgclimo_loc} not found, making new directory")
+        #    trgclimo_loc.mkdir(parents=True)
         #End if
     #End if
 
@@ -389,7 +389,8 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
+                    #interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
+                    interp_bl_file = target_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
                         if comp == "atm":

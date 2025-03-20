@@ -72,7 +72,7 @@ def create_climo_files(adf, clobber=False, search=None):
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
+    output_locs   = adf.get_cam_info("cam_climo_loc") #, required=True
     calc_climos   = adf.get_cam_info("calc_cam_climo")
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
@@ -138,6 +138,9 @@ def create_climo_files(adf, clobber=False, search=None):
         #Create "Path" objects:
         input_location  = Path(input_ts_locs[case_idx])
         output_location = Path(output_locs[case_idx])
+
+        #output_locs   = adf.get_cam_info("cam_climo_loc") #, required=True
+        regrid_output_loc   = output_location / "regrid"
 
         #Whether to overwrite existing climo files
         clobber = overwrite[case_idx]
