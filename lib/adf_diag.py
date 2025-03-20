@@ -840,14 +840,18 @@ class AdfDiag(AdfWeb):
                     ts_ds = xr.open_dataset(fil, decode_times=False)
                     if ('time_bnds' in ts_ds) or ('time_bounds' in ts_ds):
                         print("Is the land coming hereeeee?")
-                        ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
-                        ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                        if comp == "atm":
+                            ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
+                            ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                        if comp == "lnd":
+                            ts_ds.time_bounds.attrs['units'] = ts_ds.time.attrs['units']
+                            ts_ds.time_bounds.attrs['calendar'] = ts_ds.time.attrs['calendar']
                         time = ts_ds['time']
 
                         if comp == "atm":
                             time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
                         if comp == "lnd":
-                            time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='hist_interval').values, dims=time.dims, attrs=time.attrs)
+                            time = xr.DataArray(ts_ds['time_bounds'].load().mean(dim='hist_interval').values, dims=time.dims, attrs=time.attrs)
                         ts_ds['time'] = time
                         ts_ds.assign_coords(time=time)
                         ts_ds_fixed = xr.decode_cf(ts_ds)
