@@ -850,7 +850,7 @@ class AdfDiag(AdfWeb):
                         #regrd_ts_loc = Path(test_output_loc[case_idx])
                         # Check if time series directory exists, and if not, then create it:
                         # Use pathlib to create parent directories, if necessary.
-                        ts_dir
+                        ts_dir = Path(ts_dir)
                         regrd_ts_loc = ts_dir / "regrid"
                         Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
                         # Check that path actually exists:
@@ -865,8 +865,7 @@ class AdfDiag(AdfWeb):
                         #    #If so, then delete current file:
                         #    regridded_file_loc.unlink()
                         ##End if
-                        
-                        ts_dir = Path(ts_dir)
+
 
                        
                         print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
