@@ -395,7 +395,7 @@ def regrid_and_vert_interp(adf):
 
                     #Set interpolated baseline file name:
                     #interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
-                    interp_bl_file = target_loc / f'{target}_{var}_baseline.nc'
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
                         if comp == "atm":
