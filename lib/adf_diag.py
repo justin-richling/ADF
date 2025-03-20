@@ -847,7 +847,12 @@ class AdfDiag(AdfWeb):
                 if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
                     if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
                         
-                        regrd_ts_loc = Path(test_output_loc[case_idx])
+                        #regrd_ts_loc = Path(test_output_loc[case_idx])
+                        # Check if time series directory exists, and if not, then create it:
+                        # Use pathlib to create parent directories, if necessary.
+                        ts_dir
+                        regrd_ts_loc = ts_dir / "regrid"
+                        Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
                         # Check that path actually exists:
                         if not regrd_ts_loc.is_dir():
                             print(f"    {regrd_ts_loc} not found, making new directory")
@@ -913,7 +918,7 @@ class AdfDiag(AdfWeb):
                                                 + os.sep
                                                 + ".".join([case_name, hist_str, var, time_string, "nc"])
                                             )
-                            regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
+                            regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_gridded.nc")
                             #rgdata = rgdata.assign_attrs(attrs_dict)
                             # Restore the original cftime time values
                             rgdata = rgdata.assign_coords(time=('time', original_time))
