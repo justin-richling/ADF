@@ -887,7 +887,7 @@ class AdfDiag(AdfWeb):
                             print(f"    {regrd_ts_loc} not found, making new directory")
                             regrd_ts_loc.mkdir(parents=True)
                         # End if
-                        print("ts_outfil_str",ts_outfil_str)
+                        #print("ts_outfil_str",ts_outfil_str)
                         #regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
                         #Check if re-gridded file already exists and over-writing is allowed:
                         #if regridded_file_loc.is_file() and overwrite_mregrid:

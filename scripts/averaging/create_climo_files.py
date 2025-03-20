@@ -198,7 +198,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 adf.debug_log(logmsg)
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
                 continue
-            print("\n\nts_files",ts_files,"\n\n")
+            #print("\n\nts_files",ts_files,"\n\n")
             list_of_arguments.append((adf, ts_files, syr, eyr, output_file, comp))
 
 
