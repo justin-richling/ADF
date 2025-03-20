@@ -238,11 +238,11 @@ class AdfData:
         caseindex = (self.case_names).index(case) # the entry for specified case
         climo_regrid_locs = self.adf.get_cam_info("cam_ts_regrid_loc")
         climo_locs = self.adf.get_cam_info("cam_climo_loc")
-        if native_grids[caseindex]:
+        """if native_grids[caseindex]:
             a = Path(climo_regrid_locs[caseindex])
         else:
-            a = Path(climo_locs[caseindex])
-        #a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
+            a = Path(climo_locs[caseindex])"""
+        a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
         model_cl_loc = Path(a[caseindex])
         return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
 
