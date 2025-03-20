@@ -583,29 +583,29 @@ def annual_mean(data, whole_years=False, time_name='time', use_ux=False):
     else:
         # Group by the 'year' dimension
         grouped_by_year = days_in_month.groupby('time.year')
-        
+
         # Initialize a list to store the normalized days for each year
         normalized_days = []
-        
+
         # Loop over each group and normalize the values (divide by the sum of the group)
         for i, (year, group) in enumerate(grouped_by_year):
             # Compute the sum of days in the month for the current year
             print(group)
             year_sum = group[12*i:12*i+12].sum()
-            
+
             # Normalize the group by dividing each value by the sum of the group
             normalized_group = group[12*i:12*i+12] / year_sum
-            
+
             # Append the normalized values to the list
             normalized_days.append(normalized_group)
-        
+
         # Concatenate the normalized days back together (align them with the original data)
         days_gb = xr.concat(normalized_days, dim='time')
-        
+
         # Alternatively, if you want to make sure the result has the same coordinates as the original
         days_gb = days_in_month.copy(data=np.concatenate([g.values for g in normalized_days]))
         days_gb.coords['time'] = days_in_month.coords['time']  # Reassign the correct time coordinates
-    
+
     # weighted average with normalized weights: <x> = SUM x_i * w_i  (implied division by SUM w_i)
     result =  (data_to_avg * days_gb).groupby('time.year').sum(dim='time')
     result.attrs['averaging_period'] = date_range_string

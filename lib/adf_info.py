@@ -354,10 +354,10 @@ class AdfInfo(AdfConfig):
                 if 'ncols' in base_ds.dims:
                     print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
-                    year_range = [str(year) for year in range(int(syear_baseline), int(eyear_baseline))]
-
-                    # Filter file_list based on the year range
-                    filtered_file_list = [f for f in file_list if any(year in f.name for year in year_range)]
+                    #year_range = [str(year) for year in range(int(syear_baseline), int(eyear_baseline))]
+                    #
+                    ## Filter file_list based on the year range
+                    #filtered_file_list = [f for f in file_list if any(year in f.name for year in year_range)]
                     
                 elif 'lndgrid' in base_ds.dims:
                     print('\t  Looks like this is a land unstructured grid, yeah')
