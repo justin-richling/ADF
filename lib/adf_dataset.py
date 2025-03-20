@@ -101,10 +101,10 @@ class AdfData:
         #native_grids = self.adf.get_cam_info("native_grid")
         native_grids = self.adf.native_grid["test_native_grid"]
         # list of possible timeseries paths (could be multiple cases)
-        ts_regrid_locs = self.adf.get_cam_info("cam_ts_regrid_loc")
+        #ts_regrid_locs = self.adf.get_cam_info("cam_ts_regrid_loc")
         ts_locs = self.adf.get_cam_info("cam_ts_loc")
         if native_grids[caseindex]:
-            ts_loc = Path(ts_regrid_locs[caseindex])
+            ts_loc = Path(ts_locs[caseindex]) / "regrid"
         else:
             ts_loc = Path(ts_locs[caseindex])
         #ts_loc = Path(ts_locs[caseindex])
@@ -124,7 +124,8 @@ class AdfData:
             #ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
             print("timeseries native_grid:",native_grid)
             if native_grid:
-                ts_loc = Path(self.adf.get_baseline_info("cam_ts_regrid_loc"))
+                #ts_loc = Path(self.adf.get_baseline_info("cam_ts_regrid_loc"))
+                ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc")) / "regrid"
             else:
                 ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc"))
             print("ts_loc referencre",ts_loc)
