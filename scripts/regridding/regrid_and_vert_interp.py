@@ -142,7 +142,7 @@ def regrid_and_vert_interp(adf):
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
-        trgclimo_loc = Path(adf.get_baseline_info("cam_climo_regrid_loc", required=True))
+        #trgclimo_loc = Path(adf.get_baseline_info("cam_climo_regrid_loc", required=True))
         #Check if re-gridded directory exists, and if not, then create it:
         #if not trgclimo_loc.is_dir():
         #    print(f"    {trgclimo_loc} not found, making new directory")
