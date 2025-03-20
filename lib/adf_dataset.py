@@ -49,7 +49,7 @@ class AdfData:
         self.adf = adfobj  # provides quick access to the AdfDiag object
         # paths 
         #self.model_rgrid_loc = adfobj.get_basic_info("cam_climo_regrid_loc", required=True)
-        self.model_rgrid_loc = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
+        #self.model_rgrid_loc = adfobj.get_cam_info("cam_climo_regrid_loc")
 
         # variables (and info for unit transform)
         # use self.adf.diag_var_list and self.adf.self.adf.variable_defaults
