@@ -161,11 +161,11 @@ def polar_map(adfobj):
             # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
             if adfobj.compare_obs:
                 #For now, only grab one file (but convert to list for use below)
-                oclim_fils = [dclimo_loc]
+                #oclim_fils = [dclimo_loc]
                 #Set data name:
                 data_name = data_src
-            else:
-                oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
+            #else:
+            #    oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
            
             #oclim_ds = pf.load_dataset(oclim_fils)
             #oclim_ds = adfobj.data.load_reference_regrid_dataset(oclim_fils, data_var)
@@ -346,7 +346,7 @@ def polar_map(adfobj):
                             #exists in the model data, which should already
                             #have been interpolated to the standard reference
                             #pressure levels:
-                            if not (pres in mclim_ds['lev']):
+                            if not (pres in mdata['lev']):
                                 #Move on to the next pressure level:
                                 print(f"\t    WARNING: plot_press_levels value '{pres}' not a standard reference pressure, so skipping.")
                                 continue
