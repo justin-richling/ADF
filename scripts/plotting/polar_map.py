@@ -168,7 +168,7 @@ def polar_map(adfobj):
                 oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
            
             #oclim_ds = pf.load_dataset(oclim_fils)
-            oclim_ds = pf.load_reference_regrid_dataset(oclim_fils)
+            oclim_ds = adfobj.data.load_reference_regrid_dataset(oclim_fils, data_var)
             if oclim_ds is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
@@ -193,7 +193,7 @@ def polar_map(adfobj):
                 # load re-gridded model files:
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
 
-                mclim_ds = pf.load_dataset(mclim_fils)
+                mclim_ds = pf.load_regrid_dataset(mclim_fils, var)
                 if mclim_ds is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
                     print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
