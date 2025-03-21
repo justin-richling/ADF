@@ -841,8 +841,12 @@ class AdfDiag(AdfWeb):
                     if ('time_bnds' in ts_ds) or ('time_bounds' in ts_ds):
                         print("Is the land coming hereeeee?")
                         if comp == "atm":
-                            ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
-                            ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                            if ('time_bnds' in ts_ds):
+                                ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
+                                ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                            if ('time_bounds' in ts_ds):
+                                ts_ds.time_bounds.attrs['units'] = ts_ds.time.attrs['units']
+                                ts_ds.time_bounds.attrs['calendar'] = ts_ds.time.attrs['calendar']
                         if comp == "lnd":
                             ts_ds.time_bounds.attrs['units'] = ts_ds.time.attrs['units']
                             ts_ds.time_bounds.attrs['calendar'] = ts_ds.time.attrs['calendar']
