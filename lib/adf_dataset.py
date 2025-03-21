@@ -211,7 +211,7 @@ class AdfData:
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_climo_file(case, field)
         if not fils:
-            warnings.warn(f"\t    WARNING: Did not find climo file for variable: {field}. Will try to skip.")
+            #warnings.warn(f"\t    WARNING: Did not find climo file for variable: {field}. Will try to skip.")
             return None
         return self.load_dataset(fils)
 
@@ -223,7 +223,7 @@ class AdfData:
         """
         fils = self.get_climo_file(case, variablename)
         if not fils:
-            warnings.warn(f"WARNING: Did not find climo file for variable: {variablename}. Will try to skip.")
+            #warnings.warn(f"WARNING: Did not find climo file for variable: {variablename}. Will try to skip.")
             return None
         if grid == 'regular':
             return self.load_dataset(fils)
@@ -258,7 +258,7 @@ class AdfData:
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_reference_climo_file(field)
         if not fils:
-            warnings.warn(f"WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
+            #warnings.warn(f"WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
             return None
         return self.load_dataset(fils)
 
