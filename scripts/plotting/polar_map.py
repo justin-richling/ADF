@@ -93,7 +93,7 @@ def polar_map(adfobj):
 
     #Set data path variables:
     #-----------------------
-    #mclimo_rg_loc = Path(model_rgrid_loc)
+    mclimo_rg_loc = Path(model_rgrid_loc)
     if not adfobj.compare_obs:
         dclimo_loc  = Path(data_loc)
     #-----------------------
@@ -190,12 +190,12 @@ def polar_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 # load re-gridded model files:
-                mclim_fils = sorted(model_rgrid_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
 
                 mclim_ds = pf.load_dataset(mclim_fils)
                 if mclim_ds is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
-                    print(f"\t    INFO: Data Location, model_rgrid_loc, is {model_rgrid_loc}")
+                    print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
                 #End if
