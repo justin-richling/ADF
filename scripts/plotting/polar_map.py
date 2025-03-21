@@ -24,8 +24,8 @@ def polar_map(adfobj):
     # Use ADF api to get all necessary information
     #
     var_list = adfobj.diag_var_list
-    #model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
-    model_rgrid_locs = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
+    model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
+    #model_rgrid_locs = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
@@ -58,8 +58,8 @@ def polar_map(adfobj):
         obs = False
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
-        #data_loc  = model_rgrid_loc #Just use the re-gridded model data path
-        data_loc = Path(adfobj.get_baseline_info("cam_climo_regrid_loc", required=True))
+        data_loc  = model_rgrid_loc #Just use the re-gridded model data path
+        #data_loc = Path(adfobj.get_baseline_info("cam_climo_regrid_loc", required=True))
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
@@ -176,7 +176,7 @@ def polar_map(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
-                mclimo_rg_loc = Path(model_rgrid_locs[case_idx])
+                #mclimo_rg_loc = Path(model_rgrid_locs[case_idx])
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
@@ -190,12 +190,12 @@ def polar_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 # load re-gridded model files:
-                mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                mclim_fils = sorted(model_rgrid_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
 
                 mclim_ds = pf.load_dataset(mclim_fils)
                 if mclim_ds is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
-                    print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
+                    print(f"\t    INFO: Data Location, model_rgrid_loc, is {model_rgrid_loc}")
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
                 #End if
