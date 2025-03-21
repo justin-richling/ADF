@@ -339,7 +339,7 @@ def regrid_and_vert_interp(adf):
                             rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
                                                     weight_file=case_wgts_file,
-                                                    latlon_file=case_latlon_file,
+                                                    #latlon_file=case_latlon_file,
                                                     method=case_method,
                                                     )
                         else:
@@ -389,6 +389,7 @@ def regrid_and_vert_interp(adf):
 
                     #Finally, write re-gridded data to output file:
                     #Convert the list of Path objects to a list of strings
+                    mclim_fils = adf.data.get_climo_file(case_name, var)
                     climatology_files_str = [str(path) for path in mclim_fils]
                     climatology_files_str = ', '.join(climatology_files_str)
                     test_attrs_dict = {
@@ -449,7 +450,7 @@ def regrid_and_vert_interp(adf):
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                         comp=comp,
                                                         weight_file=baseline_wgts_file,
-                                                        latlon_file=baseline_latlon_file,
+                                                        #latlon_file=baseline_latlon_file,
                                                         method=base_method,
                                                         )
                             else:
@@ -852,7 +853,8 @@ import numpy as np
 import xesmf
 
 
-def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
+#def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
+def _regrid(model_dataset, var_name, comp, weight_file, method):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -904,8 +906,8 @@ def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
 
     #Regrid model data to match target grid:
     regridder = make_se_regridder(weight_file=weight_file,
-                                    s_data = s_data,
-                                    d_data = d_data,
+                                    #s_data = s_data,
+                                    #d_data = d_data,
                                     Method = method,
                                     )
     if method == 'coservative':
@@ -950,7 +952,7 @@ def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
 
 
 
-def make_se_regridder(weight_file, s_data, d_data,
+'''def make_se_regridder(weight_file, s_data, d_data,
                       Method='coservative'
                       ):
     """
@@ -1000,10 +1002,80 @@ def make_se_regridder(weight_file, s_data, d_data,
         reuse_weights=True,
         periodic=True,
     )
+    return regridder'''
+
+
+def make_se_regridder(weight_file, Method='conservative'):
+    weights = xr.open_dataset(weight_file)
+    in_shape = weights.src_grid_dims.load().data
+
+    # Since xESMF expects 2D vars, we'll insert a dummy dimension of size-1
+    if len(in_shape) == 1:
+        in_shape = [1, in_shape.item()]
+
+    # output variable shape
+    out_shape = weights.dst_grid_dims.load().data.tolist()[::-1]
+
+    dummy_in = xr.Dataset(
+        {
+            "lat": ("lat", np.empty((in_shape[0],))),
+            "lon": ("lon", np.empty((in_shape[1],))),
+        }
+    )
+    dummy_out = xr.Dataset(
+        {
+            "lat": ("lat", weights.yc_b.data.reshape(out_shape)[:, 0]),
+            "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
+        }
+    )
+    # Apparently not needed ... maybe for Method=conservative ?
+    # # Hard code masks for now, not sure this does anything?
+    # s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
+    # dummy_in['mask']= s_mask
+    
+    # d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
+    # dummy_out['mask']= d_mask                
+
+    # do source and destination grids need masks here?
+    # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
+    regridder = xesmf.Regridder(
+        dummy_in,
+        dummy_out,
+        weights=weight_file,
+        # results seem insensitive to this method choice
+        # choices are coservative_normed, coservative, and bilinear
+        method=Method,
+        reuse_weights=True,
+        periodic=True,
+    )
     return regridder
 
 
-def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
+def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid='ncol'):
+    if isinstance(data_to_regrid, xr.Dataset):
+        vars_with_ncol = [name for name in data_to_regrid.variables if comp_grid in data_to_regrid[name].dims]
+        updated = data_to_regrid.copy().update(data_to_regrid[vars_with_ncol].transpose(..., comp_grid).expand_dims("dummy", axis=-2))
+    elif isinstance(data_to_regrid, xr.DataArray):
+        updated = data_to_regrid.transpose(...,comp_grid).expand_dims("dummy",axis=-2)
+    else:
+        raise ValueError(f"Something is wrong because the data to regrid isn't xarray: {type(data_to_regrid)}")
+    regridded = regridder(updated)
+    return regridded
+
+
+def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid='ncol'):
+    if isinstance(data_to_regrid, xr.Dataset):
+        vars_with_ncol = [name for name in data_to_regrid.variables if comp_grid in data_to_regrid[name].dims]
+        updated = data_to_regrid.copy().update(data_to_regrid[vars_with_ncol].transpose(..., comp_grid).expand_dims("dummy", axis=-2))
+    elif isinstance(data_to_regrid, xr.DataArray):
+        updated = data_to_regrid.transpose(...,comp_grid).expand_dims("dummy",axis=-2)
+    else:
+        raise ValueError(f"Something is wrong because the data to regrid isn't xarray: {type(data_to_regrid)}")
+    regridded = regridder(updated,skipna=True, na_thres=1)
+    return regridded
+
+
+'''def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
                          skipna=True, na_thres=1,
@@ -1013,7 +1085,7 @@ def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
 def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
-    return regridded
+    return regridded'''
 
 
 
