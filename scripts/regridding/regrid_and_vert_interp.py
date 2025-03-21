@@ -260,9 +260,6 @@ def regrid_and_vert_interp(adf):
                        tclim_fils = adf.data.get_reference_climo_file(var)
                     #End if
 
-                    #Write to debug log if enabled:
-                    adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
-
                     if len(tclim_fils) > 1:
                         #Combine all target files together into a single data set:
                         tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
@@ -273,6 +270,9 @@ def regrid_and_vert_interp(adf):
                         #Open single file as new xarray dataset:
                         tclim_ds = xr.open_dataset(tclim_fils[0])
                     #End if
+
+                    #Write to debug log if enabled:
+                    adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
 
                     #Generate CAM climatology (climo) file list:
                     #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
