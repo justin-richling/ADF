@@ -371,7 +371,7 @@ class AdfData:
     # What's the most robust way to handle this?
 
     # Load DataSet
-    def load_dataset(self, fils):
+    def load_dataset(self, fils, **kwargs):
         """Return xarray DataSet from file(s)"""
         #if (len(fils) == 0):
         if not fils:
