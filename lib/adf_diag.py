@@ -853,7 +853,10 @@ class AdfDiag(AdfWeb):
                         time = ts_ds['time']
 
                         if comp == "atm":
-                            time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                            if ('time_bnds' in ts_ds):
+                                time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                            if ('time_bounds' in ts_ds):
+                                time = xr.DataArray(ts_ds['time_bounds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
                         if comp == "lnd":
                             time = xr.DataArray(ts_ds['time_bounds'].load().mean(dim='hist_interval').values, dims=time.dims, attrs=time.attrs)
                         ts_ds['time'] = time
