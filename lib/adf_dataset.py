@@ -385,7 +385,7 @@ class AdfData:
                 warnings.warn(f"\t    WARNING: Expecting to find file: {sfil}")
                 return None
             mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
-            ds = ux.open_dataset(mesh, sfil)    
+            ds = xr.open_dataset(sfil)
             """ds = xr.open_dataset(sfil)
             if 'ncol' in ds.dims:
                 mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
