@@ -914,17 +914,17 @@ class AdfDiag(AdfWeb):
                        
                         print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
 
-                        latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                        #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
                         #latlon_file   = ts_0
                         wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
                         method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
                         if not baseline:
                             wgts_file = wgts_file[case_idx]
                             method = method[case_idx]
-                            latlon_file = latlon_file[case_idx]
-                        if not latlon_file:
-                            msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
-                            raise AdfError(msg)
+                            #latlon_file = latlon_file[case_idx]
+                        #if not latlon_file:
+                        #    msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
+                        #    raise AdfError(msg)
 
                         #Check if any a weights file exists if using native grid, OPTIONAL
                         if not wgts_file:
@@ -946,7 +946,7 @@ class AdfDiag(AdfWeb):
                             #da = (ds[var]).squeeze()
                             rgdata = adf_utils.unstructure_regrid(ts_ds, var, comp=comp,
                                                          weight_file=wgts_file,
-                                                         latlon_file=latlon_file,
+                                                         #latlon_file=latlon_file,
                                                          method=method)
                             # Copy global attributes
                             rgdata.attrs = ts_ds.attrs.copy()
