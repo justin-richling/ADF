@@ -932,6 +932,7 @@ class AdfDiag(AdfWeb):
                             raise AdfError(msg)
 
                         for var in self.diag_var_list:
+                            print("VAR",var,"\n")
                             ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0],
                                                       
                                                      )
