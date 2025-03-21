@@ -168,8 +168,9 @@ def polar_map(adfobj):
                 oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
            
             #oclim_ds = pf.load_dataset(oclim_fils)
-            oclim_ds = adfobj.data.load_reference_regrid_dataset(oclim_fils, data_var)
-            if oclim_ds is None:
+            #oclim_ds = adfobj.data.load_reference_regrid_dataset(oclim_fils, data_var)
+            odata = adfobj.data.load_reference_regrid_da(data_name, data_var)
+            if odata is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"\t      The glob is: {data_src}_{var}_*.nc")
@@ -191,10 +192,11 @@ def polar_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 # load re-gridded model files:
-                mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
+                #mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
 
-                mclim_ds = pf.load_regrid_dataset(mclim_fils, var)
-                if mclim_ds is None:
+                #mclim_ds = pf.load_regrid_dataset(mclim_fils, var)
+                mdata = adfobj.data.load_regrid_da(case_name, var)
+                if mdata is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
                     print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
@@ -202,8 +204,8 @@ def polar_map(adfobj):
                 #End if
 
                 #Extract variable of interest
-                odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
-                mdata = mclim_ds[var].squeeze()
+                #odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
+                #mdata = mclim_ds[var].squeeze()
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
