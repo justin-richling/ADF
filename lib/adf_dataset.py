@@ -293,8 +293,8 @@ class AdfData:
     # Test case(s)
     def get_regrid_file(self, case, field):
         """Return list of test regridded files"""
-        #model_rg_loc = Path(self.adf.get_basic_info("cam_climo_regrid_loc", required=True))
-        model_rg_loc = self.adf.get_basic_info("cam_regrid_loc", required=True)
+        model_rg_loc = Path(self.adf.get_basic_info("cam_climo_regrid_loc", required=True))
+        #model_rg_loc = self.adf.get_basic_info("cam_regrid_loc", required=True)
         #caseindex = (self.case_names).index(case) # the entry for specified case
         #model_rg_loc = Path(model_rg_locs[caseindex])
         rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
