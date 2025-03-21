@@ -260,7 +260,12 @@ def regrid_and_vert_interp(adf):
                        tclim_fils = adf.data.get_reference_climo_file(var)
                     #End if
 
-                    if len(tclim_fils) > 1:
+                    tclim_ds = adf.data.load_reference_climo_dataset(target, var)
+                    if tclim_ds is None:
+                        print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
+                        continue
+
+                    """if len(tclim_fils) > 1:
                         #Combine all target files together into a single data set:
                         tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
                     elif len(tclim_fils) == 0:
@@ -269,15 +274,15 @@ def regrid_and_vert_interp(adf):
                     else:
                         #Open single file as new xarray dataset:
                         tclim_ds = xr.open_dataset(tclim_fils[0])
-                    #End if
+                    #End if"""
 
                     #Write to debug log if enabled:
-                    adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
+                    #adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
 
                     #Generate CAM climatology (climo) file list:
                     #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
                     #input_climo_locs = adf.data.load_climo_dataset(case_name, var)
-                    mclim_fils = adf.data.get_climo_file(case_name, var)
+                    """mclim_fils = adf.data.get_climo_file(case_name, var)
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
@@ -290,7 +295,12 @@ def regrid_and_vert_interp(adf):
                     else:
                         #Open single file as new xarray dataset:
                         mclim_ds = xr.open_dataset(mclim_fils[0])
-                    #End if
+                    #End if"""
+
+                    mclim_ds = adf.data.load_reference_climo_dataset(case_name, var)
+                    if mclim_ds is None:
+                        print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
+                        continue
 
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
