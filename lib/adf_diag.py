@@ -883,7 +883,7 @@ class AdfDiag(AdfWeb):
                     )
                 # End with
 
-                '''# TEMPORARY: do a quick check if this on native grid and regrid
+                # TEMPORARY: do a quick check if this on native grid and regrid
                 ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                 ts_file_ds = xr.open_dataset(
                         ts_0,
@@ -975,7 +975,7 @@ class AdfDiag(AdfWeb):
                             #print("ts_outfil_str before death: ",ts_outfil_str,"\n")
                             #sorted(ts_dir.glob(f"*.{var}.*nc"))[0].unlink()
                     
-                '''
+                
             # End for hist_str
         # End cases loop
 
