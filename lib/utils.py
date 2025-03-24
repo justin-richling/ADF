@@ -299,7 +299,7 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlo
     if comp == "lnd":
         rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
         rgdata['landmask'] = fv_ds.landmask
-        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+        rgdata['landfrac'] = rgdata.landfrac#.isel(time=0)
 
     rgdata['lat'] = fv_ds.lat
     rgdata['lon'] = fv_ds.lon
