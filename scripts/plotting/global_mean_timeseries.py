@@ -86,7 +86,7 @@ def global_mean_timeseries(adfobj):
             # check if there is a lat dimension:
             if not has_lat_ref:
                 print("the first try is fail, look for gridded time series files?")
-                regrd_ts_loc = Path(adfobj.get_baseline_info("cam_ts_regrid_loc"))
+                #regrd_ts_loc = Path(adfobj.get_baseline_info("cam_ts_loc"))
                 #print(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc")),"\n\n")
 
                 #regrd_case_ts_loc = regrd_case_ts_locs[idx]
