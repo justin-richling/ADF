@@ -345,7 +345,7 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlo
 
 
 
-def make_se_regridder(weight_file, Method='conservative'):
+'''def make_se_regridder(weight_file, Method='conservative'):
     weights = xr.open_dataset(weight_file)
     in_shape = weights.src_grid_dims.load().data
 
@@ -388,7 +388,7 @@ def make_se_regridder(weight_file, Method='conservative'):
         reuse_weights=True,
         periodic=True,
     )
-    return regridder
+    return regridder'''
 
 
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid='ncol'):
