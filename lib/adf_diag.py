@@ -915,13 +915,13 @@ class AdfDiag(AdfWeb):
                         print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
 
                         latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
-                        #latlon_file   = ts_0
+                        latlon_file   = ts_0
                         wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
                         method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
                         if not baseline:
                             wgts_file = wgts_file[case_idx]
                             method = method[case_idx]
-                            latlon_file = latlon_file[case_idx]
+                            #latlon_file = latlon_file[case_idx]
                         #if not latlon_file:
                         #    msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
                         #    raise AdfError(msg)
