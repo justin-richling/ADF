@@ -191,12 +191,12 @@ def make_se_regridder(weight_file, s_data, d_data,
             "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
         }
     )
-    # Hard code masks for now, not sure this does anything?
+    """# Hard code masks for now, not sure this does anything?
     s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
     dummy_in['mask']= s_mask
     
     d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
-    dummy_out['mask']= d_mask                
+    dummy_out['mask']= d_mask"""                
 
     # do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
