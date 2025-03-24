@@ -339,7 +339,7 @@ def regrid_and_vert_interp(adf):
                             rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
                                                     weight_file=case_wgts_file,
-                                                    #latlon_file=case_latlon_file,
+                                                    latlon_file=case_latlon_file,
                                                     method=case_method,
                                                     )
                         else:
@@ -450,7 +450,7 @@ def regrid_and_vert_interp(adf):
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                         comp=comp,
                                                         weight_file=baseline_wgts_file,
-                                                        #latlon_file=baseline_latlon_file,
+                                                        latlon_file=baseline_latlon_file,
                                                         method=base_method,
                                                         )
                             else:
