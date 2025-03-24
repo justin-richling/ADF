@@ -94,7 +94,7 @@ def global_mean_timeseries(adfobj):
                 #adfobj.data.get_ref_timeseries_file()
                 ts_base_loc = Path(adfobj.get_baseline_info("cam_ts_loc"))
                 regrd_ts_base_loc = ts_base_loc / "regrid"
-                ref_ts_da = xr.open_dataset(sorted(Path(regrd_ts_base_loc).glob(f"*{field}*_gridded.nc"))[0])
+                ref_ts_da = xr.open_dataset(sorted(Path(regrd_ts_base_loc).glob(f"*{field}*_gridded.nc"))[0])[field]
                 has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
                 if not has_lat_ref:
                     print(
@@ -160,7 +160,7 @@ def global_mean_timeseries(adfobj):
                 ts_case_loc = Path(case_ts_locs[idx])
                 regrd_case_ts_loc = ts_case_loc / "regrid"
 
-                c_ts_da = xr.open_dataset(sorted(Path(regrd_case_ts_loc).glob(f"*{field}*_gridded.nc"))[0])
+                c_ts_da = xr.open_dataset(sorted(Path(regrd_case_ts_loc).glob(f"*{field}*_gridded.nc"))[0])[field]
                 has_lat_case, has_lev_case = pf.zm_validate_dims(c_ts_da)
                 if not has_lat_case:
                     print(
