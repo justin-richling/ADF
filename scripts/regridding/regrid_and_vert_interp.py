@@ -854,7 +854,7 @@ import xesmf
 
 
 #def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
-def _regrid(model_dataset, var_name, comp, weight_file, method):
+def _regrid(model_dataset, var_name, comp, weight_file, method, latlon_file=None):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -891,23 +891,24 @@ def _regrid(model_dataset, var_name, comp, weight_file, method):
     #Extract variable info from model data (and remove any degenerate dimensions):
     mdata = model_dataset[var_name].squeeze()
 
-    # Load target grid (lat/lon) from the provided dataset
-    #fv_ds = xr.open_dataset(latlon_file)
+    if latlon_file:
+        # Load target grid (lat/lon) from the provided dataset
+        fv_ds = xr.open_dataset(latlon_file) 
 
     mdata = mdata.fillna(0)
     if comp == "lnd":
         model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
         mdata = mdata * model_dataset.landfrac  # weight flux by land frac
-        #s_data = model_dataset.landmask.isel(time=0)
-        #d_data = fv_ds.landmask
-    #else:
-        #s_data = mdata.isel(time=0)
-        #d_data = fv_ds[var_name]
+        s_data = model_dataset.landmask.isel(time=0)
+        d_data = fv_ds.landmask
+    else:
+        s_data = mdata.isel(time=0)
+        d_data = fv_ds[var_name]
 
     #Regrid model data to match target grid:
     regridder = make_se_regridder(weight_file=weight_file,
-                                    #s_data = s_data,
-                                    #d_data = d_data,
+                                    s_data = s_data,
+                                    d_data = d_data,
                                     Method = method,
                                     )
     if method == 'coservative':
@@ -917,7 +918,7 @@ def _regrid(model_dataset, var_name, comp, weight_file, method):
 
     if comp == "lnd":
         rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
-        #rgdata['landmask'] = fv_ds.landmask
+        rgdata['landmask'] = fv_ds.landmask
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
     #rgdata['lat'] = fv_ds.lat
@@ -952,7 +953,7 @@ def _regrid(model_dataset, var_name, comp, weight_file, method):
 
 
 
-'''def make_se_regridder(weight_file, s_data, d_data,
+def make_se_regridder(weight_file, s_data, d_data,
                       Method='coservative'
                       ):
     """
@@ -1002,10 +1003,10 @@ def _regrid(model_dataset, var_name, comp, weight_file, method):
         reuse_weights=True,
         periodic=True,
     )
-    return regridder'''
+    return regridder
 
 
-def make_se_regridder(weight_file, Method='conservative'):
+'''def make_se_regridder(weight_file, Method='conservative'):
     weights = xr.open_dataset(weight_file)
     in_shape = weights.src_grid_dims.load().data
 
@@ -1048,7 +1049,7 @@ def make_se_regridder(weight_file, Method='conservative'):
         reuse_weights=True,
         periodic=True,
     )
-    return regridder
+    return regridder'''
 
 
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid='ncol'):

@@ -145,7 +145,7 @@
 
     #Return dataset:
     return rgdata
-
+'''
 
 
 
@@ -206,13 +206,13 @@ def make_se_regridder(weight_file, s_data, d_data,
         #weights=weight_file,
         # results seem insensitive to this method choice
         # choices are coservative_normed, coservative, and bilinear
-        #method=Method,
+        method=Method,
         reuse_weights=True,
         periodic=True,
         **regridder_kwargs
     )
     return regridder
-
+'''
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
@@ -230,7 +230,7 @@ import xesmf
 import numpy as np
 
 #def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
-def unstructure_regrid(model_dataset, var_name, comp, weight_file, method):
+def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlon_file=None):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -269,21 +269,38 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method):
 
     # Load target grid (lat/lon) from the provided dataset
     #fv_ds = xr.open_dataset(latlon_file)
+    use_latlon_file = False
+    if latlon_file:
+        use_latlon_file = True
+        # Load target grid (lat/lon) from the provided dataset
+        fv_ds = xr.open_dataset(latlon_file) 
 
     mdata = mdata.fillna(0)
     if comp == "lnd":
+        model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
+        mdata = mdata * model_dataset.landfrac  # weight flux by land frac
+        if use_latlon_file:
+            s_data = model_dataset.landmask.isel(time=0)
+            d_data = fv_ds.landmask
+    else:
+        if use_latlon_file:
+            s_data = mdata.isel(time=0)
+            d_data = fv_ds[var_name]
+
+    mdata = mdata.fillna(0)
+    """if comp == "lnd":
         model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
         mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         #s_data = model_dataset.landmask.isel(time=0)
         #d_data = fv_ds.landmask
     #else:
         #s_data = mdata.isel(time=0)
-        #d_data = fv_ds[var_name]
+        #d_data = fv_ds[var_name]"""
 
     #Regrid model data to match target grid:
     regridder = make_se_regridder(weight_file=weight_file,
-                                    #s_data = s_data,
-                                    #d_data = d_data,
+                                    s_data = s_data,
+                                    d_data = d_data,
                                     Method = method,
                                     )
     if method == 'coservative':
@@ -293,11 +310,11 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method):
 
     if comp == "lnd":
         rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
-        #rgdata['landmask'] = fv_ds.landmask
+        rgdata['landmask'] = fv_ds.landmask
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
-    #rgdata['lat'] = fv_ds.lat
-    #rgdata['lon'] = fv_ds.lon
+    rgdata['lat'] = fv_ds.lat
+    rgdata['lon'] = fv_ds.lon
 
     # calculate area
     area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
