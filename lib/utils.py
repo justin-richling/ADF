@@ -280,11 +280,11 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlo
         model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
         mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         if use_latlon_file:
-            s_data = model_dataset.landmask.isel(time=0)
+            s_data = model_dataset.landmask#.isel(time=0)
             d_data = fv_ds.landmask
     else:
         if use_latlon_file:
-            s_data = mdata.isel(time=0)
+            s_data = mdata#.isel(time=0)
             d_data = fv_ds[var_name]
 
     mdata = mdata.fillna(0)
