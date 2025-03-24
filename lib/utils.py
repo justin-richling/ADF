@@ -378,7 +378,7 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlo
     )
     return regridder'''
 
-'''
+
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid='ncol'):
     if isinstance(data_to_regrid, xr.Dataset):
         vars_with_ncol = [name for name in data_to_regrid.variables if comp_grid in data_to_regrid[name].dims]
@@ -414,7 +414,7 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
     return regridded
-
+'''
 
 
 
