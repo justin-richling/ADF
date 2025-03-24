@@ -212,19 +212,7 @@ def make_se_regridder(weight_file, s_data, d_data,
         **regridder_kwargs
     )
     return regridder
-'''
-def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
-    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
-    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
-                         skipna=True, na_thres=1,
-                         )
-    return regridded
 
-def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
-    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
-    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
-    return regridded
-'''
 import xarray as xr
 import xesmf
 import numpy as np
@@ -280,11 +268,11 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlo
         model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
         mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         if use_latlon_file:
-            s_data = model_dataset.landmask#.isel(time=0)
+            s_data = model_dataset.landmask.isel(time=0)
             d_data = fv_ds.landmask
     else:
         if use_latlon_file:
-            s_data = mdata#.isel(time=0)
+            s_data = mdata.isel(time=0)
             d_data = fv_ds[var_name]
 
     mdata = mdata.fillna(0)
@@ -390,7 +378,7 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlo
     )
     return regridder'''
 
-
+'''
 def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid='ncol'):
     if isinstance(data_to_regrid, xr.Dataset):
         vars_with_ncol = [name for name in data_to_regrid.variables if comp_grid in data_to_regrid[name].dims]
@@ -413,6 +401,25 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid='ncol'):
         raise ValueError(f"Something is wrong because the data to regrid isn't xarray: {type(data_to_regrid)}")
     regridded = regridder(updated,skipna=True, na_thres=1)
     return regridded
+
+'''
+def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
+                         skipna=True, na_thres=1,
+                         )
+    return regridded
+
+def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
+    return regridded
+
+
+
+
+
+
 
 
 

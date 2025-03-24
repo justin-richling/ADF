@@ -921,8 +921,8 @@ def _regrid(model_dataset, var_name, comp, weight_file, method, latlon_file=None
         rgdata['landmask'] = fv_ds.landmask
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
-    #rgdata['lat'] = fv_ds.lat
-    #rgdata['lon'] = fv_ds.lon
+    rgdata['lat'] = fv_ds.lat
+    rgdata['lon'] = fv_ds.lon
 
     # calculate area
     area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
