@@ -42,7 +42,8 @@ def global_mean_timeseries(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
-    regrd_case_ts_locs = adfobj.get_cam_info("cam_ts_regrid_loc")
+    #regrd_case_ts_locs = adfobj.get_cam_info("cam_ts_regrid_loc")
+    case_ts_locs = adfobj.get_cam_info("cam_ts_loc")
 
     # Loop over variables
     for field in adfobj.diag_var_list:
@@ -87,7 +88,13 @@ def global_mean_timeseries(adfobj):
                 print("the first try is fail, look for gridded time series files?")
                 regrd_ts_loc = Path(adfobj.get_baseline_info("cam_ts_regrid_loc"))
                 #print(sorted(Path(regrd_ts_loc).glob(f"*{field}*.nc")),"\n\n")
-                ref_ts_da = xr.open_dataset(sorted(Path(regrd_ts_loc).glob(f"*{field}*_gridded.nc"))[0])
+
+                #regrd_case_ts_loc = regrd_case_ts_locs[idx]
+                #c_ts_da = xr.open_dataset(sorted(Path(regrd_case_ts_loc).glob(f"*{field}*_gridded.nc"))[0])
+                #adfobj.data.get_ref_timeseries_file()
+                ts_base_loc = Path(adfobj.get_baseline_info("cam_ts_loc"))
+                regrd_ts_base_loc = ts_base_loc / "regrid"
+                ref_ts_da = xr.open_dataset(sorted(Path(regrd_ts_base_loc).glob(f"*{field}*_gridded.nc"))[0])
                 has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
                 if not has_lat_ref:
                     print(
@@ -148,7 +155,11 @@ def global_mean_timeseries(adfobj):
 
             # check if there is a lat dimension:
             if not has_lat_case:
-                regrd_case_ts_loc = regrd_case_ts_locs[idx]
+                #regrd_case_ts_loc = Path(regrd_case_ts_locs[idx]) / "regrid"
+
+                ts_case_loc = Path(case_ts_locs[idx])
+                regrd_case_ts_loc = ts_case_loc / "regrid"
+
                 c_ts_da = xr.open_dataset(sorted(Path(regrd_case_ts_loc).glob(f"*{field}*_gridded.nc"))[0])
                 has_lat_case, has_lev_case = pf.zm_validate_dims(c_ts_da)
                 if not has_lat_case:
