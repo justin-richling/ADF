@@ -882,7 +882,8 @@ class AdfDiag(AdfWeb):
                     )
                 # End with
 
-                grid_ts = False
+                # DOES NOT WORK CORRECTLY!
+                """grid_ts = False
                 if grid_ts:
                     # TEMPORARY: do a quick check if this on native grid and regrid
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
@@ -903,7 +904,7 @@ class AdfDiag(AdfWeb):
                                 "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
                                 "hist_str":hist_str, "time_string":time_string, "comp":comp
                                 }
-                        adf_utils.grid_timeseries(**kwargs)
+                        adf_utils.grid_timeseries(**kwargs)"""
                 
             # End for hist_str
         # End cases loop

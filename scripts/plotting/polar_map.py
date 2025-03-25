@@ -160,15 +160,9 @@ def polar_map(adfobj):
 
             # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
             if adfobj.compare_obs:
-                #For now, only grab one file (but convert to list for use below)
-                #oclim_fils = [dclimo_loc]
                 #Set data name:
                 data_name = data_src
-            #else:
-            #    oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
-           
-            #oclim_ds = pf.load_dataset(oclim_fils)
-            #oclim_ds = adfobj.data.load_reference_regrid_dataset(oclim_fils, data_var)
+
             odata = adfobj.data.load_reference_regrid_da(data_name, data_var)
             if odata is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
@@ -192,9 +186,6 @@ def polar_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 # load re-gridded model files:
-                #mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
-
-                #mclim_ds = pf.load_regrid_dataset(mclim_fils, var)
                 mdata = adfobj.data.load_regrid_da(case_name, var)
                 if mdata is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
@@ -202,26 +193,6 @@ def polar_map(adfobj):
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
                 #End if
-
-                #Extract variable of interest
-                #odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
-                #mdata = mclim_ds[var].squeeze()
-
-                """ # APPLY UNITS TRANSFORMATION IF SPECIFIED:
-                # NOTE: looks like our climo files don't have all their metadata
-                mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                # update units
-                mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))"""
-
-                """# Do the same for the baseline case if need be:
-                if not adfobj.compare_obs:
-                    odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                    # update units
-                    odata.attrs['units'] = vres.get("new_unit", odata.attrs.get('units', 'none'))
-                # or for observations.
-                else:
-                    odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
-                    # Note: assume obs are set to have same untis as model."""
 
                 #Determine dimensions of variable:
                 has_dims = pf.lat_lon_validate_dims(odata)
