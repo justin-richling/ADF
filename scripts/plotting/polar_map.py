@@ -24,8 +24,8 @@ def polar_map(adfobj):
     # Use ADF api to get all necessary information
     #
     var_list = adfobj.diag_var_list
-    #model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
-    model_rgrid_locs = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
+    model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
+    #model_rgrid_locs = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
@@ -58,8 +58,8 @@ def polar_map(adfobj):
         obs = False
         data_name = adfobj.get_baseline_info("cam_case_name", required=True) # does not get used, is just here as a placemarker
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
-        #data_loc  = model_rgrid_loc #Just use the re-gridded model data path
-        data_loc = Path(adfobj.get_baseline_info("cam_climo_regrid_loc", required=True))
+        data_loc  = model_rgrid_loc #Just use the re-gridded model data path
+        #data_loc = Path(adfobj.get_baseline_info("cam_climo_regrid_loc", required=True))
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
@@ -93,7 +93,7 @@ def polar_map(adfobj):
 
     #Set data path variables:
     #-----------------------
-    #mclimo_rg_loc = Path(model_rgrid_loc)
+    mclimo_rg_loc = Path(model_rgrid_loc)
     if not adfobj.compare_obs:
         dclimo_loc  = Path(data_loc)
     #-----------------------
@@ -160,15 +160,11 @@ def polar_map(adfobj):
 
             # load data (observational) commparison files (we should explore intake as an alternative to having this kind of repeated code):
             if adfobj.compare_obs:
-                #For now, only grab one file (but convert to list for use below)
-                oclim_fils = [dclimo_loc]
                 #Set data name:
                 data_name = data_src
-            else:
-                oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
-           
-            oclim_ds = pf.load_dataset(oclim_fils)
-            if oclim_ds is None:
+
+            odata = adfobj.data.load_reference_regrid_da(data_name, data_var)
+            if odata is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"\t      The glob is: {data_src}_{var}_*.nc")
@@ -176,7 +172,7 @@ def polar_map(adfobj):
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
-                mclimo_rg_loc = Path(model_rgrid_locs[case_idx])
+                #mclimo_rg_loc = Path(model_rgrid_locs[case_idx])
 
                 #Set case nickname:
                 case_nickname = test_nicknames[case_idx]
@@ -190,35 +186,13 @@ def polar_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 # load re-gridded model files:
-                mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
-
-                mclim_ds = pf.load_dataset(mclim_fils)
-                if mclim_ds is None:
+                mdata = adfobj.data.load_regrid_da(case_name, var)
+                if mdata is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
                     print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
                 #End if
-
-                #Extract variable of interest
-                odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
-                mdata = mclim_ds[var].squeeze()
-
-                # APPLY UNITS TRANSFORMATION IF SPECIFIED:
-                # NOTE: looks like our climo files don't have all their metadata
-                mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                # update units
-                mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
-
-                # Do the same for the baseline case if need be:
-                if not adfobj.compare_obs:
-                    odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                    # update units
-                    odata.attrs['units'] = vres.get("new_unit", odata.attrs.get('units', 'none'))
-                # or for observations.
-                else:
-                    odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
-                    # Note: assume obs are set to have same untis as model.
 
                 #Determine dimensions of variable:
                 has_dims = pf.lat_lon_validate_dims(odata)
@@ -343,7 +317,7 @@ def polar_map(adfobj):
                             #exists in the model data, which should already
                             #have been interpolated to the standard reference
                             #pressure levels:
-                            if not (pres in mclim_ds['lev']):
+                            if not (pres in mdata['lev']):
                                 #Move on to the next pressure level:
                                 print(f"\t    WARNING: plot_press_levels value '{pres}' not a standard reference pressure, so skipping.")
                                 continue
