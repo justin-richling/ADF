@@ -888,7 +888,23 @@ class AdfDiag(AdfWeb):
                 ts_file_ds = xr.open_dataset(
                         ts_0,
                     )
-                if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
+                if adf_utils.check_unstructured(ts_file_ds, case_name):
+                    print()
+                    #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                    latlon_file   = ts_0
+                    wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
+                    method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
+                    if not baseline:
+                        wgts_file = wgts_file[case_idx]
+                        method = method[case_idx]
+
+                    kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
+                              "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
+                              "hist_str":hist_str, "time_string":time_string
+
+                    }
+                    adf_utils.grid_timeseries(**kwargs)
+                '''if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
                     if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
                         
                         #regrd_ts_loc = Path(test_output_loc[case_idx])
@@ -955,7 +971,7 @@ class AdfDiag(AdfWeb):
                                     #"adf_user": adf.user,
                                     #"climo_yrs": f"{case_name}: {syear}-{eyear}",
                                     #"climatology_files": climatology_files_str,
-                                    "native_grid_to_latlon":"xesmf"
+                                    "native_grid_to_latlon":f"xesmf Regridder; method: {method}"
                                 }
                             ts_outfil_str = (
                                                 str(ts_dir)
@@ -973,7 +989,7 @@ class AdfDiag(AdfWeb):
                             #file_path = os.path.join(dir_path, file_name)
                             #os.remove(ts_outfil_str)
                             #print("ts_outfil_str before death: ",ts_outfil_str,"\n")
-                            #sorted(ts_dir.glob(f"*.{var}.*nc"))[0].unlink()
+                            #sorted(ts_dir.glob(f"*.{var}.*nc"))[0].unlink()'''
                     
                 
             # End for hist_str

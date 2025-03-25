@@ -577,7 +577,7 @@ def annual_mean(data, whole_years=False, time_name='time', use_ux=False):
     # -- do it for each year to allow for non-standard calendars (360-day)
     # -- and also to provision for data with leap years
     days_in_month = data_to_avg.time.dt.daysinmonth
-    print("days_in_month",days_in_month,'\n')
+    #print("days_in_month",days_in_month,'\n')
     if not use_ux:
         days_gb = data_to_avg.time.dt.daysinmonth.groupby('time.year').map(lambda x: x / x.sum())
     else:

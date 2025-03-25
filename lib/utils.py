@@ -1,5 +1,101 @@
+# utils.py
+
+def check_unstructured(ds, case):
+    """
+    Check if a dataset is unstructured based on its dimensions.
+    """
+    if ('lat' not in ds.dims) and ('lon' not in ds.dims):
+        if ('ncol' in ds.dims) or ('lndgrid' in ds.dims):
+            message = f"Looks like the case '{case}' is unstructured, eh!"
+            print(message)
+            return True
+    return False
 
 
+from pathlib import Path
+import os
+def grid_timeseries(**kwargs):
+    #regrd_ts_loc = Path(test_output_loc[case_idx])
+    # Check if time series directory exists, and if not, then create it:
+    # Use pathlib to create parent directories, if necessary.
+
+    method = kwargs["method"]
+    weight_file = kwargs["wgts_file"]
+    latlon_file = kwargs["latlon_file"]
+    comp = kwargs["comp"]
+    diag_var_list = kwargs["diag_var_list"]
+    case_name = kwargs["case_name"]
+    hist_str = kwargs["hist_str"]
+    time_string = kwargs["time_string"]
+
+    ts_dir = Path(ts_dir)
+    regrd_ts_loc = ts_dir / "regrid"
+    Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
+    # Check that path actually exists:
+    if not regrd_ts_loc.is_dir():
+        print(f"    {regrd_ts_loc} not found, making new directory")
+        regrd_ts_loc.mkdir(parents=True)
+
+
+
+                       
+    #print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
+
+    #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+    #latlon_file   = ts_0
+    #wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
+    #method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
+    #if not baseline:
+    #    wgts_file = wgts_file[case_idx]
+    #    method = method[case_idx]
+        #latlon_file = latlon_file[case_idx]
+    #if not latlon_file:
+    #    msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
+    #    raise AdfError(msg)
+
+    #Check if any a weights file exists if using native grid, OPTIONAL
+    if not latlon_file:
+        msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
+        raise AdfError(msg)
+
+    for var in diag_var_list:
+        print("VAR",var,"\n")
+        ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0],
+                                                      
+                                                     )
+        # Store the original cftime time values
+        #print("ts_ds['time']",ts_ds['time'],"\n\n")
+        original_time = ts_ds['time'].values
+
+        rgdata = unstructure_regrid(ts_ds, var, comp=comp,
+                                                         weight_file=weight_file,
+                                                         latlon_file=latlon_file,
+                                                         method=method)
+        # Copy global attributes
+        rgdata.attrs = ts_ds.attrs.copy()
+        attrs_dict = {
+                                    #"adf_user": adf.user,
+                                    #"climo_yrs": f"{case_name}: {syear}-{eyear}",
+                                    #"climatology_files": climatology_files_str,
+                                    "native_grid_to_latlon":f"xesmf Regridder; method: {method}"
+                                }
+        ts_outfil_str = (
+                                                str(ts_dir)
+                                                + os.sep
+                                                + ".".join([case_name, hist_str, var, time_string, "nc"])
+                                            )
+        regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_gridded.nc")
+        #rgdata = rgdata.assign_attrs(attrs_dict)
+        # Restore the original cftime time values
+        rgdata = rgdata.assign_coords(time=('time', original_time))
+        #print("regridded_file_loc",rgdata.time,"\n\n")
+        save_to_nc(rgdata, regridded_file_loc)
+        #self.adf.native_grid[f"{case_type_string}_native_grid"] = False
+
+        #file_path = os.path.join(dir_path, file_name)
+        #os.remove(ts_outfil_str)
+        #print("ts_outfil_str before death: ",ts_outfil_str,"\n")
+        #sorted(ts_dir.glob(f"*.{var}.*nc"))[0].unlink()
 
 
 '''def unstructure_regrid(model_dataset, var_name, comp="atm", **kwargs):
