@@ -19,6 +19,7 @@ def grid_timeseries(**kwargs):
     # Check if time series directory exists, and if not, then create it:
     # Use pathlib to create parent directories, if necessary.
 
+    ts_dir = Path(kwargs["ts_dir"])
     method = kwargs["method"]
     weight_file = kwargs["wgts_file"]
     latlon_file = kwargs["latlon_file"]
@@ -28,7 +29,6 @@ def grid_timeseries(**kwargs):
     hist_str = kwargs["hist_str"]
     time_string = kwargs["time_string"]
 
-    ts_dir = Path(ts_dir)
     regrd_ts_loc = ts_dir / "regrid"
     Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
     # Check that path actually exists:
