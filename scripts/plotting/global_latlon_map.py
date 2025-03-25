@@ -180,25 +180,7 @@ def global_latlon_map(adfobj):
             else:
                 base_name = adfobj.data.ref_labels[var]
 
-        """unstruct_base = adfobj.unstructs['unstruct_base']
-        print("unstruct_base",unstruct_base)
-        # Gather reference variable data
-        if unstruct_base == False:
-            odata = adfobj.data.load_reference_regrid_da(base_name, var)
-
-            if odata is None:
-                dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
-                adfobj.debug_log(dmsg)
-                continue
-
-            o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
-            if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
-                print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
-                #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
-                continue"""
-
         odata = adfobj.data.load_reference_regrid_da(base_name, var)
-
         if odata is None:
             
             dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
@@ -210,31 +192,7 @@ def global_latlon_map(adfobj):
             print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
             #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
             continue
-        '''if comp == "lnd":
-            #f"\t    INOF: Unstructured grid, so global map for {var} does not have lat and lon"
-            #odata = adfobj.data.load_reference_climo_da(base_name, var)
-            """if odata is None:
-                dmsg = f"\t    WARNING: No climo baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
-                adfobj.debug_log(dmsg)
-                continue"""
-            #odataset = adfobj.data.load_reference_climo_dataset(base_name, var) 
-            odataset = adfobj.data.load_reference_regrid_dataset(base_name, var) 
-            area = odataset.area.isel(time=0)
-            landfrac = odataset.landfrac.isel(time=0)
-            # now read in mdata as a data array to get scale_factor
-            odata = odataset[var] #adfobj.data.load_climo_da(case_name, var)
-            #if odata is None:
-            #    dmsg = f"\t    WARNING: No climo baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
-            #    adfobj.debug_log(dmsg)
-            #    continue
-            #odata.attrs = mdata.attrs # copy attributes back to base case
 
-            # calculate weights
-            wgt_base = area * landfrac / (area * landfrac).sum()
-
-            #vres["wgt"] = wgt'''
-
-        #unstruct_cases = adfobj.unstructs['unstruct_tests']
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
 
@@ -249,8 +207,6 @@ def global_latlon_map(adfobj):
                 print(f"    {plot_loc} not found, making new directory")
                 plot_loc.mkdir(parents=True)
 
-
-            
             mdata = adfobj.data.load_regrid_da(case_name, var)
             #Skip this variable/case if the regridded climo file doesn't exist:
             if mdata is None:
@@ -266,94 +222,7 @@ def global_latlon_map(adfobj):
                 if (has_dims['has_lev']) and (not pres_levs):
                     print(f"\t    WARNING: skipping global map for {var} as it has more than lev dimension, but no pressure levels were provided")
                     continue
-            '''if comp == "lnd":
-                #f"\t    INOF: Unstructured grid, so global map for {var} does not have lat and lon"
-                #odata = adfobj.data.load_reference_climo_da(base_name, var)
-                """if odata is None:
-                    dmsg = f"\t    WARNING: No climo baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
-                    adfobj.debug_log(dmsg)
-                    continue"""
-                #odataset = adfobj.data.load_reference_climo_dataset(base_name, var) 
-                mdataset = adfobj.data.load_reference_regrid_dataset(base_name, var) 
-                area = mdataset.area.isel(time=0)
-                landfrac = mdataset.landfrac.isel(time=0)
-                # now read in mdata as a data array to get scale_factor
-                mdata = mdataset[var] #adfobj.data.load_climo_da(case_name, var)
-                #if odata is None:
-                #    dmsg = f"\t    WARNING: No climo baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
-                #    adfobj.debug_log(dmsg)
-                #    continue
-                #odata.attrs = mdata.attrs # copy attributes back to base case
 
-                # calculate weights
-                #wgt = area * landfrac / (area * landfrac).sum()
-                #print("\n\n",len(wgt_base.n_face),"\n\n")
-                #if len(wgt.n_face) == len(wgt_base.n_face):
-                #    vres["wgt"] = wgt
-                #    has_dims = {}
-                #    has_dims['has_lev'] = False
-                #else:
-                #    print("The weights are different between test and baseline. Won't continue, eh.")
-            '''
-
-
-            '''unstruct_case = unstruct_cases[case_idx]
-            print("unstruct_case",unstruct_case)
-            if unstruct_case == False:
-                mdata = adfobj.data.load_regrid_da(case_name, var)
-
-                #Skip this variable/case if the regridded climo file doesn't exist:
-                if mdata is None:
-                    dmsg = f"\t    WARNING: No regridded test file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
-                    adfobj.debug_log(dmsg)
-                    continue
-
-                #Determine dimensions of variable:
-                has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
-                if (not has_dims['has_lat']) or (not has_dims['has_lon']):
-                    print(f"\t    WARNING: skipping global map for {var} for case {case_name} as it does not have both lat and lon")
-                    continue
-                else: # i.e., has lat&lon
-                    if (has_dims['has_lev']) and (not pres_levs):
-                        print(f"\t    WARNING: skipping global map for {var} as it has more than lev dimension, but no pressure levels were provided")
-                        continue
-            else:
-                #f"\t    INOF: Unstructured grid, so global map for {var} does not have lat and lon"
-                mdata = adfobj.data.load_climo_da(case_name, var)
-                if mdata is None:
-                    dmsg = f"\t    WARNING: No climo test file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
-                    adfobj.debug_log(dmsg)
-                    continue
-                #Load climo model files: TODO, this is kind of clunky, but functional
-                # read in dataset for area & landfrac
-                mdataset = adfobj.data.load_climo_dataset(case_name, var) 
-                area = mdataset.area.isel(time=0)
-                landfrac = mdataset.landfrac.isel(time=0)
-                # now read in mdata as a data array to get scale_factor
-                mdata = mdataset[var] #adfobj.data.load_climo_da(case_name, var)
-                #odata.attrs = mdata.attrs # copy attributes back to base case
-
-                # calculate weights
-                wgt = area * landfrac / (area * landfrac).sum()
-                print("\n\n",len(wgt_base.n_face),"\n\n")
-                if len(wgt.n_face) == len(wgt_base.n_face):
-                    vres["wgt"] = wgt
-                    has_dims = {}
-                    has_dims['has_lev'] = False
-                else:
-                    print("The weights are different between test and baseline. Won't continue, eh.")
-                    return'''
-
-            """if (not unstruct_case) and (unstruct_base):
-                print("Base is unstructured but Test is lat/lon. Can't continue?")
-                return
-            if (unstruct_case) and (not unstruct_base):
-                print("Base is lat/lon but Test is unstructured. Can't continue?")
-                return
-            if (unstruct_case) and (unstruct_base):
-                unstructured=True
-            if (not unstruct_case) and (not unstruct_base):
-                unstructured=False"""
             # Check output file. If file does not exist, proceed.
             # If file exists:
             #   if redo_plot is true: delete it now and make plot

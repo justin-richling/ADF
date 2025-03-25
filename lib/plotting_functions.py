@@ -1914,8 +1914,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
         # get statistics (from non-wrapped)
         fields = (mdlfld, obsfld, diffld, pctld)
-        #area_avg = [spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
-        area_avg = [global_average(x, wgt) for x in fields]
+        area_avg = [spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
+        #area_avg = [global_average(x, wgt) for x in fields]
 
         d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
         # specify the central longitude for the plot
@@ -1985,6 +1985,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
+        
         if not unstructured:
             levs = np.unique(np.array(levels))
             if len(levs) < 2:
