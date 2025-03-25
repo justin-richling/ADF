@@ -53,8 +53,10 @@ def regrid_and_vert_interp(adf):
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
-    overwrite_regrid_locs = adf.get_cam_info("cam_overwrite_climo_regrid", required=True)
-    test_output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
+    #overwrite_regrid_locs = adf.get_cam_info("cam_overwrite_climo_regrid", required=True)
+    #test_output_loc       = adf.get_cam_info("cam_climo_regrid_loc", required=True)
+    overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
+    output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     var_list         = adf.diag_var_list
     var_defaults     = adf.variable_defaults
 
@@ -154,6 +156,12 @@ def regrid_and_vert_interp(adf):
 
     #Set output/target data path variables:
     #------------------------------------
+    rgclimo_loc = Path(output_loc)
+    #Check if re-gridded directory exists, and if not, then create it:
+    if not rgclimo_loc.is_dir():
+        print(f"    {rgclimo_loc} not found, making new directory")
+        rgclimo_loc.mkdir(parents=True)
+    #End if
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
     #------------------------------------
@@ -165,7 +173,7 @@ def regrid_and_vert_interp(adf):
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
 
-        rgclimo_loc = Path(test_output_loc[case_idx])
+        """rgclimo_loc = Path(test_output_loc[case_idx])
         #Check if re-gridded directory exists, and if not, then create it:
         if not rgclimo_loc.is_dir():
             print(f"    {rgclimo_loc} not found, making new directory")
@@ -175,7 +183,7 @@ def regrid_and_vert_interp(adf):
         overwrite_mregrid = overwrite_regrid_locs[case_idx]
 
         #Set case climo data path:
-        mclimo_loc  = Path(input_climo_locs[case_idx])
+        mclimo_loc  = Path(input_climo_locs[case_idx])"""
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields if needed:
@@ -229,7 +237,7 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                 #Check if re-gridded file already exists and over-writing is allowed:
-                if regridded_file_loc.is_file() and overwrite_mregrid:
+                if regridded_file_loc.is_file() and overwrite_regrid:
                     #If so, then delete current file:
                     regridded_file_loc.unlink()
                 #End if
@@ -243,16 +251,20 @@ def regrid_and_vert_interp(adf):
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       #tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       tclim_fils = adf.data.get_reference_climo_file(var)
                     #End if
 
                     #Write to debug log if enabled:
                     adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
+                    
+                    tclim_ds = adf.data.load_reference_climo_dataset(target, var)
+                    if tclim_ds is None:
 
-                    if len(tclim_fils) > 1:
+                    #if len(tclim_fils) > 1:
                         #Combine all target files together into a single data set:
-                        tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
-                    elif len(tclim_fils) == 0:
+                    #    tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
+                    #elif len(tclim_fils) == 0:
                         print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
                     else:
@@ -260,21 +272,26 @@ def regrid_and_vert_interp(adf):
                         tclim_ds = xr.open_dataset(tclim_fils[0])
                     #End if
 
-                    #Generate CAM climatology (climo) file list:
-                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
-
-                    if len(mclim_fils) > 1:
-                        #Combine all cam files together into a single data set:
-                        mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
-                    elif len(mclim_fils) == 0:
-                        #wmsg = f"\t    WARNING: Unable to find climo file for '{var}'."
-                        #wmsg += " Continuing to next variable."
-                        wmsg= f"\t    WARNING: regridding {var} failed, no climo file for case '{case_name}'. Continuing to next variable."
-                        print(wmsg)
+                    mclim_ds = adf.data.load_climo_dataset(case_name, var)
+                    if mclim_ds is None:
+                        print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
-                    else:
-                        #Open single file as new xarray dataset:
-                        mclim_ds = xr.open_dataset(mclim_fils[0])
+
+                    #Generate CAM climatology (climo) file list:
+                    #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                    #
+                    #if len(mclim_fils) > 1:
+                    #    #Combine all cam files together into a single data set:
+                    #    mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
+                    #elif len(mclim_fils) == 0:
+                    #    #wmsg = f"\t    WARNING: Unable to find climo file for '{var}'."
+                    #    #wmsg += " Continuing to next variable."
+                    #    wmsg= f"\t    WARNING: regridding {var} failed, no climo file for case '{case_name}'. Continuing to next variable."
+                    #    print(wmsg)
+                    #    continue
+                    #else:
+                    #    #Open single file as new xarray dataset:
+                    #    mclim_ds = xr.open_dataset(mclim_fils[0])
                     #End if
 
                     #Create keyword arguments dictionary for regridding function:
@@ -290,16 +307,6 @@ def regrid_and_vert_interp(adf):
                             regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
                         #End if
 
-                        ##Perform regridding and interpolation of variable:
-                        #rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
-                        #                                         regrid_dataset=tclim_ds,
-                        #                                         **regrid_kwargs)
-                    #if comp == "lnd":
-                    #    #Perform regridding of variable:
-                    #    rgdata_interp = _regrid(mclim_ds, var,
-                    #                        regrid_dataset=tclim_ds,
-                    #                        **regrid_kwargs)
-                    #if unstruct_cases[case_idx]:
                     if ('lat' not in mclim_ds.dims) and ('lat' not in mclim_ds.dims):
                         if ('ncol' in mclim_ds.dims) or ('lndgrid' in mclim_ds.dims):
                             #mclim_ds
@@ -331,8 +338,8 @@ def regrid_and_vert_interp(adf):
                             #                    comp=comp,
                             #                    method=case_method,
                             #                    **native_regrid_kwargs)
-                            #print("\n\nrgdata_interp WORKS",rgdata_interp,"\n\n")
-                            rgdata_interp = _regrid_BAD(mclim_ds, var, comp=comp,
+                            #_regrid(model_dataset, var_name, comp, method, **kwargs)
+                            rgdata_interp = _regrid(mclim_ds, var, comp=comp,
                                                 method=case_method, 
                                                         **native_regrid_kwargs)
                             print("\n\nrgdata_interp BAD",rgdata_interp,"\n\n")
@@ -385,6 +392,7 @@ def regrid_and_vert_interp(adf):
 
                     #Finally, write re-gridded data to output file:
                     #Convert the list of Path objects to a list of strings
+                    mclim_fils = adf.data.get_climo_file(case_name, var)
                     climatology_files_str = [str(path) for path in mclim_fils]
                     climatology_files_str = ', '.join(climatology_files_str)
                     test_attrs_dict = {
@@ -400,7 +408,8 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
+                    #interp_bl_file = trgclimo_loc / f'{target}_{var}_baseline.nc'
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
                         if comp == "atm":
