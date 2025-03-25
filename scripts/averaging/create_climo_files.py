@@ -217,10 +217,15 @@ def create_climo_files(adf, clobber=False, search=None):
                 else:
                     ts_dir = Path(input_ts_locs[case_idx])
                     regrd_ts_loc = ts_dir / "regrid"
-                #if sorted(regrd_ts_loc.glob(f"*.{var}.*nc")):
-                #    #ts_ds = xr.open_dataset(sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))[0])
-                #    ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))
-                ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))
+                if sorted(regrd_ts_loc.glob(f"*.{var}.*nc")):
+                    #ts_ds = xr.open_dataset(sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))[0])
+                    ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))
+                else:
+                    if is_baseline:
+                        ts_files = adf.data.get_ref_timeseries_file(var)
+                    else:
+                        ts_files = adf.data.get_timeseries_file(case_name, var)
+                #ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))
                 
 
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
