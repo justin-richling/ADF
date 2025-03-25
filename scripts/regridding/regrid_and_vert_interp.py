@@ -336,7 +336,7 @@ def regrid_and_vert_interp(adf):
                                 raise AdfError(msg)
 
                             #(model_dataset, var_name, comp, weight_file, latlon_file, method)
-                            rgdata_interp = _regrid(mclim_ds, var,
+                            rgdata_interp = _regrid(adf, mclim_ds, var,
                                                     comp=comp,
                                                     weight_file=case_wgts_file,
                                                     latlon_file=case_latlon_file,
@@ -446,8 +446,8 @@ def regrid_and_vert_interp(adf):
 
                                 base_method = adf.latlon_regrid_method["baseline_regrid_method"]
 
-                                #(model_dataset, var_name, comp, weight_file, latlon_file, method)
-                                tgdata_interp = _regrid(tclim_ds, var,
+                                #(adfobj, model_dataset, var_name, comp, weight_file, method, latlon_file=None)
+                                tgdata_interp = _regrid(adf, tclim_ds, var,
                                                         comp=comp,
                                                         weight_file=baseline_wgts_file,
                                                         latlon_file=baseline_latlon_file,
@@ -854,7 +854,7 @@ import xesmf
 
 
 #def _regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
-def _regrid(model_dataset, var_name, comp, weight_file, method, latlon_file=None):
+def _regrid(adfobj, model_dataset, var_name, comp, weight_file, method, latlon_file=None):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -890,6 +890,17 @@ def _regrid(model_dataset, var_name, comp, weight_file, method, latlon_file=None
 
     #Extract variable info from model data (and remove any degenerate dimensions):
     mdata = model_dataset[var_name].squeeze()
+    #da = (ds[variablename]).squeeze()
+    var_defaults = adfobj.variable_defaults
+    var_default_dict = var_defaults.get(var_name, {})
+    scale_factor = var_default_dict.get('scale_factor', 1)
+    add_offset = var_default_dict.get('add_offset', 0)
+    mdata = mdata * scale_factor + add_offset
+    if var_name in adfobj.variable_defaults:
+        vres = adfobj.variable_defaults[var_name]
+        mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
+    else:
+        mdata.attrs['units'] = 'none'
 
     if latlon_file:
         # Load target grid (lat/lon) from the provided dataset
