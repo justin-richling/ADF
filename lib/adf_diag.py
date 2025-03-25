@@ -882,113 +882,114 @@ class AdfDiag(AdfWeb):
                         constit_dict=constit_dict, ts_dir=ts_dir
                     )
                 # End with
-
-                # TEMPORARY: do a quick check if this on native grid and regrid
-                ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
-                ts_file_ds = xr.open_dataset(
-                        ts_0,
-                    )
-                if adf_utils.check_unstructured(ts_file_ds, case_name):
-                    print()
-                    #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
-                    latlon_file   = ts_0
-                    wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
-                    method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
-                    if not baseline:
-                        wgts_file = wgts_file[case_idx]
-                        method = method[case_idx]
-
-                    kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
-                              "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
-                              "hist_str":hist_str, "time_string":time_string, "comp":comp
-                             }
-                    adf_utils.grid_timeseries(**kwargs)
-                '''if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
-                    if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
-                        
-                        #regrd_ts_loc = Path(test_output_loc[case_idx])
-                        # Check if time series directory exists, and if not, then create it:
-                        # Use pathlib to create parent directories, if necessary.
-                        ts_dir = Path(ts_dir)
-                        regrd_ts_loc = ts_dir / "regrid"
-                        Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
-                        # Check that path actually exists:
-                        if not regrd_ts_loc.is_dir():
-                            print(f"    {regrd_ts_loc} not found, making new directory")
-                            regrd_ts_loc.mkdir(parents=True)
-                        # End if
-                        #print("ts_outfil_str",ts_outfil_str)
-                        #regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
-                        #Check if re-gridded file already exists and over-writing is allowed:
-                        #if regridded_file_loc.is_file() and overwrite_mregrid:
-                        #    #If so, then delete current file:
-                        #    regridded_file_loc.unlink()
-                        ##End if
-
-
-                       
-                        print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
-
-                        latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                grid_ts = False
+                if grid_ts:
+                    # TEMPORARY: do a quick check if this on native grid and regrid
+                    ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
+                    ts_file_ds = xr.open_dataset(
+                            ts_0,
+                        )
+                    if adf_utils.check_unstructured(ts_file_ds, case_name):
+                        print()
+                        #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
                         latlon_file   = ts_0
                         wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
                         method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
                         if not baseline:
                             wgts_file = wgts_file[case_idx]
                             method = method[case_idx]
-                            #latlon_file = latlon_file[case_idx]
-                        #if not latlon_file:
-                        #    msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
-                        #    raise AdfError(msg)
 
-                        #Check if any a weights file exists if using native grid, OPTIONAL
-                        if not wgts_file:
-                            msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
-                            raise AdfError(msg)
-
-                        for var in self.diag_var_list:
-                            print("VAR",var,"\n")
-                            ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0],
-                                                      
-                                                     )
-                            # Store the original cftime time values
-                            #print("ts_ds['time']",ts_ds['time'],"\n\n")
-                            original_time = ts_ds['time'].values
-                            #ds = self.data.load_dataset(var_file)
-                            #if ds is None:
-                            #    #warnings.warn(f"\t    WARNING: Load failed for {variablename}")
-                            #    #return None
-                            #    print("AHHHHH")
-                            #da = (ds[var]).squeeze()
-                            rgdata = adf_utils.unstructure_regrid(ts_ds, var, comp=comp,
-                                                         weight_file=wgts_file,
-                                                         latlon_file=latlon_file,
-                                                         method=method)
-                            # Copy global attributes
-                            rgdata.attrs = ts_ds.attrs.copy()
-                            attrs_dict = {
-                                    #"adf_user": adf.user,
-                                    #"climo_yrs": f"{case_name}: {syear}-{eyear}",
-                                    #"climatology_files": climatology_files_str,
-                                    "native_grid_to_latlon":f"xesmf Regridder; method: {method}"
+                        kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
+                                "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
+                                "hist_str":hist_str, "time_string":time_string, "comp":comp
                                 }
-                            ts_outfil_str = (
-                                                str(ts_dir)
-                                                + os.sep
-                                                + ".".join([case_name, hist_str, var, time_string, "nc"])
-                                            )
-                            regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_gridded.nc")
-                            #rgdata = rgdata.assign_attrs(attrs_dict)
-                            # Restore the original cftime time values
-                            rgdata = rgdata.assign_coords(time=('time', original_time))
-                            #print("regridded_file_loc",rgdata.time,"\n\n")
-                            save_to_nc(rgdata, regridded_file_loc)
-                            #self.adf.native_grid[f"{case_type_string}_native_grid"] = False
+                        adf_utils.grid_timeseries(**kwargs)
+                    '''if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
+                        if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):
+                            
+                            #regrd_ts_loc = Path(test_output_loc[case_idx])
+                            # Check if time series directory exists, and if not, then create it:
+                            # Use pathlib to create parent directories, if necessary.
+                            ts_dir = Path(ts_dir)
+                            regrd_ts_loc = ts_dir / "regrid"
+                            Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
+                            # Check that path actually exists:
+                            if not regrd_ts_loc.is_dir():
+                                print(f"    {regrd_ts_loc} not found, making new directory")
+                                regrd_ts_loc.mkdir(parents=True)
+                            # End if
+                            #print("ts_outfil_str",ts_outfil_str)
+                            #regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_regridded.nc")
+                            #Check if re-gridded file already exists and over-writing is allowed:
+                            #if regridded_file_loc.is_file() and overwrite_mregrid:
+                            #    #If so, then delete current file:
+                            #    regridded_file_loc.unlink()
+                            ##End if
 
-                            #file_path = os.path.join(dir_path, file_name)
-                            #os.remove(ts_outfil_str)
-                            #print("ts_outfil_str before death: ",ts_outfil_str,"\n")
-                            #sorted(ts_dir.glob(f"*.{var}.*nc"))[0].unlink()'''
+
+                        
+                            print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
+
+                            latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                            latlon_file   = ts_0
+                            wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
+                            method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
+                            if not baseline:
+                                wgts_file = wgts_file[case_idx]
+                                method = method[case_idx]
+                                #latlon_file = latlon_file[case_idx]
+                            #if not latlon_file:
+                            #    msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
+                            #    raise AdfError(msg)
+
+                            #Check if any a weights file exists if using native grid, OPTIONAL
+                            if not wgts_file:
+                                msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
+                                raise AdfError(msg)
+
+                            for var in self.diag_var_list:
+                                print("VAR",var,"\n")
+                                ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0],
+                                                        
+                                                        )
+                                # Store the original cftime time values
+                                #print("ts_ds['time']",ts_ds['time'],"\n\n")
+                                original_time = ts_ds['time'].values
+                                #ds = self.data.load_dataset(var_file)
+                                #if ds is None:
+                                #    #warnings.warn(f"\t    WARNING: Load failed for {variablename}")
+                                #    #return None
+                                #    print("AHHHHH")
+                                #da = (ds[var]).squeeze()
+                                rgdata = adf_utils.unstructure_regrid(ts_ds, var, comp=comp,
+                                                            weight_file=wgts_file,
+                                                            latlon_file=latlon_file,
+                                                            method=method)
+                                # Copy global attributes
+                                rgdata.attrs = ts_ds.attrs.copy()
+                                attrs_dict = {
+                                        #"adf_user": adf.user,
+                                        #"climo_yrs": f"{case_name}: {syear}-{eyear}",
+                                        #"climatology_files": climatology_files_str,
+                                        "native_grid_to_latlon":f"xesmf Regridder; method: {method}"
+                                    }
+                                ts_outfil_str = (
+                                                    str(ts_dir)
+                                                    + os.sep
+                                                    + ".".join([case_name, hist_str, var, time_string, "nc"])
+                                                )
+                                regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_gridded.nc")
+                                #rgdata = rgdata.assign_attrs(attrs_dict)
+                                # Restore the original cftime time values
+                                rgdata = rgdata.assign_coords(time=('time', original_time))
+                                #print("regridded_file_loc",rgdata.time,"\n\n")
+                                save_to_nc(rgdata, regridded_file_loc)
+                                #self.adf.native_grid[f"{case_type_string}_native_grid"] = False
+
+                                #file_path = os.path.join(dir_path, file_name)
+                                #os.remove(ts_outfil_str)
+                                #print("ts_outfil_str before death: ",ts_outfil_str,"\n")
+                                #sorted(ts_dir.glob(f"*.{var}.*nc"))[0].unlink()'''
                     
                 
             # End for hist_str
