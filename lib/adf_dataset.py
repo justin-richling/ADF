@@ -49,7 +49,7 @@ class AdfData:
         self.adf = adfobj  # provides quick access to the AdfDiag object
         # paths 
         #self.model_rgrid_loc = adfobj.get_basic_info("cam_climo_regrid_loc", required=True)
-        self.model_rgrid_loc = adfobj.get_cam_info("cam_climo_regrid_loc", required=True)
+        #self.model_rgrid_loc = adfobj.get_cam_info("cam_climo_regrid_loc")
 
         # variables (and info for unit transform)
         # use self.adf.diag_var_list and self.adf.self.adf.variable_defaults
@@ -97,8 +97,9 @@ class AdfData:
     # Test case(s)
     def get_timeseries_file(self, case, field):
         """Return list of test time series files"""
-        ts_locs = self.adf.get_cam_info("cam_ts_loc", required=True) # list of paths (could be multiple cases)
         caseindex = (self.case_names).index(case)
+        ts_locs = self.adf.get_cam_info("cam_ts_loc")
+
         ts_loc = Path(ts_locs[caseindex])
         ts_filenames = f'{case}.*.{field}.*nc'
         ts_files = sorted(ts_loc.glob(ts_filenames))
@@ -111,7 +112,7 @@ class AdfData:
             warnings.warn("\t    WARNING: ADF does not currently expect observational time series files.")
             return None
         else:
-            ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc", required=True))
+            ts_loc = Path(self.adf.get_baseline_info("cam_ts_loc"))
             ts_filenames = f'{self.ref_case_label}.*.{field}.*nc'
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
@@ -194,30 +195,15 @@ class AdfData:
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_climo_file(case, field)
         if not fils:
-            warnings.warn(f"\t    WARNING: Did not find climo file for variable: {field}. Will try to skip.")
+            #warnings.warn(f"\t    WARNING: Did not find climo file for variable: {field}. Will try to skip.")
             return None
         return self.load_dataset(fils)
-
-    def load_climo_file(self, case, variablename, grid='regular'):
-        """
-        Return Dataset for climo of variablename
-        uses grid flag to determine if reading in a regular or unstructured grid
-        returns a xarry or uxarray dataset, respectively
-        """
-        fils = self.get_climo_file(case, variablename)
-        if not fils:
-            warnings.warn(f"WARNING: Did not find climo file for variable: {variablename}. Will try to skip.")
-            return None
-        if grid == 'regular':
-            return self.load_dataset(fils)
-        elif grid == 'unstructured':
-            return self.load_ux_dataset(fils)
 
     
     def get_climo_file(self, case, variablename):
         """Retrieve the climo file path(s) for variablename for a specific case."""
-        a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
         caseindex = (self.case_names).index(case) # the entry for specified case
+        a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
         model_cl_loc = Path(a[caseindex])
         return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
 
@@ -233,7 +219,7 @@ class AdfData:
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_reference_climo_file(field)
         if not fils:
-            warnings.warn(f"WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
+            #warnings.warn(f"WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
             return None
         return self.load_dataset(fils)
 
@@ -258,10 +244,7 @@ class AdfData:
     # Test case(s)
     def get_regrid_file(self, case, field):
         """Return list of test regridded files"""
-        #model_rg_loc = Path(self.adf.get_basic_info("cam_climo_regrid_loc", required=True))
-        model_rg_locs = self.adf.get_cam_info("cam_climo_regrid_loc", required=True)
-        caseindex = (self.case_names).index(case) # the entry for specified case
-        model_rg_loc = Path(model_rg_locs[caseindex])
+        model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
         rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
         return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_regridded.nc"))
 
@@ -295,12 +278,8 @@ class AdfData:
             else:
                 fils = []
         else:
-            #model_rg_loc = Path(self.adf.get_basic_info("cam_climo_regrid_loc", required=True))
-            ref_rg_loc = Path(self.adf.get_baseline_info("cam_climo_regrid_loc", required=True))
-            #print("self.ref_case_label",self.ref_case_label,'\n"')
-            #caseindex = (self.ref_case_label).index(case) # the entry for specified case
-            #ref_rg_loc = Path(ref_rg_locs[caseindex])
-            fils = sorted(ref_rg_loc.glob(f"{case}_{field}_baseline.nc"))
+            model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+            fils = sorted(model_rg_loc.glob(f"{case}_{field}_baseline.nc"))
         return fils
 
 
@@ -335,7 +314,7 @@ class AdfData:
     # What's the most robust way to handle this?
 
     # Load DataSet
-    def load_dataset(self, fils):
+    def load_dataset(self, fils, **kwargs):
         """Return xarray DataSet from file(s)"""
         #if (len(fils) == 0):
         if not fils:
@@ -349,7 +328,7 @@ class AdfData:
                 warnings.warn(f"\t    WARNING: Expecting to find file: {sfil}")
                 return None
             mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
-            ds = ux.open_dataset(mesh, sfil)    
+            ds = xr.open_dataset(sfil)
             """ds = xr.open_dataset(sfil)
             if 'ncol' in ds.dims:
                 mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
