@@ -187,6 +187,26 @@ def create_climo_files(adf, clobber=False, search=None):
             else:
                 ts_files = adf.data.get_timeseries_file(case_name, var)
 
+            # Check to see if this is on native grid. If so, check if any time series files have been gridded...
+            #Read in files via xarray (xr):
+            if len(ts_files) == 1:
+                cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True)
+            else:
+                cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+
+            if ('lat' not in cam_ts_data.dims) and ('lon' not in cam_ts_data.dims):
+                if ('ncol' in cam_ts_data.dims) or ('lndgrid' in cam_ts_data.dims):
+                    print("Looks like this is on native grid - 'create_climo_files' script!")
+                    if is_baseline:
+                        ts_dir = Path(input_ts_baseline)
+                        regrd_ts_loc = ts_dir / "regrid"
+                    else:
+                        ts_dir = Path(input_ts_locs[case_idx])
+                        regrd_ts_loc = ts_dir / "regrid"
+                    if sorted(regrd_ts_loc.glob(f"*.{var}.*nc")):
+                        #ts_ds = xr.open_dataset(sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))[0])
+                        ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))
+
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
             if not ts_files:
