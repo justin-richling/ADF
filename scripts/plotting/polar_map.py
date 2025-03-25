@@ -207,13 +207,13 @@ def polar_map(adfobj):
                 #odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
                 #mdata = mclim_ds[var].squeeze()
 
-                # APPLY UNITS TRANSFORMATION IF SPECIFIED:
+                """ # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
                 mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
                 # update units
-                mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
+                mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))"""
 
-                # Do the same for the baseline case if need be:
+                """# Do the same for the baseline case if need be:
                 if not adfobj.compare_obs:
                     odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
                     # update units
@@ -221,7 +221,7 @@ def polar_map(adfobj):
                 # or for observations.
                 else:
                     odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
-                    # Note: assume obs are set to have same untis as model.
+                    # Note: assume obs are set to have same untis as model."""
 
                 #Determine dimensions of variable:
                 has_dims = pf.lat_lon_validate_dims(odata)
