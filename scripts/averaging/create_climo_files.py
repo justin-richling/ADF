@@ -57,6 +57,7 @@ def create_climo_files(adf, clobber=False, search=None):
     #Import necessary modules:
     from pathlib import Path
     from adf_base import AdfError
+    import utils as adf_utils
 
     #Notify user that script has started:
     msg = "\n  Calculating CAM climatologies..."
@@ -72,7 +73,7 @@ def create_climo_files(adf, clobber=False, search=None):
     #CAM simulation variables (These quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    output_locs   = adf.get_cam_info("cam_climo_loc", required=True)
+    output_locs   = adf.get_cam_info("cam_climo_loc") #, required=True
     calc_climos   = adf.get_cam_info("calc_cam_climo")
     overwrite     = adf.get_cam_info("cam_overwrite_climo")
 
@@ -139,6 +140,9 @@ def create_climo_files(adf, clobber=False, search=None):
         input_location  = Path(input_ts_locs[case_idx])
         output_location = Path(output_locs[case_idx])
 
+        #output_locs   = adf.get_cam_info("cam_climo_loc") #, required=True
+        regrid_output_loc   = output_location / "regrid"
+
         #Whether to overwrite existing climo files
         clobber = overwrite[case_idx]
 
@@ -184,6 +188,46 @@ def create_climo_files(adf, clobber=False, search=None):
             else:
                 ts_files = adf.data.get_timeseries_file(case_name, var)
 
+            """#TODO: Make this check happen in adf_dataset.py!!!!
+            # Check to see if this is on native grid. If so, check if any time series files have been gridded...
+            #Read in files via xarray (xr):
+            if len(ts_files) == 1:
+                #cam_ts_data = xr.open_dataset(ts_files[0], decode_times=True) #, decode_cf=False
+                cam_ts_data = xr.open_dataset(ts_files[0], decode_cf=False) #, decode_cf=False
+            else:
+                #cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
+                cam_ts_data = xr.open_mfdataset(ts_files, decode_cf=False, combine='by_coords')"""
+
+            """if ('lat' not in cam_ts_data.dims) and ('lon' not in cam_ts_data.dims):
+                if ('ncol' in cam_ts_data.dims) or ('lndgrid' in cam_ts_data.dims):
+                    print("Looks like this is on native grid - 'create_climo_files' script!")
+                    if is_baseline:
+                        ts_dir = Path(input_ts_baseline)
+                        regrd_ts_loc = ts_dir / "regrid"
+                    else:
+                        ts_dir = Path(input_ts_locs[case_idx])
+                        regrd_ts_loc = ts_dir / "regrid"
+                    if sorted(regrd_ts_loc.glob(f"*.{var}.*nc")):
+                        #ts_ds = xr.open_dataset(sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))[0])
+                        ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))"""
+            """if (adf_utils.check_unstructured(cam_ts_data, case_name)) or (not ts_files):
+                if is_baseline:
+                    ts_dir = Path(input_ts_baseline)
+                    regrd_ts_loc = ts_dir / "regrid"
+                else:
+                    ts_dir = Path(input_ts_locs[case_idx])
+                    regrd_ts_loc = ts_dir / "regrid"
+                if sorted(regrd_ts_loc.glob(f"*.{var}.*nc")):
+                    #ts_ds = xr.open_dataset(sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))[0])
+                    ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))
+                else:
+                    if is_baseline:
+                        ts_files = adf.data.get_ref_timeseries_file(var)
+                    else:
+                        ts_files = adf.data.get_timeseries_file(case_name, var)
+                #ts_files = sorted(regrd_ts_loc.glob(f"*.{var}.*nc"))"""
+                
+
             #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
             # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
             if not ts_files:
@@ -195,7 +239,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 adf.debug_log(logmsg)
                 #  end_diag_script(errmsg) # Previously we would kill the run here.
                 continue
-
+            #print("\n\nts_files",ts_files,"\n\n")
             list_of_arguments.append((adf, ts_files, syr, eyr, output_file, comp))
 
 
