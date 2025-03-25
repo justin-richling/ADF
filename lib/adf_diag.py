@@ -70,12 +70,12 @@ except ImportError:
     sys.exit(1)
 
 # Check if "uxarray" is present in python path:
-try:
-    import uxarray as ux
-except ImportError:
-    print("uxarray module does not exist in python path.")
-    print("Please install module, e.g. 'pip install uxarray'.")
-    sys.exit(1)
+#try:
+#    import uxarray as ux
+#except ImportError:
+#    print("uxarray module does not exist in python path.")
+#    print("Please install module, e.g. 'pip install uxarray'.")
+#    sys.exit(1)
 
 # Check if "esmpy" is present in python path:
 try:
@@ -384,8 +384,8 @@ class AdfDiag(AdfWeb):
             case_type_string = "baseline"
             hist_str_list = [self.hist_string["base_hist_str"]]
 
-            overwrite_regrid_locs = [self.get_cam_info("cam_overwrite_ts_regrid")]
-            test_output_loc       = [self.get_cam_info("cam_ts_regrid_loc", required=True)]
+            overwrite_regrid_locs = [self.get_baseline_info("cam_overwrite_ts_regrid")]
+            test_output_loc       = [self.get_baseline_info("cam_ts_regrid_loc")]
             #unstructed = [adfobj.unstructs['unstruct_base']]
 
         else:
@@ -397,11 +397,11 @@ class AdfDiag(AdfWeb):
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
-            case_type_string="case"
+            case_type_string = "test"
             hist_str_list = self.hist_string["test_hist_str"]
 
             overwrite_regrid_locs = self.get_cam_info("cam_overwrite_ts_regrid")
-            test_output_loc       = self.get_cam_info("cam_ts_regrid_loc", required=True)
+            test_output_loc       = self.get_cam_info("cam_ts_regrid_loc")
             #unstructed = self.unstructs['unstruct_tests']
         # End if
 
@@ -423,6 +423,8 @@ class AdfDiag(AdfWeb):
         # get info about variable defaults
         res = self.variable_defaults
 
+        comp = self.model_component
+
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
             # Check if particular case should be processed:
@@ -437,8 +439,6 @@ class AdfDiag(AdfWeb):
             start_year = start_years[case_idx]
             end_year = end_years[case_idx]
 
-            regrd_ts_loc = test_output_loc[case_idx]
-
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
 
@@ -446,7 +446,7 @@ class AdfDiag(AdfWeb):
 
             # Check that path actually exists:
             if not starting_location.is_dir():
-                emsg = f"Provided {case_type_string} 'cam_hist_loc' directory"
+                emsg = f"Provided {case_type_string} case 'cam_hist_loc' directory"
                 emsg += f" '{starting_location}' not found.  Script is ending here."
                 self.end_diag_fail(emsg)
             # End if
@@ -458,7 +458,7 @@ class AdfDiag(AdfWeb):
             hist_str_case = hist_str_list[case_idx]
             for hist_str in hist_str_case:
 
-                print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
+                print(f"\t Processing time series for {case_type_string} case '{case_name}', {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
                     emsg = (
                         f"No history *{hist_str}.*.nc files found in '{starting_location}'."
@@ -777,26 +777,25 @@ class AdfDiag(AdfWeb):
                     ]
 
                     if "clm" in hist_str:
-                        # Step 3a: Optional, add additional variables to clm2.h0 files 
-                        cmd_add_clm_h0_fields = [
-                            "ncks", "-A", "-v", "area,landfrac,landmask",
-                            hist_files[0],
-                            ts_outfil_str
-                        ]
+                        # Step 3a: Optional, add additional variables to clm2.h0 files
+                        if  "h0" in hist_str:
+                            cmd_add_clm_h0_fields = [
+                                "ncks", "-A", "-v", "area,landfrac,landmask",
+                                hist_files[0],
+                                ts_outfil_str
+                            ]
+                            # add time invariant information to clm2.h0 fields
+                            list_of_hist_commands.append(cmd_add_clm_h0_fields)
 
                         # Step 3b: Optional, add additional variables to clm2.h1 files 
-                        cmd_add_clm_h1_fields = [
-                            "ncrcat", "-A", "-v", "pfts1d_ixy,pfts1d_jxy,pfts1d_itype_veg,lat,lon",
-                            hist_files,
-                            ts_outfil_str
-                        ]
-
-                        # TODO, add some logic to control if these are done
-                        # add time invariant information to clm2.h0 fields
-                        list_of_hist_commands.append(cmd_add_clm_h0_fields)
-                        # add time varrying information to clm2.h1 fields
-                        #list_of_hist_commands.append(cmd_add_clm_h1_fields)
-
+                        if  "h1" in hist_str:
+                            cmd_add_clm_h1_fields = [
+                                "ncrcat", "-A", "-v", "pfts1d_ixy,pfts1d_jxy,pfts1d_itype_veg,lat,lon",
+                                hist_files,
+                                ts_outfil_str
+                            ]
+                            # add time varrying information to clm2.h1 fields
+                            list_of_hist_commands.append(cmd_add_clm_h1_fields)
 
                      # Step 3c: Create the ncatted command to remove the history attribute
                     cmd_remove_history = [
@@ -813,14 +812,8 @@ class AdfDiag(AdfWeb):
                     # Add global attributes: user, original hist file loc(s) and all filenames
                     list_of_ncattend_commands.append(cmd_ncatted)
 
-                    """# TODO, add some logic to control if these are done
-                    # add time invariant information to clm2.h0 fields
-                    list_of_hist_commands.append(cmd_add_clm_h0_fields)
-                    # add time varrying information to clm2.h1 fields
-                    #list_of_hist_commands.append(cmd_add_clm_h1_fields)
-                    """
                     # Remove the `history` attr that gets tacked on (for clean up)
-                    # NOTE: this may not be best practice, but it the history attr repeats
+                    # NOTE: this may not be best practice, but if the history attr repeats
                     #       the files attrs so the global attrs become obtrusive...
                     list_of_hist_commands.append(cmd_remove_history)
 
@@ -839,6 +832,49 @@ class AdfDiag(AdfWeb):
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_hist_commands)
 
+                # Loop over the created time series files again and fix the time if necessary
+                #NOTE: There is no solution to do this with NCO operators, but there is with CDO operators.
+                #      We can switch to using CDO, but it would require the user to have/load CDO as well.
+                fils = glob.glob(f"{ts_dir}/*{time_string}.nc")
+                for fil in fils:
+                    ts_ds = xr.open_dataset(fil, decode_times=False)
+                    if ('time_bnds' in ts_ds) or ('time_bounds' in ts_ds):
+                        if comp == "atm":
+                            if ('time_bnds' in ts_ds):
+                                ts_ds.time_bnds.attrs['units'] = ts_ds.time.attrs['units']
+                                ts_ds.time_bnds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                            if ('time_bounds' in ts_ds):
+                                ts_ds.time_bounds.attrs['units'] = ts_ds.time.attrs['units']
+                                ts_ds.time_bounds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                        if comp == "lnd":
+                            ts_ds.time_bounds.attrs['units'] = ts_ds.time.attrs['units']
+                            ts_ds.time_bounds.attrs['calendar'] = ts_ds.time.attrs['calendar']
+                        time = ts_ds['time']
+
+                        if comp == "atm":
+                            if ('time_bnds' in ts_ds):
+                                time = xr.DataArray(ts_ds['time_bnds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                            if ('time_bounds' in ts_ds):
+                                time = xr.DataArray(ts_ds['time_bounds'].load().mean(dim='nbnd').values, dims=time.dims, attrs=time.attrs)
+                        if comp == "lnd":
+                            time = xr.DataArray(ts_ds['time_bounds'].load().mean(dim='hist_interval').values, dims=time.dims, attrs=time.attrs)
+                        ts_ds['time'] = time
+                        ts_ds.assign_coords(time=time)
+                        ts_ds_fixed = xr.decode_cf(ts_ds)
+
+                        # Add attribute note of time change
+                        attrs_dict = {
+                            "adf_timeseries_info": "Time series files have been computed using 'ncrcat'",
+                            "adf_note": "The time values have been modified to middle of month"
+                        }
+                        ts_ds_fixed = ts_ds_fixed.assign_attrs(attrs_dict)
+
+                        # Save to a temporary file
+                        temp_file_path = fil + ".tmp"
+                        ts_ds_fixed.to_netcdf(temp_file_path)
+                        # Replace the original file with the modified file
+                        os.replace(temp_file_path, fil)
+
                 if vars_to_derive:
                     self.derive_variables(
                         res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
@@ -846,48 +882,30 @@ class AdfDiag(AdfWeb):
                     )
                 # End with
 
-                """
-                #Generate CAM climatology (climo) file list:
-                mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
+                # DOES NOT WORK CORRECTLY!
+                """grid_ts = False
+                if grid_ts:
+                    # TEMPORARY: do a quick check if this on native grid and regrid
+                    ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
+                    ts_file_ds = xr.open_dataset(
+                            ts_0,
+                        )
+                    if adf_utils.check_unstructured(ts_file_ds, case_name):
+                        print()
+                        #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                        latlon_file = ts_0
+                        wgts_file = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
+                        method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
+                        if not baseline:
+                            wgts_file = wgts_file[case_idx]
+                            method = method[case_idx]
 
-                if len(mclim_fils) > 1:
-                    #Combine all cam files together into a single data set:
-                    mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
-                elif len(mclim_fils) == 0:
-                    #wmsg = f"\t    WARNING: Unable to find climo file for '{var}'."
-                    #wmsg += " Continuing to next variable."
-                    wmsg= f"\t    WARNING: regridding {var} failed, no climo file for case '{case_name}'. Continuing to next variable."
-                    print(wmsg)
-                    continue
-                else:
-                    #Open single file as new xarray dataset:
-                    mclim_ds = xr.open_dataset(mclim_fils[0])
-                #End if
-                """
-
-                """if ('lat' not in hist_file_ds.dims) and ('lon' not in hist_file_ds.dims):
-                    ts_dirr = Path(ts_dir)
-                    #for ts_file in ts_dir:
-                    #    print(ts_file)
-                    #    adf_utils.unstructure_regrid(model_dataset, var_name, comp="atm")
-                    for var in diag_var_list:
-                        var_file = sorted(ts_dirr.glob(f"*.{var}.*nc"))
-                        ds = self.data.load_dataset(var_file)
-                        if ds is None:
-                            #warnings.warn(f"\t    WARNING: Load failed for {variablename}")
-                            #return None
-                            print("AHHHHH")
-                        #da = (ds[var]).squeeze()
-                        rgdata = adf_utils.unstructure_regrid(ds, var, comp="atm")
-                        attrs_dict = {
-                                #"adf_user": adf.user,
-                                #"climo_yrs": f"{case_name}: {syear}-{eyear}",
-                                #"climatology_files": climatology_files_str,
-                                "native_grid_to_latlon":"xesmf"
-                            }
-                        rgdata = rgdata.assign_attrs(attrs_dict)
-                        save_to_nc(rgdata, regrd_ts_loc)"""
-
+                        kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
+                                "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
+                                "hist_str":hist_str, "time_string":time_string, "comp":comp
+                                }
+                        adf_utils.grid_timeseries(**kwargs)"""
+                
             # End for hist_str
         # End cases loop
 
