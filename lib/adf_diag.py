@@ -901,8 +901,7 @@ class AdfDiag(AdfWeb):
                     kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
                               "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
                               "hist_str":hist_str, "time_string":time_string, "comp":comp
-
-                    }
+                             }
                     adf_utils.grid_timeseries(**kwargs)
                 '''if ('lat' not in ts_file_ds.dims) and ('lon' not in ts_file_ds.dims):
                     if ('ncol' in ts_file_ds.dims) or ('lndgrid' in ts_file_ds.dims):

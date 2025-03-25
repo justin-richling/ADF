@@ -14,8 +14,6 @@ def check_unstructured(ds, case):
 
 from pathlib import Path
 import os
-from adf_base import AdfError
-
 def grid_timeseries(**kwargs):
     #regrd_ts_loc = Path(test_output_loc[case_idx])
     # Check if time series directory exists, and if not, then create it:
@@ -37,6 +35,23 @@ def grid_timeseries(**kwargs):
     if not regrd_ts_loc.is_dir():
         print(f"    {regrd_ts_loc} not found, making new directory")
         regrd_ts_loc.mkdir(parents=True)
+
+
+
+                       
+    #print(f"\tLooks like {case_type_string} case '{case_name}' is unstructured time series, eh?")
+
+    #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+    #latlon_file   = ts_0
+    #wgts_file   = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
+    #method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
+    #if not baseline:
+    #    wgts_file = wgts_file[case_idx]
+    #    method = method[case_idx]
+        #latlon_file = latlon_file[case_idx]
+    #if not latlon_file:
+    #    msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
+    #    raise AdfError(msg)
 
     #Check if any a weights file exists if using native grid, OPTIONAL
     if not latlon_file:
@@ -271,12 +286,12 @@ def make_se_regridder(weight_file, s_data, d_data,
             "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
         }
     )
-    # Hard code masks for now, not sure this does anything?
+    """# Hard code masks for now, not sure this does anything?
     s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
     dummy_in['mask']= s_mask
     
     d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
-    dummy_out['mask']= d_mask          
+    dummy_out['mask']= d_mask"""                
 
     # do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
@@ -354,6 +369,16 @@ def unstructure_regrid(model_dataset, var_name, comp, weight_file, method, latlo
         if use_latlon_file:
             s_data = mdata#.isel(time=0)
             d_data = fv_ds[var_name]
+
+    mdata = mdata.fillna(0)
+    """if comp == "lnd":
+        model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
+        mdata = mdata * model_dataset.landfrac  # weight flux by land frac
+        #s_data = model_dataset.landmask.isel(time=0)
+        #d_data = fv_ds.landmask
+    #else:
+        #s_data = mdata.isel(time=0)
+        #d_data = fv_ds[var_name]"""
 
     #Regrid model data to match target grid:
     regridder = make_se_regridder(weight_file=weight_file,

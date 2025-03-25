@@ -256,7 +256,7 @@ class AdfData:
             return None
         return self.load_dataset(fils)
 
-    def load_climo_file(self, case, variablename, grid='regular'):
+    '''def load_climo_file(self, case, variablename, grid='regular'):
         """
         Return Dataset for climo of variablename
         uses grid flag to determine if reading in a regular or unstructured grid
@@ -269,7 +269,7 @@ class AdfData:
         if grid == 'regular':
             return self.load_dataset(fils)
         elif grid == 'unstructured':
-            return self.load_ux_dataset(fils)
+            return self.load_ux_dataset(fils)'''
 
     
     def get_climo_file(self, case, variablename):
