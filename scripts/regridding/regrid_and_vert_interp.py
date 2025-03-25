@@ -72,17 +72,9 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
-    
-
-
-    #if is_baseline:
-    #    ts_files = adf.data.get_ref_timeseries_file(var)
-    #else:
-    #    ts_files = adf.data.get_timeseries_file(case_name, var)
 
     case_latlon_files   = adf.latlon_files["test_latlon_file"]
-    #print("case_latlon_file",case_latlon_file,"\n")
+
     #Check if any a weights file exists if using native grid, OPTIONAL
     case_wgts_files   = adf.latlon_wgt_files["test_wgts_file"]
     print("case_wgts_files",case_wgts_files,"\n")
@@ -108,7 +100,6 @@ def regrid_and_vert_interp(adf):
     #Create new variables that potentially stores the re-gridded
     #ocean/land fraction dataset:
     frc_ds = None
-    tgt_frc_ds = None
 
     #Check if surface pressure exists in variable list:
     if "PS" in var_list:
@@ -136,18 +127,10 @@ def regrid_and_vert_interp(adf):
             print("\t No observations found to regrid to, so no re-gridding will be done.")
             return
         #End if
-
     else:
-
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
-        #trgclimo_loc = Path(adf.get_baseline_info("cam_climo_regrid_loc", required=True))
-        #Check if re-gridded directory exists, and if not, then create it:
-        #if not trgclimo_loc.is_dir():
-        #    print(f"    {trgclimo_loc} not found, making new directory")
-        #    trgclimo_loc.mkdir(parents=True)
-        #End if
     #End if
 
     #Grab baseline years (which may be empty strings if using Obs):
@@ -177,18 +160,6 @@ def regrid_and_vert_interp(adf):
 
         #Notify user of model case being processed:
         print(f"\t Regridding case '{case_name}' :")
-
-        """rgclimo_loc = Path(test_output_loc[case_idx])
-        #Check if re-gridded directory exists, and if not, then create it:
-        if not rgclimo_loc.is_dir():
-            print(f"    {rgclimo_loc} not found, making new directory")
-            rgclimo_loc.mkdir(parents=True)
-        #End if
-
-        overwrite_mregrid = overwrite_regrid_locs[case_idx]
-
-        #Set case climo data path:
-        mclimo_loc  = Path(input_climo_locs[case_idx])"""
 
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields if needed:
@@ -264,38 +235,6 @@ def regrid_and_vert_interp(adf):
                     if tclim_ds is None:
                         print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
-
-                    """if len(tclim_fils) > 1:
-                        #Combine all target files together into a single data set:
-                        tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
-                    elif len(tclim_fils) == 0:
-                        print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
-                        continue
-                    else:
-                        #Open single file as new xarray dataset:
-                        tclim_ds = xr.open_dataset(tclim_fils[0])
-                    #End if"""
-
-                    #Write to debug log if enabled:
-                    #adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
-
-                    #Generate CAM climatology (climo) file list:
-                    #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}_{var}_*.nc"))
-                    #input_climo_locs = adf.data.load_climo_dataset(case_name, var)
-                    """mclim_fils = adf.data.get_climo_file(case_name, var)
-
-                    if len(mclim_fils) > 1:
-                        #Combine all cam files together into a single data set:
-                        mclim_ds = xr.open_mfdataset(mclim_fils, combine='by_coords')
-                    elif len(mclim_fils) == 0:
-                        wmsg = f"\t    WARNING: regridding {var} failed, no climo file for case"
-                        wmsg += f" '{case_name}'. Continuing to next variable."
-                        print(wmsg)
-                        continue
-                    else:
-                        #Open single file as new xarray dataset:
-                        mclim_ds = xr.open_dataset(mclim_fils[0])
-                    #End if"""
 
                     mclim_ds = adf.data.load_climo_dataset(case_name, var)
                     if mclim_ds is None:
