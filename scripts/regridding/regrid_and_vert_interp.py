@@ -297,7 +297,7 @@ def regrid_and_vert_interp(adf):
                         mclim_ds = xr.open_dataset(mclim_fils[0])
                     #End if"""
 
-                    mclim_ds = adf.data.load_reference_climo_dataset(case_name, var)
+                    mclim_ds = adf.data.load_climo_dataset(case_name, var)
                     if mclim_ds is None:
                         print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
