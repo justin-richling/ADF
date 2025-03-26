@@ -317,7 +317,7 @@ def regrid_and_vert_interp(adf):
                             case_method = case_methods[case_idx]
 
                             # Grid unstructured climo if applicable before regridding
-                            rgdata_interp = _regrid(adf, mclim_ds, var,
+                            rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
                                                     wgt_file=case_wgts_file,
                                                     latlon_file=case_latlon_file,
