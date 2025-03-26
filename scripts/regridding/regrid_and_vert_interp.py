@@ -252,7 +252,7 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Write to debug log if enabled:
-                    adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
+                    #adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
                     
                     tclim_ds = adf.data.load_reference_climo_dataset(target, var)
                     if tclim_ds is None:
