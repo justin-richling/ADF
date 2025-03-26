@@ -577,7 +577,7 @@ def annual_mean(data, whole_years=False, time_name='time', use_ux=False):
     # -- do it for each year to allow for non-standard calendars (360-day)
     # -- and also to provision for data with leap years
     days_in_month = data_to_avg.time.dt.daysinmonth
-    print("days_in_month",days_in_month,'\n')
+    #print("days_in_month",days_in_month,'\n')
     if not use_ux:
         days_gb = data_to_avg.time.dt.daysinmonth.groupby('time.year').map(lambda x: x / x.sum())
     else:
@@ -1984,6 +1984,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
+        
+        # Unstructured grid check
         if not unstructured:
             levs = np.unique(np.array(levels))
             if len(levs) < 2:
@@ -2008,6 +2010,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                                     pad=0.05, shrink=0.8, **cp_info['colorbar_opt'])
                 #TODO keep variable attributes on dataarrays
                 #cbar.set_label(wrap_fields[i].attrs['units'])
+        # End if unstructured grid
+
         #ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
         ax[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
                      loc='right', fontsize=tiFontSize)

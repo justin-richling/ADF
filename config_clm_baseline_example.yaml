@@ -140,14 +140,6 @@ diag_cam_climo:
     # Default: 
     hist_str: clm2.h0
 
-    #Calculate climatologies?
-    #If false, the climatology files will not be created:
-    calc_cam_climo: true
-
-    #Overwrite CAM climatology files?
-    #If false, or not prsent, then already existing climatology files will be skipped:
-    cam_overwrite_climo: false
-
     #Name of CAM case (or CAM run name):
     cam_case_name: b.e30_beta05.BLT1850.ne30_t232_wgx3.123
 
@@ -160,6 +152,24 @@ diag_cam_climo:
     #Location of CAM history (h0) files:
     #Example test files
     cam_hist_loc: /glade/derecho/scratch/hannay/archive/${diag_cam_climo.cam_case_name}/lnd/hist
+
+    # SE to FV regridding options
+    # Leave these blank if not on the native grid
+    #-----------------------------
+    # Weights file:
+    weights_file: /glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc
+    # Regridding method:
+    regrid_method: 'coservative' #xesmf bug, missing 'n'!
+    # File with appropriate lat/lon values for regridding native to FV :
+    latlon_file: /glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc
+
+    #Calculate climatologies?
+    #If false, the climatology files will not be created:
+    calc_cam_climo: true
+
+    #Overwrite CAM climatology files?
+    #If false, or not prsent, then already existing climatology files will be skipped:
+    cam_overwrite_climo: false
 
     #Location of CAM climatologies (to be created and then used by this script)
     cam_climo_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/climo
@@ -193,20 +203,6 @@ diag_cam_climo:
     #Location where time series files are (or will be) stored:
     cam_ts_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/ts
 
-    #TEM diagnostics
-    #TODO, this isn't needed for land, but may be a helpful way to think about looking at CLM h1 files
-    #---------------
-    #TEM history file number
-    #If missing or blank, ADF will default to h4
-    tem_hist_str: cam.h4
-
-    #Location where TEM files are stored:
-    #NOTE: If path not specified or commented out, TEM calculation/plots will be skipped!
-    cam_tem_loc: /glade/derecho/scratch/${user}/${diag_cam_climo.cam_case_name}/tem/
-
-    #Overwrite TEM files, if found?
-    #If set to false, then TEM creation will be skipped if files are found:
-    overwrite_tem: false
 
     #----------------------
 
@@ -271,26 +267,6 @@ diag_cam_climo:
     #    - /some/where/you/want/to/have/time_series_files
     #    - /same/or/different/place/you/want/files
 
-    #TEM diagnostics
-    #---------------
-    #TEM history file number
-    #If missing or blank, ADF will default to h4
-    #tem_hist_str:
-    #    - cam.h4
-    #    - cam.h#
-
-    #Location where TEM files are stored:
-    #NOTE: If path not specified or commented out, TEM calculation/plots will be skipped!
-    #cam_tem_loc:
-    #    - /some/where/you/want/to/have/TEM_files/
-    #    - /same/or/different/place/you/want/TEM_files/
-
-    #Overwrite TEM files, if found?
-    #If set to false, then TEM creation will be skipped if files are found:
-    #overwrite_tem:
-    #    - false
-    #    - true
-
     #----------------------
 
 
@@ -304,14 +280,6 @@ diag_cam_baseline_climo:
     # Default: 
     hist_str: clm2.h0
 
-    #Calculate cam baseline climatologies?
-    #If false, the climatology files will not be created:
-    calc_cam_climo: true
-
-    #Overwrite CAM climatology files?
-    #If false, or not present, then already existing climatology files will be skipped:
-    cam_overwrite_climo: false
-
     #Name of CAM baseline case:
     cam_case_name: b.e30_beta05.BLT1850.ne30_t232_wgx3.122
 
@@ -324,6 +292,24 @@ diag_cam_baseline_climo:
     #Location of CAM baseline history (h0) files:
     #Example test files
     cam_hist_loc: /glade/derecho/scratch/hannay/archive/${diag_cam_baseline_climo.cam_case_name}/lnd/hist
+
+    # SE to FV regridding options
+    # Leave these blank if not on the native grid
+    #-----------------------------
+    # Weights file:
+    weights_file: /glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc
+    # Regridding method:
+    regrid_method: 'coservative' #xesmf bug, missing 'n'!
+    # File with appropriate lat/lon values for regridding native to FV :
+    latlon_file: /glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc
+
+    #Calculate cam baseline climatologies?
+    #If false, the climatology files will not be created:
+    calc_cam_climo: true
+
+    #Overwrite CAM climatology files?
+    #If false, or not present, then already existing climatology files will be skipped:
+    cam_overwrite_climo: false
 
     #Location of baseline CAM climatologies:
     cam_climo_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/climo
@@ -354,26 +340,6 @@ diag_cam_baseline_climo:
 
     #Location where time series files are (or will be) stored:
     cam_ts_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/ts
-
-    #Location where re-gridded and interpolated CAM climatology files are stored:
-    cam_climo_regrid_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/climo/regrid
-
-    #Location where re-gridded and interpolated timeseries files are stored:
-    cam_ts_regrid_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/ts/regrid
-
-    #TEM diagnostics
-    #---------------
-    #TEM history file number
-    #If missing or blank, ADF will default to h4
-    tem_hist_str: cam.h4
-
-    #Location where TEM files are stored:
-    #NOTE: If path not specified or commented out, TEM calculation/plots will be skipped!
-    cam_tem_loc: /glade/derecho/scratch/${user}/${diag_cam_baseline_climo.cam_case_name}/tem/
-
-    #Overwrite TEM files, if found?
-    #If set to false, then TEM creation will be skipped if files are found:
-    overwrite_tem: false
 
 
 #This fourth set of variables provides settings for calling the Climate Variability
@@ -475,35 +441,27 @@ diag_mdtf_info:
 #These scripts must be located in "scripts/averaging":
 time_averaging_scripts:
     - create_climo_files
-    #- create_TEM_files #To generate TEM files, please un-comment
 
 #Name of regridding scripts being used.
 #These scripts must be located in "scripts/regridding":
 regridding_scripts:
-    - regrid_climo_wrapper
-    - regrid_ts_wrapper
+    - regrid_and_vert_interp
 
 #List of analysis scripts being used.
 #These scripts must be located in "scripts/analysis":
 analysis_scripts:
     - lmwg_table
-    #- aerosol_gas_tables
 
-      #List of plotting scripts being used.
+#List of plotting scripts being used.
 #These scripts must be located in "scripts/plotting":
 plotting_scripts:
-    - global_unstructured_latlon_map
-    - polar_ux_map
+    - global_latlon_map
     #- global_mean_timeseries
     #- global_latlon_vect_map
     #- zonal_mean
     #- meridional_mean
-    #- polar_map
+    - polar_map
     #- cam_taylor_diagram
-    #- qbo
-    #- ozone_diagnostics
-    #- tape_recorder
-    #- tem
     #- regional_map_multicase #To use this please un-comment and fill-out
                               #the "region_multicase" section below
 

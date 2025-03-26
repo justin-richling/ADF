@@ -297,7 +297,6 @@ def regrid_and_vert_interp(adf):
 
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
-                    native_regrid_kwargs = {}
 
                     if comp == "atm":
                         #Check if target in relevant pressure variable dictionaries:
@@ -311,7 +310,7 @@ def regrid_and_vert_interp(adf):
                     if ('lat' not in mclim_ds.dims) and ('lat' not in mclim_ds.dims):
                         if ('ncol' in mclim_ds.dims) or ('lndgrid' in mclim_ds.dims):
                             #mclim_ds
-                            print(f"Looks like test case '{case_name}' is unstructured, eh?")
+                            print(f"\t    INFO: Looks like test case '{case_name}' is unstructured, eh?")
                             #Check if any a FV file exists if using native grid
                             case_latlon_file = case_latlon_files[case_idx]
 
@@ -422,7 +421,7 @@ def regrid_and_vert_interp(adf):
                         #if unstruct_base:
                         if ('lat' not in tclim_ds.dims) and ('lat' not in tclim_ds.dims):
                             if ('ncol' in tclim_ds.dims) or ('lndgrid' in tclim_ds.dims):
-                                print(f"Looks like baseline case '{target}' is unstructured, eh?")
+                                print(f"\t    INFO: Looks like baseline case '{target}' is unstructured, eh?")
                                 baseline_latlon_file   = adf.latlon_files["baseline_latlon_file"]
                                 if not baseline_latlon_file:
                                     msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
@@ -559,7 +558,6 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     #End if
 
     #Extract variable info from model data (and remove any degenerate dimensions):
-    #mdata = model_dataset[var_name].squeeze()
     mdata = model_dataset[var_name].squeeze()
     mdat_ofrac = None
     #if regrid_ofrac:
@@ -853,7 +851,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
     kwargs         -> Keyword arguments that contain paths to THE REST IS NOT APPLICABLE: surface pressure
                       and mid-level pressure files, which are necessary for
                       certain types of vertical interpolation.
-    This function returns a new xarray dataset that contains the regridded
+    This function returns a new xarray dataset that contains the gridded
     model variable.
     """
 
@@ -867,7 +865,6 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
     latlon_ds = xr.open_dataset(latlon_file)
 
-    #mdata = model_dataset[var_name]
     model_dataset[var_name] = model_dataset[var_name].fillna(0)
     mdata = model_dataset[var_name]
 
@@ -880,18 +877,13 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
         s_data = mdata.isel(time=0)
         d_data = latlon_ds[var_name]
 
-    #model_dataset[var_name] = model_dataset[var_name].fillna(0)
-    #model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-    #model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
-
     #Regrid model data to match target grid:
     # These two functions come with import regrid_se_to_fv
     regridder = make_se_regridder(weight_file=wgt_file,
-                                    s_data = s_data, #model_dataset.landmask.isel(time=0),
-                                    d_data = d_data, #latlon_ds.landmask,
-                                    Method = method, #'coservative',  # Bug in xesmf needs this without "n"
+                                    s_data = s_data,
+                                    d_data = d_data,
+                                    Method = method,
                                     )
-
 
     if method == 'coservative':
         rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
@@ -907,31 +899,6 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
     # calculate area
     rgdata = _calc_area(rgdata)
-    
-    """area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
-    earth_radius_km = 6.37122e3  # in meters
-
-    yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
-    xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
-    yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
-    xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
-
-    dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
-    phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
-
-    # grid cell area
-    for j in range(len(rgdata['lat'])):
-        for i in range(len(rgdata['lon'])):
-            dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
-            area_km2[j,i] = dy_km[j] * dx_km
-
-    rgdata['area'] = xr.DataArray(area_km2,
-                                    coords={'lat': rgdata.lat, 'lon': rgdata.lon},
-                                    dims=["lat", "lon"])
-    rgdata['area'].attrs['units'] = 'km2'
-    rgdata['area'].attrs['long_name'] = 'Grid cell area'"""
-
-    #End if
 
     #Return dataset:
     return rgdata
