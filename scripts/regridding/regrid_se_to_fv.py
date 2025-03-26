@@ -52,14 +52,28 @@ def make_se_regridder(weight_file, s_data, d_data,
     )
     return regridder
 
-def regrid_se_data_bilinear(regridder, data_to_regrid):
-    updated = data_to_regrid.copy().transpose(..., "lndgrid").expand_dims("dummy", axis=-2)
-    regridded = regridder(updated.rename({"dummy": "lat", "lndgrid": "lon"}),
+def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
                          skipna=True, na_thres=1,
                          )
     return regridded
 
-def regrid_se_data_conservative(regridder, data_to_regrid):
-    updated = data_to_regrid.copy().transpose(..., "lndgrid").expand_dims("dummy", axis=-2)
-    regridded = regridder(updated.rename({"dummy": "lat", "lndgrid": "lon"}) )
+def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
     return regridded
+
+"""
+def regrid_lnd_se_data_bilinear(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}),
+                         skipna=True, na_thres=1,
+                         )
+    return regridded
+
+
+def regrid_lnd_se_data_conservative(regridder, data_to_regrid, comp_grid):
+    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
+    return regridded"""

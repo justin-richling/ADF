@@ -853,7 +853,7 @@ def regrid_data(fromthis, tothis, method=1):
 
 
 #def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
-def _regrid(model_dataset, var_name, comp, method, **kwargs):
+def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -884,9 +884,9 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
         comp_grid = "lndgrid"
 
     # Hardwiring for now
-    con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
+    #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
 
-    latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+    #latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
     #fv_t232 = xr.open_dataset(fv_t232_file)
 
     latlon_ds = xr.open_dataset(latlon_file)
@@ -914,7 +914,7 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
 
     #Regrid model data to match target grid:
     # These two functions come with import regrid_se_to_fv
-    regridder = make_se_regridder(weight_file=con_weight_file,
+    regridder = make_se_regridder(weight_file=wgt_file,
                                     s_data = s_data, #model_dataset.landmask.isel(time=0),
                                     d_data = d_data, #latlon_ds.landmask,
                                     Method = method, #'coservative',  # Bug in xesmf needs this without "n"
