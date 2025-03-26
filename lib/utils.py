@@ -52,7 +52,7 @@ def grid_timeseries(**kwargs):
         original_time = ts_ds['time'].values
 
         rgdata = unstructure_regrid(ts_ds, var, comp=comp,
-                                    weight_file=weight_file,
+                                    wgt_file=weight_file,
                                     latlon_file=latlon_file,
                                     method=method)
         # Copy global attributes
