@@ -1,4 +1,5 @@
 #Import standard modules:
+from pdb import lasti2lineno
 import xarray as xr
 
 def regrid_and_vert_interp(adf):
@@ -875,32 +876,62 @@ def _regrid(model_dataset, var_name, comp, method, **kwargs):
 
     #Import ADF-specific functions:
     import numpy as np
-    from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative 
+    from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative, regrid_se_data_bilinear
+
+    if comp == "atm":
+        comp_grid = "ncol"
+    if comp == "lnd":
+        comp_grid = "lndgrid"
 
     # Hardwiring for now
     con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
 
-    fv_t232_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-    fv_t232 = xr.open_dataset(fv_t232_file)
+    latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
+    #fv_t232 = xr.open_dataset(fv_t232_file)
 
+    latlon_ds = xr.open_dataset(latlon_file)
+
+    #if latlon_file:
+    #    # Load target grid (lat/lon) from the provided dataset
+    #    fv_ds = xr.open_dataset(latlon_file)
+
+    #mdata = model_dataset[var_name]
     model_dataset[var_name] = model_dataset[var_name].fillna(0)
-    model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+    mdata = model_dataset[var_name]
+
+    if comp == "lnd":
+        model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
+        mdata = mdata * model_dataset.landfrac  # weight flux by land frac
+        s_data = model_dataset.landmask.isel(time=0)
+        d_data = latlon_ds.landmask
+    else:
+        s_data = mdata.isel(time=0)
+        d_data = latlon_ds[var_name]
+
+    #model_dataset[var_name] = model_dataset[var_name].fillna(0)
+    #model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
     model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
 
     #Regrid model data to match target grid:
     # These two functions come with import regrid_se_to_fv
     regridder = make_se_regridder(weight_file=con_weight_file,
-                                    s_data = model_dataset.landmask.isel(time=0),
-                                    d_data = fv_t232.landmask,
-                                    Method = 'coservative',  # Bug in xesmf needs this without "n"
+                                    s_data = s_data, #model_dataset.landmask.isel(time=0),
+                                    d_data = d_data, #latlon_ds.landmask,
+                                    Method = method, #'coservative',  # Bug in xesmf needs this without "n"
                                     )
-    rgdata = regrid_se_data_conservative(regridder, model_dataset)
+
+
+    if method == 'coservative':
+        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+    if method == 'bilinear':
+        rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
 
     rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
 
-    rgdata['lat'] = fv_t232.lat
-    rgdata['landmask'] = fv_t232.landmask
-    rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+    rgdata['lat'] = latlon_ds.lat #???
+    if comp == "lnd":
+        rgdata['landmask'] = latlon_ds.landmask
+        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
     # calculate area
     area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
