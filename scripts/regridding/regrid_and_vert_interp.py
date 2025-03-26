@@ -324,7 +324,7 @@ def regrid_and_vert_interp(adf):
                                                     method=case_method,
                                                     )
                             
-                            output_test_loc = output_climo_locs[case_idx]
+                            output_test_loc = Path(output_climo_locs[case_idx])
                             rgridded_output_loc   = output_test_loc / "regrid"
                             if not rgridded_output_loc.is_dir():
                                 print(f"    {rgridded_output_loc} not found, making new directory")
@@ -443,7 +443,7 @@ def regrid_and_vert_interp(adf):
                                                         latlon_file=baseline_latlon_file,
                                                         method=base_method,
                                                        )
-                                tgridded_output_loc   = target_loc / "regrid"
+                                tgridded_output_loc   = Path(target_loc) / "regrid"
                                 if not tgridded_output_loc.is_dir():
                                     print(f"    {tgridded_output_loc} not found, making new directory")
                                     tgridded_output_loc.mkdir(parents=True)
