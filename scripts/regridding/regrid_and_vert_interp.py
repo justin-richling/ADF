@@ -833,7 +833,7 @@ def regrid_data(fromthis, tothis, method=1):
 
 
 import numpy as np
-#def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
+
 def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwargs):
 
     """
