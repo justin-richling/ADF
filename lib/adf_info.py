@@ -222,6 +222,9 @@ class AdfInfo(AdfConfig):
                 baseline_regrid_method = 'coservative'
             self.__baseline_regrid_method = baseline_regrid_method
 
+            baseline_native_grid = self.get_baseline_info("native_grid")
+            self.__baseline_native_grid = baseline_native_grid
+
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if baseline_ts_done:
@@ -259,26 +262,6 @@ class AdfInfo(AdfConfig):
                     msg += f"{data_name}, using first found year: {found_eyear_baseline}"
                     print(msg)
                     eyear_baseline = found_eyear_baseline
-                
-                """#---------------------------------------------------------------------------------------
-                # NOTE: if time series files exist, we should check here if they are on the native grid.
-                # If so, this is where we would run the XESMF methods!
-                #---------------------------------------------------------------------------------------
-                #if unstruct_base:
-                ts_file_list = sorted(input_ts_loc.glob("*.nc"))
-                tclim_ds = xr.open_dataset(ts_file_list[0])
-                if ('lat' not in tclim_ds.dims) and ('lat' not in tclim_ds.dims):
-                    if ('ncol' in tclim_ds.dims) or ('lndgrid' in tclim_ds.dims):
-                        print(f"Looks like baseline case '{data_name}' is unstructured, eh?")
-                        #for file in ts_file_list:
-                        regrid_kwargs = {}
-                        for var in self.__diag_var_list:
-                            #cam.h0a.PRECL.198501-199012
-                            tclim_ds = sorted(input_ts_loc.glob(f"*{baseline_hist_str}.{var}.{syear_baseline}01-{eyear_baseline}12.nc"))
-                            utils.unstructure_regrid(tclim_ds, var,
-                                                regrid_dataset=tclim_ds,
-                                                comp=base_comp,
-                                                **regrid_kwargs)"""
             # End if baseline time series done
 
             # Check if history file path exists:
@@ -298,20 +281,6 @@ class AdfInfo(AdfConfig):
                 starting_location = Path(baseline_hist_locs)
                 print(f"\tChecking history files in '{starting_location}'")
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
-                
-                #print("We're gonna try this...")
-                #from ..scripts import regrid_and_vert_interp
-                #print("... Huh, must've worked??")
-
-                """ #Create "Path" objects:
-                input_location  = Path(input_ts_loc)
-
-                #Check that time series input directory actually exists:
-                if not input_location.is_dir():
-                    errmsg = f"\t ERROR: Time series directory '{input_ts_loc}' not found.  Script is exiting."
-                    raise AdfError(errmsg)"""
-                #ts_files = sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
-                
 
                 #Check if the history file location exists
                 if not starting_location.is_dir():
@@ -382,90 +351,19 @@ class AdfInfo(AdfConfig):
                 if base_nickname is None:
                     base_nickname = data_name
 
-                """#if base_comp == "atm":
-                #    print()
-                #if ('lndgrid' in ) or ('ncol' in )
-
-                #---------------------------------------------------------------------------------------
-                # NOTE: if time series files exist, we should check here if they are on the native grid.
-                # If so, this is where we would run the XESMF methods!
-                #---------------------------------------------------------------------------------------
-                #if unstruct_base:
-                #ts_file_list = sorted(input_ts_loc.glob("*.nc"))
-                #hist_ds = xr.open_dataset(ts_file_list[0])
-
-
-
-                #hist_yrs = np.arange(syear_baseline,eyear_baseline,1)
-                #hist_files = []
-                #for yr in hist_yrs:
-                    #sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
-                #    hist_files.append(sorted(starting_location.glob(f"*{base_hist_str}.{yr}-*.nc")))
-                if ('lat' not in base_ds.dims) and ('lat' not in base_ds.dims):
-                    if ('ncol' in base_ds.dims) or ('lndgrid' in base_ds.dims):
-                        print(f"Looks like baseline case '{data_name}' is unstructured, eh?")
-
-                        #Go ahead and make the diag plot location if it doesn't exist already
-                        regridded_hist_loc = Path(plot_dir / "regridded_hist" / data_name)
-                        print(f"\n\tRegridded history file Location: {regridded_hist_loc}")
-                        if not regridded_hist_loc.is_dir():
-                            print(f"\tINFO: Directory not found, making new regridded history plot location")
-                            regridded_hist_loc.mkdir(parents=True)
-                        
-                        # Define the years (as four-digit strings) and months (as two-digit strings)
-                        years = [f"{year:04d}" for year in range(int(syear_baseline), int(eyear_baseline)+1)]  # Years "0001" to "0010"
-                        months = [f"{month:02d}" for month in range(1, 13)]  # Months "01" to "12"
-
-                        # Initialize a list to collect the matching files
-                        file_list = []
-
-                        # Loop over each year and month, building the glob pattern for each
-                        for year in years:
-                            for month in months:
-                                # Pattern example: "*0001-01*.nc" (adjust extension if needed)
-                                pattern = f"*{base_hist_str}.{year}-{month}*.nc"
-                                # Extend file_list with all files matching the pattern
-                                file_list.extend(starting_location.glob(pattern))
-
-                        # Optionally, sort the resulting file list
-                        hist_files = sorted(file_list)
-
-                        #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
-                        regrid_kwargs = {}
-                        if baseline_wgts_file:
-                            regrid_kwargs["wgt_file"] = baseline_wgts_file
-                        if baseline_latlon_file:
-                            regrid_kwargs["latlon_file"] = baseline_latlon_file
-                        for file in hist_files:
-                            #hist_ds = sorted(input_ts_loc.glob(f"*{baseline_hist_str}.{var}.{syear_baseline}01-{eyear_baseline}12.nc"))
-                            hist_ds = xr.open_dataset(file)
-                            regrid_da = utils.unstructure_regrid(hist_ds, var,
-                                                #regrid_dataset=hist_ds,
-                                                comp=base_comp,
-                                                **regrid_kwargs)
-                            test_attrs_dict = {
-                                     "native_to_latlon":f"XESMF used to regrid native grid to lat/lon grid"
-                                    #"adf_user": adf.user,
-                                    #"climo_yrs": f"{case_name}: {syear}-{eyear}",
-                                    #"climatology_files": climatology_files_str,
-                                }
-                            regrid_da = regrid_da.assign_attrs(test_attrs_dict)
-                            utils.save_to_nc(regrid_da, regridded_hist_loc)
-                            regrid_da.close()  # bpm: we are completely done with this data"""
-
                 if 'ncols' in base_ds.dims:
-                    print('Looks like this is an atmosphere unstructured grid, yeah')
+                    print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
-                    year_range = [str(year) for year in range(int(syear_baseline), int(eyear_baseline))]
-
-                    # Filter file_list based on the year range
-                    filtered_file_list = [f for f in file_list if any(year in f.name for year in year_range)]
+                    #year_range = [str(year) for year in range(int(syear_baseline), int(eyear_baseline))]
+                    #
+                    ## Filter file_list based on the year range
+                    #filtered_file_list = [f for f in file_list if any(year in f.name for year in year_range)]
                     
                 elif 'lndgrid' in base_ds.dims:
-                    print('Looks like this is a land unstructured grid, yeah')
+                    print('\t  Looks like this is a land unstructured grid, yeah')
                     unstruct = True
                 else:
-                    print('Looks like this is a structured lat/lon grid?')
+                    print('\t  Looks like this is a structured lat/lon grid?')
                     unstruct = False
                 self.__unstruct_base = unstruct
             #End if
@@ -559,6 +457,11 @@ class AdfInfo(AdfConfig):
             cam_regrid_method = [None]*len(case_names)
         self.__cam_regrid_method = cam_regrid_method
 
+        cam_native_grid = self.get_cam_info("native_grid")
+        if cam_native_grid is None:
+            cam_native_grid = [None]*len(case_names)
+        self.__test_native_grid = cam_native_grid
+
         #Grab case time series file location(s)
         input_ts_locs = self.get_cam_info("cam_ts_loc", required=True)
 
@@ -651,13 +554,13 @@ class AdfInfo(AdfConfig):
                 
                 case_ds = xr.open_dataset(file_list[0], decode_times=True)
                 if 'ncols' in case_ds.dims:
-                    print('Looks like this is an atmosphere unstructured grid, yeah')
+                    print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
                 if 'lndgrid' in case_ds.dims:
-                    print('Looks like this is a land unstructured grid, yeah')
+                    print('\t  Looks like this is a land unstructured grid, yeah')
                     unstruct = True
                 else:
-                    print('Looks like this is a structured lat/lon grid?')
+                    print('\t  Looks like this is a structured lat/lon grid, eh?')
                     unstruct = False
                 unstructs.append(unstruct)
 
@@ -701,74 +604,6 @@ class AdfInfo(AdfConfig):
                     print(msg)
                     eyear = case_found_eyr
                 #End if
-
-                """#---------------------------------------------------------------------------------------
-                # NOTE: if time series files exist, we should check here if they are on the native grid.
-                # If so, this is where we would run the XESMF methods!
-                #---------------------------------------------------------------------------------------
-                #if unstruct_base:
-                #ts_file_list = sorted(input_ts_loc.glob("*.nc"))
-                #hist_ds = xr.open_dataset(ts_file_list[0])
-
-
-
-                #hist_yrs = np.arange(syear_baseline,eyear_baseline,1)
-                #hist_files = []
-                #for yr in hist_yrs:
-                    #sorted(input_location.glob(f"{case_name}*h0*.{var}.*nc"))
-                #    hist_files.append(sorted(starting_location.glob(f"*{base_hist_str}.{yr}-*.nc")))
-                if ('lat' not in case_ds.dims) and ('lat' not in case_ds.dims):
-                    if ('ncol' in case_ds.dims) or ('lndgrid' in case_ds.dims):
-                        print(f"Looks like baseline case '{case_name}' is unstructured, eh?")
-
-                        #Go ahead and make the diag plot location if it doesn't exist already
-                        regridded_hist_loc = Path(plot_dir / "regridded_hist" / case_name)
-                        print(f"\n\tRegridded history file Location: {regridded_hist_loc}")
-                        if not regridded_hist_loc.is_dir():
-                            print(f"\tINFO: Directory not found, making new regridded history plot location")
-                            regridded_hist_loc.mkdir(parents=True)
-                        
-                        # Define the years (as four-digit strings) and months (as two-digit strings)
-                        years = [f"{year:04d}" for year in range(int(syear), int(eyear)+1)]  # Years "0001" to "0010"
-                        months = [f"{month:02d}" for month in range(1, 13)]  # Months "01" to "12"
-
-                        # Initialize a list to collect the matching files
-                        file_list = []
-
-                        # Loop over each year and month, building the glob pattern for each
-                        for year in years:
-                            for month in months:
-                                # Pattern example: "*0001-01*.nc" (adjust extension if needed)
-                                pattern = f"*{hist_str}.{year}-{month}*.nc"
-                                # Extend file_list with all files matching the pattern
-                                file_list.extend(starting_location.glob(pattern))
-
-                        # Optionally, sort the resulting file list
-                        hist_files = sorted(file_list)
-
-                        #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
-                        regrid_kwargs = {}
-                        if cam_wgts_files[case_idx]:
-                            regrid_kwargs["wgt_file"] = cam_wgts_files[case_idx]
-                        if cam_latlon_files[case_idx]:
-                            regrid_kwargs["latlon_file"] = cam_latlon_files[case_idx]
-                        for file in hist_files:
-                            #hist_ds = sorted(input_ts_loc.glob(f"*{baseline_hist_str}.{var}.{syear_baseline}01-{eyear_baseline}12.nc"))
-                            hist_ds = xr.open_dataset(file)
-                            regrid_da = utils.unstructure_regrid(hist_ds, var,
-                                                #regrid_dataset=hist_ds,
-                                                comp=case_comp,
-                                                **regrid_kwargs)
-                            test_attrs_dict = {
-                                     "native_to_latlon":f"XESMF used to regrid native grid to lat/lon grid"
-                                    #"adf_user": adf.user,
-                                    #"climo_yrs": f"{case_name}: {syear}-{eyear}",
-                                    #"climatology_files": climatology_files_str,
-                                }
-                            regrid_da = regrid_da.assign_attrs(test_attrs_dict)
-                            utils.save_to_nc(regrid_da, regridded_hist_loc)
-                            regrid_da.close()  # bpm: we are completely done with this data"""
-
             #End if
 
             #Update climo year lists in case anything changed
@@ -980,7 +815,7 @@ class AdfInfo(AdfConfig):
         
         baseline_latlon_file = self.__baseline_latlon_file
 
-        return {"test_latlon_file":cam_latlon_files,"base_latlon_file":baseline_latlon_file}
+        return {"test_latlon_file":cam_latlon_files,"baseline_latlon_file":baseline_latlon_file}
 
     # Create property needed to return the case nicknames to user:
     @property
@@ -993,7 +828,7 @@ class AdfInfo(AdfConfig):
         
         baseline_wgts_file = self.__baseline_wgts_file
 
-        return {"test_wgts_file":cam_wgts_files,"base_wgts_file":baseline_wgts_file}
+        return {"test_wgts_file":cam_wgts_files,"baseline_wgts_file":baseline_wgts_file}
 
     # Create property needed to return the case nicknames to user:
     @property
@@ -1006,7 +841,7 @@ class AdfInfo(AdfConfig):
 
         baseline_regrid_method = self.__baseline_regrid_method
 
-        return {"test_regrid_method":cam_regrid_method,"base_regrid_method":baseline_regrid_method}
+        return {"test_regrid_method":cam_regrid_method,"baseline_regrid_method":baseline_regrid_method}
     
 
     
@@ -1021,6 +856,19 @@ class AdfInfo(AdfConfig):
         unstruct_base = self.__unstruct_base
 
         return {"unstruct_tests":unstruct_tests,"unstruct_base":unstruct_base}
+
+
+    # Create property needed to return the case nicknames to user:
+    @property
+    def native_grid(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        test_native_grid = self.__test_native_grid
+        base_native_grid = self.__baseline_native_grid
+
+        return {"test_native_grid":test_native_grid,"baseline_native_grid":base_native_grid}
 
     # Create property needed to return the climo start (syear) and end (eyear) years to user:
     @property
