@@ -325,11 +325,11 @@ def regrid_and_vert_interp(adf):
                                                     )
                             
                             output_test_loc = Path(output_climo_locs[case_idx])
-                            rgridded_output_loc   = output_test_loc / "regrid"
+                            rgridded_output_loc   = output_test_loc / "gridded"
                             if not rgridded_output_loc.is_dir():
                                 print(f"    {rgridded_output_loc} not found, making new directory")
                                 rgridded_output_loc.mkdir(parents=True)
-                            save_to_nc(rgdata_interp, rgridded_output_loc)
+                            save_to_nc(rgdata_interp, rgridded_output_loc / f'{case_name}_{var}_gridded.nc')
 
                         else:
                             msg = "WARNING: No lat/lons but no grid info either. I guess this really is a problem!"
@@ -447,7 +447,7 @@ def regrid_and_vert_interp(adf):
                                 if not tgridded_output_loc.is_dir():
                                     print(f"    {tgridded_output_loc} not found, making new directory")
                                     tgridded_output_loc.mkdir(parents=True)
-                                save_to_nc(tgdata_interp, tgridded_output_loc)
+                                save_to_nc(tgdata_interp, tgridded_output_loc / f'{target}_{var}_gridded.nc')
                             else:
                                 msg = "WARNING: No lat/lons but no grid info either. I guess this really is a problem!"
                                 msg += "\n   You might want to look at the files. Only CAM (ncol) and CLM (lndgrd) native grids are acceptable."
