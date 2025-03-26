@@ -851,7 +851,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
     kwargs         -> Keyword arguments that contain paths to THE REST IS NOT APPLICABLE: surface pressure
                       and mid-level pressure files, which are necessary for
                       certain types of vertical interpolation.
-    This function returns a new xarray dataset that contains the gridded
+    This function returns a new xarray dataset that contains the regridded
     model variable.
     """
 
@@ -865,25 +865,31 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
     latlon_ds = xr.open_dataset(latlon_file)
 
+    #mdata = model_dataset[var_name]
     model_dataset[var_name] = model_dataset[var_name].fillna(0)
     mdata = model_dataset[var_name]
 
     if comp == "lnd":
         model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
-        mdata = mdata * model_dataset.landfrac  # weight flux by land frac
+        #mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         s_data = model_dataset.landmask.isel(time=0)
         d_data = latlon_ds.landmask
     else:
         s_data = mdata.isel(time=0)
         d_data = latlon_ds[var_name]
 
+    #model_dataset[var_name] = model_dataset[var_name].fillna(0)
+    #model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
+    model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+
     #Regrid model data to match target grid:
     # These two functions come with import regrid_se_to_fv
     regridder = make_se_regridder(weight_file=wgt_file,
-                                    s_data = s_data,
-                                    d_data = d_data,
-                                    Method = method,
+                                    s_data = s_data, #model_dataset.landmask.isel(time=0),
+                                    d_data = d_data, #latlon_ds.landmask,
+                                    Method = method, #'coservative',  # Bug in xesmf needs this without "n"
                                     )
+
 
     if method == 'coservative':
         rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
