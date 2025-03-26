@@ -430,7 +430,7 @@ def regrid_and_vert_interp(adf):
                                     raise AdfError(msg)
 
                                 #Check if any a weights file exists if using native grid, OPTIONAL
-                                baseline_wgts_file   = adf.latlon_wgt_files["base_wgts_file"]
+                                baseline_wgts_file   = adf.latlon_wgt_files["baseline_wgts_file"]
                                 if not baseline_wgts_file:
                                     msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
                                     raise AdfError(msg)
