@@ -480,7 +480,6 @@ def spatial_average_lnd(indata, weights, spatial_dims=None):
         else:
             spatial_dims = [dimname for dimname in indata.dims if (('lat' in dimname.lower()) or 
                                                                    ('lon' in dimname.lower()))]
-    print("land spatial_dims",spatial_dims)
     if not spatial_dims:
         #Scripts using this function likely expect the horizontal dimensions
         #to be removed via the application of the mean. So in order to avoid
