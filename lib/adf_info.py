@@ -434,6 +434,8 @@ class AdfInfo(AdfConfig):
 
         #Check if any a FV file exists if using native grid
         cam_latlon_files   = self.get_cam_info("latlon_file")
+        if cam_latlon_files is None:
+            cam_latlon_files = [None]*len(case_names)
         self.__cam_latlon_files = cam_latlon_files
 
         #Check if any a weights file exists if using native grid, OPTIONAL
