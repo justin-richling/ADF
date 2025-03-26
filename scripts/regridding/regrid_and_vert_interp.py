@@ -865,7 +865,6 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
     latlon_ds = xr.open_dataset(latlon_file)
 
-    #mdata = model_dataset[var_name]
     model_dataset[var_name] = model_dataset[var_name].fillna(0)
     mdata = model_dataset[var_name]
 
