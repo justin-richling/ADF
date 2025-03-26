@@ -32,10 +32,10 @@ def make_se_regridder(weight_file, s_data, d_data,
         }
     )
     # Hard code masks for now, not sure this does anything?
-    if s_data:
+    if isinstance(s_data, xr.DataArray):
         s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
         dummy_in['mask']= s_mask
-    if d_data:
+    if isinstance(d_data, xr.DataArray):
         d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
         dummy_out['mask']= d_mask                
 
