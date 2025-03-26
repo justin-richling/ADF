@@ -545,7 +545,6 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
     #Import ADF-specific functions:
     import plotting_functions as pf
-    from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative
 
     #Extract keyword arguments:
     if 'ps_file' in kwargs:
@@ -833,7 +832,7 @@ def regrid_data(fromthis, tothis, method=1):
 #####
 
 
-
+import numpy as np
 #def _regrid(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
 def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwargs):
 
@@ -844,11 +843,13 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
     ----------
     model_dataset -> The xarray dataset which contains the model variable data
     var_name      -> The name of the variable to be regridded/interpolated.
+    comp          ->
+    wgt_file      ->
+    method        ->
+    latlon_file   ->
+    
     Optional inputs:
-    ps_file        -> NOT APPLICABLE: A NetCDF file containing already re-gridded surface pressure
-    regrid_dataset -> The xarray dataset that contains the lat/lon grid that
-                      "var_name" will be regridded to.  If not present then
-                      only the vertical interpolation will be done.
+
     kwargs         -> Keyword arguments that contain paths to THE REST IS NOT APPLICABLE: surface pressure
                       and mid-level pressure files, which are necessary for
                       certain types of vertical interpolation.
@@ -857,7 +858,6 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
     """
 
     #Import ADF-specific functions:
-    import numpy as np
     from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative, regrid_se_data_bilinear
 
     if comp == "atm":
@@ -865,17 +865,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
     if comp == "lnd":
         comp_grid = "lndgrid"
 
-    # Hardwiring for now
-    #con_weight_file = "/glade/work/wwieder/map_ne30pg3_to_fv0.9x1.25_scripgrids_conserve_nomask_c250108.nc"
-
-    #latlon_file = '/glade/derecho/scratch/wwieder/ctsm5.3.018_SP_f09_t232_mask/run/ctsm5.3.018_SP_f09_t232_mask.clm2.h0.0001-01.nc'
-    #fv_t232 = xr.open_dataset(fv_t232_file)
-
     latlon_ds = xr.open_dataset(latlon_file)
-
-    #if latlon_file:
-    #    # Load target grid (lat/lon) from the provided dataset
-    #    fv_ds = xr.open_dataset(latlon_file)
 
     #mdata = model_dataset[var_name]
     model_dataset[var_name] = model_dataset[var_name].fillna(0)
@@ -892,7 +882,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
     #model_dataset[var_name] = model_dataset[var_name].fillna(0)
     #model_dataset['landfrac']= model_dataset['landfrac'].fillna(0)
-    model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
+    #model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
 
     #Regrid model data to match target grid:
     # These two functions come with import regrid_se_to_fv
@@ -915,6 +905,39 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
         rgdata['landmask'] = latlon_ds.landmask
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
+    # calculate area
+    rgdata = _calc_area(rgdata)
+    
+    """area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
+    earth_radius_km = 6.37122e3  # in meters
+
+    yres_degN = np.abs(np.diff(rgdata['lat'].data))  # distances between gridcell centers...
+    xres_degE = np.abs(np.diff(rgdata['lon']))  # ...end up with one less element, so...
+    yres_degN = np.append(yres_degN, yres_degN[-1])  # shift left (edges <-- centers); assume...
+    xres_degE = np.append(xres_degE, xres_degE[-1])  # ...last 2 distances bet. edges are equal
+
+    dy_km = yres_degN * earth_radius_km * np.pi / 180  # distance in m
+    phi_rad = rgdata['lat'].data * np.pi / 180  # degrees to radians
+
+    # grid cell area
+    for j in range(len(rgdata['lat'])):
+        for i in range(len(rgdata['lon'])):
+            dx_km = xres_degE[i] * np.cos(phi_rad[j]) * earth_radius_km * np.pi / 180  # distance in m
+            area_km2[j,i] = dy_km[j] * dx_km
+
+    rgdata['area'] = xr.DataArray(area_km2,
+                                    coords={'lat': rgdata.lat, 'lon': rgdata.lon},
+                                    dims=["lat", "lon"])
+    rgdata['area'].attrs['units'] = 'km2'
+    rgdata['area'].attrs['long_name'] = 'Grid cell area'"""
+
+    #End if
+
+    #Return dataset:
+    return rgdata
+
+
+def _calc_area(rgdata):
     # calculate area
     area_km2 = np.zeros(shape=(len(rgdata['lat']), len(rgdata['lon'])))
     earth_radius_km = 6.37122e3  # in meters
@@ -939,13 +962,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
     rgdata['area'].attrs['units'] = 'km2'
     rgdata['area'].attrs['long_name'] = 'Grid cell area'
 
-    #End if
-
-    #Return dataset:
     return rgdata
-
-
-
 
 
 
