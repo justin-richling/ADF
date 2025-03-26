@@ -74,13 +74,10 @@ def regrid_and_vert_interp(adf):
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
-    unstruct_cases = adf.unstructs['unstruct_tests']
 
+    # SE to FV options
     case_latlon_files   = adf.latlon_files["test_latlon_file"]
-    #print("case_latlon_file",case_latlon_file,"\n")
-    #Check if any a weights file exists if using native grid, OPTIONAL
     case_wgts_files   = adf.latlon_wgt_files["test_wgts_file"]
-    print("case_wgts_files",case_wgts_files,"\n")
     case_methods = adf.latlon_regrid_method["test_regrid_method"]
 
     #Grab case years
@@ -195,8 +192,6 @@ def regrid_and_vert_interp(adf):
         syear = syear_cases[case_idx]
         eyear = eyear_cases[case_idx]
 
-        
-
         # probably want to do this one variable at a time:
         for var in var_list:
 
@@ -309,16 +304,17 @@ def regrid_and_vert_interp(adf):
 
                     if ('lat' not in mclim_ds.dims) and ('lat' not in mclim_ds.dims):
                         if ('ncol' in mclim_ds.dims) or ('lndgrid' in mclim_ds.dims):
-                            #mclim_ds
                             print(f"\t    INFO: Looks like test case '{case_name}' is unstructured, eh?")
+                            
                             #Check if any a FV file exists if using native grid
                             case_latlon_file = case_latlon_files[case_idx]
-
                             if not case_latlon_file:
                                 msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
-                                raise AdfError(msg)
-                            #Check if any a weights file exists if using native grid, OPTIONAL
+                                print(msg)
+                                case_latlon_file = None
+                                #raise AdfError(msg)
 
+                            #Check if any a weights file exists if using native grid, OPTIONAL
                             case_wgts_file = case_wgts_files[case_idx]
                             if not case_wgts_file:
                                 msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
@@ -326,7 +322,7 @@ def regrid_and_vert_interp(adf):
 
                             case_method = case_methods[case_idx]
 
-                            #(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwargs)
+                            # Grid unstructured climo if applicabple before regridding
                             rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
                                                     wgt_file=case_wgts_file,
@@ -422,11 +418,13 @@ def regrid_and_vert_interp(adf):
                         if ('lat' not in tclim_ds.dims) and ('lat' not in tclim_ds.dims):
                             if ('ncol' in tclim_ds.dims) or ('lndgrid' in tclim_ds.dims):
                                 print(f"\t    INFO: Looks like baseline case '{target}' is unstructured, eh?")
+
                                 baseline_latlon_file   = adf.latlon_files["baseline_latlon_file"]
                                 if not baseline_latlon_file:
                                     msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
-                                    #print(msg)
-                                    raise AdfError(msg)
+                                    print(msg)
+                                    baseline_latlon_file = None
+                                    #raise AdfError(msg)
 
                                 #Check if any a weights file exists if using native grid, OPTIONAL
                                 baseline_wgts_file   = adf.latlon_wgt_files["baseline_wgts_file"]
@@ -436,6 +434,7 @@ def regrid_and_vert_interp(adf):
                                 
                                 base_method = adf.latlon_regrid_method["baseline_regrid_method"]
 
+                                # Grid unstructured climo if applicabple before regridding
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                         comp=comp,
                                                         wgt_file=baseline_wgts_file,
@@ -856,17 +855,19 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
     """
 
     #Import ADF-specific functions:
-    from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative, regrid_se_data_bilinear
+    from regrid_se_to_fv import make_se_regridder, regrid_se_data_conservative, regrid_se_data_bilinear, regrid_atm_se_data_conservative, regrid_atm_se_data_bilinear
 
     if comp == "atm":
         comp_grid = "ncol"
     if comp == "lnd":
         comp_grid = "lndgrid"
-
-    latlon_ds = xr.open_dataset(latlon_file)
+    if latlon_file:
+        latlon_ds = xr.open_dataset(latlon_file)
+    else:
+        print("Looks like no lat lon file is supplied. God speed!")
 
     model_dataset[var_name] = model_dataset[var_name].fillna(0)
-    mdata = model_dataset[var_name]
+    #mdata = model_dataset[var_name]
 
     if comp == "lnd":
         model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
@@ -875,8 +876,8 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
         s_data = model_dataset.landmask.isel(time=0)
         d_data = latlon_ds.landmask
     else:
-        s_data = mdata.isel(time=0)
-        d_data = latlon_ds[var_name]
+        s_data = None #mdata.isel(time=0)
+        d_data = None #latlon_ds[var_name]
 
     #Grid model data to match target grid lat/lon:
     regridder = make_se_regridder(weight_file=wgt_file,
@@ -885,15 +886,21 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
                                     Method = method,
                                     )
 
+    if comp == "lnd":
+        if method == 'coservative':
+            rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+        if method == 'bilinear':
+            rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
+        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
 
-    if method == 'coservative':
-        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
-    if method == 'bilinear':
-        rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
+    if comp == "atm":
+        if method == 'coservative':
+            rgdata = regrid_atm_se_data_conservative(regridder, model_dataset, comp_grid)
+        if method == 'bilinear':
+            rgdata = regrid_atm_se_data_bilinear(regridder, model_dataset, comp_grid)
 
-    rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
 
-    rgdata['lat'] = latlon_ds.lat #???
+    #rgdata['lat'] = latlon_ds.lat #???
     if comp == "lnd":
         rgdata['landmask'] = latlon_ds.landmask
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)

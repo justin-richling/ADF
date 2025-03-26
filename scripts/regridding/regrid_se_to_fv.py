@@ -32,11 +32,12 @@ def make_se_regridder(weight_file, s_data, d_data,
         }
     )
     # Hard code masks for now, not sure this does anything?
-    s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
-    dummy_in['mask']= s_mask
-    
-    d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
-    dummy_out['mask']= d_mask                
+    if s_data:
+        s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
+        dummy_in['mask']= s_mask
+    if d_data:
+        d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
+        dummy_out['mask']= d_mask                
 
     # do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
@@ -63,6 +64,33 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
     regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
     return regridded
+
+
+
+def regrid_atm_se_data_bilinear(regridder, data_to_regrid, comp_grid='ncol'):
+    if isinstance(data_to_regrid, xr.Dataset):
+        vars_with_ncol = [name for name in data_to_regrid.variables if comp_grid in data_to_regrid[name].dims]
+        updated = data_to_regrid.copy().update(data_to_regrid[vars_with_ncol].transpose(..., comp_grid).expand_dims("dummy", axis=-2))
+    elif isinstance(data_to_regrid, xr.DataArray):
+        updated = data_to_regrid.transpose(...,comp_grid).expand_dims("dummy",axis=-2)
+    else:
+        raise ValueError(f"Something is wrong because the data to regrid isn't xarray: {type(data_to_regrid)}")
+    regridded = regridder(updated)
+    return regridded
+
+
+def regrid_atm_se_data_conservative(regridder, data_to_regrid, comp_grid='ncol'):
+    if isinstance(data_to_regrid, xr.Dataset):
+        vars_with_ncol = [name for name in data_to_regrid.variables if comp_grid in data_to_regrid[name].dims]
+        updated = data_to_regrid.copy().update(data_to_regrid[vars_with_ncol].transpose(..., comp_grid).expand_dims("dummy", axis=-2))
+    elif isinstance(data_to_regrid, xr.DataArray):
+        updated = data_to_regrid.transpose(...,comp_grid).expand_dims("dummy",axis=-2)
+    else:
+        raise ValueError(f"Something is wrong because the data to regrid isn't xarray: {type(data_to_regrid)}")
+    regridded = regridder(updated,skipna=True, na_thres=1)
+    return regridded
+
+
 
 """
 def regrid_lnd_se_data_bilinear(regridder, data_to_regrid, comp_grid):
