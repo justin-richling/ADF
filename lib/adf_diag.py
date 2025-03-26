@@ -883,17 +883,17 @@ class AdfDiag(AdfWeb):
                 # End with
 
                 # DOES NOT WORK CORRECTLY!
-                """grid_ts = True
+                grid_ts = True
                 if grid_ts:
                     # TEMPORARY: do a quick check if this on native grid and regrid
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
-                    ts_file_ds = xr.open_dataset(
-                            ts_0,
-                        )
+                    ts_file_ds = xr.open_dataset(ts_0)
+
                     if adf_utils.check_unstructured(ts_file_ds, case_name):
                         print()
-                        #latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                        latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
                         latlon_file = ts_0
+                        time_file = ts_0
                         wgts_file = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
                         method = self.latlon_regrid_method[f"{case_type_string}_regrid_method"]
                         if not baseline:
@@ -902,9 +902,9 @@ class AdfDiag(AdfWeb):
 
                         kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
                                 "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
-                                "hist_str":hist_str, "time_string":time_string, "comp":comp
+                                "hist_str":hist_str, "time_string":time_string, "comp":comp,"time_file":time_file
                                 }
-                        adf_utils.grid_timeseries(**kwargs)"""
+                        adf_utils.grid_timeseries(**kwargs)
                 
             # End for hist_str
         # End cases loop

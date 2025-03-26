@@ -219,6 +219,11 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
         rgdata['landmask'] = latlon_ds.landmask
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
+    """new_ds = xr.Dataset(
+                        coords={"lat": ds1["lat"], "lon": ds1["lon"], "time": ds2["time"]},
+                        attrs=ds2.attrs  # Copy attributes from ds2
+                    )
+    """
     # calculate area
     rgdata = _calc_area(rgdata)
 
