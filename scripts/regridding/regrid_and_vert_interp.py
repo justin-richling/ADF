@@ -327,9 +327,10 @@ def regrid_and_vert_interp(adf):
 
                             case_method = case_methods[case_idx]
 
+                            #(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwargs)
                             rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
-                                                    weight_file=case_wgts_file,
+                                                    wgt_file=case_wgts_file,
                                                     latlon_file=case_latlon_file,
                                                     method=case_method,
                                                     )
@@ -438,7 +439,7 @@ def regrid_and_vert_interp(adf):
 
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                         comp=comp,
-                                                        weight_file=baseline_wgts_file,
+                                                        wgt_file=baseline_wgts_file,
                                                         latlon_file=baseline_latlon_file,
                                                         method=base_method,
                                                        )
