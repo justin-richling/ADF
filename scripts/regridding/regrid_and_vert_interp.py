@@ -443,7 +443,7 @@ def regrid_and_vert_interp(adf):
                                                         latlon_file=baseline_latlon_file,
                                                         method=base_method,
                                                        )
-                                tgridded_output_loc   = Path(target_loc) / "regrid"
+                                tgridded_output_loc   = Path(target_loc) / "gridded"
                                 if not tgridded_output_loc.is_dir():
                                     print(f"    {tgridded_output_loc} not found, making new directory")
                                     tgridded_output_loc.mkdir(parents=True)
