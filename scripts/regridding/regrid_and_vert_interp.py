@@ -73,7 +73,7 @@ def regrid_and_vert_interp(adf):
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
-    input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
+    output_climo_locs   = adf.get_cam_info("cam_climo_loc", required=True)
 
     # SE to FV options
     case_latlon_files   = adf.latlon_files["test_latlon_file"]
@@ -255,11 +255,6 @@ def regrid_and_vert_interp(adf):
                     
                     tclim_ds = adf.data.load_reference_climo_dataset(target, var)
                     if tclim_ds is None:
-
-                    #if len(tclim_fils) > 1:
-                        #Combine all target files together into a single data set:
-                    #    tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
-                    #elif len(tclim_fils) == 0:
                         print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
                     else:
@@ -313,7 +308,7 @@ def regrid_and_vert_interp(adf):
                                 case_latlon_file = None
                                 #raise AdfError(msg)
 
-                            #Check if any a weights file exists if using native grid, OPTIONAL
+                            #Check if any a weights file exists if using native grid
                             case_wgts_file = case_wgts_files[case_idx]
                             if not case_wgts_file:
                                 msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
@@ -321,13 +316,20 @@ def regrid_and_vert_interp(adf):
 
                             case_method = case_methods[case_idx]
 
-                            # Grid unstructured climo if applicabple before regridding
-                            rgdata_interp = _regrid(mclim_ds, var,
+                            # Grid unstructured climo if applicable before regridding
+                            rgdata_interp = _regrid(adf, mclim_ds, var,
                                                     comp=comp,
                                                     wgt_file=case_wgts_file,
                                                     latlon_file=case_latlon_file,
                                                     method=case_method,
                                                     )
+                            
+                            output_test_loc = output_climo_locs[case_idx]
+                            rgridded_output_loc   = output_test_loc / "regrid"
+                            if not rgridded_output_loc.is_dir():
+                                print(f"    {rgridded_output_loc} not found, making new directory")
+                                rgridded_output_loc.mkdir(parents=True)
+                            save_to_nc(rgdata_interp, rgridded_output_loc)
 
                         else:
                             msg = "WARNING: No lat/lons but no grid info either. I guess this really is a problem!"
@@ -418,6 +420,7 @@ def regrid_and_vert_interp(adf):
                             if ('ncol' in tclim_ds.dims) or ('lndgrid' in tclim_ds.dims):
                                 print(f"\t    INFO: Looks like baseline case '{target}' is unstructured, eh?")
 
+                                #Check if any a FV file exists if using native grid
                                 baseline_latlon_file   = adf.latlon_files["baseline_latlon_file"]
                                 if not baseline_latlon_file:
                                     msg = "WARNING: This looks like an unstructured case, but missing lat/lon file"
@@ -425,7 +428,7 @@ def regrid_and_vert_interp(adf):
                                     baseline_latlon_file = None
                                     #raise AdfError(msg)
 
-                                #Check if any a weights file exists if using native grid, OPTIONAL
+                                #Check if any a weights file exists if using native grid
                                 baseline_wgts_file   = adf.latlon_wgt_files["baseline_wgts_file"]
                                 if not baseline_wgts_file:
                                     msg = "WARNING: This looks like an unstructured case, but missing weights file, can't continue."
@@ -433,13 +436,18 @@ def regrid_and_vert_interp(adf):
                                 
                                 base_method = adf.latlon_regrid_method["baseline_regrid_method"]
 
-                                # Grid unstructured climo if applicabple before regridding
+                                # Grid unstructured climo if applicable before regridding
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                         comp=comp,
                                                         wgt_file=baseline_wgts_file,
                                                         latlon_file=baseline_latlon_file,
                                                         method=base_method,
                                                        )
+                                tgridded_output_loc   = target_loc / "regrid"
+                                if not tgridded_output_loc.is_dir():
+                                    print(f"    {tgridded_output_loc} not found, making new directory")
+                                    tgridded_output_loc.mkdir(parents=True)
+                                save_to_nc(tgdata_interp, tgridded_output_loc)
                             else:
                                 msg = "WARNING: No lat/lons but no grid info either. I guess this really is a problem!"
                                 msg += "\n   You might want to look at the files. Only CAM (ncol) and CLM (lndgrd) native grids are acceptable."
