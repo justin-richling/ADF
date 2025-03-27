@@ -210,7 +210,7 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
     else:
         s_data = None #mdata.isel(time=0)
         d_data = None #latlon_ds[var_name]
-
+    print("AHHHHHH",d_data,"\n\n")
     #Grid model data to match target grid lat/lon:
     regridder = make_se_ts_regridder(weight_file=wgt_file,
                                     s_data = s_data,
