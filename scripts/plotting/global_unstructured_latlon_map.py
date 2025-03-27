@@ -276,7 +276,7 @@ def global_unstructured_latlon_map(adfobj):
                     pseasons[s] = (mseasons[s] - oseasons[s]) / np.abs(oseasons[s]) * 100.0 #relative change
 
                     ## calculate weights
-                    #wts = area * landfrac / (area * landfrac).sum()
+                    wts = area * landfrac / (area * landfrac).sum()
 
                     pf.plot_unstructured_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                       [syear_cases[case_idx],eyear_cases[case_idx]],
