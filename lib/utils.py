@@ -197,9 +197,9 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
         #mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
         s_data = model_dataset.landmask#.isel(time=0)
-        #d_data = latlon_ds.landmask
+        d_data = latlon_ds.landmask
 
-        # Combine dimensions from both datasets while keeping ds2 attributes
+        """# Combine dimensions from both datasets while keeping ds2 attributes
         d_data = xr.Dataset(
             coords={"lat": latlon_ds["lat"], "lon": latlon_ds["lon"], "time": time_file["time"]},
             attrs=latlon_ds.attrs  # Copy attributes from ds2
@@ -208,7 +208,7 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
         # Add the 'temperature' variable from ds2 to new_ds
         d_data["landmask"] = time_file["landmask"]
         print("AHHHHHH2",d_data,"\n\n")
-        d_data = d_data.landmask
+        d_data = d_data.landmask"""
     else:
         s_data = None #mdata.isel(time=0)
         d_data = None #latlon_ds[var_name]
