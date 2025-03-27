@@ -204,13 +204,15 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
             coords={"lat": latlon_ds["lat"], "lon": latlon_ds["lon"], "time": time_file["time"]},
             attrs=latlon_ds.attrs  # Copy attributes from ds2
         )
+        print("AHHHHHH",d_data,"\n\n")
         # Add the 'temperature' variable from ds2 to new_ds
         d_data["landmask"] = time_file["landmask"]
+        print("AHHHHHH2",d_data,"\n\n")
         d_data = d_data.landmask
     else:
         s_data = None #mdata.isel(time=0)
         d_data = None #latlon_ds[var_name]
-    print("AHHHHHH",d_data,"\n\n")
+    print("AHHHHHH3",d_data,"\n\n")
     #Grid model data to match target grid lat/lon:
     regridder = make_se_ts_regridder(weight_file=wgt_file,
                                     s_data = s_data,
