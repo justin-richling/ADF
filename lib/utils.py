@@ -237,7 +237,7 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
     #rgdata['lat'] = latlon_ds.lat #???
     if comp == "lnd":
         rgdata['landmask'] = latlon_ds.landmask
-        rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
+        rgdata['landfrac'] = rgdata.landfrac#.isel(time=0)
 
     """new_ds = xr.Dataset(
                         coords={"lat": ds1["lat"], "lon": ds1["lon"], "time": ds2["time"]},
