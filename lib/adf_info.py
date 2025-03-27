@@ -208,6 +208,9 @@ class AdfInfo(AdfConfig):
             #Check if any time series files are pre-made
             baseline_ts_done   = self.get_baseline_info("cam_ts_done")
 
+            baseline_mesh_file = self.get_baseline_info("mesh_file")
+            self.__baseline_mesh_file = baseline_mesh_file
+
             #Check if any a FV file exists if using native grid
             baseline_latlon_file   = self.get_baseline_info("latlon_file")
             self.__baseline_latlon_file = baseline_latlon_file
@@ -403,6 +406,10 @@ class AdfInfo(AdfConfig):
             unstructured_plotting = False
         self.__unstructured_plotting = unstructured_plotting
 
+        #Mesh file
+        mesh_file = self.get_basic_info('mesh_file')
+        self.__mesh_file = mesh_file
+
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
@@ -437,6 +444,12 @@ class AdfInfo(AdfConfig):
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
+
+        #Check if any a FV file exists if using native grid
+        cam_mesh_files   = self.get_cam_info("mesh_file")
+        if cam_mesh_files is None:
+            cam_mesh_files = [None]*len(case_names)
+        self.__cam_mesh_files = cam_mesh_files
 
         #Check if any a FV file exists if using native grid
         cam_latlon_files   = self.get_cam_info("latlon_file")
@@ -802,6 +815,28 @@ class AdfInfo(AdfConfig):
     def unstructured_plotting(self):
         """Return the "unstructured_plotting" logical to the user if requested."""
         return self.__unstructured_plotting
+
+    # Create property needed to return "num_procs" to user:
+    @property
+    def mesh_file(self):
+        """Return the "unstructured_plotting" logical to the user if requested."""
+        return self.__mesh_file
+
+
+    # Create property needed to return the case nicknames to user:
+    @property
+    def mesh_files(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        #Note that copies are needed in order to avoid having a script mistakenly
+        #modify these variables, as they are mutable and thus passed by reference:
+        cam_mesh_files = copy.copy(self.__cam_mesh_files)
+        
+        baseline_mesh_file = self.__baseline_mesh_file
+
+        return {"test_mesh_file":cam_mesh_files,"baseline_mesh_file":baseline_mesh_file}
+
+
 
     # Create property needed to return "num_procs" to user:
     @property
