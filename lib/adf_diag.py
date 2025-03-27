@@ -900,6 +900,7 @@ class AdfDiag(AdfWeb):
                         if not baseline:
                             wgts_file = wgts_file[case_idx]
                             method = method[case_idx]
+                            latlon_file = latlon_file[case_idx]
 
                         kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
                                 "method":method, "diag_var_list":self.diag_var_list, "case_name":case_name,
