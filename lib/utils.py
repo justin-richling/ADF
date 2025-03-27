@@ -91,7 +91,7 @@ import xarray as xr
 import xesmf
 import numpy as np
 
-def make_se_ts_regridder(weight_file,
+def make_se_ts_regridder(weight_file,s_data,d_data,
                       Method='coservative'
                       ):
     # Intialize dict for xesmf.Regridder
@@ -124,7 +124,14 @@ def make_se_ts_regridder(weight_file,
             "lat": ("lat", weights.yc_b.data.reshape(out_shape)[:, 0]),
             "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
         }
-    )         
+    )
+
+    if isinstance(s_data, xr.DataArray):
+        s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
+        dummy_in['mask']= s_mask
+    if isinstance(d_data, xr.DataArray):
+        d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
+        dummy_out['mask']= d_mask         
 
     # do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
@@ -194,7 +201,7 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
         d_data = None #latlon_ds[var_name]
 
     #Grid model data to match target grid lat/lon:
-    regridder = make_se_regridder(weight_file=wgt_file,
+    regridder = make_se_ts_regridder(weight_file=wgt_file,
                                     s_data = s_data,
                                     d_data = d_data,
                                     Method = method,
