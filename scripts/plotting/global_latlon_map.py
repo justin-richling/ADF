@@ -219,6 +219,13 @@ def global_latlon_map(adfobj):
             print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
             if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
                 unstruct_base = True
+                odataset = adfobj.data.load_reference_regrid_dataset(base_name, var) 
+                area = odataset.area.isel(time=0)
+                landfrac = odataset.landfrac.isel(time=0)
+                # calculate weights
+                wgt_base = area * landfrac / (area * landfrac).sum()
+
+                #vres["wgt"] = wgt
             #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
             #continue
         '''if comp == "lnd":
@@ -271,7 +278,30 @@ def global_latlon_map(adfobj):
             has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
             if (not has_dims['has_lat']) or (not has_dims['has_lon']):
                 print(f"\t    WARNING: skipping global map for {var} for case {case_name} as it does not have both lat and lon")
-                unstruct_case = True
+                if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
+                    unstruct_case = True
+                    #Load climo model files: TODO, this is kind of clunky, but functional
+                    # read in dataset for area & landfrac
+                    mdata = adfobj.data.load_climo_dataset(case_name, var) 
+                    area = mdata.area.isel(time=0)
+                    landfrac = mdata.landfrac.isel(time=0)
+                    # now read in mdata as a data array to get scale_factor
+                    mdata = adfobj.data.load_climo_da(case_name, var)
+                    #odata.attrs = mdata.attrs # copy attributes back to base case
+
+                    # calculate weights
+                    wgt = area * landfrac / (area * landfrac).sum()
+                    if len(wgt.n_face) == len(wgt_base.n_face):
+                        vres["wgt"] = wgt
+                        has_dims = {}
+                        has_dims['has_lev'] = False
+                    else:
+                        print("The weights are different between test and baseline. Won't continue, eh.")
+                        return
+
+
+
+
                 #continue
             else: # i.e., has lat&lon
                 if (has_dims['has_lev']) and (not pres_levs):

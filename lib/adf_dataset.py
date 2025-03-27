@@ -242,7 +242,7 @@ class AdfData:
     #------------------
 
     # Test case(s)
-    def get_regrid_file(self, case, field):
+    def get_regrid_file(self, case, field, **kwargs):
         """Return list of test regridded files"""
         model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
         rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
@@ -255,7 +255,7 @@ class AdfData:
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, **kwargs)
 
     
     def load_regrid_da(self, case, field, **kwargs):
@@ -269,8 +269,13 @@ class AdfData:
 
 
     # Reference case (baseline/obs)
-    def get_ref_regrid_file(self, case, field):
+    def get_ref_regrid_file(self, case, field, **kwargs):
         """Return list of reference regridded files"""
+        """if "unstructured_plotting" in kwargs:
+            unstructured_plotting = kwargs["unstructured_plotting"]
+        if unstructured_plotting:
+            hist_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
+            fils = sorted(model_rg_loc.glob(f"{case}_{field}_baseline.nc"))"""
         if self.adf.compare_obs:
             obs_loc = self.ref_var_loc.get(field, None)
             if obs_loc:
@@ -283,9 +288,9 @@ class AdfData:
         return fils
 
 
-    def load_reference_regrid_dataset(self, case, field):
+    def load_reference_regrid_dataset(self, case, field, **kwargs):
         """Return a data set to be used as reference (aka baseline) for variable field."""
-        fils = self.get_ref_regrid_file(case, field)
+        fils = self.get_ref_regrid_file(case, field, **kwargs)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
@@ -295,7 +300,7 @@ class AdfData:
     def load_reference_regrid_da(self, case, field, **kwargs):
         """Return a data array to be used as reference (aka baseline) for variable field."""
         add_offset, scale_factor = self.get_value_converters(case, field)
-        fils = self.get_ref_regrid_file(case, field)
+        fils = self.get_ref_regrid_file(case, field, **kwargs)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
