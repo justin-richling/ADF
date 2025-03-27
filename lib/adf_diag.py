@@ -892,6 +892,7 @@ class AdfDiag(AdfWeb):
                     if adf_utils.check_unstructured(ts_file_ds, case_name):
                         print()
                         latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
+                        print("latlon_file",latlon_file,"\n")
                         #latlon_file = ts_0
                         time_file = ts_0
                         wgts_file = self.latlon_wgt_files[f"{case_type_string}_wgts_file"]
