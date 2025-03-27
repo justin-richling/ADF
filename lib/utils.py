@@ -25,6 +25,7 @@ def grid_timeseries(**kwargs):
     method = kwargs["method"]
     weight_file = kwargs["wgts_file"]
     latlon_file = kwargs["latlon_file"]
+    time_file = kwargs["time_file"]
     comp = kwargs["comp"]
     diag_var_list = kwargs["diag_var_list"]
     case_name = kwargs["case_name"]
@@ -54,6 +55,7 @@ def grid_timeseries(**kwargs):
         rgdata = unstructure_regrid(ts_ds, var, comp=comp,
                                     wgt_file=weight_file,
                                     latlon_file=latlon_file,
+                                    time_file=time_file,
                                     method=method)
         # Copy global attributes
         rgdata.attrs = ts_ds.attrs.copy()
@@ -153,7 +155,7 @@ import numpy as np
 
 #def unstructure_regrid(model_dataset, var_name, comp, weight_file, latlon_file, method):
 #def unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file=None):
-def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwargs):
+def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, time_file, **kwargs):
     """
     Function that takes a variable from a model xarray
     dataset, regrids it to another dataset's lat/lon
@@ -195,7 +197,16 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
         #mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
         s_data = model_dataset.landmask#.isel(time=0)
-        d_data = latlon_ds.landmask
+        #d_data = latlon_ds.landmask
+
+        # Combine dimensions from both datasets while keeping ds2 attributes
+        d_data = xr.Dataset(
+            coords={"lat": latlon_ds["lat"], "lon": latlon_ds["lon"], "time": time_file["time"]},
+            attrs=latlon_ds.attrs  # Copy attributes from ds2
+        )
+        # Add the 'temperature' variable from ds2 to new_ds
+        d_data["landmask"] = time_file["landmask"]
+        d_data = d_data.landmask
     else:
         s_data = None #mdata.isel(time=0)
         d_data = None #latlon_ds[var_name]
