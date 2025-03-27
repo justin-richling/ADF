@@ -883,7 +883,7 @@ class AdfDiag(AdfWeb):
                 # End with
 
                 # DOES NOT WORK CORRECTLY!
-                grid_ts = True
+                grid_ts = False
                 if grid_ts:
                     # TEMPORARY: do a quick check if this on native grid and regrid
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
