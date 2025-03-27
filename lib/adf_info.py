@@ -397,6 +397,12 @@ class AdfInfo(AdfConfig):
         #Plot directory:
         plot_dir = self.get_basic_info('cam_diag_plot_loc', required=True)
 
+        #Unstructured plotting:
+        unstructured_plotting = self.get_basic_info('unstructured_plotting')
+        if not unstructured_plotting:
+            unstructured_plotting = False
+        self.__unstructured_plotting = unstructured_plotting
+
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
 
@@ -790,6 +796,12 @@ class AdfInfo(AdfConfig):
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable, as it is mutable and thus passed by reference:
         return copy.copy(self.__cam_bl_climo_info)
+
+    # Create property needed to return "num_procs" to user:
+    @property
+    def unstructured_plotting(self):
+        """Return the "unstructured_plotting" logical to the user if requested."""
+        return self.__unstructured_plotting
 
     # Create property needed to return "num_procs" to user:
     @property

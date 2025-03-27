@@ -104,6 +104,15 @@ def global_latlon_map(adfobj):
     #all generated plots and tables for each case:
     plot_locations = adfobj.plot_location
 
+    kwargs = {}
+
+    #
+    unstruct_plotting = adfobj.unstructured_plotting
+    if unstruct_plotting:
+        kwargs["unstruct_plotting"] = unstruct_plotting
+        mesh_file = adfobj.mesh_file
+        kwargs["mesh_file"] = mesh_file
+
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
@@ -197,10 +206,10 @@ def global_latlon_map(adfobj):
                 #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
                 continue"""
 
-        odata = adfobj.data.load_reference_regrid_da(base_name, var)
+
+        odata = adfobj.data.load_reference_regrid_da(base_name, var, **kwargs)
 
         if odata is None:
-            
             dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
             #dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, will"
             adfobj.debug_log(dmsg)
@@ -208,8 +217,10 @@ def global_latlon_map(adfobj):
         o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
         if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
             print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
+            if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
+                unstruct_base = True
             #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
-            continue
+            #continue
         '''if comp == "lnd":
             #f"\t    INOF: Unstructured grid, so global map for {var} does not have lat and lon"
             #odata = adfobj.data.load_reference_climo_da(base_name, var)
@@ -250,8 +261,7 @@ def global_latlon_map(adfobj):
                 plot_loc.mkdir(parents=True)
 
 
-            
-            mdata = adfobj.data.load_regrid_da(case_name, var)
+            mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
             #Skip this variable/case if the regridded climo file doesn't exist:
             if mdata is None:
                 dmsg = f"\t    WARNING: No regridded test file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
@@ -261,7 +271,8 @@ def global_latlon_map(adfobj):
             has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
             if (not has_dims['has_lat']) or (not has_dims['has_lon']):
                 print(f"\t    WARNING: skipping global map for {var} for case {case_name} as it does not have both lat and lon")
-                continue
+                unstruct_case = True
+                #continue
             else: # i.e., has lat&lon
                 if (has_dims['has_lev']) and (not pres_levs):
                     print(f"\t    WARNING: skipping global map for {var} as it has more than lev dimension, but no pressure levels were provided")
@@ -344,7 +355,7 @@ def global_latlon_map(adfobj):
                     print("The weights are different between test and baseline. Won't continue, eh.")
                     return'''
 
-            """if (not unstruct_case) and (unstruct_base):
+            if (not unstruct_case) and (unstruct_base):
                 print("Base is unstructured but Test is lat/lon. Can't continue?")
                 return
             if (unstruct_case) and (not unstruct_base):
@@ -353,7 +364,7 @@ def global_latlon_map(adfobj):
             if (unstruct_case) and (unstruct_base):
                 unstructured=True
             if (not unstruct_case) and (not unstruct_base):
-                unstructured=False"""
+                unstructured=False
             # Check output file. If file does not exist, proceed.
             # If file exists:
             #   if redo_plot is true: delete it now and make plot

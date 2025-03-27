@@ -249,7 +249,7 @@ class AdfData:
         return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_regridded.nc"))
 
 
-    def load_regrid_dataset(self, case, field):
+    def load_regrid_dataset(self, case, field, **kwargs):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_regrid_file(case, field)
         if not fils:
@@ -258,14 +258,14 @@ class AdfData:
         return self.load_dataset(fils)
 
     
-    def load_regrid_da(self, case, field):
+    def load_regrid_da(self, case, field, **kwargs):
         """Return a data array to be used as reference (aka baseline) for variable field."""
         add_offset, scale_factor = self.get_value_converters(case, field)
         fils = self.get_regrid_file(case, field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regrid file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor, **kwargs)
 
 
     # Reference case (baseline/obs)
@@ -292,7 +292,7 @@ class AdfData:
         return self.load_dataset(fils)
 
     
-    def load_reference_regrid_da(self, case, field):
+    def load_reference_regrid_da(self, case, field, **kwargs):
         """Return a data array to be used as reference (aka baseline) for variable field."""
         add_offset, scale_factor = self.get_value_converters(case, field)
         fils = self.get_ref_regrid_file(case, field)
@@ -303,7 +303,7 @@ class AdfData:
         # listed in variable defaults for this observation field
         if self.adf.compare_obs:
             field = self.ref_var_nam[field]
-        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, field, add_offset=add_offset, scale_factor=scale_factor, **kwargs)
 
     #------------------
 
@@ -317,6 +317,9 @@ class AdfData:
     def load_dataset(self, fils, **kwargs):
         """Return xarray DataSet from file(s)"""
         #if (len(fils) == 0):
+        if "unstructured_plotting" in kwargs:
+            unstructured_plotting = kwargs["unstructured_plotting"]
+
         if not fils:
             warnings.warn("\t    WARNING: Input file list is empty.")
             return None
@@ -327,9 +330,17 @@ class AdfData:
             if not Path(sfil).is_file():
                 warnings.warn(f"\t    WARNING: Expecting to find file: {sfil}")
                 return None
-            #mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
-            mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
-            ds = ux.open_dataset(mesh, sfil)
+            if unstructured_plotting:
+                #mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
+                if "mesh_file" not in kwargs:
+                    msg = "\t   WARNING: Unstructured plotting is requested, but no available mesh file."
+                    msg += " Please make sure 'mesh_file' is declared in 'diag_basic_info' in config file"
+                    print(msg)
+                    ds = None
+                mesh = kwargs["mesh_file"]
+                ds = ux.open_dataset(mesh, sfil)
+            else:
+                ds = xr.open_dataset(sfil)
             """ds = xr.open_dataset(sfil)
 
             if ('ncol' in ds.dims) or ('lndgrd' in ds.dims):
@@ -342,7 +353,7 @@ class AdfData:
     # Load DataArray
     def load_da(self, fils, variablename, **kwargs):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
-        ds = self.load_dataset(fils)
+        ds = self.load_dataset(fils, **kwargs)
         if ds is None:
             warnings.warn(f"\t    WARNING: Load failed for {variablename}")
             return None
