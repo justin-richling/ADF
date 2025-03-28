@@ -215,8 +215,11 @@ def global_latlon_map(adfobj):
             adfobj.debug_log(dmsg)
             continue
         o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
-        if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
+        #if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
+        if ('lat' not in odata.dims) and ('lon' not in odata.dims):
             print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
+            print(f"\t      - Checking if this an unstructured plot request, boi.")
+
             if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
                 unstruct_base = True
                 odataset = adfobj.data.load_reference_regrid_dataset(base_name, var) 
