@@ -206,9 +206,9 @@ def global_latlon_map(adfobj):
                 #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
                 continue"""
 
-
+        print("Checking baseline data:")
         odata = adfobj.data.load_reference_regrid_da(base_name, var, **kwargs)
-
+        print("Baseline data:")
         if odata is None:
             dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
             #dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, will"

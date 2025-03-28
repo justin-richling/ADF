@@ -292,7 +292,7 @@ class AdfData:
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_ref_regrid_file(case, field, **kwargs)
         if not fils:
-            warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
+            warnings.warn(f"\t  DATASET  WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
         return self.load_dataset(fils)
 
@@ -302,7 +302,7 @@ class AdfData:
         add_offset, scale_factor = self.get_value_converters(case, field)
         fils = self.get_ref_regrid_file(case, field, **kwargs)
         if not fils:
-            warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
+            warnings.warn(f"\t  DATAARRAY  WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
         #Change the variable name from CAM standard to what is
         # listed in variable defaults for this observation field
