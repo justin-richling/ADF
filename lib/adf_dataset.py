@@ -184,20 +184,20 @@ class AdfData:
     #------------------
 
     # Test case(s)
-    def load_climo_da(self, case, variablename):
+    def load_climo_da(self, case, variablename, **kwargs):
         """Return DataArray from climo file"""
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_climo_file(case, variablename)
-        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor, **kwargs)
 
 
-    def load_climo_dataset(self, case, field):
+    def load_climo_dataset(self, case, field, **kwargs):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_climo_file(case, field)
         if not fils:
             #warnings.warn(f"\t    WARNING: Did not find climo file for variable: {field}. Will try to skip.")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, **kwargs)
 
     
     def get_climo_file(self, case, variablename):
@@ -209,19 +209,19 @@ class AdfData:
 
 
     # Reference case (baseline/obs)
-    def load_reference_climo_da(self, case, variablename):
+    def load_reference_climo_da(self, case, variablename, **kwargs):
         """Return DataArray from reference (aka baseline) climo file"""
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         fils = self.get_reference_climo_file(variablename)
-        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor)
+        return self.load_da(fils, variablename, add_offset=add_offset, scale_factor=scale_factor, **kwargs)
 
-    def load_reference_climo_dataset(self, case, field):
+    def load_reference_climo_dataset(self, case, field, **kwargs):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_reference_climo_file(field)
         if not fils:
             #warnings.warn(f"WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, **kwargs)
 
 
     def get_reference_climo_file(self, var):
@@ -242,7 +242,7 @@ class AdfData:
     #------------------
 
     # Test case(s)
-    def get_regrid_file(self, case, field, **kwargs):
+    def get_regrid_file(self, case, field):
         """Return list of test regridded files"""
         model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
         rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
@@ -269,7 +269,7 @@ class AdfData:
 
 
     # Reference case (baseline/obs)
-    def get_ref_regrid_file(self, case, field, **kwargs):
+    def get_ref_regrid_file(self, case, field):
         """Return list of reference regridded files"""
         """if "unstructured_plotting" in kwargs:
             unstructured_plotting = kwargs["unstructured_plotting"]
@@ -290,17 +290,17 @@ class AdfData:
 
     def load_reference_regrid_dataset(self, case, field, **kwargs):
         """Return a data set to be used as reference (aka baseline) for variable field."""
-        fils = self.get_ref_regrid_file(case, field, **kwargs)
+        fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"\t  DATASET  WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, **kwargs)
 
     
     def load_reference_regrid_da(self, case, field, **kwargs):
         """Return a data array to be used as reference (aka baseline) for variable field."""
         add_offset, scale_factor = self.get_value_converters(case, field)
-        fils = self.get_ref_regrid_file(case, field, **kwargs)
+        fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"\t  DATAARRAY  WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
