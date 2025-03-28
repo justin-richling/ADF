@@ -323,6 +323,7 @@ class AdfData:
         """Return xarray DataSet from file(s)"""
         #if (len(fils) == 0):
         #if "unstructured_plotting" in kwargs:
+        print("kwargs adf dataset:",kwargs)
         unstructured_plotting = kwargs.get("unstructured_plotting",False)
 
         if not fils:
