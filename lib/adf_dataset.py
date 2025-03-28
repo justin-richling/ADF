@@ -336,6 +336,7 @@ class AdfData:
                 warnings.warn(f"\t    WARNING: Expecting to find file: {sfil}")
                 return None
             if unstructured_plotting:
+                print("IS IT COMING HERE (unstructured_plotting)??????")
                 #mesh = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'
                 if "mesh_file" not in kwargs:
                     msg = "\t   WARNING: Unstructured plotting is requested, but no available mesh file."
