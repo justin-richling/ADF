@@ -322,8 +322,8 @@ class AdfData:
     def load_dataset(self, fils, **kwargs):
         """Return xarray DataSet from file(s)"""
         #if (len(fils) == 0):
-        if "unstructured_plotting" in kwargs:
-            unstructured_plotting = kwargs.get("unstructured_plotting",False)
+        #if "unstructured_plotting" in kwargs:
+        unstructured_plotting = kwargs.get("unstructured_plotting",False)
 
         if not fils:
             warnings.warn("\t    WARNING: Input file list is empty.")
