@@ -323,7 +323,7 @@ class AdfData:
         """Return xarray DataSet from file(s)"""
         #if (len(fils) == 0):
         if "unstructured_plotting" in kwargs:
-            unstructured_plotting = kwargs["unstructured_plotting"]
+            unstructured_plotting = kwargs.get("unstructured_plotting",False)
 
         if not fils:
             warnings.warn("\t    WARNING: Input file list is empty.")

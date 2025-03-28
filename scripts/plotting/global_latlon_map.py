@@ -108,11 +108,12 @@ def global_latlon_map(adfobj):
 
     #
     unstruct_plotting = adfobj.unstructured_plotting
+    print("unstruct_plotting", unstruct_plotting)
     if unstruct_plotting:
         kwargs["unstruct_plotting"] = unstruct_plotting
         mesh_file = adfobj.mesh_file
         kwargs["mesh_file"] = mesh_file
-
+    print("kwargs", kwargs)
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
