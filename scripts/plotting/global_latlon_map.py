@@ -210,7 +210,7 @@ def global_latlon_map(adfobj):
         print("Checking baseline data:")
 
         if unstruct_plotting:
-            odata = adfobj.data.load_reference_climo_da(base_name, var)
+            odata = adfobj.data.load_reference_climo_da(base_name, var, **kwargs)
             if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
                 unstruct_base = True
                 odataset = adfobj.data.load_reference_climo_dataset(base_name, var, **kwargs) 
@@ -285,7 +285,7 @@ def global_latlon_map(adfobj):
                 plot_loc.mkdir(parents=True)
 
             if unstruct_plotting:
-                mdata = adfobj.data.load_climo_da(case_name, var)
+                mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
                 if ('ncol' in mdata.dims) or ('lndgrid' in mdata.dims):
                     unstruct_case = True
                     mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
