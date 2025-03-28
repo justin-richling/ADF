@@ -345,6 +345,7 @@ class AdfData:
                 mesh = kwargs["mesh_file"]
                 ds = ux.open_dataset(mesh, sfil)
             else:
+                print("IS IT COMING HERE??????")
                 ds = xr.open_dataset(sfil)
             """ds = xr.open_dataset(sfil)
 
