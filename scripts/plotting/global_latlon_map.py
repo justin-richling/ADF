@@ -421,14 +421,17 @@ def global_latlon_map(adfobj):
                 else:
                     print("The weights are different between test and baseline. Won't continue, eh.")
                     return'''
-            print("\n\n",len(wgt_base.n_face),"\n\n")
-            if len(wgt.n_face) == len(wgt_base.n_face):
+            print("\n\n",wgt_base.dims,"\n\n")
+            vres["wgt"] = wgt
+            has_dims = {}
+            has_dims['has_lev'] = False
+            """if len(wgt.n_face) == len(wgt_base.n_face):
                     vres["wgt"] = wgt
                     has_dims = {}
                     has_dims['has_lev'] = False
             else:
                 print("The weights are different between test and baseline. Won't continue, eh.")
-                return
+                return"""
 
             if (not unstruct_case) and (unstruct_base):
                 print("Base is unstructured but Test is lat/lon. Can't continue?")
