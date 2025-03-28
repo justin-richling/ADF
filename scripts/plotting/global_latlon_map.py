@@ -285,15 +285,14 @@ def global_latlon_map(adfobj):
                 plot_loc.mkdir(parents=True)
 
             if unstruct_plotting:
-                mdata = adfobj.data.load_climo_da(base_name, var)
+                mdata = adfobj.data.load_climo_da(case_name, var)
                 if ('ncol' in mdata.dims) or ('lndgrid' in mdata.dims):
-                    unstruct_base = True
-                    odataset = adfobj.data.load_climo_dataset(case_name, var) 
-                    area = odataset.area.isel(time=0)
-                    landfrac = odataset.landfrac.isel(time=0)
+                    unstruct_case = True
+                    mdataset = adfobj.data.load_climo_dataset(case_name, var) 
+                    area = mdataset.area.isel(time=0)
+                    landfrac = mdataset.landfrac.isel(time=0)
                     # calculate weights
                     wgt = area * landfrac / (area * landfrac).sum()
-                unstruct_case = True
             else:
                 mdata = adfobj.data.load_regrid_da(base_name, var, **kwargs)    
 
