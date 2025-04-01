@@ -797,13 +797,18 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         else:
             domain = [-180, 180, -90, -45]
 
-    # statistics for annotation (these are scalars):
+    """# statistics for annotation (these are scalars):
     d1_region_mean, d1_region_max, d1_region_min = domain_stats(d1, domain)
     d2_region_mean, d2_region_max, d2_region_min = domain_stats(d2, domain)
     dif_region_mean, dif_region_max, dif_region_min = domain_stats(dif, domain)
-    pct_region_mean, pct_region_max, pct_region_min = domain_stats(pct, domain)
+    pct_region_mean, pct_region_max, pct_region_min = domain_stats(pct, domain)"""
 
     if not unstructured:
+        # statistics for annotation (these are scalars):
+        d1_region_mean, d1_region_max, d1_region_min = domain_stats(d1, domain)
+        d2_region_mean, d2_region_max, d2_region_min = domain_stats(d2, domain)
+        dif_region_mean, dif_region_max, dif_region_min = domain_stats(dif, domain)
+        pct_region_mean, pct_region_max, pct_region_min = domain_stats(pct, domain)
         #downsize to the specified region; makes plotting/rendering/saving much faster
         d1 = d1.sel(lat=slice(domain[2],domain[3]))
         d2 = d2.sel(lat=slice(domain[2],domain[3]))
