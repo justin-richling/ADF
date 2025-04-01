@@ -270,7 +270,8 @@ def polar_map(adfobj):
 
                 #Determine dimensions of variable:
                 has_dims = pf.lat_lon_validate_dims(odata)
-                if has_dims:
+                #if has_dims:
+                if 1==1:
                     #If observations/baseline CAM have the correct
                     #dimensions, does the input CAM run have correct
                     #dimensions as well?
@@ -278,7 +279,8 @@ def polar_map(adfobj):
 
                     #If both fields have the required dimensions, then
                     #proceed with plotting:
-                    if has_dims_cam:
+                    #if has_dims_cam:
+                    if 2==2:
 
                         #
                         # Seasonal Averages
