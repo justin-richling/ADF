@@ -1,6 +1,7 @@
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
-                      mdlfld, obsfld, diffld, pctld, obs=False, **kwargs):
+                      mdlfld, obsfld, diffld, pctld, unstructured=False,
+                      obs=False, **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
 
     Parameters
@@ -58,24 +59,35 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
     # preprocess
-    # - assume all three fields have same lat/lon
-    lat = obsfld['lat']
-    wgt = np.cos(np.radians(lat))
-    mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
-    owrap, _ = add_cyclic_point(obsfld, coord=obsfld['lon'])
-    dwrap, _ = add_cyclic_point(diffld, coord=diffld['lon'])
-    pwrap, _ = add_cyclic_point(pctld, coord=pctld['lon'])
-    wrap_fields = (mwrap, owrap, pwrap, dwrap)
-    # mesh for plots:
-    lons, lats = np.meshgrid(lon, lat)
-    # Note: using wrapped data makes spurious lines across plot (maybe coordinate dependent)
-    lon2, lat2 = np.meshgrid(mdlfld['lon'], mdlfld['lat'])
+    if not unstructured:
+        # - assume all three fields have same lat/lon
+        lat = obsfld['lat']
+        wgt = np.cos(np.radians(lat))
+        mwrap, lon = add_cyclic_point(mdlfld, coord=mdlfld['lon'])
+        owrap, _ = add_cyclic_point(obsfld, coord=obsfld['lon'])
+        dwrap, _ = add_cyclic_point(diffld, coord=diffld['lon'])
+        pwrap, _ = add_cyclic_point(pctld, coord=pctld['lon'])
+        wrap_fields = (mwrap, owrap, pwrap, dwrap)
+        # mesh for plots:
+        lons, lats = np.meshgrid(lon, lat)
+        # Note: using wrapped data makes spurious lines across plot (maybe coordinate dependent)
+        lon2, lat2 = np.meshgrid(mdlfld['lon'], mdlfld['lat'])
 
-    # get statistics (from non-wrapped)
-    fields = (mdlfld, obsfld, diffld, pctld)
-    area_avg = [spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
+        # get statistics (from non-wrapped)
+        fields = (mdlfld, obsfld, diffld, pctld)
+        area_avg = [spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
 
-    d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
+        d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
+        # specify the central longitude for the plot
+        central_longitude = kwargs.get('central_longitude', 180)
+    else:
+        wgt = kwargs["wgt"]
+        wrap_fields = (mdlfld, obsfld, diffld, pctld)
+        area_avg = [global_average(x, wgt) for x in wrap_fields]
+
+        # TODO Check this is correct, weighted rmse uses xarray weighted function
+        #d_rmse = wgt_rmse(a, b, wgt)  
+        d_rmse = (np.sqrt(((diffld**2)*wgt).sum())).values.item()
 
     # We should think about how to do plot customization and defaults.
     # Here I'll just pop off a few custom ones, and then pass the rest into mpl.
@@ -91,11 +103,10 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         tiFontSize = 8
     #End if
 
+    central_longitude = kwargs.get('central_longitude', 180)
+
     # generate dictionary of contour plot settings:
     cp_info = prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
-
-    # specify the central longitude for the plot
-    central_longitude = kwargs.get('central_longitude', 180)
 
     # create figure object
     fig = plt.figure(figsize=(14,10))
@@ -134,15 +145,37 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
-
-        levs = np.unique(np.array(levels))
-        if len(levs) < 2:
-            img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
-            ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
+        
+        # Unstructured grid check
+        if not unstructured:
+            levs = np.unique(np.array(levels))
+            if len(levs) < 2:
+                img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
+                ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
+            else:
+                img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
+            #End if
         else:
-            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
-        #End if
-        ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
+            #configure for polycollection plotting
+            #TODO, would be nice to have levels set from the info, above
+            ac = a.to_polycollection(projection=proj)
+            img.append(ac)
+            #ac.norm(norm)
+            ac.set_cmap(cmap)
+            ac.set_antialiased(False)
+            ac.set_transform(proj)
+            ac.set_clim(vmin=levels[0],vmax=levels[-1])
+            ax[i].add_collection(ac)
+            if i > 0:
+                cbar = plt.colorbar(ac, ax=ax[i], orientation='vertical', 
+                                    pad=0.05, shrink=0.8, **cp_info['colorbar_opt'])
+                #TODO keep variable attributes on dataarrays
+                #cbar.set_label(wrap_fields[i].attrs['units'])
+        # End if unstructured grid
+
+        #ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
+        ax[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
+                     loc='right', fontsize=tiFontSize)
 
         # add contour lines <- Unused for now -JN
         # TODO: add an option to turn this on -BM
@@ -167,6 +200,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
         ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)
 
+    """
     #Set stats: area_avg
     ax[0].set_title(f"Mean: {mdlfld.weighted(wgt).mean().item():5.2f}\nMax: {mdlfld.max():5.2f}\nMin: {mdlfld.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
@@ -176,7 +210,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                        fontsize=tiFontSize)
     ax[3].set_title(f"Mean: {diffld.weighted(wgt).mean().item():5.2f}\nMax: {diffld.max():5.2f}\nMin: {diffld.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-
+    """
     # set rmse title:
     ax[3].set_title(f"RMSE: {d_rmse:.3f}", fontsize=tiFontSize)
     ax[3].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
