@@ -725,9 +725,13 @@ def domain_stats(data, domain):
 
 
 
-def make_polar_plot(wks, case_nickname, base_nickname,
+"""def make_polar_plot(wks, case_nickname, base_nickname,
                     case_climo_yrs, baseline_climo_yrs,
                     d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,pctchange:Optional[xr.DataArray]=None,
+                    domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False, unstructured=False, **kwargs):"""
+def make_polar_plot(wks, case_nickname, base_nickname,
+                    case_climo_yrs, baseline_climo_yrs,
+                    d1, d2, difference=None,pctchange=None,
                     domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False, unstructured=False, **kwargs):
 
     """Make a stereographic polar plot for the given data and hemisphere.
@@ -941,6 +945,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     if unstructured:
         # Loop over data arrays to make plots
         for i, a in enumerate(wrap_fields):
+            print("AHHHHHH",i)
             if i == len(wrap_fields)-2:
                 levels = cp_info['levelsdiff']
                 cmap = cp_info['cmapdiff']
