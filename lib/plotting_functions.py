@@ -897,8 +897,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     if max(np.abs(levelsdiff)) > 10*absmaxdif:
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
-    
-    
+
     #End if
     #-------------------------------
 
@@ -915,6 +914,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     else:
         cmappct = "PuOr_r"
     #End if
+
+    norms = [norm1,norm1,dnorm,pctnorm]
 
     # -- end options
 
@@ -955,7 +956,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             #configure for polycollection plotting
             #TODO, would be nice to have levels set from the info, above
             ac = a.to_polycollection(projection=proj)
-            ac.norm(norm)
+            ac.norm(norms[i])
             ac.set_cmap(cmap)
             ac.set_antialiased(False)
             ac.set_transform(proj)
