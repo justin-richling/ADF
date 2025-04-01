@@ -215,14 +215,14 @@ def polar_map(adfobj):
                     print(f"    {plot_loc} not found, making new directory")
                     plot_loc.mkdir(parents=True)
 
-                # load re-gridded model files:
+                """# load re-gridded model files:
                 mdata = adfobj.data.load_regrid_da(case_name, var)
                 if mdata is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
                     print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
-                #End if
+                #End if"""
 
                 if unstruct_plotting:
                     mesh_file = adfobj.mesh_files["test_mesh_file"][case_idx]
@@ -238,6 +238,13 @@ def polar_map(adfobj):
                         wgt = area * landfrac / (area * landfrac).sum()
                 else:
                     mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
+
+                if mdata is None:
+                    print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
+                    print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
+                    print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
+                    continue
+                #End if
 
                 vres["wgt"] = wgt
                 has_dims = {}
