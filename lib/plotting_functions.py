@@ -1050,6 +1050,22 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     [a.set_extent(domain, ccrs.PlateCarree()) for a in [axs[0], axs[1], axs[2], axs[3]]]
     [a.coastlines() for a in [axs[0], axs[1], axs[2], axs[3]]]
 
+    for a in axs:
+        a.coastlines()
+        a.set_extent([-180, 180, 50, 90], ccrs.PlateCarree())
+        # __Follow the cartopy gallery example to make circular__:
+        # Compute a circle in axes coordinates, which we can use as a boundary
+        # for the map. We can pan/zoom as much as we like - the boundary will be
+        # permanently circular.
+        theta = np.linspace(0, 2*np.pi, 100)
+        center, radius = [0.5, 0.5], 0.5
+        verts = np.vstack([np.sin(theta), np.cos(theta)]).T
+        circle = mpl.path.Path(verts * radius + center)
+        a.set_boundary(circle, transform=a.transAxes)
+        a.gridlines(draw_labels=False, crs=ccrs.PlateCarree(), 
+                    w=1, color="gray",y_inline=True, 
+                    xlocs=range(-180,180,90), ylocs=range(0,90,10))
+
     # __Follow the cartopy gallery example to make circular__:
     # Compute a circle in axes coordinates, which we can use as a boundary
     # for the map. We can pan/zoom as much as we like - the boundary will be
@@ -1546,6 +1562,19 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         #ax[i].clabel(cs[i], cs[i].levels, inline=True, fontsize=tiFontSize-2, fmt='%1.1f')
         #ax[i].text( 10, -140, "CONTOUR FROM {} to {} by {}".format(min(cs[i].levels), max(cs[i].levels), cs[i].levels[1]-cs[i].levels[0]),
         #bbox=dict(facecolor='none', edgecolor='black'), fontsize=tiFontSize-2)
+
+    # Custom setting for each subplot
+    for a in ax:
+        a.coastlines()
+        #if projection=='global':
+        a.set_global()
+        a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+        a.set_xticks(np.linspace(-180, 120, 6), crs=proj)
+        a.set_yticks(np.linspace(-90, 90, 7), crs=proj)
+        a.tick_params('both', length=5, width=1.5, which='major')
+        a.tick_params('both', length=5, width=1.5, which='minor')
+        a.xaxis.set_major_formatter(lon_formatter)
+        a.yaxis.set_major_formatter(lat_formatter)
 
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
     st.set_y(0.85)
