@@ -1063,7 +1063,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         circle = mpl.path.Path(verts * radius + center)
         a.set_boundary(circle, transform=a.transAxes)
         a.gridlines(draw_labels=False, crs=ccrs.PlateCarree(), 
-                    w=1, color="gray",y_inline=True, 
+                    lw=1, color="gray",y_inline=True, 
                     xlocs=range(-180,180,90), ylocs=range(0,90,10))
 
     # __Follow the cartopy gallery example to make circular__:
