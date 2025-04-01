@@ -268,6 +268,8 @@ def polar_map(adfobj):
                 if (not unstruct_case) and (not unstruct_base):
                     unstructured=False
 
+                print("unstructured=",unstructured,"\n")
+
                 #Determine dimensions of variable:
                 has_dims = pf.lat_lon_validate_dims(odata)
                 #if has_dims:
