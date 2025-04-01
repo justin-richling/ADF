@@ -287,7 +287,8 @@ def global_latlon_map(adfobj):
 
             if unstruct_plotting:
                 mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
-                if ('ncol' in mdata.dims) or ('lndgrid' in mdata.dims):
+                #if ('ncol' in mdata.dims) or ('lndgrid' in mdata.dims):
+                if 1==1:
                     unstruct_case = True
                     mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
                     area = mdataset.area.isel(time=0)
