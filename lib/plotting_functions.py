@@ -945,7 +945,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     if unstructured:
         # Loop over data arrays to make plots
         for i, a in enumerate(wrap_fields):
-            print("AHHHHHH",i)
+            print("AHHHHHH",i,type(a))
             if i == len(wrap_fields)-2:
                 levels = cp_info['levelsdiff']
                 cmap = cp_info['cmapdiff']
