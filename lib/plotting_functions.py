@@ -968,11 +968,11 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             ac.set_transform(proj)
             ac.set_clim(vmin=levels[0],vmax=levels[-1])
             axs[i].add_collection(ac)
-            if i > 0:
+            """if i > 0:
                 cbar = plt.colorbar(ac, ax=axs[i], orientation='vertical', 
                                     pad=0.05, shrink=0.8, **cp_info['colorbar_opt'])
                 #TODO keep variable attributes on dataarrays
-                #cbar.set_label(wrap_fields[i].attrs['units'])
+                #cbar.set_label(wrap_fields[i].attrs['units'])"""
             #Set stats: area_avg
             axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
                         loc='right', fontsize=8)
@@ -1545,11 +1545,11 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             ac.set_transform(proj)
             ac.set_clim(vmin=levels[0],vmax=levels[-1])
             ax[i].add_collection(ac)
-            if i > 0:
+            """if i > 0:
                 cbar = plt.colorbar(ac, ax=ax[i], orientation='vertical', 
                                     pad=0.05, shrink=0.8, **cp_info['colorbar_opt'])
                 #TODO keep variable attributes on dataarrays
-                #cbar.set_label(wrap_fields[i].attrs['units'])
+                #cbar.set_label(wrap_fields[i].attrs['units'])"""
         # End if unstructured grid
 
         #ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
@@ -1608,7 +1608,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     ax[3].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
     ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=tiFontSize,fontweight="bold")
 
-    for a in ax:
+    """for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
         a.coastlines()
         a.set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
@@ -1616,7 +1616,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         a.tick_params('both', length=5, width=1.5, which='major')
         a.tick_params('both', length=5, width=1.5, which='minor')
         a.xaxis.set_major_formatter(lon_formatter)
-        a.yaxis.set_major_formatter(lat_formatter)
+        a.yaxis.set_major_formatter(lat_formatter)"""
 
     # __COLORBARS__
     cb_mean_ax = inset_axes(ax2,
