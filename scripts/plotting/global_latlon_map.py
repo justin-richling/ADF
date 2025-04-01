@@ -111,8 +111,8 @@ def global_latlon_map(adfobj):
     print("unstruct_plotting", unstruct_plotting)
     if unstruct_plotting:
         kwargs["unstructured_plotting"] = unstruct_plotting
-        mesh_file = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'#adfobj.mesh_file
-        kwargs["mesh_file"] = mesh_file
+        #mesh_file = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'#adfobj.mesh_file
+        #kwargs["mesh_file"] = mesh_file
     print("kwargs", kwargs)
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
@@ -210,6 +210,8 @@ def global_latlon_map(adfobj):
         print("Checking baseline data:")
 
         if unstruct_plotting:
+            mesh_file = adfobj.mesh_files["baseline_mesh_file"]
+            kwargs["mesh_file"] = mesh_file
             odata = adfobj.data.load_reference_climo_da(base_name, var, **kwargs)
             #if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
             if 1==1:
@@ -286,6 +288,8 @@ def global_latlon_map(adfobj):
                 plot_loc.mkdir(parents=True)
 
             if unstruct_plotting:
+                mesh_file = adfobj.mesh_files["test_mesh_file"][case_idx]
+                kwargs["mesh_file"] = mesh_file
                 mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
                 #if ('ncol' in mdata.dims) or ('lndgrid' in mdata.dims):
                 if 1==1:
