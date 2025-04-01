@@ -941,6 +941,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #generate a dictionary of contour plot settings:
     cp_info = prep_contour_plot(d1, d2, dif, pct, **kwargs)
 
+    imgs = []
 
     if unstructured:
         # Loop over data arrays to make plots
@@ -975,39 +976,42 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             #Set stats: area_avg
             axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
                         loc='right', fontsize=8)
+            imgs.append(ac)
     else:
 
         if len(levs) < 2:
-            img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
-            ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
+            img1 = axs[0].contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            axs[0].text(0.4, 0.4, empty_message, transform=axs[0].transAxes, bbox=props)
 
-            img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
-            ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
+            img2 = axs[1].contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+            axs[1].text(0.4, 0.4, empty_message, transform=axs[1].transAxes, bbox=props)
         else:
-            img1 = ax1.contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
-            img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+            img1 = axs[0].contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+            img2 = axs[1].contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
 
         if len(levs_pctdiff) < 2:
-            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, transform_first=True)
-            ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+            img3 = axs[2].contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, transform_first=True)
+            axs[2].text(0.4, 0.4, empty_message, transform=axs[2].transAxes, bbox=props)
         else:
-            img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, transform_first=True)
+            img3 = axs[2].contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, transform_first=True)
 
         if len(levs_diff) < 2:
-            img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
-            ax4.text(0.4, 0.4, empty_message, transform=ax4.transAxes, bbox=props)
+            img4 = axs[3].contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+            axs[3].text(0.4, 0.4, empty_message, transform=axs[3].transAxes, bbox=props)
         else:
-            img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+            img4 = axs[3].contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
 
-        ax1.text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=ax1.transAxes)
+        imgs.append(img1,img2,img3,img4)
 
-        ax2.text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=ax2.transAxes)
+        axs[0].text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=axs[0].transAxes)
 
-        ax3.text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=ax3.transAxes)
-        ax3.set_title("Test % diff Baseline", loc='left', fontsize=8)
+        axs[1].text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=axs[1].transAxes)
 
-        ax4.text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=ax4.transAxes)
-        ax4.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
+        axs[2].text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=axs[2].transAxes)
+        axs[2].set_title("Test % diff Baseline", loc='left', fontsize=8)
+
+        axs[3].text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=axs[3].transAxes)
+        axs[3].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
         
     #Set Main title for subplots:
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
@@ -1015,16 +1019,16 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     #Set plot titles
     case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
-    ax1.set_title(case_title, loc='left', fontsize=6) #fontsize=tiFontSize
+    axs[0].set_title(case_title, loc='left', fontsize=6) #fontsize=tiFontSize
 
     if obs:
         obs_var = kwargs["obs_var_name"]
         obs_title = kwargs["obs_file"][:-3]
         base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
-        ax2.set_title(base_title, loc='left', fontsize=6) #fontsize=tiFontSize
+        axs[1].set_title(base_title, loc='left', fontsize=6) #fontsize=tiFontSize
     else:
         base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
-        ax2.set_title(base_title, loc='left', fontsize=6)
+        axs[1].set_title(base_title, loc='left', fontsize=6)
 
     """ax1.text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=ax1.transAxes)
 
@@ -1037,14 +1041,14 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     ax4.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)"""
 
     if "units" in kwargs:
-        ax2.set_ylabel(kwargs["units"])
-        ax4.set_ylabel(kwargs["units"])
+        axs[1].set_ylabel(kwargs["units"])
+        axs[3].set_ylabel(kwargs["units"])
     else:
-        ax2.set_ylabel(f"{d1.units}")
-        ax4.set_ylabel(f"{d1.units}")
+        axs[1].set_ylabel(f"{d1.units}")
+        axs[3].set_ylabel(f"{d1.units}")
 
-    [a.set_extent(domain, ccrs.PlateCarree()) for a in [ax1, ax2, ax3, ax4]]
-    [a.coastlines() for a in [ax1, ax2, ax3, ax4]]
+    [a.set_extent(domain, ccrs.PlateCarree()) for a in [axs[0], axs[1], axs[2], axs[3]]]
+    [a.coastlines() for a in [axs[0], axs[1], axs[2], axs[3]]]
 
     # __Follow the cartopy gallery example to make circular__:
     # Compute a circle in axes coordinates, which we can use as a boundary
@@ -1054,40 +1058,40 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     center, radius = [0.5, 0.5], 0.5
     verts = np.vstack([np.sin(theta), np.cos(theta)]).T
     circle = mpl.path.Path(verts * radius + center)
-    [a.set_boundary(circle, transform=a.transAxes) for a in [ax1, ax2, ax3, ax4]]
+    [a.set_boundary(circle, transform=a.transAxes) for a in [axs[0], axs[1], axs[2], axs[3]]]
 
     # __COLORBARS__
-    cb_mean_ax = inset_axes(ax2,
+    cb_mean_ax = inset_axes(axs[1],
                     width="5%",  # width = 5% of parent_bbox width
                     height="90%",  # height : 90%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0.05, 1, 1),
-                    bbox_transform=ax2.transAxes,
+                    bbox_transform=axs[1].transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img1, cax=cb_mean_ax)
+    fig.colorbar(imgs[0], cax=cb_mean_ax)
     
-    cb_pct_ax = inset_axes(ax3,
+    cb_pct_ax = inset_axes(axs[2],
                     width="5%",  # width = 5% of parent_bbox width
                     height="90%",  # height : 90%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0.05, 1, 1),
-                    bbox_transform=ax3.transAxes,
+                    bbox_transform=axs[2].transAxes,
                     borderpad=0,
                     )  
 
-    cb_diff_ax = inset_axes(ax4,
+    cb_diff_ax = inset_axes(axs[3],
                     width="5%",  # width = 5% of parent_bbox width
                     height="90%",  # height : 90%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0.05, 1, 1),
-                    bbox_transform=ax4.transAxes,
+                    bbox_transform=axs[3].transAxes,
                     borderpad=0,
                     )      
                     
-    fig.colorbar(img3, cax=cb_pct_ax)
+    fig.colorbar(imgs[2], cax=cb_pct_ax)
     
-    fig.colorbar(img4, cax=cb_diff_ax)
+    fig.colorbar(imgs[3], cax=cb_diff_ax)
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
