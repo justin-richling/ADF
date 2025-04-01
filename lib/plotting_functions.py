@@ -956,7 +956,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             #configure for polycollection plotting
             #TODO, would be nice to have levels set from the info, above
             ac = a.to_polycollection(projection=proj)
-            ac.norm(norms[i])
+            #ac.norm(norms[i])
             ac.set_cmap(cmap)
             ac.set_antialiased(False)
             ac.set_transform(proj)
