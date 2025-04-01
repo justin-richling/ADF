@@ -31,6 +31,17 @@ def polar_map(adfobj):
     #all generated plots and tables for each case:
     plot_locations = adfobj.plot_location
 
+    kwargs = {}
+
+    #
+    unstruct_plotting = adfobj.unstructured_plotting
+    print("unstruct_plotting", unstruct_plotting)
+    if unstruct_plotting:
+        kwargs["unstructured_plotting"] = unstruct_plotting
+        #mesh_file = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'#adfobj.mesh_file
+        #kwargs["mesh_file"] = mesh_file
+    print("kwargs", kwargs)
+
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
@@ -164,6 +175,25 @@ def polar_map(adfobj):
                 data_name = data_src
 
             odata = adfobj.data.load_reference_regrid_da(data_name, data_var)
+            """if odata is None:
+                print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
+                print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
+                print(f"\t      The glob is: {data_src}_{var}_*.nc")
+                continue"""
+            if unstruct_plotting:
+                mesh_file = adfobj.mesh_files["baseline_mesh_file"]
+                kwargs["mesh_file"] = mesh_file
+                odata = adfobj.data.load_reference_climo_da(data_name, var, **kwargs)
+                #if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
+                if 1==1:
+                    unstruct_base = True
+                    odataset = adfobj.data.load_reference_climo_dataset(data_name, var, **kwargs) 
+                    area = odataset.area.isel(time=0)
+                    landfrac = odataset.landfrac.isel(time=0)
+                    # calculate weights
+                    wgt_base = area * landfrac / (area * landfrac).sum()
+            else:
+                odata = adfobj.data.load_reference_regrid_da(data_name, var, **kwargs)
             if odata is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
@@ -193,6 +223,43 @@ def polar_map(adfobj):
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
                 #End if
+
+                if unstruct_plotting:
+                    mesh_file = adfobj.mesh_files["test_mesh_file"][case_idx]
+                    kwargs["mesh_file"] = mesh_file
+                    mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
+                    #if ('ncol' in mdata.dims) or ('lndgrid' in mdata.dims):
+                    if 1==1:
+                        unstruct_case = True
+                        mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
+                        area = mdataset.area.isel(time=0)
+                        landfrac = mdataset.landfrac.isel(time=0)
+                        # calculate weights
+                        wgt = area * landfrac / (area * landfrac).sum()
+                else:
+                    mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
+
+                vres["wgt"] = wgt
+                has_dims = {}
+                #has_dims['has_lev'] = False
+                if len(wgt.n_face) == len(wgt_base.n_face):
+                    vres["wgt"] = wgt
+                    has_dims = {}
+                    has_dims['has_lev'] = False
+                else:
+                    print("The weights are different between test and baseline. Won't continue, eh.")
+                    return
+
+                if (not unstruct_case) and (unstruct_base):
+                    print("Base is unstructured but Test is lat/lon. Can't continue?")
+                    return
+                if (unstruct_case) and (not unstruct_base):
+                    print("Base is lat/lon but Test is unstructured. Can't continue?")
+                    return
+                if (unstruct_case) and (unstruct_base):
+                    unstructured=True
+                if (not unstruct_case) and (not unstruct_base):
+                    unstructured=False
 
                 #Determine dimensions of variable:
                 has_dims = pf.lat_lon_validate_dims(odata)
@@ -274,7 +341,9 @@ def polar_map(adfobj):
                                     pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], pseasons[s], hemisphere=hemi, obs=obs, **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], pseasons[s],
+                                                     hemisphere=hemi, obs=obs, unstructured=unstructured,
+                                                     **vres)
 
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
@@ -300,12 +369,12 @@ def polar_map(adfobj):
                     #Check that case inputs have the correct dimensions (including "lev"):
                     has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
 
-                    # check if there is a lat dimension:
+                    """# check if there is a lat dimension:
                     if not has_lat_ref:
                         print(
                             f"\t    WARNING: Variable {var} is missing a lat dimension for '{data_name}', cannot continue to plot."
                         )
-                        continue
+                        continue"""
 
                     #Check if both cases have vertical levels to continue
                     if (has_lev) and (has_lev_ref):
@@ -385,7 +454,9 @@ def polar_map(adfobj):
                                         pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], pseasons[s], hemisphere=hemi, obs=obs, **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], pseasons[s],
+                                                     hemisphere=hemi, obs=obs, unstructured=unstructured,
+                                                     **vres)
 
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",

@@ -300,7 +300,7 @@ def global_latlon_map(adfobj):
                     # calculate weights
                     wgt = area * landfrac / (area * landfrac).sum()
             else:
-                mdata = adfobj.data.load_regrid_da(base_name, var, **kwargs)    
+                mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)    
 
 
             #mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
@@ -430,14 +430,14 @@ def global_latlon_map(adfobj):
             print("\n\n",wgt_base.dims,"\n\n")
             vres["wgt"] = wgt
             has_dims = {}
-            has_dims['has_lev'] = False
-            """if len(wgt.n_face) == len(wgt_base.n_face):
-                    vres["wgt"] = wgt
-                    has_dims = {}
-                    has_dims['has_lev'] = False
+            #has_dims['has_lev'] = False
+            if len(wgt.n_face) == len(wgt_base.n_face):
+                vres["wgt"] = wgt
+                has_dims = {}
+                has_dims['has_lev'] = False
             else:
                 print("The weights are different between test and baseline. Won't continue, eh.")
-                return"""
+                return
 
             if (not unstruct_case) and (unstruct_base):
                 print("Base is unstructured but Test is lat/lon. Can't continue?")
