@@ -180,7 +180,11 @@ def amwg_table(adf):
 
         #Notify user that script has started:
         print(f"\n  Creating table for '{case_name}'...")
-        if eyear_cases[case_idx]-syear_cases[case_idx] == 0:
+
+        syr = syear_cases[case_idx]
+        eyr = eyear_cases[case_idx]
+
+        if eyr-syr == 0:
             calc_stats = False
             print("\t INFO: Looks like there is only one year of data, will skip statistics and just add means to table")
         else:
@@ -205,7 +209,7 @@ def amwg_table(adf):
             print(f"\t - Variable '{var}' being added to table")
 
             #Create list of time series files present for variable:
-            ts_filenames = f'{case_name}.*.{var}.*nc'
+            ts_filenames = f'{case_name}.*.{var}.*{syr:04d}01-{eyr:04d}12.nc'
             ts_files = sorted(input_location.glob(ts_filenames))
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
