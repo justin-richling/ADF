@@ -199,7 +199,7 @@ def polar_map(adfobj):
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
                 print(f"\t      The glob is: {data_src}_{var}_*.nc")
                 continue
-
+            print("type(odata) LAT LON POLAR",type(odata),"\n")
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
                 #mclimo_rg_loc = Path(model_rgrid_locs[case_idx])
@@ -245,7 +245,7 @@ def polar_map(adfobj):
                     print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
                     continue
                 #End if
-
+                print("type(mdata) LAT LON POLAR",type(mdata),"\n")
                 vres["wgt"] = wgt
                 has_dims = {}
                 #has_dims['has_lev'] = False

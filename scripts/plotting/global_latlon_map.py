@@ -302,7 +302,7 @@ def global_latlon_map(adfobj):
             else:
                 mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)    
 
-
+            print("type(mdata) LAT LON GLOBAL",type(mdata),"\n")
             #mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
             #Skip this variable/case if the regridded climo file doesn't exist:
             if mdata is None:
