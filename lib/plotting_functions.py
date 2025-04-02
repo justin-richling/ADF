@@ -1982,11 +1982,11 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     for i, a in enumerate(wrap_fields):
 
-        if i == len(wrap_fields)-2:
+        if i == len(wrap_fields)-1:
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
             norm = cp_info['normdiff']
-        elif i == len(wrap_fields)-1:
+        elif i == len(wrap_fields)-2:
             levels = cp_info['levelspctdiff']
             cmap = cp_info['cmappct']
             norm = cp_info['pctnorm']
