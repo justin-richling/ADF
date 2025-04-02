@@ -67,7 +67,7 @@ def global_mean_timeseries(adfobj):
         #End if
 
         base_name = adfobj.data.ref_case_label
-        if unstructured:
+        if unstruct_plotting:
             ref_ts_ds = pf.load_dataset(baseline_ts_files)
             weights = ref_ts_ds.landfrac * ref_ts_ds.area
             ref_ts_da= ref_ts_ds[field]
