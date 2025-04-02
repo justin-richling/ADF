@@ -1364,11 +1364,11 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         # Loop over data arrays to make plots
         #for i, a in enumerate(wrap_fields):
         print("AHHHHHH",i,type(a))
-        if i == len(wrap_fields)-2:
+        if i == len(wrap_fields)-1:
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
             norm = cp_info['normdiff']
-        elif i == len(wrap_fields)-1:
+        elif i == len(wrap_fields)-2:
             levels = cp_info['levelspctdiff']
             cmap = cp_info['cmappct']
             norm = cp_info['pctnorm']
