@@ -1400,12 +1400,41 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             levs = np.unique(np.array(levels))
             if len(levs) < 2:
                 imgs.append(axs[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
+                #img3 = axs[2].contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, transform_first=True)
                 axs[i].text(0.4, 0.4, empty_message, transform=axs[i].transAxes, bbox=props)
             else:
                 imgs.append(axs[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm,
-                                            transform=ccrs.PlateCarree(), transform_first=True,
+                                            transform=ccrs.PlateCarree(), #transform_first=True,
                                             **cp_info['contourf_opt']))
             #End if
+
+            """levs = np.unique(np.array(levels1))
+            levs_diff = np.unique(np.array(levelsdiff))
+            levs_pctdiff = np.unique(np.array(levelspctdiff))
+
+            if len(levs) < 2:
+                img1 = axs[0].contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+                axs[0].text(0.4, 0.4, empty_message, transform=axs[0].transAxes, bbox=props)
+
+                img2 = axs[1].contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=norm1)
+                axs[1].text(0.4, 0.4, empty_message, transform=axs[1].transAxes, bbox=props)
+            else:
+                img1 = axs[0].contourf(lons, lats, d1_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+                img2 = axs[1].contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(), cmap=cmap1, norm=norm1, levels=levels1)
+
+            if len(levs_pctdiff) < 2:
+                img3 = axs[2].contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, transform_first=True)
+                axs[2].text(0.4, 0.4, empty_message, transform=axs[2].transAxes, bbox=props)
+            else:
+                img3 = axs[2].contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, transform_first=True)
+
+            if len(levs_diff) < 2:
+                img4 = axs[3].contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
+                axs[3].text(0.4, 0.4, empty_message, transform=axs[3].transAxes, bbox=props)
+            else:
+                img4 = axs[3].contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), cmap=cmapdiff, norm=dnorm, levels=levelsdiff)"""
+
+
         #End if unstructured
         #axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
         #                loc='right', fontsize=8)
