@@ -1923,7 +1923,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         lon2, lat2 = np.meshgrid(mdlfld['lon'], mdlfld['lat'])
 
         # get statistics (from non-wrapped)
-        fields = (mdlfld, obsfld, diffld, pctld)
+        fields = (mdlfld, obsfld, pctld, diffld)
         area_avg = [spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
 
         d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
@@ -1931,7 +1931,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         central_longitude = kwargs.get('central_longitude', 180)
     else:
         wgt = kwargs["wgt"]
-        wrap_fields = (mdlfld, obsfld, diffld, pctld)
+        wrap_fields = (mdlfld, obsfld, pctld, diffld)
         area_avg = [global_average(x, wgt) for x in wrap_fields]
 
         # TODO Check this is correct, weighted rmse uses xarray weighted function
