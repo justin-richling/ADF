@@ -1413,7 +1413,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         stat_max =  f"Max: {wrap_fields[i].max().item():5.2f}"
         stat_min = f"Min: {wrap_fields[i].min().item():5.2f}"
         stats = f"{stat_mean}\n{stat_max}\n{stat_min}"
-        axs[i].text(-0.2, -0.10, stats, transform=axs[0].transAxes, fontsize=8)
+        #axs[i].text(-0.2, -0.10, stats, transform=axs[0].transAxes, fontsize=8)
         #axs[0].text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=axs[0].transAxes)
 
         """if len(levs) < 2:
@@ -1468,14 +1468,14 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
         axs[1].set_title(base_title, loc='left', fontsize=6)
 
-    #axs[0].text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=axs[0].transAxes)
+    axs[0].text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=axs[0].transAxes)
 
-    #axs[1].text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=axs[1].transAxes)
+    axs[1].text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=axs[1].transAxes)
 
-    #axs[2].text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=axs[2].transAxes)
+    axs[2].text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=axs[2].transAxes)
     axs[2].set_title("Test % diff Baseline", loc='left', fontsize=8)
 
-    #axs[3].text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=axs[3].transAxes)
+    axs[3].text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=axs[3].transAxes)
     axs[3].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
     if "units" in kwargs:
