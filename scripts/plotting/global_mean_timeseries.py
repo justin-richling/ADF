@@ -42,6 +42,16 @@ def global_mean_timeseries(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
+    kwargs = {}
+
+    unstruct_plotting = adfobj.unstructured_plotting
+    print("unstruct_plotting", unstruct_plotting)
+    if unstruct_plotting:
+        kwargs["unstructured_plotting"] = unstruct_plotting
+        #mesh_file = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'#adfobj.mesh_file
+        #kwargs["mesh_file"] = mesh_file
+    print("kwargs", kwargs)
+
     # Loop over variables
     for field in adfobj.diag_var_list:
         #Notify user of variable being plotted:
@@ -56,10 +66,17 @@ def global_mean_timeseries(adfobj):
             vres = {}
         #End if
 
-        # reference time series (DataArray)
-        ref_ts_da = adfobj.data.load_reference_timeseries_da(field)
-
         base_name = adfobj.data.ref_case_label
+        if unstructured:
+            ref_ts_ds = pf.load_dataset(baseline_ts_files)
+            weights = ref_ts_ds.landfrac * ref_ts_ds.area
+            ref_ts_da= ref_ts_ds[field]
+        else:
+            # reference time series (DataArray)
+            ref_ts_da = adfobj.data.load_reference_timeseries_da(field)
+
+
+
 
         # Check to see if this field is available
         if ref_ts_da is None:
