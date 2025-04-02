@@ -113,6 +113,8 @@ def global_latlon_map(adfobj):
         kwargs["unstructured_plotting"] = unstruct_plotting
         #mesh_file = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'#adfobj.mesh_file
         #kwargs["mesh_file"] = mesh_file
+    else:
+        unstructured=False
     print("kwargs", kwargs)
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
@@ -466,26 +468,27 @@ def global_latlon_map(adfobj):
                     print("The weights are different between test and baseline. Won't continue, eh.")
                     return'''
 
-            has_dims = {}
-            #has_dims['has_lev'] = False
-            if len(wgt.n_face) == len(wgt_base.n_face):
-                vres["wgt"] = wgt
+            if unstruct_plotting:
                 has_dims = {}
-                has_dims['has_lev'] = False
-            else:
-                print("The weights are different between test and baseline. Won't continue, eh.")
-                return
+                #has_dims['has_lev'] = False
+                if len(wgt.n_face) == len(wgt_base.n_face):
+                    vres["wgt"] = wgt
+                    has_dims = {}
+                    has_dims['has_lev'] = False
+                else:
+                    print("The weights are different between test and baseline. Won't continue, eh.")
+                    return
 
-            if (not unstruct_case) and (unstruct_base):
-                print("Base is unstructured but Test is lat/lon. Can't continue?")
-                return
-            if (unstruct_case) and (not unstruct_base):
-                print("Base is lat/lon but Test is unstructured. Can't continue?")
-                return
-            if (unstruct_case) and (unstruct_base):
-                unstructured=True
-            if (not unstruct_case) and (not unstruct_base):
-                unstructured=False
+                if (not unstruct_case) and (unstruct_base):
+                    print("Base is unstructured but Test is lat/lon. Can't continue?")
+                    return
+                if (unstruct_case) and (not unstruct_base):
+                    print("Base is lat/lon but Test is unstructured. Can't continue?")
+                    return
+                if (unstruct_case) and (unstruct_base):
+                    unstructured=True
+                if (not unstruct_case) and (not unstruct_base):
+                    unstructured=False
             # Check output file. If file does not exist, proceed.
             # If file exists:
             #   if redo_plot is true: delete it now and make plot
