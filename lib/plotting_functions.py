@@ -1409,11 +1409,11 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #End if unstructured
         #axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
         #                loc='right', fontsize=8)
-        stat_mean = f"Mean: {area_avg[i].item():5.2f}"
+        """stat_mean = f"Mean: {area_avg[i].item():5.2f}"
         stat_max =  f"Max: {wrap_fields[i].max().item():5.2f}"
         stat_min = f"Min: {wrap_fields[i].min().item():5.2f}"
         stats = f"{stat_mean}\n{stat_max}\n{stat_min}"
-        #axs[i].text(-0.2, -0.10, stats, transform=axs[0].transAxes, fontsize=8)
+        axs[i].text(-0.2, -0.10, stats, transform=axs[0].transAxes, fontsize=8)"""
         #axs[0].text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=axs[0].transAxes)
 
         """if len(levs) < 2:
