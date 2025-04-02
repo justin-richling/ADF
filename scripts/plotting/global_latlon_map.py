@@ -222,15 +222,27 @@ def global_latlon_map(adfobj):
                 # calculate weights
                 wgt_base = area * landfrac / (area * landfrac).sum()
         else:
-            odata = adfobj.data.load_reference_regrid_da(base_name, var, **kwargs)
+            #odata = adfobj.data.load_reference_regrid_da(base_name, var, **kwargs)
+            odata = adfobj.data.load_reference_regrid_da(base_name, var)
+            if odata is None:
+                
+                dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
+                #dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, will"
+                adfobj.debug_log(dmsg)
+                continue
+            o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
+            if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
+                print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
+                #print(f"\t = Unstructured grid, so global map for {var} does not have lat and lon")
+                continue
 
-        print("Baseline data:")
-        if odata is None:
-            dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
-            #dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, will"
-            adfobj.debug_log(dmsg)
-            print(dmsg)
-            continue
+            print("Baseline data:")
+            if odata is None:
+                dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, global lat/lon mean plotting skipped."
+                #dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, will"
+                adfobj.debug_log(dmsg)
+                print(dmsg)
+                continue
         """o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
         #if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
         if ('lat' not in odata.dims) and ('lon' not in odata.dims):
