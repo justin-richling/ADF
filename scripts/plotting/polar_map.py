@@ -40,6 +40,8 @@ def polar_map(adfobj):
         kwargs["unstructured_plotting"] = unstruct_plotting
         #mesh_file = '/glade/campaign/cesm/cesmdata/inputdata/share/meshes/ne30pg3_ESMFmesh_cdf5_c20211018.nc'#adfobj.mesh_file
         #kwargs["mesh_file"] = mesh_file
+    else:
+        unstructured=False
     print("kwargs", kwargs)
 
     #CAM simulation variables (this is always assumed to be a list):
@@ -174,7 +176,7 @@ def polar_map(adfobj):
                 #Set data name:
                 data_name = data_src
 
-            odata = adfobj.data.load_reference_regrid_da(data_name, data_var)
+            #odata = adfobj.data.load_reference_regrid_da(data_name, data_var)
             """if odata is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
@@ -246,27 +248,27 @@ def polar_map(adfobj):
                     continue
                 #End if
                 print("type(mdata) LAT LON POLAR",type(mdata),"\n")
-                vres["wgt"] = wgt
-                has_dims = {}
-                #has_dims['has_lev'] = False
-                if len(wgt.n_face) == len(wgt_base.n_face):
-                    vres["wgt"] = wgt
+                if unstruct_plotting:
                     has_dims = {}
-                    has_dims['has_lev'] = False
-                else:
-                    print("The weights are different between test and baseline. Won't continue, eh.")
-                    return
+                    #has_dims['has_lev'] = False
+                    if len(wgt.n_face) == len(wgt_base.n_face):
+                        vres["wgt"] = wgt
+                        has_dims = {}
+                        has_dims['has_lev'] = False
+                    else:
+                        print("The weights are different between test and baseline. Won't continue, eh.")
+                        return
 
-                if (not unstruct_case) and (unstruct_base):
-                    print("Base is unstructured but Test is lat/lon. Can't continue?")
-                    return
-                if (unstruct_case) and (not unstruct_base):
-                    print("Base is lat/lon but Test is unstructured. Can't continue?")
-                    return
-                if (unstruct_case) and (unstruct_base):
-                    unstructured=True
-                if (not unstruct_case) and (not unstruct_base):
-                    unstructured=False
+                    if (not unstruct_case) and (unstruct_base):
+                        print("Base is unstructured but Test is lat/lon. Can't continue?")
+                        return
+                    if (unstruct_case) and (not unstruct_base):
+                        print("Base is lat/lon but Test is unstructured. Can't continue?")
+                        return
+                    if (unstruct_case) and (unstruct_base):
+                        unstructured=True
+                    if (not unstruct_case) and (not unstruct_base):
+                        unstructured=False
 
                 print("unstructured=",unstructured,"\n")
 
