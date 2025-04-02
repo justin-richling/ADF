@@ -687,7 +687,7 @@ def seasonal_mean(data, season=None, is_climo=None):
 
 #Polar Plot functions
 
-def domain_stats(data, domain):
+def domain_stats(data, domain, unstructured=False):
     """Provides statistics in specified region.
 
     Parameters
@@ -717,8 +717,12 @@ def domain_stats(data, domain):
     spatial_average
 
     """
-    x_region = data.sel(lat=slice(domain[2],domain[3]), lon=slice(domain[0],domain[1]))
-    x_region_mean = x_region.weighted(np.cos(np.deg2rad(x_region['lat']))).mean().item()
+    if not unstructured:
+        x_region = data.sel(lat=slice(domain[2],domain[3]), lon=slice(domain[0],domain[1]))
+        x_region_mean = x_region.weighted(np.cos(np.deg2rad(x_region['lat']))).mean().item()
+    else:
+        x_region = data
+        x_region_mean = data.mean().item()
     x_region_min = x_region.min().item()
     x_region_max = x_region.max().item()
     return x_region_mean, x_region_max, x_region_min
@@ -1231,12 +1235,17 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         d2_cyclic, _ = add_cyclic_point(d2, coord=d2.lon)  # since we can take difference, assume same longitude coord.
         dif_cyclic, _ = add_cyclic_point(dif, coord=dif.lon)
         pct_cyclic, _ = add_cyclic_point(pct, coord=pct.lon)
-
+        wrap_fields = (d1_cyclic, d2_cyclic, dif_cyclic, pct_cyclic)
         lons, lats = np.meshgrid(lon_cyclic, d1.lat)
     else:
         wgt = kwargs["wgt"]
         wrap_fields = (d1, d2, dif, pct)
         area_avg = [global_average(x, wgt) for x in wrap_fields]
+
+        d1_region_mean, d1_region_max, d1_region_min = domain_stats(d1, domain, unstructured)
+        d2_region_mean, d2_region_max, d2_region_min = domain_stats(d2, domain, unstructured)
+        dif_region_mean, dif_region_max, dif_region_min = domain_stats(dif, domain, unstructured)
+        pct_region_mean, pct_region_max, pct_region_min = domain_stats(pct, domain, unstructured)
 
         # TODO Check this is correct, weighted rmse uses xarray weighted function
         #d_rmse = wgt_rmse(a, b, wgt)  
