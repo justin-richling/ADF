@@ -2765,6 +2765,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     minval = np.min([np.min(adata), np.min(bdata)])
     maxval = np.max([np.max(adata), np.max(bdata)])
 
+    # determine levels & color normalization:
+    minval    = np.min([np.min(adata), np.min(bdata)])
+    maxval    = np.max([np.max(adata), np.max(bdata)])
+    absmaxdif = np.max(np.abs(diffdata))
+    absmaxpct = np.max(np.abs(pctdata))
+
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
 
