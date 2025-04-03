@@ -1202,6 +1202,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         pct = ux.UxDataArray(pct_0)
     else:
         pct = pct_0
+    print("What type is this!?!?!?!?",type(pct),"\n")
 
     if (hemisphere.upper() == "NH") or (hemisphere == "Arctic"):
         proj = ccrs.NorthPolarStereo()
