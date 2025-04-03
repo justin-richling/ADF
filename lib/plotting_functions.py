@@ -173,7 +173,7 @@ def load_ux_dataset(fils, mesh=None):
 
     Returns
     -------
-    ux.Dataset
+    ux.UxDataArray
 
     Notes
     -----
@@ -1198,8 +1198,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
     pct_0 = pct.where(np.isfinite(pct), np.nan)
     pct_0 = pct_0.fillna(0.0)
-    if isinstance(pct, ux.Dataset):
-        pct = ux.DataArray(pct_0)
+    if isinstance(pct, ux.UxDataArray):
+        pct = ux.UxDataArray(pct_0)
     else:
         pct = pct_0
 
@@ -3044,8 +3044,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
         pct_0 = pct.where(np.isfinite(pct), np.nan)
         pct_0 = pct_0.fillna(0.0)
-        if isinstance(pct, ux.Dataset):
-            pct = ux.DataArray(pct_0)
+        if isinstance(pct, ux.UxDataArray):
+            pct = ux.UxDataArray(pct_0)
         else:
             pct = pct_0
 
@@ -3117,8 +3117,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
         pct_0 = pct.where(np.isfinite(pct), np.nan)
         pct_0 = pct_0.fillna(0.0)
-        if isinstance(pct, ux.Dataset):
-            pct = ux.DataArray(pct_0)
+        if isinstance(pct, ux.UxDataArray):
+            pct = ux.UxDataArray(pct_0)
         else:
             pct = pct_0
         
@@ -3272,8 +3272,8 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
     #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
     pct_0 = pct.where(np.isfinite(pct), np.nan)
     pct_0 = pct_0.fillna(0.0)
-    if isinstance(pct, ux.Dataset):
-        pct = ux.DataArray(pct_0)
+    if isinstance(pct, ux.UxDataArray):
+        pct = ux.UxDataArray(pct_0)
     else:
         pct = pct_0
 
@@ -3492,8 +3492,8 @@ def square_contour_difference(fld1, fld2, **kwargs):
     #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
     pct_0 = pct.where(np.isfinite(pct), np.nan)
     pct_0 = pct_0.fillna(0.0)
-    if isinstance(pct, ux.Dataset):
-        pct = ux.DataArray(pct_0)
+    if isinstance(pct, ux.UxDataArray):
+        pct = ux.UxDataArray(pct_0)
     else:
         pct = pct_0
     
