@@ -1271,9 +1271,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     absmaxdif = np.max(np.abs(dif))
     absmaxpct = np.max(np.abs(pct))
 
-    means.append(d1_region_mean,d2_region_mean, pct_region_mean, dif_region_mean)
-    mins.append(d1_region_min,d2_region_min, pct_region_min, dif_region_min)
-    maxs.append(d1_region_max,d2_region_max, pct_region_max, dif_region_max)
+    means.extend([d1_region_mean,d2_region_mean, pct_region_mean, dif_region_mean])
+    mins.extend([d1_region_min,d2_region_min, pct_region_min, dif_region_min])
+    maxs.extend([d1_region_max,d2_region_max, pct_region_max, dif_region_max])
 
     """if 'colormap' in kwargs:
         cmap1 = kwargs['colormap']
