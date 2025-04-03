@@ -1207,8 +1207,10 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         raise AdfError(f'[make_polar_plot] hemisphere not specified, must be NH or SH; hemisphere set as {hemisphere}')
 
     if domain is None:
-        if (hemisphere.upper() == "NH") or (hemisphere == "Arctic"):
+        if hemisphere.upper() == "NH":
             domain = [-180, 180, 45, 90]
+        if hemisphere == "Arctic":
+            domain = [-180, 180, 50, 90]
         else:
             domain = [-180, 180, -90, -45]
 
