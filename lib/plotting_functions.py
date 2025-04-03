@@ -1392,8 +1392,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                 #TODO keep variable attributes on dataarrays
                 #cbar.set_label(wrap_fields[i].attrs['units'])"""
             #Set stats: area_avg
-            #axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
-            #            loc='right', fontsize=8)
+            axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
+                        loc='right', fontsize=8)
             imgs.append(ac)
         else:
             
@@ -1497,14 +1497,14 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
         axs[1].set_title(base_title, loc='left', fontsize=6)
 
-    axs[0].text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=axs[0].transAxes)
+    #axs[0].text(-0.2, -0.10, f"Mean: {d1_region_mean:5.2f}\nMax: {d1_region_max:5.2f}\nMin: {d1_region_min:5.2f}", transform=axs[0].transAxes)
 
-    axs[1].text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=axs[1].transAxes)
+    #axs[1].text(-0.2, -0.10, f"Mean: {d2_region_mean:5.2f}\nMax: {d2_region_max:5.2f}\nMin: {d2_region_min:5.2f}", transform=axs[1].transAxes)
 
-    axs[2].text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=axs[2].transAxes)
+    #axs[2].text(-0.2, -0.10, f"Mean: {pct_region_mean:5.2f}\nMax: {pct_region_max:5.2f}\nMin: {pct_region_min:5.2f}", transform=axs[2].transAxes)
     axs[2].set_title("Test % diff Baseline", loc='left', fontsize=8)
 
-    axs[3].text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=axs[3].transAxes)
+    #axs[3].text(-0.2, -0.10, f"Mean: {dif_region_mean:5.2f}\nMax: {dif_region_max:5.2f}\nMin: {dif_region_min:5.2f}", transform=axs[3].transAxes)
     axs[3].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=8)
 
     if "units" in kwargs:
@@ -1557,27 +1557,27 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     )
     fig.colorbar(imgs[0], cax=cb_mean_ax)
     
-    cb_pct_ax = inset_axes(axs[3],
-                    width="5%",  # width = 5% of parent_bbox width
-                    height="90%",  # height : 90%
-                    loc='lower left',
-                    bbox_to_anchor=(1.05, 0.05, 1, 1),
-                    bbox_transform=axs[3].transAxes,
-                    borderpad=0,
-                    )  
-
-    cb_diff_ax = inset_axes(axs[2],
+    cb_pct_ax = inset_axes(axs[2],
                     width="5%",  # width = 5% of parent_bbox width
                     height="90%",  # height : 90%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0.05, 1, 1),
                     bbox_transform=axs[2].transAxes,
                     borderpad=0,
+                    )  
+
+    cb_diff_ax = inset_axes(axs[3],
+                    width="5%",  # width = 5% of parent_bbox width
+                    height="90%",  # height : 90%
+                    loc='lower left',
+                    bbox_to_anchor=(1.05, 0.05, 1, 1),
+                    bbox_transform=axs[3].transAxes,
+                    borderpad=0,
                     )      
                     
-    fig.colorbar(imgs[3], cax=cb_pct_ax)
+    fig.colorbar(imgs[2], cax=cb_pct_ax)
     
-    fig.colorbar(imgs[2], cax=cb_diff_ax)
+    fig.colorbar(imgs[3], cax=cb_diff_ax)
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
