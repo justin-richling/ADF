@@ -1224,7 +1224,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     d2_region_mean, d2_region_max, d2_region_min = domain_stats(d2, domain)
     dif_region_mean, dif_region_max, dif_region_min = domain_stats(dif, domain)
     pct_region_mean, pct_region_max, pct_region_min = domain_stats(pct, domain)"""
-
+    means = []
+    mins = []
+    maxs = []
     if not unstructured:
         # statistics for annotation (these are scalars):
         d1_region_mean, d1_region_max, d1_region_min = domain_stats(d1, domain)
@@ -1256,6 +1258,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         dif_region_mean, dif_region_max, dif_region_min = domain_stats(dif, domain, unstructured)
         pct_region_mean, pct_region_max, pct_region_min = domain_stats(pct, domain, unstructured)
 
+
         # TODO Check this is correct, weighted rmse uses xarray weighted function
         #d_rmse = wgt_rmse(a, b, wgt)  
         d_rmse = (np.sqrt(((dif**2)*wgt).sum())).values.item()
@@ -1267,6 +1270,10 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     maxval    = np.max([np.max(d1), np.max(d2)])
     absmaxdif = np.max(np.abs(dif))
     absmaxpct = np.max(np.abs(pct))
+
+    means.append(d1_region_mean,d2_region_mean, pct_region_mean, dif_region_mean)
+    mins.append(d1_region_min,d2_region_min, pct_region_min, dif_region_min)
+    maxs.append(d1_region_max,d2_region_max, pct_region_max, dif_region_max)
 
     """if 'colormap' in kwargs:
         cmap1 = kwargs['colormap']
@@ -1402,8 +1409,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                 #TODO keep variable attributes on dataarrays
                 #cbar.set_label(wrap_fields[i].attrs['units'])"""
             #Set stats: area_avg
-            axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
-                        loc='right', fontsize=8)
+            #axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
+            #            loc='right', fontsize=8)
             imgs.append(ac)
         else:
             
@@ -1446,6 +1453,15 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
 
         #End if unstructured
+
+        # Set stats for title
+        stat_mean = f"Mean: {means[i].item():5.2f}"
+        stat_max =  f"Max: {maxs[i].max().item():5.2f}"
+        stat_min = f"Min: {mins[i].min().item():5.2f}"
+        stats = f"{stat_mean}\n{stat_max}\n{stat_min}"
+        axs[i].set_title(stats, loc='right', fontsize=8)
+
+
         #axs[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
         #                loc='right', fontsize=8)
         """stat_mean = f"Mean: {area_avg[i].item():5.2f}"
