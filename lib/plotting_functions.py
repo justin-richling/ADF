@@ -1395,7 +1395,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         if unstructured:
             #configure for polycollection plotting
             #TODO, would be nice to have levels set from the info, above
-            print("AHHHHHH2",i,type(a))
+            print("AHHHHHH2",i,type(a), type(a.uxgrid))
             ac = a.to_polycollection(projection=proj)
             #ac.norm(norms[i])
             ac.set_cmap(cmap)
