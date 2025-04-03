@@ -1366,11 +1366,11 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         # Loop over data arrays to make plots
         #for i, a in enumerate(wrap_fields):
         print("AHHHHHH",i,type(a))
-        if i == len(wrap_fields)-2:
+        if i == len(wrap_fields)-1:
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
             norm = cp_info['normdiff']
-        elif i == len(wrap_fields)-1:
+        elif i == len(wrap_fields)-2:
             levels = cp_info['levelspctdiff']
             cmap = cp_info['cmappct']
             norm = cp_info['pctnorm']
@@ -1559,27 +1559,27 @@ def make_polar_plot(wks, case_nickname, base_nickname,
                     )
     fig.colorbar(imgs[0], cax=cb_mean_ax)
     
-    cb_pct_ax = inset_axes(axs[2],
-                    width="5%",  # width = 5% of parent_bbox width
-                    height="90%",  # height : 90%
-                    loc='lower left',
-                    bbox_to_anchor=(1.05, 0.05, 1, 1),
-                    bbox_transform=axs[2].transAxes,
-                    borderpad=0,
-                    )  
-
-    cb_diff_ax = inset_axes(axs[3],
+    cb_pct_ax = inset_axes(axs[3],
                     width="5%",  # width = 5% of parent_bbox width
                     height="90%",  # height : 90%
                     loc='lower left',
                     bbox_to_anchor=(1.05, 0.05, 1, 1),
                     bbox_transform=axs[3].transAxes,
                     borderpad=0,
+                    )  
+
+    cb_diff_ax = inset_axes(axs[2],
+                    width="5%",  # width = 5% of parent_bbox width
+                    height="90%",  # height : 90%
+                    loc='lower left',
+                    bbox_to_anchor=(1.05, 0.05, 1, 1),
+                    bbox_transform=axs[2].transAxes,
+                    borderpad=0,
                     )      
                     
-    fig.colorbar(imgs[2], cax=cb_pct_ax)
+    fig.colorbar(imgs[3], cax=cb_pct_ax)
     
-    fig.colorbar(imgs[3], cax=cb_diff_ax)
+    fig.colorbar(imgs[2], cax=cb_diff_ax)
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
