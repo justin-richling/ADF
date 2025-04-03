@@ -1235,11 +1235,13 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         d2_cyclic, _ = add_cyclic_point(d2, coord=d2.lon)  # since we can take difference, assume same longitude coord.
         dif_cyclic, _ = add_cyclic_point(dif, coord=dif.lon)
         pct_cyclic, _ = add_cyclic_point(pct, coord=pct.lon)
-        wrap_fields = (d1_cyclic, d2_cyclic, dif_cyclic, pct_cyclic)
+        #wrap_fields = (d1_cyclic, d2_cyclic, dif_cyclic, pct_cyclic)
+        wrap_fields = (d1_cyclic, d2_cyclic, pct_cyclic, dif_cyclic)
         lons, lats = np.meshgrid(lon_cyclic, d1.lat)
     else:
         wgt = kwargs["wgt"]
-        wrap_fields = (d1, d2, dif, pct)
+        #wrap_fields = (d1, d2, dif, pct)
+        wrap_fields = (d1, d2, pct, dif)
         area_avg = [global_average(x, wgt) for x in wrap_fields]
 
         d1_region_mean, d1_region_max, d1_region_min = domain_stats(d1, domain, unstructured)
@@ -1355,7 +1357,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #levs_pctdiff = np.unique(np.array(levelspctdiff))
 
     #generate a dictionary of contour plot settings:
-    cp_info = prep_contour_plot(d1, d2, dif, pct, **kwargs)
+    cp_info = prep_contour_plot(d1, d2, pct, dif, **kwargs)
 
     imgs = []
 
