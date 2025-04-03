@@ -1198,6 +1198,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #check if pct has NaN's or Inf values and if so set them to 0 to prevent plotting errors
     pct = pct.where(np.isfinite(pct), np.nan)
     pct = pct.fillna(0.0)
+    if isinstance(pct, ux.Dataset):
+        pct = ux.DataArray(pct)
 
     if (hemisphere.upper() == "NH") or (hemisphere == "Arctic"):
         proj = ccrs.NorthPolarStereo()
