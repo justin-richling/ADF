@@ -274,8 +274,10 @@ def polar_map(adfobj):
 
                 #Determine dimensions of variable:
                 has_dims = pf.lat_lon_validate_dims(odata)
+                has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
+                has_lat, has_lev = pf.zm_validate_dims(mdata)
                 #if has_dims:
-                if 1==1:
+                if (not has_lev) and (not has_lev_ref):
                     #If observations/baseline CAM have the correct
                     #dimensions, does the input CAM run have correct
                     #dimensions as well?
