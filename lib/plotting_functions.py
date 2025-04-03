@@ -1455,9 +1455,9 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         #End if unstructured
 
         # Set stats for title
-        stat_mean = f"Mean: {means[i].item():5.2f}"
-        stat_max =  f"Max: {maxs[i].max().item():5.2f}"
-        stat_min = f"Min: {mins[i].min().item():5.2f}"
+        stat_mean = f"Mean: {means[i]:5.2f}"
+        stat_max =  f"Max: {maxs[i]:5.2f}"
+        stat_min = f"Min: {mins[i]:5.2f}"
         stats = f"{stat_mean}\n{stat_max}\n{stat_min}"
         axs[i].set_title(stats, loc='right', fontsize=8)
 
