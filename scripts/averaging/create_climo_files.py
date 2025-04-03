@@ -188,7 +188,7 @@ def create_climo_files(adf, clobber=False, search=None):
             else:
                 ts_files = adf.data.get_timeseries_file(case_name, var)
 
-            #TODO: Make this check happen in adf_dataset.py!!!!
+            """#TODO: Make this check happen in adf_dataset.py!!!!
             # Check to see if this is on native grid. If so, check if any time series files have been gridded...
             #Read in files via xarray (xr):
             if len(ts_files) == 1:
@@ -196,7 +196,7 @@ def create_climo_files(adf, clobber=False, search=None):
                 cam_ts_data = xr.open_dataset(ts_files[0], decode_cf=False) #, decode_cf=False
             else:
                 #cam_ts_data = xr.open_mfdataset(ts_files, decode_times=True, combine='by_coords')
-                cam_ts_data = xr.open_mfdataset(ts_files, decode_cf=False, combine='by_coords')
+                cam_ts_data = xr.open_mfdataset(ts_files, decode_cf=False, combine='by_coords')"""
 
             """if ('lat' not in cam_ts_data.dims) and ('lon' not in cam_ts_data.dims):
                 if ('ncol' in cam_ts_data.dims) or ('lndgrid' in cam_ts_data.dims):
