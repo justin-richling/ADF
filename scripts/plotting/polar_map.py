@@ -185,21 +185,21 @@ def polar_map(adfobj):
             if unstruct_plotting:
                 mesh_file = adfobj.mesh_files["baseline_mesh_file"]
                 kwargs["mesh_file"] = mesh_file
-                odata = adfobj.data.load_reference_climo_da(data_name, var, **kwargs)
+                odata = adfobj.data.load_reference_climo_da(data_name, data_var, **kwargs)
                 #if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
                 if 1==1:
                     unstruct_base = True
-                    odataset = adfobj.data.load_reference_climo_dataset(data_name, var, **kwargs) 
+                    odataset = adfobj.data.load_reference_climo_dataset(data_name, data_var, **kwargs) 
                     area = odataset.area.isel(time=0)
                     landfrac = odataset.landfrac.isel(time=0)
                     # calculate weights
                     wgt_base = area * landfrac / (area * landfrac).sum()
             else:
-                odata = adfobj.data.load_reference_regrid_da(data_name, var, **kwargs)
+                odata = adfobj.data.load_reference_regrid_da(data_name, data_var, **kwargs)
             if odata is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
-                print(f"\t      The glob is: {data_src}_{var}_*.nc")
+                print(f"\t      The glob is: {data_src}_{data_var}_*.nc")
                 continue
             print("type(odata) LAT LON POLAR",type(odata),"\n")
             #Loop over model cases:
@@ -372,13 +372,13 @@ def polar_map(adfobj):
                     #Check that case inputs have the correct dimensions (including "lev"):
                     has_lat, has_lev = pf.zm_validate_dims(mdata)  # assumes will work for both mdata & odata
 
-                    # check if there is a lat dimension:
+                    """# check if there is a lat dimension:
                     if not has_lat:
                         print(
                             f"\t    WARNING: Variable {var} is missing a lat dimension for '{case_name}', cannot continue to plot."
                         )
                         continue
-                    # End if
+                    # End if"""
 
                     #Check that case inputs have the correct dimensions (including "lev"):
                     has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
