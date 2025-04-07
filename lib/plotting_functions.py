@@ -701,7 +701,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     absmaxdif = np.max(np.abs(dif))
     absmaxpct = np.max(np.abs(pct))
 
-    if 'colormap' in kwargs:
+    '''if 'colormap' in kwargs:
         cmap1 = kwargs['colormap']
     else:
         cmap1 = 'coolwarm'
@@ -778,17 +778,31 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         cmappct = "PuOr_r"
     #End if
 
-    # -- end options
+    # -- end options'''
+
+    cp_info = prep_contour_plot(d1, d2, dif, pct, **kwargs)
+
+    levelsdiff = cp_info['levelsdiff']
+    cmapdiff = cp_info['cmapdiff']
+    dnorm = cp_info['normdiff']
+
+    levelspctdiff = cp_info['levelspctdiff']
+    cmappct = cp_info['cmappct']
+    pctnorm = cp_info['pctnorm']
+
+    levels1 = cp_info['levels1']
+    cmap1 = cp_info['cmap1']
+    norm1 = cp_info['norm1']
 
     lons, lats = np.meshgrid(lon_cyclic, d1.lat)
 
     fig = plt.figure(figsize=(10,10))
     gs = mpl.gridspec.GridSpec(2, 4, wspace=0.9)
 
-    ax1 = plt.subplot(gs[0, :2], projection=proj)
-    ax2 = plt.subplot(gs[0, 2:], projection=proj)
-    ax3 = plt.subplot(gs[1, :2], projection=proj)
-    ax4 = plt.subplot(gs[1, 2:], projection=proj)
+    ax1 = plt.subplot(gs[0, :2], projection=proj, **cp_info['subplots_opt'])
+    ax2 = plt.subplot(gs[0, 2:], projection=proj, **cp_info['subplots_opt'])
+    ax3 = plt.subplot(gs[1, :2], projection=proj, **cp_info['subplots_opt'])
+    ax4 = plt.subplot(gs[1, 2:], projection=proj, **cp_info['subplots_opt'])
 
     levs = np.unique(np.array(levels1))
     levs_diff = np.unique(np.array(levelsdiff))
