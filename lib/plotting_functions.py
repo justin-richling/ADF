@@ -1796,7 +1796,7 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
         ax = _meridional_plot_line(ax, lon,  data, color, **kwargs)
         return ax
 
-def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
+'''def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     """Preparation for making contour plots.
 
     Prepares for making contour plots of adata, bdata, diffdata, and pctdata, which is
@@ -1962,7 +1962,378 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'norm1': norm1,
             'levels1': levels1,
             'plot_log_p': plot_log_p
+            }'''
+
+
+
+
+
+
+
+
+
+
+
+def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
+    """Preparation for making contour plots.
+
+    Prepares for making contour plots of adata, bdata, diffdata, and pctdata, which is
+    presumably the difference between adata and bdata.
+    - set colormap from kwargs or defaults to coolwarm
+    - set contour levels from kwargs or 12 evenly spaced levels to span the data
+    - normalize colors based on specified contour levels or data range
+    - set option for linear or log pressure when applicable
+    - similar settings for difference, defaults to symmetric about zero
+    - separates Matplotlib kwargs into their own dicts
+
+    Parameters
+    ----------
+    adata, bdata, diffdata, pctdata
+        the data to be plotted
+    kwargs : dict, optional
+        plotting options
+
+    Returns
+    -------
+    dict
+        a dict with the following:
+        - 'subplots_opt': mpl kwargs for subplots
+        - 'contourf_opt': mpl kwargs for contourf
+        - 'colorbar_opt': mpl kwargs for colorbar
+        - 'diff_colorbar_opt' : mpl kwargs for difference colorbar
+        - 'normdiff': color normalization for difference panel
+        - 'cmapdiff': colormap for difference panel
+        - 'levelsdiff': contour levels for difference panel
+        - 'cmap1': color map for a and b panels
+        - 'norm1': color normalization for a and b panels
+        - 'levels1' : contour levels for a and b panels
+        - 'plot_log_p' : true/false whether to plot log(pressure) axis
+    """
+    # determine levels & color normalization:
+    minval = np.min([np.min(adata), np.min(bdata)])
+    maxval = np.max([np.max(adata), np.max(bdata)])
+
+    # determine norm to use (deprecate this once minimum MPL version is high enough)
+    normfunc, mplv = use_this_norm()
+
+    if 'colormap' in kwargs:
+        cmap1 = kwargs['colormap']
+    else:
+        cmap1 = 'coolwarm'
+    #End if
+
+    '''if 'contour_levels' in kwargs:
+        levels1 = kwargs['contour_levels']
+        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    elif 'contour_levels_range' in kwargs:
+        assert len(kwargs['contour_levels_range']) == 3, \
+        "contour_levels_range must have exactly three entries: min, max, step"
+
+        levels1 = np.arange(*kwargs['contour_levels_range'])
+        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    else:
+        levels1 = np.linspace(minval, maxval, 12)
+        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    #End if'''
+
+
+
+
+
+
+
+
+
+    if 'contour_levels' in kwargs:
+        if isinstance(kwargs["contour_levels"], list):
+            levels1 = kwargs['contour_levels']
+            """if ('non_linear' in kwargs) and (kwargs['non_linear']):
+                cmap_obj = cm.get_cmap(cmap1)
+                norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+            else:
+                norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))"""
+        if isinstance(kwargs["contour_levels"], dict):
+            if "lev" in kwargs:
+                lev = kwargs["lev"]
+                levels1 = kwargs['contour_levels'][lev]
+        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    elif 'contour_levels_range' in kwargs:
+        if isinstance(kwargs["contour_levels_range"], list):
+            assert len(kwargs['contour_levels_range']) == 3, \
+            "contour_levels_range must have exactly three entries: min, max, step"
+
+            levels1 = np.arange(*kwargs['contour_levels_range'])
+        if isinstance(kwargs["contour_levels_range"], dict):
+            if "lev" in kwargs:
+                lev = kwargs["lev"]
+                assert len(kwargs['contour_levels_range'][lev]) == 3, \
+                "contour_levels_range must have exactly three entries: min, max, step"
+
+                levels1 = np.arange(*kwargs['contour_levels_range'][lev])
+        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+   
+    else:
+        levels1 = np.linspace(minval, maxval, 12)
+        if ('non_linear' in kwargs) and (kwargs['non_linear']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    #End if
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #Check if the minval and maxval are actually different.  If not,
+    #then set "levels1" to be an empty list, which will cause the
+    #plotting scripts to add a label instead of trying to plot a variable
+    #with no contours:
+    if minval == maxval:
+        levels1 = []
+    #End if
+
+    if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
+        if ((minval < 0) and (0 < maxval)) and mplv > 2:
+            norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+        #End if
+    #End if
+
+    # Difference options -- Check in kwargs for colormap and levels
+    if "diff_colormap" in kwargs:
+        cmapdiff = kwargs["diff_colormap"]
+    else:
+        cmapdiff = 'coolwarm'
+    #End if
+
+    '''if "diff_contour_levels" in kwargs:
+        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+    elif "diff_contour_range" in kwargs:
+        assert len(kwargs['diff_contour_range']) == 3, \
+        "diff_contour_range must have exactly three entries: min, max, step"
+
+        levelsdiff = np.arange(*kwargs['diff_contour_range'])
+    else:
+        # set a symmetric color bar for diff:
+        absmaxdif = np.max(np.abs(diffdata))
+        # set levels for difference plot:
+        levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)'''
+
+
+
+    def clean_levels(plot, **kwargs):
+        if plot == "diff":
+            if "diff_contour_levels" in kwargs:
+                levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+            elif "diff_contour_range" in kwargs:
+                assert len(kwargs['diff_contour_range']) == 3, \
+                "diff_contour_range must have exactly three entries: min, max, step"
+
+                levelsdiff = np.arange(*kwargs['diff_contour_range'])
+            else:
+                # set a symmetric color bar for diff:
+                absmaxdif = np.max(np.abs(diffdata))
+                # set levels for difference plot:
+                levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
+
+        return levelsdiff
+
+    #levelsdiff = clean_levels("diff", **kwargs)
+
+
+
+    '''if "lev" in kwargs:
+        #lev_kwargs = kwargs["lev"]
+        #levelsdiff = clean_levels("diff", **lev_kwargs)
+        if "diff_contour_levels" in kwargs:
+            levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+        elif "diff_contour_range" in kwargs:
+            assert len(kwargs['diff_contour_range']) == 3, \
+            "diff_contour_range must have exactly three entries: min, max, step"
+
+            levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        else:
+            # set a symmetric color bar for diff:
+            absmaxdif = np.max(np.abs(diffdata))
+            # set levels for difference plot:
+            levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
+    else:
+        #levelsdiff = clean_levels("diff", **kwargs)
+        if "diff_contour_levels" in kwargs:
+            levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+        elif "diff_contour_range" in kwargs:
+            assert len(kwargs['diff_contour_range']) == 3, \
+            "diff_contour_range must have exactly three entries: min, max, step"
+
+            levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        else:
+            # set a symmetric color bar for diff:
+            absmaxdif = np.max(np.abs(diffdata))
+            # set levels for difference plot:
+            levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)'''
+
+
+
+
+
+
+    if "diff_contour_levels" in kwargs:
+        if isinstance(kwargs["diff_contour_levels"], list):
+            levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+        if isinstance(kwargs["contour_levels_range"], dict):
+            if "lev" in kwargs:
+                lev = kwargs["lev"]
+                """if isinstance(key, str):
+                    print(f"Key '{key}' is a string.")
+                elif isinstance(key, int):
+                    print(f"Key '{key}' is an integer.")
+                else:
+                    print(f"Key '{key}' is of type {type(key).__name__}.")"""
+
+                levelsdiff = kwargs["diff_contour_levels"][lev]
+            else:
+                print(f"ERROR: This level '{lev}' is not in variable defaults. Please add this")
+        #else:
+            #print("Wow, well I have no idea what this is. Can't continue boi!")
+    elif "diff_contour_range" in kwargs:
+        if isinstance(kwargs["diff_contour_levels"], list):
+            assert len(kwargs['diff_contour_range']) == 3, \
+            "diff_contour_range must have exactly three entries: min, max, step"
+
+            levelsdiff = np.arange(*kwargs['diff_contour_range'])
+        if isinstance(kwargs["diff_contour_range"], dict):
+            if "lev" in kwargs:
+                lev = kwargs["lev"]
+                assert len(kwargs['diff_contour_range'][lev]) == 3, \
+                "diff_contour_range must have exactly three entries: min, max, step"
+
+                levelsdiff = np.arange(*kwargs['diff_contour_range'][lev])
+            else:
+                print(f"ERROR: This level '{lev}' is not in variable defaults. Please add this")
+    else:
+        # set a symmetric color bar for diff:
+        absmaxdif = np.max(np.abs(diffdata))
+        # set levels for difference plot:
+        levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    # Percent Difference options -- Check in kwargs for colormap and levels
+    if "pct_diff_colormap" in kwargs:
+        cmappct = kwargs["pct_diff_colormap"]
+    else:
+        cmappct = "PuOr_r"
+    #End if
+
+    if "pct_diff_contour_levels" in kwargs:
+        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
+    elif "pct_diff_contour_range" in kwargs:
+            assert len(kwargs['pct_diff_contour_range']) == 3, "pct_diff_contour_range must have exactly three entries: min, max, step"
+            levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
+    else:
+        levelspctdiff = [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
+    pctnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
+
+    if "plot_log_pressure" in kwargs:
+        plot_log_p = kwargs["plot_log_pressure"]
+    else:
+        plot_log_p = False
+
+    # color normalization for difference
+    if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
+    else:
+        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+
+    subplots_opt = {}
+    contourf_opt = {}
+    colorbar_opt = {}
+    diff_colorbar_opt = {}
+    pct_colorbar_opt = {}
+
+    # extract any MPL kwargs that should be passed on:
+    if 'mpl' in kwargs:
+        subplots_opt.update(kwargs['mpl'].get('subplots',{}))
+        contourf_opt.update(kwargs['mpl'].get('contourf',{}))
+        colorbar_opt.update(kwargs['mpl'].get('colorbar',{}))
+        diff_colorbar_opt.update(kwargs['mpl'].get('diff_colorbar',{}))
+        pct_colorbar_opt.update(kwargs['mpl'].get('pct_diff_colorbar',{}))
+    #End ifs
+    return {'subplots_opt': subplots_opt,
+            'contourf_opt': contourf_opt,
+            'colorbar_opt': colorbar_opt,
+            'diff_colorbar_opt': diff_colorbar_opt,
+            'pct_colorbar_opt': pct_colorbar_opt,
+            'normdiff': normdiff,
+            'cmapdiff': cmapdiff,
+            'levelsdiff': levelsdiff,
+            'pctnorm': pctnorm,
+            'cmappct': cmappct,
+            'levelspctdiff':levelspctdiff,
+            'cmap1': cmap1,
+            'norm1': norm1,
+            'levels1': levels1,
+            'plot_log_p': plot_log_p
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
