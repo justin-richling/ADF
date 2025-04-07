@@ -2227,7 +2227,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         #else:
             #print("Wow, well I have no idea what this is. Can't continue boi!")
     elif "diff_contour_range" in kwargs:
-        if isinstance(kwargs["diff_contour_levels"], list):
+        if isinstance(kwargs["diff_contour_range"], list):
             assert len(kwargs['diff_contour_range']) == 3, \
             "diff_contour_range must have exactly three entries: min, max, step"
 
