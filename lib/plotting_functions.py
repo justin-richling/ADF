@@ -2055,8 +2055,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
 
 
-
-    if 'contour_levels' in kwargs:
+    # THIS ONE WORKS!
+    '''if 'contour_levels' in kwargs:
         if isinstance(kwargs["contour_levels"], list):
             levels1 = kwargs['contour_levels']
             """if ('non_linear' in kwargs) and (kwargs['non_linear']):
@@ -2099,8 +2099,36 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
         else:
             norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    #End if
+    #End if'''
 
+
+
+    if 'contour_levels' in kwargs:
+        levels = kwargs['contour_levels']
+        if isinstance(levels, list):
+            levels1 = levels
+        elif isinstance(levels, dict) and "lev" in kwargs:
+            levels1 = levels.get(kwargs["lev"])
+
+    elif 'contour_levels_range' in kwargs:
+        levels_range = kwargs['contour_levels_range']
+        if isinstance(levels_range, list):
+            assert len(levels_range) == 3, "contour_levels_range must have 3 entries: min, max, step"
+            levels1 = np.arange(*levels_range)
+        elif isinstance(levels_range, dict) and "lev" in kwargs:
+            range_vals = levels_range.get(kwargs["lev"])
+            assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
+            levels1 = np.arange(*range_vals)
+
+    if levels1 is None:
+        levels1 = np.linspace(minval, maxval, 12)
+
+    if kwargs.get('non_linear', False):
+        cmap_obj = cm.get_cmap(cmap1)
+        norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+    else:
+        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    #End if
 
 
 
@@ -2152,63 +2180,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
 
 
-    def clean_levels(plot, **kwargs):
-        if plot == "diff":
-            if "diff_contour_levels" in kwargs:
-                levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-            elif "diff_contour_range" in kwargs:
-                assert len(kwargs['diff_contour_range']) == 3, \
-                "diff_contour_range must have exactly three entries: min, max, step"
-
-                levelsdiff = np.arange(*kwargs['diff_contour_range'])
-            else:
-                # set a symmetric color bar for diff:
-                absmaxdif = np.max(np.abs(diffdata))
-                # set levels for difference plot:
-                levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
-
-        return levelsdiff
-
-    #levelsdiff = clean_levels("diff", **kwargs)
 
 
 
-    '''if "lev" in kwargs:
-        #lev_kwargs = kwargs["lev"]
-        #levelsdiff = clean_levels("diff", **lev_kwargs)
-        if "diff_contour_levels" in kwargs:
-            levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-        elif "diff_contour_range" in kwargs:
-            assert len(kwargs['diff_contour_range']) == 3, \
-            "diff_contour_range must have exactly three entries: min, max, step"
-
-            levelsdiff = np.arange(*kwargs['diff_contour_range'])
-        else:
-            # set a symmetric color bar for diff:
-            absmaxdif = np.max(np.abs(diffdata))
-            # set levels for difference plot:
-            levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
-    else:
-        #levelsdiff = clean_levels("diff", **kwargs)
-        if "diff_contour_levels" in kwargs:
-            levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-        elif "diff_contour_range" in kwargs:
-            assert len(kwargs['diff_contour_range']) == 3, \
-            "diff_contour_range must have exactly three entries: min, max, step"
-
-            levelsdiff = np.arange(*kwargs['diff_contour_range'])
-        else:
-            # set a symmetric color bar for diff:
-            absmaxdif = np.max(np.abs(diffdata))
-            # set levels for difference plot:
-            levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)'''
-
-
-
-
-
-
-    if "diff_contour_levels" in kwargs:
+    # THIS ONE WORKS!
+    '''if "diff_contour_levels" in kwargs:
         if isinstance(kwargs["diff_contour_levels"], list):
             levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
         if isinstance(kwargs["contour_levels_range"], dict):
@@ -2245,11 +2221,43 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))
         # set levels for difference plot:
-        levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
+        levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)'''
+    
 
 
 
 
+
+
+
+    if "diff_contour_levels" in kwargs:
+        levels = kwargs["diff_contour_levels"]
+        if isinstance(levels, list):
+            levelsdiff = levels
+        elif isinstance(levels, dict):
+            lev = kwargs.get("lev")
+            if lev in levels:
+                levelsdiff = levels[lev]
+            else:
+                print(f"ERROR: This level '{lev}' is not in diff_contour_levels. Please add this.")
+    
+    elif "diff_contour_range" in kwargs:
+        levels_range = kwargs["diff_contour_range"]
+        if isinstance(levels_range, list):
+            assert len(levels_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
+            levelsdiff = np.arange(*levels_range)
+        elif isinstance(levels_range, dict):
+            lev = kwargs.get("lev")
+            if lev in levels_range:
+                range_vals = levels_range[lev]
+                assert len(range_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
+                levelsdiff = np.arange(*range_vals)
+            else:
+                print(f"ERROR: This level '{lev}' is not in diff_contour_range. Please add this.")
+
+    if levelsdiff is None:
+        absmaxdif = np.max(np.abs(diffdata))
+        levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
 
 
 

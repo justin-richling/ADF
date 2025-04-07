@@ -1811,12 +1811,10 @@ RELHUM:
 
 U:
   colormap: "Blues"
-  #contour_levels_range: [-10, 90, 5]
   contour_levels_range:
     200: [-10, 90, 5]
     850: [-10, 30, 2.5]
   diff_colormap: "BrBG"
-  #diff_contour_range: [-15, 15, 2]
   diff_contour_range:
     200: [-15, 15, 2]
     850: [-5, 5, 0.5]
