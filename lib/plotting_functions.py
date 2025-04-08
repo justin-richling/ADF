@@ -2116,7 +2116,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #End if'''
 
 
-
+    levels1 = None
     if 'contour_levels' in kwargs:
         levels = kwargs['contour_levels']
         if isinstance(levels, list):
@@ -2243,7 +2243,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
 
 
-
+    levelsdiff = None
     if "diff_contour_levels" in kwargs:
         levels = kwargs["diff_contour_levels"]
         if isinstance(levels, list):
@@ -2269,6 +2269,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 print(f"ERROR: This level '{lev}' is not in diff_contour_range. Please add this.")
 
+    #else:
     if levelsdiff is None:
         absmaxdif = np.max(np.abs(diffdata))
         levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
