@@ -1866,7 +1866,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             levels1 = levels
         elif isinstance(levels, dict) and "lev" in kwargs:
             levels1 = levels.get(kwargs["lev"])
-
     elif 'contour_levels_range' in kwargs:
         levels_range = kwargs['contour_levels_range']
         if isinstance(levels_range, list):
@@ -1922,7 +1921,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levelsdiff = levels[lev]
             else:
                 print(f"ERROR: This level '{lev}' is not in diff_contour_levels. Please add this.")
-    
     elif "diff_contour_range" in kwargs:
         levels_range = kwargs["diff_contour_range"]
         if isinstance(levels_range, list):
