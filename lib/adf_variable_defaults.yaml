@@ -1882,9 +1882,9 @@ T:
       850: "Spectral"
   contour_levels_range:
     polar_map:
-      200: [-10, 30, 2.5]
-      850: [-10, 13, 2.5]
-    global_latlon_map: [-10, 90, 5]
+      200: [250, 350, 5]
+      850: [250, 350, 5]
+    global_latlon_map: [250, 350, 5]
       #200: [-10, 90, 5]
       #850: [-10, 30, 2.5]
   diff_colormap: "BrBG"
