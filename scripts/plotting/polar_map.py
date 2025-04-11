@@ -104,6 +104,12 @@ def polar_map(adfobj):
 
 
     print("Current script name:", __name__)
+    import inspect
+
+
+    print("Currently in:", inspect.currentframe().f_code.co_name)
+
+
     vres = {"plot_type":__name__}
     # probably want to do this one variable at a time:
     for var in var_list:
