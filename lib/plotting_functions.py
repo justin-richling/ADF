@@ -1858,7 +1858,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         cmap1 = 'coolwarm'
     #End if"""
-
+    print('kwargs["plot_type"]',kwargs["plot_type"])
     cmap1 = 'coolwarm'
     if "colormap" in kwargs:
         cmap = kwargs["colormap"]
