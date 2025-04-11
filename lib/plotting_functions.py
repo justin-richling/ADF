@@ -1861,9 +1861,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     cmap1 = 'coolwarm'
     if "colormap" in kwargs:
-        cmap1 = kwargs["colormap"]
-        if isinstance(cmap1, dict) and "plot_type" in kwargs:
-            cmap1 = cmap1.get(kwargs["plot_type"])
+        cmap = kwargs["colormap"]
+        if isinstance(cmap, dict) and "plot_type" in kwargs:
+            cmap1 = cmap.get(kwargs["plot_type"])
+        else:
+            cmap1 = cmap
 
     levels1 = None
     if 'contour_levels' in kwargs:
@@ -1918,9 +1920,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     cmapdiff = 'coolwarm'
     if "diff_colormap" in kwargs:
-        cmapdiff = kwargs["diff_colormap"]
-        if isinstance(cmapdiff, dict) and "plot_type" in kwargs:
-            cmapdiff = cmapdiff.get(kwargs["plot_type"])
+        cmap_diff = kwargs["diff_colormap"]
+        if isinstance(cmap_diff, dict) and "plot_type" in kwargs:
+            cmapdiff = cmap_diff.get(kwargs["plot_type"])
+        else:
+            cmapdiff = cmap_diff
 
 
     levelsdiff = None
