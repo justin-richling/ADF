@@ -165,6 +165,8 @@ def global_latlon_vect_map(adfobj):
             #continue
         #End if
 
+        vres["plot_type"] = __name__
+
         #Make sure that variable is part of a vector pair:
         if "vector_pair" in vres:
             var_pair = vres["vector_pair"]
@@ -405,6 +407,8 @@ def global_latlon_vect_map(adfobj):
                                 print(f"\t plot_press_levels value '{lv}' not a standard reference pressure, so skipping.")
                                 continue
                             #End if
+
+                            vres['lev'] = int(lv)
 
                             #Loop over season dictionary:
                             for s in seasons:

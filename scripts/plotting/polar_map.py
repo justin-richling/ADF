@@ -102,15 +102,6 @@ def polar_map(adfobj):
                "SON": [9, 10, 11]
                }
 
-
-    print("Current script name:", __name__)
-    import inspect
-
-
-    print("Currently in:", inspect.currentframe().f_code.co_name)
-
-
-    #vres = {"plot_type":__name__}
     # probably want to do this one variable at a time:
     for var in var_list:
         #Notify user of variable being plotted:
@@ -152,7 +143,7 @@ def polar_map(adfobj):
             web_category = vres.get("category", None)
 
         else:
-            #vres = {}
+            vres = {}
             web_category = None
         #End if
         vres["plot_type"] = __name__

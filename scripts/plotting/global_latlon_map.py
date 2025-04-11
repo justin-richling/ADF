@@ -140,11 +140,7 @@ def global_latlon_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    import sys
-    import os
-    main_script = os.path.basename(sys.argv[0])
-    print("Main script name:", main_script)
-    vres = {"plot_tpye":main_script}
+
     # probably want to do this one variable at a time:
     for var in var_list:
         #Notify user of variable being plotted:
@@ -160,10 +156,12 @@ def global_latlon_map(adfobj):
             web_category = vres.get("category", None)
 
         else:
-            #vres = {}
+            vres = {}
             web_category = None
         #End if
+
         vres["plot_type"] = __name__
+        
         # For global maps, also set the central longitude:
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180

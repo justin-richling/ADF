@@ -1875,8 +1875,6 @@ Q:
 T:
   colormap:
     global_latlon_map: "plasma"
-      #200: "coolwarm"
-      #850: "rainbow"
     polar_map: #"Blues"
       200: "terrain"
       850: "Spectral"
@@ -1885,15 +1883,13 @@ T:
       200: [200, 230, 1]
       850: [250, 300, 2.5]
     global_latlon_map: [200, 350, 5]
-      #200: [-10, 90, 5]
-      #850: [-10, 30, 2.5]
   diff_colormap: "BrBG"
   diff_contour_range:
     polar_map:
-        200: [200, 230, 1]
-        850: [250, 300, 2.5]
-    200: [-5, 6, 0.25]
-    850: [-5, 5, 0.5]
+      200: [-5, 6, 0.25]
+      850: [-5, 5, 0.5]
+    #200: [-5, 6, 0.25]
+    #850: [-5, 5, 0.5]
   category: "State"
   obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
   obs_name: "ERA5"
