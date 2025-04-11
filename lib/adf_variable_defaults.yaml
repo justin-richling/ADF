@@ -1815,7 +1815,7 @@ U:
     global_latlon_map: #"coolwarm"
       200: "coolwarm"
       850: "rainbow"
-    polar_map: "Blues"
+    polar_map: #"Blues"
       200: "terrain"
       850: "Spectral"
   contour_levels_range:
