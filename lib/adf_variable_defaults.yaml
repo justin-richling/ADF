@@ -1812,8 +1812,12 @@ RELHUM:
 U:
   #colormap: "Blues"
   colormap:
-    global_latlon_map: "coolwarm"
+    global_latlon_map: #"coolwarm"
+      200: "coolwarm"
+      850: "rainbow"
     polar_map: "Blues"
+      200: "terrain"
+      850: "Spectral"
   contour_levels_range:
     200: [-10, 90, 5]
     850: [-10, 30, 2.5]
