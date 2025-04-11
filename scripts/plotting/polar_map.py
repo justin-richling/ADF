@@ -110,7 +110,7 @@ def polar_map(adfobj):
     print("Currently in:", inspect.currentframe().f_code.co_name)
 
 
-    vres = {"plot_type":__name__}
+    #vres = {"plot_type":__name__}
     # probably want to do this one variable at a time:
     for var in var_list:
         #Notify user of variable being plotted:
@@ -155,6 +155,7 @@ def polar_map(adfobj):
             #vres = {}
             web_category = None
         #End if
+        vres["plot_type"] = __name__
 
         #loop over different data sets to plot model against:
         for data_src in data_list:
