@@ -347,6 +347,8 @@ def polar_map(adfobj):
                                 continue
                             #End if
 
+                            vres['lev'] = int(pres)
+
                             #Create new dictionaries:
                             mseasons = {}
                             oseasons = {}
@@ -406,7 +408,8 @@ def polar_map(adfobj):
                                         pf.make_polar_plot(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], pseasons[s], hemisphere=hemi, obs=obs, **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], pseasons[s],
+                                                     hemisphere=hemi, obs=obs, **vres)
 
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
