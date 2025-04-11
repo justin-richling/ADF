@@ -102,11 +102,9 @@ def polar_map(adfobj):
                "SON": [9, 10, 11]
                }
 
-    import os
 
-    script_name = os.path.basename(__file__)
-    print("Current script name:", script_name)
-    vres = {"plot_type":script_name}
+    print("Current script name:", __name__)
+    vres = {"plot_type":__name__}
     # probably want to do this one variable at a time:
     for var in var_list:
         #Notify user of variable being plotted:
