@@ -1866,7 +1866,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap1 = cmap.get(kwargs["plot_type"])
         else:
             cmap1 = cmap
-
+    print("cmap1",cmap1,"\n")
     levels1 = None
     if 'contour_levels' in kwargs:
         levels = kwargs['contour_levels']
@@ -1925,7 +1925,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmapdiff = cmap_diff.get(kwargs["plot_type"])
         else:
             cmapdiff = cmap_diff
-
+    print("cmapdiff",cmapdiff,"\n")
 
     levelsdiff = None
     if "diff_contour_levels" in kwargs:
