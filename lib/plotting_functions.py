@@ -1870,7 +1870,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap1 = cmap_lev1
         else:
             cmap1 = cmap
-    print("cmap1",cmap1,"\n")
+    print("\ncmap1 ",cmap1)
+    if "lev" in kwargs:
+        print(kwargs["lev"])
+    else:
+        print()
     
     levels1 = None
     if 'contour_levels' in kwargs:
