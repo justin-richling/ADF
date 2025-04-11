@@ -163,7 +163,7 @@ def global_latlon_map(adfobj):
             #vres = {}
             web_category = None
         #End if
-
+        vres["plot_type"] = __name__
         # For global maps, also set the central longitude:
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
