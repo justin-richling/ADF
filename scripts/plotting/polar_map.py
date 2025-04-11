@@ -101,13 +101,12 @@ def polar_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    
-    import sys
+
     import os
 
-    main_script = os.path.basename(sys.argv[0])
-    print("Main script name:", main_script)
-    vres = {"plot_tpye":main_script}
+    script_name = os.path.basename(__file__)
+    print("Current script name:", script_name)
+    vres = {"plot_type":script_name}
     # probably want to do this one variable at a time:
     for var in var_list:
         #Notify user of variable being plotted:
