@@ -42,6 +42,12 @@ def global_mean_timeseries(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
+    import sys
+    import os
+    main_script = os.path.basename(sys.argv[0])
+    print("Main script name:", main_script)
+    vres = {"plot_tpye":main_script}
+
     # Loop over variables
     for field in adfobj.diag_var_list:
         #Notify user of variable being plotted:
@@ -53,7 +59,8 @@ def global_mean_timeseries(adfobj):
             #If found then notify user, assuming debug log is enabled:
             adfobj.debug_log(f"global_mean_timeseries: Found variable defaults for {field}")
         else:
-            vres = {}
+            #vres = {}
+            web_category = None
         #End if
 
         # reference time series (DataArray)

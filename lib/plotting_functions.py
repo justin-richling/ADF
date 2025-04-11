@@ -1853,11 +1853,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
 
-    if 'colormap' in kwargs:
+    """if 'colormap' in kwargs:
         cmap1 = kwargs['colormap']
     else:
         cmap1 = 'coolwarm'
-    #End if
+    #End if"""
+
+    cmap1 = 'coolwarm'
+    if "colormap" in kwargs:
+        cmap1 = kwargs["colormap"]
+        if isinstance(levels, dict) and "plot_type" in kwargs:
+            cmap1 = levels.get(kwargs["plot_type"])
 
     levels1 = None
     if 'contour_levels' in kwargs:
@@ -1904,11 +1910,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #End if
 
     # Difference options -- Check in kwargs for colormap and levels
-    if "diff_colormap" in kwargs:
+    """if "diff_colormap" in kwargs:
         cmapdiff = kwargs["diff_colormap"]
     else:
         cmapdiff = 'coolwarm'
-    #End if
+    #End if"""
+
+    cmapdiff = 'coolwarm'
+    if "diff_colormap" in kwargs:
+        cmapdiff = kwargs["diff_colormap"]
+        if isinstance(levels, dict) and "plot_type" in kwargs:
+            cmapdiff = levels.get(kwargs["plot_type"])
+
 
     levelsdiff = None
     if "diff_contour_levels" in kwargs:

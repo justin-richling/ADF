@@ -101,6 +101,12 @@ def meridional_mean(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
 
+    import sys
+    import os
+    main_script = os.path.basename(sys.argv[0])
+    print("Main script name:", main_script)
+    vres = {"plot_tpye":main_script}
+
     #Loop over variables:
     for var in var_list:
         #Notify user of variable being plotted:
@@ -135,6 +141,7 @@ def meridional_mean(adfobj):
 
         else:
             vres = {}
+            web_category = None
         #End if
 
         #loop over different data sets to plot model against:

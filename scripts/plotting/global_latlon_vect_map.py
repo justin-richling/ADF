@@ -133,6 +133,12 @@ def global_latlon_vect_map(adfobj):
                "SON": [9, 10, 11]
                }
 
+    import sys
+    import os
+    main_script = os.path.basename(sys.argv[0])
+    print("Main script name:", main_script)
+    vres = {"plot_tpye":main_script}
+
     #Initialize skipped variables set:
     skip_vars = set()
 
@@ -155,7 +161,8 @@ def global_latlon_vect_map(adfobj):
 
         else:
             adfobj.debug_log(f"global_latlon_vect_map: Skipping '{var}' as no variable defaults were found")
-            continue
+            web_category = None
+            #continue
         #End if
 
         #Make sure that variable is part of a vector pair:

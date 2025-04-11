@@ -83,6 +83,12 @@ def zonal_mean(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]}
 
+    import sys
+    import os
+    main_script = os.path.basename(sys.argv[0])
+    print("Main script name:", main_script)
+    vres = {"plot_tpye":main_script}
+
     #Check if plots already exist and redo_plot boolean
     #If redo_plot is false and file exists, keep track and attempt to skip calcs to
     #speed up preformance a bit if re-running the ADF
@@ -159,7 +165,8 @@ def zonal_mean(adfobj):
             adfobj.debug_log(f"\t    INFO: zonal_mean: Found variable defaults for {var}")
 
         else:
-            vres = {}
+            #vres = {}
+            web_category = None
         #End if
 
         # load reference data (observational or baseline)
