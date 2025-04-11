@@ -1940,6 +1940,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 print(f"ERROR: This level '{lev}' is not in diff_contour_levels. Please add this.")
     elif "diff_contour_range" in kwargs:
         levels_range = kwargs["diff_contour_range"]
+        print("tpye(levels_range)",type(levels_range))
         if isinstance(levels_range, list):
             assert len(levels_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
             levelsdiff = np.arange(*levels_range)
