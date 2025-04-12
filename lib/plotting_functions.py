@@ -1907,11 +1907,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if isinstance(range_vals_ptype, dict) and "lev" in kwargs:
                 range_vals = range_vals_ptype.get(kwargs["lev"])
                 print("range_vals is dict AND plot_type?",range_vals,"\n\n")
+                assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
+                levels1 = np.arange(*range_vals)
             else:
-                range_vals = range_vals_ptype
+                #range_vals = range_vals_ptype
                 print("range_vals is dict but no plot_type?",range_vals,"\n\n")
-            assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
-            levels1 = np.arange(*range_vals)
+            
         
 
     if levels1 is None:
@@ -1986,13 +1987,13 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
                     diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
                     print("diffrange_vals is dict AND plot_type?",diffrange_vals,"\n\n")
+                    assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
+                    levelsdiff = np.arange(*diffrange_vals)
                 else:
-                    diffrange_vals = diffrange_vals_ptype
+                    #diffrange_vals = diffrange_vals_ptype
                     print("diffrange_vals is dict but no plot_type?",diffrange_vals,"\n\n")
-                assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
-                levelsdiff = np.arange(*diffrange_vals)
             else:
-                print(f"looks like this plot type has no special arguments for current plot type: '{plot_type}'")
+                print(f"looks like the current plot type: '{plot_type}' has no special arguments")
             
 
     if levelsdiff is None:
