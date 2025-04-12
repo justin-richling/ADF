@@ -1846,6 +1846,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         - 'levels1' : contour levels for a and b panels
         - 'plot_log_p' : true/false whether to plot log(pressure) axis
     """
+
+    if "plot_type" in kwargs:
+        plot_type = kwargs["plot_type"]
+    else:
+        plot_type = None
+
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
     maxval = np.max([np.max(adata), np.max(bdata)])
@@ -1862,8 +1868,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     cmap1 = 'coolwarm'
     if "colormap" in kwargs:
         cmap = kwargs["colormap"]
-        if isinstance(cmap, dict) and "plot_type" in kwargs:
-            cmap_lev1 = cmap.get(kwargs["plot_type"])
+        #if isinstance(cmap, dict) and "plot_type" in kwargs:
+        if (isinstance(cmap, dict)) and (plot_type):
+            cmap_lev1 = cmap.get(plot_type)
             if isinstance(cmap_lev1, dict) and "lev" in kwargs:
                 cmap1 = cmap_lev1.get(kwargs["lev"])
             else:
@@ -1881,8 +1888,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         levels = kwargs['contour_levels']
         if isinstance(levels, list):
             levels1 = levels
-        elif isinstance(levels, dict) and "plot_type" in kwargs:
-            levels_ptype = levels.get(kwargs["plot_type"])
+        #elif isinstance(levels, dict) and "plot_type" in kwargs:
+        elif (isinstance(levels, dict)) and (plot_type):
+            levels_ptype = levels.get(plot_type)
             if isinstance(levels_ptype, dict) and "lev" in kwargs:
                 levels1 = levels_ptype.get(kwargs["lev"])
             else:
@@ -1892,8 +1900,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if isinstance(levels_range, list):
             assert len(levels_range) == 3, "contour_levels_range must have 3 entries: min, max, step"
             levels1 = np.arange(*levels_range)
-        elif isinstance(levels_range, dict) and "plot_type" in kwargs:
-            range_vals_ptype = levels_range.get(kwargs["plot_type"])
+        #elif isinstance(levels_range, dict) and "plot_type" in kwargs:
+        elif (isinstance(levels_range, dict)) and (plot_type):
+            range_vals_ptype = levels_range.get(plot_type)
             print("\n\nAHHHH range_vals_ptype",range_vals_ptype,"\n\n")
             if isinstance(range_vals_ptype, dict) and "lev" in kwargs:
                 range_vals = range_vals_ptype.get(kwargs["lev"])
@@ -1942,20 +1951,22 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     cmapdiff = 'coolwarm'
     if "diff_colormap" in kwargs:
         cmap_diff = kwargs["diff_colormap"]
-        if isinstance(cmap_diff, dict) and "plot_type" in kwargs:
-            cmapdiff = cmap_diff.get(kwargs["plot_type"])
+        #if isinstance(cmap_diff, dict) and "plot_type" in kwargs:
+        if (isinstance(cmap_diff, dict)) and (plot_type):
+            cmapdiff = cmap_diff.get(plot_type)
         else:
             cmapdiff = cmap_diff
     #print("cmapdiff",cmapdiff,"\n")
 
     levelsdiff = None
     if "diff_contour_levels" in kwargs:
-        levels = kwargs["diff_contour_levels"]
-        if isinstance(levels, list):
-            levelsdiff = levels
+        diff_levels = kwargs["diff_contour_levels"]
+        if isinstance(diff_levels, list):
+            levelsdiff = diff_levels
         #elif isinstance(levels, dict) and "lev" in kwargs:
-        elif isinstance(levels, dict) and "plot_type" in kwargs:
-            levelsdiff_ptype = levels.get(kwargs["plot_type"])
+        #elif isinstance(levels, dict) and "plot_type" in kwargs:
+        elif (isinstance(diff_levels, dict)) and (plot_type):
+            levelsdiff_ptype = diff_levels.get(plot_type)
             if isinstance(levelsdiff_ptype, dict) and "lev" in kwargs:
                 levelsdiff = levelsdiff_ptype.get(kwargs["lev"])
             else:
@@ -1966,10 +1977,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if isinstance(levelsdiff_range, list):
             assert len(levelsdiff_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
             levelsdiff = np.arange(*levelsdiff_range)
-        elif isinstance(levelsdiff_range, dict) and "plot_type" in kwargs:
+        #elif isinstance(levelsdiff_range, dict) and "plot_type" in kwargs:
+        elif (isinstance(levelsdiff_range, dict)) and (plot_type):
             #if kwargs["plot_type"] == kwargs["curr_plot_type"]
-            if kwargs["plot_type"] in levelsdiff_range:
-                diffrange_vals_ptype = levelsdiff_range.get(kwargs["plot_type"])
+            if plot_type in levelsdiff_range:
+                diffrange_vals_ptype = levelsdiff_range.get(plot_type)
                 print("\n\nAHHHH diffrange_vals_ptype",diffrange_vals_ptype,"\n\n")
                 if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
                     diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
@@ -1977,10 +1989,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 else:
                     diffrange_vals = diffrange_vals_ptype
                     print("diffrange_vals is dict but no plot_type?",diffrange_vals,"\n\n")
-            #else:
-
-            assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*diffrange_vals)
+                assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
+                levelsdiff = np.arange(*diffrange_vals)
+            else:
+                print(f"looks like this plot type has no special arguments for current plot type: '{plot_type}'")
+            
 
     if levelsdiff is None:
         absmaxdif = np.max(np.abs(diffdata))
