@@ -1953,26 +1953,27 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         levels = kwargs["diff_contour_levels"]
         if isinstance(levels, list):
             levelsdiff = levels
-        elif isinstance(levels, dict) and "lev" in kwargs:
-            lev = kwargs.get("lev")
-            if lev in levels:
-                levelsdiff = levels[lev]
+        #elif isinstance(levels, dict) and "lev" in kwargs:
+        elif isinstance(levels, dict) and "plot_type" in kwargs:
+            levelsdiff_ptype = levels.get(kwargs["plot_type"])
+            if isinstance(levelsdiff_ptype, dict) and "lev" in kwargs:
+                levelsdiff = levelsdiff_ptype.get(kwargs["lev"])
             else:
-                print(f"ERROR: This level '{lev}' is not in diff_contour_levels. Please add this.")
+                levelsdiff = levels_ptype
     elif "diff_contour_range" in kwargs:
-        levels_range = kwargs["diff_contour_range"]
+        levelsdiff_range = kwargs["diff_contour_range"]
         #print("tpye(levels_range)",type(levels_range))
-        if isinstance(levels_range, list):
-            assert len(levels_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*levels_range)
-        elif isinstance(levels_range, dict):
-            lev = kwargs.get("lev")
-            if lev in levels_range:
-                range_vals = levels_range[lev]
-                assert len(range_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
-                levelsdiff = np.arange(*range_vals)
+        if isinstance(levelsdiff_range, list):
+            assert len(levelsdiff_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
+            levelsdiff = np.arange(*levelsdiff_range)
+        elif isinstance(levelsdiff_range, dict) and "plot_type" in kwargs:
+            diffrange_vals_ptype = levels_range.get(kwargs["plot_type"])
+            if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
+                diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
             else:
-                print(f"ERROR: This level '{lev}' is not in diff_contour_range. Please add this.")
+                diffrange_vals = diffrange_vals_ptype
+            assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
+            levelsdiff = np.arange(*diffrange_vals)
 
     if levelsdiff is None:
         absmaxdif = np.max(np.abs(diffdata))
