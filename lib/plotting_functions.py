@@ -1882,7 +1882,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #    print(kwargs["lev"])
     #else:
     #    print()
-    
+    print("FUUUUUDDDDGGGE:",kwargs)
     levels1 = None
     if 'contour_levels' in kwargs:
         levels = kwargs['contour_levels']
@@ -1915,7 +1915,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = np.arange(*range_vals)
             else:
                 range_vals = range_vals_ptype
-                print("range_vals is dict but no plot_type?",range_vals,"\n\n")
+                print("range_vals is dict but no plot_type?",range_vals)
             
         
 
@@ -1987,10 +1987,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #if kwargs["plot_type"] == kwargs["curr_plot_type"]
             if plot_type in levelsdiff_range:
                 diffrange_vals_ptype = levelsdiff_range.get(plot_type)
-                print("\n\nAHHHH diffrange_vals_ptype",diffrange_vals_ptype,"\n\n")
+                print("\n\nAHHHH diffrange_vals_ptype",diffrange_vals_ptype)
                 if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
                     diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
-                    print("diffrange_vals is dict AND plot_type?",diffrange_vals,"\n\n")
+                    print("diffrange_vals is dict AND plot_type?",diffrange_vals)
                     assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
                     levelsdiff = np.arange(*diffrange_vals)
                 else:
