@@ -1875,7 +1875,7 @@ Q:
 T:
   colormap:
     global_latlon_map: "plasma"
-    polar_map: #"Blues"
+    polar_map:
       200: "terrain"
       850: "Spectral"
   contour_levels_range:
@@ -1888,8 +1888,6 @@ T:
     polar_map:
       200: [-5, 6, 0.25]
       850: [-5, 5, 0.5]
-    #200: [-5, 6, 0.25]
-    #850: [-5, 5, 0.5]
   category: "State"
   obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
   obs_name: "ERA5"
