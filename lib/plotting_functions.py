@@ -1884,7 +1884,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         elif isinstance(levels, dict) and "plot_type" in kwargs:
             levels_ptype = levels.get(kwargs["plot_type"])
             if isinstance(levels_ptype, dict) and "lev" in kwargs:
-                level_vals = levels_ptype.get(kwargs["lev"])
+                levels1 = levels_ptype.get(kwargs["lev"])
             else:
                 levels1 = levels_ptype
     elif 'contour_levels_range' in kwargs:
