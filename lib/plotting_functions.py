@@ -1897,6 +1897,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = levels_ptype
     elif 'contour_levels_range' in kwargs:
         levels_range = kwargs['contour_levels_range']
+        print("\n\nAHHHH contour_levels_range",levels_range)
         if isinstance(levels_range, list):
             assert len(levels_range) == 3, "contour_levels_range must have 3 entries: min, max, step"
             levels1 = np.arange(*levels_range)
