@@ -1909,6 +1909,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 print("range_vals is dict AND plot_type?",range_vals,"\n\n")
                 assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
                 levels1 = np.arange(*range_vals)
+            if isinstance(range_vals_ptype, list):
+                print(f"looks like this the contour level range is a list and is applied for all plot types, not just the current one: '{plot_type}'")
+                levels1 = np.arange(*range_vals)
             else:
                 range_vals = range_vals_ptype
                 print("range_vals is dict but no plot_type?",range_vals,"\n\n")
