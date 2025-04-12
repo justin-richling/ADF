@@ -1967,7 +1967,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             assert len(levelsdiff_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
             levelsdiff = np.arange(*levelsdiff_range)
         elif isinstance(levelsdiff_range, dict) and "plot_type" in kwargs:
-            diffrange_vals_ptype = levels_range.get(kwargs["plot_type"])
+            diffrange_vals_ptype = levelsdiff_range.get(kwargs["plot_type"])
             if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
                 diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
             else:
