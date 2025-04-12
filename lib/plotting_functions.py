@@ -1910,7 +1910,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
                 levels1 = np.arange(*range_vals)
             else:
-                #range_vals = range_vals_ptype
+                range_vals = range_vals_ptype
                 print("range_vals is dict but no plot_type?",range_vals,"\n\n")
             
         
@@ -1990,7 +1990,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
                     levelsdiff = np.arange(*diffrange_vals)
                 else:
-                    #diffrange_vals = diffrange_vals_ptype
+                    diffrange_vals = diffrange_vals_ptype
                     print("diffrange_vals is dict but no plot_type?",diffrange_vals,"\n\n")
             else:
                 print(f"looks like the current plot type: '{plot_type}' has no special arguments")
