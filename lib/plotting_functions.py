@@ -1897,17 +1897,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = levels_ptype
     if 'contour_levels_range' in kwargs:
         levels_range = kwargs['contour_levels_range']
-        print("\n\nAHHHH contour_levels_range",levels_range)
+        ##print("\n\nAHHHH contour_levels_range",levels_range)
         if isinstance(levels_range, list):
             assert len(levels_range) == 3, "contour_levels_range must have 3 entries: min, max, step"
             levels1 = np.arange(*levels_range)
         #elif isinstance(levels_range, dict) and "plot_type" in kwargs:
         elif (isinstance(levels_range, dict)) and (plot_type):
             range_vals_ptype = levels_range.get(plot_type)
-            print("\n\nAHHHH range_vals_ptype",range_vals_ptype)
+            ##print("\n\nAHHHH range_vals_ptype",range_vals_ptype)
             if isinstance(range_vals_ptype, dict) and "lev" in kwargs:
                 range_vals = range_vals_ptype.get(kwargs["lev"])
-                print("range_vals is dict AND plot_type?",range_vals)
+                ##print("range_vals is dict AND plot_type?",range_vals)
                 assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
                 levels1 = np.arange(*range_vals)
             if isinstance(range_vals_ptype, list):
