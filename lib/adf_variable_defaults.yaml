@@ -1814,7 +1814,7 @@ U:
   colormap:
     global_latlon_map:
       200: "coolwarm"
-      850: "rainbow"
+      #850: "rainbow"
     polar_map:
       200: "terrain"
       850: "Spectral"
