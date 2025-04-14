@@ -1917,7 +1917,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 range_vals = range_vals_ptype
                 print("range_vals is dict but no plot_type?",range_vals)
             
-        
+    print()    
 
     if levels1 is None:
         levels1 = np.linspace(minval, maxval, 12)
