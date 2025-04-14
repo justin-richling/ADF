@@ -1925,13 +1925,34 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 range_vals = range_vals_ptype
                 print("range_vals is dict but no plot_type?",range_vals)
+    if 'contour_levels_linspace' in kwargs:
+        levels_linspace = kwargs['contour_levels_linspace']
+        ##print("\n\nAHHHH contour_levels_range",levels_range)
+        if isinstance(levels_linspace, list):
+            assert len(levels_linspace) == 3, "contour_levels_linspace must have 3 entries: min, max, step"
+            levels1 = np.linspace(*levels_linspace)
+        #elif isinstance(levels_range, dict) and "plot_type" in kwargs:
+        elif (isinstance(levels_linspace, dict)) and (plot_type):
+            linspace_vals_ptype = levels_linspace.get(plot_type)
+            ##print("\n\nAHHHH range_vals_ptype",range_vals_ptype)
+            if isinstance(linspace_vals_ptype, dict) and "lev" in kwargs:
+                range_vals = linspace_vals_ptype.get(kwargs["lev"])
+                #print("range_vals is dict AND plot_type?",range_vals)
+                assert len(range_vals) == 3, "contour_levels_linspace[lev] must have 3 entries: min, max, step"
+                levels1 = np.linspace(*range_vals)
+            if isinstance(linspace_vals_ptype, list):
+                print(f"looks like this the contour level range is a list and is applied for all plot types, not just the current one: '{plot_type}'")
+                levels1 = np.linspace(*linspace_vals_ptype)
+            else:
+                range_vals = linspace_vals_ptype
+                print("range_vals is dict but no plot_type?",range_vals)
 
     if levels1 is None:
         levels1 = np.linspace(minval, maxval, 12)
     #if prizzint:
     #    print("LEVELS",levels1)
 
-    print("LEVELS",levels1)
+    print("LEVELS: ",type(levels1)," - ",levels1)
 
     if kwargs.get('non_linear', False):
         cmap_obj = cm.get_cmap(cmap1)
