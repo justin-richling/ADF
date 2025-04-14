@@ -1884,9 +1884,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #    print()
     if "prizzint" in kwargs:
         if kwargs["prizzint"]:
+            prizzint = True
             print("    - FUUUUUDDDDGGGE:",kwargs,"\n")
     else:
-        hi = 0
+        prizzint = False
 
     if 'contour_levels' in kwargs:
         levels = kwargs['contour_levels']
@@ -1920,11 +1921,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 range_vals = range_vals_ptype
                 print("range_vals is dict but no plot_type?",range_vals)
-            
-    print()    
 
     if levels1 is None:
         levels1 = np.linspace(minval, maxval, 12)
+    if prizzint:
+        print("LEVELS",levels1)
 
     if kwargs.get('non_linear', False):
         cmap_obj = cm.get_cmap(cmap1)
