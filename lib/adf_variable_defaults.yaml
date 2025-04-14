@@ -1826,7 +1826,7 @@ U:
       200: [-10, 91, 5]
       850: [-10, 31, 2.5]
   contour_levels_linspace:
-    zonal_map: [-10, 30, 15]
+    zonal_mean: [-10, 30, 15]
   diff_colormap: "BrBG"
   diff_contour_range:
     global_latlon_map:
