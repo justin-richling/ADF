@@ -1811,22 +1811,22 @@ RELHUM:
 
 U:
   #colormap: "Blues"
-  colormap:
-    global_latlon_map:
-      200: "coolwarm"
-      #850: "rainbow"
-    polar_map:
-      200: "terrain"
-      850: "Spectral"
-  contour_levels_range:
-    polar_map:
-      200: [-10, 31, 2.5]
-      850: [-10, 13, 2.5]
-    global_latlon_map:
-      200: [-10, 51, 2.5]
-      850: [-10, 31, 2.5]
-  contour_levels_linspace:
-    zonal_mean: [-10, 30, 15]
+  #colormap:
+  #  global_latlon_map:
+  #    200: "coolwarm"
+  #    #850: "rainbow"
+  #  polar_map:
+  #    200: "terrain"
+  #    850: "Spectral"
+  #contour_levels_range:
+  #  polar_map:
+  #    200: [-10, 31, 2.5]
+  #    850: [-10, 13, 2.5]
+  #  global_latlon_map:
+  #    200: [-10, 51, 2.5]
+  #    850: [-10, 31, 2.5]
+  #contour_levels_linspace:
+  #  zonal_mean: [-10, 30, 15]
   diff_colormap: "BrBG"
   diff_contour_range:
     global_latlon_map:
