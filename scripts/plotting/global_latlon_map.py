@@ -299,7 +299,7 @@ def global_latlon_map(adfobj):
 
                     #Loop over seasons:
                     for s in seasons:
-                        print("Season",s)
+                        print("\nSeason",s)
                         print("Press",pres)
                         plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
                         if doplot[plot_name] is None:
