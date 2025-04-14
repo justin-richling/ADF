@@ -1936,7 +1936,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         #elif isinstance(levels_range, dict) and "plot_type" in kwargs:
         elif (isinstance(levels_linspace, dict)) and (plot_type):
             linspace_vals_ptype = levels_linspace.get(plot_type)
-            ##print("\n\nAHHHH range_vals_ptype",range_vals_ptype)
+            print("\n\nAHHHH linspace_vals_ptype",linspace_vals_ptype)
             #if isinstance(linspace_vals_ptype, dict) and "lev" in kwargs:
             if isinstance(linspace_vals_ptype, dict):
                 if "lev" in kwargs:
