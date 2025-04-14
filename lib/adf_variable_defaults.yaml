@@ -1883,7 +1883,7 @@ T:
     polar_map:
       200: [200, 230, 1]
       850: [250, 300, 2.5]
-    global_latlon_map: [200, 350, 5]
+    global_latlon_map: [200, 301, 5]
   contour_levels:
     zonal_mean:
       200: [200, 205, 210, 215, 220, 225, 230]
