@@ -1925,8 +1925,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     if levels1 is None:
         levels1 = np.linspace(minval, maxval, 12)
-    if prizzint:
-        print("LEVELS",levels1)
+    #if prizzint:
+    #    print("LEVELS",levels1)
+
+    print("LEVELS",levels1)
 
     if kwargs.get('non_linear', False):
         cmap_obj = cm.get_cmap(cmap1)
