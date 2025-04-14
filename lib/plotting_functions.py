@@ -1950,6 +1950,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 #print(f"looks like this the contour level range is a list and is applied for all plot types, not just the current one: '{plot_type}'")
                 levels1 = np.linspace(*linspace_vals_ptype)
             else:
+                print("IS IT COMEINMG DHOEJTOK")
                 range_vals = linspace_vals_ptype
                 #print("range_vals is dict but no plot_type?",range_vals)
     print("PRE CHECK LEVELS: ",type(levels1)," - ",levels1)
