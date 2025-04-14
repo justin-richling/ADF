@@ -1937,8 +1937,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         elif (isinstance(levels_linspace, dict)) and (plot_type):
             linspace_vals_ptype = levels_linspace.get(plot_type)
             ##print("\n\nAHHHH range_vals_ptype",range_vals_ptype)
-            if isinstance(linspace_vals_ptype, dict) and "lev" in kwargs:
-                range_vals = linspace_vals_ptype.get(kwargs["lev"])
+            #if isinstance(linspace_vals_ptype, dict) and "lev" in kwargs:
+            if isinstance(linspace_vals_ptype, dict):
+                if "lev" in kwargs:
+                    range_vals = linspace_vals_ptype.get(kwargs["lev"])
+                range_vals = linspace_vals_ptype
                 #print("range_vals is dict AND plot_type?",range_vals)
                 assert len(range_vals) == 3, "contour_levels_linspace[lev] must have 3 entries: min, max, step"
                 levels1 = np.linspace(*range_vals)
