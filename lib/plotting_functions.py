@@ -1956,6 +1956,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     print("PRE CHECK LEVELS: ",type(levels1)," - ",levels1)
     if levels1 is None:
         levels1 = np.linspace(minval, maxval, 12)
+        no_norm=True
     #if prizzint:
     #    print("LEVELS",levels1)
 
@@ -1966,7 +1967,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
     else:
         print("IS THE NORM HAPPENING GHEHJER")
-        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        if no_norm:
+            norm1=None
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     #End if
 
 
