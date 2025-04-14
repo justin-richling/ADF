@@ -1882,7 +1882,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #    print(kwargs["lev"])
     #else:
     #    print()
-    print("    - FUUUUUDDDDGGGE:",kwargs,"\n")
+    if "prizzint" in kwargs:
+        if kwargs["prizzint"]:
+            print("    - FUUUUUDDDDGGGE:",kwargs,"\n")
+    else:
+        hi = 0
 
     if 'contour_levels' in kwargs:
         levels = kwargs['contour_levels']
