@@ -1877,8 +1877,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap1 = cmap_lev1
         else:
             cmap1 = cmap
-    if not cmap1:
-        cmap1 = 'coolwarm' 
+    #if not cmap1:
+    #    cmap1 = 'coolwarm' 
     print("\ncmap1 ",cmap1)
     #if "lev" in kwargs:
     #    print(kwargs["lev"])
