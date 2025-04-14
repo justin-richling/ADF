@@ -1893,6 +1893,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         prizzint = False
 
     levels1 = None
+    no_norm = False
     if 'contour_levels' in kwargs:
         levels = kwargs['contour_levels']
         if isinstance(levels, list):
