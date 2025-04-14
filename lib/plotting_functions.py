@@ -1882,6 +1882,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #    print(kwargs["lev"])
     #else:
     #    print()
+    prizzint = False
     if "prizzint" in kwargs:
         if kwargs["prizzint"]:
             prizzint = True
