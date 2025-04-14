@@ -1820,11 +1820,13 @@ U:
       850: "Spectral"
   contour_levels_range:
     polar_map:
-      200: [-10, 30, 2.5]
+      200: [-10, 31, 2.5]
       850: [-10, 13, 2.5]
     global_latlon_map:
-      200: [-10, 90, 5]
-      850: [-10, 30, 2.5]
+      200: [-10, 91, 5]
+      850: [-10, 31, 2.5]
+  contour_levels_linspace:
+    zonal_map: [-10, 31, 15]
   diff_colormap: "BrBG"
   diff_contour_range:
     global_latlon_map:
