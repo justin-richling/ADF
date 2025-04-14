@@ -1895,7 +1895,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = levels_ptype.get(kwargs["lev"])
             else:
                 levels1 = levels_ptype
-    elif 'contour_levels_range' in kwargs:
+    if 'contour_levels_range' in kwargs:
         levels_range = kwargs['contour_levels_range']
         print("\n\nAHHHH contour_levels_range",levels_range)
         if isinstance(levels_range, list):
@@ -1976,7 +1976,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levelsdiff = levelsdiff_ptype.get(kwargs["lev"])
             else:
                 levelsdiff = levels_ptype
-    elif "diff_contour_range" in kwargs:
+    if "diff_contour_range" in kwargs:
         levelsdiff_range = kwargs["diff_contour_range"]
         #print("tpye(levels_range)",type(levels_range))
         if isinstance(levelsdiff_range, list):
