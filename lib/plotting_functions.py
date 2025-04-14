@@ -1965,6 +1965,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         cmap_obj = cm.get_cmap(cmap1)
         norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
     else:
+        print("IS THE NORM HAPPENING GHEHJER")
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     #End if
 
