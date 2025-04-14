@@ -1926,7 +1926,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 range_vals = range_vals_ptype
                 #print("range_vals is dict but no plot_type?",range_vals)
-
+    print("HOW ABOUT PLOT_TYPE:",plot_type)
     if 'contour_levels_linspace' in kwargs:
         levels_linspace = kwargs['contour_levels_linspace']
         ##print("\n\nAHHHH contour_levels_range",levels_range)
