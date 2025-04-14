@@ -1926,7 +1926,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 range_vals = range_vals_ptype
                 #print("range_vals is dict but no plot_type?",range_vals)
-        print("THIS IS A LIST OF START, STOP, INCRIMENT -> np.arange")
+
     if 'contour_levels_linspace' in kwargs:
         levels_linspace = kwargs['contour_levels_linspace']
         ##print("\n\nAHHHH contour_levels_range",levels_range)
@@ -1948,7 +1948,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 range_vals = linspace_vals_ptype
                 #print("range_vals is dict but no plot_type?",range_vals)
-        print("THIS IS A LIST OF START, STOP, NUMSTEPS -> np.linspace")
+    print("PRE CHECK LEVELS: ",type(levels1)," - ",levels1)
     if levels1 is None:
         levels1 = np.linspace(minval, maxval, 12)
     #if prizzint:
