@@ -1907,12 +1907,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             ##print("\n\nAHHHH range_vals_ptype",range_vals_ptype)
             if isinstance(range_vals_ptype, dict) and "lev" in kwargs:
                 range_vals = range_vals_ptype.get(kwargs["lev"])
-                ##print("range_vals is dict AND plot_type?",range_vals)
+                #print("range_vals is dict AND plot_type?",range_vals)
                 assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
                 levels1 = np.arange(*range_vals)
             if isinstance(range_vals_ptype, list):
                 print(f"looks like this the contour level range is a list and is applied for all plot types, not just the current one: '{plot_type}'")
-                levels1 = np.arange(*range_vals)
+                levels1 = np.arange(*range_vals_ptype)
             else:
                 range_vals = range_vals_ptype
                 print("range_vals is dict but no plot_type?",range_vals)
@@ -1987,7 +1987,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #if kwargs["plot_type"] == kwargs["curr_plot_type"]
             if plot_type in levelsdiff_range:
                 diffrange_vals_ptype = levelsdiff_range.get(plot_type)
-                print("\n\nAHHHH diffrange_vals_ptype",diffrange_vals_ptype)
+                #print("\n\nAHHHH diffrange_vals_ptype",diffrange_vals_ptype)
                 if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
                     diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
                     print("diffrange_vals is dict AND plot_type?",diffrange_vals)
