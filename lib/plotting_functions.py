@@ -1929,7 +1929,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     print("HOW ABOUT PLOT_TYPE:",plot_type)
     if 'contour_levels_linspace' in kwargs:
         levels_linspace = kwargs['contour_levels_linspace']
-        ##print("\n\nAHHHH contour_levels_range",levels_range)
+        print("\n\nAHHHH contour_levels_linspace",levels_linspace)
         if isinstance(levels_linspace, list):
             assert len(levels_linspace) == 3, "contour_levels_linspace must have 3 entries: min, max, step"
             levels1 = np.linspace(*levels_linspace)
