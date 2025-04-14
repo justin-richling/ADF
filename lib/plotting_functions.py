@@ -2146,6 +2146,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
         # generate dictionary of contour plot settings:
         cp_info = prep_contour_plot(azm, bzm, diff, pct, **kwargs)
+        print("zonal mean plot cmap:",cp_info['cmap1'])
 
         # Generate zonal plot:
         fig, ax = plt.subplots(figsize=(10,10),nrows=4, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
