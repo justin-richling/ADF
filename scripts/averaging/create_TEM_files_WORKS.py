@@ -15,7 +15,8 @@ def create_TEM_files(adf):
     """
 
     #Notify user that script has started:
-    print("\n  Generating CAM TEM diagnostics files...")
+    msg = "\n  Generating CAM TEM diagnostics files..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
@@ -32,16 +33,10 @@ def create_TEM_files(adf):
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
 
     if "qbo" in adf.plotting_scripts:
-        #var_list = ['uzm','epfy','epfz','vtem','wtem',
-        #            'psitem','utendepfd','utendvtem','utendwtem']
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
-                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM"]
     else:
-        #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-        #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
+        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     tem_locs = []
     
@@ -69,7 +64,7 @@ def create_TEM_files(adf):
     #Set default to h4
     hist_nums = adf.get_cam_info("tem_hist_str")
     if hist_nums is None:
-        hist_nums = ["h4a"]*len(case_names)
+        hist_nums = ["h4"]*len(case_names)
 
     #Get test case(s) tem over-write boolean and force to list if not by default
     overwrite_tem_cases = adf.get_cam_info("overwrite_tem")
@@ -118,7 +113,7 @@ def create_TEM_files(adf):
                 if not obs_file_path.is_file():
                     obs_data_loc = adf.get_basic_info("obs_data_loc")
                     obs_file_path = Path(obs_data_loc)/obs_file_path
-                print("YEHAWW:",obs_file_path)
+
                 #It's likely multiple TEM vars will come from one file, so check
                 #to see if it already exists from other vars.
                 if obs_file_path not in tem_obs_fils:
@@ -159,7 +154,7 @@ def create_TEM_files(adf):
             #Set default to h4
             hist_num = adf.get_baseline_info("tem_hist_str")
             if hist_num is None:
-                hist_num = "h4a"
+                hist_num = "h4"
 
             #Extract baseline years (which may be empty strings if using Obs):
             syear_baseline = adf.climo_yrs["syear_baseline"]
@@ -246,9 +241,7 @@ def create_TEM_files(adf):
 
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
-            print("\nhist_files",hist_files,"\n")
-            #ds_list = [xr.open_dataset(f).drop_vars('time_written', errors='ignore') for f in hist_files]
-            #ds = xr.combine_by_coords(ds_list)
+
             ds = xr.open_mfdataset(hist_files)
 
             #iterate over the times in a dataset
@@ -432,9 +425,6 @@ def calc_tem(ds):
 
     thzm.attrs['long_name'] = 'Zonal-Mean potential temperature'
     thzm.attrs['units'] = 'K'
-
-    #tzm.attrs['long_name'] = 'Zonal-Mean temperature'
-    #tzm.attrs['units'] = 'K'
 
     epfy.attrs['long_name'] = 'northward component of E-P flux'
     epfy.attrs['units'] = 'm3/s2'
