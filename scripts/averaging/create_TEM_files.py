@@ -70,6 +70,7 @@ def create_TEM_files(adf):
     hist_nums = adf.get_cam_info("tem_hist_str")
     if hist_nums is None:
         hist_nums = ["h4a"]*len(case_names)
+    print("hist_nums before baseline",hist_nums)
 
     #Get test case(s) tem over-write boolean and force to list if not by default
     overwrite_tem_cases = adf.get_cam_info("overwrite_tem")
@@ -180,6 +181,7 @@ def create_TEM_files(adf):
             overwrite_tem_cases.append(adf.get_baseline_info("overwrite_tem", False))
 
             hist_nums.append(hist_num)
+            print("hist_nums after baseline",hist_nums)
         else:
             print("\t 'cam_tem_loc' not found in 'diag_cam_baseline_climo', so no baseline files/diagnostics will be generated.")
 
@@ -205,7 +207,7 @@ def create_TEM_files(adf):
         #End if
 
         #Check if history files actually exist. If not then kill script:
-        print("hist_nums",hist_nums)
+        
         hist_str = f"{hist_nums[case_idx]}"
         if not list(starting_location.glob("*"+hist_str+'.*.nc')):
             emsg = f"No CAM history {hist_str} files found in '{starting_location}'."
