@@ -1846,7 +1846,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         - 'levels1' : contour levels for a and b panels
         - 'plot_log_p' : true/false whether to plot log(pressure) axis
     """
-    def choose_colormap(levels, threshold_symmetry=0.25):
+    """def choose_colormap(levels, threshold_symmetry=0.25):
         levels = np.array(levels)
         minval = np.min(levels)
         maxval = np.max(levels)
@@ -1861,7 +1861,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if crosses_zero and is_symmetric:
             return 'diverging'
         else:
-            return 'sequential'
+            return 'sequential'"""
 
     if "plot_type" in kwargs:
         plot_type = kwargs["plot_type"]
@@ -1881,32 +1881,31 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         cmap1 = 'coolwarm'
     #End if"""
     #print('kwargs["plot_type"]',kwargs["plot_type"])
-    cmap1 = 'coolwarm'
+    cmap1 = 'viridis'
     if "colormap" in kwargs:
         cmap = kwargs["colormap"]
         #if isinstance(cmap, dict) and "plot_type" in kwargs:
         if (isinstance(cmap, dict)) and (plot_type):
-            cmap_lev1 = cmap.get(plot_type, 'coolwarm')
+            cmap_lev1 = cmap.get(plot_type, 'viridis')
             if isinstance(cmap_lev1, dict) and "lev" in kwargs:
-                cmap1 = cmap_lev1.get(kwargs["lev"], 'coolwarm')
+                cmap1 = cmap_lev1.get(kwargs["lev"], 'viridis')
             else:
                 cmap1 = cmap_lev1
         else:
             cmap1 = cmap
-    #if not cmap1:
-    #    cmap1 = 'coolwarm' 
+
     print("\ncmap1 ",cmap1)
     #if "lev" in kwargs:
     #    print(kwargs["lev"])
     #else:
     #    print()
-    prizzint = False
+    """prizzint = False
     if "prizzint" in kwargs:
         if kwargs["prizzint"]:
             prizzint = True
             print("    - FUUUUUDDDDGGGE:",kwargs,"\n")
     else:
-        prizzint = False
+        prizzint = False"""
 
     levels1 = None
     no_norm = False
@@ -1973,8 +1972,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     print("PRE CHECK LEVELS: ",type(levels1)," - ",levels1)
     if levels1 is None:
         levels1 = np.linspace(minval, maxval, 12)
-    #if prizzint:
-    #    print("LEVELS",levels1)
 
     print("LEVELS: ",type(levels1)," - ",levels1)
 
@@ -1985,7 +1982,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     #End if
 
-    #levels1 = np.linspace(-11, 41, 12)
+    """#levels1 = np.linspace(-11, 41, 12)
     colormap_type = choose_colormap(levels1)
 
     if colormap_type == 'diverging':
@@ -1994,7 +1991,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         cmap = 'viridis'
 
-    #plt.contourf(..., levels=levels1, cmap=cmap)
+    #plt.contourf(..., levels=levels1, cmap=cmap)"""
 
 
     #Check if the minval and maxval are actually different.  If not,
