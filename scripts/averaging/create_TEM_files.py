@@ -179,7 +179,7 @@ def create_TEM_files(adf):
             tem_locs.append(tem_base_loc)
             overwrite_tem_cases.append(adf.get_baseline_info("overwrite_tem", False))
 
-            hist_nums.append(hist_num)
+            hist_nums.extend(hist_num)
         else:
             print("\t 'cam_tem_loc' not found in 'diag_cam_baseline_climo', so no baseline files/diagnostics will be generated.")
 
