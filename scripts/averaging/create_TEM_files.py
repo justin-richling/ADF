@@ -212,6 +212,8 @@ def create_TEM_files(adf):
             adf.end_diag_fail(emsg)
         #End if
 
+        print("hist_str",hist_str)
+
         #Get full path and file for file name
         output_loc_idx = tem_locs[case_idx]
 
@@ -238,11 +240,11 @@ def create_TEM_files(adf):
             #Glob each set of years
             #NOTE: This will make a nested list
             hist_files = []
+            print("starting_location",starting_location)
             for yr in np.arange(int(start_year),int(end_year)+1):
 
                 #Grab all leading zeros for climo year just in case
                 yr = f"{str(yr).zfill(4)}"
-                print("starting_location",starting_location)
                 hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
 
             #Flatten list of lists to 1d list
