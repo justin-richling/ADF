@@ -1490,7 +1490,7 @@ def vert_remap(x_mdl, p_mdl, plev):
 #####
 
 def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
-                convert_to_mb=False):
+                convert_to_mb=False, method="linear"):
     """Interpolate model hybrid levels to specified pressure levels.
 
     Parameters
@@ -1533,13 +1533,15 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
                                                                     hyam,
                                                                     hybm,
                                                                     p0=P0,
-                                                                    new_levels=new_levels
+                                                                    new_levels=new_levels,
+                                                                    method=method
                                                                    )
     else:
         data_interp = gcomp.interpolation.interp_hybrid_to_pressure(data, ps,
                                                                     hyam,
                                                                     hybm,
-                                                                    p0=P0
+                                                                    p0=P0,
+                                                                    method=method
                                                                    )
 
     # data_interp may contain a dask array, which can cause
