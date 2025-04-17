@@ -69,7 +69,7 @@ def create_TEM_files(adf):
     #Set default to h4
     hist_nums = adf.get_cam_info("tem_hist_str")
     if hist_nums is None:
-        hist_nums = ["h4a"]*len(case_names)
+        hist_nums = ["h4a"*len(case_names)]
     print("hist_nums before baseline",hist_nums)
 
     #Get test case(s) tem over-write boolean and force to list if not by default
