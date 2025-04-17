@@ -28,7 +28,7 @@ def create_TEM_files(adf):
     #Extract test case years
     start_years   = adf.climo_yrs["syears"]
     end_years     = adf.climo_yrs["eyears"]
-
+    print("start_years",start_years)
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
 
     if "qbo" in adf.plotting_scripts:
@@ -69,7 +69,7 @@ def create_TEM_files(adf):
     #Set default to h4
     hist_nums = adf.get_cam_info("tem_hist_str")
     if hist_nums is None:
-        hist_nums = ["h4a"*len(case_names)]
+        hist_nums = ["h4a"]*len(case_names)
     print("hist_nums before baseline",hist_nums)
 
     #Get test case(s) tem over-write boolean and force to list if not by default
