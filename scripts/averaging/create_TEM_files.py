@@ -474,9 +474,16 @@ def calc_tem(ds):
     utendvtem.values = np.float32(utendvtem.values)
     utendwtem.values = np.float32(utendwtem.values)
 
+    #Average time dimension over time bounds, if bounds exist:
+    if 'time_bnds' in ds:
+        time_bounds_name = 'time_bnds'
+    elif 'time_bounds' in ds:
+        time_bounds_name = 'time_bounds'
+
     dstem = xr.Dataset(data_vars=dict(date = ds.date,
                                       datesec = ds.datesec,
-                                      time_bnds = ds.time_bnds,
+                                      #time_bnds = ds.time_bnds,
+                                      time_bnds = time_bounds_name,
                                       uzm = uzm,
                                       vzm = vzm,
                                       thzm = thzm,
