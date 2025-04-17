@@ -246,6 +246,7 @@ def create_TEM_files(adf):
 
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
+            print("\nhist_files",hist_files,"\n")
             #ds_list = [xr.open_dataset(f).drop_vars('time_written', errors='ignore') for f in hist_files]
             #ds = xr.combine_by_coords(ds_list)
             ds = xr.open_mfdataset(hist_files)
