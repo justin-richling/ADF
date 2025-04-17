@@ -205,7 +205,7 @@ def create_TEM_files(adf):
         #End if
 
         #Check if history files actually exist. If not then kill script:
-        hist_str = f"*{hist_nums[case_idx]}"
+        hist_str = f"{hist_nums[case_idx]}"
         if not list(starting_location.glob(hist_str+'.*.nc')):
             emsg = f"No CAM history {hist_str} files found in '{starting_location}'."
             emsg += " Script is ending here."
