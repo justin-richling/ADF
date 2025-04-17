@@ -1846,6 +1846,22 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         - 'levels1' : contour levels for a and b panels
         - 'plot_log_p' : true/false whether to plot log(pressure) axis
     """
+    def choose_colormap(levels, threshold_symmetry=0.25):
+        levels = np.array(levels)
+        minval = np.min(levels)
+        maxval = np.max(levels)
+        
+        # 1. Check if range includes zero
+        crosses_zero = (minval < 0) and (maxval > 0)
+        
+        # 2. Check if range is symmetric (within threshold)
+        symmetry_ratio = abs(abs(maxval) - abs(minval)) / max(abs(maxval), abs(minval))
+        is_symmetric = symmetry_ratio < threshold_symmetry
+        
+        if crosses_zero and is_symmetric:
+            return 'diverging'
+        else:
+            return 'sequential'
 
     if "plot_type" in kwargs:
         plot_type = kwargs["plot_type"]
@@ -1968,6 +1984,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     #End if
+
+    #levels1 = np.linspace(-11, 41, 12)
+    colormap_type = choose_colormap(levels1)
+
+    if colormap_type == 'diverging':
+        cmap = 'RdBu_r'
+        # Optional: use TwoSlopeNorm
+    else:
+        cmap = 'viridis'
+
+    #plt.contourf(..., levels=levels1, cmap=cmap)
 
 
     #Check if the minval and maxval are actually different.  If not,
