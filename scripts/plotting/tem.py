@@ -87,7 +87,6 @@ def tem(adf):
 
     #Extract TEM file save locations
     tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
-    tem_base_loc = adf.get_baseline_info("cam_tem_loc")
 
     #If path not specified, skip TEM calculation?
     if tem_case_locs is None:
@@ -119,9 +118,6 @@ def tem(adf):
     else:
         var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
 
-    #Baseline TEM location
-    input_loc_idx = Path(tem_base_loc)
-
     #Check if comparing against obs
     if adf.compare_obs:
         obs = True
@@ -132,6 +128,9 @@ def tem(adf):
         if not tem_base.is_file():
             tem_base = "/glade/campaign/cgd/amp/amwg/ADF_obs/Obs.TEMdiag.nc"
     else:
+        tem_base_loc = adf.get_baseline_info("cam_tem_loc")
+        #Baseline TEM location
+        input_loc_idx = Path(tem_base_loc)
         #Set TEM file for baseline
         base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
         #Set full path for baseline/obs file
