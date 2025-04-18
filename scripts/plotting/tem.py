@@ -142,6 +142,14 @@ def tem(adf):
         print(f"\t'{base_file_name}' does not exist. TEM plots will be skipped.")
         return
 
+    # Manually decode 'time' using cftime
+    from xarray.coding.times import decode_cf_datetime
+
+    time_units = ds_base['time'].attrs['units']
+    calendar = ds_base['time'].attrs.get('calendar', 'standard')
+
+    ds_base['time'] = decode_cf_datetime(ds['time'], units=time_units, calendar=calendar)
+
     """if 'time_bnds' in ds_base:
         t = ds_base['time_bnds'].mean(dim='nbnd')
         t.attrs = ds_base['time'].attrs
