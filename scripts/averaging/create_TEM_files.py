@@ -257,7 +257,7 @@ def create_TEM_files(adf):
             #ds = xr.combine_by_coords(ds_list)
             ds = xr.open_mfdataset(hist_files)
 
-            print("DS",list(ds.variables))
+            print("DS",ds)
             h0_files = glob(f"{starting_location}/*cam.h0*.nc")
             ds_h0 = xr.open_dataset(h0_files[0])
             print(ds_h0.PMID)
