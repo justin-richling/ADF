@@ -140,7 +140,7 @@ def tem(adf):
     #tem_base = input_loc_idx / base_file_name
 
     #Check to see if baseline/obs TEM file exists
-    if tem_base.is_file():
+    if Path(tem_base).is_file():
         ds_base = xr.open_dataset(tem_base, decode_times=False)
     else:
         print(f"\t'{base_file_name}' does not exist. TEM plots will be skipped.")
