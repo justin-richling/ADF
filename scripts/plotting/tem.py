@@ -406,7 +406,7 @@ def tem(adf):
 
                 #Check if difference plot has contour levels, if not print notification
                 #if len(dseasons.lev) == 0:
-                if not dseasons:
+                if not isinstance(dseasons, xr.DataArray):
                     #Set empty message for comparison of cases with different vertical levels
                     #TODO: Work towards getting the vertical and horizontal interpolations!! - JR
                     empty_message = "These have different vertical levels\nCan't compare cases currently"
