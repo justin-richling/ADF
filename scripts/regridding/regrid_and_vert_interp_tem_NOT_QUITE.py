@@ -1,7 +1,7 @@
 #Import standard modules:
 import xarray as xr
 
-def regrid_and_vert_interp(adf):
+def regrid_and_vert_interp_tem(adf):
 
     """
     This function regrids the test cases to the same horizontal
@@ -46,7 +46,7 @@ def regrid_and_vert_interp(adf):
     # - regrid one to the other (probably should be a choice)
 
     #Notify user that script has started:
-    print("\n  Regridding CAM climatologies...")
+    print("\n  Regridding CAM TEM climatologies...")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
@@ -58,16 +58,17 @@ def regrid_and_vert_interp(adf):
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
         var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
-                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM","PS"]
+                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM"]
     else:
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
         #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD","PS"]
+        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
         var_cor_list = ["Uzm","THzm","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
     var_defaults     = adf.variable_defaults
 
     #CAM simulation variables (these quantities are always lists):
     case_names = adf.get_cam_info("cam_case_name", required=True)
+    #input_climo_locs = adf.get_cam_info("cam_climo_loc", required=True)
     input_climo_locs = adf.get_cam_info("cam_tem_loc", required=True)
 
     #Grab TEM diagnostics options
@@ -128,6 +129,7 @@ def regrid_and_vert_interp(adf):
     else:
 
         #Extract model baseline variables:
+        #target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
         target_loc = adf.get_baseline_info("cam_tem_loc", required=True)
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
@@ -165,6 +167,10 @@ def regrid_and_vert_interp(adf):
         #Set case climo data path:
         mclimo_loc  = Path(input_climo_locs[case_idx])
 
+        #Grab h4 history files locations
+        cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+        mhist_loc = Path(cam_hist_locs[case_idx])
+
         #Create empty dictionaries which store the locations of regridded surface
         #pressure and mid-level pressure fields:
         ps_loc_dict = {}
@@ -178,22 +184,41 @@ def regrid_and_vert_interp(adf):
         for var in var_list:
 
             if adf.compare_obs:
+                #print("adfsdfg",var_obs_dict)
                 #Check if obs exist for the variable:
                 if var in var_obs_dict:
+                    print("VAR",var)
                     #Note: In the future these may all be lists, but for
                     #now just convert the target_list.
                     #Extract target file:
+                    #tclimo_loc = var_obs_dict[var]["obs_file"]
+                    #Extract target list (eventually will be a list, for now need to convert):
+                    #target_list = [var_obs_dict[var]["obs_name"]]
                     tclimo_loc = adf.get_cam_info("cam_tem_loc", required=True)[case_idx]+"/"+"Obs.TEMdiag.nc"
                     obs_data_loc = adf.get_basic_info("obs_data_loc")
                     obs_file_path = Path(res[var]["obs_file"])
                     obs_file_path = Path(obs_data_loc)/obs_file_path
+                    thist_loc = adf.get_cam_info("cam_tem_loc", required=True)[case_idx]+"/"+"Obs.TEMdiag.nc"
                     target_list = "ERA5"
                 else:
                     dmsg = f"No obs found for variable `{var}`, regridding skipped."
+                    print(dmsg)
                     adf.debug_log(dmsg)
                     continue
                 #End if
             #End if
+            """if adf.compare_obs:
+                #Check if obs exist for the variable:
+                #if var in var_obs_dict:
+                print("VAR",var)
+                #Note: In the future these may all be lists, but for
+                #now just convert the target_list.
+                #Extract target file:
+                tclimo_loc = var_obs_dict[var.upper()]["obs_file"]
+                #Extract target list (eventually will be a list, for now need to convert):
+                target_list = [var_obs_dict[var.upper()]["obs_name"]]
+                #End if
+            #End if"""
 
             #Notify user of variable being regridded:
             print(f"\t - regridding {var} (known targets: {target_list})")
@@ -205,8 +230,7 @@ def regrid_and_vert_interp(adf):
                 adf.debug_log(f"regrid_example: regrid target = {target}")
 
                 #Determine regridded variable file name:
-                #regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}.TEMdiag_regridded.nc'#.replace()
+                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
@@ -229,14 +253,16 @@ def regrid_and_vert_interp(adf):
                     if adf.compare_obs:
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
+                        thist_fils = [thist_loc]
                     else:
-                       tclim_fils = sorted(tclimo_loc.glob(f"{target}.TEMdiag*.nc"))
+                       tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
+                       #thist_fils = sorted(mhist_loc.glob(f"{target}*_{var}_climo.nc"))
                     #End if
 
                     #Write to debug log if enabled:
                     adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
 
-                    if len(tclim_fils) > 1:
+                    """if len(tclim_fils) > 1:
                         #Combine all target files together into a single data set:
                         tclim_ds = xr.open_mfdataset(tclim_fils, combine='by_coords')
                     elif len(tclim_fils) == 0:
@@ -245,10 +271,25 @@ def regrid_and_vert_interp(adf):
                     else:
                         #Open single file as new xarray dataset:
                         tclim_ds = xr.open_dataset(tclim_fils[0])
+                    #End if"""
+
+
+
+                    if len(thist_fils) > 1:
+                        #Combine all target files together into a single data set:
+                        tclim_ds = xr.open_mfdataset(thist_fils, combine='by_coords')
+                    elif len(thist_fils) == 0:
+                        print(f"\t - regridding {var} failed, no file. Continuing to next variable.")
+                        continue
+                    else:
+                        #Open single file as new xarray dataset:
+                        thist_ds = xr.open_dataset(thist_fils[0])
                     #End if
 
+
+
                     #Generate CAM climatology (climo) file list:
-                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag*.nc"))
+                    mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag_*.nc"))
 
                     if len(mclim_fils) > 1:
                         #Combine all cam files together into a single data set:
@@ -263,6 +304,28 @@ def regrid_and_vert_interp(adf):
                         mclim_ds = xr.open_dataset(mclim_fils[0])
                     #End if
 
+                    print("mhist_loc",mhist_loc)
+                    #Generate CAM climatology (climo) file list:
+                    mhist_fils = sorted(mhist_loc.glob(f"{case_name}.cam.h4.*.nc"))
+                    print("mhist_fils",mhist_fils[-1])
+                    mhist_ds = xr.open_dataset(mhist_fils[0])
+
+                    if len(mhist_fils) > 1:
+                        #Combine all cam files together into a single data set:
+                        mhist_ds = xr.open_mfdataset(mhist_fils, combine='by_coords')
+                    elif len(mhist_fils) == 0:
+                        wmsg = f"\t - Unable to find hist file for '{var}'."
+                        wmsg += " Continuing to next variable."
+                        print(wmsg)
+                        continue
+                    else:
+                        print("I GUESS NOT HERE")
+                        #Open single file as new xarray dataset:
+                        mhist_ds = xr.open_dataset(mhist_fils[0])
+                    #End if
+
+                    mhist_loc
+
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
 
@@ -275,13 +338,19 @@ def regrid_and_vert_interp(adf):
                     #End if
 
                     #Perform regridding and interpolation of variable:
-                    rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
+                    rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, mhist_ds, var,
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
+
+                    print("\n",rgdata_interp,"\n")
 
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
 
+                    #If the variable is ocean fraction, then save the dataset for use later:
+                    if var == 'OCNFRAC':
+                        ocn_frc_ds = rgdata_interp
+                    #End if
 
                     #Finally, write re-gridded data to output file:
                     #Convert the list of Path objects to a list of strings
@@ -292,7 +361,8 @@ def regrid_and_vert_interp(adf):
                             "climo_yrs": f"{case_name}: {syear}-{eyear}",
                             "climatology_files": climatology_files_str,
                         }
-                    rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
+                    #rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
+                    print("\n",rgdata_interp,"\n")
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data
 
@@ -300,19 +370,15 @@ def regrid_and_vert_interp(adf):
                     #if applicable:
 
                     #Set interpolated baseline file name:
-                    #interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
-                    interp_bl_file = rgclimo_loc / f'{target}.TEMdiag_regridded_baseline.nc'#.replace()
-                    #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag*.nc"))
+                    interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
 
                         #Look for a baseline climo file for surface pressure (PS):
-                        #bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
-                        bl_ps_fil = interp_bl_file
+                        bl_ps_fil = tclimo_loc / f'{target}_PS_climo.nc'
 
                         #Also look for a baseline climo file for mid-level pressure (PMID):
-                        #bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
-                        bl_pmid_fil = interp_bl_file
+                        bl_pmid_fil = tclimo_loc / f'{target}_PMID_climo.nc'
 
                         #Create new keyword arguments dictionary for regridding function:
                         regrid_kwargs = {}
@@ -326,7 +392,7 @@ def regrid_and_vert_interp(adf):
                         #End if
 
                         #Generate vertically-interpolated baseline dataset:
-                        tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
+                        tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, thist_ds, var,
                                                                      **regrid_kwargs)
 
                         if tgdata_interp is None:
@@ -335,6 +401,32 @@ def regrid_and_vert_interp(adf):
                             continue
                         #End if
 
+                        #If the variable is ocean fraction, then save the dataset for use later:
+                        if var == 'OCNFRAC':
+                            tgt_ocn_frc_ds = tgdata_interp
+                        #End if
+
+                        if 'mask' in var_default_dict:
+                            if var_default_dict['mask'].lower() == 'ocean':
+                                #Check if the ocean fraction has already been regridded
+                                #and saved:
+                                if tgt_ocn_frc_ds:
+                                    ofrac = tgt_ocn_frc_ds['OCNFRAC']
+                                    # set the bounds of regridded ocnfrac to 0 to 1
+                                    ofrac = xr.where(ofrac>1,1,ofrac)
+                                    ofrac = xr.where(ofrac<0,0,ofrac)
+                                    # mask the land in TS for global means
+                                    tgdata_interp['OCNFRAC'] = ofrac
+                                    ts_tmp = tgdata_interp[var]
+                                    ts_tmp = pf.mask_land_or_ocean(ts_tmp,ofrac)
+                                    tgdata_interp[var] = ts_tmp
+                                else:
+                                    wmsg = "OCNFRAC not found in target,"
+                                    wmsg += f" unable to apply mask to '{var}'"
+                                    print(wmsg)
+                                #End if
+                            #End if
+                        #End if
 
                         # Convert the list to a string (join with commas or another separator)
                         climatology_files_str = [str(path) for path in tclim_fils]
@@ -364,7 +456,7 @@ def regrid_and_vert_interp(adf):
 #Helper functions
 #################
 
-def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
+def _regrid_and_interpolate_levs(model_dataset, raw_model_dataset, var_name, regrid_dataset=None, regrid_ofrac=False, **kwargs):
 
     """
     Function that takes a variable from a model xarray
@@ -406,7 +498,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     #End if
 
     #Extract variable info from model data (and remove any degenerate dimensions):
-    mdata = model_dataset[var_name].squeeze()
+    mdata = model_dataset[var_name.lower()].squeeze()
     mdat_ofrac = None
     #if regrid_ofrac:
     #    if 'OCNFRAC' in model_dataset:
@@ -462,16 +554,20 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
     #Check if variable has a vertical levels dimension:
     if has_lev:
+        print("mdata",mdata)
 
         if vert_coord_type == "hybrid":
             # Need hyam, hybm, and P0 for vertical interpolation of hybrid levels:
             if 'lev' in mdata.dims:
-                if ('hyam' not in model_dataset) or ('hybm' not in model_dataset):
+                #if ('hyam' not in model_dataset) or ('hybm' not in model_dataset):
+                if ('hyam' not in raw_model_dataset) or ('hybm' not in raw_model_dataset):
                     print(f"!! PROBLEM -- NO hyam or hybm for 3-D variable {var_name}, so it will not be re-gridded.")
                     return None #Return None to skip to next variable.
                 #End if
-                mhya = model_dataset['hyam']
-                mhyb = model_dataset['hybm']
+                #mhya = model_dataset['hyam']
+                #mhyb = model_dataset['hybm']
+                mhya = raw_model_dataset['hyam']
+                mhyb = raw_model_dataset['hybm']
             elif 'ilev' in mdata.dims:
                 if ('hyai' not in model_dataset) or ('hybi' not in model_dataset):
                     print(f"!! PROBLEM -- NO hyai or hybi for 3-D variable {var_name}, so it will not be re-gridded.")
@@ -588,7 +684,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
         if vert_coord_type == "hybrid":
             #Interpolate from hybrid sigma-pressure to the standard pressure levels:
             rgdata_interp = pf.lev_to_plev(rgdata, rg_ps, mhya, mhyb, P0=P0, \
-                                           convert_to_mb=True)
+                                           convert_to_mb=True, method="log")
         elif vert_coord_type == "height":
             #Interpolate variable using mid-level pressure (PMID):
             rgdata_interp = pf.pmid_to_plev(rgdata, rg_pmid, convert_to_mb=True)
@@ -641,7 +737,9 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     if proc is not None:
         xo.attrs['Processing_info'] = f"Start from file {origname}. " + proc
     xo.to_netcdf(outname, format='NETCDF4', encoding=enc)
-    '''
+
+#####'''
+
 
 def save_to_nc(tosave, outname, attrs=None, proc=None):
     """Saves xarray variable to new netCDF file"""
