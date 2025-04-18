@@ -124,11 +124,13 @@ def tem(adf):
     if "qbo" in adf.plotting_scripts:
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
+        var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem',
         #            'psitem','utendepfd','utendvtem','utendwtem']
     #Otherwise keep it simple
     else:
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     #Baseline TEM location
@@ -182,7 +184,7 @@ def tem(adf):
             data_var = var
         #End if
         """
-        if (adf.compare_obs) and (var == "thzm"):
+        if (adf.compare_obs) and (var == "THZM"):
             print("Obs case is missing potential temperature, so this variable will be skipped.")
             continue
 
@@ -309,7 +311,7 @@ def tem(adf):
                         wgt_denom_base = (od_ones*weights_base).groupby("time.season").sum(dim="time").sel(season=s)
                         oseasons = oseasons / wgt_denom_base
 
-                if var == "thzm":
+                if var == "THZM":
                     print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
 
 

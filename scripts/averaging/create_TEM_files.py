@@ -499,17 +499,17 @@ def calc_tem(ds):
                                       #PS=ds.PS,
                                       hybm=ds.hybm,
                                       hyam=ds.hyam,
-                                      uzm = uzm,
-                                      vzm = vzm,
-                                      thzm = thzm,
-                                      epfy = epfy,
-                                      epfz = epfz,
-                                      vtem = vtem,
-                                      wtem = wtem,
-                                      psitem = psitem,
-                                      utendepfd = utendepfd,
-                                      utendvtem = utendvtem,
-                                      utendwtem = utendwtem
+                                      UZM = uzm,
+                                      VZM = vzm,
+                                      THZM = thzm,
+                                      EPFY = epfy,
+                                      EPFZ = epfz,
+                                      VTEM = vtem,
+                                      WTEM = wtem,
+                                      PSITEM = psitem,
+                                      UTENDEPFD = utendepfd,
+                                      UTENDVTEM = utendvtem,
+                                      UTENDWTEM = utendwtem
                                       ))
 
     return dstem
