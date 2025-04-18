@@ -257,7 +257,7 @@ def create_TEM_files(adf):
             #ds = xr.combine_by_coords(ds_list)
             ds = xr.open_mfdataset(hist_files)
 
-            print("DS",list(ds.varaibles))
+            print("DS",list(ds.variables))
 
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
