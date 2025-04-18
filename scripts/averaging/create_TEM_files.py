@@ -243,19 +243,23 @@ def create_TEM_files(adf):
             #Glob each set of years
             #NOTE: This will make a nested list
             hist_files = []
+            hist0_files = []
             print("starting_location",starting_location)
             for yr in np.arange(int(start_year),int(end_year)+1):
 
                 #Grab all leading zeros for climo year just in case
                 yr = f"{str(yr).zfill(4)}"
                 hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
+                hist0_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
 
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
+            hist0_files = sorted(list(chain.from_iterable(hist0_files)))
             print("\nhist_files",hist_files,"\n")
             #ds_list = [xr.open_dataset(f).drop_vars('time_written', errors='ignore') for f in hist_files]
             #ds = xr.combine_by_coords(ds_list)
             ds = xr.open_mfdataset(hist_files)
+            ds0 = xr.open_mfdataset(hist0_files)
 
             print("DS",ds)
             h0_files = glob(f"{starting_location}/*cam.h0*.nc")
@@ -276,6 +280,8 @@ def create_TEM_files(adf):
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
+            dstem0['PMID']=ds_h0['PMID']
+            dstem0['PS']=ds_h0['PS']
 
             # write output to a netcdf file
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
@@ -489,8 +495,8 @@ def calc_tem(ds):
                                       datesec = ds.datesec,
                                       #time_bnds = ds.time_bnds,
                                       time_bnds = time_bounds_name,
-                                      PMID=ds.PMID,
-                                      PS=ds.PS,
+                                      #PMID=ds.PMID,
+                                      #PS=ds.PS,
                                       hybm=ds.hybm,
                                       hyam=ds.hyam,
                                       uzm = uzm,
