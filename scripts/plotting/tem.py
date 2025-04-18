@@ -221,6 +221,7 @@ def tem(adf):
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
                 if (var == "THZM") and ("THZM" in ds_base):
+                    print("I assume its not coming here?")
                     odata = ds_base[var].squeeze()
                 else:
                     if s == "ANN":
