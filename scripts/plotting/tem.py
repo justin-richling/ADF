@@ -286,7 +286,7 @@ def tem(adf):
                         oseasons = oseasons / wgt_denom_base
 
                 # Derive zonal mean temp from potential temp
-                if var == "thzm":
+                if var == "THZM":
                     path = input_ts_locs[idx]
                     ds_pmid = xr.open_dataset(f"{path}{case_name}.cam.h0.PMID.{start_year}01-{end_year}12.nc")
 
