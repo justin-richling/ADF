@@ -148,7 +148,7 @@ def tem(adf):
     time_units = ds_base['time'].attrs['units']
     calendar = ds_base['time'].attrs.get('calendar', 'standard')
 
-    ds_base['time'] = decode_cf_datetime(ds['time'], units=time_units, calendar=calendar)
+    ds_base['time'] = decode_cf_datetime(ds_base['time'], units=time_units, calendar=calendar)
 
     """if 'time_bnds' in ds_base:
         t = ds_base['time_bnds'].mean(dim='nbnd')
