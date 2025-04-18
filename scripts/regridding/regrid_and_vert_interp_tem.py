@@ -252,7 +252,7 @@ def regrid_and_vert_interp_tem(adf):
                         continue
                     else:
                         #Open single file as new xarray dataset:
-                        tclim_ds = xr.open_dataset(tclim_fils[0])
+                        tclim_ds = xr.open_dataset(tclim_fils[0],decode_times=False)
                     #End if
 
                     #Generate CAM climatology (climo) file list:
