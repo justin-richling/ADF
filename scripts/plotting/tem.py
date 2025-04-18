@@ -318,7 +318,7 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
                 
-                if (len(mseasons['lev']) == len(oseasons['lev'])) or (len(mseasons['zalat']) == len(oseasons['zalat'])):
+                if (len(mseasons['lev']) == len(oseasons['lev'])) and (len(mseasons['zalat']) == len(oseasons['zalat'])):
                     #difference: each entry should be (lat, lon)
                     dseasons = mseasons-oseasons
                 else:
