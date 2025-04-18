@@ -111,12 +111,6 @@ def tem(adf):
                "SON": [9, 10, 11]
                }
 
-    #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
-    if "qbo" in adf.plotting_scripts:
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
-                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM"]
-    else:
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
 
     #Check if comparing against obs
     if adf.compare_obs:
@@ -168,6 +162,15 @@ def tem(adf):
 
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
 
+    #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
+    if "qbo" in adf.plotting_scripts:
+        var_list = ["UZM","EPFY","EPFZ","VTEM","WTEM",
+                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM"]
+    else:
+        var_list = ["UZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
+
+    if "THZM" in ds_base:
+        var_list += ["THZM"]
     #Loop over variables:
     for var in var_list:
         #Notify user of variable being plotted:
@@ -220,13 +223,14 @@ def tem(adf):
 
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
-                if (var == "THZM") and ("THZM" in ds_base):
+                odata = ds_base[var].squeeze()
+                """if (var == "THZM") and ("THZM" in ds_base):
                     print("I assume its not coming here?")
                     odata = ds_base[var].squeeze()
                 else:
                     if s == "ANN":
                         print("THZM not in Obs, so will skip")
-                    continue
+                    continue"""
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
