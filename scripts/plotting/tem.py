@@ -220,7 +220,11 @@ def tem(adf):
 
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
-                odata = ds_base[var].squeeze()
+                if var == "THZM" and "THZM" in ds_base:
+                    odata = ds_base[var].squeeze()
+                else:
+                    print("THZM not in Obs, so will skip")
+                    continue
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
