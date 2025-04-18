@@ -109,43 +109,46 @@ def create_TEM_files(adf):
         for var in var_list:
             if var in res:
                 #Gather from variable defaults file
-                obs_file_path = Path(res[var]["obs_file"])
-                if not obs_file_path.is_file():
-                    obs_data_loc = adf.get_basic_info("obs_data_loc")
-                    obs_file_path = Path(obs_data_loc)/obs_file_path
+                if "obs_file" in res[var]:
+                    obs_file_path = Path(res[var]["obs_file"])
+                    if not obs_file_path.is_file():
+                        obs_data_loc = adf.get_basic_info("obs_data_loc")
+                        obs_file_path = Path(obs_data_loc)/obs_file_path
+                else:
+                    obs_file_path = None
 
                 #It's likely multiple TEM vars will come from one file, so check
                 #to see if it already exists from other vars.
-                if obs_file_path not in tem_obs_fils:
+                if (obs_file_path) and (obs_file_path not in tem_obs_fils):
                     tem_obs_fils.append(obs_file_path)
+        if tem_obs_fils:
+            ds = xr.open_mfdataset(tem_obs_fils,combine="nested")
+            start_year = str(ds.time[0].values)[0:4]
+            end_year = str(ds.time[-1].values)[0:4]
 
-        ds = xr.open_mfdataset(tem_obs_fils,combine="nested")
-        start_year = str(ds.time[0].values)[0:4]
-        end_year = str(ds.time[-1].values)[0:4]
+            #Update the attributes
+            ds.attrs['created'] = str(date.today())
+            ds['lev']=ds['level']
+            ds['zalat']=ds['lat']
 
-        #Update the attributes
-        ds.attrs['created'] = str(date.today())
-        ds['lev']=ds['level']
-        ds['zalat']=ds['lat']
+            #Make a copy of obs data so we don't do anything bad
+            ds_obs = ds.copy()
+            ds_base = xr.Dataset({'uzm': xr.Variable(('time', 'lev', 'zalat'), ds_obs.uzm.data),
+                                    'epfy': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfy.data),
+                                    'epfz': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfz.data),
+                                    'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.vtem.data),
+                                    'wtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.wtem.data),
+                                    'psitem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.psitem.data),
+                                    'utendepfd': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendepfd.data),
+                                    'utendvtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendvtem.data),
+                                    'utendwtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendwtem.data),
+                                    'lev': xr.Variable('lev', ds_obs.level.values),
+                                    'zalat': xr.Variable('zalat', ds_obs.lat.values),
+                                    'time': xr.Variable('time', ds_obs.time.values)
+                        })
 
-        #Make a copy of obs data so we don't do anything bad
-        ds_obs = ds.copy()
-        ds_base = xr.Dataset({'uzm': xr.Variable(('time', 'lev', 'zalat'), ds_obs.uzm.data),
-                                'epfy': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfy.data),
-                                'epfz': xr.Variable(('time', 'lev', 'zalat'), ds_obs.epfz.data),
-                                'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.vtem.data),
-                                'wtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.wtem.data),
-                                'psitem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.psitem.data),
-                                'utendepfd': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendepfd.data),
-                                'utendvtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendvtem.data),
-                                'utendwtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendwtem.data),
-                                'lev': xr.Variable('lev', ds_obs.level.values),
-                                'zalat': xr.Variable('zalat', ds_obs.lat.values),
-                                'time': xr.Variable('time', ds_obs.time.values)
-                    })
-
-        # write output to a netcdf file
-        ds_base.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
+            # write output to a netcdf file
+            ds_base.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
     else:
         if tem_base_loc:
