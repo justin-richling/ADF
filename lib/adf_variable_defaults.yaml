@@ -2073,17 +2073,17 @@ UZM:
       #ticks: [-5,-1,-0.2,0.2,1,5]
       label : "m/s"
   long_name: Zonal mean zonal wind ($\bar{u}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "uzm"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "uzm"
 
 VZM:
   ylim: [1e3,1e-1]
   units: m s-1
   long_name: Zonal-Mean meridional wind ($\bar{v}$) 
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "vzm"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "vzm"
 
 THZM:
   colormap: "Spectral_r"
@@ -2095,9 +2095,9 @@ THZM:
     colorbar:
       label : "K"
   long_name: Zonal mean potential temperature ($\bar{\theta}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "uzm"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "uzm"
 
 EPFY:
   colormap: "RdYlBu_r"
@@ -2111,9 +2111,9 @@ EPFY:
     colorbar:
       label : "m3/s2"
   long_name: EP Flux - meridional component ($F_{y}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "epfy"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "epfy"
 
 EPFZ:
   colormap: "RdYlBu_r"
@@ -2127,9 +2127,9 @@ EPFZ:
     colorbar:
       label : "m3/s2"
   long_name: EP Flux - vertical component ($F_{z}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "epfz"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "epfz"
 
 VTEM:
   colormap: "RdYlBu_r"
@@ -2143,9 +2143,9 @@ VTEM:
       ticks: [-5,-1,-0.2,0.2,1,5]
       label : "m/s"
   long_name: TEM meridional wind ($\bar{v}^{*}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "vtem"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "vtem"
 
 WTEM:
   colormap: "RdYlBu_r"
@@ -2161,9 +2161,9 @@ WTEM:
       label : "cm/s"
   units: cm/s
   long_name: TEM vertical wind ($\bar{w}^{*}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "wtem"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "wtem"
 
 PSITEM:
   colormap: "RdYlBu_r"
@@ -2178,9 +2178,9 @@ PSITEM:
       label : "kg/s"
   units: kg/s
   long_name: TEM mass stream function ($\bar{\chi}^{*}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "psitem"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "psitem"
 
 UTENDEPFD:
   colormap: "RdYlBu_r"
@@ -2193,27 +2193,27 @@ UTENDEPFD:
     colorbar:
       label : "mm/s2"
   long_name: EP flux divergence ($\nabla \cdot F$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "utendepfd"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "utendepfd"
 
 UTENDVTEM:
   colormap: "RdYlBu_r"
   diff_colormap: "bwr"
   ylim: [1e3,1e-1]
   long_name: EP flux divergence - meridional component ($F_{yy}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "utendvtem"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "utendvtem"
 
 UTENDWTEM:
   colormap: "RdYlBu_r"
   diff_colormap: "bwr"
   ylim: [1e3,1e-1]
   long_name: EP flux divergence - vertical component ($F_{zz})
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "utendwtem"
+  #obs_file: "TEM_ERA5.nc"
+  #obs_name: "ERA5"
+  #obs_var_name: "utendwtem"
 
 #######
 

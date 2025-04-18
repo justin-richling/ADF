@@ -128,12 +128,17 @@ def tem(adf):
         #Set TEM file for observations
         base_file_name = 'Obs.TEMdiag.nc'
         input_loc_idx = Path(tem_locs[0])
+        tem_base = input_loc_idx / base_file_name
+        if not tem_base.is_file():
+            tem_base = "/glade/campaign/cgd/amp/amwg/ADF_obs/Obs.TEMdiag.nc"
     else:
         #Set TEM file for baseline
         base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
+        #Set full path for baseline/obs file
+        tem_base = input_loc_idx / base_file_name
     
-    #Set full path for baseline/obs file
-    tem_base = input_loc_idx / base_file_name
+    ##Set full path for baseline/obs file
+    #tem_base = input_loc_idx / base_file_name
 
     #Check to see if baseline/obs TEM file exists
     if tem_base.is_file():
