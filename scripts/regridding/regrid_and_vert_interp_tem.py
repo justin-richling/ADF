@@ -143,9 +143,9 @@ def regrid_and_vert_interp_tem(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgclimo_loc = Path(output_loc) / "tem"
+    rgclimo_loc = Path(output_loc)# / "tem"
     if not adf.compare_obs:
-        tclimo_loc  = Path(target_loc) / "tem"
+        tclimo_loc  = Path(target_loc)# / "tem"
     #------------------------------------
 
     print("tclimo_loc",tclimo_loc)
@@ -208,7 +208,13 @@ def regrid_and_vert_interp_tem(adf):
 
                 #Determine regridded variable file name:
                 #regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
-                regridded_file_loc = rgclimo_loc / f'{target}_{case_name}.TEMdiag_regridded.nc'#.replace()
+                rgclimo_tem_loc = rgclimo_loc / "tem"
+                #Check if re-gridded directory exists, and if not, then create it:
+                if not rgclimo_tem_loc.is_dir():
+                    print(f"    {rgclimo_tem_loc} not found, making new directory")
+                    rgclimo_tem_loc.mkdir(parents=True)
+                #End if
+                regridded_file_loc = rgclimo_tem_loc / f'{target}_{case_name}.TEMdiag_regridded.nc'#.replace()
 
                 #If surface or mid-level pressure, then save for potential use by other variables:
                 if var == "PS":
@@ -303,7 +309,7 @@ def regrid_and_vert_interp_tem(adf):
 
                     #Set interpolated baseline file name:
                     #interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
-                    interp_bl_file = rgclimo_loc / f'{target}.TEMdiag_regridded_baseline.nc'#.replace()
+                    interp_bl_file = rgclimo_tem_loc / f'{target}.TEMdiag_regridded_baseline.nc'#.replace()
                     #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag*.nc"))
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
