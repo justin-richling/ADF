@@ -176,6 +176,9 @@ def regrid_and_vert_interp_tem(adf):
         syear = syear_cases[case_idx]
         eyear = eyear_cases[case_idx]
 
+        rgdata_interps = []
+        tgdata_interps = []
+
         # probably want to do this one variable at a time:
         for var in var_list:
 
@@ -286,8 +289,9 @@ def regrid_and_vert_interp_tem(adf):
                     rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
-
-                    #Extract defaults for variable:
+                    if rgdata_interp is None:
+                        continue
+                    """#Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
 
 
@@ -302,7 +306,8 @@ def regrid_and_vert_interp_tem(adf):
                         }
                     rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
-                    rgdata_interp.close()  # bpm: we are completely done with this data
+                    rgdata_interp.close()  # bpm: we are completely done with this data"""
+                    rgdata_interps.append(rgdata_interp)
 
                     #Now vertically interpolate baseline (target) climatology,
                     #if applicable:
@@ -343,8 +348,10 @@ def regrid_and_vert_interp_tem(adf):
                             continue
                         #End if
 
+                        tgdata_interps.append(tgdata_interp)
 
-                        # Convert the list to a string (join with commas or another separator)
+
+                        """# Convert the list to a string (join with commas or another separator)
                         climatology_files_str = [str(path) for path in tclim_fils]
                         climatology_files_str = ', '.join(climatology_files_str)
                         # Create a dictionary of attributes
@@ -356,13 +363,46 @@ def regrid_and_vert_interp_tem(adf):
                         tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
 
                         #Write interpolated baseline climatology to file:
-                        save_to_nc(tgdata_interp, interp_bl_file)
+                        save_to_nc(tgdata_interp, interp_bl_file)"""
                     #End if
                 else:
                     print("\t Regridded file already exists, so skipping...")
                 #End if (file check)
             #End do (target list)
         #End do (variable list)
+        #Extract defaults for variable:
+        var_default_dict = var_defaults.get(var, {})
+
+
+        #Finally, write re-gridded data to output file:
+        #Convert the list of Path objects to a list of strings
+        climatology_files_str = [str(path) for path in mclim_fils]
+        climatology_files_str = ', '.join(climatology_files_str)
+        test_attrs_dict = {
+                "adf_user": adf.user,
+                "climo_yrs": f"{case_name}: {syear}-{eyear}",
+                "climatology_files": climatology_files_str,
+            }
+        rgdata_interp = xr.concat(rgdata_interps, dim="time")
+        rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
+        save_to_nc(rgdata_interp, regridded_file_loc)
+        rgdata_interp.close()  # bpm: we are completely done with this data
+
+
+        # Convert the list to a string (join with commas or another separator)
+        climatology_files_str = [str(path) for path in tclim_fils]
+        climatology_files_str = ', '.join(climatology_files_str)
+        # Create a dictionary of attributes
+        base_attrs_dict = {
+            "adf_user": adf.user,
+            "climo_yrs": f"{case_name}: {syear}-{eyear}; {base_climo_yrs_attr}",
+            "climatology_files": climatology_files_str,
+        }
+        tgdata_interp = xr.concat(tgdata_interps, dim="time")
+        tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
+
+        #Write interpolated baseline climatology to file:
+        save_to_nc(tgdata_interp, interp_bl_file)
     #End do (case list)
 
     #Notify user that script has ended:
