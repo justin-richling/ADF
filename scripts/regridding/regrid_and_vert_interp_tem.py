@@ -46,7 +46,7 @@ def regrid_and_vert_interp_tem(adf):
     # - regrid one to the other (probably should be a choice)
 
     #Notify user that script has started:
-    print("\n  Regridding CAM climatologies...")
+    print("\n  Regridding CAM TEM...")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
@@ -147,6 +147,8 @@ def regrid_and_vert_interp_tem(adf):
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc) / "tem"
     #------------------------------------
+
+    print("tclimo_loc",tclimo_loc)
 
     #Check if re-gridded directory exists, and if not, then create it:
     if not rgclimo_loc.is_dir():
