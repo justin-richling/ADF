@@ -317,8 +317,12 @@ def tem(adf):
                 if var == "utendepfd":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
-                #difference: each entry should be (lat, lon)
-                dseasons = mseasons-oseasons
+                
+                if (len(mseasons['lev']) == len(oseasons['lev'])) or (len(mseasons['zalat']) == len(oseasons['zalat'])):
+                    #difference: each entry should be (lat, lon)
+                    dseasons = mseasons-oseasons
+                else:
+                    dseasons = None
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
@@ -401,7 +405,8 @@ def tem(adf):
 
 
                 #Check if difference plot has contour levels, if not print notification
-                if len(dseasons.lev) == 0:
+                #if len(dseasons.lev) == 0:
+                if not dseasons:
                     #Set empty message for comparison of cases with different vertical levels
                     #TODO: Work towards getting the vertical and horizontal interpolations!! - JR
                     empty_message = "These have different vertical levels\nCan't compare cases currently"
