@@ -258,6 +258,9 @@ def create_TEM_files(adf):
             ds = xr.open_mfdataset(hist_files)
 
             print("DS",list(ds.variables))
+            h0_files = glob(f"{starting_location}/*cam.h0*.nc")
+            ds_h0 = xr.open_dataset(h0_files[0])
+            print(ds_h0.PMID)
 
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
