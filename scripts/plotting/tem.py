@@ -460,7 +460,11 @@ def tem(adf):
                 ax[0].set_title(plot_title, loc='left', fontsize=10)
 
                 if obs:
-                    obs_title = Path(vres["obs_name"]).stem
+                    obs_title = ""
+                    if "obs_name" in vres:
+                        obs_title = Path(vres["obs_name"]).stem
+                    if tem_base == "/glade/campaign/cgd/amp/amwg/ADF_obs/Obs.TEMdiag.nc":
+                        obs_title = "ERA5"
                     ax[1].set_title(f"{obs_title}\n",fontsize=10)
 
                 else:
