@@ -1529,7 +1529,7 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
     if 'zalat' in data.dims:
         data = data.rename({'zalat': 'lat'})
         data = data.expand_dims({'lon': 1})
-        ps=ps.expand_dims({'lon': 1})
+        #ps=ps.expand_dims({'lon': 1})
 
     #Apply GeoCAT hybrid->pressure interpolation:
     if new_levels is not None:
