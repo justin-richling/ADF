@@ -185,7 +185,7 @@ def tem(adf):
 
             #Grab the data for the TEM netCDF files
             if tem_case.is_file():
-                ds = xr.open_dataset(tem_case)
+                ds = xr.open_dataset(tem_case, decode_times=False)
             else:
                 print(f"\t'{tem_case}' does not exist. TEM plots will be skipped.")
                 return
