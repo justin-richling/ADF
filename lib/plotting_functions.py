@@ -1526,11 +1526,11 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
     #Temporary print statement to notify users to ignore warning messages.
     #This should be replaced by a debug-log stdout filter at some point:
     print("Please ignore the interpolation warnings that follow!")
-    if 'zalat' in data.dims:
+    """if 'zalat' in data.dims:
         data = data.rename({'zalat': 'lat'})
         data = data.expand_dims({'lon': 1})
-        ps_zonal = ps.mean(dim='lon')
-        ps=ps_zonal.expand_dims({'lon': 1})
+        #ps_zonal = ps.mean(dim='lon')
+        #ps=ps_zonal.expand_dims({'lon': 1})"""
 
     #Apply GeoCAT hybrid->pressure interpolation:
     if new_levels is not None:
