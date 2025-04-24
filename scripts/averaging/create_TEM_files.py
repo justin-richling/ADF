@@ -264,7 +264,6 @@ def create_TEM_files(adf):
             print("DS",ds)
             h0_files = glob(f"{starting_location}/*cam.h0*.nc")
             ds_h0 = xr.open_dataset(h0_files[0])
-            print(ds_h0.PMID)
 
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
@@ -276,12 +275,19 @@ def create_TEM_files(adf):
                 #End if
             #End if
 
+            # Step 1: Your standard latitudes
+            za_lats = dstem0.lat.values
+
+            # Step 2: Interpolate ds2 to standard latitudes
+            ds_h0_lats = ds_h0.interp(lat=za_lats)
+            zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon')
+
             #Update the attributes
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
             dstem0['PMID']=ds_h0['PMID']
-            dstem0['PS']=ds_h0['PS']
+            dstem0['PS']=zonal_mean_PS
 
             # write output to a netcdf file
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
@@ -496,7 +502,7 @@ def calc_tem(ds):
                                       #time_bnds = ds.time_bnds,
                                       time_bnds = time_bounds_name,
                                       #PMID=ds.PMID,
-                                      #PS=ds.PS,
+                                      PS=ds.PS,
                                       hybm=ds.hybm,
                                       hyam=ds.hyam,
                                       UZM = uzm,
