@@ -276,7 +276,7 @@ def create_TEM_files(adf):
             #End if
 
             # Step 1: Your standard latitudes
-            za_lats = dstem0.lat.values
+            za_lats = dstem0.zalat.values
 
             # Step 2: Interpolate ds2 to standard latitudes
             ds_h0_lats = ds_h0.interp(lat=za_lats)
