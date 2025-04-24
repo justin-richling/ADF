@@ -502,7 +502,7 @@ def calc_tem(ds):
                                       #time_bnds = ds.time_bnds,
                                       time_bnds = time_bounds_name,
                                       #PMID=ds.PMID,
-                                      PS=ds.PS,
+                                      #PS=ds.PS,
                                       hybm=ds.hybm,
                                       hyam=ds.hyam,
                                       UZM = uzm,
