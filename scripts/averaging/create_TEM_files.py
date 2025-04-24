@@ -286,7 +286,7 @@ def create_TEM_files(adf):
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
-            dstem0['PMID']=ds_h0['PMID']
+            #dstem0['PMID']=ds_h0['PMID']
             dstem0['PS']=zonal_mean_PS
 
             # write output to a netcdf file
