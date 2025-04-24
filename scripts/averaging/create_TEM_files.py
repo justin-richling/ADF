@@ -283,6 +283,8 @@ def create_TEM_files(adf):
             zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon')
             zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon')
 
+            print("zonal_mean_PS",zonal_mean_PS.values)
+
             #Update the attributes
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
