@@ -281,13 +281,15 @@ def create_TEM_files(adf):
             # Step 2: Interpolate ds2 to standard latitudes
             ds_h0_lats = ds_h0.interp(lat=za_lats)
             zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon')
+            zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon')
 
             #Update the attributes
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
             #dstem0['PMID']=ds_h0['PMID']
-            dstem0['PS']=zonal_mean_PS
+            dstem0['PS'] = zonal_mean_PS
+            dstem0['PMID'] = zonal_mean_PMID
 
             # write output to a netcdf file
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
