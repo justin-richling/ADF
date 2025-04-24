@@ -339,7 +339,7 @@ def tem(adf):
                     pmid.attrs['units'] = 'Pa'
                     """
 
-                    pmid = mseasons["PMID"]
+                    pmid = ds["PMID"].squeeze()
                     #print(pmid)
 
                     #Create array to avoid weighting missing values:
