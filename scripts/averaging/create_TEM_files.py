@@ -290,11 +290,11 @@ def create_TEM_files(adf):
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
             #dstem0['PMID']=ds_h0['PMID']
-            dstem0['PS'] = zonal_mean_PS.values
-            dstem0['PMID'] = zonal_mean_PMID.values
+            dstem0['PS'] = zonal_mean_PS
+            dstem0['PMID'] = zonal_mean_PMID
 
             # write output to a netcdf file
-            print("tem_fil",tem_fil,"\n")
+            print("dstem0",dstem0["PS"],"\n")
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
         #End if (file creation or over-write file)
