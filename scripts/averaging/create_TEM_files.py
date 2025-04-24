@@ -280,7 +280,7 @@ def create_TEM_files(adf):
 
             # Step 2: Interpolate ds2 to standard latitudes
             ds_h0_lats = ds_h0.interp(lat=za_lats)
-            print("ds_h0_lats SHAPE",ds_h0_lats.shape)
+            print("ds_h0_lats SHAPE",ds_h0_lats)
             zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon')
             zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon')
 
