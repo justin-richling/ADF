@@ -294,6 +294,7 @@ def create_TEM_files(adf):
             dstem0['PMID'] = zonal_mean_PMID
 
             # write output to a netcdf file
+            print("tem_fil",tem_fil,"\n")
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
         #End if (file creation or over-write file)
