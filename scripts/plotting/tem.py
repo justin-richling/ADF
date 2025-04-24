@@ -330,13 +330,16 @@ def tem(adf):
 
                     #path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
                     #path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
-                    path = input_ts_locs[idx]
+                    """path = input_ts_locs[idx]
                     ds_pmid = xr.open_dataset(f"{path}{case_name}.cam.h0.PMID.{start_year}01-{end_year}12.nc")
 
 
                     ds_pmid_interp = ds_pmid.interp(lat=mseasons.zalat,method="nearest")
                     pmid = ds_pmid_interp["PMID"]
                     pmid.attrs['units'] = 'Pa'
+                    """
+
+                    pmid = mseasons["PMID"]
                     #print(pmid)
 
                     #Create array to avoid weighting missing values:
@@ -360,7 +363,7 @@ def tem(adf):
 
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
-                    pmid = pmid.mean(dim="lon")
+                    #pmid = pmid.mean(dim="lon")
                     #mseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,mseasons* units.kelvin)
                     #print("AHHH",np.max(mseasons.values))
                     #oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
