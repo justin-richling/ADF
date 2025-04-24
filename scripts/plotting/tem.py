@@ -395,11 +395,11 @@ def tem(adf):
                     print("mseasons.shape",mseasons.shape)
                     print("oseasons.shape",oseasons.shape,"\n\n")
 
-                test_lons = mseasons.lev
+                """test_lons = mseasons.lev
                 test_lats = mseasons.zalat
 
                 obs_lons = oseasons.lev
-                obs_lats = oseasons.zalat
+                obs_lats = oseasons.zalat"""
 
                 """if obs_lons.shape == test_lons.shape:
                     try:
@@ -522,7 +522,8 @@ def tem(adf):
                     lat = mseasons['zalat']
                     lev = mseasons['lev']"""
                     
-                lat = mseasons['zalat']
+                #lat = mseasons['zalat']
+                lat = mseasons['lat']
                 lev = mseasons['lev']
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
