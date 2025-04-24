@@ -335,7 +335,7 @@ def regrid_and_vert_interp_tem(adf):
                             regrid_kwargs.update({'ps_file': bl_ps_fil})
                         #End if
                         if bl_pmid_fil.is_file():
-                            regrid_kwargs.update({'pmid_file': bl_pmid_fil})
+                            regrid_kwargs.update({'pmid_file': bl_ps_fil})
                         #End if
 
                         #Generate vertically-interpolated baseline dataset:
@@ -373,7 +373,7 @@ def regrid_and_vert_interp_tem(adf):
         #Extract defaults for variable:
         var_default_dict = var_defaults.get(var, {})
 
-
+        rgdata_interp["PMID"] = mclim_ds["PMID"]
         #Finally, write re-gridded data to output file:
         #Convert the list of Path objects to a list of strings
         climatology_files_str = [str(path) for path in mclim_fils]
@@ -388,7 +388,7 @@ def regrid_and_vert_interp_tem(adf):
         save_to_nc(rgdata_interp, regridded_file_loc)
         rgdata_interp.close()  # bpm: we are completely done with this data
 
-
+        tgdata_interp["PMID"] = tclim_ds["PMID"]
         # Convert the list to a string (join with commas or another separator)
         climatology_files_str = [str(path) for path in tclim_fils]
         climatology_files_str = ', '.join(climatology_files_str)
