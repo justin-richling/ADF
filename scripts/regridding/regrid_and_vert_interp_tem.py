@@ -284,7 +284,7 @@ def regrid_and_vert_interp_tem(adf):
                     if target in pmid_loc_dict:
                         regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
                     #End if
-
+                    print("REGRID TEM SCRIPT DS:",mclim_ds,"\n\n")
                     #Perform regridding and interpolation of variable:
                     rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
                                                                  regrid_dataset=tclim_ds,
