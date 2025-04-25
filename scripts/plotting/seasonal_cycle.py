@@ -477,7 +477,7 @@ def make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,retur
     plot_locations = adfobj.plot_location[0]
     save_path = Path(plot_locations)
     zm_file = save_path / f"waccm_zm_{case_name}.nc"
-
+    print("hist_loc",hist_loc,"\n","hist_str",hist_str,"\n")
     #Check if file exists. If so, open the file or make it if not
     if zm_file.exists():
         waccm_zm = xr.open_mfdataset(zm_file)
