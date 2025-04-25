@@ -119,7 +119,6 @@ def create_TEM_files(adf):
                 if not obs_file_path.is_file():
                     obs_data_loc = adf.get_basic_info("obs_data_loc")
                     obs_file_path = Path(obs_data_loc)/obs_file_path
-                print("YEHAWW:",obs_file_path)
                 #It's likely multiple TEM vars will come from one file, so check
                 #to see if it already exists from other vars.
                 if obs_file_path not in tem_obs_fils:
@@ -215,8 +214,6 @@ def create_TEM_files(adf):
             adf.end_diag_fail(emsg)
         #End if
 
-        print("hist_str",hist_str)
-
         #Get full path and file for file name
         output_loc_idx = tem_locs[case_idx]
 
@@ -244,7 +241,6 @@ def create_TEM_files(adf):
             #NOTE: This will make a nested list
             hist_files = []
             hist0_files = []
-            print("starting_location",starting_location)
             for yr in np.arange(int(start_year),int(end_year)+1):
 
                 #Grab all leading zeros for climo year just in case
@@ -255,13 +251,8 @@ def create_TEM_files(adf):
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
             hist0_files = sorted(list(chain.from_iterable(hist0_files)))
-            print("\nhist_files",hist_files,"\n")
-            #ds_list = [xr.open_dataset(f).drop_vars('time_written', errors='ignore') for f in hist_files]
-            #ds = xr.combine_by_coords(ds_list)
             ds = xr.open_mfdataset(hist_files)
-            ds0 = xr.open_mfdataset(hist0_files)
 
-            print("DS",ds)
             h0_files = glob(f"{starting_location}/*cam.h0*.nc")
             ds_h0 = xr.open_mfdataset(h0_files)
 
@@ -280,20 +271,14 @@ def create_TEM_files(adf):
 
             # Step 2: Interpolate ds2 to standard latitudes
             ds_h0_lats = ds_h0.interp(lat=za_lats)
-            print("ds_h0_lats SHAPE",ds_h0_lats)
-            #time = ds_h0['time']
-            #ds_h0_lats = ds_h0_lats.expand_dims(time=time)
 
             zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon')
             zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon')
-
-            print("zonal_mean_PS",zonal_mean_PS.values)
 
             #Update the attributes
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
-            #dstem0['PMID']=ds_h0['PMID']
             dstem0['PS'] = zonal_mean_PS
             dstem0['PMID'] = zonal_mean_PMID
 
