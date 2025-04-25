@@ -284,7 +284,7 @@ def regrid_and_vert_interp_tem(adf):
                     if target in pmid_loc_dict:
                         regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
                     #End if
-                    #print("REGRID TEM SCRIPT DS:",mclim_ds,"\n\n")
+                    print("REGRID TEM SCRIPT DS:",mclim_ds,"\n\n")
                     #Perform regridding and interpolation of variable:
                     rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
                                                                  regrid_dataset=tclim_ds,
@@ -384,6 +384,7 @@ def regrid_and_vert_interp_tem(adf):
                 "climatology_files": climatology_files_str,
             }
         rgdata_interp = xr.concat(rgdata_interps, dim="time")
+        print("\n\nWOAH:",rgdata_interp,"\n\n")
         rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
         save_to_nc(rgdata_interp, regridded_file_loc)
         rgdata_interp.close()  # bpm: we are completely done with this data
