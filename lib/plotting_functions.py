@@ -1811,6 +1811,104 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
         return ax
 
 
+
+
+
+
+
+import numpy as np
+import matplotlib as mpl
+from urllib.parse import urlparse
+from urllib.request import urlretrieve
+from pathlib import Path
+import re
+def guess_ncl_url(cmap):
+    return f"https://www.ncl.ucar.edu/Document/Graphics/ColorTables/Files/{cmap}.rgb"
+
+
+def download_ncl_colormap(url, dest):
+    urlretrieve(url, dest)
+
+
+def read_ncl_colormap(fil):
+    # determine if fil is a URL:
+    # if so, we have to download it
+    if isinstance(fil, str):
+        pars = urlparse(fil)
+        if pars.scheme in ['http', 'https', 'ftp']:
+            filename = Path.cwd() / fil.split("/")[-1]
+            if filename.is_file():
+                print(f"File already downloaded as {filename}")
+            else:
+                print(f"File will be downloaded and saved as {filename}")
+                download_ncl_colormap(fil, str(filename))
+        else:
+            is_url = False
+            filename = Path(fil)
+    elif isinstance(fil, Path):
+        filename = fil
+    else:
+        raise ValueError(f"ERROR: what to do with type {type(fil)}")
+        
+    # NCL's colormaps are not regularized enough to just use read_csv. 
+    # We have to determine how many lines to skip because it varies.
+    # NCL has some files that have "comments" at the end
+    # which will look like additional columnns
+    # We basically are forced to just read line-by-line
+
+    # ASSUME ALL NCL COLORMAPS ARE N rows BY 3 COLUMNS,
+    # AND THE VALUES ARE INTEGERS 0-255.
+    with open(filename) as f:
+        table_exists = False
+        for count, line in enumerate(f):
+            line_str = line.strip() # remove leading/trailing whitespace
+            if (len(line_str) == 0) or (not line_str[0].isdigit()):
+                continue # empty line or non-data line 
+                # NOTE: also skips if the first value is negative (hlu_default) 
+            else:
+                if re.search(r'[^\s0-9-\.]', line_str): # any non number characters ASSUMED AT END
+                    # take the string up to the non-matching character
+                    line_vals = line_str[:re.search(r'[^\s0-9-\.]', line_str).start()-1].strip().split()
+                else:
+                    line_vals = line_str.split()
+                try: 
+                    row = [float(r) for r in line_vals]
+                except:
+                    print("ERROR")
+                    print(line_vals)
+                if table_exists:
+                    table = np.vstack([table, row])
+                else:
+                    table = np.array(row)
+                    table_exists=True
+    return table
+
+def ncl_to_mpl(nclmap, name):
+    if nclmap.max() > 1:
+        try:
+            vals = nclmap / 255
+        except:
+            print(f"ERROR: could not divide by 255. {type(nclmap) = }")
+            print(nclmap)
+            return None
+    else:
+        print(f"{name} seems to be 0-1")
+        vals = nclmap
+    assert vals.shape[1] == 3, 'vals.shape should be (N,3)'
+    ncolors = vals.shape[0]
+    if ncolors > 100:
+        my_cmap = mpl.colors.LinearSegmentedColormap.from_list(name, vals)
+        my_cmap_r = my_cmap.reversed()
+    else:
+        my_cmap = mpl.colors.ListedColormap(vals, name)
+        my_cmap_r = my_cmap.reversed()
+    # my_cmap, my_cmap_r from reversing a colormap
+    # ALLOW MPL TO KNOW ABOUT THE COLORMAP:
+    # mpl.colormaps.register(cmap=my_cmap)
+    # mpl.colormaps.register(cmap=my_cmap_r)
+    return my_cmap, my_cmap_r
+
+
 def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     """Preparation for making contour plots.
 
@@ -1893,6 +1991,24 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap1 = cmap_lev1
         else:
             cmap1 = cmap
+
+    if cmap1 not in plt.colormaps():
+        print(f"{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
+        url = guess_ncl_url(cmap1)
+        locfil = "." / f"{cmap1}.rgb"
+        if locfil.is_file():
+            data = read_ncl_colormap(locfil)
+        else:
+            data = read_ncl_colormap(url)
+        cm, cmr = ncl_to_mpl(data, cmap1)
+        #ncl_colors[cm.name] = cm
+        #ncl_colors[cmr.name] = cmr
+        
+        if not cm:
+            print(f"{cmap1} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots")
+            cmap1 = 'coolwarm'
+        else:
+            cmap1 = cm
 
     """
     url = guess_ncl_url(i)
@@ -2028,6 +2144,26 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmapdiff = cmap_diff
     #print("cmapdiff",cmapdiff,"\n")
 
+
+    if cmapdiff not in plt.colormaps():
+        print(f"Difference: {cmapdiff} is not a matplotlib standard color map. Trying if this an NCL color map")
+        url = guess_ncl_url(cmapdiff)
+        locfil = "." / f"{cmapdiff}.rgb"
+        if locfil.is_file():
+            data = read_ncl_colormap(locfil)
+        else:
+            data = read_ncl_colormap(url)
+        cm, cmr = ncl_to_mpl(data, cmapdiff)
+        #ncl_colors[cm.name] = cm
+        #ncl_colors[cmr.name] = cmr
+        
+        if not cm:
+            print(f"Difference: {cmapdiff} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots")
+            cmapdiff = 'coolwarm'
+        else:
+            cmapdiff = cm
+
+
     levelsdiff = None
     if "diff_contour_levels" in kwargs:
         diff_levels = kwargs["diff_contour_levels"]
@@ -2099,6 +2235,24 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         cmappct = "PuOr_r"
     #End if
+
+    if cmappct not in plt.colormaps():
+        print(f"Percent Difference: {cmappct} is not a matplotlib standard color map. Trying if this an NCL color map")
+        url = guess_ncl_url(cmappct)
+        locfil = "." / f"{cmappct}.rgb"
+        if locfil.is_file():
+            data = read_ncl_colormap(locfil)
+        else:
+            data = read_ncl_colormap(url)
+        cm, cmr = ncl_to_mpl(data, cmappct)
+        #ncl_colors[cm.name] = cm
+        #ncl_colors[cmr.name] = cmr
+        
+        if not cm:
+            print(f"Percent Difference: {cmappct} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots")
+            cmappct = 'PuOr_r'
+        else:
+            cmappct = cm
 
     if "pct_diff_contour_levels" in kwargs:
         levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
