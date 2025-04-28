@@ -2682,7 +2682,8 @@ def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
 
 
 def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
-
+    if 'prizzint' not in kwargs:
+        kwargs['prizzint'] = None
     # Default values
     plot_type = kwargs.get("plot_type", None)
     cmap1 = kwargs.get("colormap", 'viridis')
@@ -2723,6 +2724,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     cmap1 = validate_colormap(get_colormap("colormap", 'viridis'))
     cmapdiff = validate_colormap(get_colormap("diff_colormap", 'coolwarm'))
     cmappct = validate_colormap(cmappct)
+
+    if kwargs['prizzint'] == True:
+        print("cmap1",cmap1)
+        print("cmapdiff",cmapdiff)
+        print("cmappct",cmappct)
 
     # Levels handling
     def get_levels(levels_key, default_levels):
