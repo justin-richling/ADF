@@ -1894,18 +1894,19 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             cmap1 = cmap
 
-    print("\ncmap1 ",cmap1)
-    #if "lev" in kwargs:
-    #    print(kwargs["lev"])
-    #else:
-    #    print()
-    """prizzint = False
-    if "prizzint" in kwargs:
-        if kwargs["prizzint"]:
-            prizzint = True
-            print("    - FUUUUUDDDDGGGE:",kwargs,"\n")
+    """
+    url = guess_ncl_url(i)
+    locfil = colormap_file_loc / f"{i}.rgb"
+    if locfil.is_file():
+        data = read_ncl_colormap(locfil)
     else:
-        prizzint = False"""
+        data = read_ncl_colormap(url)
+    cm, cmr = ncl_to_mpl(data, i)
+    ncl_colors[cm.name] = cm
+    ncl_colors[cmr.name] = cmr
+    """
+
+    print("\ncmap1 ",cmap1)
 
     levels1 = None
     no_norm = False
