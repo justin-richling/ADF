@@ -1878,6 +1878,7 @@ Q:
 T:
   colormap:
     global_latlon_map: "plasma"
+    zonal_mean: "rainbow"
     polar_map:
       200: "terrain"
       850: "Spectral"

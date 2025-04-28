@@ -249,7 +249,6 @@ def zonal_mean(adfobj):
                     vres["prizzint"] = True
                 else:
                     vres["prizzint"] = False
-                print("\nSeason",s)
                 
                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                 # I'll just call this one "Zonal_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
