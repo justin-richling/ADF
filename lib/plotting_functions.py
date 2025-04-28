@@ -2681,10 +2681,8 @@ def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
 
 
 
+def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
-
-
-def get_plot_options(**kwargs):
     # Default values
     plot_type = kwargs.get("plot_type", None)
     cmap1 = kwargs.get("colormap", 'viridis')
