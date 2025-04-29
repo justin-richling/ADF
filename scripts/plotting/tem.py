@@ -254,7 +254,7 @@ def tem(adf):
                         plot_name.unlink()
 
                 #Grab variable defaults for this variable
-                vres = res[var]
+                vres = res[var.upper()]
 
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
