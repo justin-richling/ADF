@@ -2683,7 +2683,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
 
 
-def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
+'''def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     if 'prizzint' not in kwargs:
         kwargs['prizzint'] = None
     # Default values
@@ -2796,7 +2796,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         'levels1': levels1,
         'plot_log_p': plot_log_p
     }
-
+'''
 
 
 
