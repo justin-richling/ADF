@@ -8,7 +8,7 @@ from glob import glob
 from itertools import chain
 
 
-def create_TEM_files(adf):
+def create_TEM_files_WORKS(adf):
     """
     Calculate the TEM variables and create new netCDF files
 
