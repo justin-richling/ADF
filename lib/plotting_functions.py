@@ -1981,7 +1981,7 @@ def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
 
 
 
-'''def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
+def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     """Preparation for making contour plots.
 
     Prepares for making contour plots of adata, bdata, diffdata, and pctdata, which is
@@ -2067,7 +2067,7 @@ def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
     if cmap1 not in plt.colormaps():
         print(f"{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
         url = guess_ncl_url(cmap1)
-        locfil = "." / f"{cmap1}.rgb"
+        locfil = Path(".") / f"{cmap1}.rgb"
         if locfil.is_file():
             data = read_ncl_colormap(locfil)
         else:
@@ -2220,7 +2220,7 @@ def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
     if cmapdiff not in plt.colormaps():
         print(f"Difference: {cmapdiff} is not a matplotlib standard color map. Trying if this an NCL color map")
         url = guess_ncl_url(cmapdiff)
-        locfil = "." / f"{cmapdiff}.rgb"
+        locfil = Path(".") / f"{cmapdiff}.rgb"
         if locfil.is_file():
             data = read_ncl_colormap(locfil)
         else:
@@ -2375,7 +2375,7 @@ def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
             'norm1': norm1,
             'levels1': levels1,
             'plot_log_p': plot_log_p
-            }'''
+            }
 
 
 
