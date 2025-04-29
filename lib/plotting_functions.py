@@ -2347,7 +2347,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         print("OR HERE?")
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
+    print("normdiff",normdiff,"\n")
     subplots_opt = {}
     contourf_opt = {}
     colorbar_opt = {}
