@@ -2342,8 +2342,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # color normalization for difference
     if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+        print("IS IT HERE?")
         normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
     else:
+        print("OR HERE?")
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
     subplots_opt = {}
