@@ -94,7 +94,9 @@ def tem(adf):
     tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
     tem_base_loc = adf.get_baseline_info("cam_tem_loc")
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
-    if Path().is_dir():
+    regrid_tem_files = False
+    if Path(f"{output_loc}/tem").is_dir():
+        regrid_tem_files = True
         #rg_tem_case_locs = [f"{output_loc}/tem"]
         tem_case_locs = [f"{output_loc}/tem"]
         tem_base_loc = f"{output_loc}/tem"
@@ -148,8 +150,11 @@ def tem(adf):
     else:
         #Set TEM file for baseline
         input_loc_idx = Path(tem_base_loc)
-        #base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
-        base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
+        if regrid_tem_files:
+            base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
+        else:
+            base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
+        #base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
     
     #Set full path for baseline/obs file
     tem_base = input_loc_idx / base_file_name
@@ -217,7 +222,11 @@ def tem(adf):
             #Open the TEM file
             output_loc_idx = Path(tem_loc)
             #case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
-            case_file_name = f'{base_name}_{case_name}.TEMdiag_regridded.nc'
+            #case_file_name = f'{base_name}_{case_name}.TEMdiag_regridded.nc'
+            if regrid_tem_files:
+                case_file_name = f'{base_name}_{case_name}.TEMdiag_regridded.nc'
+            else:
+                case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
             tem_case = output_loc_idx / case_file_name
 
             #Grab the data for the TEM netCDF files
