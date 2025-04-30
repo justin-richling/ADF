@@ -630,7 +630,6 @@ def tem(adf):
                                     transform=ax[2].transAxes, bbox=props)
                 else:
                     img2 = ax[2].contourf(lats, levs, dseasons,
-                                            #cmap="BrBG",
                                             cmap=cp_info['cmapdiff'],
                                             levels=clevs_diff,
                                             norm=cp_info['normdiff'])
