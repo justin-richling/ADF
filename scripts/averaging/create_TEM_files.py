@@ -6,6 +6,8 @@ from datetime import date
 from pathlib import Path
 from glob import glob
 from itertools import chain
+import metpy.calc.thermo as thermo
+from metpy.units import units
 
 
 def create_TEM_files(adf):
@@ -281,6 +283,41 @@ def create_TEM_files(adf):
             dstem0['lev']=ds['lev']
             dstem0['PS'] = zonal_mean_PS
             dstem0['PMID'] = zonal_mean_PMID
+
+            #pmid = ds["PMID"].squeeze()
+            #print(pmid)
+
+            """#Create array to avoid weighting missing values:
+            pmid_ones = xr.where(pmid.isnull(), 0.0, 1.0)
+
+            #month_length = pmid.time.dt.days_in_month
+            #weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+            if s == 'ANN':
+
+                #Calculate annual weights (i.e. don't group by season):
+                weights_ann = month_length / month_length.sum()
+
+                pmid = (pmid * weights_ann).sum(dim='time')
+                pmid = pmid / (pmid_ones*weights_ann).sum(dim='time')
+            else:
+                #this is inefficient because we do same calc over and over
+                pmid = (pmid * weights).groupby("time.season").sum(dim="time").sel(season=s)
+                wgt_denom = (pmid_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
+                pmid = pmid / wgt_denom"""
+
+
+            mseasons.attrs['units'] = "K"
+            oseasons.attrs['units'] = "K"
+            #pmid = pmid.mean(dim="lon")
+            #mseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,mseasons* units.kelvin)
+            #print("AHHH",np.max(mseasons.values))
+            #oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
+
+            mseasons = thermo.temperature_from_potential_temperature(zonal_mean_PMID* units.Pa,mseasons* units.kelvin)
+            #mseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
+            #print("AHHH",np.max(mseasons.values))
+            #oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
+            oseasons = thermo.temperature_from_potential_temperature(zonal_mean_PMID* units.Pa,oseasons* units.kelvin)
 
             # write output to a netcdf file
             print("\n\ndstem0",dstem0["PS"],"\n\n")

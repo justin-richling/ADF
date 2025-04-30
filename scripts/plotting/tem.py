@@ -127,14 +127,14 @@ def tem(adf):
 
     #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
     if "qbo" in adf.plotting_scripts:
-        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
+        var_list = ['uzm', 'tzm','epfy','epfz','vtem','wtem',#'thzm'
                     'psitem','utendepfd','utendvtem','utendwtem']
         var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem',
         #            'psitem','utendepfd','utendvtem','utendwtem']
     #Otherwise keep it simple
     else:
-        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ['uzm','tzm','epfy','epfz','vtem','wtem','psitem','utendepfd']#'thzm'
         var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
@@ -323,7 +323,7 @@ def tem(adf):
                         wgt_denom_base = (od_ones*weights_base).groupby("time.season").sum(dim="time").sel(season=s)
                         oseasons = oseasons / wgt_denom_base
 
-                if var == "THZM":
+                if var == "TZM":
                     print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
 
 
@@ -335,8 +335,8 @@ def tem(adf):
                     T = temperature_from_potential_temperature(p, theta)
                     """
 
-                    """
-                    pmid = ds["PMID"].squeeze()
+                    
+                    """pmid = ds["PMID"].squeeze()
                     #print(pmid)
 
                     #Create array to avoid weighting missing values:
@@ -369,8 +369,8 @@ def tem(adf):
                     #mseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
                     #print("AHHH",np.max(mseasons.values))
                     #oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
-                    oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
-                    """
+                    oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)"""
+
 
 
 

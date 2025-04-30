@@ -2097,7 +2097,22 @@ THZM:
   long_name: Zonal mean potential temperature ($\bar{\theta}$)
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
-  obs_var_name: "uzm"
+  obs_var_name: "thzm"
+
+
+TZM:
+  colormap: "Spectral_r"
+  contour_levels_range: [185,300,6]
+  diff_colormap: "bwr"
+  diff_contour_range: [-7,7.1,0.5]
+  ylim: [1e3,1e-1]
+  mpl:
+    colorbar:
+      label : "K"
+  long_name: Zonal mean temperature ($\bar{T}$)
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "thzm"
 
 EPFY:
   colormap: "RdYlBu_r"
