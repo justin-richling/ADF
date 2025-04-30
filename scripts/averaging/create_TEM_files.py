@@ -306,18 +306,21 @@ def create_TEM_files(adf):
                 pmid = pmid / wgt_denom"""
 
 
-            mseasons.attrs['units'] = "K"
-            oseasons.attrs['units'] = "K"
+            #mseasons.attrs['units'] = "K"
+            #oseasons.attrs['units'] = "K"
             #pmid = pmid.mean(dim="lon")
             #mseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,mseasons* units.kelvin)
             #print("AHHH",np.max(mseasons.values))
             #oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
 
-            mseasons = thermo.temperature_from_potential_temperature(zonal_mean_PMID* units.Pa,mseasons* units.kelvin)
+            #mseasons = thermo.temperature_from_potential_temperature(zonal_mean_PMID* units.Pa,
+            #                                                         mseasons* units.kelvin)
             #mseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
             #print("AHHH",np.max(mseasons.values))
             #oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
-            oseasons = thermo.temperature_from_potential_temperature(zonal_mean_PMID* units.Pa,oseasons* units.kelvin)
+            dstem0["TZM"] = thermo.temperature_from_potential_temperature(zonal_mean_PMID* units.Pa,
+                                                                     dstem0["THZM"]* units.kelvin)
+            dstem0["TZM"].attrs['units'] = 'K'
 
             # write output to a netcdf file
             print("\n\ndstem0",dstem0["PS"],"\n\n")
