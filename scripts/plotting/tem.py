@@ -486,7 +486,6 @@ def tem(adf):
                     plt.colorbar(img2, ax=ax[2], location='right', pad=cmap_pad,**cp_info['diff_colorbar_opt'])
 
                 #Format y-axis
-                #for a in ax[:]:
                 for i,a in enumerate(ax[:]):
                     a.set_yscale("log")
                     a.set_xlabel("Latitude")
