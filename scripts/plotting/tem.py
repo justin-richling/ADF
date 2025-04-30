@@ -335,22 +335,7 @@ def tem(adf):
                     T = temperature_from_potential_temperature(p, theta)
                     """
 
-
-                    #path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
-                    #path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
-                    #ds_pmid = xr.open_dataset(path+"f.cam6_3_132.FMTHIST_ne30.sponge.001.cam.h0.PMID.199601-200512.nc")
-
-                    #path = "/glade/derecho/scratch/richling/adf-output/ADF-data/timeseries/"
-                    #path += "f.cam6_3_132.FMTHIST_ne30.sponge.001/1996-2005/"
-                    """path = input_ts_locs[idx]
-                    ds_pmid = xr.open_dataset(f"{path}{case_name}.cam.h0.PMID.{start_year}01-{end_year}12.nc")
-
-
-                    ds_pmid_interp = ds_pmid.interp(lat=mseasons.zalat,method="nearest")
-                    pmid = ds_pmid_interp["PMID"]
-                    pmid.attrs['units'] = 'Pa'
                     """
-
                     pmid = ds["PMID"].squeeze()
                     #print(pmid)
 
@@ -373,7 +358,7 @@ def tem(adf):
                         pmid = pmid / wgt_denom
 
 
-                    """mseasons.attrs['units'] = "K"
+                    mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
                     #pmid = pmid.mean(dim="lon")
                     #mseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,mseasons* units.kelvin)
@@ -386,17 +371,6 @@ def tem(adf):
                     #oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
                     oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
                     """
-                    # exner_function(pressure, reference_pressure=mpconsts.P0)
-                    # potential_temperature * exner_function(pressure)
-                    #exner_function = (pmid / mconst.P0*100)**mconst.kappa
-                    #(pmid / mconst.P0)**mconst.kappa
-
-                    #mseasons = (mseasons * exner_function)/13.894954
-                    #oseasons = (oseasons * exner_function)/13.894954
-
-
-                    #print("mseasons",np.max(mseasons_metpy)==np.max(mseasons))
-                    #print("oseasons",np.max(oseasons_metpy)==np.max(oseasons))
 
 
 
@@ -410,133 +384,6 @@ def tem(adf):
                     print("mseasons.shape",mseasons.shape)
                     print("oseasons.shape",oseasons.shape,"\n\n")
 
-                """test_lons = mseasons.lev
-                test_lats = mseasons.zalat
-
-                obs_lons = oseasons.lev
-                obs_lats = oseasons.zalat"""
-
-                """if obs_lons.shape == test_lons.shape:
-                    try:
-                        xr.testing.assert_equal(test_lons, obs_lons)
-                        same_lats = True
-                        if s ==list(seasons.keys())[0] and var==var_list[0]:
-                            print("the lons ARE the same")
-                    except AssertionError as e:
-                        same_lons = False
-                        if s ==list(seasons.keys())[0] and var==var_list[0]:
-                            print("the lons aren't the same")
-                    try:
-                        xr.testing.assert_equal(test_lats, obs_lats)
-                        same_lats = True
-                        if s ==list(seasons.keys())[0] and var==var_list[0]:
-                            print("the lats ARE the same")
-                    except AssertionError as e:
-                        same_lats = False
-                        if s ==list(seasons.keys())[0] and var==var_list[0]:
-                            print("the lats aren't the same")
-                else:
-                    same_lats = False
-                    same_lons = False
-                    if s ==list(seasons.keys())[0] and var==var_list[0]:
-                        print("The ensemble array lat/lon shape does not match the " \
-                            "obs mask array.\nRegridding to ensemble lats and lons")"""
-
-
-
-                """#if (not same_lats) and (not same_lons):
-                if 0 == 1:
-
-                    # Define standard pressure levels (vertical target levels)
-                    standard_lev = np.array([1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 70, 50,
-                                            30, 20, 10, 7, 5, 3, 2, 1])
-
-                    # Determine which dataset has more vertical levels
-                    if len(mseasons.lev) > len(oseasons.lev):
-                        if s == list(seasons.keys())[0] and var == var_list[0]:
-                            print("Source data is oseasons")
-                        source_data = oseasons
-                        target_data = mseasons
-                    else:
-                        if s == list(seasons.keys())[0] and var == var_list[0]:
-                            print("Source data is mseasons")
-                        source_data = mseasons
-                        target_data = oseasons
-
-                    source_data = oseasons
-                    target_data = mseasons
-
-                    # Extract source and target coordinates
-                    source_lat = source_data.zalat.values
-                    source_lev = source_data.lev.values
-                    source_values = source_data.values
-
-                    target_lat = target_data.zalat.values
-                    target_lev = target_data.lev.values
-                    target_values = target_data.values
-
-                    ### Step 1: Interpolate Source Data to Standard Vertical Levels ###
-                    source_interpolator = RegularGridInterpolator((source_lev, source_lat), source_values, bounds_error=False, fill_value=np.nan)
-
-                    # Generate meshgrid points for interpolation
-                    source_points = np.array(np.meshgrid(standard_lev, source_lat, indexing='ij')).reshape(2, -1).T
-                    source_regridded_values_vert = source_interpolator(source_points).reshape(len(standard_lev), len(source_lat))
-
-                    ### Step 2: Interpolate Target Data to Standard Vertical Levels ###
-                    target_interpolator = RegularGridInterpolator((target_lev, target_lat), target_values, bounds_error=False, fill_value=np.nan)
-
-                    # Generate meshgrid points for interpolation
-                    target_points = np.array(np.meshgrid(standard_lev, target_lat, indexing='ij')).reshape(2, -1).T
-                    target_regridded_values_vert = target_interpolator(target_points).reshape(len(standard_lev), len(target_lat))
-
-                    ### Step 3: Interpolate Source Data Horizontally ###
-                    source_regridded_values_horiz = []
-                    for i, lev in enumerate(standard_lev):
-                        interpolator = RegularGridInterpolator((source_lat,), source_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                        regridded_values = interpolator(source_lat)
-                        source_regridded_values_horiz.append(regridded_values)
-                    source_regridded_values_horiz = np.array(source_regridded_values_horiz)
-
-                    ### Step 4: Interpolate Target Data Horizontally ###
-                    target_regridded_values_horiz = []
-                    for i, lev in enumerate(standard_lev):
-                        interpolator = RegularGridInterpolator((target_lat,), target_regridded_values_vert[i, :], bounds_error=False, fill_value=np.nan)
-                        regridded_values = interpolator(source_lat)
-                        target_regridded_values_horiz.append(regridded_values)
-                    target_regridded_values_horiz = np.array(target_regridded_values_horiz)
-
-                    ### Step 5: Convert Regridded Data Back into xarray.DataArray ###
-                    source_regridded_data = xr.DataArray(
-                        data=source_regridded_values_horiz,
-                        dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": source_lat},
-                        name="source_regridded_data"
-                    )
-
-                    target_regridded_data = xr.DataArray(
-                        data=target_regridded_values_horiz,
-                        dims=["lev", "zalat"],
-                        coords={"lev": standard_lev, "zalat": source_lat},
-                        name="target_regridded_data"
-                    )
-
-                    ### Step 6: Assign Back to Variables ###
-                    oseasons = source_regridded_data
-                    mseasons = target_regridded_data
-                    lat = mseasons["zalat"]
-                    lev = mseasons["lev"]
-
-                    ### Debug Output ###
-                    if s == list(seasons.keys())[0] and var == var_list[0]:
-                        print("Source Regridded Data:")
-                        print(source_regridded_data, "\n\n")
-
-                        print("Target Regridded Data:")
-                        print(target_regridded_data, "\n\n")
-                else:
-                    lat = mseasons['zalat']
-                    lev = mseasons['lev']"""
-                    
                 #lat = mseasons['zalat']
                 lat = mseasons['lat']
                 lev = mseasons['lev']
@@ -630,7 +477,6 @@ def tem(adf):
                                     transform=ax[2].transAxes, bbox=props)
                 else:
                     img2 = ax[2].contourf(lats, levs, dseasons,
-                                            #cmap="BrBG",
                                             cmap=cp_info['cmapdiff'],
                                             levels=clevs_diff,
                                             norm=cp_info['normdiff'])
@@ -708,181 +554,3 @@ def tem(adf):
 
 # Helper functions
 ##################
-
-import xesmf as xe
-
-
-
-def interp_tem(arr_anom1, arr_anom2):
-    """
-    Check if the Obs array needs to be interpolated
-    to the ensemble file
-
-    Most likely the input array will need to be interpolated!
-    """
-
-    #arr_anom1 = arr_anom1.rename(lev="lon", zalat="lat")
-    #arr_anom2 = arr_anom2.rename(lev="lon", zalat="lat")
-    import numpy as np
-
-    # Ensure the source data is contiguous
-    #if not arr_anom1.values.flags['C_CONTIGUOUS']:
-    #    arr_anom1 = arr_anom1.copy(data=np.ascontiguousarray(arr_anom1.values))
-
-    test_lons = arr_anom1.lon
-    test_lats = arr_anom1.lat
-
-    obs_lons = arr_anom2.lon
-    obs_lats = arr_anom2.lat
-
-    # Just set these to true for now
-    same_lats = True
-    same_lons = True
-
-    arr_prime = None
-
-    if obs_lons.shape == test_lons.shape:
-        try:
-            xr.testing.assert_equal(test_lons, obs_lons)
-            print("the lons ARE the same")
-        except AssertionError as e:
-            same_lons = False
-            print("the lons aren't the same")
-        try:
-            xr.testing.assert_equal(test_lats, obs_lats)
-            print("the lats ARE the same")
-        except AssertionError as e:
-            same_lats = False
-            print("the lats aren't the same")
-    else:
-        same_lats = False
-        same_lons = False
-        print("The ensemble array lat/lon shape does not match the " \
-             "obs mask array.\nRegridding to ensemble lats and lons")
-        return arr_anom1
-
-    if (not same_lons) and (not same_lats):
-
-        ds_out = xr.Dataset(
-            {   
-                "lon": (["lon"], obs_lons.values, {"units": "degrees_east"}),
-                "lat": (["lat"], obs_lats.values, {"units": "degrees_north"}),
-            }
-        )
-
-        # Regrid to the ensemble grid to make altered obs grid
-        regridder = xe.Regridder(arr_anom1, ds_out, "bilinear", periodic=True)
-        arr_prime = regridder(arr_anom1, keep_attrs=True)
-
-    # Return the new interpolated obs array
-    return arr_prime
-
-
-
-
-
-
-'''def interp_tem(arr_anom1, arr_anom2):
-    """
-    Calculate seasonal averages and regrid the seasonal data to match the target grid,
-    only if the levels (lev) or latitudes (zalat) are different between the two datasets.
-    """
-    # Step 1: Compute seasonal averages for arr_anom1 (ensemble) and arr_anom2 (observations)
-    
-    # Resample to seasonal averages: We assume monthly data, resampling to DJF, MAM, JJA, SON
-    #seasonal_anom1 = arr_anom1.resample(time='QS-DEC').mean()  # 'QS-DEC' starts the season in December (for DJF)
-    #seasonal_anom2 = arr_anom2.resample(time='QS-DEC').mean()
-
-    # Step 2: Check if levs and zalats are the same between the two datasets
-    same_levs = xr.DataArray.equals(arr_anom1.lev, arr_anom2.lev)
-    same_zalats = xr.DataArray.equals(arr_anom1.zalat, arr_anom2.zalat)
-
-    # Step 3: If both levs and zalats are the same, no regridding is needed
-    if same_levs and same_zalats:
-        print("The levels (lev) and zalats are the same. No regridding required.")
-        return arr_anom1  # Return the seasonal data as is
-
-    # Step 4: If levs or zalats are different, create a new output grid (target grid) from arr_anom2
-    print("The levels (lev) or zalats are different. Proceeding with regridding.")
-    ds_out = xr.Dataset(
-        {
-            "zalat": (["zalat"], arr_anom2.zalat.values, {"units": "degrees_north"}),
-            "lev": (["lev"], arr_anom2.lev.values, {"units": "hPa"}),
-        }
-    )
-    arr_anom1 = arr_anom1.rename(lev="lat", zalat="lon")
-    arr_anom2 = arr_anom2.rename(lev="lat", zalat="lon")
-    print("arr_anom1.shape",arr_anom1.shape)
-    print("arr_anom2.shape",arr_anom2.shape)
-
-    # Step 5: Apply the regridding
-    regridder = xe.Regridder(arr_anom1, arr_anom2, method="bilinear")
-
-    # Step 6: Regrid the seasonal data from arr_anom1 to the target grid
-    anom1_prime = regridder(arr_anom1, keep_attrs=True)
-    
-    # Step 7: Return the regridded seasonal anomalies
-    return anom1_prime'''
-
-
-
-
-
-
-
-'''def interp_tem(arr_anom1, arr_anom2):
-    """
-    Check if the Obs array needs to be interpolated
-    to the ensemble file
-
-    Most likely the input array will need to be interpolated!
-    """
-    import xesmf as xe
-    test_levs = arr_anom1.lev
-    test_zalats = arr_anom1.zalat
-
-    obs_levs = arr_anom2.lev
-    obs_zalats = arr_anom2.zalat
-
-    # Just set these to true for now
-    same_zalats = True
-    same_levs = True
-
-    arr_prime = None
-
-    if obs_levs.shape == test_levs.shape:
-        try:
-            xr.testing.assert_equal(test_levs, obs_levs)
-            print("the lons ARE the same")
-        except AssertionError as e:
-            same_levs = False
-            print("the lons aren't the same")
-        try:
-            xr.testing.assert_equal(test_zalats, obs_zalats)
-            print("the zalats ARE the same")
-        except AssertionError as e:
-            same_zalats = False
-            print("the zalats aren't the same")
-    else:
-        same_zalats = False
-        same_levs = False
-        print("The ensemble array lev/zalats shape does not match the " \
-             "obs mask array.\nRegridding to ensemble lats and lons")
-
-    if (not same_levs) and (not same_zalats):
-
-        ds_out = xr.Dataset(
-            {
-                "zalat": (["lat"], obs_zalats.values, {"units": "degrees_north"}),
-                "lev": (["lon"], obs_levs.values, {"units": "hPa"}),
-            }
-        )
-
-        # Regrid to the ensemble grid to make altered obs grid
-        regridder = xe.Regridder(arr_anom1, ds_out, "bilinear")
-        arr_prime = regridder(arr_anom1, keep_attrs=True)
-
-    # Return the new interpolated obs array
-    return arr_prime
-
-#######'''
