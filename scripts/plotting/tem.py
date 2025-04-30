@@ -324,9 +324,6 @@ def tem(adf):
                         oseasons = oseasons / wgt_denom_base
 
                 if var == "THZM":
-                    print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
-
-
                     """
                     from metpy.calc import temperature_from_potential_temperature
                     # potential temperature
@@ -345,7 +342,7 @@ def tem(adf):
                     #month_length = pmid.time.dt.days_in_month
                     #weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
                     if s == 'ANN':
-
+                        print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
                         #Calculate annual weights (i.e. don't group by season):
                         weights_ann = month_length / month_length.sum()
 
