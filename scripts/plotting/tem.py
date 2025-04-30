@@ -537,8 +537,8 @@ def tem(adf):
                     lat = mseasons['zalat']
                     lev = mseasons['lev']"""
                     
-                lat = mseasons['zalat']
-                #lat = mseasons['lat']
+                #lat = mseasons['zalat']
+                lat = mseasons['lat']
                 lev = mseasons['lev']
                 #difference: each entry should be (lat, lon)
                 dseasons = mseasons-oseasons
