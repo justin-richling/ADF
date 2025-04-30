@@ -126,7 +126,8 @@ def create_TEM_files(adf):
                 if obs_file_path not in tem_obs_fils:
                     tem_obs_fils.append(obs_file_path)
 
-        ds = xr.open_mfdataset(tem_obs_fils,combine="nested")
+        #ds = xr.open_mfdataset(tem_obs_fils,combine="nested")
+        ds = xr.open_mfdataset(tem_obs_fils,decode_times=True, combine='by_coords')
         start_year = str(ds.time[0].values)[0:4]
         end_year = str(ds.time[-1].values)[0:4]
 
@@ -253,10 +254,10 @@ def create_TEM_files(adf):
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
             hist0_files = sorted(list(chain.from_iterable(hist0_files)))
-            ds = xr.open_mfdataset(hist_files)
+            ds = xr.open_mfdataset(hist_files,decode_times=True, combine='by_coords')
 
             h0_files = glob(f"{starting_location}/*cam.h0*.nc")
-            ds_h0 = xr.open_mfdataset(h0_files)
+            ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords')
 
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
@@ -342,19 +343,6 @@ def create_TEM_files(adf):
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
                 dstem0 = xr.decode_cf(dstem0)"""
-            # Extract original units
-            units = ds['time'].encoding.get('units', 'days since 2000-01-01')  # fallback if missing
-            calendar = ds['time'].encoding.get('calendar', 'standard')         # optional, e.g., 'noleap'
-
-            # Convert float time to datetime
-            decoded_time = xr.conventions.times.decode_cf_datetime(
-                dstem0['time'].values,
-                units,
-                calendar=calendar
-            )
-
-            # Assign new time coordinate
-            dstem0['time'] = ('time', decoded_time)
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
         #End if (file creation or over-write file)
