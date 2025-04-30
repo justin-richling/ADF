@@ -319,7 +319,7 @@ def create_TEM_files(adf):
             #print("AHHH",np.max(mseasons.values))
             #oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
             dstem0["TZM"] = thermo.temperature_from_potential_temperature(zonal_mean_PMID* units.Pa,
-                                                                     dstem0["THZM"]* units.kelvin)
+                                                                     dstem0["THZM"].values* units.kelvin)
             dstem0["TZM"].attrs['units'] = 'K'
 
             # write output to a netcdf file
