@@ -73,8 +73,8 @@ def regrid_and_vert_interp_tem(adf):
     #Grab TEM diagnostics options
     #----------------------------
     #Extract TEM file save locations
-    tem_base_loc = adf.get_baseline_info("cam_tem_loc")
-    tem_case_locs = adf.get_cam_info("cam_tem_loc")
+    base_output_loc = adf.get_baseline_info("cam_tem_loc")
+    case_output_locs = adf.get_cam_info("cam_tem_loc")
 
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
@@ -143,17 +143,19 @@ def regrid_and_vert_interp_tem(adf):
 
     #Set output/target data path variables:
     #------------------------------------
-    rgclimo_loc = Path(output_loc)# / "tem"
+    #rgclimo_loc = Path(output_loc)# / "tem"
     if not adf.compare_obs:
-        tclimo_loc  = Path(target_loc)# / "tem"
+        tclimo_loc  = Path(target_loc) / "regrid"
+    else:
+        tclimo_loc  = Path(case_output_locs[case_idx]) / "regrid"
     #------------------------------------
 
     print("tclimo_loc",tclimo_loc)
 
     #Check if re-gridded directory exists, and if not, then create it:
-    if not rgclimo_loc.is_dir():
-        print(f"    {rgclimo_loc} not found, making new directory")
-        rgclimo_loc.mkdir(parents=True)
+    if not tclimo_loc.is_dir():
+        print(f"    {tclimo_loc} not found, making new directory")
+        tclimo_loc.mkdir(parents=True)
     #End if
 
     res = adf.variable_defaults # will be dict of variable-specific plot preferences
@@ -178,6 +180,13 @@ def regrid_and_vert_interp_tem(adf):
 
         rgdata_interps = []
         tgdata_interps = []
+
+        rgclimo_loc = Path(case_output_locs[case_idx]) / "regrid"
+        #Check if re-gridded directory exists, and if not, then create it:
+        if not rgclimo_loc.is_dir():
+            print(f"    {rgclimo_loc} not found, making new directory")
+            rgclimo_loc.mkdir(parents=True)
+        #End if
 
         # probably want to do this one variable at a time:
         for var in var_list:
@@ -211,7 +220,7 @@ def regrid_and_vert_interp_tem(adf):
 
                 #Determine regridded variable file name:
                 #regridded_file_loc = rgclimo_loc / f'{target}_{case_name}_{var}_regridded.nc'
-                rgclimo_tem_loc = rgclimo_loc / "tem"
+                rgclimo_tem_loc = rgclimo_loc# / "tem"
                 #Check if re-gridded directory exists, and if not, then create it:
                 if not rgclimo_tem_loc.is_dir():
                     print(f"    {rgclimo_tem_loc} not found, making new directory")
@@ -314,7 +323,7 @@ def regrid_and_vert_interp_tem(adf):
 
                     #Set interpolated baseline file name:
                     #interp_bl_file = rgclimo_loc / f'{target}_{var}_baseline.nc'
-                    interp_bl_file = rgclimo_tem_loc / f'{target}.TEMdiag_regridded_baseline.nc'#.replace()
+                    interp_bl_file = tclimo_loc / f'{target}.TEMdiag_regridded_baseline.nc'#.replace()
                     #mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag*.nc"))
 
                     if not adf.compare_obs and not interp_bl_file.is_file():
