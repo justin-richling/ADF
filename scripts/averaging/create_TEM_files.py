@@ -323,7 +323,7 @@ def create_TEM_files(adf):
             #dstem0["TZM"].attrs['units'] = 'K'
 
             # write output to a netcdf file
-            print("\n\ndstem0",dstem0["PS"],"\n\n")
+            print("\n\ndstem0",dstem0,"\n\n")
             #Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in dstem0:
                 time_bounds_name = 'time_bnds'
