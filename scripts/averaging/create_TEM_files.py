@@ -325,19 +325,19 @@ def create_TEM_files(adf):
             # write output to a netcdf file
             print("\n\ndstem0",dstem0,"\n\n")
             #Average time dimension over time bounds, if bounds exist:
-            if 'time_bnds' in dstem0:
+            if 'time_bnds' in ds:
                 time_bounds_name = 'time_bnds'
-            elif 'time_bounds' in dstem0:
+            elif 'time_bounds' in ds:
                 time_bounds_name = 'time_bounds'
             else:
                 time_bounds_name = None
 
             if time_bounds_name:
-                time = dstem0['time']
+                time = ds['time']
                 #NOTE: force `load` here b/c if dask & time is cftime,
                 #throws a NotImplementedError:
 
-                time = xr.DataArray(dstem0[time_bounds_name].load().mean(dim='nbnd').values,
+                time = xr.DataArray(ds[time_bounds_name].load().mean(dim='nbnd').values,
                                     dims=time.dims, attrs=time.attrs)
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
