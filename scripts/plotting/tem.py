@@ -200,7 +200,7 @@ def tem(adf):
         print(f"\t - TEM plots for {var}")
 
         #Loop over model cases:
-        for idx,case_name in enumerate(case_names,decode_times=False):
+        for idx,case_name in enumerate(case_names):
 
             """# Check redo_plot. If set to True: remove old plot, if it already exists:
             if (not redo_plot) and plot_name.is_file():
@@ -231,7 +231,7 @@ def tem(adf):
 
             #Grab the data for the TEM netCDF files
             if tem_case.is_file():
-                ds = xr.open_dataset(tem_case)
+                ds = xr.open_dataset(tem_case,decode_times=False)
             else:
                 print(f"\t'{tem_case}' does not exist. TEM plots will be skipped.")
                 return
