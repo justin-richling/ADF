@@ -372,38 +372,39 @@ def regrid_and_vert_interp_tem(adf):
         #End do (variable list)
         #Extract defaults for variable:
         var_default_dict = var_defaults.get(var, {})
+        if len(rgdata_interps) > 0:
+            rgdata_interp["PMID"] = mclim_ds["PMID"]
+            #Finally, write re-gridded data to output file:
+            #Convert the list of Path objects to a list of strings
+            climatology_files_str = [str(path) for path in mclim_fils]
+            climatology_files_str = ', '.join(climatology_files_str)
+            test_attrs_dict = {
+                    "adf_user": adf.user,
+                    "climo_yrs": f"{case_name}: {syear}-{eyear}",
+                    "climatology_files": climatology_files_str,
+                }
+            rgdata_interp = xr.concat(rgdata_interps, dim="time")
+            print("\n\nWOAH:",rgdata_interp,"\n\n")
+            rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
+            save_to_nc(rgdata_interp, regridded_file_loc)
+            rgdata_interp.close()  # bpm: we are completely done with this data
 
-        rgdata_interp["PMID"] = mclim_ds["PMID"]
-        #Finally, write re-gridded data to output file:
-        #Convert the list of Path objects to a list of strings
-        climatology_files_str = [str(path) for path in mclim_fils]
-        climatology_files_str = ', '.join(climatology_files_str)
-        test_attrs_dict = {
+        if len(tgdata_interps) > 0:
+            tgdata_interp["PMID"] = tclim_ds["PMID"]
+            # Convert the list to a string (join with commas or another separator)
+            climatology_files_str = [str(path) for path in tclim_fils]
+            climatology_files_str = ', '.join(climatology_files_str)
+            # Create a dictionary of attributes
+            base_attrs_dict = {
                 "adf_user": adf.user,
-                "climo_yrs": f"{case_name}: {syear}-{eyear}",
+                "climo_yrs": f"{case_name}: {syear}-{eyear}; {base_climo_yrs_attr}",
                 "climatology_files": climatology_files_str,
             }
-        rgdata_interp = xr.concat(rgdata_interps, dim="time")
-        print("\n\nWOAH:",rgdata_interp,"\n\n")
-        rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
-        save_to_nc(rgdata_interp, regridded_file_loc)
-        rgdata_interp.close()  # bpm: we are completely done with this data
+            tgdata_interp = xr.concat(tgdata_interps, dim="time")
+            tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
 
-        tgdata_interp["PMID"] = tclim_ds["PMID"]
-        # Convert the list to a string (join with commas or another separator)
-        climatology_files_str = [str(path) for path in tclim_fils]
-        climatology_files_str = ', '.join(climatology_files_str)
-        # Create a dictionary of attributes
-        base_attrs_dict = {
-            "adf_user": adf.user,
-            "climo_yrs": f"{case_name}: {syear}-{eyear}; {base_climo_yrs_attr}",
-            "climatology_files": climatology_files_str,
-        }
-        tgdata_interp = xr.concat(tgdata_interps, dim="time")
-        tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
-
-        #Write interpolated baseline climatology to file:
-        save_to_nc(tgdata_interp, interp_bl_file)
+            #Write interpolated baseline climatology to file:
+            save_to_nc(tgdata_interp, interp_bl_file)
     #End do (case list)
 
     #Notify user that script has ended:
