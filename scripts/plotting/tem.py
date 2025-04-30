@@ -161,7 +161,7 @@ def tem(adf):
 
     #Check to see if baseline/obs TEM file exists    
     if tem_base.is_file():
-        ds_base = xr.open_dataset(tem_base)
+        ds_base = xr.open_dataset(tem_base,decode_times=False)
     else:
         print(f"\t'{base_file_name}' does not exist. TEM plots will be skipped.")
         return
@@ -200,7 +200,7 @@ def tem(adf):
         print(f"\t - TEM plots for {var}")
 
         #Loop over model cases:
-        for idx,case_name in enumerate(case_names):
+        for idx,case_name in enumerate(case_names,decode_times=False):
 
             """# Check redo_plot. If set to True: remove old plot, if it already exists:
             if (not redo_plot) and plot_name.is_file():
