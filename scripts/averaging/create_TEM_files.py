@@ -324,7 +324,7 @@ def create_TEM_files(adf):
 
             # write output to a netcdf file
             print("\n\ndstem0",dstem0,"\n\n")
-            #Average time dimension over time bounds, if bounds exist:
+            """#Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in ds:
                 time_bounds_name = 'time_bnds'
             elif 'time_bounds' in ds:
@@ -341,7 +341,20 @@ def create_TEM_files(adf):
                                     dims=time.dims, attrs=time.attrs)
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
-                dstem0 = xr.decode_cf(dstem0)
+                dstem0 = xr.decode_cf(dstem0)"""
+            # Extract original units
+            units = ds['time'].encoding.get('units', 'days since 2000-01-01')  # fallback if missing
+            calendar = ds['time'].encoding.get('calendar', 'standard')         # optional, e.g., 'noleap'
+
+            # Convert float time to datetime
+            decoded_time = xr.conventions.times.decode_cf_datetime(
+                dstem0['time'].values,
+                units,
+                calendar=calendar
+            )
+
+            # Assign new time coordinate
+            dstem0['time'] = ('time', decoded_time)
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
         #End if (file creation or over-write file)
