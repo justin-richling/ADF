@@ -336,7 +336,7 @@ def tem(adf):
                     """
 
                     
-                    """pmid = ds["PMID"].squeeze()
+                    pmid = ds["PMID"].squeeze()
                     #print(pmid)
 
                     #Create array to avoid weighting missing values:
@@ -357,22 +357,16 @@ def tem(adf):
                         wgt_denom = (pmid_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
                         pmid = pmid / wgt_denom
 
+                    #pmid = pmid.mean(dim="lon")
+
+                    mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
+                                                                             mseasons* units.kelvin)
+
+                    oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
+                                                                             oseasons* units.kelvin)
 
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
-                    #pmid = pmid.mean(dim="lon")
-                    #mseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,mseasons* units.kelvin)
-                    #print("AHHH",np.max(mseasons.values))
-                    #oseasons = thermo.temperature_from_potential_temperature(pmid* units.mbar,oseasons* units.kelvin)
-
-                    mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
-                    #mseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,mseasons* units.kelvin)
-                    #print("AHHH",np.max(mseasons.values))
-                    #oseasons_metpy = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)
-                    oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,oseasons* units.kelvin)"""
-
-
-
 
                 if var == "utendepfd":
                     mseasons = mseasons*1000
