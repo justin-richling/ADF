@@ -237,7 +237,7 @@ def adf_histogram(adfobj):
 def make_histograms(data, land, vres):
 
     do_region_masks = True
-    if (land.shape != data.shape) or (not land):
+    if (not land) or (land.shape != data.shape):
         print("\t INFO: LAND and DATA are different shapes... will not do region masking.")
         do_region_masks = False
 
