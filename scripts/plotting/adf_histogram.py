@@ -112,9 +112,9 @@ def adf_histogram(adfobj):
     
     # "reference case" first:
     ref_land = load_ref_func(*get_load_args(adfobj, adfobj.data.ref_case_label, "LANDFRAC"))
-    #if not ref_land:
-    #    print(f"\t WARNING: Missing LANDFRAC file for case '{adfobj.data.ref_case_label}', please update the config file to include this variable. Script ending here.")
-    #    return
+    if not ref_land:
+        print(f"\t WARNING: Missing LANDFRAC file for case '{adfobj.data.ref_case_label}', please update the config file to include this variable. Script ending here.")
+        return
     for var in var_list:
 
         ref_hist_file = plot_loc / f"{adfobj.data.ref_case_label}_{var}_{plot_name_string}.nc"
@@ -149,9 +149,9 @@ def adf_histogram(adfobj):
 
     for case_idx, case_name in enumerate(adfobj.data.case_names):
         case_land = load_func(*get_load_args(adfobj, case_name, "LANDFRAC"))
-        #if not ref_land:
-        #    print(f"\t WARNING: Missing LANDFRAC file for case '{case_name}', please update the config file to include this variable. Script ending here.")
-        #    return
+        if not ref_land:
+            print(f"\t WARNING: Missing LANDFRAC file for case '{case_name}', please update the config file to include this variable. Script ending here.")
+            return
         for var in var_list:
             if var in res:
                 vres = res[var]
@@ -237,7 +237,7 @@ def adf_histogram(adfobj):
 def make_histograms(data, land, vres):
 
     do_region_masks = True
-    if (not land) or (land.shape != data.shape):
+    if land.shape != data.shape:
         print("\t INFO: LAND and DATA are different shapes... will not do region masking.")
         do_region_masks = False
 
