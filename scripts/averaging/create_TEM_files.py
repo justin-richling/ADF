@@ -325,7 +325,7 @@ def create_TEM_files(adf):
 
             # write output to a netcdf file
             print("\n\ndstem0",dstem0,"\n\n")
-            """#Average time dimension over time bounds, if bounds exist:
+            #Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in ds:
                 time_bounds_name = 'time_bnds'
             elif 'time_bounds' in ds:
@@ -343,8 +343,8 @@ def create_TEM_files(adf):
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
                 dstem0 = xr.decode_cf(dstem0)
-            print("dstem0 AFTER",dstem0,"\n\n")"""
-            print("dstem0['time_bnds'].load()",dstem0['time_bnds'].load())
+            print("dstem0 AFTER",dstem0,"\n\n")
+            #print("dstem0['time_bnds'].load()",dstem0['time_bnds'].load())
 
 
             # assign time to midpoint of interval (even if it is already)
