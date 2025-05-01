@@ -344,6 +344,7 @@ def create_TEM_files(adf):
                 dstem0.assign_coords(time=time)
                 dstem0 = xr.decode_cf(dstem0)
             print("dstem0 AFTER",dstem0,"\n\n")
+            print("AAHAHAHAHAH",dstem0.time.dt)
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
         #End if (file creation or over-write file)
