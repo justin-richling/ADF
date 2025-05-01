@@ -95,7 +95,7 @@ def adf_histogram(adfobj):
     for case_idx, case_name in enumerate(adfobj.data.case_names):
         # Set output plot location:
         plot_loc = Path(plot_locations[case_idx])
-        print(f"PLOT LOCATION: {plot_loc}")
+
         # Loop over the variables for each season
         skip_make_plot = []
         for var in var_list:
@@ -112,6 +112,9 @@ def adf_histogram(adfobj):
     
     # "reference case" first:
     ref_land = load_ref_func(*get_load_args(adfobj, adfobj.data.ref_case_label, "LANDFRAC"))
+    #if not ref_land:
+    #    print(f"\t WARNING: Missing LANDFRAC file for case '{adfobj.data.ref_case_label}', please update the config file to include this variable. Script ending here.")
+    #    return
     for var in var_list:
 
         ref_hist_file = plot_loc / f"{adfobj.data.ref_case_label}_{var}_{plot_name_string}.nc"
@@ -135,17 +138,20 @@ def adf_histogram(adfobj):
         
         has_lat_lon = pf.lat_lon_validate_dims(da)
         if not has_lat_lon:
-            print(f"INFO: {var} looks like it is on unstructured mesh. Has ncol: {'ncol' in da.dims}. Histogram does not need to regrid.")
+            print(f"\t INFO: {var} looks like it is on unstructured mesh. Has ncol: {'ncol' in da.dims}. Histogram does not need to regrid.")
 
         if (not ref_histogram_file_exists) or (redo_histogram_files):
             ref_result = make_histograms(da, ref_land, vres)
-            print(f"Writing Reference Case Histogram: {ref_hist_file}")
+            print(f"\t Writing Reference Case Histogram: {ref_hist_file}")
             ref_result.to_netcdf(ref_hist_file)
         else:
             print("reference histogram file exists, will use that one.")
 
     for case_idx, case_name in enumerate(adfobj.data.case_names):
         case_land = load_func(*get_load_args(adfobj, case_name, "LANDFRAC"))
+        #if not ref_land:
+        #    print(f"\t WARNING: Missing LANDFRAC file for case '{case_name}', please update the config file to include this variable. Script ending here.")
+        #    return
         for var in var_list:
             if var in res:
                 vres = res[var]
@@ -164,7 +170,7 @@ def adf_histogram(adfobj):
                     continue
                 has_lat_lon = pf.lat_lon_validate_dims(da)
                 if not has_lat_lon:
-                    print(f"INFO: {var} looks like it is on unstructured mesh. Has ncol: {'ncol' in da.dims}. Histogram does not need to regrid.")
+                    print(f"\t INFO: {var} looks like it is on unstructured mesh. Has ncol: {'ncol' in da.dims}. Histogram does not need to regrid.")
                 
                 result = make_histograms(da, case_land, vres)
                 print(f"Writing Case Histogram: {hist_file}")
@@ -172,11 +178,10 @@ def adf_histogram(adfobj):
             else:
                 print(f"{case_name} histogram file exists, will use that one.")
 
-    print(f"HISTOGRAM PLOT LOCATION:\n{plot_loc}")
     for var in var_list:
         ref_hist_file = plot_loc / f"{adfobj.data.ref_case_label}_{var}_{plot_name_string}.nc"
         if not ref_hist_file.is_file():
-            print(f"ERROR: histogram file not found for {var}, {adfobj.data.ref_case_label}... skip.")
+            print(f"\t ERROR: histogram file not found for {var}, {adfobj.data.ref_case_label}... skip.")
             continue
         ref_h_ds = xr.open_dataset(ref_hist_file)['histogram']
         add_annot = False
@@ -185,7 +190,7 @@ def adf_histogram(adfobj):
             annot = f"input dimensions: {ref_h_ds.attrs['input_dims']}"
         case_hist_files = [plot_loc / f"{case_name}_{var}_{plot_name_string}.nc" for case_name in adfobj.data.case_names]
         if not all([f.is_file() for f in case_hist_files]):
-            print(f"ERROR: histogram files not found for {var}, {adfobj.data.case_names}... skip")
+            print(f"\t ERROR: histogram files not found for {var}, {adfobj.data.case_names}... skip")
             continue
         case_h_ds = {c: xr.open_dataset(case_hist_files[i])['histogram'] for i, c in enumerate(adfobj.data.case_names)}
 
@@ -227,13 +232,13 @@ def adf_histogram(adfobj):
                 multi_case=True,
                 plot_type=plot_name_string,
             )
-            print(f"\t Saved {var} Histogram for {season}: {plot_name.name}")
+            #print(f"\t Saved {var} Histogram for {season}: {plot_name.name}")
 
 def make_histograms(data, land, vres):
 
     do_region_masks = True
-    if land.shape != data.shape:
-        print("LAND and DATA are different shapes... will not do region masking.")
+    if (land.shape != data.shape) or (not land):
+        print("\t INFO: LAND and DATA are different shapes... will not do region masking.")
         do_region_masks = False
 
     # determine the bins
@@ -242,7 +247,7 @@ def make_histograms(data, land, vres):
     elif 'contour_levels_range' in vres:
         bins = np.arange(*vres['contour_levels_range'])
     else:
-        print("WARNING: no sensible defaults found -- histogram will use 25 bins (bins may differ across cases)")
+        print("\t WARNING: no sensible defaults found -- histogram will use 25 bins (bins may differ across cases)")
         bins = np.linspace(data.min(), data.max(), 26)
 
     # extend bins to catch all values
