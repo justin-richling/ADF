@@ -282,8 +282,8 @@ def create_TEM_files(adf):
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
-            dstem0['PS'] = zonal_mean_PS
-            dstem0['PMID'] = zonal_mean_PMID
+            dstem0['PS'] = zonal_mean_PS.values
+            dstem0['PMID'] = zonal_mean_PMID.values
 
             #pmid = ds["PMID"].squeeze()
             #print(pmid)
@@ -344,7 +344,7 @@ def create_TEM_files(adf):
                 dstem0.assign_coords(time=time)
                 dstem0 = xr.decode_cf(dstem0)
             print("dstem0 AFTER",dstem0,"\n\n")"""
-            #print("AAHAHAHAHAH",dstem0.time.dt)
+            print("dstem0['time_bnds'].load()",dstem0['time_bnds'].load())
 
 
             # assign time to midpoint of interval (even if it is already)
