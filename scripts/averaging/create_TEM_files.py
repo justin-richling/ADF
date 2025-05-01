@@ -282,8 +282,8 @@ def create_TEM_files(adf):
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
-            dstem0['PS'] = zonal_mean_PS.values
-            dstem0['PMID'] = zonal_mean_PMID.values
+            dstem0['PS'] = zonal_mean_PS
+            dstem0['PMID'] = zonal_mean_PMID
 
             #pmid = ds["PMID"].squeeze()
             #print(pmid)
