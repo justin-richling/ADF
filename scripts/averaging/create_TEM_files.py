@@ -349,11 +349,11 @@ def create_TEM_files(adf):
 
             # assign time to midpoint of interval (even if it is already)
             if 'time_bnds' in dstem0:
-                t = dstem0['time_bnds'].mean(dim='nbnd')
+                t = dstem0['time_bnds'].load().mean(dim='nbnd')
                 t.attrs = dstem0['time'].attrs
                 dstem0 = dstem0.assign_coords({'time':t})
             elif 'time_bounds' in dstem0:
-                t = dstem0['time_bounds'].mean(dim='nbnd')
+                t = dstem0['time_bounds'].load().mean(dim='nbnd')
                 t.attrs = dstem0['time'].attrs
                 dstem0 = dstem0.assign_coords({'time':t})
             else:
