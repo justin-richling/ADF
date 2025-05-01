@@ -264,7 +264,7 @@ def create_TEM_files_WORKS(adf):
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
-
+            print("AAHAHAHAHAH",dstem0.time.dt)
             # write output to a netcdf file
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
