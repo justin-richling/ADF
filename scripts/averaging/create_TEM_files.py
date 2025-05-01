@@ -325,7 +325,7 @@ def create_TEM_files(adf):
 
             # write output to a netcdf file
             print("\n\ndstem0",dstem0,"\n\n")
-            #Average time dimension over time bounds, if bounds exist:
+            """#Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in ds:
                 time_bounds_name = 'time_bnds'
             elif 'time_bounds' in ds:
@@ -343,8 +343,25 @@ def create_TEM_files(adf):
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
                 dstem0 = xr.decode_cf(dstem0)
-            print("dstem0 AFTER",dstem0,"\n\n")
-            print("AAHAHAHAHAH",dstem0.time.dt)
+            print("dstem0 AFTER",dstem0,"\n\n")"""
+            #print("AAHAHAHAHAH",dstem0.time.dt)
+
+
+            # assign time to midpoint of interval (even if it is already)
+            if 'time_bnds' in dstem0:
+                t = dstem0['time_bnds'].mean(dim='nbnd')
+                t.attrs = dstem0['time'].attrs
+                dstem0 = dstem0.assign_coords({'time':t})
+            elif 'time_bounds' in dstem0:
+                t = dstem0['time_bounds'].mean(dim='nbnd')
+                t.attrs = dstem0['time'].attrs
+                dstem0 = dstem0.assign_coords({'time':t})
+            else:
+                warnings.warn("Timeseries file does not have time bounds info.")
+            dstem0 = xr.decode_cf(dstem0)
+
+
+
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
         #End if (file creation or over-write file)
