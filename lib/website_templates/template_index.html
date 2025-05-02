@@ -178,12 +178,12 @@
               {% for avail_type in avail_plot_types %}
                 {% if avail_type in plot_types.keys() %}
                   <div class="grid-item">
-                    <a href={{ plot_types[avail_type] }} class="btn btn-outline-primary" style="font-size: 30px; border: none"> &nbsp; {{ avail_type }} </a>
+                    <a href={{ plot_types[avail_type] }} class="btn btn-outline-primary" style="font-size: clamp(1rem, 2vw, 2.5rem); border: none"> &nbsp; {{ avail_type }} </a>
                   </div><!--grid-item-->
                 {% else %}
                   <div class="grid-item">
                     <!--<a-blocked style="font-size: 30px;">{{ avail_type }}</a-blocked>-->
-                    <button name="button" onclick="" style="font-size: 30px; border: none;" class="btn btn-outline-primary" disabled="">{{ avail_type }}</button>
+                    <button name="button" onclick="" style="font-size: clamp(1rem, 2vw, 2.5rem); border: none;" class="btn btn-outline-primary" disabled="">{{ avail_type }}</button>
                   </div><!--grid-item-blocked-->
                 {% endif %}
               {% endfor %}
