@@ -10,7 +10,7 @@
       <meta name="description" content="" />
       <link rel="icon" href="https://raw.githubusercontent.com/NCAR/CUPiD/main/images/logo.png" />
       <style>
-        .grid-container {
+        /*.grid-container {
     display: grid;
     column-gap: 30px;
     row-gap: 50px;
@@ -27,7 +27,18 @@
     border-radius: 15px;  padding: 10px;
 
     text-align: center;
-        }
+        }*/
+
+
+        .grid-container {
+  display: grid;
+  column-gap: 30px;
+  row-gap: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  background-color: #e4eef0;
+  padding: 25px;
+  border-radius: 15px;
+}
 
 
         nav.primary-navigation {
