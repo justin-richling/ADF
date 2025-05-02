@@ -832,8 +832,10 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
         ind_ax.set_title(plot_titles[i] + ('  Mean %.2g' % field_mean),fontsize=10)
 
         # Colorbar options
-        cbar = plt.colorbar(img, orientation='horizontal', pad=0.05)
-        ind_cbar = plt.colorbar(ind_img, orientation='horizontal', pad=0.05)
+        #cbar = plt.colorbar(img, orientation='horizontal', pad=0.05)
+        cbar = fig.colorbar(img, ax=axs[i], orientation='horizontal', pad=0.05)
+        #ind_cbar = plt.colorbar(ind_img, orientation='horizontal', pad=0.05)
+        ind_cbar = ind_fig.colorbar(ind_img, ax=ind_ax, orientation='horizontal', pad=0.05)
 
         if 'ticks' in plot_param:
             cbar.set_ticks(plot_param['ticks'])
