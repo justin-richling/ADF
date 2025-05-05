@@ -253,8 +253,8 @@ def create_TEM_files(adf):
 
                 #Grab all leading zeros for climo year just in case
                 yr = f"{str(yr).zfill(4)}"
-                print('yr',yr,"DKSNML")
-                print("FILE:",glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
+                #print('yr',yr,"DKSNML")
+                #print("FILE:",glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist0_files.append(glob(f"{starting_location}/*{hist0_str}.{yr}*.nc"))
 
@@ -263,7 +263,7 @@ def create_TEM_files(adf):
             hist0_files = sorted(list(chain.from_iterable(hist0_files)))
             ds = xr.open_mfdataset(hist_files,decode_times=True, combine='by_coords')
             ds_h0 = xr.open_mfdataset(hist0_files,decode_times=True, combine='by_coords')
-            print("ds_h0 BEFORE",ds_h0,"\n\n")
+            #print("ds_h0 BEFORE",ds_h0,"\n\n")
 
             #h0_files = glob(f"{starting_location}/*cam.h0*.nc")
             #ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords').sel(time=slice())
@@ -287,7 +287,7 @@ def create_TEM_files(adf):
                 ds_h0['time'] = time
                 ds_h0.assign_coords(time=time)
                 ds_h0 = xr.decode_cf(ds_h0)
-            print("ds_h0 AFTER",ds_h0,"\n\n")
+            #print("ds_h0 AFTER",ds_h0,"\n\n")
 
 
             #iterate over the times in a dataset
@@ -302,13 +302,14 @@ def create_TEM_files(adf):
 
             # Step 1: Your standard latitudes
             za_lats = dstem0.zalat.values
+            print("dstem0.UZM",dstem0.UZM,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
             # Step 2: Interpolate ds2 to standard latitudes
             ds_h0_lats = ds_h0.interp(zalat=za_lats)
 
             zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon').compute()
             zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon').compute()
-            dstem0['PMID'] = zonal_mean_PMID
+            #dstem0['PMID'] = zonal_mean_PMID
             print("zonal_mean_PMID",zonal_mean_PMID,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
             #Update the attributes
@@ -357,7 +358,7 @@ def create_TEM_files(adf):
             #dstem0["TZM"].attrs['units'] = 'K'
 
             # write output to a netcdf file
-            print("\n\ndstem0",dstem0,"\n\n")
+            #print("\n\ndstem0",dstem0,"\n\n")
             #Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in ds:
                 time_bounds_name = 'time_bnds'
