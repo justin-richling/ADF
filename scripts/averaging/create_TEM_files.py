@@ -257,7 +257,7 @@ def create_TEM_files(adf):
                 print("FILE:",glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist0_files.append(glob(f"{starting_location}/*{hist0_str}.{yr}*.nc"))
-
+            print("hist0_files",hist0_files,"\n")
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
             hist0_files = sorted(list(chain.from_iterable(hist0_files)))
