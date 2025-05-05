@@ -342,7 +342,7 @@ def tem(adf):
                     pmid = ds["PMID"].squeeze()
                     pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
                     print("PMID in plotting:",pmid,"\n\n")
-                    print("mdata in plotting:",mdata)
+                    print("mdata in plotting:",mseasons,"\n\n---------------------------------------\n")
                     
 
                     #Create array to avoid weighting missing values:
@@ -384,7 +384,7 @@ def tem(adf):
                     print("\n\nmseasons",mseasons,"\n\n")
 
                     print("mseasons.shape",mseasons.shape)
-                    print("oseasons.shape",oseasons.shape,"\n\n")
+                    print("oseasons.shape",oseasons.shape,"\n-- - - - - - - - - - - - - - - - - - - - - \n")
 
                 lat = mseasons['zalat']
                 #lat = mseasons['lat']
