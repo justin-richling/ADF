@@ -258,10 +258,11 @@ def create_TEM_files(adf):
             hist0_files = sorted(list(chain.from_iterable(hist0_files)))
             ds = xr.open_mfdataset(hist_files,decode_times=True, combine='by_coords')
             ds_h0 = xr.open_mfdataset(hist0_files,decode_times=True, combine='by_coords')
+            print("ds_h0 BEFORE",ds_h0,"\n\n")
 
             #h0_files = glob(f"{starting_location}/*cam.h0*.nc")
             #ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords').sel(time=slice())
-            ds_h0 = ds_h0.rename({'lat': 'zalat'})
+            #ds_h0 = ds_h0.rename({'lat': 'zalat'})
 
             #Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in ds_h0:
