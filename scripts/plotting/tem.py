@@ -91,16 +91,19 @@ def tem(adf):
     tem_locs = []
 
     #Extract TEM file save locations
-    tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
-    tem_base_loc = adf.get_baseline_info("cam_tem_loc")
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     regrid_tem_files = False
+    kwargs = {}
     if Path(f"{output_loc}/tem").is_dir():
         regrid_tem_files = True
         #rg_tem_case_locs = [f"{output_loc}/tem"]
         tem_case_locs = [f"{output_loc}/tem"]
         tem_base_loc = f"{output_loc}/tem"
         #rg_tem_base_loc = f"{output_loc}/tem"
+    else:
+        tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
+        tem_base_loc = adf.get_baseline_info("cam_tem_loc")
+        kwargs['decode_times'] = False
 
     #If path not specified, skip TEM calculation?
     if tem_case_locs is None:
@@ -161,7 +164,7 @@ def tem(adf):
 
     #Check to see if baseline/obs TEM file exists    
     if tem_base.is_file():
-        ds_base = xr.open_dataset(tem_base)#,decode_times=False
+        ds_base = xr.open_dataset(tem_base, **kwargs)#,decode_times=False
     else:
         print(f"\t'{base_file_name}' does not exist. TEM plots will be skipped.")
         return
@@ -231,7 +234,7 @@ def tem(adf):
 
             #Grab the data for the TEM netCDF files
             if tem_case.is_file():
-                ds = xr.open_dataset(tem_case)#,decode_times=False
+                ds = xr.open_dataset(tem_case, **kwargs)#,decode_times=False
             else:
                 print(f"\t'{tem_case}' does not exist. TEM plots will be skipped.")
                 return
