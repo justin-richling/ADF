@@ -376,7 +376,7 @@ def create_TEM_files(adf):
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
                 dstem0 = xr.decode_cf(dstem0)
-            print("dstem0 AFTER",dstem0,"\n\n")
+            print("dstem0 AFTER",dstem0.PMID,"\n\n")
             #print("dstem0['time_bnds'].load()",dstem0['time_bnds'].load())
 
 
