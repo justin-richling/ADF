@@ -258,6 +258,7 @@ def create_TEM_files(adf):
 
             h0_files = glob(f"{starting_location}/*cam.h0*.nc")
             ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords')
+            ds_h0 = ds_h0.rename({'lat': 'zalat'})
 
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
@@ -359,8 +360,6 @@ def create_TEM_files(adf):
             else:
                 warnings.warn("Timeseries file does not have time bounds info.")
             dstem0 = xr.decode_cf(dstem0)"""
-
-            dstem0 = dstem0.rename({'lat': 'zalat'})
 
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
