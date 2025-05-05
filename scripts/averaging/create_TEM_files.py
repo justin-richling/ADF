@@ -260,6 +260,27 @@ def create_TEM_files(adf):
             ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords')
             ds_h0 = ds_h0.rename({'lat': 'zalat'})
 
+            #Average time dimension over time bounds, if bounds exist:
+            if 'time_bnds' in ds_h0:
+                time_bounds_name = 'time_bnds'
+            elif 'time_bounds' in ds_h0:
+                time_bounds_name = 'time_bounds'
+            else:
+                time_bounds_name = None
+
+            if time_bounds_name:
+                time = ds_h0['time']
+                #NOTE: force `load` here b/c if dask & time is cftime,
+                #throws a NotImplementedError:
+
+                time = xr.DataArray(ds_h0[time_bounds_name].load().mean(dim='nbnd').values,
+                                    dims=time.dims, attrs=time.attrs)
+                ds_h0['time'] = time
+                ds_h0.assign_coords(time=time)
+                ds_h0 = xr.decode_cf(ds_h0)
+
+
+
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
                 if idx == 0:
