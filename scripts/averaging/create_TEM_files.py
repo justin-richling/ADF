@@ -300,6 +300,25 @@ def create_TEM_files(adf):
                 #End if
             #End if
 
+            #Average time dimension over time bounds, if bounds exist:
+            if 'time_bnds' in ds:
+                time_bounds_name = 'time_bnds'
+            elif 'time_bounds' in ds:
+                time_bounds_name = 'time_bounds'
+            else:
+                time_bounds_name = None
+
+            if time_bounds_name:
+                time = ds['time']
+                #NOTE: force `load` here b/c if dask & time is cftime,
+                #throws a NotImplementedError:
+
+                time = xr.DataArray(ds[time_bounds_name].load().mean(dim='nbnd').values,
+                                    dims=time.dims, attrs=time.attrs)
+                dstem0['time'] = time
+                dstem0.assign_coords(time=time)
+                dstem0 = xr.decode_cf(dstem0)
+
             # Step 1: Your standard latitudes
             za_lats = dstem0.zalat.values
             print("dstem0.UZM",dstem0.UZM,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
@@ -359,7 +378,7 @@ def create_TEM_files(adf):
 
             # write output to a netcdf file
             #print("\n\ndstem0",dstem0,"\n\n")
-            #Average time dimension over time bounds, if bounds exist:
+            """#Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in ds:
                 time_bounds_name = 'time_bnds'
             elif 'time_bounds' in ds:
@@ -376,7 +395,7 @@ def create_TEM_files(adf):
                                     dims=time.dims, attrs=time.attrs)
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
-                dstem0 = xr.decode_cf(dstem0)
+                dstem0 = xr.decode_cf(dstem0)"""
             print("dstem0 AFTER",dstem0.PMID.values,"\n\n")
             #print("dstem0['time_bnds'].load()",dstem0['time_bnds'].load())
 
