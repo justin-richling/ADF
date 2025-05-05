@@ -262,9 +262,9 @@ def tem(adf):
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
                 odata = ds_base[var].squeeze()
-                #if regrid_tem_files == False:
-                #    mdata['time'] = xr.conventions.times.decode_cf_datetime(mdata.time, mdata.time.attrs['units'])
-                #    odata['time'] = xr.conventions.times.decode_cf_datetime(odata.time, odata.time.attrs['units'])
+                if regrid_tem_files == False:
+                    mdata['time'] = xr.conventions.times.decode_cf_datetime(mdata.time, mdata.time.attrs['units'])
+                    odata['time'] = xr.conventions.times.decode_cf_datetime(odata.time, odata.time.attrs['units'])
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
@@ -340,6 +340,7 @@ def tem(adf):
 
                     #print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
+                    pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
                     print("PMID in plotting:",pmid,"\n\n")
                     print("mdata in plotting:",mdata)
                     
