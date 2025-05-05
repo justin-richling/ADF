@@ -347,7 +347,7 @@ def create_TEM_files(adf):
             #print("dstem0['time_bnds'].load()",dstem0['time_bnds'].load())
 
 
-            # assign time to midpoint of interval (even if it is already)
+            """# assign time to midpoint of interval (even if it is already)
             if 'time_bnds' in dstem0:
                 t = dstem0['time_bnds'].load().mean(dim='nbnd')
                 t.attrs = dstem0['time'].attrs
@@ -358,7 +358,7 @@ def create_TEM_files(adf):
                 dstem0 = dstem0.assign_coords({'time':t})
             else:
                 warnings.warn("Timeseries file does not have time bounds info.")
-            dstem0 = xr.decode_cf(dstem0)
+            dstem0 = xr.decode_cf(dstem0)"""
 
 
 
