@@ -341,7 +341,7 @@ def tem(adf):
                     #print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
                     print("PMID in plotting:",pmid,"\n\n")
-                    print("mseasons in plotting:",mseasons)
+                    print("mdata in plotting:",mdata)
                     
 
                     #Create array to avoid weighting missing values:
