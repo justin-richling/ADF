@@ -374,6 +374,8 @@ def tem(adf):
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
 
+                    print("mseasons in plotting:",mseasons)
+
                 if var == "utendepfd":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
