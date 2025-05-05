@@ -261,7 +261,9 @@ def tem(adf):
 
                 #Gather data for both cases
                 mdata = ds[var].squeeze()
+                mdata['time'] = xr.conventions.times.decode_cf_datetime(mdata.time, mdata.time.attrs['units'])
                 odata = ds_base[var].squeeze()
+                odata['time'] = xr.conventions.times.decode_cf_datetime(odata.time, odata.time.attrs['units'])
 
                 # APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
