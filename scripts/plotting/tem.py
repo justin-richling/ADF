@@ -338,9 +338,11 @@ def tem(adf):
                     T = temperature_from_potential_temperature(p, theta)
                     """
 
-                    print("ds in plotting:",ds)
+                    #print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
-                    print("PMID in plotting:",pmid)
+                    print("PMID in plotting:",pmid,"\n\n")
+                    print("mseasons in plotting:",mseasons)
+                    
 
                     #Create array to avoid weighting missing values:
                     pmid_ones = xr.where(pmid.isnull(), 0.0, 1.0)
