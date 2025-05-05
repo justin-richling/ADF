@@ -248,6 +248,8 @@ def create_TEM_files(adf):
 
                 #Grab all leading zeros for climo year just in case
                 yr = f"{str(yr).zfill(4)}"
+                print('yr',yr,"DKSNML")
+                print("FILE:",glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist0_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
 
@@ -257,7 +259,7 @@ def create_TEM_files(adf):
             ds = xr.open_mfdataset(hist_files,decode_times=True, combine='by_coords')
 
             h0_files = glob(f"{starting_location}/*cam.h0*.nc")
-            ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords')
+            ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords').sel(time=slice())
             ds_h0 = ds_h0.rename({'lat': 'zalat'})
 
             #Average time dimension over time bounds, if bounds exist:
