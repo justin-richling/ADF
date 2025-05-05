@@ -278,7 +278,7 @@ def create_TEM_files(adf):
                 ds_h0['time'] = time
                 ds_h0.assign_coords(time=time)
                 ds_h0 = xr.decode_cf(ds_h0)
-
+            print("ds_h0 AFTER",ds_h0,"\n\n")
 
 
             #iterate over the times in a dataset
