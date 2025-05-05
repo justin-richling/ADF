@@ -338,7 +338,7 @@ def tem(adf):
                     T = temperature_from_potential_temperature(p, theta)
                     """
 
-                    
+                    print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
                     print("PMID in plotting:",pmid)
 
