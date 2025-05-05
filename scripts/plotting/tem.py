@@ -341,7 +341,7 @@ def tem(adf):
                     #print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
                     pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
-                    print("PMID in plotting:",pmid,"\n\n")
+                    print("PMID in plotting:",pmid.values,"\n\n")
                     print("mdata in plotting:",mseasons,"\n\n---------------------------------------\n")
                     
 
