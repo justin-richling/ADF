@@ -341,8 +341,6 @@ def tem(adf):
                     #print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
                     pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
-                    print("PMID in plotting:",pmid.values,"\n\n")
-                    print("mdata in plotting:",mseasons,"\n\n---------------------------------------\n")
                     
 
                     #Create array to avoid weighting missing values:
@@ -352,6 +350,8 @@ def tem(adf):
                     #weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
                     if s == 'ANN':
                         print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
+                        print("PMID in plotting:",pmid.values,"\n\n")
+                        print("mdata in plotting:",mseasons,"\n\n---------------------------------------\n")
                         #Calculate annual weights (i.e. don't group by season):
                         weights_ann = month_length / month_length.sum()
 
