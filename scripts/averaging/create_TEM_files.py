@@ -26,6 +26,7 @@ def create_TEM_files(adf):
 
     #Grab h4 history files locations
     cam_hist_locs = adf.get_cam_info("cam_hist_loc", required=True)
+    cam_hist_strs = adf.hist_string["test_hist_str"]
 
     #Extract test case years
     start_years   = adf.climo_yrs["syears"]
@@ -158,6 +159,7 @@ def create_TEM_files(adf):
     else:
         if tem_base_loc:
             cam_hist_locs.append(adf.get_baseline_info("cam_hist_loc", required=True))
+            cam_hist_strs.append(adf.hist_string["base_hist_str"])
 
             #Set default to h4
             hist_num = adf.get_baseline_info("tem_hist_str")
@@ -217,6 +219,9 @@ def create_TEM_files(adf):
             adf.end_diag_fail(emsg)
         #End if
 
+        #hist0_str = "cam.h0"
+        hist0_str = cam_hist_strs[case_idx]
+
         #Get full path and file for file name
         output_loc_idx = tem_locs[case_idx]
 
@@ -251,7 +256,7 @@ def create_TEM_files(adf):
                 print('yr',yr,"DKSNML")
                 print("FILE:",glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
-                hist0_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
+                hist0_files.append(glob(f"{starting_location}/*{hist0_str}.{yr}*.nc"))
 
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
