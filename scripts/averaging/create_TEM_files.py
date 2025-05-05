@@ -221,6 +221,7 @@ def create_TEM_files(adf):
 
         #hist0_str = "cam.h0"
         hist0_str = cam_hist_strs[case_idx]
+        print("hist0_str",hist0_str,"\n")
 
         #Get full path and file for file name
         output_loc_idx = tem_locs[case_idx]
