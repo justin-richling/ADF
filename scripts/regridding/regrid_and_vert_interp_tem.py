@@ -308,7 +308,7 @@ def regrid_and_vert_interp_tem(adf):
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data"""
                     rgdata_interp["PMID"] = mclim_ds["PMID"]
-                    rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
+                    #rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
                     rgdata_interps.append(rgdata_interp)
 
                     #Now vertically interpolate baseline (target) climatology,
@@ -350,7 +350,7 @@ def regrid_and_vert_interp_tem(adf):
                             continue
                         #End if
                         tgdata_interp["PMID"] = tclim_ds["PMID"]
-                        tgdata_interp = tgdata_interp.rename({'lat': 'zalat'})
+                        #tgdata_interp = tgdata_interp.rename({'lat': 'zalat'})
                         tgdata_interps.append(tgdata_interp)
 
 
