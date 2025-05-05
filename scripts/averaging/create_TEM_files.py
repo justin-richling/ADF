@@ -255,9 +255,9 @@ def create_TEM_files(adf):
                 #Grab all leading zeros for climo year just in case
                 yr = f"{str(yr).zfill(4)}"
                 #print('yr',yr,"DKSNML")
-                print("FILE:",glob(f"{starting_location}/*{hist0_str}.{yr}*.nc"))
-                hist_files.append(glob(f"{starting_location}/*.{hist_str}.{yr}*.nc"))
-                hist0_files.append(glob(f"{starting_location}/*.{hist0_str}.{yr}*.nc"))
+                print("FILE:",glob(f"{starting_location}/*{hist0_str[0]}.{yr}*.nc"))
+                hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
+                hist0_files.append(glob(f"{starting_location}/*{hist0_str[0]}.{yr}*.nc"))
             print("hist_files",hist_files,"\n")
             print("hist0_files",hist0_files,"\n")
             #Flatten list of lists to 1d list
