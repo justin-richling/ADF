@@ -267,7 +267,7 @@ def create_TEM_files(adf):
 
             #h0_files = glob(f"{starting_location}/*cam.h0*.nc")
             #ds_h0 = xr.open_mfdataset(h0_files,decode_times=True, combine='by_coords').sel(time=slice())
-            #ds_h0 = ds_h0.rename({'lat': 'zalat'})
+            ds_h0 = ds_h0.rename({'lat': 'zalat'})
 
             #Average time dimension over time bounds, if bounds exist:
             if 'time_bnds' in ds_h0:
