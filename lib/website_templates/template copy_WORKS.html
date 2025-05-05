@@ -14,11 +14,12 @@
     display: grid;
     column-gap: 30px;
     row-gap: 50px;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(4, 1fr);
     background-color: #e4eef0;
         padding: 25px;
         border-radius: 15px;
         }
+
         .grid-item {
     background-color: rgba(255, 255, 255, 0.6);
     font-family: Tahoma, Geneva, Verdana, sans-serif;
@@ -114,7 +115,7 @@
 
   <body class="ncar">
     <main class="container-lg py-2 pt-md-3">
-      <h1>CAM Diagnostics</h1>
+      <h1>AMP Multi-Case Diagnostics</h1>
       <div class="center">
         <nav role="navigation" class="primary-navigation">
           <ul>
@@ -139,6 +140,8 @@
         </nav>
       </div><!--center-->
       <div class="d-grid d-print-flex">
+        
+
         <article class="main-content-wrapper">
           <!-- update the page title -->
           <!--<h1>CESM Unified Diagnostics CUPiD</h1>-->
@@ -162,44 +165,65 @@
             </table>
             <br>
                   
-
-
-
-            <a style="font-size:35px">
-              <h1>{{ plottype_title }} Plots</h1>
-            </div>
+            <div class="center">
+                <div class="float-child">
+                  <div><h1>{{plottype_title}} - {{var_title}}</h1></div>
+                </div><!--float-child-->
+                <div class="float-child">
+                  <div>
+                    <button style="border-radius: 10px;"><a href="mean_diag_{{plottype_title}}.html">Back to {{plottype_title}}</a></button>
+                    <button style="border-radius: 10px;"><a href="../index.html">Back to Plot Types</a></button>
+                  </div>
+                </div><!--float-child-->
+            </div><!--center-->
         
-            <div class="grid-container" >
-              {% for category, var_seas in mydata.items() %}
-              <div class="grid-item">
-  
-                  <h3 class="block">{{ category }}</h3>
-                    <div class="grid-container-adf" >
-                      {% for var_name, ptype_seas in var_seas.items() %}
-                        {% if non_seasons[category][var_name] == False %}<!-- Check if these have traditional seasons, ANN, DJF, etc. -->
-                          {% for i,season in enumerate(ptype_seas.keys()) %}
-                              {% if i==0 %}<!-- Grab first available season to make as default -->
-                                <div>
-                                  <a href="../html_img/plot_page_{{ var_name }}_{{ season }}_{{ plottype_title }}_Mean.html"> {{var_name}} </a><br>
-                                </div><!--grid-item2-->
-                              {% endif %}
-                          {% endfor %}<!-- ptype_seas.keys() -->
+            <div style="width: 100%;"> <!-- main div-->
+              <div class="grid-container-template" style="border: 3px solid black; border-radius: 10px;">
+                {% for category, var_seas in mydata.items() %}
+                  {% for var_name, ptype_seas in var_seas.items() %}
+                    {% if var_name == var_title %}
+                      {% if non_seasons[category][var_name] == False %}
+                        {% for season in seasons %}
+                          {% if season in ptype_seas.keys() %}
+                            <div class="grid-item">
+                              <a href="../html_img/{{ ptype_seas[season] }}">{{ season }}</a>
+                            </div><!--grid-item-->
+                          {% else %}
+                            <div class="grid-item-blocked">
+                              <a-blocked>{{ season }}</a-blocked>
+                            </div><!--grid-item-blocked-->
+                          {% endif %}<!-- ptype_seas.keys() -->
+                        {% endfor %}<!-- season in seasons -->
+                      {% else %}
+                        {% for season in ptype_seas.keys() %}
+                          <div class="grid-item">
+                            <a href="../html_img/{{ ptype_seas[season] }}">{{ season }}</a>
+                          </div><!--grid-item-->
+                        {% endfor %}<!-- ptype_seas.keys() -->
+                      {% endif %}<!-- non_season -->
+                    {% endif %}<!-- var_name == var_title -->
+                  {% endfor %}<!-- var_seas.items() -->
+                {% endfor %}<!-- mydata.items() -->
+              </div><!--grid-container-->
+              <br>
         
-                        {% else %}<!-- These will be non-traditional seasons -->
-                          {% for season in ptype_seas.keys() %}
-                            {% if season == list(ptype_seas.keys())[0] %}
-                              <div class="grid-item">
-                                <a href="../html_img/plot_page_{{ var_name }}_{{ season }}_{{ plottype_title }}_Mean.html"> {{var_name}} </a><br>
-                              </div><!--grid-item2-->
-                            {% endif %}
-                          {% endfor %}<!-- ptype_seas.keys() -->
-        
-                        {% endif %}<!--if non_season == False-->
-                      {% endfor %}<!-- var_seas.items() -->
 
-              </div><!--grid-item-->
-              {% endfor %}
-            </div><!--grid-container-ptype-->
+
+
+
+            <div id="footer" style="display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%;">
+              <!-- Grid Container -->
+              <div class="grid-container-template" style="border: 3px solid black; border-radius: 10px;">
+
+            
+              <!-- Image -->
+              <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+                <a href="{{ imgs[0] }}" target="_blank"></a>
+                <img src="{{ imgs[0] }}" alt="{{ imgs[1] }}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px;">
+              </a>
+              </div> <!-- end bottom div -->
+            </div><!--footer-->
+          </div> <!-- end main div -->
 
 
 

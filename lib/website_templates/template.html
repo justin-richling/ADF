@@ -171,7 +171,29 @@
                 </div><!--float-child-->
                 <div class="float-child">
                   <div>
-                    <button style="border-radius: 10px;"><a href="mean_diag_{{plottype_title}}.html">Back to {{plottype_title}}</a></button>
+                    <!-- <button style="border-radius: 10px;"><a href="mean_diag_{{plottype_title}}.html">Back to {{plottype_title}}</a></button>-->
+                    <!-- Dropdown Menu for Categories and Variables -->
+                    <nav role="navigation" class="primary-navigation">
+                      <ul>
+                        <li><a href="#">Jump to Variable &dtrif;</a>
+                          <ul class="dropdown">
+                            {% for category, var_seas in mydata.items() %}
+                              <li>
+                                <a href="#">{{ category }} &rtrif;</a>
+                                <ul class="dropdown">
+                                  {% for var_name in var_seas.keys() %}
+                                    <li>
+                                      <a href="mean_diag_{{ plottype_title }}_{{ var_name }}.html">{{ var_name }}</a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      </ul>
+                    </nav>
+
                     <button style="border-radius: 10px;"><a href="../index.html">Back to Plot Types</a></button>
                   </div>
                 </div><!--float-child-->
