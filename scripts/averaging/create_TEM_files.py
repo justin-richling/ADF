@@ -360,7 +360,7 @@ def create_TEM_files(adf):
                 warnings.warn("Timeseries file does not have time bounds info.")
             dstem0 = xr.decode_cf(dstem0)"""
 
-
+            dstem0 = dstem0.rename({'lat': 'zalat'})
 
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
