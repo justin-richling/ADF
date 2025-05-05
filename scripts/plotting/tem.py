@@ -340,7 +340,7 @@ def tem(adf):
 
                     
                     pmid = ds["PMID"].squeeze()
-                    #print(pmid)
+                    print("PMID in plotting:",pmid)
 
                     #Create array to avoid weighting missing values:
                     pmid_ones = xr.where(pmid.isnull(), 0.0, 1.0)
