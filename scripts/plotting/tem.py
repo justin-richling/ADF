@@ -195,7 +195,7 @@ def tem(adf):
             data_var = var
         #End if
         """
-        if (adf.compare_obs) and (var == "THZM"):
+        if (adf.compare_obs) and (var == "THZM" or var == "TZM"):
             print("Obs case is missing potential temperature, so this variable will be skipped.")
             continue
 
@@ -270,7 +270,8 @@ def tem(adf):
                     odata = ds_base["THZM"].squeeze()
                 else:
                     mdata = ds[var].squeeze()
-                    odata = ds_base[var].squeeze()
+                    if adf.compare_obs:
+                        odata = ds_base[var.lower()].squeeze()
                 if regrid_tem_files == False:
                     mdata['time'] = xr.conventions.times.decode_cf_datetime(mdata.time, mdata.time.attrs['units'])
                     odata['time'] = xr.conventions.times.decode_cf_datetime(odata.time, odata.time.attrs['units'])
@@ -391,7 +392,7 @@ def tem(adf):
 
                     #print("mseasons in plotting:",mseasons)
 
-                if var == "utendepfd":
+                if var == "UTENDEPFD":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
