@@ -386,7 +386,7 @@ def regrid_and_vert_interp_tem(adf):
                     "climatology_files": climatology_files_str,
                 }
             rgdata_interp = xr.concat(rgdata_interps, dim="time")
-            rgdata_interp["PMID"] = mclim_ds["PMID"]
+            #rgdata_interp["PMID"] = mclim_ds["PMID"]
             #print("\n\nWOAH:",rgdata_interp,"\n\n")
             rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
             save_to_nc(rgdata_interp, regridded_file_loc)
@@ -404,7 +404,7 @@ def regrid_and_vert_interp_tem(adf):
                 "climatology_files": climatology_files_str,
             }
             tgdata_interp = xr.concat(tgdata_interps, dim="time")
-            tgdata_interp["PMID"] = tclim_ds["PMID"]
+            #tgdata_interp["PMID"] = tclim_ds["PMID"]
             tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
             print('tgdata_interp["PMID"]',tgdata_interp["PMID"],"\n-~-~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_\n")
             #Write interpolated baseline climatology to file:
