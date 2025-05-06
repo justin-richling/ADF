@@ -432,8 +432,8 @@ def tem(adf):
                 prev_major_ticks = []
                 prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(mlevs)))))
                 prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(olevs)))))
-                prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(mlevs)))))
-
+                #prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(mlevs)))))
+                prev_major_tick = min(prev_major_ticks)
                 # Set padding for colorbar form axis
                 cmap_pad = 0.005
 
@@ -514,7 +514,7 @@ def tem(adf):
                     plt.colorbar(img2, ax=ax[2], location='right', pad=cmap_pad,**cp_info['diff_colorbar_opt'])
                 
 
-                print("prev_major_ticks",prev_major_ticks,"\n")
+                #print("prev_major_ticks",prev_major_ticks,"\n")
 
                 #Format y-axis
                 for i,a in enumerate(ax[:]):
@@ -528,7 +528,7 @@ def tem(adf):
 
                         #print("y_lims",y_lims,"\n")
                         #np.min(levs)
-                        y_lims[-1]=prev_major_ticks[i] #np.min(levs)
+                        y_lims[-1]=prev_major_tick #np.min(levs)
                         #print("y_lims",y_lims,"\n")
                         a.set_ylim(y_lims)
                     else:
