@@ -525,7 +525,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     #End if
 
     #Extract variable info from model data (and remove any degenerate dimensions):
-    if isinstance(model_dataset,xr.DataSet):
+    if isinstance(model_dataset,xr.Dataset):
         mdata = model_dataset[var_name].squeeze()
     if isinstance(model_dataset,xr.DataArray):
         mdata = model_dataset#[var_name].squeeze()
