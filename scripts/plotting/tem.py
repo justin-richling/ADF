@@ -151,7 +151,7 @@ def tem(adf):
         #Set TEM file for observations
         base_file_name = 'Obs.TEMdiag.nc'
         if regrid_tem_files:
-            tem_base_loc = Path(tem_case_locs[0])
+            tem_base_loc = Path(adf.get_cam_info("cam_tem_loc",required=True)[0])
         else:
             tem_base_loc = Path(tem_locs[0])
     else:
