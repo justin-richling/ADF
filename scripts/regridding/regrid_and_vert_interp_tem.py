@@ -58,11 +58,11 @@ def regrid_and_vert_interp_tem(adf):
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
         var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
-                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM","PS"]
+                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM","PS","PMID"]
     else:
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
         #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD","PS"]
+        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD","PS","PMID"]
         var_cor_list = ["Uzm","THzm","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
     var_defaults     = adf.variable_defaults
 
@@ -98,7 +98,7 @@ def regrid_and_vert_interp_tem(adf):
     ocn_frc_ds = None
     tgt_ocn_frc_ds = None
 
-    #Check if surface pressure exists in variable list:
+    """#Check if surface pressure exists in variable list:
     if "PMID" in var_list:
         #If so, then move it to front of variable list so that
         #it can be used to vertically interpolate model variables
@@ -107,7 +107,7 @@ def regrid_and_vert_interp_tem(adf):
         ps_idx = var_list.index("PMID")
         var_list.pop(ps_idx)
         var_list.insert(0,"PMID")
-    #End if
+    #End if"""
 
     #Check if surface pressure exists in variable list:
     if "PS" in var_list:
