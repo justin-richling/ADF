@@ -913,6 +913,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
         if method == 'coservative':
             if 'lev' in model_dataset.dims:
                 rgdata = regrid_3d_conservative(regridder, model_dataset)
+                print("WHAT THE HELL IS HAPPENING:",rgdata,"\n\n\n")
             else:
                 rgdata = regrid_atm_se_data_conservative(regridder, model_dataset, comp_grid)
         if method == 'bilinear':
