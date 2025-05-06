@@ -374,8 +374,8 @@ def tem(adf):
                     print("mseasons AFTER THERMO:",mseasons,"\n\n---------------------------------------\n")
                     #mseasons = mseasons[:,:,0]
                     #oseasons = oseasons[:,:,0]
-                    mseasons = mseasons.isel(dim_name="lat", drop=True)
-                    oseasons = oseasons.isel(dim_name="lat", drop=True)
+                    mseasons = mseasons.isel(lat=0, drop=True)
+                    oseasons = oseasons.isel(lat=0, drop=True)
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
 
