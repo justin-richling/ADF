@@ -499,8 +499,8 @@ def tem(adf):
                     #TODO: Work towards getting the vertical and horizontal interpolations!! - JR
                     empty_message = "Missing Data"
                     props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
-                    prop_x = 0.18
-                    prop_y = 0.42
+                    prop_x = 0.5
+                    prop_y = 0.5
                     ax[2].text(prop_x, prop_y, empty_message,
                                     transform=ax[2].transAxes, bbox=props)
                 else:
