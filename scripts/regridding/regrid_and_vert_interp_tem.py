@@ -318,7 +318,7 @@ def regrid_and_vert_interp_tem(adf):
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data"""
                     #print('mclim_ds["PMID"]',mclim_ds["PMID"],"\n")
-                    #rgdata_interp["PMID"] = mclim_ds["PMID"]
+                    rgdata_interp["PMID"] = mclim_ds["PMID"]
                     rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
                     rgdata_interps.append(rgdata_interp)
 
@@ -361,7 +361,7 @@ def regrid_and_vert_interp_tem(adf):
                             #for now:
                             continue
                         #End if
-                        #tgdata_interp["PMID"] = tclim_ds["PMID"]
+                        tgdata_interp["PMID"] = tclim_ds["PMID"]
                         tgdata_interp = tgdata_interp.rename({'lat': 'zalat'})
                         tgdata_interps.append(tgdata_interp)
 
@@ -401,7 +401,7 @@ def regrid_and_vert_interp_tem(adf):
             print(f"\n\n\n\n{rgdata_interps[0]}\n\nTHIUS IS GONNA BE BIG!",rgdata_interps,"\n\n\n\n")
             #rgdata_interp = xr.concat(rgdata_interps, dim="time")
             rgdata_interp = xr.merge(rgdata_interps)
-            rgdata_interp["PMID"] = mclim_ds["PMID"]
+            #rgdata_interp["PMID"] = mclim_ds["PMID"]
             #print("\n\nWOAH:",rgdata_interp,"\n\n")
             rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
             print("\n\nWOAH:",rgdata_interp,"\n")
@@ -422,7 +422,7 @@ def regrid_and_vert_interp_tem(adf):
             }
             #tgdata_interp = xr.concat(tgdata_interps, dim="time")
             tgdata_interp = xr.merge(tgdata_interps)
-            tgdata_interp["PMID"] = tclim_ds["PMID"]
+            #tgdata_interp["PMID"] = tclim_ds["PMID"]
             tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
             print('tgdata_interp["PMID"]',tgdata_interp["PMID"],"\n-~-~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_\n")
             #Write interpolated baseline climatology to file:
