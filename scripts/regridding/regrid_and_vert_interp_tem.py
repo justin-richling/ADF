@@ -639,7 +639,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
     #Interpolate variable to default pressure levels:
     if has_lev:
         import numpy as np
-        new_levels = np.array[3.01759109, 5.44485703, 9.08718781, 14.24753845, 21.00145538,
+        new_levels = np.ndarray[3.01759109, 5.44485703, 9.08718781, 14.24753845, 21.00145538,
             29.20879333, 38.55235229, 48.63703735, 59.09703247, 69.66665161,
             80.20207275, 90.66681885, 101.10148926, 111.59320801, 122.25200439,
             133.19550293, 144.54046143, 156.39897461, 168.87756592, 182.0778125,
