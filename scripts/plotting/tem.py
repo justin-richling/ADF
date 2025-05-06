@@ -432,6 +432,7 @@ def tem(adf):
                 prev_major_ticks = []
                 prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(mlevs)))))
                 prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(olevs)))))
+                prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(mlevs)))))
 
                 # Set padding for colorbar form axis
                 cmap_pad = 0.005
