@@ -201,7 +201,7 @@ def regrid_and_vert_interp_tem(adf):
                     obs_data_loc = adf.get_basic_info("obs_data_loc")
                     obs_file_path = Path(res[var]["obs_file"])
                     obs_file_path = Path(obs_data_loc)/obs_file_path
-                    target_list = ["ERA5"]
+                    target_list = ["Obs"]
                 else:
                     dmsg = f"No obs found for variable `{var}`, regridding skipped."
                     adf.debug_log(dmsg)
