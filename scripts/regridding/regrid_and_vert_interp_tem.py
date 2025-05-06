@@ -638,10 +638,23 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
     #Interpolate variable to default pressure levels:
     if has_lev:
+        new_levels = [3.01759109, 5.44485703, 9.08718781, 14.24753845, 21.00145538,
+            29.20879333, 38.55235229, 48.63703735, 59.09703247, 69.66665161,
+            80.20207275, 90.66681885, 101.10148926, 111.59320801, 122.25200439,
+            133.19550293, 144.54046143, 156.39897461, 168.87756592, 182.0778125,
+            196.0976416, 211.03290039, 226.97895996, 243.98534668, 262.11119629,
+            281.51827148, 302.36227539, 324.74960449, 348.79453125, 374.61978516,
+            402.3571582, 432.14824219, 464.14512695, 498.51110352, 535.42157227,
+            574.2534451, 612.85953891, 649.19185169, 682.74605196, 713.7345652,
+            742.35357401, 768.78426008, 793.19395123, 815.73718074, 836.55666564,
+            855.78421029, 873.54154074, 889.94107538, 905.08663666, 919.07410836,
+            931.99204257, 943.92222039, 954.94016956, 965.11564272, 974.5130589,
+            983.19191142, 991.20714452, 997.52772561]
+
 
         if vert_coord_type == "hybrid":
             #Interpolate from hybrid sigma-pressure to the standard pressure levels:
-            rgdata_interp = pf.lev_to_plev(rgdata, rg_ps, mhya, mhyb, P0=P0, \
+            rgdata_interp = pf.lev_to_plev(rgdata, rg_ps, mhya, mhyb, P0=P0, new_levels=new_levels, \
                                            convert_to_mb=True)
         elif vert_coord_type == "height":
             #Interpolate variable using mid-level pressure (PMID):
