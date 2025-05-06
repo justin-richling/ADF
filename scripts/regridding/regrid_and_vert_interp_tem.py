@@ -389,6 +389,7 @@ def regrid_and_vert_interp_tem(adf):
             #rgdata_interp["PMID"] = mclim_ds["PMID"]
             #print("\n\nWOAH:",rgdata_interp,"\n\n")
             rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
+            print("\n\nWOAH:",rgdata_interp,"\n\n")
             save_to_nc(rgdata_interp, regridded_file_loc)
             rgdata_interp.close()  # bpm: we are completely done with this data
 
