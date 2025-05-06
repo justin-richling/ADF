@@ -511,6 +511,9 @@ def tem(adf):
                                     levels=clevs_diff[::2], norm=cp_info['normdiff'])
                     cp_info['diff_colorbar_opt']["label"] = cp_info['colorbar_opt']["label"]
                     plt.colorbar(img2, ax=ax[2], location='right', pad=cmap_pad,**cp_info['diff_colorbar_opt'])
+                
+
+                print("prev_major_ticks",prev_major_ticks,"\n")
 
                 #Format y-axis
                 for i,a in enumerate(ax[:]):
