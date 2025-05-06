@@ -573,7 +573,7 @@ class AdfInfo(AdfConfig):
                 if any(dim in case_ds.dims for dim in ['ncols', 'ncol']):
                     print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
-                if 'lndgrid' in case_ds.dims:
+                elif 'lndgrid' in case_ds.dims:
                     print('\t  Looks like this is a land unstructured grid, yeah')
                     unstruct = True
                 else:
