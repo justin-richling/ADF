@@ -7,7 +7,8 @@ import xesmf
 import numpy as np
 
 def make_se_regridder(weight_file, s_data, d_data,
-                      Method='coservative'
+                      var,
+                      Method='coservative',
                       ):
     weights = xr.open_dataset(weight_file)
     in_shape = weights.src_grid_dims.load().data
@@ -52,8 +53,9 @@ def make_se_regridder(weight_file, s_data, d_data,
         dummy_in['mask']= s_mask
     if isinstance(d_data, xr.DataArray):
         d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
-        dummy_out['mask']= d_mask                
-    print("\n\ndummy_in",dummy_in,"\n\n")
+        dummy_out['mask']= d_mask
+    print("VAR:",var)            
+    print("---------------\ndummy_in",dummy_in,"\n\n")
     print("dummy_out",dummy_out,"\n\n")
 
     list_of_datasets = [dummy_in, dummy_out, weights]

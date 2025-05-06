@@ -851,6 +851,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
                                     s_data = s_data,
                                     d_data = d_data,
                                     Method = method,
+                                    var=var_name
                                     )
     """if method == 'coservative':
         rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
