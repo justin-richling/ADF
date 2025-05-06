@@ -405,7 +405,7 @@ def regrid_and_vert_interp_tem(adf):
             }
             tgdata_interp = xr.concat(tgdata_interps, dim="time")
             tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
-
+            print('tgdata_interp["PMID"]',tgdata_interp["PMID"],"\n-~-~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_\n")
             #Write interpolated baseline climatology to file:
             save_to_nc(tgdata_interp, interp_bl_file)
     #End do (case list)
