@@ -31,6 +31,21 @@ def make_se_regridder(weight_file, s_data, d_data,
             "lon": ("lon", weights.xc_b.data.reshape(out_shape)[0, :]),
         }
     )
+
+
+    def check_duplicate_lons(ds, ds_name="dataset"):
+        try:
+            lons = ds['lon'].values
+            if lons.ndim > 1:
+                print(f"[{ds_name}] Skipping 2D longitude check (not supported directly).")
+                return
+            if len(set(lons)) < len(lons):
+                print(f"[{ds_name}] 🚨 Duplicate longitudes found!")
+            else:
+                print(f"[{ds_name}] ✅ Longitudes are unique.")
+        except KeyError:
+            print(f"[{ds_name}] ❌ No 'lon' coordinate found.")
+
     # Hard code masks for now, not sure this does anything?
     if isinstance(s_data, xr.DataArray):
         s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
@@ -40,6 +55,11 @@ def make_se_regridder(weight_file, s_data, d_data,
         dummy_out['mask']= d_mask                
     print("\n\ndummy_in",dummy_in,"\n\n")
     print("dummy_out",dummy_out,"\n\n")
+
+    list_of_datasets = [dummy_in, dummy_out, weights]
+    for i, ds in enumerate(list_of_datasets):
+        check_duplicate_lons(ds, ds_name=f"dataset_{i}")
+
     dummy_in = dummy_in.drop_duplicates(dim='lon')
 
     """def add_bounds_1d(coord, name):
@@ -61,20 +81,6 @@ def make_se_regridder(weight_file, s_data, d_data,
     print("\n\ndummy_in FIXED?",dummy_in,"\n\n")
 
     list_of_datasets = [dummy_in, dummy_out, weights]
-    def check_duplicate_lons(ds, ds_name="dataset"):
-        try:
-            lons = ds['lon'].values
-            if lons.ndim > 1:
-                print(f"[{ds_name}] Skipping 2D longitude check (not supported directly).")
-                return
-            if len(set(lons)) < len(lons):
-                print(f"[{ds_name}] 🚨 Duplicate longitudes found!")
-            else:
-                print(f"[{ds_name}] ✅ Longitudes are unique.")
-        except KeyError:
-            print(f"[{ds_name}] ❌ No 'lon' coordinate found.")
-
-    # Example use:
     for i, ds in enumerate(list_of_datasets):
         check_duplicate_lons(ds, ds_name=f"dataset_{i}")
 
