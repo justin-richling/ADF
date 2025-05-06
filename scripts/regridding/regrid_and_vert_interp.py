@@ -853,11 +853,20 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
                                     Method = method,
                                     var=var_name
                                     )
-    """if method == 'coservative':
-        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
-    if method == 'bilinear':
-        rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
-    rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)"""
+    def regrid_3d_conservative(regridder, data3d):
+        if "lev" not in data3d.dims:
+            raise ValueError("Expected a 3D variable with 'lev' dimension.")
+
+        regridded_levels = []
+        for level in data3d.lev:
+            print(f"Regridding level: {level.item()}")
+            slice2d = data3d.sel(lev=level)
+            regridded = regridder(slice2d)
+            regridded = regridded.expand_dims(lev=[level.item()])
+            regridded_levels.append(regridded)
+
+        return xr.concat(regridded_levels, dim="lev")
+
     if comp == "lnd":
         if method == 'coservative':
             rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
@@ -867,7 +876,10 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
     if comp == "atm":
         if method == 'coservative':
-            rgdata = regrid_atm_se_data_conservative(regridder, model_dataset, comp_grid)
+            if 'lev' in model_dataset.dims:
+                rgdata = regrid_3d_conservative(regridder, model_dataset)
+            else:
+                rgdata = regrid_atm_se_data_conservative(regridder, model_dataset, comp_grid)
         if method == 'bilinear':
             rgdata = regrid_atm_se_data_bilinear(regridder, model_dataset, comp_grid)
 
