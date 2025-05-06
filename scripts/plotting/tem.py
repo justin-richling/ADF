@@ -130,14 +130,14 @@ def tem(adf):
 
     #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
     if "qbo" in adf.plotting_scripts:
-        var_list = ['uzm', 'thzm','epfy','epfz','vtem','wtem',#'thzm'
+        var_list = ['uzm', 'thzm', 'tzm', 'epfy','epfz','vtem','wtem',
                     'psitem','utendepfd','utendvtem','utendwtem']
         var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem',
         #            'psitem','utendepfd','utendvtem','utendwtem']
     #Otherwise keep it simple
     else:
-        var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']#'thzm'
+        var_list = ['uzm','thzm', 'tzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
         var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
@@ -257,6 +257,11 @@ def tem(adf):
                         plot_name.unlink()
 
                 #Grab variable defaults for this variable
+                """if var == "TZM":
+                    vres = res["THZM"]
+                else:   
+                    vres = res[var.upper()]"""
+
                 vres = res[var.upper()]
 
                 #Gather data for both cases
@@ -329,7 +334,8 @@ def tem(adf):
                         wgt_denom_base = (od_ones*weights_base).groupby("time.season").sum(dim="time").sel(season=s)
                         oseasons = oseasons / wgt_denom_base
 
-                if var == "THZM":
+                #if var == "THZM":
+                if var == "TZM":
                     """
                     from metpy.calc import temperature_from_potential_temperature
                     # potential temperature
