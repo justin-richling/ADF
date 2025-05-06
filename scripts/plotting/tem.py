@@ -351,7 +351,7 @@ def tem(adf):
                     #weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
                     if s == 'ANN':
                         print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
-                        print("PMID in plotting:",pmid.values,"\n\n")
+                        print("PMID BEFORE SEAONS:",pmid,"\n\n")
                         print("mseasons BEFORE THERMO:",mseasons,"\n\n---------------------------------------\n")
                         #Calculate annual weights (i.e. don't group by season):
                         weights_ann = month_length / month_length.sum()
@@ -365,7 +365,7 @@ def tem(adf):
                         pmid = pmid / wgt_denom
 
                     #pmid = pmid.mean(dim="lon")
-
+                    print("PMID AFTER SEAONS:",pmid,"\n\n")
                     mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
                                                                              mseasons* units.kelvin)
 
