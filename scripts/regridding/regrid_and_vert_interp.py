@@ -867,21 +867,36 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
         return xr.concat(regridded_levels, dim="lev")"""
 
-    def regrid_3d_conservative(regridder, data3d):
-        if "time" not in data3d.dims or "lev" not in data3d.dims:
-            raise ValueError("Expected a 4D variable with 'time' and 'lev' dimensions.")
+    import xarray as xr
 
-        first_time = data3d.isel(time=0)
+    def regrid_3d_conservative(regridder, data, level_index=0):
+        """
+        Regrid the first time step (and first level) of a 3D DataArray using conservative regridding.
 
-        regridded_levels = []
-        for level in first_time.lev:
-            print(f"Regridding level: {level.item()}")
-            slice2d = first_time.sel(lev=level)
-            regridded = regridder(slice2d)
-            regridded = regridded.expand_dims(lev=[level.item()])
-            regridded_levels.append(regridded)
+        Parameters:
+            regridder: xesmf.Regridder object (must be conservative-compatible)
+            data: xarray.DataArray with dimensions (time, lev, ncol) or similar
+            level_index: which level index to use (default: 0)
 
-        return xr.concat(regridded_levels, dim="lev").expand_dims(time=[data3d.time[0].item()])
+        Returns:
+            regridded_data: xarray.DataArray with horizontal dimensions of the target grid
+        """
+        # Ensure data has expected dimensions
+        if "time" not in data.dims or "lev" not in data.dims:
+            raise ValueError("Input data must have 'time' and 'lev' dimensions")
+
+        # Extract single 2D slice (1st time step and specified vertical level)
+        slice2d = data.isel(time=0, lev=level_index)
+
+        # Check shape: if 1D, expand to 2D as (1, ncol)
+        if slice2d.ndim == 1:
+            slice2d = slice2d.expand_dims("dummy", axis=0)
+
+        # Apply regridder
+        regridded = regridder(slice2d)
+
+        return regridded
+
 
 
     if comp == "lnd":
