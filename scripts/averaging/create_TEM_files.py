@@ -185,7 +185,6 @@ def create_TEM_files(adf):
             overwrite_tem_cases.append(adf.get_baseline_info("overwrite_tem", False))
 
             hist_nums.append(hist_num)
-            print("hist_nums after baseline",hist_nums)
         else:
             print("\t 'cam_tem_loc' not found in 'diag_cam_baseline_climo', so no baseline files/diagnostics will be generated.")
 
@@ -221,7 +220,6 @@ def create_TEM_files(adf):
 
         #hist0_str = "cam.h0"
         hist0_str = cam_hist_strs[case_idx]
-        print("hist0_str",hist0_str,"\n")
 
         #Get full path and file for file name
         output_loc_idx = tem_locs[case_idx]
@@ -251,15 +249,11 @@ def create_TEM_files(adf):
             hist_files = []
             hist0_files = []
             for yr in np.arange(int(start_year),int(end_year)+1):
-
                 #Grab all leading zeros for climo year just in case
                 yr = f"{str(yr).zfill(4)}"
-                #print('yr',yr,"DKSNML")
-                print("FILE:",glob(f"{starting_location}/*{hist0_str[0]}.{yr}*.nc"))
                 hist_files.append(glob(f"{starting_location}/*{hist_str}.{yr}*.nc"))
                 hist0_files.append(glob(f"{starting_location}/*{hist0_str[0]}.{yr}*.nc"))
-            print("hist_files",hist_files,"\n")
-            print("hist0_files",hist0_files,"\n")
+
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
             hist0_files = sorted(list(chain.from_iterable(hist0_files)))
@@ -323,7 +317,7 @@ def create_TEM_files(adf):
 
             # Step 1: Your standard latitudes
             za_lats = dstem0.zalat.values
-            print("dstem0.UZM",dstem0.UZM,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+            #print("dstem0.UZM",dstem0.UZM,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
             # Step 2: Interpolate ds2 to standard latitudes
             ds_h0_lats = ds_h0.interp(zalat=za_lats)
@@ -331,7 +325,7 @@ def create_TEM_files(adf):
             zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon').compute()
             zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon').compute()
             #dstem0['PMID'] = zonal_mean_PMID
-            print("zonal_mean_PMID",zonal_mean_PMID,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+            #print("zonal_mean_PMID",zonal_mean_PMID,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
             print("dstem0['lev']",dstem0['lev'].values,"\n")
 
@@ -400,7 +394,7 @@ def create_TEM_files(adf):
                 dstem0['time'] = time
                 dstem0.assign_coords(time=time)
                 dstem0 = xr.decode_cf(dstem0)"""
-            print("dstem0 AFTER",dstem0.PMID.values,"\n\n")
+            #print("dstem0 AFTER",dstem0.PMID.values,"\n\n")
             #print("dstem0['time_bnds'].load()",dstem0['time_bnds'].load())
 
 

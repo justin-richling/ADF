@@ -148,8 +148,6 @@ def regrid_and_vert_interp_tem(adf):
         tclimo_loc  = Path(target_loc)# / "tem"
     #------------------------------------
 
-    print("tclimo_loc",tclimo_loc)
-
     #Check if re-gridded directory exists, and if not, then create it:
     if not rgclimo_loc.is_dir():
         print(f"    {rgclimo_loc} not found, making new directory")
@@ -389,7 +387,7 @@ def regrid_and_vert_interp_tem(adf):
                     "climatology_files": climatology_files_str,
                 }
             rgdata_interp = xr.concat(rgdata_interps, dim="time")
-            print("\n\nWOAH:",rgdata_interp,"\n\n")
+            #print("\n\nWOAH:",rgdata_interp,"\n\n")
             rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
             save_to_nc(rgdata_interp, regridded_file_loc)
             rgdata_interp.close()  # bpm: we are completely done with this data
