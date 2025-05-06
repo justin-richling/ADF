@@ -60,7 +60,7 @@ def make_se_regridder(weight_file, s_data, d_data,
     for i, ds in enumerate(list_of_datasets):
         check_duplicate_lons(ds, ds_name=f"dataset_{i}")
 
-    dummy_in = dummy_in.drop_duplicates(dim='lon')
+    #dummy_in = dummy_in.drop_duplicates(dim='lon')
 
     """def add_bounds_1d(coord, name):
         diff = np.diff(coord)
