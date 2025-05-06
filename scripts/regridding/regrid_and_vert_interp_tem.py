@@ -99,6 +99,17 @@ def regrid_and_vert_interp_tem(adf):
     tgt_ocn_frc_ds = None
 
     #Check if surface pressure exists in variable list:
+    if "PMID" in var_list:
+        #If so, then move it to front of variable list so that
+        #it can be used to vertically interpolate model variables
+        #if need be.  This should be done after PMID so that the order
+        #is PS, PMID, other variables:
+        ps_idx = var_list.index("PMID")
+        var_list.pop(ps_idx)
+        var_list.insert(0,"PMID")
+    #End if
+
+    #Check if surface pressure exists in variable list:
     if "PS" in var_list:
         #If so, then move it to front of variable list so that
         #it can be used to vertically interpolate model variables
