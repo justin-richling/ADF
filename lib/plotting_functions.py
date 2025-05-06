@@ -1534,7 +1534,7 @@ def lev_to_plev(data, ps, hyam, hybm, P0=100000., new_levels=None,
 
     #Apply GeoCAT hybrid->pressure interpolation:
     if new_levels is not None:
-        print("type(new_levels)",type(new_levels),"\n")
+        #print("type(new_levels)",type(new_levels),"\n")
         data_interp = gcomp.interpolation.interp_hybrid_to_pressure(data, ps,
                                                                     hyam,
                                                                     hybm,

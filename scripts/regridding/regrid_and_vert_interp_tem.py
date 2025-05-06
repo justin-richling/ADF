@@ -317,7 +317,7 @@ def regrid_and_vert_interp_tem(adf):
                     rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data"""
-                    print('mclim_ds["PMID"]',mclim_ds["PMID"],"\n")
+                    #print('mclim_ds["PMID"]',mclim_ds["PMID"],"\n")
                     #rgdata_interp["PMID"] = mclim_ds["PMID"]
                     rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
                     rgdata_interps.append(rgdata_interp)
@@ -398,12 +398,13 @@ def regrid_and_vert_interp_tem(adf):
                     "climatology_files": climatology_files_str,
                 }
 
-            print(f"\n\n\n\n{rgdata_interps[0]}\nTHIUS IS GONNA BE BIG!",rgdata_interps,"\n\n\n\n")
+            print(f"\n\n\n\n{rgdata_interps[0]}\n\nTHIUS IS GONNA BE BIG!",rgdata_interps,"\n\n\n\n")
             rgdata_interp = xr.concat(rgdata_interps, dim="time")
             #rgdata_interp["PMID"] = mclim_ds["PMID"]
             #print("\n\nWOAH:",rgdata_interp,"\n\n")
             rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
-            print("\n\nWOAH:",rgdata_interp,"\n\n")
+            print("\n\nWOAH:",rgdata_interp,"\n")
+            print("WHAT ISD HAPPENEFOIBN FOKNS",rgdata_interp.UZM.time,"\n\n")
             save_to_nc(rgdata_interp, regridded_file_loc)
             rgdata_interp.close()  # bpm: we are completely done with this data
 
