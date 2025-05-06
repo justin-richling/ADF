@@ -658,7 +658,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
             new_levs = True
             print("min(regrid_dataset.lev.values)",min(regrid_dataset.lev.values),"\n")
             #np.array(regrid_dataset.lev.values)
-            new_levels = np.array(np.logspace(np.log10(1000), np.log10(min(regrid_dataset.lev.values)), num=30))
+            new_levels = np.array(np.logspace(np.log10(1000), np.log10(min(regrid_dataset.lev.values)), num=30))*100
 
             # Optional: round for readability
             #new_levels = np.round(new_levels, decimals=3)
