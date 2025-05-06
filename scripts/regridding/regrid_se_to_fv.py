@@ -40,7 +40,7 @@ def make_se_regridder(weight_file, s_data, d_data,
         dummy_out['mask']= d_mask                
     print("\n\ndummy_in",dummy_in,"\n\n")
     print("dummy_out",dummy_out,"\n\n")
-    dummy_in = dummy_in.sel(lon=~dummy_in['lon'].to_pandas().duplicated())
+    dummy_in = dummy_in.drop_duplicates(dim='lon')
     print("\n\ndummy_in FIXED?",dummy_in,"\n\n")
 
     list_of_datasets = [dummy_in, dummy_out, weights]
