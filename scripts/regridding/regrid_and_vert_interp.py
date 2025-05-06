@@ -867,7 +867,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
 
         return xr.concat(regridded_levels, dim="lev")"""
 
-    import xarray as xr
+    #import xarray as xr
 
     def regrid_3d_conservative(regridder, data, level_index=0):
         """
