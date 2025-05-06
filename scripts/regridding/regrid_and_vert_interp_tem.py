@@ -306,7 +306,7 @@ def regrid_and_vert_interp_tem(adf):
                     rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data"""
-                    rgdata_interp["PMID"] = mclim_ds["PMID"]
+                    #rgdata_interp["PMID"] = mclim_ds["PMID"]
                     rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
                     rgdata_interps.append(rgdata_interp)
 
@@ -349,7 +349,7 @@ def regrid_and_vert_interp_tem(adf):
                             #for now:
                             continue
                         #End if
-                        tgdata_interp["PMID"] = tclim_ds["PMID"]
+                        #tgdata_interp["PMID"] = tclim_ds["PMID"]
                         tgdata_interp = tgdata_interp.rename({'lat': 'zalat'})
                         tgdata_interps.append(tgdata_interp)
 
@@ -376,7 +376,7 @@ def regrid_and_vert_interp_tem(adf):
         #Extract defaults for variable:
         var_default_dict = var_defaults.get(var, {})
         if len(rgdata_interps) > 0:
-            #rgdata_interp["PMID"] = mclim_ds["PMID"]
+            rgdata_interp["PMID"] = mclim_ds["PMID"]
             #Finally, write re-gridded data to output file:
             #Convert the list of Path objects to a list of strings
             climatology_files_str = [str(path) for path in mclim_fils]
@@ -393,7 +393,7 @@ def regrid_and_vert_interp_tem(adf):
             rgdata_interp.close()  # bpm: we are completely done with this data
 
         if len(tgdata_interps) > 0:
-            #tgdata_interp["PMID"] = tclim_ds["PMID"]
+            tgdata_interp["PMID"] = tclim_ds["PMID"]
             # Convert the list to a string (join with commas or another separator)
             climatology_files_str = [str(path) for path in tclim_fils]
             climatology_files_str = ', '.join(climatology_files_str)
