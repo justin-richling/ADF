@@ -317,6 +317,7 @@ def regrid_and_vert_interp_tem(adf):
                     rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data"""
+                    print('mclim_ds["PMID"]',mclim_ds["PMID"],"\n")
                     #rgdata_interp["PMID"] = mclim_ds["PMID"]
                     rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
                     rgdata_interps.append(rgdata_interp)
