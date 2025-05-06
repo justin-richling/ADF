@@ -40,6 +40,28 @@ def make_se_regridder(weight_file, s_data, d_data,
         dummy_out['mask']= d_mask                
     print("\n\ndummy_in",dummy_in,"\n\n")
     print("dummy_out",dummy_out,"\n\n")
+
+    list_of_datasets = [dummy_in, dummy_out, weights]
+    def check_duplicate_lons(ds, ds_name="dataset"):
+        try:
+            lons = ds['lon'].values
+            if lons.ndim > 1:
+                print(f"[{ds_name}] Skipping 2D longitude check (not supported directly).")
+                return
+            if len(set(lons)) < len(lons):
+                print(f"[{ds_name}] 🚨 Duplicate longitudes found!")
+            else:
+                print(f"[{ds_name}] ✅ Longitudes are unique.")
+        except KeyError:
+            print(f"[{ds_name}] ❌ No 'lon' coordinate found.")
+
+    # Example use:
+    for i, ds in enumerate(list_of_datasets):
+        check_duplicate_lons(ds, ds_name=f"dataset_{i}")
+
+
+
+
     # do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
     regridder = xesmf.Regridder(
