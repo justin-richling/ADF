@@ -162,6 +162,8 @@ def tem(adf):
     #Set full path for baseline/obs file
     tem_base = input_loc_idx / base_file_name
 
+    print("tem_base FOR OBS",tem_base,"\n")
+
     #Check to see if baseline/obs TEM file exists    
     if tem_base.is_file():
         ds_base = xr.open_dataset(tem_base, **kwargs)#,decode_times=False
