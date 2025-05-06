@@ -390,7 +390,6 @@ def regrid_and_vert_interp_tem(adf):
             rgdata_interp = xr.concat(rgdata_interps, dim="time")
             print("\n\nWOAH:",rgdata_interp,"\n\n")
             rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
-            rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
             save_to_nc(rgdata_interp, regridded_file_loc)
             rgdata_interp.close()  # bpm: we are completely done with this data
 
@@ -407,7 +406,6 @@ def regrid_and_vert_interp_tem(adf):
             }
             tgdata_interp = xr.concat(tgdata_interps, dim="time")
             tgdata_interp = tgdata_interp.assign_attrs(base_attrs_dict)
-            tgdata_interp = tgdata_interp.rename({'lat': 'zalat'})
 
             #Write interpolated baseline climatology to file:
             save_to_nc(tgdata_interp, interp_bl_file)
