@@ -398,7 +398,7 @@ def regrid_and_vert_interp_tem(adf):
                     "climatology_files": climatology_files_str,
                 }
 
-            print(f"\n\n\n\n{rgdata_interps}\nTHIUS IS GONNA BE BIG!",rgdata_interps,"\n\n\n\n")
+            print(f"\n\n\n\n{rgdata_interps[0]}\nTHIUS IS GONNA BE BIG!",rgdata_interps,"\n\n\n\n")
             rgdata_interp = xr.concat(rgdata_interps, dim="time")
             #rgdata_interp["PMID"] = mclim_ds["PMID"]
             #print("\n\nWOAH:",rgdata_interp,"\n\n")
