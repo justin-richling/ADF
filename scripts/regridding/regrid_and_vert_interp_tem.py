@@ -294,7 +294,8 @@ def regrid_and_vert_interp_tem(adf):
                     if target in pmid_loc_dict:
                         regrid_kwargs.update({'pmid_file': pmid_loc_dict[target]})
                     #End if
-
+                    #rgdata_interp["PMID"] = mclim_ds["PMID"]
+                    print('mclim_ds["PMID"]',mclim_ds["PMID"],"\n")
                     #Perform regridding and interpolation of variable:
                     rgdata_interp = _regrid_and_interpolate_levs(mclim_ds, var,
                                                                  regrid_dataset=tclim_ds,
@@ -317,8 +318,8 @@ def regrid_and_vert_interp_tem(adf):
                     rgdata_interp = rgdata_interp.assign_attrs(test_attrs_dict)
                     save_to_nc(rgdata_interp, regridded_file_loc)
                     rgdata_interp.close()  # bpm: we are completely done with this data"""
-                    #print('mclim_ds["PMID"]',mclim_ds["PMID"],"\n")
-                    rgdata_interp["PMID"] = mclim_ds["PMID"]
+                    print('rgdata_interp["PMID"]',rgdata_interp["PMID"],"\n")
+                    #rgdata_interp["PMID"] = mclim_ds["PMID"]
                     rgdata_interp = rgdata_interp.rename({'lat': 'zalat'})
                     rgdata_interps.append(rgdata_interp)
 
@@ -361,7 +362,7 @@ def regrid_and_vert_interp_tem(adf):
                             #for now:
                             continue
                         #End if
-                        tgdata_interp["PMID"] = tclim_ds["PMID"]
+                        #tgdata_interp["PMID"] = tclim_ds["PMID"]
                         tgdata_interp = tgdata_interp.rename({'lat': 'zalat'})
                         tgdata_interps.append(tgdata_interp)
 
