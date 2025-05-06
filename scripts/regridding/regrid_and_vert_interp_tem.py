@@ -655,7 +655,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
         if vert_coord_type == "hybrid":
             #Interpolate from hybrid sigma-pressure to the standard pressure levels:
-            rgdata_interp = pf.lev_to_plev(rgdata, rg_ps, mhya, mhyb, P0=P0, new_levels=model_dataset.lev, \
+            rgdata_interp = pf.lev_to_plev(rgdata, rg_ps, mhya, mhyb, P0=P0, new_levels=model_dataset.lev.values, \
                                            convert_to_mb=True)
         elif vert_coord_type == "height":
             #Interpolate variable using mid-level pressure (PMID):
