@@ -340,7 +340,8 @@ def tem(adf):
 
                     #print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
-                    pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
+                    if regrid_tem_files == False:
+                        pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
                     
 
                     #Create array to avoid weighting missing values:
