@@ -42,7 +42,7 @@ def make_se_regridder(weight_file, s_data, d_data,
     print("dummy_out",dummy_out,"\n\n")
     dummy_in = dummy_in.drop_duplicates(dim='lon')
 
-    def add_bounds_1d(coord, name):
+    """def add_bounds_1d(coord, name):
         diff = np.diff(coord)
         bounds = np.zeros((len(coord), 2))
         bounds[1:, 0] = coord[:-1] + diff / 2
@@ -55,7 +55,7 @@ def make_se_regridder(weight_file, s_data, d_data,
     dummy_in["lon_bnds"] = add_bounds_1d(dummy_in["lon"].values, "lon")
     dummy_in["lat_bnds"] = add_bounds_1d(dummy_in["lat"].values, "lat")
     dummy_in["lon"].attrs["bounds"] = "lon_bnds"
-    dummy_in["lat"].attrs["bounds"] = "lat_bnds"
+    dummy_in["lat"].attrs["bounds"] = "lat_bnds""""
 
     print("\n\ndummy_in FIXED?",dummy_in,"\n\n")
 
