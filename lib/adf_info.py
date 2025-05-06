@@ -353,7 +353,8 @@ class AdfInfo(AdfConfig):
                 base_nickname = self.get_baseline_info('case_nickname')
                 if base_nickname is None:
                     base_nickname = data_name
-                if 'ncols' in base_ds.dims:
+                #if 'ncols' in base_ds.dims:
+                if any(dim in base_ds.dims for dim in ['ncols', 'ncol']):
                     print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
                 elif 'lndgrid' in base_ds.dims:
@@ -568,7 +569,8 @@ class AdfInfo(AdfConfig):
                     self.end_diag_fail(emsg)
                 
                 case_ds = xr.open_dataset(file_list[0], decode_times=True)
-                if 'ncols' in case_ds.dims:
+                #if 'ncols' in case_ds.dims:
+                if any(dim in case_ds.dims for dim in ['ncols', 'ncol']):
                     print('\t  Looks like this is an atmosphere unstructured grid, yeah')
                     unstruct = True
                 if 'lndgrid' in case_ds.dims:
