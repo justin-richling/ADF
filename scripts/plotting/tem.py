@@ -413,6 +413,7 @@ def tem(adf):
                 if (mseasons.dims == oseasons.dims) and (mseasons.shape == oseasons.shape):
                     dseasons = mseasons-oseasons
                 else:
+                    print("Mismatched shape between model and baseline, will skip difference plots but still show the data?")
                     dseasons = None
                 
                 #Gather contour plot options
