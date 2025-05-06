@@ -402,9 +402,13 @@ def tem(adf):
                     print("mseasons.shape",mseasons.shape)
                     print("oseasons.shape",oseasons.shape,"\n-- - - - - - - - - - - - - - - - - - - - - \n")
                     #print("mseasons['zalat']",mseasons['zalat'])
-                lat = mseasons['zalat']
-                #lat = mseasons['lat']
-                lev = mseasons['lev']
+                
+                mlat = mseasons['zalat']
+                mlev = mseasons['lev']
+
+                olat = oseasons['zalat']
+                olev = oseasons['lev']
+
                 #difference: each entry should be (lat, lon)
                 if (mseasons.dims == oseasons.dims) and (mseasons.shape == oseasons.shape):
                     dseasons = mseasons-oseasons
@@ -420,7 +424,8 @@ def tem(adf):
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
                 # mesh for plots:
-                lats, levs = np.meshgrid(lat, lev)
+                mlats, mlevs = np.meshgrid(mlat, mlev)
+                olats, olevs = np.meshgrid(olat, olev)
 
                 # Find the next value below highest vertical level
                 prev_major_tick = 10 ** (np.floor(np.log10(np.min(levs))))
@@ -440,8 +445,8 @@ def tem(adf):
                 ax = [ax1,ax2,ax3]
 
                 #Contour fill
-                img0 = ax[0].contourf(lats, levs,mseasons, levels=clevs, norm=norm, cmap=cmap)
-                img1 = ax[1].contourf(lats, levs,oseasons, levels=clevs, norm=norm, cmap=cmap)
+                img0 = ax[0].contourf(mlats, mlevs, mseasons, levels=clevs, norm=norm, cmap=cmap)
+                img1 = ax[1].contourf(olats, olevs, oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
                 #Add contours for highlighting
                 c0 = ax[0].contour(lats,levs,mseasons,levels=clevs[::2], norm=norm,
