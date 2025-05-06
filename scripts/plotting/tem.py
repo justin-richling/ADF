@@ -119,7 +119,7 @@ def tem(adf):
             #End if
             tem_locs.append(tem_case_loc)
         #End for
-
+    print("tem_locs",tem_locs,"\n")
     #Set seasonal ranges:
     seasons = {"ANN": np.arange(1,13,1),
                "DJF": [12, 1, 2],
