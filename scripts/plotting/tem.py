@@ -388,7 +388,7 @@ def tem(adf):
 
                     print("mseasons.shape",mseasons.shape)
                     print("oseasons.shape",oseasons.shape,"\n-- - - - - - - - - - - - - - - - - - - - - \n")
-
+                    print("mseasons['zalat']",mseasons['zalat'])
                 lat = mseasons['zalat']
                 #lat = mseasons['lat']
                 lev = mseasons['lev']
