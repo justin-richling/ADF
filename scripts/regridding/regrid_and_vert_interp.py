@@ -853,7 +853,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
                                     Method = method,
                                     var=var_name
                                     )
-    def regrid_3d_conservative(regridder, data3d):
+    """def regrid_3d_conservative(regridder, data3d):
         if "lev" not in data3d.dims:
             raise ValueError("Expected a 3D variable with 'lev' dimension.")
 
@@ -865,7 +865,24 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
             regridded = regridded.expand_dims(lev=[level.item()])
             regridded_levels.append(regridded)
 
-        return xr.concat(regridded_levels, dim="lev")
+        return xr.concat(regridded_levels, dim="lev")"""
+
+    def regrid_3d_conservative(regridder, data3d):
+        if "time" not in data3d.dims or "lev" not in data3d.dims:
+            raise ValueError("Expected a 4D variable with 'time' and 'lev' dimensions.")
+
+        first_time = data3d.isel(time=0)
+
+        regridded_levels = []
+        for level in first_time.lev:
+            print(f"Regridding level: {level.item()}")
+            slice2d = first_time.sel(lev=level)
+            regridded = regridder(slice2d)
+            regridded = regridded.expand_dims(lev=[level.item()])
+            regridded_levels.append(regridded)
+
+        return xr.concat(regridded_levels, dim="lev").expand_dims(time=[data3d.time[0].item()])
+
 
     if comp == "lnd":
         if method == 'coservative':
