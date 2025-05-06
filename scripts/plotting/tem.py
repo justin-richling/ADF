@@ -406,7 +406,10 @@ def tem(adf):
                 #lat = mseasons['lat']
                 lev = mseasons['lev']
                 #difference: each entry should be (lat, lon)
-                dseasons = mseasons-oseasons
+                if (mseasons.dims == oseasons.dims) and (mseasons.shape == oseasons.shape):
+                    dseasons = mseasons-oseasons
+                else:
+                    dseasons = None
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
@@ -482,9 +485,8 @@ def tem(adf):
                     # Add contour labels
                     plt.clabel(c1, inline=True, fontsize=8, levels=c1.levels)
 
-
                 #Check if difference plot has contour levels, if not print notification
-                if len(dseasons.lev) == 0:
+                if (dseasons is None) or (len(dseasons.lev) == 0):
                     #Set empty message for comparison of cases with different vertical levels
                     #TODO: Work towards getting the vertical and horizontal interpolations!! - JR
                     empty_message = "Missing Data"
