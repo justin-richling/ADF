@@ -39,7 +39,7 @@ def make_se_regridder(weight_file, s_data, d_data,
         d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
         dummy_out['mask']= d_mask                
     print("\n\ndummy_in",dummy_in,"\n\n")
-    print("\n\dummy_out",dummy_out,"\n\n")
+    print("dummy_out",dummy_out,"\n\n")
     # do source and destination grids need masks here?
     # See xesmf docs https://xesmf.readthedocs.io/en/stable/notebooks/Masking.html#Regridding-with-a-mask
     regridder = xesmf.Regridder(
