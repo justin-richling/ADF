@@ -150,10 +150,10 @@ def tem(adf):
         obs = True
         #Set TEM file for observations
         base_file_name = 'Obs.TEMdiag.nc'
-        #if regrid_tem_files:
-        #    input_loc_idx = Path(tem_case_locs[0])
-        #else:
-        #    input_loc_idx = Path(tem_locs[0])
+        if regrid_tem_files:
+            tem_base_loc = Path(tem_case_locs[0])
+        else:
+            tem_base_loc = Path(tem_locs[0])
     else:
         #Set TEM file for baseline
         #input_loc_idx = Path(tem_base_loc)
