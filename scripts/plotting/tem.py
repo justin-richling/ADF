@@ -371,8 +371,8 @@ def tem(adf):
 
                     oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
                                                                              oseasons* units.kelvin)
-                    #mseasons = mseasons[:,:,0]
-                    #oseasons = oseasons[:,:,0]
+                    mseasons = mseasons[:,:,0]
+                    oseasons = oseasons[:,:,0]
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
 
