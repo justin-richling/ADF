@@ -652,7 +652,12 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
             931.99204257, 943.92222039, 954.94016956, 965.11564272, 974.5130589,
             983.19191142, 991.20714452, 997.52772561])
 
+        # Generate 30 levels between 1000 and 3 hPa in log space
+        print("min(regrid_dataset.lev.values)",min(regrid_dataset.lev.values),"\n")
+        new_levels = np.logspace(np.log10(1000), np.log10(min(regrid_dataset.lev.values)), num=30)
 
+        # Optional: round for readability
+        new_levels = np.round(new_levels, decimals=3)
         if vert_coord_type == "hybrid":
             #Interpolate from hybrid sigma-pressure to the standard pressure levels:
             rgdata_interp = pf.lev_to_plev(rgdata, rg_ps, mhya, mhyb, P0=P0, \
