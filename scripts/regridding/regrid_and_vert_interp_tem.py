@@ -653,6 +653,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
             983.19191142, 991.20714452, 997.52772561])
 
         # Generate 30 levels between 1000 and 3 hPa in log space
+        print("min(regrid_dataset.lev.values)",regrid_dataset,"\n")
         print("min(regrid_dataset.lev.values)",min(regrid_dataset.lev.values),"\n")
         new_levels = np.logspace(np.log10(1000), np.log10(min(regrid_dataset.lev.values)), num=30)
 
