@@ -342,7 +342,6 @@ def tem(adf):
                     pmid = ds["PMID"].squeeze()
                     if regrid_tem_files == False:
                         pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
-                    pmid = pmid.rename({'lat': 'zalat'})
 
                     #Create array to avoid weighting missing values:
                     pmid_ones = xr.where(pmid.isnull(), 0.0, 1.0)
