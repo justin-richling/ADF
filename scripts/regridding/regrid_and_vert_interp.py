@@ -844,7 +844,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
         d_data = latlon_ds.landmask
     else:
         s_data = model_dataset[var_name].isel(time=0)
-        d_data = latlon_ds[var_name]
+        d_data = latlon_ds.S
 
     #Grid model data to match target grid lat/lon:
     regridder = make_se_regridder(weight_file=wgt_file,
