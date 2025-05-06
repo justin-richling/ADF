@@ -662,7 +662,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
 
             # Optional: round for readability
             #new_levels = np.round(new_levels, decimals=3)
-            print("new_levels",new_levels,"\n")
+            #print("new_levels",new_levels,"\n")
         if vert_coord_type == "hybrid":
             #Interpolate from hybrid sigma-pressure to the standard pressure levels:
             if new_levs:
