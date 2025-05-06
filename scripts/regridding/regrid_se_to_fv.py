@@ -55,7 +55,8 @@ def make_se_regridder(weight_file, s_data, d_data,
     dummy_in["lon_bnds"] = add_bounds_1d(dummy_in["lon"].values, "lon")
     dummy_in["lat_bnds"] = add_bounds_1d(dummy_in["lat"].values, "lat")
     dummy_in["lon"].attrs["bounds"] = "lon_bnds"
-    dummy_in["lat"].attrs["bounds"] = "lat_bnds""""
+    dummy_in["lat"].attrs["bounds"] = "lat_bnds"
+    """
 
     print("\n\ndummy_in FIXED?",dummy_in,"\n\n")
 
