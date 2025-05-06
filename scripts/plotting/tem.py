@@ -1,6 +1,5 @@
 #Import standard modules:
 from pathlib import Path
-from this import d
 import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
@@ -146,20 +145,20 @@ def tem(adf):
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     #Baseline TEM location
-    #input_loc_idx = Path(tem_base_loc)
+    input_loc_idx = Path(tem_base_loc)
 
     #Check if comparing against obs
     if adf.compare_obs:
         obs = True
         #Set TEM file for observations
         base_file_name = 'Obs.TEMdiag.nc'
-        if regrid_tem_files:
-            input_loc_idx = Path(tem_case_locs[0])
-        else:
-            input_loc_idx = Path(tem_locs[0])
+        #if regrid_tem_files:
+        #    input_loc_idx = Path(tem_case_locs[0])
+        #else:
+        #    input_loc_idx = Path(tem_locs[0])
     else:
         #Set TEM file for baseline
-        input_loc_idx = Path(tem_base_loc)
+        #input_loc_idx = Path(tem_base_loc)
         if regrid_tem_files:
             base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
         else:
