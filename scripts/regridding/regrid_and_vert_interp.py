@@ -886,7 +886,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
             raise ValueError("Input data must have 'time' and 'lev' dimensions")
 
         # Extract single 2D slice (1st time step and specified vertical level)
-        slice2d = data.isel(time=0, lev=level_index)
+        slice2d = data[var_name].isel(time=0, lev=level_index)
 
         # Check shape: if 1D, expand to 2D as (1, ncol)
         if slice2d.ndim == 1:
