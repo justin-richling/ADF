@@ -852,8 +852,12 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
                                     d_data = d_data,
                                     Method = method,
                                     )
-
-    if comp == "lnd":
+    if method == 'coservative':
+        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+    if method == 'bilinear':
+        rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
+    rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+    """if comp == "lnd":
         if method == 'coservative':
             rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
         if method == 'bilinear':
@@ -864,7 +868,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
         if method == 'coservative':
             rgdata = regrid_atm_se_data_conservative(regridder, model_dataset, comp_grid)
         if method == 'bilinear':
-            rgdata = regrid_atm_se_data_bilinear(regridder, model_dataset, comp_grid)
+            rgdata = regrid_atm_se_data_bilinear(regridder, model_dataset, comp_grid)"""
 
 
     #rgdata['lat'] = latlon_ds.lat #???
