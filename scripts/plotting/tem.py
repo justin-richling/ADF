@@ -1,5 +1,6 @@
 #Import standard modules:
 from pathlib import Path
+from this import d
 import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
@@ -87,6 +88,8 @@ def tem(adf):
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
     #-----------------------------------------
     
+
+    tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
     #Initialize list of input TEM file locations
     tem_locs = []
 
@@ -98,7 +101,8 @@ def tem(adf):
         regrid_tem_files = True
         #rg_tem_case_locs = [f"{output_loc}/tem"]
         tem_case_locs = [f"{output_loc}/tem"]
-        tem_base_loc = f"{output_loc}/tem"
+        if not adf.compare_obs:
+            tem_base_loc = f"{output_loc}/tem"
         #rg_tem_base_loc = f"{output_loc}/tem"
     else:
         tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
@@ -149,7 +153,10 @@ def tem(adf):
         obs = True
         #Set TEM file for observations
         base_file_name = 'Obs.TEMdiag.nc'
-        input_loc_idx = Path(tem_locs[0])
+        if regrid_tem_files:
+            input_loc_idx = Path(tem_case_locs[0])
+        else:
+            input_loc_idx = Path(tem_locs[0])
     else:
         #Set TEM file for baseline
         input_loc_idx = Path(tem_base_loc)
