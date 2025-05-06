@@ -343,6 +343,7 @@ def regrid_and_vert_interp_tem(adf):
 
                         #Generate vertically-interpolated baseline dataset:
                         tgdata_interp = _regrid_and_interpolate_levs(tclim_ds, var,
+                                                                     regrid_dataset=tclim_ds,
                                                                      **regrid_kwargs)
 
                         if tgdata_interp is None:
