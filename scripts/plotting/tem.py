@@ -372,8 +372,10 @@ def tem(adf):
                     oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
                                                                              oseasons* units.kelvin)
                     print("mseasons AFTER THERMO:",mseasons,"\n\n---------------------------------------\n")
-                    mseasons = mseasons[:,:,0]
-                    oseasons = oseasons[:,:,0]
+                    #mseasons = mseasons[:,:,0]
+                    #oseasons = oseasons[:,:,0]
+                    mseasons = mseasons.isel(dim_name="lat", drop=True)
+                    oseasons = oseasons.isel(dim_name="lat", drop=True)
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
 
