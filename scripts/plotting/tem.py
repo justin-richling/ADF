@@ -89,6 +89,7 @@ def tem(adf):
     
 
     tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
+    #tem_base_loc = adf.get_baseline_info("cam_tem_loc")
     #Initialize list of input TEM file locations
     tem_locs = []
 
@@ -144,9 +145,6 @@ def tem(adf):
         var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
-    #Baseline TEM location
-    input_loc_idx = Path(tem_base_loc)
-
     #Check if comparing against obs
     if adf.compare_obs:
         obs = True
@@ -164,6 +162,9 @@ def tem(adf):
         else:
             base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
         #base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
+
+    #Baseline TEM location
+    input_loc_idx = Path(tem_base_loc)
     
     #Set full path for baseline/obs file
     tem_base = input_loc_idx / base_file_name
