@@ -333,6 +333,8 @@ def create_TEM_files(adf):
             #dstem0['PMID'] = zonal_mean_PMID
             print("zonal_mean_PMID",zonal_mean_PMID,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
+            print("dstem0['lev']",dstem0['lev'].values,"\n")
+
             #Update the attributes
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
