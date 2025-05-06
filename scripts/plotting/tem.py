@@ -265,8 +265,12 @@ def tem(adf):
                 vres = res[var.upper()]
 
                 #Gather data for both cases
-                mdata = ds[var].squeeze()
-                odata = ds_base[var].squeeze()
+                if var == "TZM":
+                    mdata = ds["THZM"].squeeze()
+                    odata = ds_base["THZM"].squeeze()
+                else:
+                    mdata = ds[var].squeeze()
+                    odata = ds_base[var].squeeze()
                 if regrid_tem_files == False:
                     mdata['time'] = xr.conventions.times.decode_cf_datetime(mdata.time, mdata.time.attrs['units'])
                     odata['time'] = xr.conventions.times.decode_cf_datetime(odata.time, odata.time.attrs['units'])
