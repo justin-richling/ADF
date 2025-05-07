@@ -288,6 +288,9 @@ def regrid_and_vert_interp(adf):
                             print("After _regrid?",rgdata_interp,"\n\n")
                             rgdata_interp.attrs = ds_attrs
                             rgdata_interp['lev'].attrs['long_name'] = mclim_ds.lev.long_name
+
+                            rgdata_interp['hybm'] = mclim_ds.hybm
+                            rgdata_interp['hyam'] = mclim_ds.hyam
                             print("After adding attrs??",rgdata_interp,"\n\n")
                             output_test_loc = Path(output_climo_locs[case_idx])
                             rgridded_output_loc   = output_test_loc / "gridded"
