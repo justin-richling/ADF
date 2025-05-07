@@ -198,11 +198,14 @@ def global_latlon_map(adfobj):
             odata = adfobj.data.load_reference_climo_da(base_name, var, **kwargs)
 
             unstruct_base = True
-            odataset = adfobj.data.load_reference_climo_dataset(base_name, var, **kwargs) 
-            area = odataset.area.isel(time=0)
-            landfrac = odataset.landfrac.isel(time=0)
-            # calculate weights
-            wgt_base = area * landfrac / (area * landfrac).sum()
+            if comp == "lnd":
+                odataset = adfobj.data.load_reference_climo_dataset(base_name, var, **kwargs) 
+                area = odataset.area.isel(time=0)
+                landfrac = odataset.landfrac.isel(time=0)
+                # calculate weights
+                wgt_base = area * landfrac / (area * landfrac).sum()
+            if comp == "atm":
+                wgt_base = odataset.areawt.isel(time=0)
         else:
             #odata = adfobj.data.load_reference_regrid_da(base_name, var, **kwargs)
             odata = adfobj.data.load_reference_regrid_da(base_name, var)
@@ -243,11 +246,14 @@ def global_latlon_map(adfobj):
                 mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
 
                 unstruct_case = True
-                mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
-                area = mdataset.area.isel(time=0)
-                landfrac = mdataset.landfrac.isel(time=0)
-                # calculate weights
-                wgt = area * landfrac / (area * landfrac).sum()
+                if comp == "lnd":
+                    mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
+                    area = mdataset.area.isel(time=0)
+                    landfrac = mdataset.landfrac.isel(time=0)
+                    # calculate weights
+                    wgt = area * landfrac / (area * landfrac).sum()
+                if comp == "atm":
+                    wgt = mdataset.areawt.isel(time=0)
             else:
                 mdata = adfobj.data.load_regrid_da(case_name, var)
                 #Skip this variable/case if the regridded climo file doesn't exist:
