@@ -302,6 +302,7 @@ def regrid_and_vert_interp(adf):
                     rgdata_interp = _regrid_and_interpolate_levs(rgdata_interp, var,
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
+                    print("DOESNT WORK!",rgdata_interp,"\n\n")
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
 
