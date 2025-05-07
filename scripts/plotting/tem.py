@@ -507,10 +507,10 @@ def tem(adf):
                 if (dseasons is None) or (len(dseasons.lev) == 0):
                     #Set empty message for comparison of cases with different vertical levels
                     #TODO: Work towards getting the vertical and horizontal interpolations!! - JR
-                    empty_message = "Missing Data"
+                    empty_message = "These have different vertical levels\nCan't compare cases currently"
                     props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
-                    prop_x = 0.5
-                    prop_y = 0.5
+                    prop_x = 0.18
+                    prop_y = 0.42
                     ax[2].text(prop_x, prop_y, empty_message,
                                     transform=ax[2].transAxes, bbox=props)
                 else:
