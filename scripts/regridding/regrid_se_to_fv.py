@@ -105,13 +105,13 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
         regridded = regridder(updated.rename({comp_grid: "lon"}))
         return regridded.squeeze("lat")
 
-    elif len(data_to_regrid.dims) == 2 and comp_grid in dims:
+    elif len(data_to_regrid.dims) == 2:
         # (other, ncol) → (other, lat, lon)
         updated = data_to_regrid.expand_dims("lat", axis=-2)
         regridded = regridder(updated.rename({"lat": "lat", comp_grid: "lon"}))
         return regridded
 
-    elif len(data_to_regrid.dims) == 3 and comp_grid in dims:
+    elif len(data_to_regrid.dims) == 3:
         # Assume (time, lev, ncol)
         stacked = data_to_regrid.stack(stack_dim=("time", "lev"))
         updated = stacked.expand_dims("lat", axis=-2)
