@@ -276,7 +276,7 @@ def regrid_and_vert_interp(adf):
                                 raise AdfError(msg)
 
                             case_method = case_methods[case_idx]
-
+                            ds_attrs = mclim_ds.attrs
                             # Grid unstructured climo if applicable before regridding
                             rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
@@ -285,7 +285,7 @@ def regrid_and_vert_interp(adf):
                                                     method=case_method,
                                                     )
                             print("After _regrid?",rgdata_interp,"\n\n")
-                            rgdata_interp
+                            rgdata_interp.attrs = ds_attrs
                             output_test_loc = Path(output_climo_locs[case_idx])
                             rgridded_output_loc   = output_test_loc / "gridded"
                             if not rgridded_output_loc.is_dir():
@@ -303,7 +303,7 @@ def regrid_and_vert_interp(adf):
                     rgdata_interp = _regrid_and_interpolate_levs(rgdata_interp, var,
                                                                  regrid_dataset=tclim_ds,
                                                                  **regrid_kwargs)
-                    print("DOESNT WORK!",rgdata_interp,"\n\n")
+                    #print("DOESNT WORK!",rgdata_interp,"\n\n")
                     #Extract defaults for variable:
                     var_default_dict = var_defaults.get(var, {})
 
