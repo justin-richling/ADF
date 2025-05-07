@@ -404,7 +404,7 @@ def regrid_and_vert_interp(adf):
                                     raise AdfError(msg)
                                 
                                 base_method = adf.latlon_regrid_method["baseline_regrid_method"]
-
+                                ds_attrs = tclim_ds.attrs
                                 # Grid unstructured climo if applicable before regridding
                                 tgdata_interp = _regrid(tclim_ds, var,
                                                         comp=comp,
@@ -412,6 +412,11 @@ def regrid_and_vert_interp(adf):
                                                         latlon_file=baseline_latlon_file,
                                                         method=base_method,
                                                        )
+                                tgdata_interp.attrs = ds_attrs
+                                tgdata_interp['lev'].attrs['long_name'] = tclim_ds.lev.long_name
+
+                                tgdata_interp['hybm'] = tclim_ds.hybm
+                                tgdata_interp['hyam'] = tclim_ds.hyam
                                 tgridded_output_loc   = Path(target_loc) / "gridded"
                                 if not tgridded_output_loc.is_dir():
                                     print(f"    {tgridded_output_loc} not found, making new directory")
