@@ -285,6 +285,7 @@ def regrid_and_vert_interp(adf):
                                                     method=case_method,
                                                     )
                             print("After _regrid?",rgdata_interp,"\n\n")
+                            rgdata_interp
                             output_test_loc = Path(output_climo_locs[case_idx])
                             rgridded_output_loc   = output_test_loc / "gridded"
                             if not rgridded_output_loc.is_dir():
@@ -722,6 +723,7 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
             #Don't process variable:
             return None
         #End if
+        print("array in has_lev:",rgdata_interp)
     else:
         #Just rename variable:
         rgdata_interp = rgdata
