@@ -396,8 +396,8 @@ def global_latlon_map(adfobj):
                         pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
                                                 [syear_baseline,eyear_baseline],
-                                                mseasons[s].sel(lev=pres), oseasons[s].sel(lev=pres), dseasons[s].sel(lev=pres),
-                                                pseasons[s].sel(lev=pres),
+                                                mseasons[s].sel(lev=pres,method="nearest"), oseasons[s].sel(lev=pres), dseasons[s].sel(lev=pres),
+                                                pseasons[s].sel(lev=pres,method="nearest"),
                                                 obs=adfobj.compare_obs, unstructured=unstructured, **vres)
 
                         #Add plot to website (if enabled):
