@@ -286,6 +286,7 @@ def regrid_and_vert_interp(adf):
                                                     )
                             print("After _regrid?",rgdata_interp,"\n\n")
                             rgdata_interp.attrs = ds_attrs
+                            print("After adding attrs??",rgdata_interp,"\n\n")
                             output_test_loc = Path(output_climo_locs[case_idx])
                             rgridded_output_loc   = output_test_loc / "gridded"
                             if not rgridded_output_loc.is_dir():
