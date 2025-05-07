@@ -282,11 +282,11 @@ def global_latlon_map(adfobj):
 
             #Determine dimensions of variable:
             if unstruct_plotting:
-                has_dims = {}
+                #has_dims = {}
                 if len(wgt.n_face) == len(wgt_base.n_face):
                     vres["wgt"] = wgt
-                    has_dims = {}
-                    has_dims['has_lev'] = False
+                    #has_dims = {}
+                    #has_dims['has_lev'] = False
                 else:
                     print("The weights are different between test and baseline. Won't continue, eh.")
                     return
