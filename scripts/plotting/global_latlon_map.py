@@ -198,8 +198,8 @@ def global_latlon_map(adfobj):
             odata = adfobj.data.load_reference_climo_da(base_name, var, **kwargs)
 
             unstruct_base = True
-            if comp == "lnd":
-                odataset = adfobj.data.load_reference_climo_dataset(base_name, var, **kwargs) 
+            odataset = adfobj.data.load_reference_climo_dataset(base_name, var, **kwargs)
+            if comp == "lnd": 
                 area = odataset.area.isel(time=0)
                 landfrac = odataset.landfrac.isel(time=0)
                 # calculate weights
@@ -246,8 +246,8 @@ def global_latlon_map(adfobj):
                 mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
 
                 unstruct_case = True
-                if comp == "lnd":
-                    mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
+                mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs)
+                if comp == "lnd": 
                     area = mdataset.area.isel(time=0)
                     landfrac = mdataset.landfrac.isel(time=0)
                     # calculate weights
