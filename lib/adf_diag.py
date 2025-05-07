@@ -845,6 +845,7 @@ class AdfDiag(AdfWeb):
                                                     dims=time.dims, attrs=time.attrs)
                             # Optional, add additional variables to cam.h0* files
                             if "h0" in hist_str:
+                                print("ATM is it coming here???")
                                 ds = xr.open_dataset(hist_files[0], decode_times=False)
                                 ts_ds['areawt'] = ds.areawt
                         if comp == "lnd":
