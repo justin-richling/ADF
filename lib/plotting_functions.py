@@ -1338,6 +1338,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         central_longitude = kwargs.get('central_longitude', 180)
     else:
         wgt = kwargs["wgt"]
+        print("Plotting functions mdlfld",mdlfld,"\n\n")
         wrap_fields = (mdlfld, obsfld, pctld, diffld)
         area_avg = [global_average(x, wgt) for x in wrap_fields]
 
