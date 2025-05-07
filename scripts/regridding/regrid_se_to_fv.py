@@ -71,7 +71,7 @@ def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
 #    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
 #    return regridded
 
-def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
+"""def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     dims = data_to_regrid.dims
     #if data_to_regrid.ndim == 1:
     if len(data_to_regrid.dims) == 2:
@@ -95,7 +95,7 @@ def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
         return unstacked.transpose("time", "lev", "ilev", "lat", "lon")
 
     else:
-        raise ValueError(f"Unhandled data shape or dimensions: {data_to_regrid.shape} {dims}")
+        raise ValueError(f"Unhandled data shape or dimensions: {data_to_regrid.shape} {dims}")"""
 
 
 
