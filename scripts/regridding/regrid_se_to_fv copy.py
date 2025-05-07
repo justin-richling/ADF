@@ -33,6 +33,20 @@ def make_se_regridder(weight_file, s_data, d_data,
         }
     )
 
+
+    def check_duplicate_lons(ds, ds_name="dataset"):
+        try:
+            lons = ds['lon'].values
+            if lons.ndim > 1:
+                print(f"[{ds_name}] Skipping 2D longitude check (not supported directly).")
+                return
+            if len(set(lons)) < len(lons):
+                print(f"[{ds_name}] 🚨 Duplicate longitudes found!")
+            else:
+                print(f"[{ds_name}] ✅ Longitudes are unique.")
+        except KeyError:
+            print(f"[{ds_name}] ❌ No 'lon' coordinate found.")
+
     # Hard code masks for now, not sure this does anything?
     if isinstance(s_data, xr.DataArray):
         s_mask = xr.DataArray(s_data.data.reshape(in_shape[0],in_shape[1]), dims=("lat", "lon"))
@@ -43,6 +57,16 @@ def make_se_regridder(weight_file, s_data, d_data,
     print("VAR:",var)            
     print("---------------\ndummy_in",dummy_in,"\n\n")
     print("dummy_out",dummy_out,"\n\n")
+
+    list_of_datasets = [dummy_in, dummy_out, weights]
+    for i, ds in enumerate(list_of_datasets):
+        check_duplicate_lons(ds, ds_name=f"dataset_{i}")
+
+    list_of_datasets = [dummy_in, dummy_out, weights]
+    for i, ds in enumerate(list_of_datasets):
+        check_duplicate_lons(ds, ds_name=f"dataset_{i}")
+
+
 
 
     # do source and destination grids need masks here?
@@ -73,6 +97,7 @@ def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
 
 def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     dims = data_to_regrid.dims
+    print("I HATE THIS CRAP",data_to_regrid)
     #if data_to_regrid.ndim == 1:
     if len(data_to_regrid.dims) == 2:
         # (ncol,) → (1, ncol)
