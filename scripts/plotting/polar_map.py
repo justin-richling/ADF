@@ -410,10 +410,6 @@ def polar_map(adfobj):
 
                                 # make plots: northern and southern hemisphere separately:
                                 for hemi_type in hemis:
-                                    print("mseasons[s].shape",mseasons[s].shape)
-                                    print("oseasons[s].shape",oseasons[s].shape)
-                                    print("dseasons[s].shape",dseasons[s].shape)
-                                    print("pseasons[s].shape",pseasons[s].shape)
 
                                     #Create plot name and path:
                                     plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"

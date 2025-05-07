@@ -957,6 +957,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     for a in axs:
         a.coastlines()
+        print("Polar Plots domain:",domain)
         a.set_extent(domain, ccrs.PlateCarree())
         # __Follow the cartopy gallery example to make circular__:
         # Compute a circle in axes coordinates, which we can use as a boundary
