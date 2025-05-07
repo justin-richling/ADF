@@ -205,7 +205,7 @@ def global_latlon_map(adfobj):
                 # calculate weights
                 wgt_base = area * landfrac / (area * landfrac).sum()
             if comp == "atm":
-                wgt_base = odataset.areawt.isel(time=0)
+                wgt_base = odataset.area.isel(time=0)
         else:
             #odata = adfobj.data.load_reference_regrid_da(base_name, var, **kwargs)
             odata = adfobj.data.load_reference_regrid_da(base_name, var)
@@ -253,7 +253,7 @@ def global_latlon_map(adfobj):
                     # calculate weights
                     wgt = area * landfrac / (area * landfrac).sum()
                 if comp == "atm":
-                    wgt = mdataset.areawt.isel(time=0)
+                    wgt = mdataset.area.isel(time=0)
             else:
                 mdata = adfobj.data.load_regrid_da(case_name, var)
                 #Skip this variable/case if the regridded climo file doesn't exist:
@@ -367,6 +367,7 @@ def global_latlon_map(adfobj):
                     #exists in the model data, which should already
                     #have been interpolated to the standard reference
                     #pressure levels:
+                    print("PRESS:",pres,mdata['lev'],odata['lev'])
                     if (not (pres in mdata['lev'])) or (not (pres in odata['lev'])):
                         print(f"\t    WARNING: plot_press_levels value '{pres}' not present in {var} [test: {(pres in mdata['lev'])}, ref: {pres in odata['lev']}], so skipping.")
                         continue

@@ -847,7 +847,7 @@ class AdfDiag(AdfWeb):
                             if "h0" in hist_str:
                                 print("ATM is it coming here???")
                                 ds = xr.open_dataset(hist_files[0], decode_times=False)
-                                ts_ds['areawt'] = ds.areawt
+                                ts_ds['area'] = ds.areawt
                         if comp == "lnd":
                             # need greater flexibility given changes in clm history files over time
                             if 'hist_interval' in ts_ds['time_bounds'].dims:
