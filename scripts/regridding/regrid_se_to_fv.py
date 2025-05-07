@@ -97,7 +97,7 @@ def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
 
 def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
     dims = data_to_regrid.dims
-
+    print(len(data_to_regrid.dims))
     #if data_to_regrid.ndim == 1:
     if len(data_to_regrid.dims) == 1:
         # (ncol,) → (1, ncol)
