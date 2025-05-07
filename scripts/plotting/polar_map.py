@@ -326,7 +326,7 @@ def polar_map(adfobj):
                                         #Determine hemisphere to plot based on plot file name:
                                         if hemi_type == "NHPolar":
                                             hemi = "NH"
-                                        else:
+                                        if hemi_type == "SHPolar":
                                             hemi = "SH"
                                         #End if
                                     if comp == "lnd":
