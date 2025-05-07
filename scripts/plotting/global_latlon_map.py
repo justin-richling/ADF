@@ -391,7 +391,7 @@ def global_latlon_map(adfobj):
                         
                         # percent change
                         pseasons[s] = (mseasons[s] - oseasons[s]) / np.abs(oseasons[s]) * 100.0 #relative change
-
+                        print("latlon plot is it coming Here??")
                         pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
                                                 [syear_cases[case_idx],eyear_cases[case_idx]],
                                                 [syear_baseline,eyear_baseline],
