@@ -843,6 +843,10 @@ class AdfDiag(AdfWeb):
                             if 'time_bounds' in ts_ds:
                                 time = xr.DataArray(ts_ds['time_bounds'].load().mean(dim='nbnd').values,
                                                     dims=time.dims, attrs=time.attrs)
+                            # Optional, add additional variables to cam.h0* files
+                            if "h0" in hist_str:
+                                ds = xr.open_dataset(hist_files[0], decode_times=False)
+                                ts_ds['areawt'] = ds.areawt
                         if comp == "lnd":
                             # need greater flexibility given changes in clm history files over time
                             if 'hist_interval' in ts_ds['time_bounds'].dims:
@@ -852,7 +856,7 @@ class AdfDiag(AdfWeb):
                                 time = xr.DataArray(ts_ds['time_bounds'].load().mean(dim='nbnd').values,
                                                     dims=time.dims, attrs=time.attrs)
 
-                            # Optional, add additional variables to clm2.h0 files
+                            # Optional, add additional variables to clm2.h0* files
                             if "h0" in hist_str:
                                 ds = xr.open_dataset(hist_files[0], decode_times=False)
                                 ts_ds['area'] = ds.area
