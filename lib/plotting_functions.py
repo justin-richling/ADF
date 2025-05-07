@@ -805,7 +805,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
             domain = [-180, 180, 45, 90]
         if hemisphere == "Arctic":
             domain = [-180, 180, 50, 90]
-        else:
+        if hemisphere.upper() == "SH":
             domain = [-180, 180, -90, -45]
 
     """# statistics for annotation (these are scalars):
@@ -957,7 +957,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     for a in axs:
         a.coastlines()
-        print("Polar Plots domain:",domain)
+        print("Polar Plots domain:",hemisphere.upper(),domain)
         a.set_extent(domain, ccrs.PlateCarree())
         # __Follow the cartopy gallery example to make circular__:
         # Compute a circle in axes coordinates, which we can use as a boundary
