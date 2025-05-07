@@ -90,10 +90,37 @@ def regrid_se_data_bilinear(regridder, data_to_regrid, comp_grid):
                          )
     return regridded
 
+#def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
+#    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
+#    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
+#    return regridded
+
 def regrid_se_data_conservative(regridder, data_to_regrid, comp_grid):
-    updated = data_to_regrid.copy().transpose(..., comp_grid).expand_dims("dummy", axis=-2)
-    regridded = regridder(updated.rename({"dummy": "lat", comp_grid: "lon"}) )
-    return regridded
+    dims = data_to_regrid.dims
+
+    if data_to_regrid.ndim == 1:
+        # (ncol,) → (1, ncol)
+        updated = data_to_regrid.expand_dims("lat", axis=0)
+        regridded = regridder(updated.rename({comp_grid: "lon"}))
+        return regridded.squeeze("lat")
+
+    elif data_to_regrid.ndim == 2 and comp_grid in dims:
+        # (other, ncol) → (other, lat, lon)
+        updated = data_to_regrid.expand_dims("lat", axis=-2)
+        regridded = regridder(updated.rename({"lat": "lat", comp_grid: "lon"}))
+        return regridded
+
+    elif data_to_regrid.ndim == 3 and comp_grid in dims:
+        # Assume (time, lev, ncol)
+        stacked = data_to_regrid.stack(stack_dim=("time", "lev"))
+        updated = stacked.expand_dims("lat", axis=-2)
+        regridded = regridder(updated.rename({"lat": "lat", comp_grid: "lon"}))
+        unstacked = regridded.unstack("stack_dim")
+        return unstacked.transpose("time", "lev", "lat", "lon")
+
+    else:
+        raise ValueError(f"Unhandled data shape or dimensions: {data_to_regrid.shape} {dims}")
+
 
 
 

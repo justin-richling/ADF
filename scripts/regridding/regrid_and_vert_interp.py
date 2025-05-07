@@ -856,53 +856,18 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
                                     Method = method,
                                     var=var_name
                                     )
-    """def regrid_3d_conservative(regridder, data3d):
-        if "lev" not in data3d.dims:
-            raise ValueError("Expected a 3D variable with 'lev' dimension.")
+ 
 
-        regridded_levels = []
-        for level in data3d.lev:
-            print(f"Regridding level: {level.item()}")
-            slice2d = data3d.sel(lev=level)
-            regridded = regridder(slice2d)
-            regridded = regridded.expand_dims(lev=[level.item()])
-            regridded_levels.append(regridded)
-
-        return xr.concat(regridded_levels, dim="lev")"""
-
-    #import xarray as xr
-
-    def regrid_3d_conservative(regridder, data, level_index=0):
-        """
-        Regrid the first time step (and first level) of a 3D DataArray using conservative regridding.
-
-        Parameters:
-            regridder: xesmf.Regridder object (must be conservative-compatible)
-            data: xarray.DataArray with dimensions (time, lev, ncol) or similar
-            level_index: which level index to use (default: 0)
-
-        Returns:
-            regridded_data: xarray.DataArray with horizontal dimensions of the target grid
-        """
-        # Ensure data has expected dimensions
-        if "time" not in data.dims or "lev" not in data.dims:
-            raise ValueError("Input data must have 'time' and 'lev' dimensions")
-        print("WHT????",data.U,"\n\n")
-        # Extract single 2D slice (1st time step and specified vertical level)
-        slice2d = data[var_name].isel(time=0, lev=level_index)
-
-        # Check shape: if 1D, expand to 2D as (1, ncol)
-        if slice2d.ndim == 1:
-            slice2d = slice2d.expand_dims("dummy", axis=0)
-
-        # Apply regridder
-        regridded = regridder(slice2d)
-
-        return regridded
-
-
-
+    if method == 'coservative':
+        rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
+    if method == 'bilinear':
+        rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
     if comp == "lnd":
+        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
+
+
+
+    """if comp == "lnd":
         if method == 'coservative':
             rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
         if method == 'bilinear':
@@ -918,7 +883,7 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
                 rgdata = regrid_atm_se_data_conservative(regridder, model_dataset, comp_grid)
         if method == 'bilinear':
             rgdata = regrid_atm_se_data_bilinear(regridder, model_dataset, comp_grid)
-
+    """
 
     #rgdata['lat'] = latlon_ds.lat #???
     if comp == "lnd":
