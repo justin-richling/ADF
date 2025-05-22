@@ -362,12 +362,12 @@ def tem(adf):
                 olat = oseasons['zalat']
                 olev = oseasons['lev']
 
-                #difference: each entry should be (lat, lon)
+                """#difference: each entry should be (lat, lon)
                 if (mseasons.dims == oseasons.dims) and (mseasons.shape == oseasons.shape):
                     dseasons = mseasons-oseasons
                 else:
                     #print("Mismatched shape between model and baseline, will skip difference plots but still show the data?")
-                    dseasons = None
+                    dseasons = None"""
                 
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
@@ -405,6 +405,12 @@ def tem(adf):
                     mseasons = mseasons.isel(lat=0)
                 if 'lat' in oseasons.dims:
                     oseasons = oseasons.isel(lat=0)
+                #difference: each entry should be (lat, lon)
+                if (mseasons.dims == oseasons.dims) and (mseasons.shape == oseasons.shape):
+                    dseasons = mseasons-oseasons
+                else:
+                    #print("Mismatched shape between model and baseline, will skip difference plots but still show the data?")
+                    dseasons = None
                 img0 = ax[0].contourf(mlats, mlevs, mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(olats, olevs, oseasons, levels=clevs, norm=norm, cmap=cmap)
                     
