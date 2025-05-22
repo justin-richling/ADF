@@ -288,9 +288,9 @@ def create_TEM_files(adf):
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
                 if idx == 0:
-                    dstem0 = calc_tem(ds.squeeze().isel(time=idx))
+                    dstem0 = calc_tem(ds.squeeze().isel(time=idx), zm_name)
                 else:
-                    dstem = calc_tem(ds.squeeze().isel(time=idx))
+                    dstem = calc_tem(ds.squeeze().isel(time=idx), zm_name)
                     if "zalat" in dstem.dims:
                         zm_name = "zalat"
                     if "zmlat" in dstem.dims:
@@ -357,7 +357,7 @@ def create_TEM_files(adf):
 
 
 
-def calc_tem(ds):
+def calc_tem(ds, zm_name):
     """
     # calc_tem() function to calculate TEM diagnostics on CAM/WACCM output
     # This assumes the data have already been organized into zonal mean fluxes
@@ -402,10 +402,10 @@ def calc_tem(ds):
     om = 7.29212e-5
     H = 7000.
     g0 = 9.80665
-    if "zalat" in ds["UZM"].dims:
-        zm_name = "zalat"
-    if "zmlat" in ds["UZM"].dims:
-        zm_name = "zmlat"
+    #if "zalat" in ds["UZM"].dims:
+    #    zm_name = "zalat"
+    #if "zmlat" in ds["UZM"].dims:
+    #    zm_name = "zmlat"
     nlat = ds[zm_name].size
     nlev = ds['lev'].size
 
