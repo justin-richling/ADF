@@ -356,7 +356,7 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
                 
-                mlat = mseasons['zalat']
+                mlat = mseasons['zmlat']
                 mlev = mseasons['lev']
 
                 olat = oseasons['zalat']
