@@ -253,9 +253,12 @@ def create_TEM_files(adf):
 
             #Flatten list of lists to 1d list
             hist_files = sorted(list(chain.from_iterable(hist_files)))
-            ds = xr.open_mfdataset(hist_files,decode_times=True, combine='by_coords')
+            #ds = xr.open_mfdataset(hist_files,decode_times=True, combine='by_coords')
+            ds = xr.open_mfdataset(hist_files,decode_times=True, combine='nested', concat_dim='time')
+            
             
             hist0_files = sorted(list(chain.from_iterable(hist0_files)))
+            #ds_h0 = xr.open_mfdataset(hist0_files,decode_times=True, combine='by_coords')
             ds_h0 = xr.open_mfdataset(hist0_files,decode_times=True, combine='by_coords')
             if "zalat" in ds_h0.dims:
                 zm_name = "zalat"
