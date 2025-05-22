@@ -402,9 +402,9 @@ def calc_tem(ds):
     om = 7.29212e-5
     H = 7000.
     g0 = 9.80665
-    if "zalat" in ds["Uzm"].dims:
+    if "zalat" in ds["UZM"].dims:
         zm_name = "zalat"
-    if "zmlat" in ds["Uzm"].dims:
+    if "zmlat" in ds["UZM"].dims:
         zm_name = "zmlat"
     nlat = ds[zm_name].size
     nlev = ds['lev'].size
