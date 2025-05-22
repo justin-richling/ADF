@@ -243,6 +243,7 @@ def tem(adf):
                     odata = ds_base["THZM"].squeeze()
                 else:
                     mdata = ds[var].squeeze()
+                    odata = ds_base[var].squeeze()
                     if adf.compare_obs:
                         odata = ds_base[var.lower()].squeeze()
                 if regrid_tem_files == False:
