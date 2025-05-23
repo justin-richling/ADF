@@ -396,14 +396,17 @@ def tem(adf):
                 if var == "THZ":
                     from matplotlib.colors import PowerNorm
 
-                    norm = PowerNorm(gamma=0.5, vmin=oseasons.min(), vmax=oseasons.max())  # gamma < 1 emphasizes low values
-                if var == "THZM":
+                    #norm = PowerNorm(gamma=0.5, vmin=oseasons.min(), vmax=oseasons.max())  # gamma < 1 emphasizes low values
+                    from matplotlib.colors import TwoSlopeNorm
+
+                    norm = TwoSlopeNorm(vmin=214, vcenter=260, vmax=650)
+                """if var == "THZM":
                     from matplotlib.colors import LogNorm
 
                     #norm = PowerNorm(gamma=0.5, vmin=oseasons.min(), vmax=oseasons.max())  # gamma < 1 emphasizes low values
                     norm = LogNorm(vmin=oseasons.min()+1e-2, vmax=oseasons.max())
 
-                    #plt.contourf(lat, pressure, temp, levels=levels, cmap='coolwarm', norm=norm)
+                    #plt.contourf(lat, pressure, temp, levels=levels, cmap='coolwarm', norm=norm)"""
                 cmap = cp_info['cmap1']
                 clevs_diff = np.unique(np.array(cp_info['levelsdiff']))
 
