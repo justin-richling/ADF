@@ -2164,7 +2164,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap1 = 'coolwarm'
         else:
             cmap1 = cm
-
+    print("Selected cmap:",cmap1)
     """
     url = guess_ncl_url(i)
     locfil = colormap_file_loc / f"{i}.rgb"
