@@ -2143,9 +2143,25 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if not cm:
             print(f"{cmap1} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
             if adata.name == "PRECT":
-                cmap1 = 'GnBu'
+                """cmap1 = 'GnBu'
                 if cmap1 not in plt.colormaps():
-                    cmap1 = 'BrBG'
+                    cmap1 = 'BrBG'"""
+                import numpy as np
+                import matplotlib.pyplot as plt
+                from matplotlib.colors import LinearSegmentedColormap
+
+                # Improved brown to blue with alpha
+                colors = [
+                    (101/255, 67/255, 33/255, 0.05),  # very transparent deep brown
+                    (101/255, 67/255, 33/255, 0.4),   # semi-transparent deep brown
+                    (70/255, 130/255, 180/255, 0.7),  # semi-transparent steel blue
+                    (0/255, 0/255, 139/255, 1.0)      # fully opaque dark blue
+                ]
+
+                # Create colormap
+                cmap1 = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
+
+
             else:
                 cmap1 = 'coolwarm'
         else:
