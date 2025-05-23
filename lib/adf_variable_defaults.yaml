@@ -1619,7 +1619,7 @@ PRECSL:
   pct_diff_colormap: "PuOr_r"
 
 PRECT:
-  #colormap: "Blues"
+  colormap: "terrain"
   contour_levels_range: [0, 12.1, 0.5]
   diff_colormap: "seismic"
   diff_contour_range: [-10, 10, 0.5]
