@@ -99,6 +99,7 @@ import geocat.comp as gcomp
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.lines import Line2D
 import matplotlib.cm as cm
+from matplotlib.colors import LinearSegmentedColormap
 
 from adf_diag import AdfDiag
 from adf_base import AdfError
@@ -2146,9 +2147,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 """cmap1 = 'GnBu'
                 if cmap1 not in plt.colormaps():
                     cmap1 = 'BrBG'"""
-                import numpy as np
-                import matplotlib.pyplot as plt
-                from matplotlib.colors import LinearSegmentedColormap
 
                 # Improved brown to blue with alpha
                 colors = [
