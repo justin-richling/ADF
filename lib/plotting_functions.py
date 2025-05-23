@@ -2140,7 +2140,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cm = None
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
-        
+        print("Min:", np.min(adata))
+        print("Max:", np.max(adata))
         if not cm:
             print(f"{cmap1} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
             if adata.name == "PRECT":
