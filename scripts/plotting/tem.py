@@ -394,11 +394,11 @@ def tem(adf):
 
                 norm = cp_info['norm1']
                 if var == "THZ":
-                    from matplotlib.colors import LogNorm
+                    from matplotlib.colors import PowerNorm
 
                     norm = PowerNorm(gamma=0.5, vmin=oseasons.min(), vmax=oseasons.max())  # gamma < 1 emphasizes low values
                 if var == "THZM":
-                    from matplotlib.colors import PowerNorm
+                    from matplotlib.colors import LogNorm
 
                     #norm = PowerNorm(gamma=0.5, vmin=oseasons.min(), vmax=oseasons.max())  # gamma < 1 emphasizes low values
                     norm = LogNorm(vmin=oseasons.min()+1e-2, vmax=oseasons.max())
