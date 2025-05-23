@@ -361,7 +361,8 @@ def tem(adf):
                     mseasons = mseasons.rename({"zmlat": "zalat"})
                 mlat = mseasons['zalat']
                 mlev = mseasons['lev']
-
+                if 'zmlat' in oseasons.dims:
+                    oseasons = oseasons.rename({"zmlat": "zalat"})
                 olat = oseasons['zalat']
                 olev = oseasons['lev']
 
@@ -501,10 +502,10 @@ def tem(adf):
                         a.set_ylim(a.get_ylim()[::-1])
 
                 # Format color bars
-                plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,**cp_info['colorbar_opt'],extend="both")
+                plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])
                 # Remove the colorbar label for baseline
                 cp_info['colorbar_opt'].pop("label", None)
-                plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,**cp_info['colorbar_opt'],extend="both")
+                plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])
 
                 #Variable plot title name
                 longname = vres["long_name"]
