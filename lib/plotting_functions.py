@@ -1300,7 +1300,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
-            if a.name == "PRECT":
+            if mdlfld.name == "PRECT":
                 img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
             else:
                 img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
