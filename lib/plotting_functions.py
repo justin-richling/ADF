@@ -2078,7 +2078,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     elif 'contour_levels_range' in kwargs: # arange: Check if the user wants to generate a list from start, stop, step
-        print("len(kwargs['contour_levels_range'])",len(kwargs['contour_levels_range']))
         assert len(kwargs['contour_levels_range']) == 3, \
         "contour_levels_range must have exactly three entries: min, max, step"
 
@@ -2165,7 +2164,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     """
 
     print(f"\n{adata.name} cmap1 ",cmap1)
-    """
+    
     levels1 = None
     no_norm = False
     if 'contour_levels' in kwargs:
@@ -2240,7 +2239,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     #End if
-    """
 
     """#levels1 = np.linspace(-11, 41, 12)
     colormap_type = choose_colormap(levels1)
