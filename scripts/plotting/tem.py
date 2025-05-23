@@ -420,6 +420,7 @@ def tem(adf):
 
                 #Contour fill
                 if var == "TZM":
+                    print("OUBJSNLKDKP")
                     clevs = np.arange(180,301,5)
                 img0 = ax[0].contourf(mlats, mlevs, mseasons, levels=clevs, norm=norm, cmap=cmap)
                 img1 = ax[1].contourf(olats, olevs, oseasons, levels=clevs, norm=norm, cmap=cmap)
