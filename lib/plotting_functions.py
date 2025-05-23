@@ -2157,14 +2157,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 # Explicit color stops with relative positions (from 0 to 1)
                 # Define the color stops with RGBA and precise positions
                 colors = [
-                            (0.00, (1.0, 1.0, 1.0, 0.02)),              # nearly white, very transparent
-                            (0.05, (210/255, 180/255, 140/255, 0.1)),   # light tan, still subtle
-                            (0.10, (139/255, 90/255, 43/255, 0.3)),     # light-medium brown
-                            (0.20, (101/255, 67/255, 33/255, 0.5)),     # standard brown
-
-                            (0.45, (70/255, 130/255, 180/255, 0.6)),    # steel blue
-                            (0.70, (30/255, 60/255, 200/255, 0.85)),    # deeper blue
-                            (1.00, (0/255, 0/255, 139/255, 1.0))        # dark blue
+                            (0.00, (1.0, 1.0, 1.0, 0.02)),             # very dry, near white
+                            (0.10, (210/255, 180/255, 140/255, 0.2)),  # dry tan (sand)
+                            (0.25, (139/255, 90/255, 43/255, 0.4)),    # earthy brown
+                            (0.45, (107/255, 142/255, 35/255, 0.6)),   # olive green (moist)
+                            (0.70, (60/255, 179/255, 113/255, 0.8)),   # medium sea green (wet)
+                            (1.00, (0/255, 100/255, 200/255, 1.0))     # saturated blue
                         ]
 
                 # Create colormap
