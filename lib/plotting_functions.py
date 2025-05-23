@@ -1302,7 +1302,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         else:
             if mdlfld.name == "PRECT":
                 print("cp_info['contourf_opt']",cp_info['contourf_opt'])
-                img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
+                img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))#extend='max'
             else:
                 img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
         #End if
