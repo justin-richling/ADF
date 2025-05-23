@@ -2254,6 +2254,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     #End if
 
+    if adata.name == "PRECT":
+        norm1=None
+
     """#levels1 = np.linspace(-11, 41, 12)
     colormap_type = choose_colormap(levels1)
 
