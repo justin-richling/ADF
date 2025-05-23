@@ -2047,6 +2047,65 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
 
+
+    
+    # determine levels & color normalization:
+    minval = np.min([np.min(adata), np.min(bdata)])
+    maxval = np.max([np.max(adata), np.max(bdata)])
+
+    # determine norm to use (deprecate this once minimum MPL version is high enough)
+    normfunc, mplv = use_this_norm()
+
+    if 'colormap' in kwargs:
+        cmap1 = kwargs['colormap']
+        # Check if the colormap name exists in Matplotlib
+        if cmap1 not in plt.colormaps():
+            print(f"{cmap1} is not a matplotlib standard color map. Defaulting to 'coolwarm' for test/base plots")
+            cmap1 = 'coolwarm'
+    else:
+        cmap1 = 'coolwarm'
+    #End if
+
+    if 'contour_levels' in kwargs: # list: Check if contours are specified as list
+        levels1 = kwargs['contour_levels']
+        # Check if any item in the list is a string
+        contains_string = any(isinstance(item, str) for item in levels1)
+        if contains_string:
+            levels1 = [float(item) for item in levels1]
+        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N, extend='both')
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    elif 'contour_levels_range' in kwargs: # arange: Check if the user wants to generate a list from start, stop, step
+        assert len(kwargs['contour_levels_range']) == 3, \
+        "contour_levels_range must have exactly three entries: min, max, step"
+
+        levels1 = np.arange(*kwargs['contour_levels_range'])
+        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N, extend='both')
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    else: # linspace: Check if user wants to generate a list from start, stop, num_steps
+        levels1 = np.linspace(minval, maxval, 24)
+        if ('non_linear_levels' in kwargs) and (kwargs['non_linear_levels']):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N, extend='both')
+        else:
+            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+    #End if
+    
+
+
+
+
+
+
+
+
+
+
     """if 'colormap' in kwargs:
         cmap1 = kwargs['colormap']
     else:
@@ -2105,7 +2164,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     """
 
     print(f"\n{adata.name} cmap1 ",cmap1)
-
+    """
     levels1 = None
     no_norm = False
     if 'contour_levels' in kwargs:
@@ -2180,6 +2239,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
     #End if
+    """
 
     """#levels1 = np.linspace(-11, 41, 12)
     colormap_type = choose_colormap(levels1)
