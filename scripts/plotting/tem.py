@@ -393,10 +393,15 @@ def tem(adf):
                 clevs = np.unique(np.array(cp_info['levels1']))
 
                 norm = cp_info['norm1']
-                if var == "THZ" or var == "THZM":
-                    from matplotlib.colors import PowerNorm
+                if var == "THZ":
+                    from matplotlib.colors import LogNorm
 
                     norm = PowerNorm(gamma=0.5, vmin=oseasons.min(), vmax=oseasons.max())  # gamma < 1 emphasizes low values
+                if var == "THZM":
+                    from matplotlib.colors import PowerNorm
+
+                    #norm = PowerNorm(gamma=0.5, vmin=oseasons.min(), vmax=oseasons.max())  # gamma < 1 emphasizes low values
+                    norm = LogNorm(vmin=oseasons.min()+1e-2, vmax=oseasons.max())
 
                     #plt.contourf(lat, pressure, temp, levels=levels, cmap='coolwarm', norm=norm)
                 cmap = cp_info['cmap1']
