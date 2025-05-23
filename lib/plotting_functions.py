@@ -2032,7 +2032,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             return 'diverging'
         else:
             return 'sequential'"""
-
+    print("TRY THIS BOI",adata.name)
+    if adata.name == "PRECT":
+        print("OK THIS WORKSQ")
     if "plot_type" in kwargs:
         plot_type = kwargs["plot_type"]
     else:
@@ -2077,8 +2079,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         #ncl_colors[cmr.name] = cmr
         
         if not cm:
-            print(f"{cmap1} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots")
-            cmap1 = 'coolwarm'
+            print(f"{cmap1} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
+            if adata.name == "PRECT":
+                cmap1 = 'BrBG'
+            else:
+                cmap1 = 'coolwarm'
         else:
             cmap1 = cm
 
