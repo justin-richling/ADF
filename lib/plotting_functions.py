@@ -2084,7 +2084,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if not cm:
             print(f"{cmap1} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
             if adata.name == "PRECT":
-                cmap1 = 'BrBG'
+                cmap1 = 'gist_earth'
+                if cmap1 not in plt.colormaps():
+                    cmap1 = 'coolwarm'
             else:
                 cmap1 = 'coolwarm'
         else:
