@@ -2086,7 +2086,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if adata.name == "PRECT":
                 cmap1 = 'gist_earth'
                 if cmap1 not in plt.colormaps():
-                    cmap1 = 'coolwarm'
+                    cmap1 = 'BrBG'
             else:
                 cmap1 = 'coolwarm'
         else:
