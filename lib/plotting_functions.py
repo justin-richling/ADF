@@ -2149,11 +2149,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     cmap1 = 'BrBG'"""
 
                 # Improved brown to blue with alpha
+                # Explicit color stops with relative positions (from 0 to 1)
                 colors = [
-                    (101/255, 67/255, 33/255, 0.05),  # very transparent deep brown
-                    (101/255, 67/255, 33/255, 0.4),   # semi-transparent deep brown
-                    (70/255, 130/255, 180/255, 0.7),  # semi-transparent steel blue
-                    (0/255, 0/255, 139/255, 1.0)      # fully opaque dark blue
+                    (0.0, (101/255, 67/255, 33/255, 0.1)),  # transparent deep brown
+                    (0.3, (101/255, 67/255, 33/255, 0.4)),  # more opaque brown
+                    (0.6, (70/255, 130/255, 180/255, 0.7)), # steel blue
+                    (1.0, (0/255, 0/255, 139/255, 1.0))     # opaque dark blue
                 ]
 
                 # Create colormap
