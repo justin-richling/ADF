@@ -1620,7 +1620,7 @@ PRECSL:
 
 PRECT:
   #colormap: "GnBu"
-  #contour_levels_range: [0, 23, 1]
+  contour_levels_range: [0, 12, 1]
   diff_colormap: "seismic"
   diff_contour_range: [-10, 10, 0.5]
   scale_factor: 86400000
@@ -1634,7 +1634,7 @@ PRECT:
   obs_var_name: "PRECT"
   category: "Hydrologic cycle"
   derivable_from: ['PRECL','PRECC']
-  pct_diff_contour_levels: [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
+  #pct_diff_contour_levels: [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
   pct_diff_colormap: "PuOr_r"
 
 QFLX:
