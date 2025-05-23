@@ -2053,7 +2053,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         cmap1 = 'coolwarm'
     #End if"""
     #print('kwargs["plot_type"]',kwargs["plot_type"])
-    cmap1 = 'viridis'
+    cmap1 = 'fakemap'#'viridis'
     if "colormap" in kwargs:
         cmap = kwargs["colormap"]
         #if isinstance(cmap, dict) and "plot_type" in kwargs:
@@ -2099,7 +2099,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     ncl_colors[cmr.name] = cmr
     """
 
-    print("\ncmap1 ",cmap1)
+    print(f"\n{adata.name} cmap1 ",cmap1)
 
     levels1 = None
     no_norm = False
