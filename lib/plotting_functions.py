@@ -2157,14 +2157,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 # Explicit color stops with relative positions (from 0 to 1)
                 # Define the color stops with RGBA and precise positions
                 colors = [
-                    (0.00, (101/255, 67/255, 33/255, 0.05)),   # transparent brown
-                    (0.05, (101/255, 67/255, 33/255, 0.3)),    # semi-transparent brown
-                    (0.10, (101/255, 67/255, 33/255, 0.5)),    # last brown stop
+                            (0.00, (101/255, 67/255, 33/255, 0.05)),   # very transparent brown
+                            (0.10, (101/255, 67/255, 33/255, 0.3)),    # mid brown
+                            (0.20, (101/255, 67/255, 33/255, 0.5)),    # last brown stop (1/5 in)
 
-                    (0.40, (70/255, 130/255, 180/255, 0.6)),   # steel blue
-                    (0.75, (30/255, 60/255, 200/255, 0.85)),   # deeper blue
-                    (1.00, (0/255, 0/255, 139/255, 1.0))       # opaque dark blue
-                ]
+                            (0.45, (70/255, 130/255, 180/255, 0.6)),   # steel blue
+                            (0.70, (30/255, 60/255, 200/255, 0.85)),   # deeper blue
+                            (1.00, (0/255, 0/255, 139/255, 1.0))       # opaque dark blue
+                        ]
 
                 # Create colormap
                 cmap1 = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
