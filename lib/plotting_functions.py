@@ -2066,7 +2066,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         cmap1 = 'coolwarm'
     #End if
 
-    if 'contour_levels' in kwargs: # list: Check if contours are specified as list
+    """if 'contour_levels' in kwargs: # list: Check if contours are specified as list
         levels1 = kwargs['contour_levels']
         # Check if any item in the list is a string
         contains_string = any(isinstance(item, str) for item in levels1)
@@ -2094,7 +2094,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N, extend='both')
         else:
             norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    #End if
+    #End if"""
     
 
 
