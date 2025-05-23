@@ -1300,7 +1300,10 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
-            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
+            if a.name == "PRECT":
+                img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
+            else:
+                img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
         #End if
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
 
@@ -2151,11 +2154,15 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
                 # Improved brown to blue with alpha
                 # Explicit color stops with relative positions (from 0 to 1)
+                # Define the color stops with RGBA and precise positions
                 colors = [
-                    (0.0, (101/255, 67/255, 33/255, 0.1)),  # transparent deep brown
-                    (0.3, (101/255, 67/255, 33/255, 0.4)),  # more opaque brown
-                    (0.6, (70/255, 130/255, 180/255, 0.7)), # steel blue
-                    (1.0, (0/255, 0/255, 139/255, 1.0))     # opaque dark blue
+                    (0.00, (101/255, 67/255, 33/255, 0.05)),   # transparent brown
+                    (0.05, (101/255, 67/255, 33/255, 0.3)),    # semi-transparent brown
+                    (0.10, (101/255, 67/255, 33/255, 0.5)),    # last brown stop
+
+                    (0.40, (70/255, 130/255, 180/255, 0.6)),   # steel blue
+                    (0.75, (30/255, 60/255, 200/255, 0.85)),   # deeper blue
+                    (1.00, (0/255, 0/255, 139/255, 1.0))       # opaque dark blue
                 ]
 
                 # Create colormap
