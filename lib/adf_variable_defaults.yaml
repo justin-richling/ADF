@@ -2087,7 +2087,7 @@ VZM:
 
 THZM:
   colormap: "Spectral_r"
-  contour_levels_range: [260,10001,500]
+  #contour_levels_range: [260,10001,500]
   diff_colormap: "bwr"
   diff_contour_range: [-50,50.1,2.5]
   ylim: [1e3,1e-1]
