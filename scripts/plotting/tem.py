@@ -509,18 +509,20 @@ def tem(adf):
                         a.set_ylim(a.get_ylim()[::-1])
 
                 # Format color bars
-                if var == "TZM":
+                """if var == "TZM":
                     print("OUBJSNLKDKPasdasdasd")
                     plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,extend="both")
                 else:
-                    plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])
+                    plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])"""
+                plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])
                 # Remove the colorbar label for baseline
                 cp_info['colorbar_opt'].pop("label", None)
-                if var == "TZM":
+                """if var == "TZM":
                     print("OUBJSNLKDKPasdasdasd")
                     plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,extend="both")
                 else:
-                    plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])
+                    plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])"""
+                plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,extend="both",**cp_info['colorbar_opt'])
 
                 #Variable plot title name
                 longname = vres["long_name"]
