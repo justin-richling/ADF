@@ -572,7 +572,7 @@ def calc_tem(ds, zm_name):
                                       VTEM = vtem,
                                       WTEM = wtem,
                                       PSITEM = psitem,
-                                      UTENDEPFD = utendepfd,
+                                      DELF = utendepfd,
                                       UTENDVTEM = utendvtem,
                                       UTENDWTEM = utendwtem
                                       ))

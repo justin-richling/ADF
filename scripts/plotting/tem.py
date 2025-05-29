@@ -235,11 +235,8 @@ def tem(adf):
                         plot_name.unlink()
 
                 #Grab variable defaults for this variable
-                if var == "DELF":
-                    #var = "UTENDEPFD"
-                    vres = res["UTENDEPFD"]
-                else:
-                    vres = res[var.upper()]
+                vres = res[var.upper()]
+
                 #Gather data for both cases
                 if var == "TZM":
                     mdata = ds["THZM"].squeeze()
@@ -355,8 +352,7 @@ def tem(adf):
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
 
-                if var == "UTENDEPFD":
-                    var = "DELF"
+                if var == "DELF":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
                 
