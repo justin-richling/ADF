@@ -235,7 +235,11 @@ def tem(adf):
                         plot_name.unlink()
 
                 #Grab variable defaults for this variable
-                vres = res[var.upper()]
+                if var == "DELF":
+                    #var = "UTENDEPFD"
+                    vres = res["UTENDEPFD"]
+                else:
+                    vres = res[var.upper()]
 
                 #Gather data for both cases
                 if var == "TZM":
