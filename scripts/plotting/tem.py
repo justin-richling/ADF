@@ -353,6 +353,7 @@ def tem(adf):
                     oseasons.attrs['units'] = "K"
 
                 if var == "UTENDEPFD":
+                    var = "DELF"
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
                 
