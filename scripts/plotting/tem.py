@@ -237,7 +237,6 @@ def tem(adf):
                 #Grab variable defaults for this variable
                 if var == "DELF":
                     #var = "UTENDEPFD"
-                    "asdfas"
                     vres = res["UTENDEPFD"]
                 else:
                     vres = res[var.upper()]
