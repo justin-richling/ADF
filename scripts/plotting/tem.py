@@ -240,7 +240,6 @@ def tem(adf):
                     vres = res["UTENDEPFD"]
                 else:
                     vres = res[var.upper()]
-                    "sdfg"
 
                 #Gather data for both cases
                 if var == "TZM":
