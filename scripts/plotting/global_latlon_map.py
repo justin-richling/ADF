@@ -253,7 +253,8 @@ def global_latlon_map(adfobj):
                     # calculate weights
                     wgt = area * landfrac / (area * landfrac).sum()
                 if comp == "atm":
-                    wgt = mdataset.var.isel(time=0)
+                    wgt = mdataset.isel(time=0)
+                    print("LATLON FUNC wgt",wgt,"\n")
             else:
                 mdata = adfobj.data.load_regrid_da(case_name, var)
                 #Skip this variable/case if the regridded climo file doesn't exist:
