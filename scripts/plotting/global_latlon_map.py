@@ -253,7 +253,7 @@ def global_latlon_map(adfobj):
                     # calculate weights
                     wgt = area * landfrac / (area * landfrac).sum()
                 if comp == "atm":
-                    wgt = mdataset.isel(time=0)
+                    wgt = mdataset.isel(time=0)[var]
                     print("LATLON FUNC wgt",wgt[var],"\n")
             else:
                 mdata = adfobj.data.load_regrid_da(case_name, var)
