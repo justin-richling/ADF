@@ -487,10 +487,11 @@ def spatial_average_lnd(indata, weights, spatial_dims=None):
         #(which could be difficult to debug) the ADF should die here:
         emsg = "spatial_average: No spatial dimensions were identified,"
         emsg += " so can not perform average."
-        raise AdfError(emsg)
+        #raise AdfError(emsg)
+        return None
 
-    
-    return weighted.sum(dim=spatial_dims, keep_attrs=True)
+    else:
+        return weighted.sum(dim=spatial_dims, keep_attrs=True)
 
 
 def wgt_rmse(fld1, fld2, wgt):
