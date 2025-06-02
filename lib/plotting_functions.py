@@ -403,7 +403,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
     if unstruct:
         print("\n\nUXARRAY DIMS:",indataset.dims,"\n\n")
         # Identify spatial dimension
-        spatial_dim = 'nCells'  # Replace with the actual spatial dimension name
+        spatial_dim = 'n_face'  # Replace with the actual spatial dimension name
 
         # Compute face areas
         face_areas = indataset.uxgrid.compute_face_areas()
