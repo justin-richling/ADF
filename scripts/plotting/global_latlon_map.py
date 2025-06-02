@@ -205,7 +205,7 @@ def global_latlon_map(adfobj):
                 # calculate weights
                 wgt_base = area * landfrac / (area * landfrac).sum()
             if comp == "atm":
-                wgt_base = odataset.isel(time=0)
+                wgt_base = odataset.isel(time=0)[var]
         else:
             #odata = adfobj.data.load_reference_regrid_da(base_name, var, **kwargs)
             odata = adfobj.data.load_reference_regrid_da(base_name, var)
