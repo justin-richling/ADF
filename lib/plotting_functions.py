@@ -422,14 +422,14 @@ def spatial_average(indata, weights=None, spatial_dims=None):
     print("weights AFTER",weights,"\n")
     #Apply weights to input data:
     weighted = indata.weighted(weights)
-
+    print("spatial_dims BEFORE",spatial_dims)
     # we want to average over all non-time dimensions
     if spatial_dims is None:
         if 'ncol' in indata.dims:
             spatial_dims = ['ncol']
         else:
             spatial_dims = [dimname for dimname in indata.dims if (('lat' in dimname.lower()) or ('lon' in dimname.lower()))]
-
+    print("spatial_dims AFTER",spatial_dims)
     if not spatial_dims:
         #Scripts using this function likely expect the horizontal dimensions
         #to be removed via the application of the mean. So in order to avoid
