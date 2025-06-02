@@ -401,18 +401,19 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
     import warnings
 
     if unstruct:
-        grid = indataset.uxgrid
-        #face_dim = grid.face_dimension
-        # Dynamically get the spatial (face) dimension
-        face_dim = list(grid.face_coords.values())[0].dims[0]
-        # Compute or get face areas
-        areas = grid.compute_face_areas()
-        weights = areas / areas.sum()
+        print("\n\nUXARRAY DIMS:",indataset.dims,"\n\n")
+        # Identify spatial dimension
+        spatial_dim = 'nCells'  # Replace with the actual spatial dimension name
 
+        # Compute face areas
+        face_areas = indataset.uxgrid.compute_face_areas()
 
-        # Area-weighted mean over spatial dimension
-        avg = indata.weighted(weights).mean(dim=face_dim)
-        return avg
+        # Normalize weights
+        weights = face_areas / face_areas.sum()
+
+        # Compute area-weighted average
+        weighted_avg = indata.weighted(weights).mean(dim=spatial_dim)
+        return weighted_avg
 
     print("weights BEFORFE",weights)
     if weights is None:
