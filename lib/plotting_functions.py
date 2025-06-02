@@ -419,7 +419,7 @@ def spatial_average(indata, weights=None, spatial_dims=None):
             warnings.warn("Un-recognized spatial dimensions: using equal weights for all grid points.")
         #End if
     #End if
-    print("weights AFTER",weights.data,"\n")
+    print("weights AFTER",weights,"\n")
     #Apply weights to input data:
     weighted = indata.weighted(weights)
 
