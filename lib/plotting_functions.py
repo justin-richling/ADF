@@ -402,7 +402,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
 
     if unstruct:
         grid = indataset.uxgrid
-        face_dim = grid._face_dim
+        face_dim = grid.face_dimension
         # Compute or get face areas
         areas = grid.compute_face_areas()
         weights = areas / areas.sum()
