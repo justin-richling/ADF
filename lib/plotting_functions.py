@@ -407,6 +407,8 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
 
         # Compute face areas
         face_areas = indataset.uxgrid.compute_face_areas()
+        print("type(face_areas)",type(face_areas))
+        print("face_areas",face_areas)
 
         # Normalize weights
         weights = face_areas / face_areas.sum()
