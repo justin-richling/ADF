@@ -412,6 +412,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
 
         # Normalize weights
         weights = face_areas / face_areas.sum()
+        print("weights",weights,"\n")
 
         # Compute area-weighted average
         weighted_avg = indata.weighted(weights).mean(dim=spatial_dim)
