@@ -1335,7 +1335,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         # get statistics (from non-wrapped)
         fields = (mdlfld, obsfld, pctld, diffld)
         area_avg = [spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
-
+        if area_avg is None:
+            area_avg = [0]*len(wrap_fields)
         d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
         # specify the central longitude for the plot
         central_longitude = kwargs.get('central_longitude', 180)
