@@ -1458,10 +1458,10 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         # End if unstructured grid
 
         #ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
-        #ax[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
-        #             loc='right', fontsize=tiFontSize)
-        ax[i].set_title(f"Mean: {0}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
+        ax[i].set_title(f"Mean: {area_avg[i].item():5.2f}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
                      loc='right', fontsize=tiFontSize)
+        #ax[i].set_title(f"Mean: {0}\nMax: {wrap_fields[i].max().item():5.2f}\nMin: {wrap_fields[i].min().item():5.2f}", 
+        #             loc='right', fontsize=tiFontSize)
 
         # add contour lines <- Unused for now -JN
         # TODO: add an option to turn this on -BM
