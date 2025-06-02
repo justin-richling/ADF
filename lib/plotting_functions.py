@@ -1335,8 +1335,6 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         # get statistics (from non-wrapped)
         fields = (mdlfld, obsfld, pctld, diffld)
         area_avg = [spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
-        if area_avg is None:
-            area_avg = [0]*len(wrap_fields)
         d_rmse = wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
         # specify the central longitude for the plot
         central_longitude = kwargs.get('central_longitude', 180)
@@ -1347,6 +1345,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
         area_avg = [spatial_average(x, wgt,spatial_dims=None) for x in wrap_fields]
         #spatial_average(indata, weights=None, spatial_dims=None)
+        if area_avg is None:
+            area_avg = [0]*len(wrap_fields)
 
         # TODO Check this is correct, weighted rmse uses xarray weighted function
         #d_rmse = wgt_rmse(a, b, wgt)  
