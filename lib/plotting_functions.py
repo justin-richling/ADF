@@ -401,7 +401,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
     import warnings
 
     if unstruct:
-        print("\n\nUXARRAY DIMS:",indataset.dims,"\n\n")
+        """print("\n\nUXARRAY DIMS:",indataset.dims,"\n\n")
         # Identify spatial dimension
         spatial_dim = 'n_face'  # Replace with the actual spatial dimension name
 
@@ -419,7 +419,8 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
         print("weights",weights,"\n")
 
         # Compute area-weighted average
-        weighted_avg = indata.weighted(weights).mean(dim=spatial_dim)
+        weighted_avg = indata.weighted(weights).mean(dim=spatial_dim)"""
+        weighted_avg = indata.weighted_mean()
         return weighted_avg
 
     print("weights BEFORFE",weights)
