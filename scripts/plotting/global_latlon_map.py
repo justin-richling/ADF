@@ -286,6 +286,7 @@ def global_latlon_map(adfobj):
                 #has_dims = {}
                 if len(wgt.n_face) == len(wgt_base.n_face):
                     vres["wgt"] = wgt
+                    vres["indataset"] = mdataset
                     #has_dims = {}
                     #has_dims['has_lev'] = False
                 else:

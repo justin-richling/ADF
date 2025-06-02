@@ -370,7 +370,7 @@ def global_average(fld, wgt, verbose=False):
     return np.ma.average(avg1)
 
 
-def spatial_average(indata, weights=None, spatial_dims=None):
+def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, indataset=None):
     """Compute spatial average.
 
     Parameters
@@ -399,6 +399,19 @@ def spatial_average(indata, weights=None, spatial_dims=None):
     When none of those three are found, raise an AdfError.
     """
     import warnings
+
+    if unstruct:
+        grid = indataset.uxgrid
+        face_dim = grid._face_dim
+        # Compute or get face areas
+        areas = grid.compute_face_areas()
+        weights = areas / areas.sum()
+
+
+        # Area-weighted mean over spatial dimension
+        avg = indata.weighted(weights).mean(dim=face_dim)
+        return avg
+
     print("weights BEFORFE",weights)
     if weights is None:
         #Calculate spatial weights:
@@ -1340,10 +1353,12 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         central_longitude = kwargs.get('central_longitude', 180)
     else:
         wgt = kwargs["wgt"]
+        indataset = kwargs["indataset"]
         print("Plotting functions mdlfld",mdlfld,"\n\n")
         wrap_fields = (mdlfld, obsfld, pctld, diffld)
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
-        area_avg = [spatial_average(x, wgt,spatial_dims=None) for x in wrap_fields]
+        area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
+        #spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, indataset=None)
         #spatial_average(indata, weights=None, spatial_dims=None)
         if area_avg is None:
             area_avg = [0]*len(wrap_fields)
