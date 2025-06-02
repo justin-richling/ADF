@@ -408,7 +408,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
         # Compute face areas
         #face_areas = indataset.uxgrid.compute_face_areas()[1]
         face_areas_np = indataset.uxgrid.compute_face_areas()
-        spatial_dim = indataset.dims[-1]
+        spatial_dim = 'n_face'
         face_areas = xr.DataArray(face_areas_np, dims=[spatial_dim])
 
         print("type(face_areas)",type(face_areas))
