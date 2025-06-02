@@ -399,7 +399,7 @@ def spatial_average(indata, weights=None, spatial_dims=None):
     When none of those three are found, raise an AdfError.
     """
     import warnings
-
+    print("weights BEFORFE",weights)
     if weights is None:
         #Calculate spatial weights:
         if 'lat' in indata.coords:
@@ -419,7 +419,7 @@ def spatial_average(indata, weights=None, spatial_dims=None):
             warnings.warn("Un-recognized spatial dimensions: using equal weights for all grid points.")
         #End if
     #End if
-
+    print("weights AFTER",weights,"\n")
     #Apply weights to input data:
     weighted = indata.weighted(weights)
 
