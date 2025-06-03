@@ -401,7 +401,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
     import warnings
 
     if unstruct:
-        weighted_avg = indata.weighted_mean(keep_attrs=True)
+        weighted_avg = indata.weighted_mean()#keep_attrs=True
         return weighted_avg
 
     print("weights BEFORFE",weights)
