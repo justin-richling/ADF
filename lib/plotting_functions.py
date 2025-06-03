@@ -848,7 +848,8 @@ def make_polar_plot(wks, case_nickname, base_nickname,
         wgt = kwargs["wgt"]
         #wrap_fields = (d1, d2, dif, pct)
         wrap_fields = (d1, d2, pct, dif)
-        area_avg = [global_average(x, wgt) for x in wrap_fields]
+        #area_avg = [global_average(x, wgt) for x in wrap_fields]
+        #area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
 
         d1_region_mean, d1_region_max, d1_region_min = domain_stats(d1, domain, unstructured)
         d2_region_mean, d2_region_max, d2_region_min = domain_stats(d2, domain, unstructured)
