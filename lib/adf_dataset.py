@@ -244,7 +244,6 @@ class AdfData:
         """Return list of test regridded files"""
         model_rg_loc = Path(self.adf.get_basic_info("cam_regrid_loc", required=True))
         rlbl = self.ref_labels[field]  # rlbl = "reference label" = the name of the reference data that defines target grid
-        print("AHHH",sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_regridded.nc")))
         return sorted(model_rg_loc.glob(f"{rlbl}_{case}_{field}_regridded.nc"))
 
 

@@ -179,11 +179,13 @@ def polar_map(adfobj):
             if unstruct_plotting:
                 mesh_file = adfobj.mesh_files["baseline_mesh_file"]
                 kwargs["mesh_file"] = mesh_file
-                odata = adfobj.data.load_reference_climo_da(data_name, data_var, **kwargs)
+                #odata = adfobj.data.load_reference_climo_da(data_name, data_var, **kwargs)
+                odata = adfobj.data.load_reference_regrid_da(data_name, data_var, **kwargs)
                 #if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
 
                 unstruct_base = True
-                odataset = adfobj.data.load_reference_climo_dataset(data_name, data_var, **kwargs)
+                #odataset = adfobj.data.load_reference_climo_dataset(data_name, data_var, **kwargs)
+                odataset = adfobj.data.load_reference_regrid_dataset(data_name, data_var, **kwargs)
                 if comp == "lnd":
                     area = odataset.area.isel(time=0)
                     landfrac = odataset.landfrac.isel(time=0)
@@ -228,10 +230,12 @@ def polar_map(adfobj):
                 if unstruct_plotting:
                     mesh_file = adfobj.mesh_files["test_mesh_file"][case_idx]
                     kwargs["mesh_file"] = mesh_file
-                    mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
+                    #mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
+                    mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
 
                     unstruct_case = True
-                    mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
+                    #mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs)
+                    mdataset = adfobj.data.load_regrid_dataset(case_name, var, **kwargs)
                     if comp == "lnd": 
                         area = mdataset.area.isel(time=0)
                         landfrac = mdataset.landfrac.isel(time=0)
