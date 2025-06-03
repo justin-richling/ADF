@@ -404,7 +404,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
         weighted_avg = indata.weighted_mean()#keep_attrs=True
         return weighted_avg
 
-    print("weights BEFORFE",weights)
+    #print("weights BEFORFE",weights)
     if weights is None:
         #Calculate spatial weights:
         if 'lat' in indata.coords:
@@ -424,17 +424,17 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
             warnings.warn("Un-recognized spatial dimensions: using equal weights for all grid points.")
         #End if
     #End if
-    print("weights AFTER",weights,"\n")
+    #print("weights AFTER",weights,"\n")
     #Apply weights to input data:
     weighted = indata.weighted(weights)
-    print("spatial_dims BEFORE",spatial_dims)
+    #print("spatial_dims BEFORE",spatial_dims)
     # we want to average over all non-time dimensions
     if spatial_dims is None:
         if 'ncol' in indata.dims:
             spatial_dims = ['ncol']
         else:
             spatial_dims = [dimname for dimname in indata.dims if (('lat' in dimname.lower()) or ('lon' in dimname.lower()))]
-    print("spatial_dims AFTER",spatial_dims)
+    #print("spatial_dims AFTER",spatial_dims)
     if not spatial_dims:
         #Scripts using this function likely expect the horizontal dimensions
         #to be removed via the application of the mean. So in order to avoid
@@ -965,7 +965,6 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     for a in axs:
         a.coastlines()
-        print("Polar Plots domain:",hemisphere.upper(),domain)
         a.set_extent(domain, ccrs.PlateCarree())
         # __Follow the cartopy gallery example to make circular__:
         # Compute a circle in axes coordinates, which we can use as a boundary
@@ -1346,7 +1345,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     else:
         wgt = kwargs["wgt"]
         indataset = kwargs["indataset"]
-        print("Plotting functions mdlfld",mdlfld,"\n\n")
+        #print("Plotting functions mdlfld",mdlfld,"\n\n")
         wrap_fields = (mdlfld, obsfld, pctld, diffld)
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
         area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
