@@ -401,26 +401,7 @@ def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, ind
     import warnings
 
     if unstruct:
-        """print("\n\nUXARRAY DIMS:",indataset.dims,"\n\n")
-        # Identify spatial dimension
-        spatial_dim = 'n_face'  # Replace with the actual spatial dimension name
-
-        # Compute face areas
-        #face_areas = indataset.uxgrid.compute_face_areas()[1]
-        face_areas_np = indataset.uxgrid.compute_face_areas()
-        spatial_dim = 'n_face'
-        face_areas = xr.DataArray(face_areas_np, dims=[spatial_dim])
-
-        print("type(face_areas)",type(face_areas))
-        print("face_areas",face_areas)
-
-        # Normalize weights
-        weights = face_areas / face_areas.sum()
-        print("weights",weights,"\n")
-
-        # Compute area-weighted average
-        weighted_avg = indata.weighted(weights).mean(dim=spatial_dim)"""
-        weighted_avg = indata.weighted_mean()
+        weighted_avg = indata.weighted_mean(keep_attrs=True)
         return weighted_avg
 
     print("weights BEFORFE",weights)
