@@ -330,7 +330,8 @@ class AdfData:
             if unstructured_plotting:
                 if "mesh_file" not in kwargs:
                     msg = "\t   WARNING: Unstructured plotting is requested, but no available mesh file."
-                    msg += " Please make sure 'mesh_file' is declared in 'diag_basic_info' in config file"
+                    msg += " Please make sure 'mesh_file' is declared in the config yaml file"
+                    msg += "\n\t   NOTE: many mesh files can be found at /glade/campaign/cesm/cesmdata/inputdata/share/meshes/"
                     print(msg)
                     ds = None
                 mesh = kwargs["mesh_file"]
