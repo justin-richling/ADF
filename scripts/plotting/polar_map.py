@@ -181,19 +181,33 @@ def polar_map(adfobj):
                 kwargs["mesh_file"] = mesh_file
                 odata = adfobj.data.load_reference_climo_da(data_name, data_var, **kwargs)
                 #if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
-                if 1==1:
-                    unstruct_base = True
-                    odataset = adfobj.data.load_reference_climo_dataset(data_name, data_var, **kwargs) 
+
+                unstruct_base = True
+                odataset = adfobj.data.load_reference_climo_dataset(data_name, data_var, **kwargs)
+                if comp == "lnd":
                     area = odataset.area.isel(time=0)
                     landfrac = odataset.landfrac.isel(time=0)
                     # calculate weights
                     wgt_base = area * landfrac / (area * landfrac).sum()
+                if comp == "atm":
+                    wgt_base = odataset.isel(time=0)[var]
             else:
                 odata = adfobj.data.load_reference_regrid_da(data_name, data_var, **kwargs)
+                if odata is None:
+                    dmsg = f"\t    WARNING: No regridded baseline file for {data_name} for variable `{var}`, polar lat/lon mean plotting skipped."
+                    adfobj.debug_log(dmsg)
+                    continue
+                o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
+                if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
+                    print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
+                    continue
+            
+            
             if odata is None:
-                print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
-                print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
-                print(f"\t      The glob is: {data_src}_{data_var}_*.nc")
+                dmsg = f"\t    WARNING: No baseline file for {data_name} for variable `{var}`, polar lat/lon mean plotting skipped."
+                #dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{var}`, will"
+                adfobj.debug_log(dmsg)
+                print(dmsg)
                 continue
 
             #Loop over model cases:
@@ -215,23 +229,43 @@ def polar_map(adfobj):
                     mesh_file = adfobj.mesh_files["test_mesh_file"][case_idx]
                     kwargs["mesh_file"] = mesh_file
                     mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
-                    #if ('ncol' in mdata.dims) or ('lndgrid' in mdata.dims):
-                    if 1==1:
-                        unstruct_case = True
-                        mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
+
+                    unstruct_case = True
+                    mdataset = adfobj.data.load_climo_dataset(case_name, var, **kwargs) 
+                    if comp == "lnd": 
                         area = mdataset.area.isel(time=0)
                         landfrac = mdataset.landfrac.isel(time=0)
                         # calculate weights
                         wgt = area * landfrac / (area * landfrac).sum()
+                    if comp == "atm":
+                        wgt = mdataset.isel(time=0)[var]
                 else:
                     mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
 
+                    #Skip this variable/case if the regridded climo file doesn't exist:
+                    if mdata is None:
+                        dmsg = f"\t    WARNING: No regridded test file for {case_name} for variable `{var}`, polar lat/lon mean plotting skipped."
+                        adfobj.debug_log(dmsg)
+                        continue
+                    #Determine dimensions of variable:
+                    has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+                    if (not has_dims['has_lat']) or (not has_dims['has_lon']):
+                        print(f"\t    WARNING: skipping polar map for {var} for case {case_name} as it does not have both lat and lon")
+                        continue
+                    else: # i.e., has lat&lon
+                        if (has_dims['has_lev']) and (not pres_levs):
+                            print(f"\t    WARNING: skipping polar map for {var} as it has more than lev dimension, but no pressure levels were provided")
+                            continue
+
+                #Skip this variable/case if the regridded climo file doesn't exist:
                 if mdata is None:
-                    print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
-                    print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
-                    print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
+                    dmsg = f"\t    WARNING: No test file for {case_name} for variable `{var}`, polar lat/lon mean plotting skipped."
+                    adfobj.debug_log(dmsg)
                     continue
-                #End if
+                has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+                if (has_dims['has_lev']) and (not pres_levs):
+                    print(f"\t    WARNING: skipping polar map for {var} as it has more than lev dimension, but no pressure levels were provided")
+                    continue
 
                 if unstruct_plotting:
                     has_dims = {}
