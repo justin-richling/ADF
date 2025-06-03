@@ -308,7 +308,7 @@ class AdfData:
 
     # DataSet and DataArray load
     #---------------------------
-    # TODO, make uxarray options fo all of these fuctions.  
+    # TODO, make uxarray options for all of these fuctions.  
     # What's the most robust way to handle this?
 
     # Load DataSet
