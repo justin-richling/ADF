@@ -305,7 +305,7 @@ def vert_interp(adf):
                     else:
                         rgdata_interp = mclim_ds"""
                     #else:
-                    rgdata_interp = _interpolate_levs(rgdata_interp, var,
+                    rgdata_interp = _interpolate_levs(mclim_ds, var,
                                                                  **regrid_kwargs)
                     #print("DOESNT WORK!",rgdata_interp,"\n\n")
                     #Extract defaults for variable:
