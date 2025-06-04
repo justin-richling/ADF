@@ -1071,24 +1071,47 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     _Note_ The title string constructed by kwargs appears to not be used.
     """
 
+    
+    if not unstructured:
+        lat = umdlfld_nowrap['lat']
+        wgt = np.cos(np.radians(lat))
+
+        # add cyclic longitude:
+        umdlfld, lon = add_cyclic_point(umdlfld_nowrap, coord=umdlfld_nowrap['lon'])
+        vmdlfld, _   = add_cyclic_point(vmdlfld_nowrap, coord=vmdlfld_nowrap['lon'])
+        uobsfld, _   = add_cyclic_point(uobsfld_nowrap, coord=uobsfld_nowrap['lon'])
+        vobsfld, _   = add_cyclic_point(vobsfld_nowrap, coord=vobsfld_nowrap['lon'])
+        udiffld, _   = add_cyclic_point(udiffld_nowrap, coord=udiffld_nowrap['lon'])
+        vdiffld, _   = add_cyclic_point(vdiffld_nowrap, coord=vdiffld_nowrap['lon'])
+
+        # create mesh for plots:
+        lons, lats = np.meshgrid(lon, lat)
+    else:
+        wgt = kwargs["wgt"]
+        indataset = kwargs["indataset"]
+        print("Plotting functions mdlfld",mdlfld,"\n\n")
+        #wrap_fields = (mdlfld, obsfld, pctld, diffld)
+        umdlfld = umdlfld_nowrap
+        vmdlfld = vmdlfld_nowrap
+        uobsfld = uobsfld_nowrap
+        vobsfld = vobsfld_nowrap
+        udiffld = udiffld_nowrap
+        vdiffld = vdiffld_nowrap
+        #area_avg = [global_average(x, wgt) for x in wrap_fields]
+        area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
+        #spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, indataset=None)
+        #spatial_average(indata, weights=None, spatial_dims=None)
+        
+
+        # TODO Check this is correct, weighted rmse uses xarray weighted function
+        #d_rmse = wgt_rmse(a, b, wgt)  
+        #d_rmse = (np.sqrt(((diffld**2)*wgt).sum())).values.item()
+
     # specify the central longitude for the plot:
     cent_long = kwargs.get('central_longitude', 180)
 
     # generate projection:
     proj = ccrs.PlateCarree(central_longitude=cent_long)
-    lat = umdlfld_nowrap['lat']
-    wgt = np.cos(np.radians(lat))
-
-    # add cyclic longitude:
-    umdlfld, lon = add_cyclic_point(umdlfld_nowrap, coord=umdlfld_nowrap['lon'])
-    vmdlfld, _   = add_cyclic_point(vmdlfld_nowrap, coord=vmdlfld_nowrap['lon'])
-    uobsfld, _   = add_cyclic_point(uobsfld_nowrap, coord=uobsfld_nowrap['lon'])
-    vobsfld, _   = add_cyclic_point(vobsfld_nowrap, coord=vobsfld_nowrap['lon'])
-    udiffld, _   = add_cyclic_point(udiffld_nowrap, coord=udiffld_nowrap['lon'])
-    vdiffld, _   = add_cyclic_point(vdiffld_nowrap, coord=vdiffld_nowrap['lon'])
-
-    # create mesh for plots:
-    lons, lats = np.meshgrid(lon, lat)
 
     # create figure:
     fig = plt.figure(figsize=(14,10))
@@ -1160,14 +1183,27 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     #End if
 
     # Generate vector plot:
-    #  - contourf to show magnitude w/ colorbar
-    #  - vectors (colored or not) to show flow --> subjective (?) choice for how to thin out vectors to be legible
-    img1 = ax1.contourf(lons, lats, mdl_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True,)
-    ax1.quiver(lons[skip], lats[skip], umdlfld[skip], vmdlfld[skip], mdl_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
+    # Unstructured grid check
+    if not unstructured:
+        #  - contourf to show magnitude w/ colorbar
+        #  - vectors (colored or not) to show flow --> subjective (?) choice for how to thin out vectors to be legible
+        img1 = ax1.contourf(lons, lats, mdl_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True,)
+        ax1.quiver(lons[skip], lats[skip], umdlfld[skip], vmdlfld[skip], mdl_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
 
-    img2 = ax2.contourf(lons, lats, obs_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True)
-    ax2.quiver(lons[skip], lats[skip], uobsfld[skip], vobsfld[skip], obs_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
-
+        img2 = ax2.contourf(lons, lats, obs_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True)
+        ax2.quiver(lons[skip], lats[skip], uobsfld[skip], vobsfld[skip], obs_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
+    else:
+        #configure for polycollection plotting
+        #TODO, would be nice to have levels set from the info, above
+        ac = a.to_polycollection(projection=proj)
+        img.append(ac)
+        #ac.norm(norm)
+        ac.set_cmap(cmap)
+        ac.set_antialiased(False)
+        ac.set_transform(proj)
+        ac.set_clim(vmin=levels[0],vmax=levels[-1])
+        ax[i].add_collection(ac)
+        # End if unstructured grid
     # We should think about how to do plot customization and defaults.
     # Here I'll just pop off a few custom ones, and then pass the rest into mpl.
     if 'tiString' in kwargs:
