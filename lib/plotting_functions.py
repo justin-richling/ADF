@@ -1140,7 +1140,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     ax1 = plt.subplot(gs[0:2, :3], projection=proj)
     ax2 = plt.subplot(gs[0:2, 3:], projection=proj)
     ax3 = plt.subplot(gs[2, 1:5], projection=proj)
-    ax = [] #ax1,ax2,ax3
+    ax = [ax1,ax2,ax3]
     img = []
 
     # formatting for tick labels
