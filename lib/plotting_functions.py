@@ -1264,7 +1264,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             acm.set_clim(vmin=levels[0],vmax=levels[-1])
             ax[i].add_collection(acm)
             skip = 20
-            ax[i].quiver(lon[::skip], lat[::skip], u_vals[::skip], v_vals[::skip], transform=ccrs.PlateCarree(),cmap='Reds')
+            ax[i].quiver(lons[::skip], lats[::skip], u_vals[::skip], v_vals[::skip], transform=ccrs.PlateCarree(),cmap='Reds')
 
             """acm = mdl_mag.to_polycollection(projection=proj)
             img.append(acm)
