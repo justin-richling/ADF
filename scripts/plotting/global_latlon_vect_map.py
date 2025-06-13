@@ -366,6 +366,8 @@ def global_latlon_vect_map(adfobj):
 
                     unstruct_case = True
                     mdataset = adfobj.data.load_climo_dataset(case_name, data_var[0], **kwargs)
+                    #Determine dimensions of variable:
+                    m_has_dims = pf.validate_dims(umdata, [ "lev"])
                     if comp == "lnd": 
                         area = mdataset.area.isel(time=0)
                         landfrac = mdataset.landfrac.isel(time=0)
@@ -383,7 +385,7 @@ def global_latlon_vect_map(adfobj):
                         adfobj.debug_log(dmsg)
                         continue
                     #Determine dimensions of variable:
-                    m_has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+                    m_has_dims = pf.validate_dims(umdata, ["lat", "lon", "lev"])
                     if (not m_has_dims['has_lat']) or (not m_has_dims['has_lon']):
                         print(f"\t    WARNING: skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                         continue
