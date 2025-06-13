@@ -1266,7 +1266,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             fld_ux = ux.UxDataArray(fld)
             fld_ux._uxgrid = umdlfld_nowrap.uxgrid
             #cp_info = prep_contour_plot(mdl_mag_ma, obs_mag_ma, diff_mag, pct_mag, **kwargs)
-            acm = fld.to_polycollection(projection=proj)
+            acm = fld_ux.to_polycollection(projection=proj)
             img.append(acm)
             #ac.norm(norm)
             acm.set_cmap(cmap)
