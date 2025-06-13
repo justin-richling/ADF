@@ -383,12 +383,12 @@ def global_latlon_vect_map(adfobj):
                         adfobj.debug_log(dmsg)
                         continue
                     #Determine dimensions of variable:
-                    has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
-                    if (not has_dims['has_lat']) or (not has_dims['has_lon']):
+                    m_has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+                    if (not m_has_dims['has_lat']) or (not m_has_dims['has_lon']):
                         print(f"\t    WARNING: skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                         continue
                     else: # i.e., has lat&lon
-                        if (has_dims['has_lev']) and (not pres_levs):
+                        if (m_has_dims['has_lev']) and (not pres_levs):
                             print(f"\t    WARNING: skipping global map for {var} as it has more than lev dimension, but no pressure levels were provided")
                             continue
                 #Skip this variable/case if the regridded climo file doesn't exist:
@@ -504,7 +504,7 @@ def global_latlon_vect_map(adfobj):
                 #   if redo_plot is false: add to website and move on
                 doplot = {}
 
-                if (not u_has_dims['has_lev']) or (not v_has_dims['has_lev']):
+                if (not m_has_dims['has_lev']) or (not o_has_dims['has_lev']):
                     for s in seasons:
                         plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
                         doplot[plot_name] = plot_file_op(adfobj, plot_name, var, case_name, s, web_category, redo_plot, "LatLon")
