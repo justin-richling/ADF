@@ -504,7 +504,7 @@ def global_latlon_vect_map(adfobj):
                 #   if redo_plot is false: add to website and move on
                 doplot = {}
 
-                if not has_dims['has_lev']:
+                if (not u_has_dims['has_lev']) or (not v_has_dims['has_lev']):
                     for s in seasons:
                         plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
                         doplot[plot_name] = plot_file_op(adfobj, plot_name, var, case_name, s, web_category, redo_plot, "LatLon")
@@ -546,11 +546,11 @@ def global_latlon_vect_map(adfobj):
                             #exists in the model data, which should already
                             #have been interpolated to the standard reference
                             #pressure levels:
-                            if not (lv in umclim_ds['lev']):
+                            """if not (lv in umclim_ds['lev']):
                                 #Move on to the next pressure level:
                                 print(f"\t plot_press_levels value '{lv}' not a standard reference pressure, so skipping.")
                                 continue
-                            #End if
+                            #End if"""
 
                             if (not (pres in umdata['lev'])) or (not (pres in uodata['lev'])):
                                 print(f"\t    WARNING: plot_press_levels value '{pres}' not present in {var} [test: {(pres in umdata['lev'])}, ref: {pres in uodata['lev']}], so skipping.")
