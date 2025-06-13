@@ -1141,6 +1141,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     ax2 = plt.subplot(gs[0:2, 3:], projection=proj)
     ax3 = plt.subplot(gs[2, 1:5], projection=proj)
     #ax = [ax1,ax2,ax3]
+    img = []
 
     # formatting for tick labels
     lon_formatter = LongitudeFormatter(number_format='0.0f',
@@ -1208,8 +1209,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         normdiff = mpl.colors.Normalize(vmin=min_diff_val, vmax=max_diff_val)
     #End if"""
 
-    wrap_fields = (mdl_mag, obs_mag, diff_mag, pct_mag)
-    other_wrap_fields = ([umdlfld, vmdlfld], [uobsfld, vobsfld], [udiffld, vdiffld], [upctld, vpctld])
+    wrap_fields = (mdl_mag, obs_mag, diff_mag)#pct_mag
+    other_wrap_fields = ([umdlfld, vmdlfld], [uobsfld, vobsfld], [udiffld, vdiffld])#, [upctld, vpctld]
     for i, fld in enumerate(wrap_fields):
 
         """if i == len(wrap_fields)-1:
@@ -1351,9 +1352,9 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                        fontsize=tiFontSize)
     ax3.set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {diff_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-    ax4.set_title(f"Mean: {pct_mag.weighted(wgt).mean().item():5.2f}\nMax: {pct_mag.max():5.2f}\nMin: {pct_mag.min():5.2f}", loc='right',
-                       fontsize=tiFontSize)
-    pct_mag
+    #ax4.set_title(f"Mean: {pct_mag.weighted(wgt).mean().item():5.2f}\nMax: {pct_mag.max():5.2f}\nMin: {pct_mag.min():5.2f}", loc='right',
+    #                   fontsize=tiFontSize)
+
 
     # set rmse title:
     ax3.set_title(f"RMSE: ", fontsize=tiFontSize)
@@ -1386,7 +1387,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                    bbox_transform=ax2.transAxes,
                    borderpad=0,
                    )
-    fig.colorbar(img2, cax=cb_c2_ax)
+    fig.colorbar(img[1], cax=cb_c2_ax)
 
     ## Plot vector differences:
     #img3 = ax3.contourf(lons, lats, diff_mag, transform=ccrs.PlateCarree(), transform_first=True, norm=normdiff, cmap='PuOr', alpha=0.5)
@@ -1401,7 +1402,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                    bbox_transform=ax3.transAxes,
                    borderpad=0
                    )
-    fig.colorbar(img3, cax=cb_d_ax)
+    fig.colorbar(img[2], cax=cb_d_ax)
 
     # Write final figure to file
     fig.savefig(wks, bbox_inches='tight', dpi=300)
