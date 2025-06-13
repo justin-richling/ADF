@@ -1076,6 +1076,9 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         lat = umdlfld_nowrap['lat']
         wgt = np.cos(np.radians(lat))
 
+         # create mesh for plots:
+        lons, lats = np.meshgrid(lon, lat)
+
         # add cyclic longitude:
         umdlfld, lon = add_cyclic_point(umdlfld_nowrap, coord=umdlfld_nowrap['lon'])
         vmdlfld, _   = add_cyclic_point(vmdlfld_nowrap, coord=vmdlfld_nowrap['lon'])
@@ -1089,7 +1092,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     else:
         wgt = kwargs["wgt"]
         indataset = kwargs["indataset"]
-        print("Plotting functions mdlfld",mdlfld,"\n\n")
+
         #wrap_fields = (mdlfld, obsfld, pctld, diffld)
         umdlfld = umdlfld_nowrap
         vmdlfld = vmdlfld_nowrap
@@ -1097,6 +1100,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         vobsfld = vobsfld_nowrap
         udiffld = udiffld_nowrap
         vdiffld = vdiffld_nowrap
+        #wrap_fields = (umdlfld, vmdlfld, uobsfld, vobsfld, udiffld, vdiffld)
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
         area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
         #spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, indataset=None)
@@ -1107,8 +1111,13 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         #d_rmse = wgt_rmse(a, b, wgt)  
         #d_rmse = (np.sqrt(((diffld**2)*wgt).sum())).values.item()
 
+    #wrap_fields = (umdlfld, vmdlfld, uobsfld, vobsfld, udiffld, vdiffld)
+
     # specify the central longitude for the plot:
     cent_long = kwargs.get('central_longitude', 180)
+
+    # generate dictionary of contour plot settings:
+    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
 
     # generate projection:
     proj = ccrs.PlateCarree(central_longitude=cent_long)
@@ -1122,7 +1131,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     ax1 = plt.subplot(gs[0:2, :3], projection=proj)
     ax2 = plt.subplot(gs[0:2, 3:], projection=proj)
     ax3 = plt.subplot(gs[2, 1:5], projection=proj)
-    ax = [ax1,ax2,ax3]
+    #ax = [ax1,ax2,ax3]
 
     # formatting for tick labels
     lon_formatter = LongitudeFormatter(number_format='0.0f',
@@ -1182,28 +1191,108 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         normdiff = mpl.colors.Normalize(vmin=min_diff_val, vmax=max_diff_val)
     #End if
 
-    # Generate vector plot:
-    # Unstructured grid check
-    if not unstructured:
-        #  - contourf to show magnitude w/ colorbar
-        #  - vectors (colored or not) to show flow --> subjective (?) choice for how to thin out vectors to be legible
-        img1 = ax1.contourf(lons, lats, mdl_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True,)
-        ax1.quiver(lons[skip], lats[skip], umdlfld[skip], vmdlfld[skip], mdl_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
+    wrap_fields = (mdl_mag, obs_mag, diff_mag)
+    other_wrap_fields = ([umdlfld, vmdlfld], [uobsfld, vobsfld], [udiffld, vdiffld])
+    for i, fld in enumerate(wrap_fields):
 
-        img2 = ax2.contourf(lons, lats, obs_mag, cmap='Greys', transform=ccrs.PlateCarree(), transform_first=True)
-        ax2.quiver(lons[skip], lats[skip], uobsfld[skip], vobsfld[skip], obs_mag.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
-    else:
-        #configure for polycollection plotting
-        #TODO, would be nice to have levels set from the info, above
-        ac = a.to_polycollection(projection=proj)
-        img.append(ac)
-        #ac.norm(norm)
-        ac.set_cmap(cmap)
-        ac.set_antialiased(False)
-        ac.set_transform(proj)
-        ac.set_clim(vmin=levels[0],vmax=levels[-1])
-        ax[i].add_collection(ac)
-        # End if unstructured grid
+        """if i == len(wrap_fields)-1:
+            levels = cp_info['levelsdiff']
+            cmap = cp_info['cmapdiff']
+            norm = cp_info['normdiff']
+        #elif i == len(wrap_fields)-2:
+        #    levels = cp_info['levelspctdiff']
+        #    cmap = cp_info['cmappct']
+        #    norm = cp_info['pctnorm']
+        else:
+            levels = cp_info['levels1']
+            cmap = cp_info['cmap1']
+            norm = cp_info['norm1']"""
+
+        # Unstructured grid check
+        if not unstructured:
+            levs = np.unique(np.array(levels))
+            if len(levs) < 2:
+                img.append(ax[i].contourf(lons,lats,fld,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
+                ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
+            else:
+                #  - contourf to show magnitude w/ colorbar
+                #  - vectors (colored or not) to show flow --> subjective (?) choice for how to thin out vectors to be legible
+                if i == len(wrap_fields)-1:
+                    levels = cp_info['levelsdiff']
+                    cmap = cp_info.get('cmapdiff','PuOr')
+                    norm = cp_info['normdiff']
+                #elif i == len(wrap_fields)-2:
+                #    levels = cp_info['levelspctdiff']
+                #    cmap = cp_info['cmappct']
+                #    norm = cp_info['pctnorm']
+                else:
+                    levels = cp_info['levels1']
+                    cmap = cp_info.get('cmap1','Greys')
+                    norm = cp_info['norm1']
+                ax[i].contourf(lons, lats, fld, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True,)
+                ua, va = other_wrap_fields[i]
+                ax[i].quiver(lons[skip], lats[skip], ua[skip], va[skip], fld.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
+                #ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
+        else:
+            #configure for polycollection plotting
+            #TODO, would be nice to have levels set from the info, above
+            """ac = a.to_polycollection(projection=proj)
+            img.append(ac)
+            #ac.norm(norm)
+            ac.set_cmap(cmap)
+            ac.set_antialiased(False)
+            ac.set_transform(proj)
+            ac.set_clim(vmin=levels[0],vmax=levels[-1])
+            ax[i].add_collection(ac)"""
+
+            fld
+            acm = fld.to_polycollection(projection=proj)
+            img.append(acm)
+            #ac.norm(norm)
+            acm.set_cmap(cmap)
+            acm.set_antialiased(False)
+            acm.set_transform(proj)
+            acm.set_clim(vmin=levels[0],vmax=levels[-1])
+            ax[i].add_collection(acm)
+
+            """acm = mdl_mag.to_polycollection(projection=proj)
+            img.append(acm)
+            #ac.norm(norm)
+            acm.set_cmap(cmap)
+            acm.set_antialiased(False)
+            acm.set_transform(proj)
+            acm.set_clim(vmin=levels[0],vmax=levels[-1])
+            ax1.add_collection(acm)
+
+            aco = obs_mag.to_polycollection(projection=proj)
+            img.append(aco)
+            #ac.norm(norm)
+            aco.set_cmap(cmap)
+            aco.set_antialiased(False)
+            aco.set_transform(proj)
+            aco.set_clim(vmin=levels[0],vmax=levels[-1])
+            ax1.add_collection(aco)
+
+            acd = diff_mag.to_polycollection(projection=proj)
+            img.append(acd)
+            #ac.norm(norm)
+            acd.set_cmap('PuOr')
+            acd.set_antialiased(False)
+            acd.set_transform(proj)
+            acd.set_clim(vmin=levels[0],vmax=levels[-1])
+            ax3.add_collection(acd)"""
+            # End if unstructured grid
+            # Add cosmetic plot features:
+
+        ax[i].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+        ax[i].coastlines()
+        ax[i].set_xticks(np.linspace(-180, 120, 6), crs=ccrs.PlateCarree())
+        ax[i].set_yticks(np.linspace(-90, 90, 7), crs=ccrs.PlateCarree())
+        ax[i].tick_params('both', length=5, width=1.5, which='major')
+        ax[i].tick_params('both', length=5, width=1.5, which='minor')
+        ax[i].xaxis.set_major_formatter(lon_formatter)
+        ax[i].yaxis.set_major_formatter(lat_formatter)
+
     # We should think about how to do plot customization and defaults.
     # Here I'll just pop off a few custom ones, and then pass the rest into mpl.
     if 'tiString' in kwargs:
@@ -1222,35 +1311,36 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
     #Set plot titles
     case_title = "$\mathbf{Test}:$"+f"{case_nickname}\nyears: {case_climo_yrs[0]}-{case_climo_yrs[-1]}"
-    ax[0].set_title(case_title, loc='left', fontsize=tiFontSize)
+    ax1.set_title(case_title, loc='left', fontsize=tiFontSize)
 
     if obs:
         obs_var = kwargs["obs_var_name"]
         obs_title = kwargs["obs_file"][:-3]
         base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
-        ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)
+        ax2.set_title(base_title, loc='left', fontsize=tiFontSize)
     else:
         base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
-        ax[1].set_title(base_title, loc='left', fontsize=tiFontSize)
+        ax2.set_title(base_title, loc='left', fontsize=tiFontSize)
 
     #Set stats: area_avg
-    ax[0].set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
+    ax1.set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-    ax[1].set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
+    ax2.set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-    ax[-1].set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
+    ax3.set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
 
     # set rmse title:
-    ax[-1].set_title(f"RMSE: ", fontsize=tiFontSize)
-    ax[-1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
+    ax3.set_title(f"RMSE: ", fontsize=tiFontSize)
+    ax3.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
 
     if "units" in kwargs:
-        ax[1].set_ylabel(f"[{kwargs['units']}]")
-        ax[-1].set_ylabel(f"[{kwargs['units']}]")
+        ax3.set_ylabel(f"[{kwargs['units']}]")
+        ax3.set_ylabel(f"[{kwargs['units']}]")
     #End if
 
-    # Add cosmetic plot features:
+    """# Add cosmetic plot features:
+    ax = [ax1,ax2,ax3]
     for a in ax:
         a.spines['geo'].set_linewidth(1.5) #cartopy's recommended method
         a.coastlines()
@@ -1259,7 +1349,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         a.tick_params('both', length=5, width=1.5, which='major')
         a.tick_params('both', length=5, width=1.5, which='minor')
         a.xaxis.set_major_formatter(lon_formatter)
-        a.yaxis.set_major_formatter(lat_formatter)
+        a.yaxis.set_major_formatter(lat_formatter)"""
     #End for
 
     # Add colorbar to vector plot:
@@ -1273,9 +1363,9 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                    )
     fig.colorbar(img2, cax=cb_c2_ax)
 
-    # Plot vector differences:
-    img3 = ax3.contourf(lons, lats, diff_mag, transform=ccrs.PlateCarree(), transform_first=True, norm=normdiff, cmap='PuOr', alpha=0.5)
-    ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
+    ## Plot vector differences:
+    #img3 = ax3.contourf(lons, lats, diff_mag, transform=ccrs.PlateCarree(), transform_first=True, norm=normdiff, cmap='PuOr', alpha=0.5)
+    #ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
 
     # Add color bar to difference plot:
     cb_d_ax = inset_axes(ax3,
