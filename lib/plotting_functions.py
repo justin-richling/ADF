@@ -1078,9 +1078,6 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         lat = umdlfld_nowrap['lat']
         wgt = np.cos(np.radians(lat))
 
-         # create mesh for plots:
-        lons, lats = np.meshgrid(lon, lat)
-
         # add cyclic longitude:
         umdlfld, lon = add_cyclic_point(umdlfld_nowrap, coord=umdlfld_nowrap['lon'])
         vmdlfld, _   = add_cyclic_point(vmdlfld_nowrap, coord=vmdlfld_nowrap['lon'])
@@ -1096,6 +1093,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     else:
         wgt = kwargs["wgt"]
         indataset = kwargs["indataset"]
+        grid = ux.open_grid(kwargs["mesh_file"])
 
         #wrap_fields = (mdlfld, obsfld, pctld, diffld)
         umdlfld = umdlfld_nowrap
@@ -1106,6 +1104,11 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         vdiffld = vdiffld_nowrap
         upctld = upctld_nowrap
         vpctld = vpctld_nowrap
+
+        # Use face (cell-centered) coordinates
+        lons = grid.face_lon.values
+        lats = grid.face_lat.values
+
         #wrap_fields = (umdlfld, vmdlfld, uobsfld, vobsfld, udiffld, vdiffld)
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
         #area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
@@ -1260,6 +1263,9 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             ax[i].add_collection(ac)"""
 
             fld
+            fld_ux = ux.UxDataArray(fld)
+            fld_ux._uxgrid = umdlfld_nowrap.uxgrid
+            #cp_info = prep_contour_plot(mdl_mag_ma, obs_mag_ma, diff_mag, pct_mag, **kwargs)
             acm = fld.to_polycollection(projection=proj)
             img.append(acm)
             #ac.norm(norm)

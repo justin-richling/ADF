@@ -362,6 +362,7 @@ def global_latlon_vect_map(adfobj):
                 if unstruct_plotting:
                     mesh_file = adfobj.mesh_files["test_mesh_file"][case_idx]
                     kwargs["mesh_file"] = mesh_file
+                    vres["mesh_file"] = mesh_file
                     umdata = adfobj.data.load_climo_da(case_name, data_var[0], **kwargs)
                     vmdata = adfobj.data.load_climo_da(case_name, data_var[1], **kwargs)
 
