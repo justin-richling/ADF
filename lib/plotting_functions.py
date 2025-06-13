@@ -1226,6 +1226,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             cmap = cp_info.get('cmap1','Greys')
             norm = cp_info['norm1']
 
+        ua, va = other_wrap_fields[i]
+
         # Unstructured grid check
         if not unstructured:
             levs = np.unique(np.array(levels))
@@ -1236,7 +1238,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                 #  - contourf to show magnitude w/ colorbar
                 #  - vectors (colored or not) to show flow --> subjective (?) choice for how to thin out vectors to be legible
                 ax[i].contourf(lons, lats, fld, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True,)
-                ua, va = other_wrap_fields[i]
+                #ua, va = other_wrap_fields[i]
                 ax[i].quiver(lons[skip], lats[skip], ua[skip], va[skip], fld.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
                 #ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
         else:
@@ -1264,7 +1266,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             acm.set_clim(vmin=levels[0],vmax=levels[-1])
             ax[i].add_collection(acm)
             skip = 20
-            ax[i].quiver(lons[::skip], lats[::skip], u_vals[::skip], v_vals[::skip], transform=ccrs.PlateCarree(),cmap='Reds')
+            ax[i].quiver(lons[::skip], lats[::skip], ua[::skip], va[::skip], transform=ccrs.PlateCarree(),cmap='Reds')
 
             """acm = mdl_mag.to_polycollection(projection=proj)
             img.append(acm)
