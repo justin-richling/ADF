@@ -1026,7 +1026,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                            case_climo_yrs, baseline_climo_yrs,
                            plev, umdlfld_nowrap, vmdlfld_nowrap,
                            uobsfld_nowrap, vobsfld_nowrap,
-                           udiffld_nowrap, vdiffld_nowrap, obs=False, **kwargs):
+                           udiffld_nowrap, vdiffld_nowrap, obs=False,
+                           unstructured=unstructured, **kwargs):
 
     """This plots a vector plot.
 
