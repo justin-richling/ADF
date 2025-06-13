@@ -1117,8 +1117,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     # specify the central longitude for the plot:
     cent_long = kwargs.get('central_longitude', 180)
 
-    # generate dictionary of contour plot settings:
-    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
+    """# generate dictionary of contour plot settings:
+    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)"""
 
     # generate projection:
     proj = ccrs.PlateCarree(central_longitude=cent_long)
@@ -1181,7 +1181,10 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     obs_mag  = xr.DataArray(obs_mag_ma)
     diff_mag = mdl_mag - obs_mag
 
-    # Get difference limits, in order to plot the correct range:
+    # generate dictionary of contour plot settings:
+    cp_info = prep_contour_plot(mdl_mag_ma, obs_mag_ma, diff_mag, **kwargs)
+
+    """# Get difference limits, in order to plot the correct range:
     min_diff_val = np.min(diff_mag)
     max_diff_val = np.max(diff_mag)
 
@@ -1190,7 +1193,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         normdiff = mpl.colors.TwoSlopeNorm(vmin=min_diff_val, vmax=max_diff_val, vcenter=0.0)
     else:
         normdiff = mpl.colors.Normalize(vmin=min_diff_val, vmax=max_diff_val)
-    #End if
+    #End if"""
 
     wrap_fields = (mdl_mag, obs_mag, diff_mag)
     other_wrap_fields = ([umdlfld, vmdlfld], [uobsfld, vobsfld], [udiffld, vdiffld])
