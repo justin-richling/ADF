@@ -1213,9 +1213,9 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     other_wrap_fields = ([umdlfld, vmdlfld], [uobsfld, vobsfld], [udiffld, vdiffld])#, [upctld, vpctld]
     for i, fld in enumerate(wrap_fields):
 
-        """if i == len(wrap_fields)-1:
+        if i == len(wrap_fields)-1:
             levels = cp_info['levelsdiff']
-            cmap = cp_info['cmapdiff']
+            cmap = cp_info.get('cmapdiff','PuOr')
             norm = cp_info['normdiff']
         #elif i == len(wrap_fields)-2:
         #    levels = cp_info['levelspctdiff']
@@ -1223,8 +1223,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         #    norm = cp_info['pctnorm']
         else:
             levels = cp_info['levels1']
-            cmap = cp_info['cmap1']
-            norm = cp_info['norm1']"""
+            cmap = cp_info.get('cmap1','Greys')
+            norm = cp_info['norm1']
 
         # Unstructured grid check
         if not unstructured:
@@ -1235,18 +1235,6 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             else:
                 #  - contourf to show magnitude w/ colorbar
                 #  - vectors (colored or not) to show flow --> subjective (?) choice for how to thin out vectors to be legible
-                if i == len(wrap_fields)-1:
-                    levels = cp_info['levelsdiff']
-                    cmap = cp_info.get('cmapdiff','PuOr')
-                    norm = cp_info['normdiff']
-                #elif i == len(wrap_fields)-2:
-                #    levels = cp_info['levelspctdiff']
-                #    cmap = cp_info['cmappct']
-                #    norm = cp_info['pctnorm']
-                else:
-                    levels = cp_info['levels1']
-                    cmap = cp_info.get('cmap1','Greys')
-                    norm = cp_info['norm1']
                 ax[i].contourf(lons, lats, fld, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True,)
                 ua, va = other_wrap_fields[i]
                 ax[i].quiver(lons[skip], lats[skip], ua[skip], va[skip], fld.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
