@@ -505,7 +505,7 @@ def global_latlon_vect_map(adfobj):
                 # If file exists:
                 #   if redo_plot is true: delete it now and make plot
                 #   if redo_plot is false: add to website and move on
-                doplot = {}
+                """doplot = {}
 
                 if (not m_has_dims['has_lev']) or (not o_has_dims['has_lev']):
                     for s in seasons:
@@ -518,7 +518,7 @@ def global_latlon_vect_map(adfobj):
                             doplot[plot_name] = plot_file_op(adfobj, plot_name, f"{var}_{pres}hpa", case_name, s, web_category, redo_plot, "LatLon")
                 if all(value is None for value in doplot.values()):
                     print(f"\t    INFO: All plots exist for {var}. Redo is {redo_plot}. Existing plots added to website data. Continue.")
-                    continue
+                    continue"""
 
                 #If both fields have the required dimensions, then
                 #proceed with plotting:
