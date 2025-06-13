@@ -308,6 +308,7 @@ def global_latlon_vect_map(adfobj):
 
                 unstruct_base = True
                 odataset = adfobj.data.load_reference_climo_dataset(base_name, data_var[0], **kwargs)
+                o_has_dims = pf.validate_dims(uodata, [ "lev"])
                 if comp == "lnd": 
                     area = odataset.area.isel(time=0)
                     landfrac = odataset.landfrac.isel(time=0)
