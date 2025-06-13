@@ -539,6 +539,8 @@ def global_latlon_vect_map(adfobj):
                     voseasons = {}
                     udseasons = {} # hold the differences
                     vdseasons = {} # hold the differences
+                    upseasons = {}
+                    vpseasons = {}
                     print("m_has_dims",m_has_dims,"\n\n")
                     if m_has_dims['has_lev']:
 
