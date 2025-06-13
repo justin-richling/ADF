@@ -1103,7 +1103,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         vdiffld = vdiffld_nowrap
         #wrap_fields = (umdlfld, vmdlfld, uobsfld, vobsfld, udiffld, vdiffld)
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
-        area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
+        #area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
         #spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, indataset=None)
         #spatial_average(indata, weights=None, spatial_dims=None)
         
