@@ -624,6 +624,10 @@ def global_latlon_vect_map(adfobj):
                             udseasons[s] = umseasons[s] - uoseasons[s]
                             vdseasons[s] = vmseasons[s] - voseasons[s]
 
+                            # percent change
+                            upseasons[s] = (umseasons[s] - uoseasons[s]) / np.abs(uoseasons[s]) * 100.0 #relative change
+                            vpseasons[s] = (vmseasons[s] - voseasons[s]) / np.abs(voseasons[s]) * 100.0 #relative change
+
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
                             # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                             plot_name = plot_loc / f"{var_name}_{s}_LatLon_Vector_Mean.{plot_type}"
@@ -658,7 +662,8 @@ def global_latlon_vect_map(adfobj):
                                                       [syear_baseline,eyear_baseline], None,
                                                       umseasons[s], vmseasons[s],
                                                       uoseasons[s], voseasons[s],
-                                                      udseasons[s], vdseasons[s], obs,
+                                                      udseasons[s], vdseasons[s],
+                                                      upseasons[s], vpseasons[s], obs,
                                                       unstructured=unstructured, **vres)
 
                             #Add plot to website (if enabled):

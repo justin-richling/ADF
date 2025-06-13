@@ -1026,7 +1026,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
                            case_climo_yrs, baseline_climo_yrs,
                            plev, umdlfld_nowrap, vmdlfld_nowrap,
                            uobsfld_nowrap, vobsfld_nowrap,
-                           udiffld_nowrap, vdiffld_nowrap, obs,
+                           udiffld_nowrap, vdiffld_nowrap,
+                           upctld_nowrap, vpctld_nowrap, obs,
                            unstructured, **kwargs):
 
     """This plots a vector plot.
@@ -1087,6 +1088,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         vobsfld, _   = add_cyclic_point(vobsfld_nowrap, coord=vobsfld_nowrap['lon'])
         udiffld, _   = add_cyclic_point(udiffld_nowrap, coord=udiffld_nowrap['lon'])
         vdiffld, _   = add_cyclic_point(vdiffld_nowrap, coord=vdiffld_nowrap['lon'])
+        upctld, _   = add_cyclic_point(upctld_nowrap, coord=upctld_nowrap['lon'])
+        vpctld, _   = add_cyclic_point(vpctld_nowrap, coord=vpctld_nowrap['lon'])
 
         # create mesh for plots:
         lons, lats = np.meshgrid(lon, lat)
@@ -1101,6 +1104,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         vobsfld = vobsfld_nowrap
         udiffld = udiffld_nowrap
         vdiffld = vdiffld_nowrap
+        upctld = upctld_nowrap
+        vpctld = vpctld_nowrap
         #wrap_fields = (umdlfld, vmdlfld, uobsfld, vobsfld, udiffld, vdiffld)
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
         #area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
@@ -1176,13 +1181,18 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     mdl_mag_ma  = np.sqrt(umdlfld**2 + vmdlfld**2)
     obs_mag_ma  = np.sqrt(uobsfld**2 + vobsfld**2)
 
+    mdl_mag_ma  = np.sqrt(umdlfld**2 + vmdlfld**2)
+    obs_mag_ma  = np.sqrt(uobsfld**2 + vobsfld**2)
+
     #Convert vector magnitudes to xarray DataArrays:
     mdl_mag  = xr.DataArray(mdl_mag_ma)
     obs_mag  = xr.DataArray(obs_mag_ma)
     diff_mag = mdl_mag - obs_mag
+    pct_mag = ((mdl_mag_ma - obs_mag)/ np.abs(obs_mag))*100
+    #(vmseasons[s] - voseasons[s]) / np.abs(voseasons[s]) * 100.0 #relative change
 
     # generate dictionary of contour plot settings:
-    cp_info = prep_contour_plot(mdl_mag_ma, obs_mag_ma, diff_mag, **kwargs)
+    cp_info = prep_contour_plot(mdl_mag_ma, obs_mag_ma, diff_mag, pct_mag, **kwargs)
 
     """# Get difference limits, in order to plot the correct range:
     min_diff_val = np.min(diff_mag)
@@ -1195,8 +1205,8 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         normdiff = mpl.colors.Normalize(vmin=min_diff_val, vmax=max_diff_val)
     #End if"""
 
-    wrap_fields = (mdl_mag, obs_mag, diff_mag)
-    other_wrap_fields = ([umdlfld, vmdlfld], [uobsfld, vobsfld], [udiffld, vdiffld])
+    wrap_fields = (mdl_mag, obs_mag, diff_mag, pct_mag)
+    other_wrap_fields = ([umdlfld, vmdlfld], [uobsfld, vobsfld], [udiffld, vdiffld], [upctld, vpctld])
     for i, fld in enumerate(wrap_fields):
 
         """if i == len(wrap_fields)-1:
@@ -1331,10 +1341,13 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     #Set stats: area_avg
     ax1.set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-    ax2.set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
+    ax2.set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.max():5.2f}\nMin: {obs_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-    ax3.set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
+    ax3.set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {diff_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
+    ax4.set_title(f"Mean: {pct_mag.weighted(wgt).mean().item():5.2f}\nMax: {pct_mag.max():5.2f}\nMin: {pct_mag.min():5.2f}", loc='right',
+                       fontsize=tiFontSize)
+    pct_mag
 
     # set rmse title:
     ax3.set_title(f"RMSE: ", fontsize=tiFontSize)
