@@ -165,6 +165,10 @@ def amwg_table(adf):
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
 
+        is_baseline = False
+        if (not adf.get_basic_info("compare_obs")) and (case_name == baseline_name):
+            is_baseline = True
+
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_idx])
 
@@ -204,7 +208,7 @@ def amwg_table(adf):
             #Notify users of variable being added to table:
             print(f"\t - Variable '{var}' being added to table")
 
-            #Create list of time series files present for variable:
+            """#Create list of time series files present for variable:
             ts_filenames = f'{case_name}.*.{var}.*nc'
             ts_files = sorted(input_location.glob(ts_filenames))
 
@@ -225,7 +229,16 @@ def amwg_table(adf):
 
             #Load model variable data from file:
             ds = pf.load_dataset(ts_files)
-            data = ds[var]
+            data = ds[var]"""
+
+            #Create list of time series files present for variable:
+            # Note that we hard-code for h0 because we only want to make climos of monthly output
+            if is_baseline:
+                #ts_files = adf.data.get_ref_timeseries_file(var)
+                data = load_reference_timeseries_da(var)
+            else:
+                #ts_files = adf.data.get_timeseries_file(case_name, var)
+                data = load_timeseries_da(case_name, var)
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
