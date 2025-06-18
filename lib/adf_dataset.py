@@ -334,8 +334,8 @@ class AdfData:
                     msg += "\n\t   NOTE: many mesh files can be found at /glade/campaign/cesm/cesmdata/inputdata/share/meshes/"
                     print(msg)
                     ds = None
-                mesh = kwargs["mesh_file"]
-                ds = ux.open_dataset(mesh, sfil)
+                mesh_file = kwargs["mesh_file"]
+                ds = ux.open_dataset(mesh_file, sfil)
             else:
                 ds = xr.open_dataset(sfil)
         if ds is None:
