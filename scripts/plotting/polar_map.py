@@ -177,8 +177,7 @@ def polar_map(adfobj):
                 data_name = data_src
 
             if unstruct_plotting:
-                mesh_file = adfobj.mesh_files["baseline_mesh_file"]
-                kwargs["mesh_file"] = mesh_file
+                kwargs["mesh_file"] = adfobj.mesh_files["baseline_mesh_file"]
                 #odata = adfobj.data.load_reference_climo_da(data_name, data_var, **kwargs)
                 odata = adfobj.data.load_reference_regrid_da(data_name, data_var, **kwargs)
                 #if ('ncol' in odata.dims) or ('lndgrid' in odata.dims):
@@ -228,8 +227,7 @@ def polar_map(adfobj):
                     plot_loc.mkdir(parents=True)
 
                 if unstruct_plotting:
-                    mesh_file = adfobj.mesh_files["test_mesh_file"][case_idx]
-                    kwargs["mesh_file"] = mesh_file
+                    kwargs["mesh_file"] = adfobj.mesh_files["test_mesh_file"][case_idx]
                     #mdata = adfobj.data.load_climo_da(case_name, var, **kwargs)
                     mdata = adfobj.data.load_regrid_da(case_name, var, **kwargs)
 
