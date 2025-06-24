@@ -338,16 +338,16 @@ def create_TEM_files(adf):
             ds_h0_lats = ds_h0.interp({lat_coord_name: za_lats})
 
             #ds_h0_lats = ds_h0.interp(zalat=za_lats)
-            print("WHY DID THISNOT BREAK BEFORE?",ds_h0_lats['PS'])
-            #zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon').compute()
-            #zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon').compute()
+            #print("WHY DID THISNOT BREAK BEFORE?",ds_h0_lats['PS'])
+            zonal_mean_PS = ds_h0_lats['PS']#.mean(dim='lon').compute()
+            zonal_mean_PMID = ds_h0_lats['PMID']#.mean(dim='lon').compute()
 
             #Update the attributes
             dstem0.attrs = ds.attrs
             dstem0.attrs['created'] = str(date.today())
             dstem0['lev']=ds['lev']
-            #dstem0['PS'] = zonal_mean_PS
-            #dstem0['PMID'] = zonal_mean_PMID
+            dstem0['PS'] = zonal_mean_PS
+            dstem0['PMID'] = zonal_mean_PMID
 
             dstem0.to_netcdf(tem_fil, unlimited_dims='time', mode='w')
 
