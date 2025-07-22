@@ -156,7 +156,7 @@ class AdfDiag(AdfWeb):
     post-processed data.
     """
 
-    def __init__(self, config_file, debug=False):
+    def __init__(self, config_file, debug=False, use_dask=None):
         """
         Initalize ADF diagnostics object.
         """
@@ -179,6 +179,10 @@ class AdfDiag(AdfWeb):
         # Provide convenience functions for data handling:
         self.data = AdfData(self)
 
+        # Enable Dask
+        config_dask = self.read_config_var("use_dask", default=False)
+        self.use_dask = config_dask if use_dask is None else use_dask
+
     # Create property needed to return "plotting_scripts" variable to user:
     @property
     def plotting_scripts(self):
@@ -191,7 +195,7 @@ class AdfDiag(AdfWeb):
     # Script-running functions
     #########
 
-    def __diag_scripts_caller(
+    '''def __diag_scripts_caller(
         self,
         scripts_dir: str,
         func_names: list,
@@ -209,6 +213,9 @@ class AdfDiag(AdfWeb):
         log_section    : optional variable that specifies where the log entries are coming from.
                          Note:  Is it better to just make a child log instead?
         """
+
+        import os, sys
+        task_list = []
 
         # Loop over all averaging script names:
         for func_name in func_names:
@@ -281,7 +288,96 @@ class AdfDiag(AdfWeb):
             # Call function
             self.__function_caller(
                 func_name, func_kwargs=func_kwargs, module_name=func_name
+            )'''
+    
+    def __diag_scripts_caller(
+            self,
+            scripts_dir: str,
+            func_names: list,
+            default_kwargs: Optional[dict] = None,
+            log_section: Optional[str] = None,
+        ):
+        """
+        Parse a list of scripts as provided by the config file,
+        and call them as functions while passing in the correct inputs.
+        Supports Dask parallelization if self.use_dask is True.
+        """
+        import os
+        import sys
+
+        task_list = []
+
+        for func_name in func_names:
+            if isinstance(func_name, dict):
+                emsg = "Function dictionary must be of the form: "
+                emsg += "{function_name : {kwargs:{...}, module:'xxxx'}}"
+                assert len(func_name) == 1, emsg
+                has_opt = True
+                opt = list(func_name.values())[0]
+                func_name = list(func_name.keys())[0]
+            elif isinstance(func_name, str):
+                has_opt = False
+                opt = ''
+            else:
+                raise TypeError("Provided script must either be a string or a dictionary.")
+
+            func_script = func_name + ".py"
+            if has_opt and "module" in opt:
+                func_script = opt["module"]
+
+            func_script_path = os.path.join(_DIAG_SCRIPTS_PATH, scripts_dir, func_script)
+
+            if not os.path.exists(func_script_path):
+                emsg = f"Script file '{func_script_path}' is missing. Diagnostics are ending here."
+                self.end_diag_fail(emsg)
+
+            if func_script_path not in sys.path:
+                dmsg = f"{log_section or 'diag_scripts_caller'}: Inserting to sys.path: {func_script_path}"
+                self.debug_log(dmsg)
+                sys.path.insert(0, func_script_path)
+
+            func_kwargs = default_kwargs
+            if has_opt and "kwargs" in opt:
+                func_kwargs = opt["kwargs"]
+
+            dmsg = f"{log_section or 'diag_scripts_caller'}: \n \t func_name = {func_name}\n \t func_kwargs = {func_kwargs}"
+            self.debug_log(dmsg)
+
+            # Wrap the call depending on Dask flag
+            if self.use_dask:
+                from dask import delayed
+                task = delayed(self.__function_caller)(func_name, func_kwargs=func_kwargs, module_name=func_name)
+            else:
+                task = lambda: self.__function_caller(func_name, func_kwargs=func_kwargs, module_name=func_name)
+
+            task_list.append(task)
+
+        # Run the tasks
+        if self.use_dask:
+            from dask.diagnostics import ProgressBar
+            from dask.distributed import Client
+            from dask_jobqueue import PBSCluster
+
+            self.debug_log("Starting Dask parallel plotting using PBSCluster...")
+
+            cluster = PBSCluster(
+                cores=1,
+                memory="2GB",
+                processes=1,
+                walltime="00:30:00",
+                interface="ib0",
+                job_extra=["-A YOUR_PROJECT_CODE", "-q casper"]  # Replace with your Casper project code
             )
+            cluster.scale(jobs=len(task_list))
+            client = Client(cluster)
+
+            with ProgressBar():
+                from dask import compute
+                compute(*task_list)
+        else:
+            for task in task_list:
+                task()  # This is just the normal function call
+
 
     #########
 

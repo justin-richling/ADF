@@ -86,6 +86,11 @@ def parse_arguments():
     #Debug setting:
     parser.add_argument('--debug', action='store_true', help="Turn on debug output.")
 
+    #Enable Dask
+    parser.add_argument(
+    "--use-dask", action="store_true", help="Use Dask to parallelize plotting"
+    )
+
     #--------------------------------
 
     #Parse Argument inputs
@@ -143,7 +148,8 @@ if __name__ == "__main__":
     #+++++++++++++++++++++++++++++++++
 
     #Initalize CAM diagnostics object:
-    diag = AdfDiag(config_yaml, debug=config_debug)
+    #diag = AdfDiag(config_yaml, debug=config_debug)
+    diag = AdfDiag(config_yaml, debug=config_debug, use_dask=args.use_dask)
 
     #Create model time series.
     #Please note that this is an internal ADF function:
