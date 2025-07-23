@@ -89,6 +89,7 @@ def global_latlon_map(adfobj):
     
     # Process regular variables
     for var in adfobj.diag_var_list:
+        print("VAR",var)
         process_variable(adfobj, var, **config)
         
     # Handle AOD special case
