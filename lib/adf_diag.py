@@ -180,7 +180,7 @@ class AdfDiag(AdfWeb):
         self.data = AdfData(self)
 
         # Enable Dask
-        config_dask = self.read_config_var("use_dask", default=False)
+        config_dask = self.read_config_var("use_dask")
         self.use_dask = config_dask if use_dask is None else use_dask
 
     # Create property needed to return "plotting_scripts" variable to user:
