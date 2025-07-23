@@ -351,11 +351,13 @@ class AdfDiag(AdfWeb):
             if self.use_dask:
                 from dask import delayed
                 #task = delayed(self.__function_caller)(func_name, func_kwargs=func_kwargs, module_name=func_name)
-                from functools import partial
-                task = delayed(partial(self.__function_caller,
-                                    func_name=func_name,
-                                    func_kwargs=func_kwargs,
-                                    module_name=func_name))
+                task = delayed(self.__function_caller)(func_name, func_kwargs=func_kwargs, module_name=func_name)
+
+                #from functools import partial
+                #task = delayed(partial(self.__function_caller,
+                #                    func_name=func_name,
+                #                    func_kwargs=func_kwargs,
+                #                    module_name=func_name))
             else:
                 task = lambda: self.__function_caller(func_name, func_kwargs=func_kwargs, module_name=func_name)
 
