@@ -179,9 +179,13 @@ class AdfDiag(AdfWeb):
         # Provide convenience functions for data handling:
         self.data = AdfData(self)
 
-        # Enable Dask
+        # Grab PROJECT code
         config_dask = self.read_config_var("use_dask")
         self.use_dask = config_dask if use_dask is None else use_dask
+
+        # Enable Dask
+        proj_code = self.read_config_var("project_code")
+        self.proj_code = proj_code
 
     # Create property needed to return "plotting_scripts" variable to user:
     @property
@@ -358,22 +362,33 @@ class AdfDiag(AdfWeb):
             from dask.distributed import Client
             from dask_jobqueue import PBSCluster
 
-            self.debug_log("Starting Dask parallel plotting using PBSCluster...")
+            if self.proj_code:
 
-            cluster = PBSCluster(
-                cores=1,
-                memory="2GB",
-                processes=1,
-                walltime="00:30:00",
-                interface="ib0",
-                job_extra=["-A YOUR_PROJECT_CODE", "-q casper"]  # Replace with your Casper project code
-            )
-            cluster.scale(jobs=len(task_list))
-            client = Client(cluster)
+                self.debug_log("Starting Dask parallel plotting using PBSCluster...")
+                if not self.dask_mem:
+                    self.dask_mem = "2GB"
+                if not self.dask_walltime:
+                    self.dask_walltime = "01:00:00"
+                if not self.processes:
+                    self.processes = 1
+                cluster = PBSCluster(
+                    cores=1,
+                    memory=self.dask_mem,
+                    processes=self.processes,
+                    walltime=self.dask_walltime,
+                    interface="ib0",
+                    job_extra=[f"-A {self.proj_code}", "-q casper"]  # Replace with your Casper project code
+                )
+                cluster.scale(jobs=len(task_list))
+                client = Client(cluster)
 
-            with ProgressBar():
-                from dask import compute
-                compute(*task_list)
+                with ProgressBar():
+                    from dask import compute
+                    compute(*task_list)
+            else:
+                print("\tWarning: No PROJECT code supplied, not using Dask...")
+                for task in task_list:
+                    task()  # This is just the normal function call
         else:
             for task in task_list:
                 task()  # This is just the normal function call
