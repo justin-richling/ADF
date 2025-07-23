@@ -340,9 +340,12 @@ class AdfDiag(AdfWeb):
                 self.debug_log(dmsg)
                 sys.path.insert(0, func_script_path)
 
-            func_kwargs = default_kwargs
+            #func_kwargs = default_kwargs
+            import copy
+            func_kwargs = copy.deepcopy(default_kwargs) if default_kwargs else {}
             if has_opt and "kwargs" in opt:
-                func_kwargs = opt["kwargs"]
+                #func_kwargs = opt["kwargs"]
+                func_kwargs.update(opt["kwargs"])
 
             dmsg = f"{log_section or 'diag_scripts_caller'}: \n \t func_name = {func_name}\n \t func_kwargs = {func_kwargs}"
             self.debug_log(dmsg)
@@ -359,7 +362,10 @@ class AdfDiag(AdfWeb):
                 #                    func_kwargs=func_kwargs,
                 #                    module_name=func_name))
             else:
-                task = lambda: self.__function_caller(func_name, func_kwargs=func_kwargs, module_name=func_name)
+                #task = lambda: self.__function_caller(func_name, func_kwargs=func_kwargs, module_name=func_name)
+                from functools import partial
+                task = partial(self.__function_caller, func_name, func_kwargs=func_kwargs, module_name=func_name)
+
 
             task_list.append(task)
 
