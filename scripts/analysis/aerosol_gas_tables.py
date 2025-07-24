@@ -1311,5 +1311,5 @@ def make_table(adfobj, vars, chem_type, Dic_scn_var_comp, areas, trops, case_nam
     output_csv_file = output_location / f'ADF_amwg_{chem_type}_table.csv'
     # Save table to CSV and add table dataframe to website (if enabled)
     table_df.to_csv(output_csv_file, index=False)
-    adfobj.add_website_data(table_df, chem_type, case, plot_type="Tables")
+    adfobj.add_website_data(table_df, chem_type, case_names[0], plot_type="Tables")
 #####
