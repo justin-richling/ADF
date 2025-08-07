@@ -654,8 +654,8 @@ class AdfInfo(AdfConfig):
     #########
 
     # Example usage
-    #branch = get_git_branch()
-    #print("Current Git branch:", branch)
+    branch = get_git_branch()
+    print("Current Git branch:", branch)
 
 
     # Create property needed to return "user" name to user:
