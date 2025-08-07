@@ -644,7 +644,7 @@ class AdfInfo(AdfConfig):
                 check=True
             )
             branch = result.stdout.strip()
-            print(branch)
+            print("Current Git branch:", branch)
             return branch
         except subprocess.CalledProcessError as e:
             print("Error getting git branch:", e.stderr.strip())
@@ -655,8 +655,6 @@ class AdfInfo(AdfConfig):
 
     # Example usage
     branch = get_git_branch()
-    print("Current Git branch:", branch)
-
 
     # Create property needed to return "user" name to user:
     @property
