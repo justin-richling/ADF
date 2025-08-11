@@ -85,12 +85,12 @@ class AdfInfo(AdfConfig):
 
         # Expand CVDP climo info variable strings:
         if self.__cvdp_info is not None:
-            #cvdp_default_loc = "/glade/u/home/asphilli/CESM-diagnostics/CVDP/Release/v5.2.0/"
             cvdp_default_loc = Path("externals/CVDP/")
-            print("!*!*!*!-- cvdp_default_loc --!*!*!*!",cvdp_default_loc)
             self.__cvdp_info.get("cvdp_codebase_loc",cvdp_default_loc)
             self.expand_references(self.__cvdp_info)
         # End if
+
+        print(os.getenv("USER"))
 
         # Add MDTF info to object:
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
