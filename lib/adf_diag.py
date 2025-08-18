@@ -1006,7 +1006,7 @@ class AdfDiag(AdfWeb):
             )
         else:
             cvdp_dir = self.get_cvdp_info("cvdp_loc", required=True) + case_names[0]
-        print("cvdp_dir",cvdp_dir)
+        print("cvdp_dir!!",cvdp_dir)
         # end if
         if not os.path.isdir(cvdp_dir):
             shutil.copytree(
