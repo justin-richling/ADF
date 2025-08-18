@@ -155,6 +155,7 @@ if __name__ == "__main__":
 
     #Call the CVDP:
     print(diag.get_cvdp_info('cvdp_run'))
+    print("AHAHHAHAHAHAHAHAHAHAH")
     if diag.get_cvdp_info('cvdp_run'):
        diag.setup_run_cvdp()
 
