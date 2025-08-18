@@ -88,6 +88,10 @@ class AdfInfo(AdfConfig):
             cvdp_default_loc = Path("externals/CVDP/")
             self.__cvdp_info.get("cvdp_codebase_loc",cvdp_default_loc)
             self.expand_references(self.__cvdp_info)
+
+            #cvdp_default_loc = Path("externals/CVDP/")
+            #self.__cvdp_info.get("cvdp_loc",cvdp_default_loc)
+            #self.expand_references(self.__cvdp_info)
         # End if
 
         print(os.getenv("USER"))
