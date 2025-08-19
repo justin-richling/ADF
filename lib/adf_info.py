@@ -425,7 +425,8 @@ class AdfInfo(AdfConfig):
                 hist_strs = hist_str_case[0]
 
                 if (len(case_names) > 1) or (isinstance(hist_strs, dict)):
-                    hist_str_case_1 = list(hist_strs.keys())[case_idx]
+                    #hist_str_case_1 = list(hist_strs.keys())[case_idx]
+                    hist_str_case_1 = hist_strs[case_idx]
                     print("hist_str_case_1",hist_str_case_1,"\n")
                     hist_str = hist_strs[hist_str_case_1][0]
                 else:
