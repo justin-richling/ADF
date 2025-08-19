@@ -419,8 +419,9 @@ class AdfDiag(AdfWeb):
                 hist_str_multi_case = hist_str_list[0][0]
                 print("hist_str_multi_case",hist_str_multi_case)
                 if (len(case_names) > 1) or (isinstance(hist_str_multi_case, dict)):
-                    hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
-                    hist_strs = hist_str_multi_case[hist_str_case_idx]
+                    #hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
+                    #hist_strs = hist_str_multi_case[hist_str_case_idx]
+                    hist_strs = hist_str_multi_case
                 else:
                     hist_strs = [hist_str_multi_case]
             else:
