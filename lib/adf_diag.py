@@ -383,6 +383,7 @@ class AdfDiag(AdfWeb):
         # Read hist_str (component.hist_num) from the yaml file, or set to default
         dmsg = f"reading from {hist_str_list} files"
         self.debug_log(dmsg)
+        print(dmsg)
 
         # get info about variable defaults
         res = self.variable_defaults
@@ -425,8 +426,8 @@ class AdfDiag(AdfWeb):
                 else:
                     hist_strs = [hist_str_multi_case]
             else:
-                hist_strs = hist_str_list[0]
-
+                hist_strs = hist_str_list[0][0]
+            print("hist_strs",hist_strs)
             for hist_str in [hist_strs]:
 
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
