@@ -356,6 +356,8 @@ class AdfInfo(AdfConfig):
         #Initialize CAM history string nested list
         self.__hist_str = hist_str
 
+        print("hist_str",hist_str)
+
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
 
