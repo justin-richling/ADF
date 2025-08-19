@@ -427,7 +427,7 @@ class AdfDiag(AdfWeb):
             else:
                 hist_strs = hist_str_list[0]
 
-            for hist_str in hist_strs:
+            for hist_str in [hist_strs]:
 
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
