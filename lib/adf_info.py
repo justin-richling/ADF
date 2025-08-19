@@ -91,8 +91,12 @@ class AdfInfo(AdfConfig):
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
 
         if self.__mdtf_info is not None:
-            if self.__mdtf_info['mdtf_run']:
-                self.expand_references(self.__mdtf_info)
+            if 'mdtf_run' in self.__mdtf_info:
+                if self.__mdtf_info['mdtf_run']:
+                    self.expand_references(self.__mdtf_info)
+            else:
+                # If mdtf_run is not in the config, then assume MDTF is not being run
+                self.__mdtf_info = None
         # End if
 
         # Check if inputs are of the correct type:
