@@ -340,6 +340,10 @@ class AdfDiag(AdfWeb):
         Generate time series versions of the CAM history file data.
         """
 
+        #Notify user that script has started:
+        msg = "\n  Calculating CAM time series..."
+        print(f"{msg}\n  {'-' * (len(msg)-3)}")
+
         global call_ncrcat
 
         def call_ncrcat(cmd):
@@ -360,7 +364,7 @@ class AdfDiag(AdfWeb):
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
             cam_ts_done = [self.get_baseline_info("cam_ts_done")]
             cam_hist_locs = [self.get_baseline_info("cam_hist_loc")]
-            ts_dir = [self.get_baseline_info("cam_ts_loc", required=True)]
+            ts_dirs = [self.get_baseline_info("cam_ts_loc", required=True)]
             overwrite_ts = [self.get_baseline_info("cam_overwrite_ts")]
             start_years = [self.climo_yrs["syear_baseline"]]
             end_years = [self.climo_yrs["eyear_baseline"]]
@@ -372,7 +376,7 @@ class AdfDiag(AdfWeb):
             case_names = self.get_cam_info("cam_case_name", required=True)
             cam_ts_done = self.get_cam_info("cam_ts_done")
             cam_hist_locs = self.get_cam_info("cam_hist_loc")
-            ts_dir = self.get_cam_info("cam_ts_loc", required=True)
+            ts_dirs = self.get_cam_info("cam_ts_loc", required=True)
             overwrite_ts = self.get_cam_info("cam_overwrite_ts")
             start_years = self.climo_yrs["syears"]
             end_years = self.climo_yrs["eyears"]
@@ -390,13 +394,10 @@ class AdfDiag(AdfWeb):
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
-            # Notify user time series files are starting
-            print(f"\n  Writing time series files to {ts_dir[case_idx]}")
-
             # Check if particular case should be processed:
             if cam_ts_done[case_idx]:
-                emsg = " Configuration file indicates time series files have been pre-computed."
-                emsg += f" Will rely on those files directly."
+                emsg = "\tNOTE: Configuration file indicates time series files have been pre-computed"
+                emsg += f" for case '{case_name}'.  Will rely on those files directly."
                 print(emsg)
                 continue
             # End if
@@ -438,6 +439,9 @@ class AdfDiag(AdfWeb):
                     emsg += " Script is ending here."
                     self.end_diag_fail(emsg)
                 # End if
+
+                # Notify user that script has started:
+                print(f"\n\t Writing time series files to:\n\t{ts_dirs[case_idx]}")
 
                 # Create empty list:
                 files_list = []
@@ -521,7 +525,7 @@ class AdfDiag(AdfWeb):
 
                 # Check if time series directory exists, and if not, then create it:
                 # Use pathlib to create parent directories, if necessary.
-                Path(ts_dir[case_idx]).mkdir(parents=True, exist_ok=True)
+                Path(ts_dirs[case_idx]).mkdir(parents=True, exist_ok=True)
 
                 # INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
                 first_file_split = str(hist_files[0]).split(".")
@@ -538,6 +542,8 @@ class AdfDiag(AdfWeb):
 
                 # Loop over CAM history variables:
                 list_of_commands = []
+                list_of_ncattend_commands = []
+                list_of_hist_commands = []
                 vars_to_derive = []
                 # create copy of var list that can be modified for derivable variables
                 diag_var_list = self.diag_var_list
@@ -545,7 +551,8 @@ class AdfDiag(AdfWeb):
                 # Aerosol Calcs
                 # --------------
                 # Always make sure PMID is made if aerosols are desired in config file
-                # Since there's no requirement for `aerosol_zonal_list` to be included, allow it to be absent:
+                # Since there's no requirement for `aerosol_zonal_list` to be included,
+                # allow it to be absent:
 
                 azl = res.get("aerosol_zonal_list", [])
                 if "PMID" not in diag_var_list:
@@ -562,6 +569,25 @@ class AdfDiag(AdfWeb):
                 for var in diag_var_list:
                     # Notify user of new time series file:
                     print(f"\t - time series for {var}")
+
+                    # Create full path name, file name template:
+                    # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
+                    ts_outfil_str = (
+                        ts_dirs[case_idx]
+                        + os.sep
+                        + ".".join([case_name, hist_str, var, time_string, "nc"])
+                    )
+
+                    # Check if clobber is true for file
+                    if Path(ts_outfil_str).is_file():
+                        if overwrite_ts[case_idx]:
+                            Path(ts_outfil_str).unlink()
+                        else:
+                            #msg = f"[{__name__}] Warning: '{var}' file was found "
+                            msg = f"\t    INFO: '{var}' file was found "
+                            msg += "and overwrite is False. Will use existing file."
+                            print(msg)
+                            continue
 
                     # Set error messages for printing/debugging
                     # Derived variable, but missing constituent list
@@ -591,7 +617,7 @@ class AdfDiag(AdfWeb):
                             constit_list = vres["derivable_from_cam_chem"]
                             if constit_list:
                                 if all(item in hist_file_ds.data_vars for item in constit_list):
-                                    # Set check to look for regular CAM constituents in variable defaults
+                                    # Set check to look for regular CAM constituents
                                     try_cam_constits = False
                                     derive = True
                                     msg = f"create time series for {case_name}:"
@@ -630,32 +656,25 @@ class AdfDiag(AdfWeb):
                             # Add constituent list to variable key in dictionary
                             constit_dict[var] = constit_list
                             continue
-                            # Log if this variable can be derived but is missing list of constituents
+                            # Log if variable can be derived but is missing list of constituents
                         elif (derive) and (not constit_list):
                             self.debug_log(constit_errmsg)
                             continue
-                        # Lastly, raise error if the variable is not a derived quanitity but is also not
-                        # in the history file(s)
+                        # Lastly, raise error if the variable is not a derived quanitity
+                        # but is also not in the history file(s)
                         else:
-                            msg = f"WARNING: {var} is not in the file {hist_files[0]} "
-                            msg += "nor can it be derived.\n"
-                            msg += "\t  ** No time series will be generated."
+                            msg = f"\t    WARNING: {var} is not in the history file for case '{case_name}' "
+                            msg += "nor can it be derived. Script will continue to next variable."
                             print(msg)
+                            logmsg = f"create time series for {case_name}:"
+                            logmsg += f"\n {var} is not in the file {hist_files[0]} "
+                            self.debug_log(logmsg)
                             continue
                         # End if
                     # End if (var in var_diag_list)
 
                     # Check if variable has a "lev" dimension according to first file:
-                    has_lev = bool("lev" in hist_file_ds[var].dims)
-
-                    # Create full path name, file name template:
-                    # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
-
-                    ts_outfil_str = (
-                        ts_dir[case_idx]
-                        + os.sep
-                        + ".".join([case_name, hist_str, var, time_string, "nc"])
-                    )
+                    has_lev = bool("lev" in hist_file_ds[var].dims or "ilev" in hist_file_ds[var].dims)
 
                     # Check if files already exist in time series directory:
                     ts_file_list = glob.glob(ts_outfil_str)
@@ -690,12 +709,12 @@ class AdfDiag(AdfWeb):
                     if has_lev and vert_coord_type:
                         # For now, only add these variables if using CAM:
                         if "cam" in hist_str:
-                            # PS might be in a different history file. If so, continue without error.
+                            # PS might be in a different history file. If so, continue w/o error.
                             ncrcat_var_list = ncrcat_var_list + ",hyam,hybm,hyai,hybi"
 
                             if "PS" in hist_file_var_list:
                                 ncrcat_var_list = ncrcat_var_list + ",PS"
-                                print("Adding PS to file")
+                                print(f"\t    INFO: Adding PS to file for '{var}'")
                             else:
                                 wmsg = "WARNING: PS not found in history file."
                                 wmsg += " It might be needed at some point."
@@ -727,20 +746,59 @@ class AdfDiag(AdfWeb):
                         + ["-o", ts_outfil_str]
                     )
 
+                    # Example ncatted command (you can modify it with the specific attribute changes you need)
+                    #cmd_ncatted = ["ncatted", "-O", "-a", f"adf_user,global,a,c,{self.user}", ts_outfil_str]
+                    # Step 1: Convert Path objects to strings and concatenate the list of historical files into a single string
+                    hist_files_str = ', '.join(str(f.name) for f in hist_files)
+                    hist_locs_str = ', '.join(str(loc) for loc in cam_hist_locs)
+
+                    # Step 2: Create the ncatted command to add both global attributes
+                    cmd_ncatted = [
+                        "ncatted", "-O",
+                        "-a", "adf_user,global,a,c," + f"{self.user}",
+                        "-a", "hist_file_locs,global,a,c," + f"{hist_locs_str}",
+                        "-a", "hist_file_list,global,a,c," + f"{hist_files_str}",
+                        ts_outfil_str
+                    ]
+
+                    # Step 3: Create the ncatted command to remove the history attribute
+                    cmd_remove_history = [
+                        "ncatted", "-O", "-h",
+                        "-a", "history,global,d,,",
+                        ts_outfil_str
+                    ]
+
                     # Add to command list for use in multi-processing pool:
+                    # -----------------------------------------------------
+                    # generate time series files
                     list_of_commands.append(cmd)
+                    # Add global attributes: user, original hist file loc(s) and all filenames
+                    list_of_ncattend_commands.append(cmd_ncatted)
+                    # Remove the `history` attr that gets tacked on (for clean up)
+                    # NOTE: this may not be best practice, but it the history attr repeats
+                    #       the files attrs so the global attrs become obtrusive...
+                    list_of_hist_commands.append(cmd_remove_history)
 
                 # End variable loop
 
                 # Now run the "ncrcat" subprocesses in parallel:
                 with mp.Pool(processes=self.num_procs) as mpool:
                     _ = mpool.map(call_ncrcat, list_of_commands)
+                # End with
 
-                    if vars_to_derive:
-                        self.derive_variables(
-                            res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
-                            constit_dict=constit_dict, ts_dir=ts_dir[case_idx]
-                        )
+                # Run ncatted commands after ncrcat is done
+                with mp.Pool(processes=self.num_procs) as mpool:
+                    _ = mpool.map(call_ncrcat, list_of_ncattend_commands)
+
+                # Run ncatted command to remove history attribute after the global attributes are set
+                with mp.Pool(processes=self.num_procs) as mpool:
+                    _ = mpool.map(call_ncrcat, list_of_hist_commands)
+
+                if vars_to_derive:
+                    self.derive_variables(
+                        res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
+                        constit_dict=constit_dict, ts_dir=ts_dir
+                    )
                 # End with
             # End for hist_str
         # End cases loop
@@ -1155,7 +1213,7 @@ class AdfDiag(AdfWeb):
 
             # Check if all the necessary constituent files were found
             if len(constit_files) != len(constit_list):
-                ermsg = f"\t   ** Not all constituent files present; {var} cannot be calculated."
+                ermsg = f"\t    WARNING: Not all constituent files present; {var} cannot be calculated."
                 ermsg += f" Please remove {var} from 'diag_var_list' or find the "
                 ermsg += "relevant CAM files.\n"
                 print(ermsg)
@@ -1189,7 +1247,7 @@ class AdfDiag(AdfWeb):
                     if overwrite:
                         Path(derived_file).unlink()
                     else:
-                        msg = f"[{__name__}] Warning: '{var}' file was found "
+                        msg = f"\t    INFO: '{var}' file was found "
                         msg += "and overwrite is False. Will use existing file."
                         print(msg)
                         continue
@@ -1221,9 +1279,9 @@ class AdfDiag(AdfWeb):
                         ds_pmid = _load_dataset(glob.glob(os.path.join(ts_dir, "*.PMID.*"))[0])
                         ds_pmid_done = True
                         if not ds_pmid:
-                            errmsg = "Missing necessary files for dry air density"
+                            errmsg = "\t    WARNING: Missing necessary files for dry air density"
                             errmsg += " (rho) calculation.\n"
-                            errmsg += "Please make sure 'PMID' is in the CAM run"
+                            errmsg += "\t     Please make sure 'PMID' is in the CAM run"
                             errmsg += " for aerosol calculations"
                             print(errmsg)
                             continue
@@ -1231,9 +1289,9 @@ class AdfDiag(AdfWeb):
                         ds_t = _load_dataset(glob.glob(os.path.join(ts_dir, "*.T.*"))[0])
                         ds_t_done = True
                         if not ds_t:
-                            errmsg = "Missing necessary files for dry air density"
+                            errmsg = "\t    WARNING: Missing necessary files for dry air density"
                             errmsg += " (rho) calculation.\n"
-                            errmsg += "Please make sure 'T' is in the CAM run"
+                            errmsg += "\t     Please make sure 'T' is in the CAM run"
                             errmsg += " for aerosol calculations"
                             print(errmsg)
                             continue
@@ -1258,6 +1316,7 @@ class AdfDiag(AdfWeb):
         """
         Create MDTF directory tree, generate input settings jsonc file
         Submit MDTF diagnostics.
+        Returns mdtf_proc for sub-process control (waits for it to finish in run_adf_diag)
 
         """
 
@@ -1335,19 +1394,21 @@ class AdfDiag(AdfWeb):
         if copy_files_only:
             print("\t ...Copy files only. NOT Running MDTF")
             print(f"\t    Command: {mdtf_exe} Log: {mdtf_log}")
+            return 0
         else:
             print(
                 f"\t ...Running MDTF in background. Command: {mdtf_exe} Log: {mdtf_log}"
             )
             print(f"Running MDTF in background. Command: {mdtf_exe} Log: {mdtf_log}")
             with open(mdtf_log, "w", encoding="utf-8") as subout:
-                _ = subprocess.Popen(
+                mdtf_proc_var = subprocess.Popen(
                     [mdtf_exe],
                     shell=True,
                     stdout=subout,
                     stderr=subout,
                     close_fds=True,
                 )
+            return mdtf_proc_var
 
     def move_tsfiles_for_mdtf(self, verbose):
         """
@@ -1369,7 +1430,6 @@ class AdfDiag(AdfWeb):
         freq_string_options = ["month", "day", "6hr", "3hr", "1hr"]           #values
         freq_string_dict    = dict(zip(freq_string_cesm,freq_string_options)) #make dict
 
-        
         hist_str_list = self.get_cam_info("hist_str")
         case_names = self.get_cam_info("cam_case_name", required=True)
         var_list = self.diag_var_list
@@ -1393,7 +1453,7 @@ class AdfDiag(AdfWeb):
                     adf_file_list = glob.glob(adf_file_str)
 
                     if len(adf_file_list) == 1:
-                        if verbose > 2:
+                        if verbose > 1:
                             print(f"Copying ts file: {adf_file_list} to MDTF dir")
                     elif len(adf_file_list) > 1:
                         if verbose > 0:
@@ -1401,7 +1461,7 @@ class AdfDiag(AdfWeb):
                                 f"WARNING: found multiple timeseries files {adf_file_list}. Continuing with best guess; suggest cleaning up multiple dates in ts dir"
                             )
                     else:
-                        if verbose > 0:
+                        if verbose > 1:
                             print(
                                 f"WARNING: No files matching {case_name}.{hist_str}.{var} found in {adf_file_str}. Skipping"
                             )
@@ -1446,7 +1506,7 @@ class AdfDiag(AdfWeb):
                         continue
                     freq = freq_string_dict.get(found_strings[0])
                     print(f"Translated {found_strings[0]} to {freq}")
-                    
+
                     #
                     # Destination file is MDTF directory and name structure
                     #
@@ -1509,7 +1569,7 @@ def _load_dataset(fils):
     warnings.formatwarning = my_formatwarning
 
     if len(fils) == 0:
-        warnings.warn("Input file list is empty.")
+        warnings.warn("\t    WARNING: Input file list is empty.")
         return None
     if len(fils) > 1:
         return xr.open_mfdataset(fils, combine='by_coords')
