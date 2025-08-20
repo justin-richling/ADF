@@ -95,7 +95,8 @@ def global_latlon_map(adfobj):
     if "AODVISdn" in adfobj.diag_var_list:
         print("\tRunning AOD panel diagnostics against MERRA and MODIS...")
         aod_latlon(adfobj)
-        
+
+    #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")
 
 
