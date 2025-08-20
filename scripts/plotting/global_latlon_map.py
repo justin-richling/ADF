@@ -350,9 +350,13 @@ def global_latlon_map(adfobj):
                             #Grab data for desired multi-plots (from yaml file)
                             if multi_plots:
                                 if var in adfobj.get_multi_case_info("global_latlon_map"):
-                                    multi_dict[var][case_name][s] = {"m_data":mseasons[s],"vres":vres}
-                                    multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
-                                    multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+                                    #multi_dict[var][case_name][s] = {"m_data":mseasons[s],"vres":vres}
+                                    #multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
+                                    #multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+
+                                    multi_dict[var][case_name][s]["m_data"] = mseasons[s]
+                                    multi_dict[var][case_name][s]["o_data"] = oseasons[s]
+                                    multi_dict[var][case_name][s]["diff_data"] = dseasons[s]
 
                             # time to make plot; here we'd probably loop over whatever plots we want for this variable
                             # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
@@ -462,9 +466,13 @@ def global_latlon_map(adfobj):
 
                                 if multi_plots:
                                     if var in adfobj.get_multi_case_info("global_latlon_map"):
-                                        multi_dict[var][case_name][s] = {"m_data":mseasons[s],"vres":vres}
-                                        multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
-                                        multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+                                        #multi_dict[var][case_name][s] = {"m_data":mseasons[s],"vres":vres}
+                                        #multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
+                                        #multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+
+                                        multi_dict[var][case_name][s]["m_data"] = mseasons[s]
+                                        multi_dict[var][case_name][s]["o_data"] = oseasons[s]
+                                        multi_dict[var][case_name][s]["diff_data"] = dseasons[s]
 
                                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                                 # I'll just call this one "LatLon_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
