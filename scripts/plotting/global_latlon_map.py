@@ -354,6 +354,10 @@ def global_latlon_map(adfobj):
                                     #multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
                                     #multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
 
+                                    multi_dict[var][case_name][s]["m_data"] = {}
+                                    multi_dict[var][case_name][s]["o_data"] = {}
+                                    multi_dict[var][case_name][s]["diff_data"] = {}
+                                    
                                     multi_dict[var][case_name][s]["m_data"] = mseasons[s]
                                     multi_dict[var][case_name][s]["o_data"] = oseasons[s]
                                     multi_dict[var][case_name][s]["diff_data"] = dseasons[s]
@@ -469,6 +473,10 @@ def global_latlon_map(adfobj):
                                         #multi_dict[var][case_name][s] = {"m_data":mseasons[s],"vres":vres}
                                         #multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
                                         #multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+
+                                        multi_dict[var][case_name][s]["m_data"] = {}
+                                        multi_dict[var][case_name][s]["o_data"] = {}
+                                        multi_dict[var][case_name][s]["diff_data"] = {}
 
                                         multi_dict[var][case_name][s]["m_data"] = mseasons[s]
                                         multi_dict[var][case_name][s]["o_data"] = oseasons[s]
