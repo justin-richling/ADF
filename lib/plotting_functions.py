@@ -2790,6 +2790,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
     if nrows < 2:
         nrows = 2
+    nrows = len(case_names)
     #End if
 
     # specify the central longitude for the plot
@@ -2818,7 +2819,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                                 subplot_kw={"projection": proj})
 
                         #Set figure title
-                        plt.suptitle(f'All Case Comparison (Test - Baseline)  {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
+                        plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
 
                         count = 0
                         img = []
