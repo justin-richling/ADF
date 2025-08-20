@@ -2766,6 +2766,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     else:
         ncols = 2
     #End if
+    ncols = 3
 
     #Check redo_plot. If set to True: remove old plot, if it already exists:
     redo_plot = adfobj.get_basic_info('redo_plot')
