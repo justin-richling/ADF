@@ -515,8 +515,7 @@ def global_latlon_map(adfobj):
     #End for (variable loop)
 
     #This will be a list of variables for multi-case plotting based off LatLon plot type
-    #if multi_plots:
-    if 1==2:
+    if multi_plots:
         #Notify user that script has started:
         print("\n  Generating lat/lon multi-case plots...")
 
@@ -524,7 +523,7 @@ def global_latlon_map(adfobj):
 
         pf.multi_latlon_plots(main_site_assets_path, "LatLon", case_names,
                              [test_nicknames,base_nickname], multi_dict,
-                             web_category, adfobj)
+                             web_category, adfobj,**vres)
 
         print("  ...lat/lon multi-case plots have been generated successfully.")
 
