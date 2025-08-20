@@ -49,12 +49,40 @@
 # category  -> The website category the variable will be placed under.
 #
 #
+# DERIVING:
+#
+# derivable_from -> If not present in the available output files, the variable can be derived from
+#                   other variables that are present (e.g. PRECT can be derived from PRECC and PRECL),
+#                   which are specified in this list
+#                   NOTE: this is not very flexible at the moment! It can only handle variables that
+#                         are sums of the constituents. Futher flexibility is being explored.
+#
+#
 # Final Note:  Please do not modify this file unless you plan to push your changes back to the ADF repo.
 #              If you would like to modify this file for your personal ADF runs then it is recommended
 #              to make a copy of this file, make modifications in that copy, and then point the ADF to
 #              it using the "defaults_file" config variable.
 #
 #+++++++++++
+
+#+++++++++++++
+# Available ADF Default Plot Types
+#+++++++++++++
+default_ptypes: ["Tables","LatLon","LatLon_Vector","Zonal","Meridional",
+                  "NHPolar","SHPolar","Special"]
+
+#+++++++++++++
+# Constants
+#+++++++++++++
+
+#Dry Air Gas Constant:
+Rgas: 287.04 #[J/K/Kg]=8.314/0.028965
+
+#+++++++++++++
+# CAM-CHEM Variables
+#+++++++++++++
+#List of variables for CAM-CHEM runs that have different constituents than regular CAM runs
+cam_chem_list: ["SOA","SO4"]
 
 #+++++++++++++
 # Category: Microphysics
@@ -112,6 +140,9 @@ FICE:
 # Category: Aerosols
 #+++++++++++
 
+#List of zonal areosols
+aerosol_zonal_list: ["BC","POM","SO4","SOA","NH4HSO4","DUST","SeaSalt"]
+
 AODDUST:
   category: "Aerosols"
   colormap: "Oranges"
@@ -131,6 +162,19 @@ AODVIS:
   scale_factor: 1
   add_offset: 0
   new_unit: ""
+
+AODVISdn:
+  category: "Aerosols"
+  colormap: "jet"
+  contour_levels_range: [0.01, 1.01, 0.05]
+  diff_colormap: "PuOr_r"
+  diff_contour_range: [-0.4, 0.401, 0.05]
+  scale_factor: 1
+  add_offset: 0
+  new_unit: ""
+  obs_file: "MOD08_M3_192x288_AOD_2001-2020_climo.nc"
+  obs_name: "MODIS"
+  obs_var_name: "AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean"
 
 BURDENBC:
   category: "Aerosols"
@@ -159,6 +203,87 @@ SO2:
 SOAG:
   category: "Aerosols"
 
+BC:
+  colormap: "RdBu_r"
+  diff_colormap: "BrBG"
+  scale_factor: 1000000000
+  add_offset: 0
+  new_unit: '$\mu$g/m3'
+  mpl:
+    colorbar:
+      label : '$\mu$g/m3'
+  category: "Aerosols"
+  derivable_from: ["bc_a1", "bc_a4"]
+
+POM:
+  colormap: "RdBu_r"
+  diff_colormap: "BrBG"
+  scale_factor: 1000000000
+  add_offset: 0
+  new_unit: '$\mu$g/m3'
+  mpl:
+    colorbar:
+      label : '$\mu$g/m3'
+  category: "Aerosols"
+  derivable_from: ["pom_a1", "pom_a4"]
+
+SO4:
+  colormap: "RdBu_r"
+  diff_colormap: "BrBG"
+  scale_factor: 1000000000
+  add_offset: 0
+  new_unit: '$\mu$g/m3'
+  mpl:
+    colorbar:
+      label : '$\mu$g/m3'
+  category: "Aerosols"
+  derivable_from: ["so4_a1", "so4_a2", "so4_a3"]
+  derivable_from_cam_chem: ["so4_a1", "so4_a2", "so4_a3", "so4_a5"]
+
+SOA:
+  colormap: "RdBu_r"
+  diff_colormap: "BrBG"
+  scale_factor: 1000000000
+  add_offset: 0
+  new_unit: '$\mu$g/m3'
+  mpl:
+    colorbar:
+      label : '$\mu$g/m3'
+  category: "Aerosols"
+  derivable_from: ["soa_a1", "soa_a2"]
+  derivable_from_cam_chem: ["soa1_a1", "soa2_a1", "soa3_a1", "soa4_a1", "soa5_a1", "soa1_a2", "soa2_a2", "soa3_a2", "soa4_a2", "soa5_a2"]
+
+DUST:
+  colormap: "RdBu_r"
+  contour_levels: [0,0.1,0.25,0.4,0.6,0.8,1.4,2,3,4,8,12,30,48,114,180]
+  non_linear: True
+  diff_colormap: "BrBG"
+  scale_factor: 1000000000
+  add_offset: 0
+  new_unit: '$\mu$g/m3'
+  mpl:
+    colorbar:
+      label : '$\mu$g/m3'
+  category: "Aerosols"
+  derivable_from: ["dst_a1", "dst_a2", "dst_a3"]
+
+SeaSalt:
+  colormap: "RdBu_r"
+  contour_levels: [0,0.05,0.075,0.2,0.3,0.4,0.7,1,1.5,2,4,6,15,24,57,90]
+  non_linear: True
+  diff_colormap: "BrBG"
+  scale_factor: 1000000000
+  add_offset: 0
+  new_unit: '$\mu$g/m3'
+  mpl:
+    colorbar:
+      label : '$\mu$g/m3'
+      ticks: [0.05,0.2,0.4,1,2,6,24,90]
+    diff_colorbar:
+      label : '$\mu$g/m3'
+      ticks: [-10,8,6,4,2,0,-2,-4,-6,-8,-10]
+  category: "Aerosols"
+  derivable_from: ["ncl_a1", "ncl_a2", "ncl_a3"]
 
 #+++++++++++++++++
 # Category: Budget
@@ -203,6 +328,9 @@ ZMDT:
 
 CAPE:
   category: "Deep Convection"
+  obs_file: "CAPE_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "CAPE"
 
 CMFMC_DP:
   category: "Deep Convection"
@@ -252,16 +380,21 @@ H2SO4:
 N2O:
   category: "Composition"
 
-
 #+++++++++++++++++
 # Category: Clouds
 #+++++++++++++++++
 
 CLDICE:
   category: "Clouds"
+  obs_file: "CLDICE_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "CLDICE"
 
 CLDLIQ:
   category: "Clouds"
+  obs_file: "CLDLIQ_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "CLDLIQ"
 
 CLDTOT:
   colormap: "Oranges"
@@ -343,6 +476,11 @@ TGCLDLWP:
     colorbar:
       label : "g m$^{-2}$"
   category: "Clouds"
+  obs_file: "TGCLDLWP_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "TGCLDLWP"
+  obs_scale_factor: 1000
+  obs_add_offset: 0
 
 TGCLDIWP:
   colormap: "Blues"
@@ -356,6 +494,11 @@ TGCLDIWP:
     colorbar:
       label : "g m$^{-2}$"
   category: "Clouds"
+  obs_file: "TGCLDIWP_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "TGCLDIWP"
+  obs_scale_factor: 1000
+  obs_add_offset: 0
 
 CCN3:
   category: "Clouds"
@@ -394,12 +537,42 @@ PRECC:
   category: "Hydrologic cycle"
 
 PRECL:
+  colormap: "Greens"
+  contour_levels_range: [0, 20, 1]
+  diff_colormap: "BrBG"
+  diff_contour_range: [-10, 10, 0.5]
+  scale_factor: 86400000
+  add_offset: 0
+  new_unit: "mm d$^{-1}$"
+  mpl:
+    colorbar:
+      label : "mm d$^{-1}$"
   category: "Hydrologic cycle"
 
 PRECSC:
+  colormap: "Greens"
+  contour_levels_range: [0, 20, 1]
+  diff_colormap: "BrBG"
+  diff_contour_range: [-10, 10, 0.5]
+  scale_factor: 86400000
+  add_offset: 0
+  new_unit: "mm d$^{-1}$"
+  mpl:
+    colorbar:
+      label : "mm d$^{-1}$"
   category: "Hydrologic cycle"
 
 PRECSL:
+  colormap: "Greens"
+  contour_levels_range: [0, 20, 1]
+  diff_colormap: "BrBG"
+  diff_contour_range: [-10, 10, 0.5]
+  scale_factor: 86400000
+  add_offset: 0
+  new_unit: "mm d$^{-1}$"
+  mpl:
+    colorbar:
+      label : "mm d$^{-1}$"
   category: "Hydrologic cycle"
 
 PRECT:
@@ -417,6 +590,7 @@ PRECT:
   obs_name: "ERAI"
   obs_var_name: "PRECT"
   category: "Hydrologic cycle"
+  derivable_from: ['PRECL','PRECC']
 
 QFLX:
   category: "Hydrologic cycle"
@@ -425,9 +599,11 @@ QFLX:
 # Category: Surface variables
 #+++++++++++++++++
 
-
 PBLH:
   category: "Surface variables"
+  obs_file: "PBLH_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "PBLH"
 
 PSL:
   colormap: "Oranges"
@@ -441,6 +617,9 @@ PSL:
     colorbar:
       label : "hPa"
   category: "Surface variables"
+  obs_file: "PSL_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "PSL"
 
 PS:
   colormap: "Oranges"
@@ -453,13 +632,16 @@ PS:
   mpl:
     colorbar:
       label : "hPa"
-  obs_file: "ERAI_all_climo.nc"
-  obs_name: "ERAI"
-  obs_var_name: "PS"
   category: "Surface variables"
+  obs_file: "PS_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "PS"
 
 TREFHT:
   category: "Surface variables"
+  obs_file: "TREFHT_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "TREFHT"
 
 TS:
   colormap: "Blues"
@@ -523,7 +705,6 @@ OCNFRAC:
 LANDFRAC:
   category: "Surface variables"
 
-
 #+++++++++++++++++
 # Category: State
 #+++++++++++++++++
@@ -568,8 +749,8 @@ U:
   mpl:
     colorbar:
       label : "ms$^{-1}$"
-  obs_file: "ERAI_all_climo.nc"
-  obs_name: "ERAI"
+  obs_file: "U_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
   obs_var_name: "U"
   vector_pair: "V"
   vector_name: "Wind"
@@ -586,8 +767,8 @@ V:
   mpl:
     colorbar:
       label : "ms$^{-1}$"
-  obs_file: "ERAI_all_climo.nc"
-  obs_name: "ERAI"
+  obs_file: "V_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
   obs_var_name: "V"
   vector_pair: "U"
   vector_name: "Wind"
@@ -595,12 +776,21 @@ V:
 
 Q:
   category: "State"
+  obs_file: "Q_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "Q"
 
 T:
   category: "State"
+  obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "T"
 
 OMEGA:
   category: "State"
+  obs_file: "OMEGA_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "OMEGA"
 
 OMEGA500:
   category: "State"
@@ -630,6 +820,20 @@ QRS:
 #+++++++++++++++++
 # Category: TOA energy flux
 #+++++++++++++++++
+
+RESTOM:
+  colormap: "RdBu_r"
+  contour_levels_range: [-100, 100, 5]
+  diff_colormap: "seismic"
+  diff_contour_range: [-10, 10, 0.5]
+  scale_factor: 1
+  add_offset: 0
+  new_unit: "W m$^{-2}$"
+  mpl:
+    colorbar:
+      label : "W m$^{-2}$"
+  category: "TOA energy flux"
+  derivable_from: ['FLNT','FSNT']
 
 SWCF:
   colormap: "Blues"
@@ -676,12 +880,22 @@ FSUTOA:
   mpl:
     colorbar:
       label : "Wm$^{-2}$"
-  obs_file: "CERES_EBAF_Ed4.1_2001-2020.nc"
-  obs_name: "CERES_EBAF_Ed4.1"
-  obs_var_name: "toa_sw_all_mon"
   category: "TOA energy flux"
 
 FSNT:
+  colormap: "Blues"
+  contour_levels_range: [120, 320, 10]
+  diff_colormap: "BrBG"
+  diff_contour_range: [-20, 20, 2]
+  scale_factor: 1
+  add_offset: 0
+  new_unit: "Wm$^{-2}$"
+  mpl:
+    colorbar:
+      label : "Wm$^{-2}$"
+  obs_file: "CERES_EBAF_Ed4.1_2001-2020.nc"
+  obs_name: "CERES_EBAF_Ed4.1"
+  obs_var_name: "fsnt"
   category: "TOA energy flux"
 
 FSNTC:
@@ -895,6 +1109,90 @@ OMEGAT:
   colormap: "PuOr_r"
   diff_colormap: "coolwarm"
   plot_log_pressure: True
+
+#++++++++++++++
+# Category: TEM
+#++++++++++++++
+
+uzm:
+  ylim: [1e3,1]
+  units: m s-1
+  long_name: Zonal-Mean zonal wind
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "uzm"
+
+vzm:
+  ylim: [1e3,1]
+  units: m s-1
+  long_name: Zonal-Mean meridional wind
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "vzm"
+
+epfy:
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: northward component of the Eliassen–Palm flux
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "epfy"
+
+epfz:
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: upward component of the Eliassen–Palm flux
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "epfz"
+
+vtem:
+  ylim: [1e2,1]
+  units: m/s
+  long_name: Transformed Eulerian mean northward wind
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "vtem"
+
+wtem:
+  ylim: [1e2,1]
+  units: m/s
+  long_name: Transformed Eulerian mean upward wind
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "wtem"
+
+psitem:
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: Transformed Eulerian mean mass stream function
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "psitem"
+
+utendepfd:
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "utendepfd"
+
+utendvtem:
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: tendency of eastward wind due to TEM northward wind advection and the coriolis term
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "utendvtem"
+
+utendwtem:
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: tendency of eastward wind due to TEM upward wind advection
+  obs_file: "TEM_ERA5.nc"
+  obs_name: "ERA5"
+  obs_var_name: "utendwtem"
 
 #-----------
 #End of File
