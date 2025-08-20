@@ -2847,6 +2847,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
                         """
                         for r in range(0,nrows):
+                            print("Row number:",r)
                             #for c in range(0,ncols):
                             if 1==1:
                                 #if count < nplots:
@@ -2887,8 +2888,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                             else:
                                                 normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                                            img.append(axs[r,2].contourf(lons, lats, dwrap, levels=levelsdiff,
-                                                    cmap=cmapdiff, norm=normdiff,
+                                            img.append(axs[r,2].contourf(lons, lats, dwrap,
+                                                                         #levels=levelsdiff,
+                                                    cmap=cmapdiff,
+                                                    #norm=normdiff,
                                                     transform=ccrs.PlateCarree()))
                                         
                                         else:
@@ -2957,8 +2960,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                                 c = 0
                                             if key == "o_data":
                                                 c = 1
-                                            img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levels1,
-                                                cmap=cmap1, norm=norm1,
+                                            img.append(axs[r,c].contourf(lons, lats, mwrap,
+                                                                         #levels=levels1,
+                                                cmap=cmap1,
+                                                #norm=norm1,
                                                 transform=ccrs.PlateCarree()))
 
                                         #Set individual plot titles (case name/nickname)
