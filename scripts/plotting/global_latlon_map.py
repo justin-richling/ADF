@@ -283,6 +283,7 @@ def global_latlon_map(adfobj):
                         mseasons = {}
                         oseasons = {}
                         dseasons = {} # hold the differences
+                        pseasons = {}
 
                         #Loop over season dictionary:
                         for s in seasons:
@@ -329,6 +330,10 @@ def global_latlon_map(adfobj):
 
                                     # difference: each entry should be (lat, lon)
                                     dseasons[s] = mseasons[s] - oseasons[s]
+
+                                    # Calculate percent change
+                                    pseasons[s] = (mseasons[s] - oseasons[s]) / np.abs(oseasons[s]) * 100.0
+                                    pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), np.nan)
                                 #End if
 
                             else:
@@ -337,6 +342,9 @@ def global_latlon_map(adfobj):
                                 oseasons[s] = odata.sel(time=seasons[s]).mean(dim='time')
                                 # difference: each entry should be (lat, lon)
                                 dseasons[s] = mseasons[s] - oseasons[s]
+                                # Calculate percent change
+                                pseasons[s] = (mseasons[s] - oseasons[s]) / np.abs(oseasons[s]) * 100.0
+                                pseasons[s] = pseasons[s].where(np.isfinite(pseasons[s]), np.nan)
                             #End if
 
                             #Grab data for desired multi-plots (from yaml file)
@@ -371,7 +379,7 @@ def global_latlon_map(adfobj):
                             pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
-                                                 mseasons[s], oseasons[s], dseasons[s], **vres)
+                                                 mseasons[s], oseasons[s], dseasons[s], pseasons[s], **vres)
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var, case_name, plot_ext="global_latlon_map", 
@@ -480,7 +488,7 @@ def global_latlon_map(adfobj):
                                 pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
-                                                     mseasons[s], oseasons[s], dseasons[s], **vres)
+                                                     mseasons[s], oseasons[s], dseasons[s], pseasons[s], **vres)
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var}_{pres}hpa", case_name, plot_ext="global_latlon_map",
