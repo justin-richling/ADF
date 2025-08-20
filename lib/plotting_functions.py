@@ -2792,6 +2792,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     if nrows < 2:
         nrows = 2
     nrows = len(case_names)
+    print("nrows",nrows)
     #End if
 
     # specify the central longitude for the plot
@@ -2954,7 +2955,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                             lons, lats = np.meshgrid(lon, lat)
                                             if key == "m_data":
                                                 c = 0
-                                            if key == "m_data":
+                                            if key == "o_data":
                                                 c = 1
                                             img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levels1,
                                                 cmap=cmap1, norm=norm1,
@@ -2979,9 +2980,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                 count = count + 1
 
                         # __COLORBARS__
-                        fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
-                                    aspect=20, shrink=.5, location="bottom",
-                                    anchor=(0.5,-0.3), extend='both')
+                        #fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
+                        #            aspect=20, shrink=.5, location="bottom",
+                        #            anchor=(0.5,-0.3), extend='both')
 
                         #Clean up the spacing a bit
                         plt.subplots_adjust(wspace=0.3, hspace=hspace)
