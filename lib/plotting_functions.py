@@ -2948,61 +2948,30 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                                 #End if
                                             #End if
 
-
-
-
                                             lat = val['lat']
                                             mwrap, lon = add_cyclic_point(val, coord=val['lon'])
                                             # mesh for plots:
                                             lons, lats = np.meshgrid(lon, lat)
                                             if key == "m_data":
                                                 c = 0
-                                                """levelsdiff = multi_dict[var][case_names[r]][season]["vres"]["contour_range"]
-                                                levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
-
-                                                # color normalization for difference
-                                                if (np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff)):
-                                                    normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
-                                                else:
-                                                    normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
-                                                cmap = multi_dict[var][case_names[r]][season]["vres"]['colormap']"""
-                                                #fld = val
                                             if key == "m_data":
                                                 c = 1
                                             img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levels1,
                                                 cmap=cmap1, norm=norm1,
                                                 transform=ccrs.PlateCarree()))
 
+                                        #Set individual plot titles (case name/nickname)
+                                        #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
+                                        #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
 
-                                    """levelsdiff = multi_dict[var][case_names[count]][season]["vres"]["diff_contour_range"]
-                                    levelsdiff = np.arange(levelsdiff[0],levelsdiff[1]+levelsdiff[-1],levelsdiff[-1])
-
-                                    # color normalization for difference
-                                    if (np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff)):
-                                        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
-                                    else:
-                                        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
-                                    cmap = multi_dict[var][case_names[count]][season]["vres"]['diff_colormap']
-
-                                    img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levelsdiff,
-                                                    cmap=cmap, norm=normdiff,
-                                                    transform=ccrs.PlateCarree()))
-                                    """
-
-                                    #Set individual plot titles (case name/nickname)
-                                    titles.append(axs[r,c].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
-                                    titles.append(axs[r,c].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
-
-                                    axs[r,idx].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-                                    axs[r,idx].coastlines()
-                                    axs[r,idx].set_xticks(np.linspace(-180, 120, 6), crs=proj)
-                                    axs[r,idx].set_yticks(np.linspace(-90, 90, 7), crs=proj)
-                                    axs[r,idx].tick_params('both', length=5, width=1.5, which='major')
-                                    axs[r,idx].tick_params('both', length=5, width=1.5, which='minor')
-                                    axs[r,idx].xaxis.set_major_formatter(lon_formatter)
-                                    axs[r,idx].yaxis.set_major_formatter(lat_formatter)
+                                        axs[r,idx].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+                                        axs[r,idx].coastlines()
+                                        axs[r,idx].set_xticks(np.linspace(-180, 120, 6), crs=proj)
+                                        axs[r,idx].set_yticks(np.linspace(-90, 90, 7), crs=proj)
+                                        axs[r,idx].tick_params('both', length=5, width=1.5, which='major')
+                                        axs[r,idx].tick_params('both', length=5, width=1.5, which='minor')
+                                        axs[r,idx].xaxis.set_major_formatter(lon_formatter)
+                                        axs[r,idx].yaxis.set_major_formatter(lat_formatter)
 
                                 else:
                                     #Clear left over subplots if they don't fill the row x column matrix
