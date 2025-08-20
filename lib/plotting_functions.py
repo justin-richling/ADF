@@ -2874,6 +2874,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                                     transform=ccrs.PlateCarree()))
                                         
                                         else:
+                                            print("multi_dict[var][case_names[r]][season]",multi_dict[var][case_names[r]][season])
                                             adata = multi_dict[var][case_names[r]][season]["m_data"]
                                             bdata = multi_dict[var][case_names[r]][season]["o_data"]
                                             # determine levels & color normalization:
