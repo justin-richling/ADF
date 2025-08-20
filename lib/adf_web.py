@@ -59,6 +59,7 @@ class _WebData:
                  plot_ext = None,
                  category = None,
                  season = None,
+                 non_season = False,
                  plot_type = "Special",
                  data_frame = False,
                  html_file  = None,
@@ -71,6 +72,7 @@ class _WebData:
         self.case       = case_name
         self.category   = category
         self.season     = season
+        self.non_season = non_season
         self.plot_type  = plot_type
         self.plot_ext   = plot_ext
         self.data_frame = data_frame
@@ -146,6 +148,18 @@ class AdfWeb(AdfObs):
             #Specify where CSS files will be stored:
             css_files_dir = website_dir / "templates"
 
+            #Add links to external packages (if applicable)
+            self.external_package_links = {}
+
+            #MDTF puts directory under case[0]
+            if self.get_mdtf_info('mdtf_run'):
+                syear = self.climo_yrs["syears"]
+                eyear = self.climo_yrs["eyears"]
+                mdtf_path = f"../mdtf/MDTF_{case_name}"
+                mdtf_path += f"_{syear[0]}_{eyear[0]}"
+                self.external_package_links['MDTF'] = mdtf_path
+            #End if
+
             #Add all relevant paths to dictionary for specific case:
             self.__case_web_paths[case_name] = {'website_dir': website_dir,
                                                 'img_pages_dir': img_pages_dir,
@@ -185,6 +199,7 @@ class AdfWeb(AdfObs):
                          plot_ext = None,
                          category = None,
                          season = None,
+                         non_season = False,
                          plot_type = "Special",
                          multi_case=False):
 
@@ -205,6 +220,10 @@ class AdfWeb(AdfObs):
                       then it will default to "No category yet".
         season     -> What the season is for the plot.  If not provided it will assume the
                       plot does not need any seasonal seperation.
+
+        non_season -> Are the plots NOT divided up by seaons, ANN, DJF, MAM, JJA, or SON?
+                      - QBO is displayed as QBOts and QBOamp in the season argument above
+
         plot_type  -> Type of plot.  If not provided then plot type will be "Special".
 
         multi_case -> Logical which indicates whether the image or dataframe can contain
@@ -295,6 +314,7 @@ class AdfWeb(AdfObs):
         web_data = _WebData(web_data, web_name, case_name, plot_ext,
                             category = category,
                             season = season,
+                            non_season = non_season,
                             plot_type = plot_type,
                             data_frame = data_frame,
                             html_file = html_file,
@@ -339,6 +359,14 @@ class AdfWeb(AdfObs):
             self.end_diag_fail(emsg)
         #End except
 
+        #Make jinja functions that mimics python functions.
+        #  - This will allow for the use of 'list' in the html rendering.
+        def jinja_list(seas_list):
+            return list(seas_list)
+        #   - This will allow for the use of 'enumerate' in the html rendering.
+        def jinja_enumerate(arg):
+            return enumerate(arg)
+
         #Notify user that script has started:
         print("\n  Generating Diagnostics webpages...")
 
@@ -355,6 +383,9 @@ class AdfWeb(AdfObs):
             main_site_path = "" #Set main_site_path to blank value
             multi_layout = False
         #End if
+
+        #Access variable defaults yaml file
+        res = self.variable_defaults
 
         #Extract needed variables from yaml file:
         case_names = self.get_cam_info('cam_case_name', required=True)
@@ -438,6 +469,9 @@ class AdfWeb(AdfObs):
         #Set main title for website:
         main_title = "CAM Diagnostics"
 
+        #List of seasons
+        seasons = ["ANN","DJF","MAM","JJA","SON"]
+
         #Determine local directory:
         adf_lib_dir = Path(__file__).parent
 
@@ -462,6 +496,8 @@ class AdfWeb(AdfObs):
         multi_mean_html_info = OrderedDict()
         #Use this for multi-case with multi-plots
         multi_plot_html_info = OrderedDict()
+
+        non_seasons = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
         table_html_info = OrderedDict()
@@ -543,11 +579,14 @@ class AdfWeb(AdfObs):
                     season = "plot" #Just have the link be labeled "plot".
                 #End if
 
-                #Extract plot_type:
-                ptype = web_data.plot_type
-
                 #Extract web data name (usually the variable name):
                 var = web_data.name
+
+                #Extract whether plot has traditional seasons or not
+                non_season = web_data.non_season
+
+                #Extract plot_type:
+                ptype = web_data.plot_type
 
                 #Check if category has been provided for this web data:
                 if web_data.category:
@@ -639,6 +678,17 @@ class AdfWeb(AdfObs):
                         mean_html_info[ptype][category][var] = OrderedDict()
                     #End if
                     mean_html_info[ptype][category][var][season] = web_data.html_file.name
+
+                    #Initialize Ordered Dictionary for non season kwarg:
+                    if ptype not in non_seasons:
+                        non_seasons[ptype] = OrderedDict()
+                    #End if
+                    if category not in non_seasons[ptype]:
+                        non_seasons[ptype][category] = OrderedDict()
+                    #End if
+                    if var not in non_seasons[ptype][category]:
+                        non_seasons[ptype][category][var] = non_season
+                    #End if
                 #End if (check for multi_plot)
             #End if (data-frame check)
         #End for (web_data list loop)
@@ -761,7 +811,9 @@ class AdfWeb(AdfObs):
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
-                                       "multi": multi_layout}
+                                       "multi": multi_layout,
+                                       "seasons": seasons,
+                                       "non_seasons": non_seasons[web_data.plot_type]}
 
                     tmpl = jinenv.get_template('template.html')  #Set template
 
@@ -779,6 +831,9 @@ class AdfWeb(AdfObs):
                         #Construct individual plot type mean_diag html files, if they don't
                         #already exist:
                         mean_tmpl = jinenv.get_template('template_mean_diag.html')
+
+                        rend_kwarg_dict["enumerate"] = jinja_enumerate
+                        rend_kwarg_dict["list"] = jinja_list
 
                         #Remove keys from main dictionary for this html page
                         templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
@@ -823,6 +878,15 @@ class AdfWeb(AdfObs):
             plot_types = plot_type_html
             #End if
 
+            #List of ADF default plot types
+            avail_plot_types = res["default_ptypes"]
+           
+            #Check if current plot type is in ADF default.
+            #If not, add it so the index.html file can include it
+            for ptype in plot_types.keys():
+                if ptype not in avail_plot_types:
+                    avail_plot_types.append(plot_types)
+
             #Construct index.html
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_index.html')
@@ -833,6 +897,7 @@ class AdfWeb(AdfObs):
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
                                             plot_types=plot_types,
+                                            avail_plot_types=avail_plot_types,
                                             multi=multi_layout)
 
             #Write Mean diagnostics index HTML file:
