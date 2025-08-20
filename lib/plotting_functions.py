@@ -2955,7 +2955,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                             if key == "m_data":
                                                 c = 1
                                             img.append(axs[r,c].contourf(lons, lats, mwrap, levels=levels1,
-                                                cmap=cmap, norm=norm1,
+                                                cmap=cmap1, norm=norm1,
                                                 transform=ccrs.PlateCarree()))
 
 
