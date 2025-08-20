@@ -1,6 +1,7 @@
 import numpy as np
 import xarray as xr
 import sys
+import shutil
 from pathlib import Path
 import warnings  # use to warn user about missing files.
 
@@ -59,8 +60,6 @@ def amwg_table(adf):
 
     #Import necessary modules:
     from adf_base import AdfError
-
-
 
     #Additional information:
     #----------------------
@@ -131,12 +130,10 @@ def amwg_table(adf):
     output_locs = adf.plot_location
 
     #CAM simulation variables (these quantities are always lists):
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
-
-    #Grab all case nickname(s)
-    test_nicknames = adf.case_nicknames["test_nicknames"]
-
+    test_case_names = adf.get_cam_info("cam_case_name", required=True)
+    case_names = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+    test_nicknames = adf.case_nicknames["test_nicknames"]
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -144,31 +141,26 @@ def amwg_table(adf):
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
 
-        #Grab baseline case nickname
-        base_nickname = adf.case_nicknames["base_nickname"]
-
-        test_nicknames += [base_nickname]
-
-        if "CMIP" in baseline_name:
-            print("CMIP files detected, skipping AMWG table (for now)...")
-
-        else:
-            #Append to case list:
-            case_names.append(baseline_name)
-            input_ts_locs.append(input_ts_baseline)
+        case_names.append(baseline_name)
+        input_ts_locs.append(input_ts_baseline)
 
         #Save the baseline to the first case's plots directory:
-        output_locs.append(output_locs[0])
+        #output_locs.append(output_locs[0])
+        if len(test_case_names) == 1:
+            output_locs.append(output_locs[0])
+    else:
+        print("AMWG table doesn't currently work with obs, so obs table won't be created.")
+    #End if
+    base_nickname = adf.case_nicknames["base_nickname"]
+    nicknames = test_nicknames + [base_nickname]
 
     #-----------------------------------------
-    #Create (empty) dictionary to use for the
-    #residual top of model (RESTOM) radiation calculation:
-    restom_dict = {}
-
-    #Hold output paths for csv files
-    csv_locs = []
 
     #Loop over CAM cases:
+    #Initialize list of case name csv files for case comparison check later
+    csv_list = []
+    csv_locs = []
+    case_output_locs = {}
     for case_idx, case_name in enumerate(case_names):
 
         #Convert output location string to a Path object:
@@ -177,30 +169,21 @@ def amwg_table(adf):
         #Generate input file path:
         input_location = Path(input_ts_locs[case_idx])
 
-        #Add output paths for csv files
-        csv_locs.append(output_locs[case_idx])
-
         #Check that time series input directory actually exists:
         if not input_location.is_dir():
             errmsg = f"Time series directory '{input_location}' not found.  Script is exiting."
             raise AdfError(errmsg)
         #Write to debug log if enabled:
         adf.debug_log(f"DEBUG: location of files is {str(input_location)}")
-        #Check if analysis directory exists, and if not, then create it:
-        if not output_location.is_dir():
-            print(f"\t    {output_locs[case_idx]} not found, making new directory")
-            output_location.mkdir(parents=True)
 
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+        case_output_locs[case_name] = output_location
 
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
         if Path(output_csv_file).is_file():
             Path.unlink(output_csv_file)
         #End if
-
-        #Save case name as a new key in the RESTOM dictonary:
-        restom_dict[case_name] = {}
 
         #Create/reset new variable that potentially stores the re-gridded
         #ocean fraction xarray data-array:
@@ -226,12 +209,14 @@ def amwg_table(adf):
             #TEMPORARY:  For now, make sure only one file exists:
             if len(ts_files) != 1:
                 errmsg =  "Currently the AMWG table script can only handle one time series file per variable."
-                errmsg += f" Multiple files were found for the variable '{var}'"
-                raise AdfError(errmsg)
+                errmsg += f" Multiple files were found for the variable '{var}', so it will be skipped."
+                print(errmsg)
+                continue
             #End if
 
-            #Load model data from file:
-            data = _load_data(ts_files[0], var)
+            #Load model variable data from file:
+            ds = pf.load_dataset(ts_files)
+            data = ds[var]
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
@@ -285,19 +270,10 @@ def amwg_table(adf):
                 # flags that we have spatial dimensions
                 # Note: that could be 'lev' which should trigger different behavior
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
-                data = _spatial_average(data)  # changes data "in place"
-
-            #Add necessary data for RESTOM calcs below
-            if var == "FLNT":
-                restom_dict[case_name][var] = data
-                #Copy units for RESTOM as well:
-                restom_units = unit_str
-            if var == "FSNT":
-                restom_dict[case_name][var] = data
+                data = pf.spatial_average(data)  # changes data "in place"
 
             # In order to get correct statistics, average to annual or seasonal
-            data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
-                                                              # NOTE: data will now have a 'year' dimension instead of 'time'
+            data = pf.annual_mean(data, whole_years=True, time_name='time')
 
             # create a dataframe:
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
@@ -323,67 +299,44 @@ def amwg_table(adf):
         #End of var_list loop
         #--------------------
 
-        if "FSNT" and "FLNT" in var_list:
-            #RESTOM Calcs
-            var = "RESTOM" #RESTOM = FSNT-FLNT
-            print(f"\t - Variable '{var}' being added to table")
-            data = restom_dict[case_name]["FSNT"] - restom_dict[case_name]["FLNT"]
-            # In order to get correct statistics, average to annual or seasonal
-            data = data.groupby('time.year').mean(dim='time') # this should be fast b/c time series should be in memory
-                                                                # NOTE: data will now have a 'year' dimension instead of 'time'
-            # These get written to our output file:
-            stats_list = _get_row_vals(data)
-            row_values = [var, restom_units] + stats_list
-            # col (column) values declared above
-
-            # Format entries:
-            dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
-
-            # Add entries to Pandas structure:
-            df = pd.DataFrame(dfentries)
-
-            # Check if the output CSV file exists,
-            # if so, then append to it:
-            if output_csv_file.is_file():
-                df.to_csv(output_csv_file, mode='a', header=False, index=False)
-            else:
-                df.to_csv(output_csv_file, header=cols, index=False)
-            #End if
-
-            #last step is to add table dataframe to website (if enabled):
+        # Move RESTOM to top of table (if applicable)
+        #--------------------------------------------
+        try:
             table_df = pd.read_csv(output_csv_file)
+            if 'RESTOM' in table_df['variable'].values:
+                table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
+                table_df = table_df.drop_duplicates()
+                table_df.to_csv(output_csv_file, header=cols, index=False)
 
-            #Reorder RESTOM to top of tables
-            idx = table_df.index[table_df['variable'] == 'RESTOM'].tolist()[0]
-            table_df = pd.concat([table_df[table_df['variable'] == 'RESTOM'], table_df]).reset_index(drop = True)
-            table_df = table_df.drop([idx+1]).reset_index(drop=True)
-            table_df = table_df.drop_duplicates()
+            # last step is to add table dataframe to website (if enabled):
+            adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+        except FileNotFoundError:
+            print(f"\n\tAMWG table for '{case_name}' not created.\n")
+        #End try/except
 
-            #Re-save the csv file
-            table_df.to_csv(output_csv_file, header=cols, index=False)
-
-        else:
-            #Print message to debug log:
-            adf.debug_log("RESTOM not calculated because FSNT and/or FLNT variables not in dataset")
-        #End if
-
-        # last step is to add table dataframe to website (if enabled):
-        table_df = pd.read_csv(output_csv_file)
-        adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
+        #Keep track of case csv files for comparison table check later
+        csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
+        csv_locs.append(output_location)
 
     #End of model case loop
     #----------------------
-    test_case_names = adf.get_cam_info("cam_case_name", required=True)
 
-    #Notify user that script has ended:
-    print("  ...AMWG variable table has been generated successfully.")
+    #Start case comparison tables
+    #----------------------------
+    # Copy the file to all individual directories
+    if len(test_case_names) > 1:
+        base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
+        for i,case in enumerate(test_case_names):
+            shutil.copy(base_csv[0], output_locs[i])
+        base_csv[0].unlink()
 
-    #Check if observations are being comapred to, if so skip table comparison...
+    #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
-        if "CMIP" in baseline_name:
-            print("CMIP case detected, skipping comparison table...")
+        #Check if all tables were created to compare against, if not, skip table comparison...
+        if len(csv_list) != len(case_names):
+            print("\tNot enough cases to compare, skipping comparison table...")
         else:
-
+            # Check if this a multi-case scenario or single case
             if len(test_case_names) == 1:
                 #Create comparison table for both cases
                 print("\n  Making comparison table...")
@@ -392,58 +345,23 @@ def amwg_table(adf):
 
             if len(test_case_names) > 1:
                 print("\n  Making comparison table for multiple cases...")
-                _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames)
+                _df_multi_comp_table(adf, csv_locs, case_names, nicknames)
                 print("\n  Making comparison table for each case...")
                 for idx,case in enumerate(case_names[0:-1]):
                     _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
                 print("  ... Multi-case comparison table has been generated successfully")
         #End if
     else:
-        print(" Comparison table currently doesn't work with obs, so skipping...")
+        print(" No comparison table will be generated due to running against obs.")
     #End if
+
+    #Notify user that script has ended:
+    print("  ...AMWG variable table(s) have been generated successfully.")
 
 
 ##################
 # Helper functions
 ##################
-
-def _load_data(dataloc, varname):
-    import xarray as xr
-    ds = xr.open_dataset(dataloc)
-    return ds[varname]
-
-#####
-
-def _spatial_average(indata):
-    import xarray as xr
-    import numpy as np
-    import warnings
-
-    #Make sure there is no veritcal level dimension:
-    assert 'lev' not in indata.coords
-    assert 'ilev' not in indata.coords
-
-    #Calculate spatial weights:
-    if 'lat' in indata.coords:
-        weights = np.cos(np.deg2rad(indata.lat))
-        weights.name = "weights"
-    elif 'ncol' in indata.coords:
-        warnings.warn("We need a way to get area variable. Using equal weights.")
-        weights = xr.DataArray(1.)
-        weights.name = "weights"
-    else:
-        weights = xr.DataArray(1.)
-        weights.name = "weights"
-    #End if
-
-    #Apply weights to input data:
-    weighted = indata.weighted(weights)
-
-    # we want to average over all non-time dimensions
-    avgdims = [dim for dim in indata.dims if dim != 'time']
-    return weighted.mean(dim=avgdims)
-
-#####
 
 def _get_row_vals(data):
     # Now that data is (time,), we can do our simple stats:
@@ -479,8 +397,13 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
         - Write output to csv file and add to website
     """
 
+    import pandas as pd
+
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
 
+    # * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    #This will be for single-case for now (case_names[0]),
+    #will need to change to loop as multi-case is introduced
     case = output_location/f"amwg_table_{case_names[0]}.csv"
     baseline = base_output_location/f"amwg_table_{case_names[-1]}.csv"
 
@@ -507,7 +430,6 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "case_comparison", case_names[0], plot_type="Tables")
 
-#####
 
 def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     """
@@ -528,7 +450,7 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
     cols_comp = ['variable', 'unit']
 
     #Read baseline case
-    baseline = str(csv_locs[-1])+f"/amwg_table_{case_names[-1]}.csv"
+    baseline = str(csv_locs[0])+f"/amwg_table_{case_names[-1]}.csv"
     df_base = pd.read_csv(baseline)
 
     #Read all test cases and add to table
@@ -575,8 +497,6 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
 
     #Add comparison table dataframe to website (if enabled):
     adf.add_website_data(df_comp, "all_case_comparison", case_names[0], plot_type="Tables")
-
-#####
 
 ##############
 #END OF SCRIPT
