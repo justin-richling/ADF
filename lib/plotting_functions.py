@@ -2807,18 +2807,21 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     
 
     for var in multi_dict.keys():
-        fig_width = 15
-        fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
-        fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
-                                                    sharex=True,
-                                                    sharey=True,
-                                                    subplot_kw={"projection": proj})
-
-        #Set figure title
-        plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
-            for case in multi_dict[var].keys():
-                for season in multi_dict[var][case].keys():
+            #for case in multi_dict[var].keys():
+            for season in multi_dict[var].keys():
+                fig_width = 15
+                fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
+                fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
+                                                            sharex=True,
+                                                            sharey=True,
+                                                            subplot_kw={"projection": proj})
+
+                #Set figure title
+                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
+                #for season in multi_dict[var][case].keys():
+                #for case in multi_dict[var][season].keys():
+                if 1==1:
                     file_name = f"{var}_{season}_{ptype}_multi_plot.png"
                     if (not redo_plot) and Path(wks / file_name).is_file():
                         #Continue to next iteration:
