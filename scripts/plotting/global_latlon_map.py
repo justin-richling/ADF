@@ -353,6 +353,8 @@ def global_latlon_map(adfobj):
                                     #multi_dict[var][case_name][s] = {"m_data":mseasons[s],"vres":vres}
                                     #multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
                                     #multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
+                                    if s not in multi_dict[var][case_name]:
+                                        multi_dict[var][case_name][s] = {}
 
                                     multi_dict[var][case_name][s]["m_data"] = {}
                                     multi_dict[var][case_name][s]["o_data"] = {}
@@ -473,7 +475,8 @@ def global_latlon_map(adfobj):
                                         #multi_dict[var][case_name][s] = {"m_data":mseasons[s],"vres":vres}
                                         #multi_dict[var][case_name][s] = {"o_data":oseasons[s],"vres":vres}
                                         #multi_dict[var][case_name][s] = {"diff_data":dseasons[s],"vres":vres}
-
+                                        if s not in multi_dict[var][case_name]:
+                                            multi_dict[var][case_name][s] = {}
                                         multi_dict[var][case_name][s]["m_data"] = {}
                                         multi_dict[var][case_name][s]["o_data"] = {}
                                         multi_dict[var][case_name][s]["diff_data"] = {}
