@@ -27,7 +27,7 @@
         <div><h3>Click on case name for that ADF case vs baseline page</h3></div>
         {% for case_name, case_dtls in case_sites.items() %}
         <h2 style="display:inline; color:black;"> Test Case {{ loop.index }}: </h2>
-        <h2 style="display:inline;"><a href="{{ case_dtls[0] }}/website/index.html">{{ case_name }}</a></h2>
+        <h2 style="display:inline;"><a href="{{ case_dtls[0] }}">{{ case_name }}</a></h2>
           <h2 style="display:inline; color:black;"> - years: {{ case_dtls[1] }} - {{ case_dtls[2] }}</h2><br>
         {% endfor %}
         <h2 style="display:inline; color:black;"> Baseline Case: </h2>
