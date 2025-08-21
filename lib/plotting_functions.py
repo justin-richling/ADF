@@ -3099,14 +3099,14 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
             #for case in multi_dict[var].keys():
             #for season in multi_dict[var][case_names[0]].keys():
             for season in ["ANN"]:
-                fig_width = 15
+                """fig_width = 15
                 fig_height = 5+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
                 fig, axs = plt.subplots(nrows=nrows,ncols=ncols,
                                         figsize=(fig_width,fig_height), 
                                         facecolor='w', edgecolor='k',
                                                             #sharex=True,
                                                             #sharey=True,
-                                                            subplot_kw={"projection": proj})
+                                                            subplot_kw={"projection": proj})"""
 
                 #Set figure title
                 #plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.9)#  y=y_title #y=0.325 y=0.225
@@ -3144,6 +3144,36 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     diffld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
                     cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
                     """
+
+                    import matplotlib.pyplot as plt
+                    from matplotlib import gridspec
+
+                    # Define rows and columns
+                    ncols = 3  # m_data, o_data, diff_data
+                    ncolorbars = 2  # One for m/o, one for diff
+                    height_ratios = []
+
+                    # Define height for each row and its colorbars
+                    plot_height = 1
+                    cbar_height = 0.1  # relative to row
+                    spacing_height = 0.3  # vertical space between plot rows
+
+                    # Create height ratios for all rows
+                    for _ in range(nrows):
+                        height_ratios.extend([plot_height, cbar_height, spacing_height])
+
+                    # Remove last spacing row
+                    height_ratios = height_ratios[:-1]
+
+                    # Create figure and GridSpec
+                    fig_height = sum(height_ratios)
+                    fig_width = 15
+                    fig = plt.figure(figsize=(fig_width, fig_height))
+                    gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols, height_ratios=height_ratios, figure=fig)
+
+
+
+
                     from matplotlib.transforms import Bbox
 
                     # Define vertical offset from plot to colorbar in figure coordinates
@@ -3151,10 +3181,13 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     cbar_height = 0.015  # height of colorbar
                     for r in range(nrows):
                         print(f"Plotting row {r} for case {case_names[r]}")
-                        colorbars = {}  # To hold references to contourf plots for colorbars
+                        row_base = r * 3  # Because each row uses 3 grid rows (plot, cbar, space)
+                        colorbars = {}
 
                         for c, key in enumerate(["m_data", "o_data", "diff_data"]):
                             print(f"\tPlotting {key} at row {r}, col {c}")
+                            # Create subplot
+                            ax = fig.add_subplot(gs[row_base, c], projection=proj)
 
                             fld = multi_dict[var][case_names[r]][season][key]
                             lat = fld['lat']
@@ -3274,9 +3307,21 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     norm=norm1,
                                     transform=ccrs.PlateCarree()))"""
                             # Plot to the correct subplot
-                            cf = axs[r, c].contourf(lons, lats, data, levels=levels, cmap=cmap,
-                                                    norm=norm, transform=ccrs.PlateCarree())
-                            #Set individual plot titles (case name/nickname)
+                            #cf = axs[r, c].contourf(lons, lats, data, levels=levels, cmap=cmap,
+                            #                        norm=norm, transform=ccrs.PlateCarree())
+                            
+                            cf = ax.contourf(lons, lats, data, levels=levels, cmap=cmap,
+                                            norm=norm, transform=ccrs.PlateCarree())
+        
+                            ax.coastlines()
+                            ax.spines['geo'].set_linewidth(1.5)
+                            ax.set_xticks(np.linspace(-180, 120, 6), crs=proj)
+                            ax.set_yticks(np.linspace(-90, 90, 7), crs=proj)
+                            ax.tick_params('both', length=5, width=1.5, which='major')
+                            ax.xaxis.set_major_formatter(lon_formatter)
+                            ax.yaxis.set_major_formatter(lat_formatter)
+
+                            """#Set individual plot titles (case name/nickname)
                             #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
                             #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
                             if c == 0:
@@ -3292,7 +3337,16 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             axs[r, c].tick_params('both', length=5, width=1.5, which='major')
                             axs[r, c].tick_params('both', length=5, width=1.5, which='minor')
                             axs[r, c].xaxis.set_major_formatter(lon_formatter)
-                            axs[r, c].yaxis.set_major_formatter(lat_formatter)
+                            axs[r, c].yaxis.set_major_formatter(lat_formatter)"""
+
+                            # Add title
+                            if c == 0:
+                                ax.set_title(f"{nicknames[0][r]}", fontsize=10)
+                            elif c == 1:
+                                ax.set_title(f"{nicknames[1]}", fontsize=10)
+                            else:
+                                ax.set_title("Difference", fontsize=10)
+
 
                             # Store for colorbars
                             colorbars[key] = cf
@@ -3308,35 +3362,13 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         cax_diff = divider_diff.append_axes("bottom", size="5%", pad=0.2)
                         cb_diff = fig.colorbar(colorbars["diff_data"], cax=cax_diff, orientation="horizontal")
                         cb_diff.ax.tick_params(labelsize=7)"""
+                        # Add colorbars
+                        cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
+                        fig.colorbar(colorbars["m_data"], cax=cbar_shared_ax, orientation="horizontal")
 
-                        bbox0 = axs[r, 0].get_position()
-                        bbox1 = axs[r, 1].get_position()
-                        
-                        shared_left = bbox0.x0
-                        shared_right = bbox1.x1
-                        shared_bottom = bbox0.y0 - cbar_offset
+                        cbar_diff_ax = fig.add_subplot(gs[row_base + 1, 2])
+                        fig.colorbar(colorbars["diff_data"], cax=cbar_diff_ax, orientation="horizontal")
 
-                        cbar_ax_shared = fig.add_axes([
-                            shared_left,
-                            shared_bottom,
-                            shared_right - shared_left,
-                            cbar_height
-                        ])
-                        fig.colorbar(colorbars["m_data"], cax=cbar_ax_shared, orientation="horizontal")
-
-                        # --- Diff colorbar below diff_data ---
-                        bbox2 = axs[r, 2].get_position()
-                        diff_left = bbox2.x0
-                        diff_right = bbox2.x1
-                        diff_bottom = bbox2.y0 - cbar_offset
-
-                        cbar_ax_diff = fig.add_axes([
-                            diff_left,
-                            diff_bottom,
-                            diff_right - diff_left,
-                            cbar_height
-                        ])
-                        fig.colorbar(colorbars["diff_data"], cax=cbar_ax_diff, orientation="horizontal")
 
                         #else:
                         #    #Clear left over subplots if they don't fill the row x column matrix
