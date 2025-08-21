@@ -3156,7 +3156,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     # Define height for each row and its colorbars
                     plot_height = 1
                     cbar_height = 0.02  # relative to row
-                    spacing_height = 0.05  # vertical space between plot rows
+                    spacing_height = 0.5  # vertical space between plot rows
 
                     # Create height ratios for all rows
                     for _ in range(nrows):
