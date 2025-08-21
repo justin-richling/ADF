@@ -1183,10 +1183,10 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 
 #######
-multi_plot_dict = {}
+#multi_plot_dict = {}
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
-                      mdlfld, obsfld, diffld, pctld, obs=False, **kwargs):
+                      mdlfld, obsfld, diffld, pctld, obs=False, multi_plot_dict=None, **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
 
     Parameters
@@ -1242,6 +1242,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
 
     #nice formatting for tick labels
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
+
+    multi_plot_dict[kwargs["season"]] = {}
 
     # preprocess
     # - assume all three fields have same lat/lon
@@ -1309,14 +1311,20 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     for i, a in enumerate(wrap_fields):
 
         if i == len(wrap_fields)-1:
+            plizzy = "diff"
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
             norm = cp_info['normdiff']
         elif i == len(wrap_fields)-2:
+            plizzy = "pctdiff"
             levels = cp_info['levelspctdiff']
             cmap = cp_info['cmappct']
             norm = cp_info['pctnorm']
         else:
+            if i == 0:
+                plizzy = "model"
+            if i == 1:
+                plizzy = "obs"
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
@@ -1328,7 +1336,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         else:
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
         #End if
-        multi_plot_dict[a] = {"lons":lons, "lats":lats, "fld":a, "levels":levels, "cmap":cmap, "norm":norm}
+        multi_plot_dict[kwargs["season"]][plizzy] = {"lons":lons, "lats":lats, "fld":a, "levels":levels, "cmap":cmap, "norm":norm}
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
 
         # add contour lines <- Unused for now -JN
