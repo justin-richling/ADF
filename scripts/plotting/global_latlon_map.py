@@ -538,7 +538,7 @@ def global_latlon_map(adfobj):
     #This will be a list of variables for multi-case plotting based off LatLon plot type
     if multi_plots:
         #Notify user that script has started:
-        print("\n  Generating lat/lon multi-case plots...")
+        print("\n     Generating lat/lon multi-case plots...")
 
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
         for var in multi_dict.keys():
@@ -548,7 +548,7 @@ def global_latlon_map(adfobj):
                                 [test_nicknames,base_nickname], multi_dict,
                                 web_category, adfobj, **vres)
 
-        print("  ...lat/lon multi-case plots have been generated successfully.")
+        print("     ...lat/lon multi-case plots have been generated successfully.")
 
     #Notify user that script has ended:
     print("  ...lat/lon maps have been generated successfully.")

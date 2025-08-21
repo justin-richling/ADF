@@ -2750,7 +2750,7 @@ def multi_latlon_plots_diffz(wks, ptype, case_names, nicknames, multi_dict, web_
 
 
 
-def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
+def multi_latlon_plots_CLOSE_BUT_BADSIES(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
     """ This is a multi-case comparison of test minus baseline for each test case:
         wks: path for saved image.
                 Should be assets directory inside of the main_website directory
@@ -2980,11 +2980,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     c = 0
                                 if key == "o_data":
                                     c = 1
-                                print("model levels1",levels1)
-                                print("mwrap",mwrap,"\b")
+
                                 img.append(axs[r,c].contourf(lons, lats, mwrap,
                                                                         levels=levels1,
-                                    cmap="Oranges",#cmap1,
+                                    cmap=cmap1,
                                     norm=norm1,
                                     transform=ccrs.PlateCarree()))
 
@@ -3027,6 +3026,305 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
 
 
+
+def multi_latlon_plotsS(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
+    """ This is a multi-case comparison of test minus baseline for each test case:
+        wks: path for saved image.
+                Should be assets directory inside of the main_website directory
+        ptype: ADF shortname for plot type.
+                For this plot it will be either LatLon or LatLon_Vector
+        case_names: list of test case names only
+        nicknames: list of test case nicknames
+                First entry of list will be list of test case nicknames
+                Second entry will be string object of baseline nickname
+        multi_dict: ordered dictionary of difference data for each var, test case, and season
+                multi_dict[var][case_name][s]
+        web_category:
+                variable category
+        adfobj: ADF object
+                Needed to test if redo_plot is called in config yaml file
+    """
+
+
+    nplots = len(nicknames[0])
+    if nplots > 2:
+        ncols = 3
+    else:
+        ncols = 2
+    #End if
+    ncols = 3
+
+    #Check redo_plot. If set to True: remove old plot, if it already exists:
+    redo_plot = adfobj.get_basic_info('redo_plot')
+
+    #Determine needed matplotlib normalization function:
+    normfunc,_ = use_this_norm()
+
+    #Try and format spacing based on number of cases
+    # NOTE: ** this will have to change if figsize or dpi change **
+    if nplots < 4:
+        hspace = -1.0
+    else:
+        hspace = -0.85
+    #End if
+
+    nrows = int(np.ceil(nplots/ncols))
+    if nrows == 1:
+        y_title = 0.265
+    else:
+        y_title = 0.315
+    #End if
+
+    if nrows < 2:
+        nrows = 2
+    nrows = len(case_names)
+    print("nrows",nrows)
+    #End if
+
+    # specify the central longitude for the plot
+    central_longitude = get_central_longitude(adfobj)
+    proj = ccrs.PlateCarree(central_longitude=central_longitude)
+    # formatting for tick labels
+    lon_formatter = LongitudeFormatter(number_format='0.0f',
+                                        degree_symbol='',
+                                        dateline_direction_label=False)
+    lat_formatter = LatitudeFormatter(number_format='0.0f',
+                                        degree_symbol='')
+    
+    # multi_dict[var][case_name][season]
+    for var in multi_dict.keys():
+        if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
+            #for case in multi_dict[var].keys():
+            for season in multi_dict[var][case_names[0]].keys():
+                fig_width = 15
+                fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
+                fig, axs = plt.subplots(nrows=nrows,ncols=ncols,
+                                        figsize=(fig_width,30), 
+                                        facecolor='w', edgecolor='k',
+                                                            #sharex=True,
+                                                            #sharey=True,
+                                                            subplot_kw={"projection": proj})
+
+                #Set figure title
+                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.9)#  y=y_title #y=0.325 y=0.225
+                #for season in multi_dict[var][case].keys():
+                #for case in multi_dict[var][season].keys():
+                #if 1==1:
+                file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+                """
+                if (not redo_plot) and Path(wks / file_name).is_file():
+                    #Continue to next iteration:
+                    continue
+                elif (redo_plot) or (not Path(wks / file_name).is_file()):
+                """
+                if 1==1:
+
+                    img = []
+                    titles = []
+                    """# generate dictionary of contour plot settings:
+                    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
+                    if i == len(wrap_fields)-1:
+                        levels = cp_info['levelsdiff']
+                        cmap = cp_info['cmapdiff']
+                        norm = cp_info['normdiff']
+                    elif i == len(wrap_fields)-2:
+                        levels = cp_info['levelspctdiff']
+                        cmap = cp_info['cmappct']
+                        norm = cp_info['pctnorm']
+                    else:
+                        levels = cp_info['levels1']
+                        cmap = cp_info['cmap1']
+                        norm = cp_info['norm1']
+
+                    mdlfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
+                    obsfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
+                    diffld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
+                    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
+                    """
+                    for r in range(nrows):
+                        print(f"Plotting row {r} for case {case_names[r]}")
+                        colorbars = {}  # To hold references to contourf plots for colorbars
+
+                        for c, key in enumerate(["m_data", "o_data", "diff_data"]):
+                            print(f"\tPlotting {key} at row {r}, col {c}")
+
+                            fld = multi_dict[var][case_names[r]][season][key]
+                            lat = fld['lat']
+                            data, lon = add_cyclic_point(fld, coord=fld['lon'])
+                            lons, lats = np.meshgrid(lon, lat)
+                            if key == "diff_data":
+                                print("\t\t ** diff_data")
+                                #fld = val
+                                #lat = fld['lat']
+                                #dwrap, lon = add_cyclic_point(fld, coord=fld['lon'])
+                                # mesh for plots:
+                                #lons, lats = np.meshgrid(lon, lat)
+
+                                # Difference options -- Check in kwargs for colormap and levels
+                                if "diff_colormap" in kwargs:
+                                    cmap = kwargs["diff_colormap"]
+                                else:
+                                    cmap = 'coolwarm'
+                                #End if
+
+                                if "diff_contour_levels" in kwargs:
+                                    levels = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+                                elif "diff_contour_range" in kwargs:
+                                    assert len(kwargs['diff_contour_range']) == 3, \
+                                    "diff_contour_range must have exactly three entries: min, max, step"
+
+                                    levels = np.arange(*kwargs['diff_contour_range'])
+                                else:
+                                    # set a symmetric color bar for diff:
+                                    absmaxdif = np.max(np.abs(data.data))
+                                    # set levels for difference plot:
+                                    levels = np.linspace(-1*absmaxdif, absmaxdif, 12)
+
+                                # color normalization for difference
+                                if ((np.min(levels) < 0) and (0 < np.max(levels))) and mplv > 2:
+                                    norm = normfunc(vmin=np.min(levels), vmax=np.max(levels), vcenter=0.0)
+                                else:
+                                    norm = mpl.colors.Normalize(vmin=np.min(levels), vmax=np.max(levels))
+
+                                """img.append(axs[r,2].contourf(lons, lats, data,
+                                                            levels=levelsdiff,
+                                                cmap=cmapdiff,
+                                                norm=normdiff,
+                                                transform=ccrs.PlateCarree()))"""
+                                        
+                            else:
+                                print("\t\t ** m/o_data")
+                                adata = multi_dict[var][case_names[r]][season]["m_data"]
+                                bdata = multi_dict[var][case_names[r]][season]["o_data"]
+                                # determine levels & color normalization:
+                                minval = np.min([np.min(adata), np.min(bdata)])
+                                maxval = np.max([np.max(adata), np.max(bdata)])
+
+                                # determine norm to use (deprecate this once minimum MPL version is high enough)
+                                normfunc, mplv = use_this_norm()
+
+                                if 'colormap' in kwargs:
+                                    cmap = kwargs['colormap']
+                                else:
+                                    cmap = 'coolwarm'
+                                #End if
+
+                                if 'contour_levels' in kwargs:
+                                    levels = kwargs['contour_levels']
+                                    if ('non_linear' in kwargs) and (kwargs['non_linear']):
+                                        cmap_obj = cm.get_cmap(cmap)
+                                        norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
+                                    else:
+                                        norm = mpl.colors.Normalize(vmin=min(levels), vmax=max(levels))
+                                elif 'contour_levels_range' in kwargs:
+                                    assert len(kwargs['contour_levels_range']) == 3, \
+                                    "contour_levels_range must have exactly three entries: min, max, step"
+
+                                    levels = np.arange(*kwargs['contour_levels_range'])
+                                    if ('non_linear' in kwargs) and (kwargs['non_linear']):
+                                        cmap_obj = cm.get_cmap(cmap)
+                                        norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
+                                    else:
+                                        norm = mpl.colors.Normalize(vmin=min(levels), vmax=max(levels))
+                                else:
+                                    levels = np.linspace(minval, maxval, 12)
+                                    if ('non_linear' in kwargs) and (kwargs['non_linear']):
+                                        cmap_obj = cm.get_cmap(cmap)
+                                        norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
+                                    else:
+                                        norm = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+                                #End if
+
+                                #Check if the minval and maxval are actually different.  If not,
+                                #then set "levels1" to be an empty list, which will cause the
+                                #plotting scripts to add a label instead of trying to plot a variable
+                                #with no contours:
+                                if minval == maxval:
+                                    levels = []
+                                #End if
+
+                                if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
+                                    if ((minval < 0) and (0 < maxval)) and mplv > 2:
+                                        norm = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
+                                    else:
+                                        norm = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+                                    #End if
+                                #End if
+
+                                #lat = val['lat']
+                                #mwrap, lon = add_cyclic_point(val, coord=val['lon'])
+                                ## mesh for plots:
+                                #lons, lats = np.meshgrid(lon, lat)
+                                if key == "m_data":
+                                    c = 0
+                                if key == "o_data":
+                                    c = 1
+
+                                """img.append(axs[r,c].contourf(lons, lats, mwrap,
+                                                                        levels=levels1,
+                                    cmap=cmap1,
+                                    norm=norm1,
+                                    transform=ccrs.PlateCarree()))"""
+                            # Plot to the correct subplot
+                            cf = axs[r, c].contourf(lons, lats, data, levels=levels, cmap=cmap,
+                                                    norm=norm, transform=ccrs.PlateCarree())
+                            #Set individual plot titles (case name/nickname)
+                            #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
+                            #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
+                            axs[r, c].set_title(f"{key} - {case_names[r]}", fontsize=10)
+                            axs[r, c].spines['geo'].set_linewidth(1.5)
+                            axs[r, c].coastlines()
+                            axs[r, c].set_xticks(np.linspace(-180, 120, 6), crs=proj)
+                            axs[r, c].set_yticks(np.linspace(-90, 90, 7), crs=proj)
+                            axs[r, c].tick_params('both', length=5, width=1.5, which='major')
+                            axs[r, c].tick_params('both', length=5, width=1.5, which='minor')
+                            axs[r, c].xaxis.set_major_formatter(lon_formatter)
+                            axs[r, c].yaxis.set_major_formatter(lat_formatter)
+
+                            # Store for colorbars
+                            colorbars[key] = cf
+                        
+                        # Add shared colorbar for m_data and o_data
+                        cbar_ax_shared = fig.add_axes([
+                            axs[r, 0].get_position().x0,  # left edge of first plot
+                            axs[r, 0].get_position().y0 - 0.03,  # below plots
+                            axs[r, 1].get_position().x1 - axs[r, 0].get_position().x0,  # width across col 0-1
+                            0.015  # height
+                        ])
+                        fig.colorbar(colorbars["m_data"], cax=cbar_ax_shared, orientation='horizontal')
+                        cbar_ax_shared.set_title("Model/Obs", fontsize=8)
+
+                        # Add separate colorbar for diff_data
+                        cbar_ax_diff = fig.add_axes([
+                            axs[r, 2].get_position().x0,  # left edge of third plot
+                            axs[r, 2].get_position().y0 - 0.03,  # below third plot
+                            axs[r, 2].get_position().x1 - axs[r, 2].get_position().x0,  # width
+                            0.015
+                        ])
+                        fig.colorbar(colorbars["diff_data"], cax=cbar_ax_diff, orientation='horizontal')
+                        cbar_ax_diff.set_title("Difference", fontsize=8)
+
+                        #else:
+                        #    #Clear left over subplots if they don't fill the row x column matrix
+                        #    axs[r,idx].set_visible(False)
+                        #count = count + 1
+
+                    # __COLORBARS__
+                    #fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
+                    #            aspect=20, shrink=.5, location="bottom",
+                    #            anchor=(0.5,-0.3), extend='both')
+
+                    #Clean up the spacing a bit
+                    plt.subplots_adjust(wspace=0.3, hspace=hspace)
+
+                    fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
+                    print(f"Did it make it here and also check thi spath out: {wks / file_name}")
+
+                    adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
+                                                            category=web_category, season=season, plot_type="LatLon",multi_case=True)
+
+                    #Close plots:
+                    plt.close()
 
 #####################
 #END HELPER FUNCTIONS
