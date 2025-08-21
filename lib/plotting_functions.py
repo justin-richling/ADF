@@ -3142,7 +3142,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
                     """
                     for r in range(nrows):
-                        print(f"Plotting row {r} for case {nicknames[r]}")
+                        print(f"Plotting row {r} for case {case_names[r]}")
                         colorbars = {}  # To hold references to contourf plots for colorbars
 
                         for c, key in enumerate(["m_data", "o_data", "diff_data"]):
