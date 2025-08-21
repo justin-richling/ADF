@@ -3385,7 +3385,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     #Clean up the spacing a bit
                     #plt.subplots_adjust(wspace=0.3, hspace=hspace)
-                    plt.subplots_adjust(hspace=hspace)
+                    #plt.subplots_adjust(hspace=hspace)
 
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
                     print(f"Did it make it here and also check thi spath out: {wks / file_name}")
