@@ -2805,7 +2805,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
     
-
+    # multi_dict[var][case_name][season]
     for var in multi_dict.keys():
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
             #for case in multi_dict[var].keys():
@@ -2821,191 +2821,190 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                 plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
                 #for season in multi_dict[var][case].keys():
                 #for case in multi_dict[var][season].keys():
-                if 1==1:
-                    file_name = f"{var}_{season}_{ptype}_multi_plot.png"
-                    if (not redo_plot) and Path(wks / file_name).is_file():
-                        #Continue to next iteration:
-                        continue
-                    elif (redo_plot) or (not Path(wks / file_name).is_file()):
+                #if 1==1:
+                file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+                if (not redo_plot) and Path(wks / file_name).is_file():
+                    #Continue to next iteration:
+                    continue
+                elif (redo_plot) or (not Path(wks / file_name).is_file()):
 
+                    img = []
+                    titles = []
+                    """# generate dictionary of contour plot settings:
+                    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
+                    if i == len(wrap_fields)-1:
+                        levels = cp_info['levelsdiff']
+                        cmap = cp_info['cmapdiff']
+                        norm = cp_info['normdiff']
+                    elif i == len(wrap_fields)-2:
+                        levels = cp_info['levelspctdiff']
+                        cmap = cp_info['cmappct']
+                        norm = cp_info['pctnorm']
+                    else:
+                        levels = cp_info['levels1']
+                        cmap = cp_info['cmap1']
+                        norm = cp_info['norm1']
 
-                        count = 0
-                        img = []
-                        titles = []
-                        """# generate dictionary of contour plot settings:
-                        cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
-                        if i == len(wrap_fields)-1:
-                            levels = cp_info['levelsdiff']
-                            cmap = cp_info['cmapdiff']
-                            norm = cp_info['normdiff']
-                        elif i == len(wrap_fields)-2:
-                            levels = cp_info['levelspctdiff']
-                            cmap = cp_info['cmappct']
-                            norm = cp_info['pctnorm']
-                        else:
-                            levels = cp_info['levels1']
-                            cmap = cp_info['cmap1']
-                            norm = cp_info['norm1']
+                    mdlfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
+                    obsfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
+                    diffld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
+                    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
+                    """
+                    for r in range(0,nrows):
+                    #for r,(key,val) in enumerate(multi_dict[var][case_names[r]][season].items()):
+                        print("Row number:",r)
+                        #for c in range(0,ncols):
 
-                        mdlfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
-                        obsfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
-                        diffld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
-                        cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
-                        """
-                        for r in range(0,nrows):
-                            print("Row number:",r)
-                            #for c in range(0,ncols):
-                            if 1==1:
-                                #if count < nplots:
-                                if 1==1:
-                                    for idx,(key,val) in enumerate(multi_dict[var][case_names[r]][season].items()):
-                                        
-                                        if key == "diff_data":
+                        #if count < nplots:
 
-                                            fld = val
-                                            lat = fld['lat']
-                                            dwrap, lon = add_cyclic_point(fld, coord=fld['lon'])
-                                            # mesh for plots:
-                                            lons, lats = np.meshgrid(lon, lat)
+                        for idx,(key,val) in enumerate(multi_dict[var][case_names[r]][season].items()):
 
-                                            # Difference options -- Check in kwargs for colormap and levels
-                                            if "diff_colormap" in kwargs:
-                                                cmapdiff = kwargs["diff_colormap"]
-                                            else:
-                                                cmapdiff = 'coolwarm'
-                                            #End if
+                            if key == "diff_data":
 
-                                            if "diff_contour_levels" in kwargs:
-                                                levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-                                            elif "diff_contour_range" in kwargs:
-                                                assert len(kwargs['diff_contour_range']) == 3, \
-                                                "diff_contour_range must have exactly three entries: min, max, step"
+                                fld = val
+                                lat = fld['lat']
+                                dwrap, lon = add_cyclic_point(fld, coord=fld['lon'])
+                                # mesh for plots:
+                                lons, lats = np.meshgrid(lon, lat)
 
-                                                levelsdiff = np.arange(*kwargs['diff_contour_range'])
-                                            else:
-                                                # set a symmetric color bar for diff:
-                                                absmaxdif = np.max(np.abs(val.data))
-                                                # set levels for difference plot:
-                                                levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
-
-                                            # color normalization for difference
-                                            if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
-                                                normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
-                                            else:
-                                                normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
-                                            img.append(axs[r,2].contourf(lons, lats, dwrap,
-                                                                         #levels=levelsdiff,
-                                                    cmap=cmapdiff,
-                                                    #norm=normdiff,
-                                                    transform=ccrs.PlateCarree()))
-                                        
-                                        else:
-                                            adata = multi_dict[var][case_names[r]][season]["m_data"]
-                                            bdata = multi_dict[var][case_names[r]][season]["o_data"]
-                                            # determine levels & color normalization:
-                                            minval = np.min([np.min(adata), np.min(bdata)])
-                                            maxval = np.max([np.max(adata), np.max(bdata)])
-
-                                            # determine norm to use (deprecate this once minimum MPL version is high enough)
-                                            normfunc, mplv = use_this_norm()
-
-                                            if 'colormap' in kwargs:
-                                                cmap1 = kwargs['colormap']
-                                            else:
-                                                cmap1 = 'coolwarm'
-                                            #End if
-
-                                            if 'contour_levels' in kwargs:
-                                                levels1 = kwargs['contour_levels']
-                                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                                    cmap_obj = cm.get_cmap(cmap1)
-                                                    norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-                                                else:
-                                                    norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-                                            elif 'contour_levels_range' in kwargs:
-                                                assert len(kwargs['contour_levels_range']) == 3, \
-                                                "contour_levels_range must have exactly three entries: min, max, step"
-
-                                                levels1 = np.arange(*kwargs['contour_levels_range'])
-                                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                                    cmap_obj = cm.get_cmap(cmap1)
-                                                    norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-                                                else:
-                                                    norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-                                            else:
-                                                levels1 = np.linspace(minval, maxval, 12)
-                                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                                    cmap_obj = cm.get_cmap(cmap1)
-                                                    norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-                                                else:
-                                                    norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-                                            #End if
-
-                                            #Check if the minval and maxval are actually different.  If not,
-                                            #then set "levels1" to be an empty list, which will cause the
-                                            #plotting scripts to add a label instead of trying to plot a variable
-                                            #with no contours:
-                                            if minval == maxval:
-                                                levels1 = []
-                                            #End if
-
-                                            if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-                                                if ((minval < 0) and (0 < maxval)) and mplv > 2:
-                                                    norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
-                                                else:
-                                                    norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-                                                #End if
-                                            #End if
-
-                                            lat = val['lat']
-                                            mwrap, lon = add_cyclic_point(val, coord=val['lon'])
-                                            # mesh for plots:
-                                            lons, lats = np.meshgrid(lon, lat)
-                                            if key == "m_data":
-                                                c = 0
-                                            if key == "o_data":
-                                                c = 1
-                                            img.append(axs[r,c].contourf(lons, lats, mwrap,
-                                                                         #levels=levels1,
-                                                cmap="Oranges",#cmap1,
-                                                norm=norm1,
-                                                transform=ccrs.PlateCarree()))
-
-                                        #Set individual plot titles (case name/nickname)
-                                        #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
-                                        #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
-
-                                        axs[r,idx].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
-                                        axs[r,idx].coastlines()
-                                        axs[r,idx].set_xticks(np.linspace(-180, 120, 6), crs=proj)
-                                        axs[r,idx].set_yticks(np.linspace(-90, 90, 7), crs=proj)
-                                        axs[r,idx].tick_params('both', length=5, width=1.5, which='major')
-                                        axs[r,idx].tick_params('both', length=5, width=1.5, which='minor')
-                                        axs[r,idx].xaxis.set_major_formatter(lon_formatter)
-                                        axs[r,idx].yaxis.set_major_formatter(lat_formatter)
-
+                                # Difference options -- Check in kwargs for colormap and levels
+                                if "diff_colormap" in kwargs:
+                                    cmapdiff = kwargs["diff_colormap"]
                                 else:
-                                    #Clear left over subplots if they don't fill the row x column matrix
-                                    axs[r,idx].set_visible(False)
-                                count = count + 1
+                                    cmapdiff = 'coolwarm'
+                                #End if
 
-                        # __COLORBARS__
-                        #fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
-                        #            aspect=20, shrink=.5, location="bottom",
-                        #            anchor=(0.5,-0.3), extend='both')
+                                if "diff_contour_levels" in kwargs:
+                                    levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
+                                elif "diff_contour_range" in kwargs:
+                                    assert len(kwargs['diff_contour_range']) == 3, \
+                                    "diff_contour_range must have exactly three entries: min, max, step"
 
-                        #Clean up the spacing a bit
-                        plt.subplots_adjust(wspace=0.3, hspace=hspace)
+                                    levelsdiff = np.arange(*kwargs['diff_contour_range'])
+                                else:
+                                    # set a symmetric color bar for diff:
+                                    absmaxdif = np.max(np.abs(val.data))
+                                    # set levels for difference plot:
+                                    levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
 
-                        fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
-                        print(f"Did it make it here and also check thi spath out: {wks / file_name}")
+                                # color normalization for difference
+                                if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+                                    normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
+                                else:
+                                    normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-                        adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
+                                img.append(axs[r,2].contourf(lons, lats, dwrap,
+                                                            levels=levelsdiff,
+                                                cmap=cmapdiff,
+                                                norm=normdiff,
+                                                transform=ccrs.PlateCarree()))
+                                        
+                            else:
+                                adata = multi_dict[var][case_names[r]][season]["m_data"]
+                                bdata = multi_dict[var][case_names[r]][season]["o_data"]
+                                # determine levels & color normalization:
+                                minval = np.min([np.min(adata), np.min(bdata)])
+                                maxval = np.max([np.max(adata), np.max(bdata)])
+
+                                # determine norm to use (deprecate this once minimum MPL version is high enough)
+                                normfunc, mplv = use_this_norm()
+
+                                if 'colormap' in kwargs:
+                                    cmap1 = kwargs['colormap']
+                                else:
+                                    cmap1 = 'coolwarm'
+                                #End if
+
+                                if 'contour_levels' in kwargs:
+                                    levels1 = kwargs['contour_levels']
+                                    if ('non_linear' in kwargs) and (kwargs['non_linear']):
+                                        cmap_obj = cm.get_cmap(cmap1)
+                                        norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+                                    else:
+                                        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+                                elif 'contour_levels_range' in kwargs:
+                                    assert len(kwargs['contour_levels_range']) == 3, \
+                                    "contour_levels_range must have exactly three entries: min, max, step"
+
+                                    levels1 = np.arange(*kwargs['contour_levels_range'])
+                                    if ('non_linear' in kwargs) and (kwargs['non_linear']):
+                                        cmap_obj = cm.get_cmap(cmap1)
+                                        norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+                                    else:
+                                        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+                                else:
+                                    levels1 = np.linspace(minval, maxval, 12)
+                                    if ('non_linear' in kwargs) and (kwargs['non_linear']):
+                                        cmap_obj = cm.get_cmap(cmap1)
+                                        norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+                                    else:
+                                        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+                                #End if
+
+                                #Check if the minval and maxval are actually different.  If not,
+                                #then set "levels1" to be an empty list, which will cause the
+                                #plotting scripts to add a label instead of trying to plot a variable
+                                #with no contours:
+                                if minval == maxval:
+                                    levels1 = []
+                                #End if
+
+                                if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
+                                    if ((minval < 0) and (0 < maxval)) and mplv > 2:
+                                        norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
+                                    else:
+                                        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+                                    #End if
+                                #End if
+
+                                lat = val['lat']
+                                mwrap, lon = add_cyclic_point(val, coord=val['lon'])
+                                # mesh for plots:
+                                lons, lats = np.meshgrid(lon, lat)
+                                if key == "m_data":
+                                    c = 0
+                                if key == "o_data":
+                                    c = 1
+                                img.append(axs[r,c].contourf(lons, lats, mwrap,
+                                                                        levels=levels1,
+                                    cmap="Oranges",#cmap1,
+                                    norm=norm1,
+                                    transform=ccrs.PlateCarree()))
+
+                            #Set individual plot titles (case name/nickname)
+                            #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
+                            #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
+
+                            axs[r,idx].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
+                            axs[r,idx].coastlines()
+                            axs[r,idx].set_xticks(np.linspace(-180, 120, 6), crs=proj)
+                            axs[r,idx].set_yticks(np.linspace(-90, 90, 7), crs=proj)
+                            axs[r,idx].tick_params('both', length=5, width=1.5, which='major')
+                            axs[r,idx].tick_params('both', length=5, width=1.5, which='minor')
+                            axs[r,idx].xaxis.set_major_formatter(lon_formatter)
+                            axs[r,idx].yaxis.set_major_formatter(lat_formatter)
+
+                        #else:
+                        #    #Clear left over subplots if they don't fill the row x column matrix
+                        #    axs[r,idx].set_visible(False)
+                        #count = count + 1
+
+                    # __COLORBARS__
+                    #fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
+                    #            aspect=20, shrink=.5, location="bottom",
+                    #            anchor=(0.5,-0.3), extend='both')
+
+                    #Clean up the spacing a bit
+                    plt.subplots_adjust(wspace=0.3, hspace=hspace)
+
+                    fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
+                    print(f"Did it make it here and also check thi spath out: {wks / file_name}")
+
+                    adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
                                                             category=web_category, season=season, plot_type="LatLon",multi_case=True)
 
-                        #Close plots:
-                        plt.close()
+                    #Close plots:
+                    plt.close()
 
 
 
