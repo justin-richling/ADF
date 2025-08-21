@@ -1248,7 +1248,7 @@ class AdfWeb(AdfObs):
                     multi_plots[multi_case_dict[key]] = mcase_plot
                 #End for
             #End if
-
+            print("multi_plots",multi_plots)
             main_title = "ADF Diagnostics"
             main_tmpl = jinenv.get_template('template_multi_case_index.html')
             main_rndr = main_tmpl.render(title=main_title,
