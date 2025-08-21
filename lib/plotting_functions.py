@@ -3066,6 +3066,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
         hspace = -1.0
     else:
         hspace = -0.85
+    hspace = -0.5
     #End if
 
     nrows = int(np.ceil(nplots/ncols))
@@ -3098,9 +3099,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
             #for season in multi_dict[var][case_names[0]].keys():
             for season in ["ANN"]:
                 fig_width = 15
-                fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
+                fig_height = 5+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
                 fig, axs = plt.subplots(nrows=nrows,ncols=ncols,
-                                        figsize=(fig_width,30), 
+                                        figsize=(fig_width,fig_height), 
                                         facecolor='w', edgecolor='k',
                                                             #sharex=True,
                                                             #sharey=True,
