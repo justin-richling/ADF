@@ -1336,7 +1336,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         else:
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
         #End if
-        multi_plot_dict[kwargs["season"]][plizzy] = {"lons":lons, "lats":lats, "fld":a, "levels":levels, "cmap":cmap, "norm":norm}
+        #multi_plot_dict[kwargs["season"]][plizzy] = {"lons":lons, "lats":lats, "fld":a, "levels":levels, "cmap":cmap, "norm":norm}
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
 
         # add contour lines <- Unused for now -JN
