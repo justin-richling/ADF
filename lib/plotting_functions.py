@@ -3294,7 +3294,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             axs[r, 0].get_position().x0,  # left edge of first plot
                             axs[r, 0].get_position().y0 - 0.03,  # below plots
                             axs[r, 1].get_position().x1 - axs[r, 0].get_position().x0,  # width across col 0-1
-                            0.015  # height
+                            0.01  # height
                         ])
                         fig.colorbar(colorbars["m_data"], cax=cbar_ax_shared, orientation='horizontal')
                         #cbar_ax_shared.set_title("Model/Obs", fontsize=8)
@@ -3304,7 +3304,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             axs[r, 2].get_position().x0,  # left edge of third plot
                             axs[r, 2].get_position().y0 - 0.03,  # below third plot
                             axs[r, 2].get_position().x1 - axs[r, 2].get_position().x0,  # width
-                            0.015
+                            0.01
                         ])
                         fig.colorbar(colorbars["diff_data"], cax=cbar_ax_diff, orientation='horizontal')
                         #cbar_ax_diff.set_title("Difference", fontsize=8)
@@ -3321,7 +3321,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     #Clean up the spacing a bit
                     #plt.subplots_adjust(wspace=0.3, hspace=hspace)
-                    plt.subplots_adjust(wspace=0.3)
+                    plt.subplots_adjust(wspace=0.3, hspace=hspace)
 
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
                     print(f"Did it make it here and also check thi spath out: {wks / file_name}")
