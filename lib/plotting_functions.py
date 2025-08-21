@@ -3155,8 +3155,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     # Define height for each row and its colorbars
                     plot_height = 1
-                    cbar_height = 0.1  # relative to row
-                    spacing_height = 0.3  # vertical space between plot rows
+                    cbar_height = 0.05  # relative to row
+                    spacing_height = 0.2  # vertical space between plot rows
 
                     # Create height ratios for all rows
                     for _ in range(nrows):
@@ -3366,30 +3366,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
 
                         # Add colorbars
-                        #cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
-                        #fig.colorbar(colorbars["m_data"], cax=cbar_shared_ax, orientation="horizontal")
-
-
-                        # Add shared colorbar under first two plots (m_data & o_data)
-                        # Get bounding boxes of the first two plot axes
-                        bbox0 = fig.axes[-3].get_position()
-                        bbox1 = fig.axes[-2].get_position()
-
-                        # Compute the span covering both plots
-                        full_left = bbox0.x0
-                        full_right = bbox1.x1
-                        full_width = full_right - full_left
-
-                        # Shrink width to 50% and center it
-                        half_width = 0.5 * full_width
-                        cbar_left = full_left + (full_width - half_width) / 2
-                        cbar_bottom = min(bbox0.y0, bbox1.y0) - 0.025  # adjust vertical offset
-                        cbar_height = 0.015  # adjust thickness as needed
-
-                        # Create new axis for the centered colorbar
-                        cbar_shared_ax = fig.add_axes([cbar_left, cbar_bottom, half_width, cbar_height])
+                        cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
                         fig.colorbar(colorbars["m_data"], cax=cbar_shared_ax, orientation="horizontal")
-
 
                         cbar_diff_ax = fig.add_subplot(gs[row_base + 1, 2])
                         fig.colorbar(colorbars["diff_data"], cax=cbar_diff_ax, orientation="horizontal")
