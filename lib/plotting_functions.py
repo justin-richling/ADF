@@ -3155,8 +3155,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     # Define height for each row and its colorbars
                     plot_height = 1
-                    cbar_height = 0.02  # relative to row
-                    spacing_height = 0.5  # vertical space between plot rows
+                    cbar_height = 0.05  # relative to row
+                    spacing_height = 0.1  # vertical space between plot rows
 
                     # Create height ratios for all rows
                     for _ in range(nrows):
@@ -3167,7 +3167,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     # Create figure and GridSpec
                     #fig_height = sum(height_ratios)
-                    fig_height = 1+(3*nrows)
+                    fig_height = 1+(2*nrows)
                     fig_width = 15
                     fig = plt.figure(figsize=(fig_width, fig_height))
                     gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols, height_ratios=height_ratios, figure=fig)
