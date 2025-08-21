@@ -967,7 +967,7 @@ class AdfWeb(AdfObs):
                                         "multi": False,
                                         "case_sites": case_sites,
                                         "seasons": seasons,
-                                        "non_seasons": non_seasons[web_data.plot_type]}}
+                                        "non_seasons": non_seasons[web_data.plot_type]}
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
@@ -1095,7 +1095,7 @@ class AdfWeb(AdfObs):
                                                     "multi": multi_layout,
                                                     "case_sites": case_sites,
                                                     "seasons": seasons,
-                                                    "non_seasons": non_seasons[web_data.plot_type]}}
+                                                    "non_seasons": non_seasons[web_data.plot_type]}
 
                                 multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
 
@@ -1177,7 +1177,7 @@ class AdfWeb(AdfObs):
                                             "multi": multi_layout,
                                             "case_sites": case_sites,
                                             "seasons": seasons,
-                                            "non_seasons": non_seasons[web_data.plot_type]}}
+                                            "non_seasons": non_seasons[web_data.plot_type]}
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
 
