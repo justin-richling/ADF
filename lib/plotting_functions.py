@@ -2972,6 +2972,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     c = 0
                                 if key == "o_data":
                                     c = 1
+                                print("model levels1",levels1)
+                                print("mwrap",mwrap,"\b")
                                 img.append(axs[r,c].contourf(lons, lats, mwrap,
                                                                         levels=levels1,
                                     cmap="Oranges",#cmap1,
@@ -2981,7 +2983,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             #Set individual plot titles (case name/nickname)
                             #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
                             #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
-
+                            print("axis stuff:",r,idx)
                             axs[r,idx].spines['geo'].set_linewidth(1.5) #cartopy's recommended method
                             axs[r,idx].coastlines()
                             axs[r,idx].set_xticks(np.linspace(-180, 120, 6), crs=proj)
