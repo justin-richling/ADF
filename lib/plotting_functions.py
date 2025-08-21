@@ -98,6 +98,7 @@ from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy.util import add_cyclic_point
 import geocat.comp as gcomp
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
 import matplotlib.cm as cm
 
@@ -3066,7 +3067,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
         hspace = -1.0
     else:
         hspace = -0.85
-    hspace = -0.5
+    hspace = 0.4
     #End if
 
     nrows = int(np.ceil(nplots/ncols))
@@ -3291,25 +3292,17 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             # Store for colorbars
                             colorbars[key] = cf
                         
-                        # Add shared colorbar for m_data and o_data
-                        cbar_ax_shared = fig.add_axes([
-                            axs[r, 0].get_position().x0,  # left edge of first plot
-                            axs[r, 0].get_position().y0 - 0.03,  # below plots
-                            axs[r, 1].get_position().x1 - axs[r, 0].get_position().x0,  # width across col 0-1
-                            0.01  # height
-                        ])
-                        fig.colorbar(colorbars["m_data"], cax=cbar_ax_shared, orientation='horizontal')
-                        #cbar_ax_shared.set_title("Model/Obs", fontsize=8)
+                        # Add shared colorbar under first two plots (m_data & o_data)
+                        divider_shared = make_axes_locatable(axs[r, 0])
+                        cax_shared = divider_shared.append_axes("bottom", size="5%", pad=0.2)
+                        cb_shared = fig.colorbar(colorbars["m_data"], cax=cax_shared, orientation="horizontal")
+                        cb_shared.ax.tick_params(labelsize=7)
 
-                        # Add separate colorbar for diff_data
-                        cbar_ax_diff = fig.add_axes([
-                            axs[r, 2].get_position().x0,  # left edge of third plot
-                            axs[r, 2].get_position().y0 - 0.03,  # below third plot
-                            axs[r, 2].get_position().x1 - axs[r, 2].get_position().x0,  # width
-                            0.01
-                        ])
-                        fig.colorbar(colorbars["diff_data"], cax=cbar_ax_diff, orientation='horizontal')
-                        #cbar_ax_diff.set_title("Difference", fontsize=8)
+                        # Add separate colorbar under difference plot
+                        divider_diff = make_axes_locatable(axs[r, 2])
+                        cax_diff = divider_diff.append_axes("bottom", size="5%", pad=0.2)
+                        cb_diff = fig.colorbar(colorbars["diff_data"], cax=cax_diff, orientation="horizontal")
+                        cb_diff.ax.tick_params(labelsize=7)
 
                         #else:
                         #    #Clear left over subplots if they don't fill the row x column matrix
