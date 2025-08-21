@@ -3166,7 +3166,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     height_ratios = height_ratios[:-1]
 
                     # Create figure and GridSpec
-                    fig_height = sum(height_ratios)
+                    #fig_height = sum(height_ratios)
+                    fig_height = 5+(3*nrows)
                     fig_width = 15
                     fig = plt.figure(figsize=(fig_width, fig_height))
                     gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols, height_ratios=height_ratios, figure=fig)
