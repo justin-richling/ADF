@@ -833,7 +833,7 @@ class AdfWeb(AdfObs):
 
                     rend_kwarg_dict["enumerate"] = jinja_enumerate
                     rend_kwarg_dict["list"] = jinja_list
-                    mean_rndr = mean_tmpl.render(templ_rend_kwarg_dict)
+                    mean_rndr = mean_tmpl.render(rend_kwarg_dict)
 
                     #Write mean diagnostic plots HTML file:
                     with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
