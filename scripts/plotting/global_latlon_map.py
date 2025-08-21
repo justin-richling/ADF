@@ -387,7 +387,7 @@ def global_latlon_map(adfobj):
                             #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
                             #   *Any other entries will be ignored.
                             # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
-                            print("lat lon script vres",vres)
+
                             pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                                  [syear_cases[case_idx],eyear_cases[case_idx]],
                                                  [syear_baseline,eyear_baseline],
@@ -541,10 +541,12 @@ def global_latlon_map(adfobj):
         print("\n  Generating lat/lon multi-case plots...")
 
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
-        print("vres",vres)
-        pf.multi_latlon_plots(main_site_assets_path, "LatLon", case_names,
-                             [test_nicknames,base_nickname], multi_dict,
-                             web_category, adfobj, **vres)
+        for var in multi_dict.keys():
+            vres = res.get(var, {})
+            print("vres",vres)
+            pf.multi_latlon_plots(main_site_assets_path, "LatLon", case_names,
+                                [test_nicknames,base_nickname], multi_dict,
+                                web_category, adfobj, **vres)
 
         print("  ...lat/lon multi-case plots have been generated successfully.")
 
