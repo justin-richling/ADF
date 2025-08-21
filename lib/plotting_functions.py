@@ -3095,7 +3095,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
     for var in multi_dict.keys():
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
             #for case in multi_dict[var].keys():
-            for season in multi_dict[var][case_names[0]].keys():
+            #for season in multi_dict[var][case_names[0]].keys():
+            for season in ["ANN"]:
                 fig_width = 15
                 fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
                 fig, axs = plt.subplots(nrows=nrows,ncols=ncols,
