@@ -3144,6 +3144,11 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     diffld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
                     cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
                     """
+                    from matplotlib.transforms import Bbox
+
+                    # Define vertical offset from plot to colorbar in figure coordinates
+                    cbar_offset = 0.015  # vertical offset
+                    cbar_height = 0.015  # height of colorbar
                     for r in range(nrows):
                         print(f"Plotting row {r} for case {case_names[r]}")
                         colorbars = {}  # To hold references to contourf plots for colorbars
@@ -3304,29 +3309,32 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         cb_diff = fig.colorbar(colorbars["diff_data"], cax=cax_diff, orientation="horizontal")
                         cb_diff.ax.tick_params(labelsize=7)"""
 
-                        # Shared colorbar below first two columns in row r
-                        shared_left = axs[r, 0].get_position().x0
-                        shared_right = axs[r, 1].get_position().x1
-                        shared_bottom = axs[r, 0].get_position().y0 - 0.03
+                        bbox0 = axs[r, 0].get_position()
+                        bbox1 = axs[r, 1].get_position()
+                        
+                        shared_left = bbox0.x0
+                        shared_right = bbox1.x1
+                        shared_bottom = bbox0.y0 - cbar_offset
 
                         cbar_ax_shared = fig.add_axes([
                             shared_left,
                             shared_bottom,
                             shared_right - shared_left,
-                            0.008  # height
+                            cbar_height
                         ])
                         fig.colorbar(colorbars["m_data"], cax=cbar_ax_shared, orientation="horizontal")
 
-                        # Diff colorbar below third column
-                        diff_left = axs[r, 2].get_position().x0
-                        diff_right = axs[r, 2].get_position().x1
-                        diff_bottom = axs[r, 2].get_position().y0 - 0.03
+                        # --- Diff colorbar below diff_data ---
+                        bbox2 = axs[r, 2].get_position()
+                        diff_left = bbox2.x0
+                        diff_right = bbox2.x1
+                        diff_bottom = bbox2.y0 - cbar_offset
 
                         cbar_ax_diff = fig.add_axes([
                             diff_left,
                             diff_bottom,
                             diff_right - diff_left,
-                            0.008
+                            cbar_height
                         ])
                         fig.colorbar(colorbars["diff_data"], cax=cbar_ax_diff, orientation="horizontal")
 
