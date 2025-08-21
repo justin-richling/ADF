@@ -2906,7 +2906,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
                                 else:
                                     normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
+                                print("diff levelsdiff",levelsdiff)
                                 img.append(axs[r,2].contourf(lons, lats, dwrap,
                                                             levels=levelsdiff,
                                                 cmap=cmapdiff,
