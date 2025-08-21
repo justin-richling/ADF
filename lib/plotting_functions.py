@@ -1183,7 +1183,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 
 #######
-
+multi_plot_dict = {}
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
                       mdlfld, obsfld, diffld, pctld, obs=False, **kwargs):
@@ -1328,6 +1328,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         else:
             img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
         #End if
+        multi_plot_dict[a] = {"lons":lons, "lats":lats, "fld":a, "levels":levels, "cmap":cmap, "norm":norm}
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
 
         # add contour lines <- Unused for now -JN
@@ -2812,21 +2813,26 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
             for season in multi_dict[var][case_names[0]].keys():
                 fig_width = 15
                 fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
-                fig, axs = plt.subplots(nrows=nrows,ncols=ncols,figsize=(fig_width,fig_height), facecolor='w', edgecolor='k',
+                fig, axs = plt.subplots(nrows=nrows,ncols=ncols,
+                                        #figsize=(fig_width,fig_height), 
+                                        facecolor='w', edgecolor='k',
                                                             #sharex=True,
                                                             #sharey=True,
                                                             subplot_kw={"projection": proj})
 
                 #Set figure title
-                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16, y=y_title)#y=0.325 y=0.225
+                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,)#  y=y_title #y=0.325 y=0.225
                 #for season in multi_dict[var][case].keys():
                 #for case in multi_dict[var][season].keys():
                 #if 1==1:
                 file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+                """
                 if (not redo_plot) and Path(wks / file_name).is_file():
                     #Continue to next iteration:
                     continue
                 elif (redo_plot) or (not Path(wks / file_name).is_file()):
+                """
+                if 1==1:
 
                     img = []
                     titles = []
@@ -2858,9 +2864,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         #if count < nplots:
 
                         for idx,(key,val) in enumerate(multi_dict[var][case_names[r]][season].items()):
-
+                            print("\t - idx:",idx)
                             if key == "diff_data":
-
+                                print("\t\t ** diff_data")
                                 fld = val
                                 lat = fld['lat']
                                 dwrap, lon = add_cyclic_point(fld, coord=fld['lon'])
@@ -2900,6 +2906,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                                 transform=ccrs.PlateCarree()))
                                         
                             else:
+                                print("\t\t ** m/o_data")
                                 adata = multi_dict[var][case_names[r]][season]["m_data"]
                                 bdata = multi_dict[var][case_names[r]][season]["o_data"]
                                 # determine levels & color normalization:
