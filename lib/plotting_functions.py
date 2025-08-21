@@ -3271,7 +3271,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             #Set individual plot titles (case name/nickname)
                             #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
                             #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
-                            axs[r, c].set_title(f"{nicknames[r]}", fontsize=10)
+                            if c == 0:
+                                axs[r, c].set_title(f"{nicknames[0][r]}", fontsize=10)
+                            if c == 1:
+                                axs[r, c].set_title(f"{nicknames[1]}", fontsize=10)
+                            if c == 2:
+                                axs[r, c].set_title(f"Difference", fontsize=10)
                             axs[r, c].spines['geo'].set_linewidth(1.5)
                             axs[r, c].coastlines()
                             axs[r, c].set_xticks(np.linspace(-180, 120, 6), crs=proj)
@@ -3292,7 +3297,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             0.015  # height
                         ])
                         fig.colorbar(colorbars["m_data"], cax=cbar_ax_shared, orientation='horizontal')
-                        cbar_ax_shared.set_title("Model/Obs", fontsize=8)
+                        #cbar_ax_shared.set_title("Model/Obs", fontsize=8)
 
                         # Add separate colorbar for diff_data
                         cbar_ax_diff = fig.add_axes([
@@ -3302,7 +3307,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             0.015
                         ])
                         fig.colorbar(colorbars["diff_data"], cax=cbar_ax_diff, orientation='horizontal')
-                        cbar_ax_diff.set_title("Difference", fontsize=8)
+                        #cbar_ax_diff.set_title("Difference", fontsize=8)
 
                         #else:
                         #    #Clear left over subplots if they don't fill the row x column matrix
