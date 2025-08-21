@@ -967,20 +967,19 @@ class AdfWeb(AdfObs):
                                         "multi": False,
                                         "case_sites": case_sites}
 
-                    if not mean_table_file.exists():
-                        #Construct mean_table.html
-                        mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
+                    #Construct mean_table.html
+                    mean_table_tmpl = jinenv.get_template('template_mean_tables.html')
 
-                        #Remove key from main dictionary for this html page
-                        tmpl_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name'}}
+                    #Remove key from main dictionary for this html page
+                    tmpl_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'table_name'}}
 
-                        mean_table_rndr = mean_table_tmpl.render(tmpl_rend_kwarg_dict)
+                    mean_table_rndr = mean_table_tmpl.render(tmpl_rend_kwarg_dict)
 
-                        #Write mean diagnostic tables HTML file:
-                        with open(mean_table_file, 'w', encoding='utf-8') as ofil:
-                            ofil.write(mean_table_rndr)
-                        #End with
-                    #End if
+                    #Write mean diagnostic tables HTML file:
+                    with open(mean_table_file, 'w', encoding='utf-8') as ofil:
+                        ofil.write(mean_table_rndr)
+                    #End with
+
 
                     #Loop through all test cases (exclude baseline)
                     if web_data.case != data_name:
@@ -1139,7 +1138,9 @@ class AdfWeb(AdfObs):
                                 #Construct individual plot type mean_diag
                                 #html files, if they don't already exist:
                                 tmp = jinenv.get_template('template_multi_case_mean_diag.html')
-
+                                templ_rend_kwarg_dict["enumerate"] = jinja_enumerate
+                                templ_rend_kwarg_dict["list"] = jinja_list
+      
                                 mean_rndr = tmp.render(templ_rend_kwarg_dict)
 
                                 #Write mean diagnostic plots HTML file:
