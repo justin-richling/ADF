@@ -669,6 +669,72 @@ class AdfInfo(AdfConfig):
         # -----------------------------------------
 
     #########
+    def get_git_info():
+        import subprocess
+        info = {}
+
+        try:
+            # Current branch
+            branch = subprocess.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                                    stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['branch'] = branch
+
+            # Commit hash
+            commit = subprocess.run(['git', 'rev-parse', 'HEAD'],
+                                    stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['commit'] = commit
+
+            # Remote URL
+            remote_url = subprocess.run(['git', 'remote', 'get-url', 'origin'],
+                                        stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['remote_url'] = remote_url
+
+            # Repo name
+            info['repo_name'] = os.path.splitext(os.path.basename(remote_url))[0]
+
+            # Status
+            status = subprocess.run(['git', 'status', '--short'],
+                                    stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['is_dirty'] = bool(status)
+
+        except subprocess.CalledProcessError as e:
+            print("Git command failed:", e)
+            return None
+
+        return info
+
+    # Example usage
+    git_info = get_git_info()
+    for key, value in git_info.items():
+        print(f"{key}: {value}")
+
+    def get_git_branch():
+        import subprocess
+        try:
+            result = subprocess.run(
+                ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=True
+            )
+            branch = result.stdout.strip()
+            print("Current Git branch:", branch)
+            #return self.__branch
+        except subprocess.CalledProcessError as e:
+            print("Error getting git branch:", e.stderr.strip())
+            return None
+        # -----------------------------------------
+
+    #########
+
+    # Example usage
+    branch = get_git_branch()
+    # Create property needed to return "user" name to user:
+    #@property
+    #def git_branch(self):
+    #    """Return the "user" name if requested."""
+    #    return self.__user
 
     # Create property needed to return "user" name to user:
     @property
