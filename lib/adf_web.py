@@ -965,9 +965,7 @@ class AdfWeb(AdfObs):
                                         "plot_types": plot_type_html,
                                         "multi_head": True,
                                         "multi": False,
-                                        "case_sites": case_sites,
-                                        "seasons": seasons,
-                                        "non_seasons": non_seasons[web_data.plot_type]}
+                                        "case_sites": case_sites}
 
                     if not mean_table_file.exists():
                         #Construct mean_table.html
