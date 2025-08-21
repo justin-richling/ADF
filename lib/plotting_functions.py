@@ -2814,14 +2814,14 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                 fig_width = 15
                 fig_height = 15+(3*nrows) #try and dynamically create size of fig based off number of cases (therefore rows)
                 fig, axs = plt.subplots(nrows=nrows,ncols=ncols,
-                                        #figsize=(fig_width,fig_height), 
+                                        figsize=(fig_width,30), 
                                         facecolor='w', edgecolor='k',
                                                             #sharex=True,
                                                             #sharey=True,
                                                             subplot_kw={"projection": proj})
 
                 #Set figure title
-                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,)#  y=y_title #y=0.325 y=0.225
+                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.9)#  y=y_title #y=0.325 y=0.225
                 #for season in multi_dict[var][case].keys():
                 #for case in multi_dict[var][season].keys():
                 #if 1==1:
