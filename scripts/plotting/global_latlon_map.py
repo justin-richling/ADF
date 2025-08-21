@@ -541,7 +541,6 @@ def global_latlon_map(adfobj):
         print("\n     Generating lat/lon multi-case plots...")
 
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
-        print("multi_dict",multi_dict)
         for var in multi_dict.keys():
             vres = res.get(var, {})
             print("vres",vres)
