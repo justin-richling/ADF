@@ -3106,7 +3106,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                                             subplot_kw={"projection": proj})
 
                 #Set figure title
-                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.9)#  y=y_title #y=0.325 y=0.225
+                #plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.9)#  y=y_title #y=0.325 y=0.225
                 #for season in multi_dict[var][case].keys():
                 #for case in multi_dict[var][season].keys():
                 #if 1==1:
@@ -3142,7 +3142,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
                     """
                     for r in range(nrows):
-                        print(f"Plotting row {r} for case {case_names[r]}")
+                        print(f"Plotting row {r} for case {nicknames[r]}")
                         colorbars = {}  # To hold references to contourf plots for colorbars
 
                         for c, key in enumerate(["m_data", "o_data", "diff_data"]):
@@ -3271,7 +3271,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             #Set individual plot titles (case name/nickname)
                             #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
                             #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
-                            axs[r, c].set_title(f"{key} - {case_names[r]}", fontsize=10)
+                            axs[r, c].set_title(f"{nicknames[r]}", fontsize=10)
                             axs[r, c].spines['geo'].set_linewidth(1.5)
                             axs[r, c].coastlines()
                             axs[r, c].set_xticks(np.linspace(-180, 120, 6), crs=proj)
@@ -3315,7 +3315,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     #            anchor=(0.5,-0.3), extend='both')
 
                     #Clean up the spacing a bit
-                    plt.subplots_adjust(wspace=0.3, hspace=hspace)
+                    #plt.subplots_adjust(wspace=0.3, hspace=hspace)
+                    plt.subplots_adjust(wspace=0.3)
 
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
                     print(f"Did it make it here and also check thi spath out: {wks / file_name}")
