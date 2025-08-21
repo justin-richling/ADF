@@ -3362,12 +3362,14 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         cax_diff = divider_diff.append_axes("bottom", size="5%", pad=0.2)
                         cb_diff = fig.colorbar(colorbars["diff_data"], cax=cax_diff, orientation="horizontal")
                         cb_diff.ax.tick_params(labelsize=7)"""
-                        # Add colorbars
+
+
+                        """# Add colorbars
                         cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
                         fig.colorbar(colorbars["m_data"], cax=cbar_shared_ax, orientation="horizontal")
 
                         cbar_diff_ax = fig.add_subplot(gs[row_base + 1, 2])
-                        fig.colorbar(colorbars["diff_data"], cax=cbar_diff_ax, orientation="horizontal")
+                        fig.colorbar(colorbars["diff_data"], cax=cbar_diff_ax, orientation="horizontal")"""
 
 
                         #else:
