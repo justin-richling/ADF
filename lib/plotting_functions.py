@@ -3027,7 +3027,7 @@ def multi_latlon_plots_CLOSE_BUT_BADSIES(wks, ptype, case_names, nicknames, mult
 
 
 
-def multi_latlon_plotsS(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
+def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
     """ This is a multi-case comparison of test minus baseline for each test case:
         wks: path for saved image.
                 Should be assets directory inside of the main_website directory
