@@ -1243,7 +1243,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     #nice formatting for tick labels
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
-    multi_plot_dict[kwargs["season"]] = {}
+    #multi_plot_dict[kwargs["season"]] = {}
 
     # preprocess
     # - assume all three fields have same lat/lon
