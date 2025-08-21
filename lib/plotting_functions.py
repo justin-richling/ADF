@@ -3067,7 +3067,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
         hspace = -1.0
     else:
         hspace = -0.85
-    hspace = -0.4
+    hspace = -0.2
     #End if
 
     nrows = int(np.ceil(nplots/ncols))
