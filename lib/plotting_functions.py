@@ -3292,7 +3292,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             # Store for colorbars
                             colorbars[key] = cf
                         
-                        # Add shared colorbar under first two plots (m_data & o_data)
+                        """# Add shared colorbar under first two plots (m_data & o_data)
                         divider_shared = make_axes_locatable(axs[r, 0])
                         cax_shared = divider_shared.append_axes("bottom", size="5%", pad=0.2)
                         cb_shared = fig.colorbar(colorbars["m_data"], cax=cax_shared, orientation="horizontal")
@@ -3302,7 +3302,33 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         divider_diff = make_axes_locatable(axs[r, 2])
                         cax_diff = divider_diff.append_axes("bottom", size="5%", pad=0.2)
                         cb_diff = fig.colorbar(colorbars["diff_data"], cax=cax_diff, orientation="horizontal")
-                        cb_diff.ax.tick_params(labelsize=7)
+                        cb_diff.ax.tick_params(labelsize=7)"""
+
+                        # Shared colorbar below first two columns in row r
+                        shared_left = axs[r, 0].get_position().x0
+                        shared_right = axs[r, 1].get_position().x1
+                        shared_bottom = axs[r, 0].get_position().y0 - 0.03
+
+                        cbar_ax_shared = fig.add_axes([
+                            shared_left,
+                            shared_bottom,
+                            shared_right - shared_left,
+                            0.008  # height
+                        ])
+                        fig.colorbar(colorbars["m_data"], cax=cbar_ax_shared, orientation="horizontal")
+
+                        # Diff colorbar below third column
+                        diff_left = axs[r, 2].get_position().x0
+                        diff_right = axs[r, 2].get_position().x1
+                        diff_bottom = axs[r, 2].get_position().y0 - 0.03
+
+                        cbar_ax_diff = fig.add_axes([
+                            diff_left,
+                            diff_bottom,
+                            diff_right - diff_left,
+                            0.008
+                        ])
+                        fig.colorbar(colorbars["diff_data"], cax=cbar_ax_diff, orientation="horizontal")
 
                         #else:
                         #    #Clear left over subplots if they don't fill the row x column matrix
