@@ -125,7 +125,7 @@ def tape_recorder(adfobj):
     alldat=[]
     runname_LT=[]
     for idx,key in enumerate(runs_LT2):
-        dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0.Q.*.nc')[0])
+        dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0a.Q.*.nc')[0])
         dat = fixcesmtime(dat,start_years[idx],end_years[idx])
         datzm = dat.mean('lon')
         dat_tropics = cosweightlat(datzm.Q, -10, 10)
