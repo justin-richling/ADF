@@ -236,12 +236,19 @@ def tape_recorder(adfobj):
     
     if multi_case:
         plot_name_multi = main_site_assets_path / f'TapeRecorder_ANN_Special_multi_plot.{plot_type}'
-        plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
         fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):
         adfobj.add_website_data(plot_name_multi, f"{var}_TapeRecorder", None, category=None, season="ANN",
                                 multi_case=True,plot_type = "Special")
+        for i,plot_loc in plot_location:
+            plot_loc = Path(plot_loc)
+            plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
+            fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
+
+            #Add plot to website (if enabled):
+            adfobj.add_website_data(plot_name_multi, f"{var}_TapeRecorder", None, category=None, season="ANN",
+                                    multi_case=True,plot_type = "Special")
     
     else:
         #This may have to change if other variables are desired in this plot type?
