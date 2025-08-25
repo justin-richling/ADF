@@ -3049,8 +3049,8 @@ def calculate_figsize_from_width_ratios(width_ratios, num_plot_columns, plot_wid
     fig_height = num_rows * height_per_row
     return (fig_width, fig_height)
 
-
-def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
+#def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
+def multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, web_category, adfobj, **kwargs):
     """ This is a multi-case comparison of test minus baseline for each test case:
         wks: path for saved image.
                 Should be assets directory inside of the main_website directory
@@ -3116,7 +3116,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                         degree_symbol='')
     
     # multi_dict[var][case_name][season]
-    for var in multi_dict.keys():
+    #for var in multi_dict.keys():
+    if 1==1:
         if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
             #for case in multi_dict[var].keys():
             #for season in multi_dict[var][case_names[0]].keys():
@@ -3214,7 +3215,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             gs_col = grid_col_map[c]
                             ax = fig.add_subplot(gs[row_base, gs_col], projection=proj)
 
-                            fld = multi_dict[var][case_names[r]][season][key]
+                            #fld = multi_dict[var][case_names[r]][season][key]
+                            fld = multi_dict_var[case_names[r]][season][key]
                             lat = fld['lat']
                             data, lon = add_cyclic_point(fld, coord=fld['lon'])
                             lons, lats = np.meshgrid(lon, lat)
@@ -3248,8 +3250,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     norm = mpl.colors.Normalize(vmin=np.min(levels), vmax=np.max(levels))
                             else:
                                 print("\t\t ** m/o_data")
-                                adata = multi_dict[var][case_names[r]][season]["m_data"]
-                                bdata = multi_dict[var][case_names[r]][season]["o_data"]
+                                #adata = multi_dict[var][case_names[r]][season]["m_data"]
+                                #bdata = multi_dict[var][case_names[r]][season]["o_data"]
+                                adata = multi_dict_var[case_names[r]][season]["m_data"]
+                                bdata = multi_dict_var[case_names[r]][season]["o_data"]
                                 # determine levels & color normalization:
                                 minval = np.min([np.min(adata), np.min(bdata)])
                                 maxval = np.max([np.max(adata), np.max(bdata)])
