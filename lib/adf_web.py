@@ -938,6 +938,7 @@ class AdfWeb(AdfObs):
                 #Starting multi-case tables if requested
                 # - - - - - - - - - - - - - - - - - - -
                 if web_data.data_frame:
+                    multi_plots["Tables"] = "html_table/mean_tables.html"
 
                     #Create all individual tables for the individual websites
 
