@@ -177,6 +177,7 @@ def qbo(adfobj):
             #Check if this is multi-case diagnostics
             if multi_case:
                 if icase != ncases-1:
+                    print("QBO TIME SERIES single case I think:",case_names[icase])
                     plot_loc_ts_idx  = Path(plot_locations[icase]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
 
                     #----QBO timeseries plots
@@ -309,7 +310,7 @@ def qbo(adfobj):
                 ax.legend(loc='upper left')
 
                 #plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
-                plot_loc_amp_idx = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
+                plot_loc_amp_idx = Path(plot_locations[icase]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
 
                 fig.savefig(plot_loc_amp_idx, bbox_inches='tight', facecolor='white')
                 plt.close()
