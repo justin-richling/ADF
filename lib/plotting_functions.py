@@ -3126,7 +3126,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     from matplotlib import gridspec
 
                     # Define rows and columns
-                    ncols = 3  # m_data, o_data, diff_data
+                    ncols = 3+2  # m_data, space, o_data, space, diff_data
                     ncolorbars = 2  # One for m/o, one for diff
                     height_ratios = []
 
