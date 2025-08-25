@@ -3312,11 +3312,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             colorbars[key] = cf
 
                         # Add colorbars
+                        """
                         #cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
                         ax1 = fig.add_subplot(gs[row_base, 0])
                         ax2 = fig.add_subplot(gs[row_base, 1])
-                        ax1 = colorbars[list(colorbars.keys())[0]]
-                        ax2 = colorbars[list(colorbars.keys())[1]]
+                        #ax1 = colorbars[list(colorbars.keys())[0]]
+                        #ax2 = colorbars[list(colorbars.keys())[1]]
 
                         # Get their bounding boxes in figure coordinates
                         pos1 = ax1.get_position()
@@ -3331,9 +3332,13 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         # Add custom colorbar axis
                         cbar_shared_ax = fig.add_axes([x0, y0, x1 - x0, height])
                         fig.colorbar(colorbars["m_data"], cax=cbar_shared_ax, orientation="horizontal")
+                        """
+                        #fig.colorbar(colorbars["m_data"], orientation="vertical")
+                        fig.colorbar(colorbars["o_data"], orientation="vertical")
 
                         cbar_diff_ax = fig.add_subplot(gs[row_base + 1, 2])
-                        fig.colorbar(colorbars["diff_data"], cax=cbar_diff_ax, orientation="horizontal")
+                        #fig.colorbar(colorbars["diff_data"], cax=cbar_diff_ax, orientation="horizontal")
+                        fig.colorbar(colorbars["diff_data"], orientation="vertical")
 
                     # __COLORBARS__
                     #fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
