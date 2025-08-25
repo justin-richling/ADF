@@ -177,7 +177,7 @@ def qbo(adfobj):
             #Check if this is multi-case diagnostics
             if multi_case:
                 if icase != ncases-1:
-                    plot_loc_ts  = Path(plot_locations[icase]) / f'QBOts.{plot_type}'
+                    plot_loc_ts_idx  = Path(plot_locations[icase]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
 
                     #----QBO timeseries plots
                     fig_m = plt.figure(figsize=(16,16))
@@ -237,10 +237,10 @@ def qbo(adfobj):
                     ax_m = plotcolorbar(fig_m, x1[0]+0.2, x2[2]-0.2,y1[2]-0.035,y1[2]-0.03)
 
                     #Save figure to file:
-                    fig_m.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
+                    fig_m.savefig(plot_loc_ts_idx, bbox_inches='tight', facecolor='white')
 
                     #Add plot to website (if enabled):
-                    adfobj.add_website_data(plot_loc_ts, "QBO", case_names[icase], category=None, season="QBOts",
+                    adfobj.add_website_data(plot_loc_ts_idx, "QBO", case_names[icase], category=None, season="QBOts",
                                             multi_case=True,plot_type="Special")
             #End if (multi-case)
 
@@ -308,12 +308,13 @@ def qbo(adfobj):
 
                 ax.legend(loc='upper left')
 
-                plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
+                #plot_loc_amp = Path(plot_locations[icase]) / f'QBOamp.{plot_type}'
+                plot_loc_amp_idx = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
 
-                fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
+                fig.savefig(plot_loc_amp_idx, bbox_inches='tight', facecolor='white')
                 plt.close()
                 #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_loc_amp, "QBO", case_names[icase], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
+                adfobj.add_website_data(plot_loc_amp_idx, "QBO", case_names[icase], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
             #End if (not baseline)
         #End for (cases)
     #End if (multi-case)
