@@ -3188,7 +3188,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
                     # Adjust value to control spacing from title
-                    plt.subplots_adjust(top=0.85)
+                    plt.subplots_adjust(top=0.875)
 
                     from matplotlib.transforms import Bbox
 
