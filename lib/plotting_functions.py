@@ -3172,7 +3172,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     fig = plt.figure(figsize=(fig_width, fig_height))
                     gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols, height_ratios=height_ratios, figure=fig)
 
-
                     plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
 
                     from matplotlib.transforms import Bbox
@@ -3196,11 +3195,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             lons, lats = np.meshgrid(lon, lat)
                             if key == "diff_data":
                                 print("\t\t ** diff_data")
-                                #fld = val
-                                #lat = fld['lat']
-                                #dwrap, lon = add_cyclic_point(fld, coord=fld['lon'])
-                                # mesh for plots:
-                                #lons, lats = np.meshgrid(lon, lat)
 
                                 # Difference options -- Check in kwargs for colormap and levels
                                 if "diff_colormap" in kwargs:
@@ -3227,13 +3221,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     norm = normfunc(vmin=np.min(levels), vmax=np.max(levels), vcenter=0.0)
                                 else:
                                     norm = mpl.colors.Normalize(vmin=np.min(levels), vmax=np.max(levels))
-
-                                """img.append(axs[r,2].contourf(lons, lats, data,
-                                                            levels=levelsdiff,
-                                                cmap=cmapdiff,
-                                                norm=normdiff,
-                                                transform=ccrs.PlateCarree()))"""
-                                        
                             else:
                                 print("\t\t ** m/o_data")
                                 adata = multi_dict[var][case_names[r]][season]["m_data"]
@@ -3293,24 +3280,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                     #End if
                                 #End if
 
-                                #lat = val['lat']
-                                #mwrap, lon = add_cyclic_point(val, coord=val['lon'])
-                                ## mesh for plots:
-                                #lons, lats = np.meshgrid(lon, lat)
                                 if key == "m_data":
                                     c = 0
                                 if key == "o_data":
                                     c = 1
 
-                                """img.append(axs[r,c].contourf(lons, lats, mwrap,
-                                                                        levels=levels1,
-                                    cmap=cmap1,
-                                    norm=norm1,
-                                    transform=ccrs.PlateCarree()))"""
                             # Plot to the correct subplot
-                            #cf = axs[r, c].contourf(lons, lats, data, levels=levels, cmap=cmap,
-                            #                        norm=norm, transform=ccrs.PlateCarree())
-                            
                             cf = ax.contourf(lons, lats, data, levels=levels, cmap=cmap,
                                             norm=norm, transform=ccrs.PlateCarree())
         
@@ -3321,24 +3296,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                             ax.tick_params('both', length=5, width=1.5, which='major')
                             ax.xaxis.set_major_formatter(lon_formatter)
                             ax.yaxis.set_major_formatter(lat_formatter)
-
-                            """#Set individual plot titles (case name/nickname)
-                            #titles.append(axs[r,idx].set_title("$\mathbf{Test}:$"+f" {nicknames[0][count]}",loc='left',fontsize=8))
-                            #titles.append(axs[r,idx].set_title("$\mathbf{Baseline}:$"+f" {nicknames[1]}",loc='right',fontsize=8))
-                            if c == 0:
-                                axs[r, c].set_title(f"{nicknames[0][r]}", fontsize=10)
-                            if c == 1:
-                                axs[r, c].set_title(f"{nicknames[1]}", fontsize=10)
-                            if c == 2:
-                                axs[r, c].set_title(f"Difference", fontsize=10)
-                            axs[r, c].spines['geo'].set_linewidth(1.5)
-                            axs[r, c].coastlines()
-                            axs[r, c].set_xticks(np.linspace(-180, 120, 6), crs=proj)
-                            axs[r, c].set_yticks(np.linspace(-90, 90, 7), crs=proj)
-                            axs[r, c].tick_params('both', length=5, width=1.5, which='major')
-                            axs[r, c].tick_params('both', length=5, width=1.5, which='minor')
-                            axs[r, c].xaxis.set_major_formatter(lon_formatter)
-                            axs[r, c].yaxis.set_major_formatter(lat_formatter)"""
 
                             # Add title
                             if c == 0:
