@@ -3168,7 +3168,6 @@ def multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, w
                     row_axes = []
 
                     for c, key in enumerate(["m_data", "o_data", "diff_data"]):
-                        print(f"\tPlotting {key} at row {r}, col {c}")
 
                         # Create subplot
                         gs_col = grid_col_map[c]

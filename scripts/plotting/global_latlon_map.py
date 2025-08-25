@@ -150,13 +150,28 @@ def global_latlon_map(adfobj):
                "SON": [9, 10, 11]
                }
 
-    # probably want to do this one variable at a time:
-    for var in var_list:
-        #Check if multi-case scenario, if so grab details
-        if multi_plots:
+
+    if multi_plots:
+        #if not adfobj.get_multi_case_info("global_latlon_map"):
+        #        multi_dict[var] = OrderedDict()
+        if adfobj.get_multi_case_info("global_latlon_map"):
             for multi_var in adfobj.get_multi_case_info("global_latlon_map"):
                 if multi_var not in multi_dict:
                     multi_dict[multi_var] = OrderedDict()
+
+    # probably want to do this one variable at a time:
+    for var in var_list:
+        if multi_plots:
+            if not adfobj.get_multi_case_info("global_latlon_map"):
+                    multi_dict[var] = OrderedDict()
+        #Check if multi-case scenario, if so grab details
+        """if multi_plots:
+            if not adfobj.get_multi_case_info("global_latlon_map"):
+                multi_dict[var] = OrderedDict()
+            else:
+                for multi_var in adfobj.get_multi_case_info("global_latlon_map"):
+                    if multi_var not in multi_dict:
+                        multi_dict[multi_var] = OrderedDict()"""
 
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
