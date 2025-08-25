@@ -437,7 +437,8 @@ class AdfWeb(AdfObs):
         multi_case_dict = {"global_latlon_map":"LatLon",
                                "zonal_mean":"Zonal",
                                "meridional":"Meridional",
-                               "global_latlon_vect_map":"LatLon_Vector"}
+                               "global_latlon_vect_map":"LatLon_Vector"
+                               }
 
         #Dictionary for multi-case website plot types
         multi_plots = {#"Tables": "html_table/mean_tables.html",
@@ -1080,6 +1081,7 @@ class AdfWeb(AdfObs):
                                                         start=main_site_img_path),
                                                         multi_plot_page]
                                 #print("multi_mean_html_info[ptype]",multi_mean_html_info[ptype])
+                                #multi_plots[ptype] = f"html_img/multi_case_mean_diag_{ptype}.html"
                                 rend_kwarg_dict = {"title": main_title,
                                                     "var_title": var,
                                                     "season_title": season,
@@ -1167,6 +1169,7 @@ class AdfWeb(AdfObs):
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page, start=main_site_img_path),
                             web_data.asset_path.stem]
                         print("SPECIAL CALSINED PE: multi_mean_html_info[ptype]",multi_mean_html_info[ptype],"\n")
+                        multi_plots[ptype] = f"html_img/multi_case_mean_diag_{ptype}.html"
 
                         print("seasons", seasons)
                         print("non_seasons", non_seasons[web_data.plot_type])
