@@ -3315,8 +3315,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         #cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
                         ax1 = fig.add_subplot(gs[row_base, 0])
                         ax2 = fig.add_subplot(gs[row_base, 1])
-                        ax1 = list(colorbars.keys())[0]
-                        ax2 = list(colorbars.keys())[1]
+                        ax1 = colorbars[list(colorbars.keys())[0]]
+                        ax2 = colorbars[list(colorbars.keys())[1]]
 
                         # Get their bounding boxes in figure coordinates
                         pos1 = ax1.get_position()
