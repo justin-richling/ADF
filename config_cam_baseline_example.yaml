@@ -509,14 +509,6 @@ diag_var_list:
     - O3
     - CO
 
-# Make mulit-plot comparison image for specified plots types
-# This will only run if there are more than one specified test cases declared above
-# NOTE: These plot types also need to be present above in the plotting_scripts section (for now) and variables in the diag_var_list
-# NOTE: Only global LatLon multi-case plots are available at this time - more are coming. JR
-multi_case_plots:
-    global_latlon_map:
-        - PS
-
 #<Add more variables here.>
 # MDTF recommended variables
 #    - FLUT
