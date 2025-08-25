@@ -3173,7 +3173,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols, height_ratios=height_ratios, figure=fig)
 
 
-                    plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.9)#  y=y_title #y=0.325 y=0.225
+                    plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
 
                     from matplotlib.transforms import Bbox
 
