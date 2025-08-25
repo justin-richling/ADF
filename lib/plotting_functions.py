@@ -3173,6 +3173,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols, height_ratios=height_ratios, figure=fig)
 
                     plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
+                    # Adjust value to control spacing from title
+                    plt.subplots_adjust(top=0.91)
 
                     from matplotlib.transforms import Bbox
 
@@ -3313,6 +3315,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         #cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
                         ax1 = fig.add_subplot(gs[row_base, 0])
                         ax2 = fig.add_subplot(gs[row_base, 1])
+                        ax1 = list(colorbars[key].keys())[0]
+                        ax2 = list(colorbars[key].keys())[1]
 
                         # Get their bounding boxes in figure coordinates
                         pos1 = ax1.get_position()
@@ -3322,7 +3326,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         x0 = (pos1.x0 + pos1.x1) / 2  # middle of ax1
                         x1 = (pos2.x0 + pos2.x1) / 2  # middle of ax2
                         y0 = pos1.y0 - 0.05           # place it slightly below ax1
-                        height = 0.02                 # small height for colorbar
+                        height = row_base + 1 #0.02                 # small height for colorbar
 
                         # Add custom colorbar axis
                         cbar_shared_ax = fig.add_axes([x0, y0, x1 - x0, height])
@@ -3338,7 +3342,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     #Clean up the spacing a bit
                     #plt.subplots_adjust(wspace=0.3, hspace=hspace)
-                    #plt.subplots_adjust(hspace=hspace)
+                    hspace = 0.2
+                    plt.subplots_adjust(hspace=hspace)
 
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
                     print(f"Did it make it here and also check thi spath out: {wks / file_name}")
