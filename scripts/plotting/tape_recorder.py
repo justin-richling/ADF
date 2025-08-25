@@ -231,7 +231,7 @@ def tape_recorder(adfobj):
             y1_loc = y1[count]-0.03
             y2_loc = y1[count]-0.02
 
-            plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+            cbar_ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
                             x1_loc, x2_loc, y1_loc, y2_loc,
                             cmap=cmap)
             
@@ -242,6 +242,8 @@ def tape_recorder(adfobj):
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[idx], category=None, season="ANN",
                                     multi_case=True,plot_type = "Special")
+
+            cbar_ax.remove()
 
 
     #Check to see if any cases were successful
