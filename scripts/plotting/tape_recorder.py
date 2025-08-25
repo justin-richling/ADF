@@ -72,24 +72,30 @@ def tape_recorder(adfobj):
 
         #Append all baseline objects to test case lists
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
-        case_names = case_names + [data_name]
+        #case_names = case_names + [data_name]
+        case_names = [data_name]+case_names
         
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
-        case_ts_locs = case_ts_locs+[data_ts_loc]
+        #case_ts_locs = case_ts_locs+[data_ts_loc]
+        case_ts_locs = [data_ts_loc]+case_ts_locs
 
         base_nickname = adfobj.case_nicknames['base_nickname']
-        test_nicknames = test_nicknames+[base_nickname]
+        #test_nicknames = test_nicknames+[base_nickname]
+        test_nicknames = [base_nickname]+test_nicknames
 
         data_start_year = adfobj.climo_yrs["syear_baseline"]
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
-        start_years = start_years+[data_start_year]
-        end_years = end_years+[data_end_year]
+        #start_years = start_years+[data_start_year]
+        #end_years = end_years+[data_end_year]
+        start_years = [data_start_year]+start_years
+        end_years = [data_end_year]+end_years
 
         #Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
         # Filter the list to include only strings that are exactly in the substrings list
         base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
-        hist_strs = case_hist_strs + base_hist_strs
+        #hist_strs = case_hist_strs + base_hist_strs
+        hist_strs = base_hist_strs+case_hist_strs
     else:
         hist_strs = case_hist_strs
     #End if
@@ -231,7 +237,7 @@ def tape_recorder(adfobj):
     y1_loc = y1[count]-0.03
     y2_loc = y1[count]-0.02
 
-    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+    plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
                       x1_loc, x2_loc, y1_loc, y2_loc,
                       cmap=cmap)
 
