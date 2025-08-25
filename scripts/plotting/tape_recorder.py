@@ -302,7 +302,7 @@ def tape_recorder(adfobj):
         nplots = len(runname_LT) + 2  # obs (2) + models
 
         fig = plt.figure(figsize=(4 * nplots, 6))
-        x1, x2, y1, y2 = get5by5coords_zmplots(nplots)
+        x1, x2, y1, y2 = get5by5coords_zmplots()
 
         # Plot MLS and ERA5
         plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
