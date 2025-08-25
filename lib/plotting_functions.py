@@ -3122,29 +3122,6 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                 """
                 if 1==1:
 
-                    img = []
-                    titles = []
-                    """# generate dictionary of contour plot settings:
-                    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
-                    if i == len(wrap_fields)-1:
-                        levels = cp_info['levelsdiff']
-                        cmap = cp_info['cmapdiff']
-                        norm = cp_info['normdiff']
-                    elif i == len(wrap_fields)-2:
-                        levels = cp_info['levelspctdiff']
-                        cmap = cp_info['cmappct']
-                        norm = cp_info['pctnorm']
-                    else:
-                        levels = cp_info['levels1']
-                        cmap = cp_info['cmap1']
-                        norm = cp_info['norm1']
-
-                    mdlfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
-                    obsfld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
-                    diffld = multi_dict[var][case_names[0]][multi_dict[var][case].keys()[0]]
-                    cp_info = prep_contour_plot(mdlfld, obsfld, diffld, None, **kwargs)
-                    """
-
                     import matplotlib.pyplot as plt
                     from matplotlib import gridspec
 
@@ -3181,11 +3158,17 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     # Define vertical offset from plot to colorbar in figure coordinates
                     cbar_offset = 0.015  # vertical offset
                     cbar_height = 0.015  # height of colorbar
+
+                    # Store axes
+                    axes = []
                     for r in range(nrows):
                         print(f"Plotting row {r} for case {case_names[r]}")
                         row_base = r * 3  # Because each row uses 3 grid rows (plot, cbar, space)
                         colorbars = {}
                         cbar_axs = {}
+    
+                        row_axes = []
+
 
                         for c, key in enumerate(["m_data", "o_data", "diff_data"]):
                             print(f"\tPlotting {key} at row {r}, col {c}")
@@ -3310,9 +3293,12 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
 
                             # Store for colorbars
-                            colorbars[key] = cf
+                            #colorbars[key] = cf
+                            row_axes.append((ax, cf))  # Save both axis and contour
                             cbar_axs[key] = ax
+                        axes.append(row_axes)
 
+                        '''
                         # Add colorbars
                         """
                         #cbar_shared_ax = fig.add_subplot(gs[row_base + 1, 0:2])
@@ -3378,38 +3364,29 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         # Add colorbar
                         fig.colorbar(colorbars["diff_data"], cax=cbar_ax, orientation='vertical')
 
-                    # __COLORBARS__
-                    #fig.colorbar(img[-1], ax=axs.ravel().tolist(), orientation='horizontal',
-                    #            aspect=20, shrink=.5, location="bottom",
-                    #            anchor=(0.5,-0.3), extend='both')
+                        '''
 
-                    """
+                    
+                    
+                    
+                    # Add colorbars for middle and right columns (columns 2 and 3)
                     for row in range(3):
-                        for col in [1, 2]:  # Only for columns 1 and 2
-                            ax = axes[row][col]
-                            cf = ax.contourf(...)  # Your plotting code here
-
-                            # Get position of the subplot axis
+                        for col, gap_col in zip([1, 2], [3, 5]):  # colorbar next to these
+                            ax, cf = axes[row][col]
                             pos = ax.get_position()
 
-                            # Define size and spacing for colorbar
                             cbar_width = 0.015
                             cbar_pad = 0.005
 
-                            # Create new axis for colorbar (aligned in height with ax)
                             cbar_ax = fig.add_axes([
-                                pos.x1 + cbar_pad,  # right next to the subplot
-                                pos.y0,             # same bottom
-                                cbar_width,         # thin vertical bar
-                                pos.height          # same height
+                                pos.x1 + cbar_pad,
+                                pos.y0,
+                                cbar_width,
+                                pos.height
                             ])
-
-                            # Add colorbar
                             fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
-
-                    """
-
-
+                    
+                    
                     #Clean up the spacing a bit
                     #plt.subplots_adjust(wspace=0.3, hspace=hspace)
                     hspace = 0.2
