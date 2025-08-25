@@ -440,8 +440,9 @@ class AdfWeb(AdfObs):
                                "global_latlon_vect_map":"LatLon_Vector"}
 
         #Dictionary for multi-case website plot types
-        multi_plots = {"Tables": "html_table/mean_tables.html",
-                       "Special":"html_img/multi_case_mean_diag_Special.html"}
+        multi_plots = {#"Tables": "html_table/mean_tables.html",
+                       #"Special":"html_img/multi_case_mean_diag_Special.html"
+                       }
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -1248,7 +1249,7 @@ class AdfWeb(AdfObs):
                 css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
                 shutil.copytree(css_files_dir, main_templates_path)
             #End if
-            print("multi_case_plots",multi_case_plots)
+            print("\nmulti_case_plots",multi_case_plots)
             if multi_case_plots:
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
