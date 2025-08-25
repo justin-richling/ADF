@@ -321,9 +321,22 @@ def tape_recorder(adfobj):
                             x1[i+2],x2[i+2],y1[i+2],y2[i+2],cmap=cmap, paxis='lev',
                             taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
             
+        if len(runname_LT) == 1:
+            x1_loc = (x1[1]-x1[0])/2
+            x2_loc = ((x2[2]-x2[1])/2)+x2[1]
+        elif len(runname_LT) == 2:
+            x1_loc = (x1[1]-x1[0])/2
+            x2_loc = ((x2[3]-x2[2])/2)+x2[2]
+        else:
+            x1_loc = x1[1]
+            x2_loc = x2[3]
+
+        y1_loc = y1[count-1]-0.03
+        y2_loc = y1[count-1]-0.02
+
         plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
-                      x1_loc, x2_loc, y1_loc, y2_loc,
-                      cmap=cmap)
+                        x1_loc, x2_loc, y1_loc, y2_loc,
+                        cmap=cmap)
         
         plot_name_multi = main_site_assets_path / f'{var}_TapeRecorder_ANN_Special_multi_plot.{plot_type}'
         fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
