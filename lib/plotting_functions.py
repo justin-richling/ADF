@@ -3144,13 +3144,15 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     # Create figure and GridSpec
                     #fig_height = sum(height_ratios)
-                    fig_height = 5+(3*nrows)
+                    fig_height = 1+(3*nrows)
                     fig_width = 15
                     fig = plt.figure(figsize=(fig_width, fig_height))
                     gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols,
                                            height_ratios=height_ratios,
                                            width_ratios=[1, 0.05, 1, 0.1, 1],
                                            figure=fig)
+                    
+                    grid_col_map = {0: 0, 1: 2, 2: 4}
 
                     plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
                     # Adjust value to control spacing from title
@@ -3176,7 +3178,9 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         for c, key in enumerate(["m_data", "o_data", "diff_data"]):
                             print(f"\tPlotting {key} at row {r}, col {c}")
                             # Create subplot
-                            ax = fig.add_subplot(gs[row_base, c], projection=proj)
+                            #ax = fig.add_subplot(gs[row_base, c], projection=proj)
+                            gs_col = grid_col_map[c]
+                            ax = fig.add_subplot(gs[row_base, gs_col], projection=proj)
 
                             fld = multi_dict[var][case_names[r]][season][key]
                             lat = fld['lat']
