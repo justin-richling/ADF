@@ -182,6 +182,7 @@ def tape_recorder(adfobj):
         hist_str = hist_strs[idx]
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         dat = adfobj.data.load_timeseries_dataset(fils)
+        plot_loc = plot_location[idx]
 
         if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
@@ -205,6 +206,43 @@ def tape_recorder(adfobj):
                             taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
             count=count+1
             runname_LT.append(key)
+
+
+            #Check to see if any cases were successful
+            if not key:
+                msg = f"\t  WARNING: No cases seem to be available, please check time series files for {var}."
+                msg += "\n\tNo tape recorder plots will be made."
+                print(msg)
+                #End tape recorder plotting script:
+                return
+
+            #Shift colorbar if there are less than 5 subplots
+            # There will always be at least 2 (MLS and ERA5)
+            if len(key) == 1:
+                x1_loc = (x1[1]-x1[0])/2
+                x2_loc = ((x2[2]-x2[1])/2)+x2[1]
+            elif len(key) == 2:
+                x1_loc = (x1[1]-x1[0])/2
+                x2_loc = ((x2[3]-x2[2])/2)+x2[2]
+            else:
+                x1_loc = x1[1]
+                x2_loc = x2[3]
+
+            y1_loc = y1[count]-0.03
+            y2_loc = y1[count]-0.02
+
+            plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+                            x1_loc, x2_loc, y1_loc, y2_loc,
+                            cmap=cmap)
+            
+            plot_loc = Path(plot_loc)
+            plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
+            fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
+
+            #Add plot to website (if enabled):
+            adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[i], category=None, season="ANN",
+                                    multi_case=True,plot_type = "Special")
+
 
     #Check to see if any cases were successful
     if not runname_LT:
@@ -241,14 +279,14 @@ def tape_recorder(adfobj):
         #Add plot to website (if enabled):
         adfobj.add_website_data(plot_name_multi, f"{var}_TapeRecorder", None, category=None, season="ANN",
                                 multi_case=True,plot_type = "Special")
-        for i,plot_loc in enumerate(plot_location):
+        """for i,plot_loc in enumerate(plot_location):
             plot_loc = Path(plot_loc)
             plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
             fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
             #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[i], category=None, season="ANN",
-                                    multi_case=True,plot_type = "Special")
+                                    multi_case=True,plot_type = "Special")"""
 
     else:
         #This may have to change if other variables are desired in this plot type?

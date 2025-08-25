@@ -1078,7 +1078,7 @@ class AdfWeb(AdfObs):
                                 img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                         start=main_site_img_path),
                                                         multi_plot_page]
-                                print("multi_mean_html_info[ptype]",multi_mean_html_info[ptype])
+                                #print("multi_mean_html_info[ptype]",multi_mean_html_info[ptype])
                                 rend_kwarg_dict = {"title": main_title,
                                                     "var_title": var,
                                                     "season_title": season,
@@ -1162,10 +1162,13 @@ class AdfWeb(AdfObs):
                         #img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                         #                                    start=main_site_img_path),
                         #                                    multi_plot_page]
-                        print(ext,web_data.asset_path.stem)
+                        #print(ext,web_data.asset_path.stem)
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page, start=main_site_img_path),
                             web_data.asset_path.stem]
-                        print("multi_mean_html_info[ptype]",multi_mean_html_info[ptype])
+                        print("SPECIAL CALSINED PE: multi_mean_html_info[ptype]",multi_mean_html_info[ptype],"\n")
+
+                        print("seasons", seasons)
+                        print("non_seasons", non_seasons[web_data.plot_type])
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
                                             "season_title": season,
@@ -1220,15 +1223,15 @@ class AdfWeb(AdfObs):
                         mean_ptype_file = main_site_img_path / multi_mean
 
                         #Remove keys from main dictionary for this html page
-                        templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
+                        #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
 
                         #Construct individual plot type mean_diag
                         #html files, if they don't already exist:
                         tmp = jinenv.get_template('template_multi_case_mean_diag.html')
-                        templ_rend_kwarg_dict["enumerate"] = jinja_enumerate
-                        templ_rend_kwarg_dict["list"] = jinja_list
+                        rend_kwarg_dict["enumerate"] = jinja_enumerate
+                        rend_kwarg_dict["list"] = jinja_list
 
-                        mean_rndr = tmp.render(templ_rend_kwarg_dict)
+                        mean_rndr = tmp.render(rend_kwarg_dict)
 
                         #Write mean diagnostic plots HTML file:
                         with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
