@@ -3147,7 +3147,10 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     fig_height = 1+(3*nrows)
                     fig_width = 15
                     fig = plt.figure(figsize=(fig_width, fig_height))
-                    gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols, height_ratios=height_ratios, figure=fig)
+                    gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols,
+                                           height_ratios=height_ratios,
+                                           width_ratios=[1, 0.05, 1, 0.1, 1],
+                                           figure=fig)
 
                     plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
                     # Adjust value to control spacing from title
@@ -3288,8 +3291,26 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                 ax.set_title(f"{nicknames[0][r]}", fontsize=10)
                             elif c == 1:
                                 ax.set_title(f"{nicknames[1]}", fontsize=10)
+                                # Optional: colorbar to the right of ax3
+                                pos = ax.get_position()
+                                cbar_ax = fig.add_axes([
+                                    pos.x1 + 0.01,  # right of ax3
+                                    pos.y0,
+                                    0.015,
+                                    pos.height
+                                ])
+                                fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
                             else:
                                 ax.set_title("Difference", fontsize=10)
+                                # Optional: colorbar to the right of ax3
+                                pos = ax.get_position()
+                                cbar_ax = fig.add_axes([
+                                    pos.x1 + 0.01,  # right of ax3
+                                    pos.y0,
+                                    0.015,
+                                    pos.height
+                                ])
+                                fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
 
 
                             # Store for colorbars
@@ -3369,7 +3390,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     
                     
                     
-                    # Add colorbars for middle and right columns (columns 2 and 3)
+                    """# Add colorbars for middle and right columns (columns 2 and 3)
                     for row in range(3):
                         for col, gap_col in zip([1, 2], [3, 5]):  # colorbar next to these
                             ax, cf = axes[row][col]
@@ -3384,17 +3405,17 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                                 cbar_width,
                                 pos.height
                             ])
-                            fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
+                            fig.colorbar(cf, cax=cbar_ax, orientation='vertical')"""
                     
                     
                     #Clean up the spacing a bit
                     #plt.subplots_adjust(wspace=0.3, hspace=hspace)
                     hspace = 0.2
                     #plt.subplots_adjust(hspace=hspace)
-                    plt.subplots_adjust(wspace=0.3)
+                    #plt.subplots_adjust(wspace=0.3)
 
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
-                    print(f"Did it make it here and also check thi spath out: {wks / file_name}")
+                    print(f"Did it make it here and also check this path out: {wks / file_name}")
 
                     adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
                                                             category=web_category, season=season, plot_type="LatLon",multi_case=True)
