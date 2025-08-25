@@ -296,7 +296,7 @@ def qbo(adfobj):
                 
                 #Check to plot baseline if not compared to obs
                 if not adfobj.compare_obs:
-                    ax.plot(modamp[-1], -np.log10(modamp[-1].lev), linewidth=2, label=base_nickname)
+                    ax.plot(modamp[-1], -np.log10(modamp[-1].lev), linewidth=2, style="-",label=base_nickname,zorder=100)
 
                 ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
 
