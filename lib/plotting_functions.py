@@ -3027,6 +3027,28 @@ def multi_latlon_plots_CLOSE_BUT_BADSIES(wks, ptype, case_names, nicknames, mult
 
 
 
+def calculate_figsize_from_width_ratios(width_ratios, num_plot_columns, plot_width=4.5,
+                                        num_rows=1, height_per_row=2.5):
+    """
+    Calculates appropriate figsize (width, height) for a GridSpec layout
+    with given width_ratios and desired plot sizes.
+
+    Parameters:
+    - width_ratios: list of floats, e.g. [1, 0.05, 1, 0.1, 1]
+    - num_plot_columns: how many real plot columns are in the layout (e.g. 3)
+    - plot_width: desired width (in inches) for each plot column
+    - num_rows: number of subplot rows
+    - height_per_row: height (in inches) for each row (optional)
+
+    Returns:
+    - (fig_width, fig_height): tuple for use in plt.figure(figsize=(...))
+    """
+
+    total_ratio = sum(width_ratios)
+    fig_width = plot_width * total_ratio / num_plot_columns
+    fig_height = num_rows * height_per_row
+    return (fig_width, fig_height)
+
 
 def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
     """ This is a multi-case comparison of test minus baseline for each test case:
@@ -3144,12 +3166,22 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
 
                     # Create figure and GridSpec
                     #fig_height = sum(height_ratios)
-                    fig_height = 1+(3*nrows)
-                    fig_width = 15
+                    #fig_height = 1+(3*nrows)
+                    #fig_width = 15
+
+
+                    width_ratios = [1, 0.025, 1, 0.25, 1]  # m | space | o | space | diff
+                    fig_width, fig_height = calculate_figsize_from_width_ratios(
+                        width_ratios, num_plot_columns=ncols,
+                        plot_width=4.5,  # desired width of each plot
+                        num_rows=nrows,
+                        height_per_row=3
+                    )
+
                     fig = plt.figure(figsize=(fig_width, fig_height))
                     gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols,
                                            height_ratios=height_ratios,
-                                           width_ratios=[1, 0.05, 1, 0.1, 1],
+                                           width_ratios=width_ratios,
                                            figure=fig)
                     
                     grid_col_map = {0: 0, 1: 2, 2: 4}
