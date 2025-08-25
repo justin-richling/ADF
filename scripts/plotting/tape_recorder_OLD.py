@@ -144,6 +144,12 @@ def tape_recorder(adfobj):
     
     # Plotting
     #---------
+    
+    #Make dictionary for case names and associated timeseries file locations
+    runs_LT2={}
+    for i,val in enumerate(test_nicknames):
+        runs_LT2[val] = case_ts_locs[i]
+
     # MLS data
     mls = xr.open_dataset(obs_loc / "mls_h2o_latNpressNtime_3d_monthly_v5.nc")
     mls = mls.rename(x='lat', y='lev', t='time')
@@ -157,72 +163,55 @@ def tape_recorder(adfobj):
     # ERA5 data
     era5 = xr.open_dataset(obs_loc / "ERA5_Q_10Sto10N_1980to2020.nc")
     era5 = era5.groupby('time.month').mean('time')
-    era5_data = era5.Q
 
-    #Set up figure and plot MLS and ERA5 data
+    alldat=[]
+    runname_LT=[]
+    for idx,key in enumerate(runs_LT2):
+        dat = xr.open_dataset(glob.glob(runs_LT2[key]+'/*h0a.Q.*.nc')[0])
+        dat = fixcesmtime(dat,start_years[idx],end_years[idx])
+        datzm = dat.mean('lon')
+        dat_tropics = cosweightlat(datzm.Q, -10, 10)
+        dat_mon = dat_tropics.groupby('time.month').mean('time').load()
+        alldat.append(dat_mon)
+        runname_LT.append(key)
+
+    runname_LT=xr.DataArray(runname_LT, dims='run', coords=[np.arange(0,len(runname_LT),1)], name='run')
+    alldat_concat_LT = xr.concat(alldat, dim=runname_LT)
+
     fig = plt.figure(figsize=(16,16))
     x1, x2, y1, y2 = get5by5coords_zmplots()
 
     plot_step = 0.5e-7
     plot_min = 1.5e-6
-    plot_max = 3.5e-6
+    plot_max = 3e-6
 
     ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
                       x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
                       taxis='month',climo_yrs="2004-2021")
 
-    ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
+    ax = plot_pre_mon(fig, era5.Q, plot_step,plot_min,plot_max,
                       'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
                       taxis='month',climo_yrs="1980-2020")
 
-
-    #Loop over case(s) and start count at 2 to account for MLS and ERA5 plots above
-    runname_LT=[]
+    #Start count at 2 to account for MLS and ERA5 plots above
     count=2
-    for idx,key in enumerate(test_nicknames):
-        # Search for files
-        ts_loc = Path(case_ts_locs[idx])
-        hist_str = hist_strs[idx]
-        fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        dat = adfobj.data.load_timeseries_dataset(fils)
-
-        if not dat:
-            dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
-            print(dmsg)
-            adfobj.debug_log(dmsg)
-            continue
-
-        #Grab time slice based on requested years (if applicable)
-        dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
-
-        has_dims = pf.validate_dims(dat[var], ['lon'])
-        if not has_dims['has_lon']:
-            print(f"\t    WARNING: Variable {var} is missing a lat dimension for '{key}', cannot continue to plot.")
-        else:
-            datzm = dat.mean('lon')
-            dat_tropics = cosweightlat(datzm[var], -10, 10)
-            dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-            ax = plot_pre_mon(fig, dat_mon,
-                            plot_step, plot_min, plot_max, key,
-                            x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
-            count=count+1
-            runname_LT.append(key)
-
-    #Check to see if any cases were successful
-    if not runname_LT:
-        msg = f"\t  WARNING: No cases seem to be available, please check time series files for {var}."
-        msg += "\n\tNo tape recorder plots will be made."
-        print(msg)
-        #End tape recorder plotting script:
-        return
-
+    for irun in np.arange(0,alldat_concat_LT.run.size,1):
+        title = f"{alldat_concat_LT.run.isel(run=irun).values}"
+        ax = plot_pre_mon(fig, alldat_concat_LT.isel(run=irun),
+                          plot_step, plot_min, plot_max, title,
+                          x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
+                          taxis='month',climo_yrs=f"{start_years[irun]}-{end_years[irun]}")
+        count=count+1
+    
     #Shift colorbar if there are less than 5 subplots
     # There will always be at least 2 (MLS and ERA5)
-    if len(runname_LT) == 1:
+    if len(case_ts_locs) == 0:
+        print("Seems like there are no simulations to plot, exiting script.")
+        return
+    if len(case_ts_locs) == 1:
         x1_loc = (x1[1]-x1[0])/2
         x2_loc = ((x2[2]-x2[1])/2)+x2[1]
-    elif len(runname_LT) == 2:
+    elif len(case_ts_locs) == 2:
         x1_loc = (x1[1]-x1[0])/2
         x2_loc = ((x2[3]-x2[2])/2)+x2[2]
     else:
@@ -232,7 +221,7 @@ def tape_recorder(adfobj):
     y1_loc = y1[count]-0.03
     y2_loc = y1[count]-0.02
 
-    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, 'Q (kg/kg)',
                       x1_loc, x2_loc, y1_loc, y2_loc,
                       cmap=cmap)
 
@@ -240,7 +229,7 @@ def tape_recorder(adfobj):
     fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
+    adfobj.add_website_data(plot_name, "tape_recorder", None, season="ANN", multi_case=True)
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
@@ -347,6 +336,17 @@ def precip_cmap(n, nowhite=False):
     mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap', colors)
 
     return mymap
+
+#########
+
+def fixcesmtime(dat,syear,eyear):
+    """
+    Fix the CESM timestamp with a simple set of dates
+    """
+    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
+    dat = dat.assign_coords({"time":timefix})
+
+    return dat
 
 #########
 

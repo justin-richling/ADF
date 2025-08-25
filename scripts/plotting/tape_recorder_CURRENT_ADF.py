@@ -349,17 +349,6 @@ def precip_cmap(n, nowhite=False):
 
 #########
 
-def fixcesmtime(dat,syear,eyear):
-    """
-    Fix the CESM timestamp with a simple set of dates
-    """
-    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
-    dat = dat.assign_coords({"time":timefix})
-
-    return dat
-
-#########
-
 def get5by5coords_zmplots():
     """
     positioning for 5x5 plots
