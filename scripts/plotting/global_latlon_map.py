@@ -537,7 +537,6 @@ def global_latlon_map(adfobj):
 
     #This will be a list of variables for multi-case plotting based off LatLon plot type
     if multi_plots:
-        print("LAT LON: multi_dict",multi_dict)
         #Notify user that script has started:
         print("\n     Generating lat/lon multi-case plots...")
 
