@@ -3173,7 +3173,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     width_ratios = [1, 0.025, 1, 0.25, 1]  # m | space | o | space | diff
                     fig_width, fig_height = calculate_figsize_from_width_ratios(
                         width_ratios, num_plot_columns=3,
-                        plot_width=15,  # desired width of each plot
+                        plot_width=18,  # desired width of each plot
                         num_rows=nrows,
                         height_per_row=3
                     )
