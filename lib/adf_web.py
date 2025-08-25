@@ -1110,27 +1110,6 @@ class AdfWeb(AdfObs):
 
                                 #Check if the mean plot type and var page exists for this case:
                                 img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                                plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
-                                mean_ptype_plot_page = img_pages_dir / plot_page
-
-                                """
-                                if not mean_ptype_plot_page.exists():
-
-                                    #Remove key from main dictionary for this html page
-                                    templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
-
-                                    #Construct individual plot type mean_diag
-                                    #html files, if they don't already exist:
-                                    page_tmpl = jinenv.get_template('template_multi_case_var.html')
-
-                                    plot_page_rndr = page_tmpl.render(templ_var_rend_kwarg_dict)
-
-                                    #Write mean diagnostic plots HTML file:
-                                    with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                                        ofil.write(plot_page_rndr)
-                                    #End with
-                                #End if (mean_ptype_plot_page exists)
-                                """
 
                                 multi_mean = f"multi_case_mean_diag_{ptype}.html"
                                 mean_ptype_file = main_site_img_path / multi_mean
@@ -1162,10 +1141,7 @@ class AdfWeb(AdfObs):
                         #Create output HTML file path:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                         multi_plot_page = f"{var}_{season}_{ptype}_multi_plot.png"
-                        #img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
-                        #                                    start=main_site_img_path),
-                        #                                    multi_plot_page]
-                        #print(ext,web_data.asset_path.stem)
+
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page, start=main_site_img_path),
                             web_data.asset_path.stem]
                         print("SPECIAL CALSINED PE: multi_mean_html_info[ptype]",multi_mean_html_info[ptype],"\n")
@@ -1202,26 +1178,6 @@ class AdfWeb(AdfObs):
 
                         #Check if the mean plot type and var page exists for this case:
                         img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                        plot_page = f"plot_page_multi_case_{var}_{ptype}.html"
-                        mean_ptype_plot_page = img_pages_dir / plot_page
-                        """
-                        if not mean_ptype_plot_page.exists():
-
-                        #Remove key from main dictionary for this html page
-                        templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
-
-                        #Construct individual plot type mean_diag
-                        #html files, if they don't already exist:
-                        page_tmpl = jinenv.get_template('template_multi_case_var.html')
-
-                        plot_page_rndr = page_tmpl.render(templ_var_rend_kwarg_dict)
-
-                        #Write mean diagnostic plots HTML file:
-                        with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                            ofil.write(plot_page_rndr)
-                        #End with
-                        #End if (mean_ptype_plot_page exists)
-                        """
 
                         multi_mean = f"multi_case_mean_diag_{ptype}.html"
                         mean_ptype_file = main_site_img_path / multi_mean
