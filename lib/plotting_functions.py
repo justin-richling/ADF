@@ -3447,7 +3447,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     #Clean up the spacing a bit
                     #plt.subplots_adjust(wspace=0.3, hspace=hspace)
                     hspace = 0.2
-                    #plt.subplots_adjust(hspace=hspace)
+                    plt.subplots_adjust(hspace=hspace)
                     #plt.subplots_adjust(wspace=0.3)
 
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
