@@ -165,16 +165,17 @@ def tape_recorder(adfobj):
     plot_min = 1.5e-6
     plot_max = 3.5e-6
 
-    ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+    """ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
                       x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
                       taxis='month',climo_yrs="2004-2021")
 
     ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
                       'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
-                      taxis='month',climo_yrs="1980-2020")
+                      taxis='month',climo_yrs="1980-2020")"""
 
     #Loop over case(s) and start count at 2 to account for MLS and ERA5 plots above
     runname_LT=[]
+    model_data_list = []
     count=2
     for idx,key in enumerate(test_nicknames):
         # Search for files
@@ -200,11 +201,30 @@ def tape_recorder(adfobj):
             datzm = dat.mean('lon')
             dat_tropics = cosweightlat(datzm[var], -10, 10)
             dat_mon = dat_tropics.groupby('time.month').mean('time').load()
+            # Save for final multipanel
+            model_data_list.append(dat_mon)
+            runname_LT.append(key)
+
+            # === Per-case 3-panel plot ===
+            fig = plt.figure(figsize=(16, 16))
+            x1, x2, y1, y2 = get5by5coords_zmplots()
+
+
+            ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+                      x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
+                      taxis='month',climo_yrs="2004-2021")
+
+            ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
+                      'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
+                      taxis='month',climo_yrs="1980-2020")
+
+
+
             ax = plot_pre_mon(fig, dat_mon,
                             plot_step, plot_min, plot_max, key,
                             x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
                             taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
-            count=count+1
+            #count=count+1
             runname_LT.append(key)
 
 
@@ -218,7 +238,8 @@ def tape_recorder(adfobj):
 
             #Shift colorbar if there are less than 5 subplots
             # There will always be at least 2 (MLS and ERA5)
-            if len(key) == 1:
+            #if len(key) == 1:
+            if 1==1:
                 x1_loc = (x1[1]-x1[0])/2
                 x2_loc = ((x2[2]-x2[1])/2)+x2[1]
             elif len(key) == 2:
@@ -228,8 +249,10 @@ def tape_recorder(adfobj):
                 x1_loc = x1[1]
                 x2_loc = x2[3]
 
-            y1_loc = y1[count]-0.03
-            y2_loc = y1[count]-0.02
+            #y1_loc = y1[count]-0.03
+            #y2_loc = y1[count]-0.02
+            y1_loc = y1[count-1]-0.03
+            y2_loc = y1[count-1]-0.02
 
             cbar_ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
                             x1_loc, x2_loc, y1_loc, y2_loc,
@@ -243,10 +266,10 @@ def tape_recorder(adfobj):
             adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[idx], category=None, season="ANN",
                                     multi_case=True,plot_type = "Special")
 
-            cbar_ax.remove()
+            #cbar_ax.remove()
 
 
-    #Check to see if any cases were successful
+    """#Check to see if any cases were successful
     if not runname_LT:
         msg = f"\t  WARNING: No cases seem to be available, please check time series files for {var}."
         msg += "\n\tNo tape recorder plots will be made."
@@ -271,10 +294,37 @@ def tape_recorder(adfobj):
 
     plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
                       x1_loc, x2_loc, y1_loc, y2_loc,
-                      cmap=cmap)
+                      cmap=cmap)"""
 
     
     if multi_case:
+        # === Multi-panel summary figure ===
+        nplots = len(runname_LT) + 2  # obs (2) + models
+
+        fig = plt.figure(figsize=(4 * nplots, 6))
+        x1, x2, y1, y2 = get5by5coords_zmplots(nplots)
+
+        # Plot MLS and ERA5
+        plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+                      x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
+                      taxis='month',climo_yrs="2004-2021")
+
+        plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
+                      'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
+                      taxis='month',climo_yrs="1980-2020")
+
+        # Plot each model
+        for i, dat_mon in enumerate(model_data_list):
+            #plot_pre_mon(fig, dat_mon, ..., x1[i+2], x2[i+2], y1[i+2], y2[i+2], ...)
+            plot_pre_mon(fig, dat_mon,
+                            plot_step, plot_min, plot_max, key,
+                            x1[i+2],x2[i+2],y1[i+2],y2[i+2],cmap=cmap, paxis='lev',
+                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+            
+        plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+                      x1_loc, x2_loc, y1_loc, y2_loc,
+                      cmap=cmap)
+        
         plot_name_multi = main_site_assets_path / f'{var}_TapeRecorder_ANN_Special_multi_plot.{plot_type}'
         fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
 
@@ -290,7 +340,7 @@ def tape_recorder(adfobj):
             adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[i], category=None, season="ANN",
                                     multi_case=True,plot_type = "Special")"""
 
-    else:
+    """else:
         #This may have to change if other variables are desired in this plot type?
         plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
 
@@ -307,7 +357,7 @@ def tape_recorder(adfobj):
         fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
+        adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)"""
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
