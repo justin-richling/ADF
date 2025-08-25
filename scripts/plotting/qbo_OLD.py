@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap ## used to create custom colormaps
 import matplotlib.colors as mcolors
 import matplotlib as mpl
-import plotting_functions as pf
 
 def my_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
@@ -29,9 +28,8 @@ def qbo(adfobj):
     Isla Simpson (islas@ucar.edu) 22nd March 2022
 
     """
-    #Notify user that script has started:
-    msg = "\n  Generating qbo plots..."
-    print(f"{msg}\n  {'-' * (len(msg)-3)}")
+ #Notify user that script has started:
+    print("\n  Generating qbo plots...")
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
@@ -75,28 +73,12 @@ def qbo(adfobj):
     #End if
 
     #Set path for QBO figures:
-    plot_loc_ts  = Path(plot_locations[0]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
-    plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
+    plot_loc_ts  = Path(plot_locations[0]) / f'QBOts.{plot_type}'
+    plot_loc_amp = Path(plot_locations[0]) / f'QBOamp.{plot_type}'
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:
     print(f"\t QBO plots will be saved here: {plot_locations[0]}")
-
-    # Check redo_plot. If set to True: remove old plots, if they already exist:
-    if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
-        #Add already-existing plot to website (if enabled):
-        adfobj.debug_log(f"'{plot_loc_ts}' and '{plot_loc_amp}' exist and clobber is false.")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
-
-        #Continue to next iteration:
-        return
-    elif (redo_plot):
-        if plot_loc_ts.is_file():
-            plot_loc_ts.unlink()
-        if plot_loc_amp.is_file():
-            plot_loc_amp.unlink()
-    #End if
 
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
@@ -109,13 +91,14 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_loc)
-    casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+
+    casedat = [ _load_dataset(case_loc[i], case_names[i],'U') for i in range(0,ncases,1) ]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
     for idx, dat in enumerate(casedat):
         if 'U' not in dat.variables:
-            warnings.warn(f"\t    WARNING: Case {case_names[idx]} contains no 'U' field, skipping...")
+            warnings.warn(f"QBO: case {case_names[idx]} contains no 'U' field, skipping...")
             bad_idxs.append(idx)
         #End if
     #End for
@@ -128,23 +111,7 @@ def qbo(adfobj):
     #End if
 
     #----Calculate the zonal mean
-    casedatzm = []
-    for i in range(0,ncases,1):
-        has_dims = pf.validate_dims(casedat[i].U, ['lon'])
-        if not has_dims['has_lon']:
-            print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_loc[i]}', cannot continue to plot.")
-        else:
-            casedatzm.append(casedat[i].U.mean("lon"))
-    if len(casedatzm) == 0:
-        print(f"\t  WARNING: No available cases found, exiting script.")
-        exitmsg = "\tNo QBO plots will be made."
-        print(exitmsg)
-        return
-    if len(casedatzm) != ncases:
-        print(f"\t  WARNING: Number of available cases does not match number of cases. Will exit script for now.")
-        exitmsg = "\tNo QBO plots will be made."
-        print(exitmsg)
-        return
+    casedatzm = [ casedat[i].U.mean("lon") for i in range(0,ncases,1) ]
 
     #----Calculate the 5S-5N average
     casedat_5S_5N = [ cosweightlat(casedatzm[i],-5,5) for i in range(0,ncases,1) ]
@@ -171,7 +138,7 @@ def qbo(adfobj):
     else:
         ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
-    casecount=0
+    #casecount=0
     for icase in range(0,ncases,1):
         if (icase < 11 ): # only only going to work with 12 panels currently
             #Check if this is multi-case diagnostics
@@ -251,7 +218,7 @@ def qbo(adfobj):
             else:
                 ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
                         x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_nicknames[icase])
-            casecount=casecount+1
+            #casecount=casecount+1
         else:
             warnings.warn("The QBO diagnostics can only manage up to twelve cases!")
             break
@@ -275,9 +242,8 @@ def qbo(adfobj):
 
         #Add plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
-        #adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
-        #                        multi_case=True,plot_type="Special")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
+        adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
+                                multi_case=True,plot_type="Special")
     #-----------------
 
     #---Dunkerton and Delisi QBO amplitude
@@ -320,6 +286,7 @@ def qbo(adfobj):
     fig = plt.figure(figsize=(16,16))
 
     ax = fig.add_axes([0.05,0.6,0.4,0.4])
+    
 
     ax.set_ylim(-np.log10(150),-np.log10(1))
     ax.set_yticks([-np.log10(100),-np.log10(30),-np.log10(10),-np.log10(3),-np.log10(1)])
@@ -327,9 +294,7 @@ def qbo(adfobj):
     ax.set_ylabel('Pressure (hPa)', fontsize=12)
     ax.set_xlabel('Dunkerton and Delisi QBO amplitude (ms$^{-1}$)', fontsize=12)
     ax.set_title('Dunkerton and Delisi QBO amplitude', fontsize=14)
-
     ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
-
     for icase in range(0,ncases,1):
         ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
 
@@ -347,8 +312,7 @@ def qbo(adfobj):
         fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
         
         #Add plot to website (if enabled):
-        #adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
+        adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
     
     #Close main fig
     plt.close()
