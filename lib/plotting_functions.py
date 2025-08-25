@@ -3341,7 +3341,7 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                         pos = cbar_axs["o_data"].get_position()
 
                         # Define size and spacing for colorbar
-                        cbar_width = 0.015
+                        cbar_width = 0.0125
                         cbar_pad = 0.005
 
                         # Create new axis for colorbar (aligned in height with ax)
@@ -3413,7 +3413,8 @@ def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_catego
                     #Clean up the spacing a bit
                     #plt.subplots_adjust(wspace=0.3, hspace=hspace)
                     hspace = 0.2
-                    plt.subplots_adjust(hspace=hspace)
+                    #plt.subplots_adjust(hspace=hspace)
+                    plt.subplots_adjust(wspace=0.3)
 
                     fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
                     print(f"Did it make it here and also check thi spath out: {wks / file_name}")
