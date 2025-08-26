@@ -363,8 +363,8 @@ def tape_recorder(adfobj):
             x1_loc = x1[1]
             x2_loc = x2[3]
 
-        y1_loc = y1[count-1]-0.03
-        y2_loc = y1[count-1]-0.02
+        y1_loc = y1[2]-0.03
+        y2_loc = y1[2]-0.02
 
         plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
                         x1_loc, x2_loc, y1_loc, y2_loc,
