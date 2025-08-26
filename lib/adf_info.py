@@ -92,7 +92,12 @@ class AdfInfo(AdfConfig):
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
 
         if self.__mdtf_info is not None:
-            self.expand_references(self.__mdtf_info)
+            if 'mdtf_run' in self.__mdtf_info:
+                if self.__mdtf_info['mdtf_run']:
+                    self.expand_references(self.__mdtf_info)
+            else:
+                # If mdtf_run is not in the config, then assume MDTF is not being run
+                self.__mdtf_info = None
         # End if
 
         # Get the current system user
@@ -380,14 +385,18 @@ class AdfInfo(AdfConfig):
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
 
+         # Check if this is multi-case and adjust appropriately
+        if len(case_names) > 1:
+            cam_hist_str = [[i] for i in cam_hist_str[0]]
+
         if not cam_hist_str:
-            hist_str = [['cam.h0a']]*self.__num_cases
+            hist_str_dict = [['cam.h0a']]*self.__num_cases
         else:
-            hist_str = cam_hist_str
+            hist_str_dict = cam_hist_str
         #End if
 
         #Initialize CAM history string nested list
-        self.__hist_str = hist_str
+        self.__hist_str = hist_str_dict
 
         #Check if using pre-made ts files
         cam_ts_done   = self.get_cam_info("cam_ts_done")
@@ -442,10 +451,22 @@ class AdfInfo(AdfConfig):
             #End if
 
             #Check if history file path exists:
-            hist_str_case = hist_str[case_idx]
+            hist_str_case = hist_str_dict[0]
             if any(cam_hist_locs):
                 #Grab first possible hist string, just looking for years of run
-                hist_str = hist_str_case[0]
+                hist_strs = hist_str_case[0]
+
+                if (len(case_names) > 1) or (isinstance(hist_strs, dict)):
+                    #hist_str_case_1 = list(hist_strs.keys())[case_idx]
+                    hist_str_case_1 = hist_strs#[case_idx]
+                    print("hist_str_case_1",hist_str_case_1,"\n")
+                    hist_str = hist_strs#hist_strs[hist_str_case_1]
+                else:
+                    #if isinstance(hist_strs, dict):
+                    #    hist_str = hist_strs
+                    hist_str = hist_strs
+                print("hist_str",hist_str,"\n")
+
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
@@ -549,6 +570,22 @@ class AdfInfo(AdfConfig):
         self.__syears = syears_fixed
         self.__eyears = eyears_fixed
 
+        #Make directoriess for multi-case diagnostics if applicable
+        if len(case_names) > 1:
+            multi_path = Path(self.get_basic_info('cam_diag_plot_loc', required=True))
+            multi_path.mkdir(parents=True, exist_ok=True)
+            main_site_path = multi_path / "main_website"
+            main_site_path.mkdir(exist_ok=True)
+            main_site_assets_path = main_site_path / "assets"
+            main_site_assets_path.mkdir(exist_ok=True)
+            main_site_img_path = main_site_path / "html_img"
+            main_site_img_path.mkdir(exist_ok=True)
+
+            #Initialize multi-case directories:
+            self.__main_site_path = main_site_path
+            self.__main_site_assets_path = main_site_assets_path
+            self.__main_site_img_path = main_site_img_path
+
         #Finally add baseline case (if applicable) for use by the website table
         #generator.  These files will be stored in the same location as the first
         #listed case.
@@ -631,6 +668,72 @@ class AdfInfo(AdfConfig):
         # -----------------------------------------
 
     #########
+    def get_git_info():
+        import subprocess
+        info = {}
+
+        try:
+            # Current branch
+            branch = subprocess.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                                    stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['branch'] = branch
+
+            # Commit hash
+            commit = subprocess.run(['git', 'rev-parse', 'HEAD'],
+                                    stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['commit'] = commit
+
+            # Remote URL
+            remote_url = subprocess.run(['git', 'remote', 'get-url', 'origin'],
+                                        stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['remote_url'] = remote_url
+
+            # Repo name
+            info['repo_name'] = os.path.splitext(os.path.basename(remote_url))[0]
+
+            # Status
+            status = subprocess.run(['git', 'status', '--short'],
+                                    stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+            info['is_dirty'] = bool(status)
+
+        except subprocess.CalledProcessError as e:
+            print("Git command failed:", e)
+            return None
+
+        return info
+
+    # Example usage
+    git_info = get_git_info()
+    for key, value in git_info.items():
+        print(f"{key}: {value}")
+
+    def get_git_branch():
+        import subprocess
+        try:
+            result = subprocess.run(
+                ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=True
+            )
+            branch = result.stdout.strip()
+            print("Current Git branch:", branch)
+            #return self.__branch
+        except subprocess.CalledProcessError as e:
+            print("Error getting git branch:", e.stderr.strip())
+            return None
+        # -----------------------------------------
+
+    #########
+
+    # Example usage
+    branch = get_git_branch()
+    # Create property needed to return "user" name to user:
+    #@property
+    #def git_branch(self):
+    #    """Return the "user" name if requested."""
+    #    return self.__user
 
     # Create property needed to return "user" name to user:
     @property
@@ -728,6 +831,15 @@ class AdfInfo(AdfConfig):
             base_hist_strs = ""
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
+
+    # Create property needed to return the multi-case directories to scripts:
+    @property
+    def main_site_paths(self):
+        """Return the directories for multi-case diags if applicable."""
+
+        return {"main_site_path":self.__main_site_path,
+                "main_site_assets_path":self.__main_site_assets_path,
+                "main_site_img_path":self.__main_site_img_path}
 
     #########
 
