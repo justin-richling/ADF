@@ -77,15 +77,18 @@ def polar_map(adfobj):
         if adfobj.get_multi_case_info("polar_map"):
             multi_plots = True
             multi_dict = OrderedDict()
+            for multi_var in adfobj.get_multi_case_info("polar_map"):
+                if multi_var not in multi_dict:
+                    multi_dict[multi_var] = OrderedDict()
     #End if (check for multiple cases)
 
-    if multi_plots:
+    """if multi_plots:
         #if not adfobj.get_multi_case_info("global_latlon_map"):
         #        multi_dict[var] = OrderedDict()
         if adfobj.get_multi_case_info("polar_map"):
             for multi_var in adfobj.get_multi_case_info("polar_map"):
                 if multi_var not in multi_dict:
-                    multi_dict[multi_var] = OrderedDict()
+                    multi_dict[multi_var] = OrderedDict()"""
 
     """# probably want to do this one variable at a time:
     for var in var_list:
@@ -140,8 +143,6 @@ def polar_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-    
-    multi_dict = {}
 
     # probably want to do this one variable at a time:
     for var in var_list:

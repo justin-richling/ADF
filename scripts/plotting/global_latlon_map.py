@@ -159,9 +159,9 @@ def global_latlon_map(adfobj):
 
     # probably want to do this one variable at a time:
     for var in var_list:
-        if multi_plots:
+        """if multi_plots:
             if not adfobj.get_multi_case_info("global_latlon_map"):
-                    multi_dict[var] = OrderedDict()
+                    multi_dict[var] = OrderedDict()"""
         #Check if multi-case scenario, if so grab details
         """if multi_plots:
             if not adfobj.get_multi_case_info("global_latlon_map"):
