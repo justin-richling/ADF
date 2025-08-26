@@ -254,9 +254,6 @@ def tape_recorder(adfobj):
                             plot_step, plot_min, plot_max, key,
                             x1[3],x2[3],y1[3],y2[3],cmap=cmap, paxis='lev',
                             taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
-            #count=count+1
-            runname_LT.append(key)
-
 
             #Check to see if any cases were successful
             if not key:
