@@ -174,8 +174,11 @@ def polar_map(adfobj):
         
         for case_idx, case_name in enumerate(case_names):
 
-
-            multi_dict[var][case_name] = {}
+            #Grab data for desired multi-plots (from yaml file)
+            if multi_plots:
+                if var in adfobj.get_multi_case_info("global_latlon_map"):
+                    multi_dict[var][case_name] = OrderedDict()
+            #multi_dict[var][case_name] = {}
             #multi_dict[var][case_name] = {}
             #multi_dict[var][case_name] = {}
 
