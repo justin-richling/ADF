@@ -3113,14 +3113,14 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
                         verts = np.vstack([np.sin(theta), np.cos(theta)]).T
                         circle = mpl.path.Path(verts * radius + center)
                         ax.set_boundary(circle, transform=ax.transAxes)
-                        
+                        ax.set_extent(domain, ccrs.PlateCarree())
                         ax.coastlines()
-                        ax.spines['geo'].set_linewidth(1.5)
-                        ax.set_xticks(np.linspace(-180, 120, 6), crs=proj)
-                        ax.set_yticks(np.linspace(-90, 90, 7), crs=proj)
-                        ax.tick_params('both', length=5, width=1.5, which='major')
-                        ax.xaxis.set_major_formatter(lon_formatter)
-                        ax.yaxis.set_major_formatter(lat_formatter)
+                        #ax.spines['geo'].set_linewidth(1.5)
+                        #ax.set_xticks(np.linspace(-180, 120, 6), crs=proj)
+                        #ax.set_yticks(np.linspace(-90, 90, 7), crs=proj)
+                        #ax.tick_params('both', length=5, width=1.5, which='major')
+                        #ax.xaxis.set_major_formatter(lon_formatter)
+                        #ax.yaxis.set_major_formatter(lat_formatter)
 
                         # Add title
                         if c == 0:
