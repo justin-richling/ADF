@@ -267,9 +267,9 @@ def polar_map(adfobj):
                 plot['season']
             )
 
-            multi_dict[var][case_name][s][plot['type']]["m_data"] = mseason
-            multi_dict[var][case_name][s][plot['type']]["o_data"] = oseason
-            multi_dict[var][case_name][s][plot['type']]["diff_data"] = dseason
+            multi_dict[var][case_name][plot['season']][plot['type']]["m_data"] = mseason
+            multi_dict[var][case_name][plot['season']][plot['type']]["o_data"] = oseason
+            multi_dict[var][case_name][plot['season']][plot['type']]["diff_data"] = dseason
 
             # Create plot
             if plot['path'].exists():
