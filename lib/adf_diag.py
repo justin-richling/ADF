@@ -426,7 +426,7 @@ class AdfDiag(AdfWeb):
                     hist_strs = hist_str_multi_case
                 else:
                     print("single test here?")
-                    hist_strs = [hist_str_multi_case]
+                    hist_strs = hist_str_multi_case
             else:
                 hist_strs = hist_str_list[0][0]
             print("hist_strs",hist_strs)
