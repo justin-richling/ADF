@@ -1088,6 +1088,7 @@ class AdfWeb(AdfObs):
                                 #Create output HTML file path:
                                 img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
                                 multi_plot_page = f"{var}_{season}_{ptype}_multi_plot.png"
+                                print("adf_web: multi_plot_page",multi_plot_page)
                                 img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                         start=main_site_img_path),
                                                         multi_plot_page]
