@@ -195,7 +195,7 @@ def tape_recorder(adfobj):
     datzm_base = dat_base.mean('lon')
     dat_tropics_base = cosweightlat(datzm_base[var], -10, 10)
     dat_mon_base = dat_tropics_base.groupby('time.month').mean('time').load()
-    dat_mon_base.values = dat_mon_base.values()*0.75*0
+    dat_mon_base.values = dat_mon_base.values*0.75*0
 
     model_data_list.append(dat_mon_base)
     runname_LT.append(key_base)
@@ -217,7 +217,6 @@ def tape_recorder(adfobj):
 
         #Grab time slice based on requested years (if applicable)
         dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
-        dat.values = dat.values*0.75*(idx+1)
 
         has_dims = pf.validate_dims(dat[var], ['lon'])
         if not has_dims['has_lon']:
@@ -226,6 +225,7 @@ def tape_recorder(adfobj):
             datzm = dat.mean('lon')
             dat_tropics = cosweightlat(datzm[var], -10, 10)
             dat_mon = dat_tropics.groupby('time.month').mean('time').load()
+            dat_mon.values = dat_mon.values*0.75*(idx+1)
             # Save for final multipanel
             model_data_list.append(dat_mon)
             runname_LT.append(key)
