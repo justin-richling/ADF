@@ -173,6 +173,7 @@ def polar_map(adfobj):
             has_lev = "lev" in tmp_ds.dims
 
             for s in seasons:
+                multi_dict[var][case_name][s] = {}
                 for hemi_type in ["NHPolar", "SHPolar"]:
                     multi_dict[var][case_name][s][hemi_type] = {}
                     if pres_levs and has_lev: # 3-D variable & pressure levels specified
