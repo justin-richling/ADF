@@ -86,7 +86,7 @@ def tape_recorder(adfobj):
 
         base_nickname = adfobj.case_nicknames['base_nickname']
         #test_nicknames = test_nicknames+[base_nickname]
-        test_nicknames = [base_nickname]+test_nicknames
+        nicknames = [base_nickname]+test_nicknames
 
         data_start_year = adfobj.climo_yrs["syear_baseline"]
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
@@ -179,7 +179,7 @@ def tape_recorder(adfobj):
     count=2
 
 
-    key_base = test_nicknames[0]
+    key_base = base_nickname
     ts_loc_base = Path(case_ts_locs[0])
     hist_str_base = hist_strs[0]
     fils_base = sorted(ts_loc_base.glob(f'*{hist_str_base}.{var}.*.nc'))
@@ -200,7 +200,7 @@ def tape_recorder(adfobj):
     model_data_list.append(dat_mon_base)
     runname_LT.append(key_base)
 
-    for idx,key in enumerate(test_nicknames[1:]):
+    for idx,key in enumerate(test_nicknames):
         # Search for files
         print("Tape recorder key:",key)
         ts_loc = Path(case_ts_locs[idx])

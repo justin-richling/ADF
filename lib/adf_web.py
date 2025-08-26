@@ -426,10 +426,14 @@ class AdfWeb(AdfObs):
             #var_list should be a list of all vars for each plot map extensions
             #var is iterative for all plot map extensions
             for multi_var_list in [multi_case_plots[ext] for ext in multi_case_plots]:
-                for var in multi_var_list:
-                    if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
-                        mvars.append(var)
-
+                if multi_var_list:
+                    for var in multi_var_list:
+                        if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
+                            mvars.append(var)
+                else:
+                    for var in self.diag_var_list:
+                        if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
+                            mvars.append(var)
         #Create multi-case site:
         #Make a dictionary for plot type extensions for given plot type
         #This can probably be populated in the for-loops during html creation...
