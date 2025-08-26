@@ -1151,11 +1151,11 @@ class AdfWeb(AdfObs):
 
                         img_data = [os.path.relpath(main_site_assets_path / multi_plot_page, start=main_site_img_path),
                             web_data.asset_path.stem]
-                        print("SPECIAL CALSINED PE: multi_mean_html_info[ptype]",multi_mean_html_info[ptype],"\n")
+                        #print("SPECIAL CALSINED PE: multi_mean_html_info[ptype]",multi_mean_html_info[ptype],"\n")
                         multi_plots[ptype] = f"html_img/multi_case_mean_diag_{ptype}.html"
 
-                        print("seasons", seasons)
-                        print("non_seasons", non_seasons[web_data.plot_type])
+                        #print("seasons", seasons)
+                        #print("non_seasons", non_seasons[web_data.plot_type])
                         rend_kwarg_dict = {"title": main_title,
                                             "var_title": var,
                                             "season_title": season,
