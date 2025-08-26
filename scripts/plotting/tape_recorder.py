@@ -39,6 +39,11 @@ def tape_recorder(adfobj):
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    if len(case_names) > 1:
+        multi_case = True
+        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+    else:
+        multi_case = False
 
     #Grab test case time series locs(s)
     case_ts_locs = adfobj.get_cam_info("cam_ts_loc", required=True)
@@ -72,24 +77,30 @@ def tape_recorder(adfobj):
 
         #Append all baseline objects to test case lists
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
-        case_names = case_names + [data_name]
+        #case_names = case_names + [data_name]
+        #case_names = [data_name]+case_names
         
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
-        case_ts_locs = case_ts_locs+[data_ts_loc]
+        #case_ts_locs = case_ts_locs+[data_ts_loc]
+        case_ts_locs = [data_ts_loc]+case_ts_locs
 
         base_nickname = adfobj.case_nicknames['base_nickname']
-        test_nicknames = test_nicknames+[base_nickname]
+        #test_nicknames = test_nicknames+[base_nickname]
+        nicknames = [base_nickname]+test_nicknames
 
         data_start_year = adfobj.climo_yrs["syear_baseline"]
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
-        start_years = start_years+[data_start_year]
-        end_years = end_years+[data_end_year]
+        #start_years = start_years+[data_start_year]
+        #end_years = end_years+[data_end_year]
+        start_years = [data_start_year]+start_years
+        end_years = [data_end_year]+end_years
 
         #Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
         # Filter the list to include only strings that are exactly in the substrings list
         base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
-        hist_strs = case_hist_strs + base_hist_strs
+        #hist_strs = case_hist_strs + base_hist_strs
+        hist_strs = base_hist_strs+case_hist_strs
     else:
         hist_strs = case_hist_strs
     #End if
@@ -127,21 +138,8 @@ def tape_recorder(adfobj):
     #TODO: add option to look for H2O if Q is not available, and vice-versa
     var = "Q"
 
-    #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
-
     print(f"\t - Plotting annual tape recorder for {var}")
 
-    # Check redo_plot. If set to True: remove old plot, if it already exists:
-    if (not redo_plot) and plot_name.is_file():
-        #Add already-existing plot to website (if enabled):
-        adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-        adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
-        return
-
-    elif (redo_plot) and plot_name.is_file():
-        plot_name.unlink()
-    
     # Plotting
     #---------
     # MLS data
@@ -167,24 +165,49 @@ def tape_recorder(adfobj):
     plot_min = 1.5e-6
     plot_max = 3.5e-6
 
-    ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+    """ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
                       x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
                       taxis='month',climo_yrs="2004-2021")
 
     ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
                       'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
-                      taxis='month',climo_yrs="1980-2020")
-
+                      taxis='month',climo_yrs="1980-2020")"""
 
     #Loop over case(s) and start count at 2 to account for MLS and ERA5 plots above
     runname_LT=[]
+    model_data_list = []
     count=2
+
+
+    key_base = base_nickname
+    ts_loc_base = Path(case_ts_locs[0])
+    hist_str_base = hist_strs[0]
+    fils_base = sorted(ts_loc_base.glob(f'*{hist_str_base}.{var}.*.nc'))
+    dat_base = adfobj.data.load_timeseries_dataset(fils_base)
+
+    #Grab time slice based on requested years (if applicable)
+    dat_base = dat_base.sel(time=slice(str(start_years[0]).zfill(4),str(end_years[0]).zfill(4)))
+
+    has_dims = pf.validate_dims(dat_base[var], ['lon'])
+    if not has_dims['has_lon']:
+        print(f"\t    WARNING: Variable {var} is missing a lat dimension for '{key_base}', cannot continue to plot.")
+
+    datzm_base = dat_base.mean('lon')
+    dat_tropics_base = cosweightlat(datzm_base[var], -10, 10)
+    dat_mon_base = dat_tropics_base.groupby('time.month').mean('time').load()
+    dat_mon_base.values = dat_mon_base.values#+(0.15e-6)
+
+    model_data_list.append(dat_mon_base)
+    runname_LT.append(key_base)
+
     for idx,key in enumerate(test_nicknames):
         # Search for files
+        print("Tape recorder key:",key)
         ts_loc = Path(case_ts_locs[idx])
         hist_str = hist_strs[idx]
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         dat = adfobj.data.load_timeseries_dataset(fils)
+        plot_loc = plot_location[idx]
 
         if not dat:
             dmsg = f"\t No data for `{var}` found in {fils}, case will be skipped in tape recorder plot."
@@ -202,45 +225,124 @@ def tape_recorder(adfobj):
             datzm = dat.mean('lon')
             dat_tropics = cosweightlat(datzm[var], -10, 10)
             dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-            ax = plot_pre_mon(fig, dat_mon,
-                            plot_step, plot_min, plot_max, key,
-                            x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
-                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
-            count=count+1
+            dat_mon.values = dat_mon.values+((0.25*(idx+1))*1e-6)
+            # Save for final multipanel
+            model_data_list.append(dat_mon)
             runname_LT.append(key)
 
-    #Check to see if any cases were successful
-    if not runname_LT:
-        msg = f"\t  WARNING: No cases seem to be available, please check time series files for {var}."
-        msg += "\n\tNo tape recorder plots will be made."
-        print(msg)
-        #End tape recorder plotting script:
-        return
+            # === Per-case 3-panel plot ===
+            fig = plt.figure(figsize=(16, 16))
+            x1, x2, y1, y2 = get5by5coords_zmplots()
 
-    #Shift colorbar if there are less than 5 subplots
-    # There will always be at least 2 (MLS and ERA5)
-    if len(runname_LT) == 1:
-        x1_loc = (x1[1]-x1[0])/2
-        x2_loc = ((x2[2]-x2[1])/2)+x2[1]
-    elif len(runname_LT) == 2:
-        x1_loc = (x1[1]-x1[0])/2
-        x2_loc = ((x2[3]-x2[2])/2)+x2[2]
-    else:
-        x1_loc = x1[1]
-        x2_loc = x2[3]
 
-    y1_loc = y1[count]-0.03
-    y2_loc = y1[count]-0.02
+            ax = plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+                      x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
+                      taxis='month',climo_yrs="2004-2021")
 
-    ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
-                      x1_loc, x2_loc, y1_loc, y2_loc,
-                      cmap=cmap)
+            ax = plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
+                      'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
+                      taxis='month',climo_yrs="1980-2020")
 
-    #Save image
-    fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
-    #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True)
+
+            ax = plot_pre_mon(fig, dat_mon_base,
+                            plot_step, plot_min, plot_max, key_base,
+                            x1[2],x2[2],y1[2],y2[2],cmap=cmap, paxis='lev',
+                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+            
+            plot_pre_mon(fig, dat_mon,
+                            plot_step, plot_min, plot_max, key,
+                            x1[3],x2[3],y1[3],y2[3],cmap=cmap, paxis='lev',
+                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+
+            #Check to see if any cases were successful
+            if not key:
+                msg = f"\t  WARNING: No cases seem to be available, please check time series files for {var}."
+                msg += "\n\tNo tape recorder plots will be made."
+                print(msg)
+                #End tape recorder plotting script:
+                return
+
+            #Shift colorbar if there are less than 5 subplots
+            # There will always be at least 2 (MLS and ERA5)
+            #if len(key) == 1:
+            if 0==1:
+                x1_loc = (x1[1]-x1[0])/2
+                x2_loc = ((x2[2]-x2[1])/2)+x2[1]
+            #elif len(key) == 2:
+            elif 1==1:
+                x1_loc = (x1[1]-x1[0])/2
+                x2_loc = ((x2[3]-x2[2])/2)+x2[2]
+            #else:
+            #    x1_loc = x1[1]
+            #    x2_loc = x2[3]
+
+            #y1_loc = y1[count]-0.03
+            #y2_loc = y1[count]-0.02
+            y1_loc = y1[count-1]-0.03
+            y2_loc = y1[count-1]-0.02
+
+            plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+                            x1_loc, x2_loc, y1_loc, y2_loc,
+                            cmap=cmap)
+            
+            plot_loc = Path(plot_loc)
+            plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
+            fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
+
+            #Add plot to website (if enabled):
+            adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[idx], category=None, season="ANN",
+                                    multi_case=True,plot_type = "Special")
+
+    
+    if multi_case:
+        # === Multi-panel summary figure ===
+        nplots = len(runname_LT) + 2  # obs (2) + models
+
+        #fig = plt.figure(figsize=(4 * nplots, 6))
+        fig = plt.figure(figsize=(16,16))
+        x1, x2, y1, y2 = get5by5coords_zmplots()
+
+        # Plot MLS and ERA5
+        plot_pre_mon(fig, mls, plot_step,plot_min,plot_max,'MLS',
+                      x1[0],x2[0],y1[0],y2[0],cmap=cmap, paxis='lev',
+                      taxis='month',climo_yrs="2004-2021")
+
+        plot_pre_mon(fig, era5_data, plot_step,plot_min,plot_max,
+                      'ERA5',x1[1],x2[1],y1[1],y2[1], cmap=cmap, paxis='pre',
+                      taxis='month',climo_yrs="1980-2020")
+
+        # Plot each model
+        for i, dat_mon in enumerate(model_data_list):
+            #plot_pre_mon(fig, dat_mon, ..., x1[i+2], x2[i+2], y1[i+2], y2[i+2], ...)
+            plot_pre_mon(fig, dat_mon,
+                            plot_step, plot_min, plot_max, runname_LT[i],
+                            x1[i+2],x2[i+2],y1[i+2],y2[i+2],cmap=cmap, paxis='lev',
+                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+            
+        if len(runname_LT) == 1:
+            x1_loc = (x1[1]-x1[0])/2
+            x2_loc = ((x2[2]-x2[1])/2)+x2[1]
+        elif len(runname_LT) == 2:
+            x1_loc = (x1[1]-x1[0])/2
+            x2_loc = ((x2[3]-x2[2])/2)+x2[2]
+        else:
+            x1_loc = x1[1]
+            x2_loc = x2[3]
+
+        y1_loc = y1[nplots]-0.03
+        y2_loc = y1[nplots]-0.02
+
+        plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+                        x1_loc, x2_loc, y1_loc, y2_loc,
+                        cmap=cmap)
+        
+        plot_name_multi = main_site_assets_path / f'{var}_TapeRecorder_ANN_Special_multi_plot.{plot_type}'
+        fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
+
+        #Add plot to website (if enabled):
+        adfobj.add_website_data(plot_name_multi, f"{var}_TapeRecorder", None, category=None, season="ANN",
+                                multi_case=True,plot_type = "Special")
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
@@ -347,6 +449,17 @@ def precip_cmap(n, nowhite=False):
     mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap', colors)
 
     return mymap
+
+#########
+
+def fixcesmtime(dat,syear,eyear):
+    """
+    Fix the CESM timestamp with a simple set of dates
+    """
+    timefix = pd.date_range(start=f'1/1/{syear}', end=f'12/1/{eyear}', freq='MS') # generic time coordinate from a non-leap-year
+    dat = dat.assign_coords({"time":timefix})
+
+    return dat
 
 #########
 
