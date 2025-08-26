@@ -2921,11 +2921,11 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
     else:
         raise AdfError(f'[make_polar_plot] hemisphere not specified, must be NHPolar or SHPolar; hemisphere set as {ptype}')
 
-    if domain is None:
-        if ptype == "NHPolar":
-            domain = [-180, 180, 45, 90]
-        else:
-            domain = [-180, 180, -90, -45]
+    #if domain is None:
+    if ptype == "NHPolar":
+        domain = [-180, 180, 45, 90]
+    else:
+        domain = [-180, 180, -90, -45]
 
 
 
