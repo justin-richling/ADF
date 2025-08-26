@@ -183,7 +183,8 @@ def tape_recorder(adfobj):
     ts_loc_base = Path(case_ts_locs[0])
     hist_str_base = hist_strs[0]
     fils_base = sorted(ts_loc_base.glob(f'*{hist_str_base}.{var}.*.nc'))
-    dat_base = adfobj.data.load_timeseries_dataset(fils_base)*0.75*0
+    dat_base = adfobj.data.load_timeseries_dataset(fils_base)
+    dat_base.values = dat_base.values*0.75*0
     #Grab time slice based on requested years (if applicable)
     dat_base = dat_base.sel(time=slice(str(start_years[0]).zfill(4),str(end_years[0]).zfill(4)))
 
@@ -205,6 +206,7 @@ def tape_recorder(adfobj):
         hist_str = hist_strs[idx]
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         dat = adfobj.data.load_timeseries_dataset(fils)*0.75*idx
+        dat.values = dat.values*0.75*(idx+1)
         plot_loc = plot_location[idx]
 
         if not dat:
@@ -329,7 +331,8 @@ def tape_recorder(adfobj):
         # === Multi-panel summary figure ===
         nplots = len(runname_LT) + 2  # obs (2) + models
 
-        fig = plt.figure(figsize=(4 * nplots, 6))
+        #fig = plt.figure(figsize=(4 * nplots, 6))
+        fig = plt.figure(figsize=(16,16))
         x1, x2, y1, y2 = get5by5coords_zmplots()
 
         # Plot MLS and ERA5
