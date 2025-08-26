@@ -187,7 +187,7 @@ def tape_recorder(adfobj):
     print("dat_base",type(dat_base))
     print("dat_base",type(dat_base.values))
     print("dat_base",type(dat_base.values()))
-    dat_base.values = dat_base.values*0.75*0
+    dat_base.values = dat_base.values()*0.75*0
     #Grab time slice based on requested years (if applicable)
     dat_base = dat_base.sel(time=slice(str(start_years[0]).zfill(4),str(end_years[0]).zfill(4)))
 
