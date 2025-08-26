@@ -177,12 +177,34 @@ def tape_recorder(adfobj):
     runname_LT=[]
     model_data_list = []
     count=2
-    for idx,key in enumerate(test_nicknames):
+
+
+    key_base = test_nicknames[0]
+    ts_loc_base = Path(case_ts_locs[0])
+    hist_str_base = hist_strs[0]
+    fils_base = sorted(ts_loc_base.glob(f'*{hist_str_base}.{var}.*.nc'))
+    dat_base = adfobj.data.load_timeseries_dataset(fils_base)*0.75*0
+    #Grab time slice based on requested years (if applicable)
+    dat_base = dat_base.sel(time=slice(str(start_years[0]).zfill(4),str(end_years[0]).zfill(4)))
+
+    has_dims = pf.validate_dims(dat_base[var], ['lon'])
+    if not has_dims['has_lon']:
+        print(f"\t    WARNING: Variable {var} is missing a lat dimension for '{key_base}', cannot continue to plot.")
+
+    datzm_base = dat_base.mean('lon')
+    dat_tropics_base = cosweightlat(datzm_base[var], -10, 10)
+    dat_mon_base = dat_tropics_base.groupby('time.month').mean('time').load()
+
+    model_data_list.append(dat_mon_base)
+    runname_LT.append(key_base)
+
+    for idx,key in enumerate(test_nicknames[1:]):
         # Search for files
+        print("Tape recorder key:",key)
         ts_loc = Path(case_ts_locs[idx])
         hist_str = hist_strs[idx]
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        dat = adfobj.data.load_timeseries_dataset(fils)
+        dat = adfobj.data.load_timeseries_dataset(fils)*0.75*idx
         plot_loc = plot_location[idx]
 
         if not dat:
@@ -220,9 +242,14 @@ def tape_recorder(adfobj):
 
 
 
-            ax = plot_pre_mon(fig, dat_mon,
+            ax = plot_pre_mon(fig, dat_mon_base,
+                            plot_step, plot_min, plot_max, key_base,
+                            x1[2],x2[2],y1[2],y2[2],cmap=cmap, paxis='lev',
+                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+            
+            plot_pre_mon(fig, dat_mon,
                             plot_step, plot_min, plot_max, key,
-                            x1[count],x2[count],y1[count],y2[count],cmap=cmap, paxis='lev',
+                            x1[3],x2[3],y1[3],y2[3],cmap=cmap, paxis='lev',
                             taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
             #count=count+1
             runname_LT.append(key)
@@ -239,22 +266,23 @@ def tape_recorder(adfobj):
             #Shift colorbar if there are less than 5 subplots
             # There will always be at least 2 (MLS and ERA5)
             #if len(key) == 1:
-            if 1==1:
+            if 0==1:
                 x1_loc = (x1[1]-x1[0])/2
                 x2_loc = ((x2[2]-x2[1])/2)+x2[1]
-            elif len(key) == 2:
+            #elif len(key) == 2:
+            elif 1==1:
                 x1_loc = (x1[1]-x1[0])/2
                 x2_loc = ((x2[3]-x2[2])/2)+x2[2]
-            else:
-                x1_loc = x1[1]
-                x2_loc = x2[3]
+            #else:
+            #    x1_loc = x1[1]
+            #    x2_loc = x2[3]
 
             #y1_loc = y1[count]-0.03
             #y2_loc = y1[count]-0.02
             y1_loc = y1[count-1]-0.03
             y2_loc = y1[count-1]-0.02
 
-            cbar_ax = plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
+            plotcolorbar(fig, plot_step, plot_min, plot_max, f'{var} (kg/kg)',
                             x1_loc, x2_loc, y1_loc, y2_loc,
                             cmap=cmap)
             
