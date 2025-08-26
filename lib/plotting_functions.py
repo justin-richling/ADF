@@ -2909,11 +2909,6 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
     n_plot_cols = 3
     n_plot_spaces = 2 # should be one less than num of cols
 
-
-
-
-
-
     if ptype == "NHPolar":
         proj = ccrs.NorthPolarStereo()
     elif ptype == "SHPolar":
@@ -2934,6 +2929,7 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
             return
         for season in multi_dict_var[case_names[0]].keys():
             file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+            print("file_name in polar in plotting_functions",file_name)
             if (not redo_plot) and Path(wks / file_name).is_file():
                 #Continue to next iteration:
                 continue
@@ -2959,7 +2955,7 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
                 width_ratios = [2, 0.015, 2, 0.15, 2]  # m | space | o | space | diff
                 fig_width, fig_height = calculate_figsize_from_width_ratios(
                         width_ratios, num_plot_columns=3,
-                        plot_width=20,  # desired width of each plot
+                        plot_width=10,  # desired width of each plot
                         num_rows=nrows,
                         height_per_row=3
                     )
