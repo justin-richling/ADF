@@ -176,7 +176,7 @@ def polar_map(adfobj):
 
             #Grab data for desired multi-plots (from yaml file)
             if multi_plots:
-                if var in adfobj.get_multi_case_info("global_latlon_map"):
+                if var in adfobj.get_multi_case_info("polar_map"):
                     multi_dict[var][case_name] = OrderedDict()
             #multi_dict[var][case_name] = {}
             #multi_dict[var][case_name] = {}
@@ -191,10 +191,10 @@ def polar_map(adfobj):
             has_lev = "lev" in tmp_ds.dims
 
             for s in seasons:
-                if var in adfobj.get_multi_case_info("global_latlon_map"):
+                if var in adfobj.get_multi_case_info("polar_map"):
                     multi_dict[var][case_name][s] = {}
                 for hemi_type in ["NHPolar", "SHPolar"]:
-                    if var in adfobj.get_multi_case_info("global_latlon_map"):
+                    if var in adfobj.get_multi_case_info("polar_map"):
                         multi_dict[var][case_name][s][hemi_type] = {}
                     if pres_levs and has_lev: # 3-D variable & pressure levels specified
                         for pres in pres_levs:
@@ -286,7 +286,7 @@ def polar_map(adfobj):
                 use_odata,
                 plot['season']
             )
-            if var in adfobj.get_multi_case_info("global_latlon_map"):
+            if var in adfobj.get_multi_case_info("polar_map"):
                 multi_dict[var][case_name][plot['season']][plot['type']]["m_data"] = mseason
                 multi_dict[var][case_name][plot['season']][plot['type']]["o_data"] = oseason
                 multi_dict[var][case_name][plot['season']][plot['type']]["diff_data"] = dseason
