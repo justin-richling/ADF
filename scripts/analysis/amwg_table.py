@@ -1,6 +1,7 @@
 import numpy as np
 import xarray as xr
 import sys
+import shutil
 from pathlib import Path
 import warnings  # use to warn user about missing files.
 
@@ -129,12 +130,13 @@ def amwg_table(adf):
     output_locs = adf.plot_location
 
     #CAM simulation variables (these quantities are always lists):
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
+    test_case_names = adf.get_cam_info("cam_case_name", required=True)
+    case_names = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
+    test_nicknames = adf.case_nicknames["test_nicknames"]
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -153,16 +155,22 @@ def amwg_table(adf):
         eyear_cases.append(eyear_baseline)
 
         #Save the baseline to the first case's plots directory:
-        output_locs.append(output_locs[0])
+        #output_locs.append(output_locs[0])
+        if len(test_case_names) == 1:
+            output_locs.append(output_locs[0])
     else:
-        print("\t WARNING: AMWG table doesn't currently work with obs, so obs table won't be created.")
+        print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
+    base_nickname = adf.case_nicknames["base_nickname"]
+    nicknames = test_nicknames + [base_nickname]
 
     #-----------------------------------------
 
     #Loop over CAM cases:
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
+    csv_locs = []
+    case_output_locs = {}
     for case_idx, case_name in enumerate(case_names):
 
         #Convert output location string to a Path object:
@@ -188,6 +196,7 @@ def amwg_table(adf):
 
         #Create output file name:
         output_csv_file = output_location / f"amwg_table_{case_name}.csv"
+        case_output_locs[case_name] = output_location
 
         #Given that this is a final, user-facing analysis, go ahead and re-do it every time:
         if Path(output_csv_file).is_file():
@@ -287,11 +296,10 @@ def amwg_table(adf):
             # Set values for columns
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
-            if not calc_stats:
-                row_values = [var, unit_str] + [data.data.mean()] + ["-","-","-","-","-","-"]
-            else:
-                stats_list = _get_row_vals(data)
-                row_values = [var, unit_str] + stats_list
+
+            # These get written to our output file:
+            stats_list = _get_row_vals(data)
+            row_values = [var, unit_str] + stats_list
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -326,22 +334,40 @@ def amwg_table(adf):
 
         #Keep track of case csv files for comparison table check later
         csv_list.extend(sorted(output_location.glob(f"amwg_table_{case_name}.csv")))
+        csv_locs.append(output_location)
 
     #End of model case loop
     #----------------------
 
     #Start case comparison tables
     #----------------------------
+    # Copy the file to all individual directories
+    if len(test_case_names) > 1:
+        base_csv = sorted(Path(output_locs[-1]).glob(f"amwg_table_{baseline_name}.csv"))
+        for i,case in enumerate(test_case_names):
+            shutil.copy(base_csv[0], output_locs[i])
+        base_csv[0].unlink()
+
     #Check if observations are being compared to, if so skip table comparison...
     if not adf.get_basic_info("compare_obs"):
         #Check if all tables were created to compare against, if not, skip table comparison...
         if len(csv_list) != len(case_names):
             print("\tNot enough cases to compare, skipping comparison table...")
         else:
-            #Create comparison table for both cases
-            print("\n  Making comparison table...")
-            _df_comp_table(adf, output_location, case_names)
-            print("  ... Comparison table has been generated successfully")
+            # Check if this a multi-case scenario or single case
+            if len(test_case_names) == 1:
+                #Create comparison table for both cases
+                print("\n  Making comparison table...")
+                _df_comp_table(adf, output_location, Path(output_locs[0]), case_names)
+                print("  ... Comparison table has been generated successfully")
+
+            if len(test_case_names) > 1:
+                print("\n  Making comparison table for multiple cases...")
+                _df_multi_comp_table(adf, csv_locs, case_names, nicknames)
+                print("\n  Making comparison table for each case...")
+                for idx,case in enumerate(case_names[0:-1]):
+                    _df_comp_table(adf, Path(output_locs[idx]), Path(output_locs[0]), [case,baseline_name])
+                print("  ... Multi-case comparison table has been generated successfully")
         #End if
     else:
         print(" No comparison table will be generated due to running against obs.")
@@ -381,7 +407,14 @@ def _get_row_vals(data):
 
 #####
 
-def _df_comp_table(adf, output_location, case_names):
+def _df_comp_table(adf, output_location, base_output_location, case_names):
+    """
+    Function to build case vs baseline AMWG table
+    -----
+        - Read in table data and create side by side comparison table
+        - Write output to csv file and add to website
+    """
+
     import pandas as pd
 
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
@@ -390,7 +423,7 @@ def _df_comp_table(adf, output_location, case_names):
     #This will be for single-case for now (case_names[0]),
     #will need to change to loop as multi-case is introduced
     case = output_location/f"amwg_table_{case_names[0]}.csv"
-    baseline = output_location/f"amwg_table_{case_names[-1]}.csv"
+    baseline = base_output_location/f"amwg_table_{case_names[-1]}.csv"
 
     #Read in test case and baseline dataframes:
     df_case = pd.read_csv(case)
@@ -409,7 +442,75 @@ def _df_comp_table(adf, output_location, case_names):
     df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
 
     #Write the comparison dataframe to a new CSV file:
-    cols_comp = ['variable', 'unit', 'test', 'control', 'diff']
+    cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
+    df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
+
+    #Add comparison table dataframe to website (if enabled):
+    adf.add_website_data(df_comp, "case_comparison", case_names[0], plot_type="Tables")
+
+
+def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
+    """
+    Function to build comparison AMWG table for all cases
+    ------
+        - Read in each previously made table from file
+          and compile full comparison.
+    """
+
+    #Create path to main website in mutli-case directory
+    main_site_path = Path(adf.get_basic_info('cam_diag_plot_loc', required=True))
+    output_csv_file_comp = main_site_path / "amwg_table_comp_all.csv"
+
+    #Create the "comparison" dataframe:
+    df_comp = pd.DataFrame(dtype=object)
+
+    #Create new colummns
+    cols_comp = ['variable', 'unit']
+
+    #Read baseline case
+    baseline = str(csv_locs[0])+f"/amwg_table_{case_names[-1]}.csv"
+    df_base = pd.read_csv(baseline)
+
+    #Read all test cases and add to table
+    for i,val in enumerate(csv_locs[:-1]):
+        case = str(val)+f"/amwg_table_{case_names[i]}.csv"
+        df_case = pd.read_csv(case)
+
+        #If no custom nicknames, shorten column name to case number
+        if test_nicknames[i] == case_names[i]:
+            df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
+            cols_comp.append(f"case {i+1}")
+        #Else, name columns after nicknames
+        else:
+            df_comp[['variable','unit',f"{test_nicknames[i]}"]] = df_case[['variable','unit','mean']]
+            cols_comp.append(test_nicknames[i])
+
+    #Add baseline cases to end of the table
+    if test_nicknames[-1] == case_names[-1]:
+        df_comp["baseline"] = df_base[['mean']]
+        cols_comp.append("baseline")
+    else:
+        df_comp[f"{test_nicknames[-1]} ( baseline )"] = df_base[['mean']]
+        cols_comp.append(f"{test_nicknames[-1]} ( baseline )")
+
+    #Format the floats:
+    for col in df_comp.columns:
+        #Ignore columns that don't contain floats
+        if (col != 'variable') and (col != "unit"):
+            if "baseline" not in col:
+
+                #Iterate over rows and check magnitude of value
+                for idx,row in enumerate(df_comp[col]):
+                    #Check if value is less than one, keep 3 non-zero decimal values
+                    #Else, keep 3 main digits, including decimal values
+                    if np.abs(df_comp[col][idx]) < 1:
+                        formatter = ".3g"
+                    else:
+                        formatter = ".3f"
+                    #Replace value in dataframe
+                    df_comp.at[idx,col]= f'{df_comp[col][idx]:{formatter}}   ({(df_comp[col][idx]-df_base["mean"][idx]):{formatter}})'
+
+    #Finally, write data to csv
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
