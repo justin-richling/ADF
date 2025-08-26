@@ -1,6 +1,6 @@
 """Module to make polar stereographic maps."""
 from pathlib import Path
-import xarray as xr
+from collections import OrderedDict
 import numpy as np
 
 # ADF library
@@ -68,7 +68,16 @@ def polar_map(adfobj):
     plot_locations = adfobj.plot_location
 
     #CAM simulation variables (this is always assumed to be a list):
+    multi_plots = False
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
+    print("adfobj.get_multi_case_info",adfobj.get_multi_case_info)
+    #read_config_var('multi_case_plots')
+    if len(case_names) > 1:
+        #Check if multi-plots are desired from yaml file
+        if adfobj.get_multi_case_info("global_latlon_map"):
+            multi_plots = True
+            multi_dict = OrderedDict()
+    #End if (check for multiple cases)
 
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
@@ -117,10 +126,16 @@ def polar_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
+    
+    multi_dict = {}
 
     # probably want to do this one variable at a time:
     for var in var_list:
         print(f"\t - polar maps for {var}")
+
+        multi_dict[var] = {}
+        multi_dict[var] = {}
+        multi_dict[var] = {}
 
         if var not in adfobj.data.ref_var_nam:
             dmsg = f"\t    WARNING: No reference data found for variable `{var}`, polar lat/lon mean plotting skipped."
@@ -143,6 +158,12 @@ def polar_map(adfobj):
         all_plots_exist = True
         
         for case_idx, case_name in enumerate(case_names):
+
+
+            multi_dict[var][case_name] = {}
+            #multi_dict[var][case_name] = {}
+            #multi_dict[var][case_name] = {}
+
             plot_loc = Path(plot_locations[case_idx])
 
             tmp_ds = adfobj.data.load_regrid_dataset(case_name, var)
@@ -153,6 +174,7 @@ def polar_map(adfobj):
 
             for s in seasons:
                 for hemi_type in ["NHPolar", "SHPolar"]:
+                    multi_dict[var][case_name][s][hemi_type] = {}
                     if pres_levs and has_lev: # 3-D variable & pressure levels specified
                         for pres in pres_levs:
                             plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
@@ -166,6 +188,9 @@ def polar_map(adfobj):
                                 'pressure': pres,
                                 'exists': plot_name.is_file()
                             }
+                            #multi_dict[var][case_name][s] = {}
+                            #multi_dict[var][case_name][s] = {}
+                            #multi_dict[var][case_name][s] = {}
                             plot_info.append(info)
                             if (redo_plot is False) and info['exists']:
                                 adfobj.add_website_data(info['path'], info['var'],
@@ -241,6 +266,10 @@ def polar_map(adfobj):
                 plot['season']
             )
 
+            multi_dict[var][case_name][s][plot['type']]["m_data"] = mseason
+            multi_dict[var][case_name][s][plot['type']]["o_data"] = oseason
+            multi_dict[var][case_name][s][plot['type']]["diff_data"] = dseason
+
             # Create plot
             if plot['path'].exists():
                 plot['path'].unlink()
@@ -260,6 +289,27 @@ def polar_map(adfobj):
                 category=web_category, season=plot['season'],
                 plot_type=plot['type']
             )
+    
+
+
+    #This will be a list of variables for multi-case plotting based off LatLon plot type
+    if multi_plots:
+        #Notify user that script has started:
+        print("\n     Generating polar lat/lon multi-case plots...")
+
+        hemis = ["NHPolar", "SHPolar"]
+        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+        for var in multi_dict.keys():
+            #print("VAR:",var)
+            vres = res.get(var, {})
+            #print("vres",vres)
+            for hemi in hemis:
+
+                pf.multi_polar_plots(main_site_assets_path, var, hemi, case_names,
+                                    [test_nicknames,base_nickname], multi_dict[var],
+                                    web_category, adfobj, **vres)
+
+        print("     ...polar lat/lon multi-case plots have been generated successfully.")
 
     print("  ...polar maps have been generated successfully.")
 
