@@ -2956,7 +2956,7 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
                 height_ratios = height_ratios[:-1]
 
                 # Create figure and GridSpec
-                width_ratios = [1, 0.015, 1, 0.15, 1]  # m | space | o | space | diff
+                width_ratios = [2, 0.015, 2, 0.15, 2]  # m | space | o | space | diff
                 fig_width, fig_height = calculate_figsize_from_width_ratios(
                         width_ratios, num_plot_columns=3,
                         plot_width=20,  # desired width of each plot
