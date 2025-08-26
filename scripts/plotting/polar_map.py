@@ -302,7 +302,7 @@ def polar_map(adfobj):
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
         for var in multi_dict.keys():
             print("VAR:",var)
-            print("multi_dict",multi_dict[var],"\n\n")
+            #("multi_dict",multi_dict[var],"\n\n")
             
             vres = res.get(var, {})
             #print("vres",vres)

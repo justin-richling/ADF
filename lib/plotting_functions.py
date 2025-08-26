@@ -3102,7 +3102,7 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
 
                         # Plot to the correct subplot
                         cf = ax.contourf(lons, lats, data, levels=levels, cmap=cmap,
-                                            norm=norm, transform=ccrs.PlateCarree())
+                                            norm=norm)
         
                         # __Follow the cartopy gallery example to make circular__:
                         # Compute a circle in axes coordinates, which we can use as a boundary
