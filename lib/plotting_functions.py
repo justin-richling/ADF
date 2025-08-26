@@ -2926,19 +2926,8 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
         domain = [-180, 180, 45, 90]
     else:
         domain = [-180, 180, -90, -45]
+    #End if
 
-
-
-
-
-
-    # formatting for tick labels
-    lon_formatter = LongitudeFormatter(number_format='0.0f',
-                                        degree_symbol='',
-                                        dateline_direction_label=False)
-    lat_formatter = LatitudeFormatter(number_format='0.0f',
-                                        degree_symbol='')
-    
     if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
         if case_names[0] not in multi_dict_var.keys():
             print(f"Skipping variable {var} since case {case_names[0]} not found in multi_dict_var")
