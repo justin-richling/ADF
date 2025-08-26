@@ -206,7 +206,7 @@ def tape_recorder(adfobj):
         ts_loc = Path(case_ts_locs[idx])
         hist_str = hist_strs[idx]
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
-        dat = adfobj.data.load_timeseries_dataset(fils)*0.75*idx
+        dat = adfobj.data.load_timeseries_dataset(fils)
         plot_loc = plot_location[idx]
 
         if not dat:
