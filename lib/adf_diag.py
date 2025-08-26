@@ -179,6 +179,9 @@ class AdfDiag(AdfWeb):
         # Provide convenience functions for data handling:
         self.data = AdfData(self)
 
+        #Add multi plots info to object:
+        self.__multi_case_plots = self.read_config_var('multi_case_plots')
+
     # Create property needed to return "plotting_scripts" variable to user:
     @property
     def plotting_scripts(self):
@@ -186,6 +189,16 @@ class AdfDiag(AdfWeb):
         # Note that a copy is needed in order to avoid having a script mistakenly
         # modify this variable:
         return copy.copy(self.__plotting_scripts)
+
+    def get_multi_case_info(self, var_str, required=False):
+        """
+        Return the config variable from 'multi_case_plots' as requested by
+        the user.
+        """
+
+        return self.read_config_var(var_str,
+                                    conf_dict=self.__multi_case_plots,
+                                    required=required)
 
     #########
     # Script-running functions
@@ -402,13 +415,23 @@ class AdfDiag(AdfWeb):
                 self.end_diag_fail(emsg)
             # End if
 
-            # Extract time series file location
-            ts_dir = ts_dirs[case_idx]
-
             # Check if history files actually exqist. If not then kill script:
-            hist_str_case = hist_str_list[case_idx]
-            for hist_str in hist_str_case:
-
+            if not baseline:
+                hist_str_multi_case = hist_str_list[0][0]
+                print("hist_str_multi_case",hist_str_multi_case)
+                if (len(case_names) > 1) or (isinstance(hist_str_multi_case, dict)):
+                    #hist_str_case_idx = list(hist_str_multi_case.keys())[case_idx]
+                    #hist_strs = hist_str_multi_case[hist_str_case_idx]
+                    hist_strs = hist_str_multi_case
+                else:
+                    print("single test here?")
+                    hist_strs = hist_str_multi_case
+            else:
+                hist_strs = hist_str_list[0][0]
+            print("hist_strs and baseline?",baseline,hist_strs)
+            for hist_str in [hist_strs]:
+                print("number of cases:",len(case_names))
+                print("hist_str",hist_str)
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
                     emsg = (
@@ -419,7 +442,7 @@ class AdfDiag(AdfWeb):
                 # End if
 
                 # Notify user that script has started:
-                print(f"\n\t Writing time series files to:\n\t{ts_dir}")
+                print(f"\n\t Writing time series files to:\n\t{ts_dirs[case_idx]}")
 
                 # Create empty list:
                 files_list = []
@@ -503,7 +526,7 @@ class AdfDiag(AdfWeb):
 
                 # Check if time series directory exists, and if not, then create it:
                 # Use pathlib to create parent directories, if necessary.
-                Path(ts_dir).mkdir(parents=True, exist_ok=True)
+                Path(ts_dirs[case_idx]).mkdir(parents=True, exist_ok=True)
 
                 # INPUT NAME TEMPLATE: $CASE.$scomp.[$type.][$string.]$date[$ending]
                 first_file_split = str(hist_files[0]).split(".")
@@ -551,7 +574,7 @@ class AdfDiag(AdfWeb):
                     # Create full path name, file name template:
                     # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
                     ts_outfil_str = (
-                        ts_dir
+                        ts_dirs[case_idx]
                         + os.sep
                         + ".".join([case_name, hist_str, var, time_string, "nc"])
                     )
@@ -662,6 +685,18 @@ class AdfDiag(AdfWeb):
                         if not overwrite_ts[case_idx]:
                             # If not, then simply skip this variable:
                             continue
+                    """
+                    # Check if clobber is true for file
+                    overwrite = False
+                    if Path(derived_file).is_file():
+                        if overwrite:
+                            Path(derived_file).unlink()
+                        else:
+                            msg = f"[{__name__}] Warning: '{var}' file was found "
+                            msg += "and overwrite is False. Will use existing file."
+                            print(msg)
+                            continue
+                    """
 
                     # Variable list starts with just the variable
                     ncrcat_var_list = f"{var}"
@@ -763,7 +798,7 @@ class AdfDiag(AdfWeb):
                 if vars_to_derive:
                     self.derive_variables(
                         res=res, hist_str=hist_str, vars_to_derive=vars_to_derive,
-                        constit_dict=constit_dict, ts_dir=ts_dir
+                        constit_dict=constit_dict, ts_dir=ts_dirs[case_idx]
                     )
                 # End with
             # End for hist_str
@@ -1327,7 +1362,8 @@ class AdfDiag(AdfWeb):
         case_idx = 0
         plot_path = os.path.join(self.plot_location[case_idx], "mdtf")
         for var in ["WORKING_DIR", "OUTPUT_DIR"]:
-            mdtf_info[var] = plot_path
+            if mdtf_info[var] == "default":
+                mdtf_info[var] = plot_path
 
         #
         # Write the input settings json file
