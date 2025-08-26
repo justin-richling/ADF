@@ -430,10 +430,14 @@ class AdfWeb(AdfObs):
                     for var in multi_var_list:
                         if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
                             mvars.append(var)
-                else:
-                    for var in self.diag_var_list:
-                        if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
-                            mvars.append(var)
+                #else:
+                #    for var in self.diag_var_list:
+                #        if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
+                #            mvars.append(var)
+            if "polar_map" in multi_case_plots.keys():
+                multi_case_plots["nh_polar_map"] = multi_case_plots["polar_map"]
+                multi_case_plots["sh_polar_map"] = multi_case_plots["polar_map"]
+                del multi_case_plots["polar_map"]
         #Create multi-case site:
         #Make a dictionary for plot type extensions for given plot type
         #This can probably be populated in the for-loops during html creation...
