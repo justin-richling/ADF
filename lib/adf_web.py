@@ -439,6 +439,8 @@ class AdfWeb(AdfObs):
         #This can probably be populated in the for-loops during html creation...
         #Or it should be declared somewhere higher up, like adf_info or something
         multi_case_dict = {"global_latlon_map":"LatLon",
+                           "nh_polar_map":"NHPolar",
+                           "sh_polar_map":"SHPolar",
                                "zonal_mean":"Zonal",
                                "meridional":"Meridional",
                                "global_latlon_vect_map":"LatLon_Vector"
