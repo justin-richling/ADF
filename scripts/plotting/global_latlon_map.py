@@ -66,18 +66,15 @@ def global_latlon_map(adfobj):
     plot_locations = adfobj.plot_location
 
     #CAM simulation variables (this is always assumed to be a list):
+    multi_plots = False
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
+    print("adfobj.get_multi_case_info",adfobj.get_multi_case_info)
     #read_config_var('multi_case_plots')
     if len(case_names) > 1:
         #Check if multi-plots are desired from yaml file
         if adfobj.get_multi_case_info("global_latlon_map"):
-                multi_plots = True
-                multi_dict = OrderedDict()
-        else:
-            multi_plots = False
-        #End if (check for multi-case plots for LatLon)
-    else:
-        multi_plots = False
+            multi_plots = True
+            multi_dict = OrderedDict()
     #End if (check for multiple cases)
 
     #Grab case climo years
