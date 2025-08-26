@@ -554,10 +554,10 @@ def global_latlon_map(adfobj):
 
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
         for var in multi_dict.keys():
-            print("VAR:",var)
+            #print("VAR:",var)
             vres = res.get(var, {})
-            print("vres",vres)
-            #multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, web_category, adfobj, **kwargs)
+            #print("vres",vres)
+
             pf.multi_latlon_plots(main_site_assets_path, var, "LatLon", case_names,
                                 [test_nicknames,base_nickname], multi_dict[var],
                                 web_category, adfobj, **vres)
