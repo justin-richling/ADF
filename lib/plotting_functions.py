@@ -2707,7 +2707,7 @@ def multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, w
                 # Store axes
                 axes = []
                 for r in range(nrows):
-                    print(f"Plotting row {r} for case {case_names[r]}")
+                    #print(f"Plotting row {r} for case {case_names[r]}")
                     row_base = r * 3  # Because each row uses 3 grid rows (plot, cbar, space)
                     cbar_axs = {}
                     row_axes = []
@@ -2980,7 +2980,7 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
                 # Store axes
                 axes = []
                 for r in range(nrows):
-                    print(f"Plotting row {r} for case {case_names[r]}")
+                    #print(f"Plotting row {r} for case {case_names[r]}")
                     row_base = r * 3  # Because each row uses 3 grid rows (plot, cbar, space)
                     cbar_axs = {}
                     row_axes = []
