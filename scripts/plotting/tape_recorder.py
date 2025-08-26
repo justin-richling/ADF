@@ -78,7 +78,7 @@ def tape_recorder(adfobj):
         #Append all baseline objects to test case lists
         data_name = adfobj.get_baseline_info("cam_case_name", required=True)
         #case_names = case_names + [data_name]
-        case_names = [data_name]+case_names
+        #case_names = [data_name]+case_names
         
         data_ts_loc = adfobj.get_baseline_info("cam_ts_loc", required=True)
         #case_ts_locs = case_ts_locs+[data_ts_loc]
@@ -195,7 +195,7 @@ def tape_recorder(adfobj):
     datzm_base = dat_base.mean('lon')
     dat_tropics_base = cosweightlat(datzm_base[var], -10, 10)
     dat_mon_base = dat_tropics_base.groupby('time.month').mean('time').load()
-    dat_mon_base.values = dat_mon_base.values*0.15
+    dat_mon_base.values = dat_mon_base.values+0.15
 
     model_data_list.append(dat_mon_base)
     runname_LT.append(key_base)
@@ -225,7 +225,7 @@ def tape_recorder(adfobj):
             datzm = dat.mean('lon')
             dat_tropics = cosweightlat(datzm[var], -10, 10)
             dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-            dat_mon.values = dat_mon.values*0.05*(idx+1)
+            dat_mon.values = dat_mon.values+(0.05*(idx+1))
             # Save for final multipanel
             model_data_list.append(dat_mon)
             runname_LT.append(key)
@@ -346,7 +346,7 @@ def tape_recorder(adfobj):
         for i, dat_mon in enumerate(model_data_list):
             #plot_pre_mon(fig, dat_mon, ..., x1[i+2], x2[i+2], y1[i+2], y2[i+2], ...)
             plot_pre_mon(fig, dat_mon,
-                            plot_step, plot_min, plot_max, key,
+                            plot_step, plot_min, plot_max, runname_LT[i],
                             x1[i+2],x2[i+2],y1[i+2],y2[i+2],cmap=cmap, paxis='lev',
                             taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
             
