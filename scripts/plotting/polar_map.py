@@ -79,6 +79,20 @@ def polar_map(adfobj):
             multi_dict = OrderedDict()
     #End if (check for multiple cases)
 
+    if multi_plots:
+        #if not adfobj.get_multi_case_info("global_latlon_map"):
+        #        multi_dict[var] = OrderedDict()
+        if adfobj.get_multi_case_info("global_latlon_map"):
+            for multi_var in adfobj.get_multi_case_info("global_latlon_map"):
+                if multi_var not in multi_dict:
+                    multi_dict[multi_var] = OrderedDict()
+
+    # probably want to do this one variable at a time:
+    for var in var_list:
+        if multi_plots:
+            if not adfobj.get_multi_case_info("global_latlon_map"):
+                    multi_dict[var] = OrderedDict()
+
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
@@ -133,9 +147,9 @@ def polar_map(adfobj):
     for var in var_list:
         print(f"\t - polar maps for {var}")
 
-        multi_dict[var] = {}
-        multi_dict[var] = {}
-        multi_dict[var] = {}
+        #multi_dict[var] = {}
+        #multi_dict[var] = {}
+        #multi_dict[var] = {}
 
         if var not in adfobj.data.ref_var_nam:
             dmsg = f"\t    WARNING: No reference data found for variable `{var}`, polar lat/lon mean plotting skipped."
