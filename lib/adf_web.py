@@ -1215,7 +1215,8 @@ class AdfWeb(AdfObs):
                 css_files_dir = self.__case_web_paths[case_names[-1]]['css_files_dir']
                 shutil.copytree(css_files_dir, main_templates_path)
             #End if
-            print("\nmulti_case_plots",multi_case_plots)
+            print("\nmulti_case_plots",multi_case_plots,"\n")
+            print("multi_case_dict",multi_case_dict,"\n")
             if multi_case_plots:
                 for key in multi_case_plots:
                     #Update the dictionary to add any plot types specified in the yaml file
