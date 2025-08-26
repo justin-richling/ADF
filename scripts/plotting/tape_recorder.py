@@ -184,10 +184,7 @@ def tape_recorder(adfobj):
     hist_str_base = hist_strs[0]
     fils_base = sorted(ts_loc_base.glob(f'*{hist_str_base}.{var}.*.nc'))
     dat_base = adfobj.data.load_timeseries_dataset(fils_base)
-    print("dat_base",type(dat_base))
-    print("dat_base",type(dat_base.values))
-    print("dat_base",type(dat_base.values()))
-    dat_base.values = dat_base.values()*0.75*0
+
     #Grab time slice based on requested years (if applicable)
     dat_base = dat_base.sel(time=slice(str(start_years[0]).zfill(4),str(end_years[0]).zfill(4)))
 
@@ -198,6 +195,7 @@ def tape_recorder(adfobj):
     datzm_base = dat_base.mean('lon')
     dat_tropics_base = cosweightlat(datzm_base[var], -10, 10)
     dat_mon_base = dat_tropics_base.groupby('time.month').mean('time').load()
+    dat_mon_base.values = dat_mon_base.values()*0.75*0
 
     model_data_list.append(dat_mon_base)
     runname_LT.append(key_base)
