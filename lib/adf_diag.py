@@ -425,12 +425,14 @@ class AdfDiag(AdfWeb):
                     #hist_strs = hist_str_multi_case[hist_str_case_idx]
                     hist_strs = hist_str_multi_case
                 else:
+                    print("single test here?")
                     hist_strs = [hist_str_multi_case]
             else:
                 hist_strs = hist_str_list[0][0]
             print("hist_strs",hist_strs)
             for hist_str in [hist_strs]:
-
+                print("number of cases:",len(case_names))
+                print("hist_str",hist_str)
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
                     emsg = (
