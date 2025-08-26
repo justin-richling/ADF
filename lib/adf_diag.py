@@ -428,7 +428,10 @@ class AdfDiag(AdfWeb):
                     print("single test here?")
                     hist_strs = hist_str_multi_case
             else:
-                hist_strs = hist_str_list[0][0]
+                if (len(case_names) > 1) or (isinstance(hist_str_multi_case, dict)):
+                    hist_strs = hist_str_list[0][0]
+                else:
+                    hist_strs = hist_str_list[0]
             print("hist_strs",hist_strs)
             for hist_str in [hist_strs]:
                 print("number of cases:",len(case_names))
