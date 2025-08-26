@@ -195,7 +195,7 @@ def tape_recorder(adfobj):
     datzm_base = dat_base.mean('lon')
     dat_tropics_base = cosweightlat(datzm_base[var], -10, 10)
     dat_mon_base = dat_tropics_base.groupby('time.month').mean('time').load()
-    dat_mon_base.values = dat_mon_base.values+0.15
+    dat_mon_base.values = dat_mon_base.values+(0.15*1e-6)
 
     model_data_list.append(dat_mon_base)
     runname_LT.append(key_base)
@@ -225,7 +225,7 @@ def tape_recorder(adfobj):
             datzm = dat.mean('lon')
             dat_tropics = cosweightlat(datzm[var], -10, 10)
             dat_mon = dat_tropics.groupby('time.month').mean('time').load()
-            dat_mon.values = dat_mon.values+(0.05*(idx+1))
+            dat_mon.values = dat_mon.values+((0.05*(idx+1))/1e-6)
             # Save for final multipanel
             model_data_list.append(dat_mon)
             runname_LT.append(key)
