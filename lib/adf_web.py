@@ -1144,9 +1144,11 @@ class AdfWeb(AdfObs):
                                 #End with
 
 
-                    """#Loop over any non multi-case multi-plot scenarios
+                    #Loop over any non multi-case multi-plot scenarios
                     #ie multi-case Taylor Diagrams and multi-case QBO
                     if ext not in multi_case_dict:
+                        print("multi_case_dict",multi_case_dict,"\n")
+                        print("ext not in multi_case_dict",ext)
                         #Move file to assets directory:
                         if not web_data.data.is_file():
                             shutil.copy(web_data.data, web_data.asset_path)
@@ -1178,7 +1180,7 @@ class AdfWeb(AdfObs):
                                             "non_seasons": non_seasons[web_data.plot_type]}
 
                         multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                        print("adf_web multimean 2",multimean)
+                        #print("adf_web multimean 2",multimean)
 
                         tmpl = jinenv.get_template('template_multi_case.html')
 
@@ -1210,7 +1212,7 @@ class AdfWeb(AdfObs):
                         #Write mean diagnostic plots HTML file:
                         with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
                             ofil.write(mean_rndr)
-                        #End with"""
+                        #End with
 
                     #End if (ext not in multi_case_dict)
                 #End if (web_data.data_frame)
