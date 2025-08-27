@@ -1054,6 +1054,7 @@ class AdfWeb(AdfObs):
                     ptype = web_data.plot_type
                     var = web_data.name
                     ext = web_data.plot_ext
+                    print("if not web_data.data_frame:",ext)
 
                     #Check if category has been provided for this web data:
                     if web_data.category:
