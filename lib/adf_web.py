@@ -1149,7 +1149,7 @@ class AdfWeb(AdfObs):
                     #ie multi-case Taylor Diagrams and multi-case QBO
                     if ext not in multi_case_dict:
                         print("multi_case_dict",multi_case_dict,"\n")
-                        print("ext not in multi_case_dict",ext)
+                        #print("ext not in multi_case_dict",ext)
                         #Move file to assets directory:
                         if not web_data.data.is_file():
                             shutil.copy(web_data.data, web_data.asset_path)
