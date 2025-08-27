@@ -1144,7 +1144,7 @@ class AdfWeb(AdfObs):
                                 #End with
 
 
-                    #Loop over any non multi-case multi-plot scenarios
+                    """#Loop over any non multi-case multi-plot scenarios
                     #ie multi-case Taylor Diagrams and multi-case QBO
                     if ext not in multi_case_dict:
                         #Move file to assets directory:
@@ -1210,7 +1210,7 @@ class AdfWeb(AdfObs):
                         #Write mean diagnostic plots HTML file:
                         with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
                             ofil.write(mean_rndr)
-                        #End with
+                        #End with"""
 
                     #End if (ext not in multi_case_dict)
                 #End if (web_data.data_frame)
