@@ -852,27 +852,6 @@ class AdfWeb(AdfObs):
                         ofil.write(mean_rndr)
                     #End with
 
-                    """
-                    #Check if the mean plot type and var page exists for this case:
-                    plot_page = f"plot_page_{web_data.name}_{web_data.plot_type}.html"
-                    mean_ptype_plot_page = img_pages_dir / plot_page
-                    if not mean_ptype_plot_page.exists():
-
-                        #Construct individual plot type mean_diag html files, if they don't
-                        #already exist:
-                        plot_page_tmpl = jinenv.get_template('template_var.html')
-
-                        #Remove key from main dictionary for this html page
-                        templ_var_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs'}}
-
-                        plot_page_rndr = plot_page_tmpl.render(templ_var_rend_kwarg_dict)
-
-                        #Write mean diagnostic plots HTML file:
-                        with open(mean_ptype_plot_page,'w', encoding='utf-8') as ofil:
-                            ofil.write(plot_page_rndr)
-                        #End with
-                    #End if (mean_ptype_plot_page)
-                    """
                 #End if (check for multi-case diags)
             #Also check if index page exists for this case:
             index_html_file = \
@@ -1054,7 +1033,7 @@ class AdfWeb(AdfObs):
                     ptype = web_data.plot_type
                     var = web_data.name
                     ext = web_data.plot_ext
-                    print("if not web_data.data_frame:",ext)
+                    print("if not web_data.data_frame:",ext,ptype,var)
 
                     #Check if category has been provided for this web data:
                     if web_data.category:
