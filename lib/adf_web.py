@@ -1033,7 +1033,11 @@ class AdfWeb(AdfObs):
                     ptype = web_data.plot_type
                     var = web_data.name
                     ext = web_data.plot_ext
-                    print("if not web_data.data_frame:",ext,ptype,var)
+                    multi_case = web_data.multi_case
+                    print("if not web_data.data_frame: ext",ext)
+                    print("if not web_data.data_frame: ptype",ptype)
+                    print("if not web_data.data_frame: var",var)
+                    print("if not web_data.data_frame: multi_case",multi_case)
 
                     #Check if category has been provided for this web data:
                     if web_data.category:
