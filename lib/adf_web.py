@@ -1037,7 +1037,7 @@ class AdfWeb(AdfObs):
                     print("if not web_data.data_frame: ext",ext)
                     print("if not web_data.data_frame: ptype",ptype)
                     print("if not web_data.data_frame: var",var)
-                    print("if not web_data.data_frame: multi_case",multi_case)
+                    print("if not web_data.data_frame: multi_case",multi_case,"\n")
 
                     #Check if category has been provided for this web data:
                     if web_data.category:
@@ -1131,7 +1131,7 @@ class AdfWeb(AdfObs):
                         #Loop over any non multi-case multi-plot scenarios
                         #ie multi-case Taylor Diagrams and multi-case QBO
                         if ext not in multi_case_dict:
-                            print("multi_case_dict",multi_case_dict,"\n")
+                            print("multi_case_dict",multi_case_dict,"\n--------------\n")
                             #print("ext not in multi_case_dict",ext)
                             #Move file to assets directory:
                             if not web_data.data.is_file():
