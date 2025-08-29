@@ -178,7 +178,7 @@ class AdfDiag(AdfWeb):
 
         # Provide convenience functions for data handling:
         if not self.diag_var_list:
-            emsg = f" {__file__} No variables were specified in the 'diag_var_list' config argument."
+            emsg = f" {__file__} No variables were specified in the 'diag_var_list' config argument?"
             #emsg += " Please add variables to this list"
             #emsg += "  ...NO CAM time series file generated."
             #self.end_diag_fail(emsg)
@@ -348,6 +348,7 @@ class AdfDiag(AdfWeb):
             #self.end_diag_fail(emsg)
             # Notify user that script has ended:
             print(emsg)
+            self.debug_log(msg)
             return
 
 
