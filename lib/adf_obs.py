@@ -93,7 +93,7 @@ class AdfObs(AdfInfo):
                 emsg = "No variables were specified in the 'diag_var_list' config argument."
                 #emsg += " Please add variables to this list"
                 #emsg += "  ...NO CAM time series file generated."
-                self.end_diag_fail(emsg)
+                #self.end_diag_fail(emsg)
                 # Notify user that script has ended:
                 print(emsg)
                 return
