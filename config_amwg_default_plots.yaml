@@ -385,6 +385,9 @@ analysis_scripts:
     - amwg_table
     #- aerosol_gas_tables
 
+    # aerosol_gas_tables Info:
+    # troposphere: (realistic case): use ozone (150ppb) or Trop_P. If not found, calculate total column.
+    # tropopause: 500hPa as the tropopause threshold.
 #List of plotting scripts being used.
 #These scripts must be located in "scripts/plotting":
 plotting_scripts:
