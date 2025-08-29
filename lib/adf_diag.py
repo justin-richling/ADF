@@ -335,9 +335,9 @@ class AdfDiag(AdfWeb):
         # create copy of var list that can be modified for derivable variables
         diag_var_list = self.diag_var_list
         if not diag_var_list:
-            emsg = f"No variables were specified in the 'diag_var_list' config argument."
+            emsg = f"\tNo variables were specified in the 'diag_var_list' config argument."
             #emsg += " Please add variables to this list"
-            emsg += "\n  ...NO CAM time series file generated."
+            emsg += "\n    ...NO CAM time series file generated."
             #self.end_diag_fail(emsg)
             # Notify user that script has ended:
             print(emsg)
