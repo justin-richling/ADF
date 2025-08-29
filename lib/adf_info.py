@@ -657,7 +657,10 @@ class AdfInfo(AdfConfig):
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable, as it is mutable and thus passed by reference:
         print("YAAAHHOOOOO")
-        return copy.copy(self.__diag_var_list)
+        if self.__diag_var_list is None:
+            return "special"   # could be anything
+        else:
+            return copy.copy(self.__diag_var_list)
 
     # Create property needed to return "basic_info" expanded dictionary to user:
     @property

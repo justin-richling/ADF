@@ -47,6 +47,8 @@ def zonal_mean(adfobj):
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     var_list = adfobj.diag_var_list
+    if var_list == "special":     # <-- check for the condition
+        return "Stopped early because of function_2"
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables:
