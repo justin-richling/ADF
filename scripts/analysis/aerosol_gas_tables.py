@@ -105,7 +105,7 @@ def aerosol_gas_tables(adfobj, trop_val=None, **kwargs):
             *   based on Carbon MW (12). It still needs ADF modification to read a list from yaml file. 
     '''
 
-
+    print("FIRSTIES: trop_val",trop_val,"*****")
     #Notify user that script has started:
     msg = "\n   Calculating chemistry/aerosol budget tables..."
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
