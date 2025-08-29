@@ -89,6 +89,14 @@ class AdfObs(AdfInfo):
         #farther down in the ADF inheritance chain:
         #----------------------------------------
         if self.__variable_defaults:
+            if not self.diag_var_list:
+                emsg = "No variables were specified in the 'diag_var_list' config argument."
+                #emsg += " Please add variables to this list"
+                #emsg += "  ...NO CAM time series file generated."
+                self.end_diag_fail(emsg)
+                # Notify user that script has ended:
+                print(emsg)
+                return
             #Variable defaults exist, so check if any want a land or ocean mask:
             for var in self.diag_var_list:
                 #Check if any variable wants a land or ocean mask:
