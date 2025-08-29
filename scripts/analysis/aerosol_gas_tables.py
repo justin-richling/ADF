@@ -5,6 +5,7 @@ from pathlib import Path
 from datetime import datetime
 import numpy as np
 import itertools
+import pandas as pd
 
 # Import necessary ADF modules:
 from adf_base import AdfError
@@ -331,8 +332,6 @@ def aerosol_gas_tables(adfobj, trop_val=None, **kwargs):
                     "num_yrs":num_yrs,
                     "AEROSOLS":AEROSOLS}
 
-    #print(table_kwargs)
-
     # Create the budget tables
     #-------------------------
     # Aerosols
@@ -364,11 +363,9 @@ def list_files(adfobj, directory, start_year ,end_year, h_case):
 #        all_filenames.append(sorted(Path(directory).glob(f'*.{h_case}.{i}-*')))
         all_filenames.append(sorted(Path(directory).glob(f'*.{h_case}.{i:04d}*')))
 
-    #print(directory)
     # Flattening the list of lists
     filenames = list(itertools.chain.from_iterable(sorted(all_filenames)))
     if len(filenames)==0:
-        #sys.exit(" Directory has no outputs ")
         msg = f"chem/aerosol tables, 'list_files':"
         msg += f"\n\t - Directory '{directory}' has no outputs."
         adfobj.debug_log(msg)
@@ -902,7 +899,8 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
         msg = f"chem/aerosol tables: 'make_Dic_scn_var_comp'"
         msg += f"\n\t Current CAM variable: {current_var}"
         msg += f"\n\t   Derived components for CAM variable {current_var}: {components}"
-        #adfobj.debug_log(msg)
+        adfobj.debug_log(msg)
+
         Dic_comp={}
         Dic_comp,missing_vars,needed_vars=SEbudget(adfobj,dic_SE,current_dir,current_files,components,ext1_SE)
 
@@ -927,8 +925,6 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
 
     # Critical threshholds, just run this once
     # this is for finding tropospheric values
-    # Critical threshholds?\n",
-    # Just run this once\n",
     tropospheric_method='NA'
     if trop_val == 'topopause':
         try:
@@ -1046,9 +1042,7 @@ def SEbudget(adfobj,dic_SE,data_dir,files,vars,ext1_SE,**kwargs):
             if file == 0:
                     Dic_all_data[var]=[]
 
-
        # Star gathering of variable data
-
             if var=='TROP_P':
                 data=np.array(ds['TROP_P'+ext1_SE].isel(time=0))/100
             elif var== 'Pressure':
@@ -1067,11 +1061,8 @@ def SEbudget(adfobj,dic_SE,data_dir,files,vars,ext1_SE,**kwargs):
                         data[i]=hyam[i]*P0+hybm[i]*PS
                     data=data/100
             else:
-
-    
                 data=[]
                 for i in dic_SE[var].keys():
-    
                     if file == 0:
                         msg = f"chem/aerosol tables: 'SEbudget'"
                         msg += f"\n\t\t   ** variable(s) needed for derived var {var}: {dic_SE[var].keys()}"
@@ -1086,9 +1077,7 @@ def SEbudget(adfobj,dic_SE,data_dir,files,vars,ext1_SE,**kwargs):
                             data.append(mock_2d)
                         else:
                             data.append(mock_3d)
-                    # End if
                         if file == 0:
-    
                             if var not in missing_vars:
                                 if var!='U': # This is to avoid confusion between U variable or U mock!
                                     missing_vars.append(var)
@@ -1096,9 +1085,8 @@ def SEbudget(adfobj,dic_SE,data_dir,files,vars,ext1_SE,**kwargs):
     
                 # End if
     
-            # Get total summed data for this history file data
+                # Get total summed data for this history file data
                 data=np.sum(data,axis=0)
-        # End try/except
 
             if ('CHML' in var) or ('CHMP' in var) :
                 Temp=np.array(ds['T'+ext1_SE].isel(time=0))
