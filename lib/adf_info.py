@@ -656,6 +656,7 @@ class AdfInfo(AdfConfig):
         """Return a copy of the "diag_var_list" list to the user if requested."""
         #Note that a copy is needed in order to avoid having a script mistakenly
         #modify this variable, as it is mutable and thus passed by reference:
+        print("YAAAHHOOOOO")
         return copy.copy(self.__diag_var_list)
 
     # Create property needed to return "basic_info" expanded dictionary to user:
