@@ -177,7 +177,15 @@ class AdfDiag(AdfWeb):
         self.__plotting_scripts = self.read_config_var("plotting_scripts")
 
         # Provide convenience functions for data handling:
-        self.data = AdfData(self)
+        if not self.diag_var_list:
+            emsg = "No variables were specified in the 'diag_var_list' config argument."
+            #emsg += " Please add variables to this list"
+            #emsg += "  ...NO CAM time series file generated."
+            #self.end_diag_fail(emsg)
+            # Notify user that script has ended:
+            print(emsg)
+        else:
+            self.data = AdfData(self)
 
     # Create property needed to return "plotting_scripts" variable to user:
     @property
