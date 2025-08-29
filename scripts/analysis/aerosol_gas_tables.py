@@ -110,6 +110,10 @@ def aerosol_gas_tables(adfobj, trop_val=None, **kwargs):
     msg = "\n   Calculating chemistry/aerosol budget tables..."
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
+    # Check which type of tables to be created, default to 'troposphere'
+    if trop_val is None:
+        trop_val = 'troposphere'
+
     # Inputs
     #-------
     # Variable defaults info
