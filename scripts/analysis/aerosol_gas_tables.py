@@ -927,7 +927,7 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
     # this is for finding tropospheric values
     tropospheric_method='NA'
     print("trop_val",trop_val,"*****")
-    if trop_val == 'topopause':
+    if trop_val == 'tropopause':
         try:
             current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['Pressure'],ext1_SE)
             Dic_crit=current_crit['Pressure']
@@ -945,7 +945,7 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
         msg += f"\n\t - potential missing variables from budget? {missing_vars_tot}"
         adfobj.debug_log(msg)
         print(msg)
-    elif trop_val == 'toposphere':
+    elif trop_val == 'troposphere':
         try:
             current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['O3'],ext1_SE)
             Dic_crit=current_crit['O3']
@@ -965,7 +965,8 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
                 Tropospheric=False
                 msg += f"\n\t WARNING: No way of defining troposphere was found in the model, budgets are total column"
                 print(msg)
-
+    if not Dic_crit:
+        print("UH OH, Dic_crit is not defined!")
     msg = f"chem/aerosol tables:"
     msg += f"\n\t - needed variables for budget {needed_vars_tot}"
     adfobj.debug_log(msg)
