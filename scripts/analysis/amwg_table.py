@@ -94,7 +94,7 @@ def amwg_table(adf):
                "tropics": (0, 360, -20, 20),
                "southern": (0, 360, -90, -20),
                "northern": (0, 360, 20, 90)}
-
+    print("domains",domains)
     # and then in time it is DJF JJA ANN
 
     #Notify user that script has started:
