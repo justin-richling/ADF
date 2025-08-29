@@ -9,7 +9,7 @@ import itertools
 # Import necessary ADF modules:
 from adf_base import AdfError
 
-def aerosol_gas_tables(adfobj):
+def aerosol_gas_tables(adfobj, trop_val=None, **kwargs):
     '''
     Calculate aerosol and gaseous budget tables
 
@@ -93,11 +93,12 @@ def aerosol_gas_tables(adfobj):
             * Add a condition to calculate whole world budgets when O3 is not find.
             * Update pressure calculation in a more general way.
 
-        Behrooz Roozitalab, 20 Aug, 2025 _ Version 1
+        Behrooz Roozitalab, 20 Aug, 2025 _ Version 0
         - fixed:
             * the html page was not created, it is fixed.
             * added "hm" as a case to enable using annual averaged files in addition to monthly files.
-            * This version uses 500hPa as the tropopause threshold. Use Version 0 for a realistic case.
+            * if config arg is tropopause : This version uses 500hPa as the tropopause threshold. Use Version 0 for a realistic case.
+            * if config arg is troposphere : New method of defining troposphere, use  ozone (150ppb) or Trop_P. If not found, calculate total column
             * Added DMS to gases list - reported as DMS not S
             * Automatic addition of gaseous compounds even when not defined in the default list, 
             *   based on Carbon MW (12). It still needs ADF modification to read a list from yaml file. 
@@ -287,7 +288,7 @@ def aerosol_gas_tables(adfobj):
 
         # Gather dictionary data for current case
         # NOTE: The calculations can take a long time...
-        Dic_crit, Dic_scn_var_comp[case],Tropospheric,tropospheric_method = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS,Tropospheric)
+        Dic_crit, Dic_scn_var_comp[case],Tropospheric,tropospheric_method = make_Dic_scn_var_comp(adfobj, VARIABLES, data_dir, dic_SE, Files, ext1_SE, AEROSOLS,Tropospheric,trop_val)
         # Regional refinement
         # NOTE: This function 'Inside_SE' is unavailable at the moment! - JR 10/2024
         if regional:
@@ -305,6 +306,12 @@ def aerosol_gas_tables(adfobj):
             if tropospheric_method=='pressure':
                 # using pressure > 500hPa
                 trop = np.where(current_crit<500,np.nan,current_crit)
+            if tropospheric_method=='ozone':
+                # using ozone <150 ppb
+                trop = np.where(current_crit>150,np.nan,current_crit)
+            elif tropospheric_method=='tropopause':
+                # using pressure > tropopause pressure
+                trop = np.where(current_crit['Pressure']<current_crit['TROP_P'],np.nan,current_crit['Pressure'])
             elif tropospheric_method=='NA':
                 print('ERROR: Tropopause is not defined correctly!')
         else:
@@ -813,7 +820,7 @@ def fill_dic_SE(adfobj, dic_SE, variables, ListVars, ext1_SE, AEROSOLS, MW, AVO,
 #####
 
 
-def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files, ext1_SE, AEROSOLS,Tropospheric):
+def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files, ext1_SE, AEROSOLS,Tropospheric,trop_val):
     """
     This function retrieves the files, latitude, and longitude information
     in all the directories within the chosen dates.
@@ -923,20 +930,39 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
     # Critical threshholds?\n",
     # Just run this once\n",
     tropospheric_method='NA'
-    try:
-        current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['Pressure'],ext1_SE)
-        Dic_crit=current_crit['Pressure']
-        tropospheric_method='pressure'
-        msg += f"\n\t WARNING: Troposphere is defined as Pressure>500 hPa"
-    except:
-        current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['U'],ext1_SE) 
-        Dic_crit=current_crit['U']
-        Tropospheric=False
-        msg += f"\n\t WARNING: No way of defining troposphere was found in the model, budgets are total column"
-    # Log info to logging file
-    msg = f"chem/aerosol tables:"
-    msg += f"\n\t - potential missing variables from budget? {missing_vars_tot}"
-    adfobj.debug_log(msg)
+    if trop_val == 'topopause':
+        try:
+            current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['Pressure'],ext1_SE)
+            Dic_crit=current_crit['Pressure']
+            tropospheric_method='pressure'
+            msg += f"\n\t WARNING: Troposphere is defined as Pressure>500 hPa"
+        except:
+            current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['U'],ext1_SE) 
+            Dic_crit=current_crit['U']
+            Tropospheric=False
+            msg += f"\n\t WARNING: No way of defining troposphere was found in the model, budgets are total column"
+        # Log info to logging file
+        msg = f"chem/aerosol tables:"
+        msg += f"\n\t - potential missing variables from budget? {missing_vars_tot}"
+        adfobj.debug_log(msg)
+    elif trop_val == 'toposphere':
+        try:
+            current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['O3'],ext1_SE)
+            Dic_crit=current_crit['O3']
+            tropospheric_method='ozone'
+            msg += f"\n\t WARNING: Troposphere is defined as O3<150 ppb"
+                    
+        except:
+            try:
+                current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['TROP_P','Pressure'],ext1_SE)
+                Dic_crit=current_crit #[['TROP_P','Pressure']]
+                tropospheric_method='tropopause'
+                msg += f"\n\t WARNING: Troposphere is defined as pressure>trop_p"
+            except:
+                current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['U'],ext1_SE) 
+                Dic_crit=current_crit['U']
+                Tropospheric=False
+                msg += f"\n\t WARNING: No way of defining troposphere was found in the model, budgets are total column"
 
     msg = f"chem/aerosol tables:"
     msg += f"\n\t - needed variables for budget {needed_vars_tot}"
@@ -997,7 +1023,6 @@ def SEbudget(adfobj,dic_SE,data_dir,files,vars,ext1_SE,**kwargs):
         try:
             delP=np.array(ds['PDELDRY'+ext1_SE].isel(time=0))
         except:
-
             hyai=np.array(ds['hyai'])
             hybi=np.array(ds['hybi'])
 
@@ -1006,7 +1031,6 @@ def SEbudget(adfobj,dic_SE,data_dir,files,vars,ext1_SE,**kwargs):
             except:
                 PS=np.array(ds['PS'+ext1_SE].isel(time=0))
             # End try/except
-
             P0=1e5
             if SE:
                 Plevel=np.zeros((len(hyai),len(PS)))
