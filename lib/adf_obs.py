@@ -96,7 +96,7 @@ class AdfObs(AdfInfo):
                 #self.end_diag_fail(emsg)
                 # Notify user that script has ended:
                 print(emsg)
-                self.debug_log(msg)
+                self.debug_log(emsg)
                 return
             #Variable defaults exist, so check if any want a land or ocean mask:
             for var in self.diag_var_list:
