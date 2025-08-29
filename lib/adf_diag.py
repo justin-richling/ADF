@@ -340,6 +340,7 @@ class AdfDiag(AdfWeb):
             self.end_diag_fail(emsg)
             # Notify user that script has ended:
             print(emsg)
+            return
 
 
         global call_ncrcat
