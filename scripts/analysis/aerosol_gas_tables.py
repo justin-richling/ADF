@@ -981,7 +981,7 @@ def SEbudget(adfobj,dic_SE,data_dir,files,vars,ext1_SE,**kwargs):
     chunk of code that takes the longest by far.
 
     Example:
-    ** This is for both chemistry and aeorosl calculations
+    ** This is for both chemistry and aerosol calculations
 
     dic_SE: dictionary specyfing what variables to get. For example,
             for precipitation you can define SE as:
