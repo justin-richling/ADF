@@ -965,8 +965,7 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
                 Tropospheric=False
                 msg += f"\n\t WARNING: No way of defining troposphere was found in the model, budgets are total column"
                 print(msg)
-    if not Dic_crit:
-        print("UH OH, Dic_crit is not defined!")
+
     msg = f"chem/aerosol tables:"
     msg += f"\n\t - needed variables for budget {needed_vars_tot}"
     adfobj.debug_log(msg)
