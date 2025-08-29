@@ -926,43 +926,50 @@ def make_Dic_scn_var_comp(adfobj, variables, current_dir, dic_SE, current_files,
     # Critical threshholds, just run this once
     # this is for finding tropospheric values
     tropospheric_method='NA'
+    print("trop_val",trop_val,"*****")
     if trop_val == 'topopause':
         try:
             current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['Pressure'],ext1_SE)
             Dic_crit=current_crit['Pressure']
             tropospheric_method='pressure'
             msg += f"\n\t WARNING: Troposphere is defined as Pressure>500 hPa"
+            print(msg)
         except:
             current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['U'],ext1_SE) 
             Dic_crit=current_crit['U']
             Tropospheric=False
             msg += f"\n\t WARNING: No way of defining troposphere was found in the model, budgets are total column"
+            print(msg)
         # Log info to logging file
         msg = f"chem/aerosol tables:"
         msg += f"\n\t - potential missing variables from budget? {missing_vars_tot}"
         adfobj.debug_log(msg)
+        print(msg)
     elif trop_val == 'toposphere':
         try:
             current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['O3'],ext1_SE)
             Dic_crit=current_crit['O3']
             tropospheric_method='ozone'
             msg += f"\n\t WARNING: Troposphere is defined as O3<150 ppb"
-                    
+            print(msg)        
         except:
             try:
                 current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['TROP_P','Pressure'],ext1_SE)
                 Dic_crit=current_crit #[['TROP_P','Pressure']]
                 tropospheric_method='tropopause'
                 msg += f"\n\t WARNING: Troposphere is defined as pressure>trop_p"
+                print(msg)
             except:
                 current_crit,_,__=SEbudget(adfobj,dic_SE,current_dir,current_files,['U'],ext1_SE) 
                 Dic_crit=current_crit['U']
                 Tropospheric=False
                 msg += f"\n\t WARNING: No way of defining troposphere was found in the model, budgets are total column"
+                print(msg)
 
     msg = f"chem/aerosol tables:"
     msg += f"\n\t - needed variables for budget {needed_vars_tot}"
     adfobj.debug_log(msg)
+    print(msg)
 
     return Dic_crit,Dic_scn_var_comp,Tropospheric,tropospheric_method
 #####
