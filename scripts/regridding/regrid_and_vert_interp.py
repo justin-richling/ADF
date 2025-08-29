@@ -51,6 +51,10 @@ def regrid_and_vert_interp(adf):
     overwrite_regrid = adf.get_basic_info("cam_overwrite_regrid", required=True)
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     var_list         = adf.diag_var_list
+    if not var_list:
+        emsg = f" {__file__} No variables were specified in the 'diag_var_list' config argument."
+        print(emsg)
+        return
     var_defaults     = adf.variable_defaults
 
     #CAM simulation variables (these quantities are always lists):
