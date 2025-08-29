@@ -47,7 +47,7 @@ def zonal_mean(adfobj):
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     var_list = adfobj.diag_var_list
-    if var_list == "special":     # <-- check for the condition
+    if not var_list:     # <-- check for the condition
         return print("Stopped early because of function_2")
 
     #Special ADF variable which contains the output paths for
