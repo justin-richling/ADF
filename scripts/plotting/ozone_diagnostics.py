@@ -904,12 +904,12 @@ def ozone_diagnostics (adfobj):
    #Check and make sure that if the O3 Diagnostics are selected in the .yaml file that
    #ozone (O3) is listed in the diag_var_list.
    #--------------------------------------------------------------------------------------
-   if not ('O3' in adfobj.diag_var_list):
+   """if not ('O3' in adfobj.diag_var_list):
       msg = "No ozone ('O3') variable present"
       msg += " in 'diag_var_list', so O3 diagnostic plots will"
       msg += " be skipped."
       print(msg)
-      return
+      return"""
    
    #--------------------------------------------------------------------------------------
    #Get the ozone sonde data from all of the stations
