@@ -123,12 +123,10 @@ def MOPITT(adfobj):
     sat_pressure_array = xr.full_like(ak_array, np.nan)
     sat_pressure_array[:,:,:,0] = sat_psurf
     sat_pressure_array[:,:,:,1:10] = press_dummy_arr
-    #print(sat_pressure_array.isel(time=0, lat=-45, lon=-80))
 
     #Correct for where MOPITT surface pressure <900 hPa
     #calculate pressure differences
     dp = xr.full_like(ak_array, np.nan)
-    dp.shape
     dp[:,:,:,9] = 1000
     for z in range (0, 9):
         dp[:,:,:,z] = sat_pressure_array[:,:,:,0] - sat_pressure_array[:,:,:,z+1]
