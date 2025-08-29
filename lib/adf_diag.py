@@ -331,6 +331,17 @@ class AdfDiag(AdfWeb):
         msg = "\n  Calculating CAM time series..."
         print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
+        # create copy of var list that can be modified for derivable variables
+        diag_var_list = self.diag_var_list
+        if not diag_var_list:
+            emsg = "No variables were specified in the 'diag_var_list' config argument."
+            #emsg += " Please add variables to this list"
+            emsg += "  ...NO CAM time series file generated."
+            self.end_diag_fail(emsg)
+            # Notify user that script has ended:
+            print(emsg)
+
+
         global call_ncrcat
 
         def call_ncrcat(cmd):
@@ -523,8 +534,6 @@ class AdfDiag(AdfWeb):
                 list_of_ncattend_commands = []
                 list_of_hist_commands = []
                 vars_to_derive = []
-                # create copy of var list that can be modified for derivable variables
-                diag_var_list = self.diag_var_list
 
                 # Aerosol Calcs
                 # --------------
