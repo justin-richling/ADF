@@ -1227,6 +1227,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             norm = cp_info['norm1']
 
         ua, va = other_wrap_fields[i]
+        print("ua",ua)
 
         # Unstructured grid check
         if not unstructured:
@@ -1267,7 +1268,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             ax[i].add_collection(acm)
             skip = 20
             ax[i].quiver(lons[::skip], lats[::skip],
-                         ua.isel(face=slice(None, None, skip)), va.isel(face=slice(None, None, skip)),
+                         ua[::skip], va[::skip],
                          transform=ccrs.PlateCarree(),cmap='Reds')
 
             """acm = mdl_mag.to_polycollection(projection=proj)
