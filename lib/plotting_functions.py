@@ -1267,9 +1267,12 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             acm.set_clim(vmin=levels[0],vmax=levels[-1])
             ax[i].add_collection(acm)
             skip = 20
+            indices = np.arange(0, ua.sizes['n_face'], skip)
+            ua_sub = ua.isel(n_face=indices)
+            va_sub = va.isel(n_face=indices)
             ax[i].quiver(lons[::skip], lats[::skip],
-                         ua.isel(n_face=slice(None, None, skip)),
-                         va.isel(n_face=slice(None, None, skip)),
+                         ua_sub,
+                         va_sub,
                          transform=ccrs.PlateCarree(),cmap='Reds')
 
             """acm = mdl_mag.to_polycollection(projection=proj)
