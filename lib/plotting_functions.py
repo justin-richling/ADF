@@ -2398,6 +2398,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         # set a symmetric color bar for diff:
         absmaxdif = np.max(np.abs(diffdata))
         # set levels for difference plot:
+        absmaxdif = float(absmaxdif)
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
         
     # Percent Difference options -- Check in kwargs for colormap and levels
