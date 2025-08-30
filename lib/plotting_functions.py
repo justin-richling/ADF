@@ -1266,7 +1266,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             acm.set_clim(vmin=levels[0],vmax=levels[-1])
             ax[i].add_collection(acm)
             skip = 20
-            ax[i].quiver(lons.isel(face=slice(None, None, skip)), lats.isel(face=slice(None, None, skip)),
+            ax[i].quiver(lons[::skip], lats[::skip],
                          ua.isel(face=slice(None, None, skip)), va.isel(face=slice(None, None, skip)),
                          transform=ccrs.PlateCarree(),cmap='Reds')
 
