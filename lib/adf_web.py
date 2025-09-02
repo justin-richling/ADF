@@ -1038,7 +1038,7 @@ class AdfWeb(AdfObs):
                     print("if not web_data.data_frame: ext",ext)
                     print("if not web_data.data_frame: ptype",ptype)
                     print("if not web_data.data_frame: var",var)
-                    print("if not web_data.data_frame: multi_case",multi_case,"\n")
+                    print("if not web_data.data_frame: multi_case",multi_case)
 
                     #Check if category has been provided for this web data:
                     if web_data.category:
@@ -1056,14 +1056,16 @@ class AdfWeb(AdfObs):
                     #End if
                     if multi_case:
                         #Check for multi-case multi-plots
-                        print("\nmulti_case_plots:",multi_case_plots)
+                        print("multi_case_plots:",multi_case_plots,"\n")
                         if multi_case_plots:
+                            print("DID IT COME HERE 'if multi_case_plots'")
                             #This currently runs web_data.case for every case, but in reality
                             #it really only needs to run once since the plots are
                             #already made with all cases.
                             #So just grab the first test case:
                             case1 = self.get_cam_info('cam_case_name', required=True)[0]
                             if str(web_data.case) == str(case1):
+                                print("DOID IT COME HERE 'if str(web_data.case) == str(case1)'")
                                 #Check if variable is in desired multi-case plot
                                 #and if plot_type is in given multi-case plot set:
                                 if (var in mvars) and (ext in multi_case_plots):
