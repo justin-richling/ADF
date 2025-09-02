@@ -540,7 +540,8 @@ def global_latlon_map(adfobj):
         for var in multi_dict.keys():
             #print("VAR:",var)
             vres = res.get(var, {})
-            #print("vres",vres)
+            print("vres",vres)
+            #print("multi_dict[var]",multi_dict[var])
 
             pf.multi_latlon_plots(main_site_assets_path, var, "LatLon", case_names,
                                 [test_nicknames,base_nickname], multi_dict[var],
