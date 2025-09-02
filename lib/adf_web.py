@@ -1035,10 +1035,12 @@ class AdfWeb(AdfObs):
                     var = web_data.name
                     ext = web_data.plot_ext
                     multi_case = web_data.multi_case
-                    print("if not web_data.data_frame: ext",ext)
+                    print("\nif not web_data.data_frame: ext",ext)
                     print("if not web_data.data_frame: ptype",ptype)
                     print("if not web_data.data_frame: var",var)
                     print("if not web_data.data_frame: multi_case",multi_case)
+                    print("if not web_data.data_frame: web_data.case",web_data.case)
+                    print("if not web_data.data_frame: web_data.case",web_data.case)
 
                     #Check if category has been provided for this web data:
                     if web_data.category:
@@ -1068,7 +1070,10 @@ class AdfWeb(AdfObs):
                                 print("DOID IT COME HERE 'if str(web_data.case) == str(case1)'")
                                 #Check if variable is in desired multi-case plot
                                 #and if plot_type is in given multi-case plot set:
+                                print("VAR",var)
                                 if (var in mvars) and (ext in multi_case_plots):
+                                    print
+                                    print("DOID IT COME HERE 'if (var in mvars) and (ext in multi_case_plots)'")
                                     #Move file to assets directory:
                                     if not web_data.data.is_file():
                                         shutil.copy(web_data.data, web_data.asset_path)
