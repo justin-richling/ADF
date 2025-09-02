@@ -430,7 +430,8 @@ class AdfWeb(AdfObs):
                 if multi_var_list:
                     for var in multi_var_list:
                         if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
-                            mvars.append(var)
+                            if var not in mvars:
+                                mvars.append(var)
                 #else:
                 #    for var in self.diag_var_list:
                 #        if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
@@ -1039,7 +1040,6 @@ class AdfWeb(AdfObs):
                     print("if not web_data.data_frame: ptype",ptype)
                     print("if not web_data.data_frame: var",var)
                     print("if not web_data.data_frame: multi_case",multi_case)
-                    print("if not web_data.data_frame: web_data.case",web_data.case)
                     print("if not web_data.data_frame: web_data.case",web_data.case)
 
                     #Check if category has been provided for this web data:
