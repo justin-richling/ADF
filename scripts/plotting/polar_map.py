@@ -330,7 +330,7 @@ def polar_map(adfobj):
 
                 pf.multi_polar_plots(main_site_assets_path, var, hemi, case_names,
                                     [test_nicknames,base_nickname], multi_dict[var],
-                                    web_category, adfobj, **vres)
+                                    web_category, adfobj, multi_case=True, **vres)
 
         print("     ...polar lat/lon multi-case plots have been generated successfully.")
 

@@ -544,7 +544,7 @@ def global_latlon_map(adfobj):
 
             pf.multi_latlon_plots(main_site_assets_path, var, "LatLon", case_names,
                                 [test_nicknames,base_nickname], multi_dict[var],
-                                web_category, adfobj, **vres)
+                                web_category, adfobj, multi_case=True, **vres)
 
         print("     ...lat/lon multi-case plots have been generated successfully.")
 
