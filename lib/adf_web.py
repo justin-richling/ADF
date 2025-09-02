@@ -1071,8 +1071,11 @@ class AdfWeb(AdfObs):
                                 #Check if variable is in desired multi-case plot
                                 #and if plot_type is in given multi-case plot set:
                                 print("VAR",var)
+                                print("mvars",mvars)
+                                if (var in mvars):
+                                    print(var, mvars)
                                 if (var in mvars) and (ext in multi_case_plots):
-                                    print
+                                    #print
                                     print("DOID IT COME HERE 'if (var in mvars) and (ext in multi_case_plots)'")
                                     #Move file to assets directory:
                                     if not web_data.data.is_file():
