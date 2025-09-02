@@ -2864,7 +2864,7 @@ def multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, w
 
                 fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
 
-                adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext="global_latlon_map",
+                adfobj.add_website_data(wks / file_name, var, case_names[0], plot_ext="global_latlon_map",
                                                             category=web_category, season=season, plot_type="LatLon",multi_case=True)
 
                 #Close plots:
@@ -3150,7 +3150,7 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
                     hemi_ext = "nh"
                 if ptype == "SHPolar":
                     hemi_ext = "sh"
-                adfobj.add_website_data(wks / file_name, file_name, case_names[0], plot_ext=f"{hemi_ext}_polar_map",
+                adfobj.add_website_data(wks / file_name, var, case_names[0], plot_ext=f"{hemi_ext}_polar_map",
                                                             category=web_category, season=season, plot_type=ptype,multi_case=True)
 
                 #Close plots:
