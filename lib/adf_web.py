@@ -418,6 +418,7 @@ class AdfWeb(AdfObs):
 
         #Extract requested multi-case multi-plots
         multi_case_plots = self.read_config_var('multi_case_plots')
+        print("FIRST TIME multi_case_plots:",multi_case_plots,"\n\n")
 
         if multi_case_plots:
             #Grab all variables for each multi-case plot type
@@ -1055,6 +1056,7 @@ class AdfWeb(AdfObs):
                     #End if
                     if multi_case:
                         #Check for multi-case multi-plots
+                        print("\nmulti_case_plots:",multi_case_plots)
                         if multi_case_plots:
                             #This currently runs web_data.case for every case, but in reality
                             #it really only needs to run once since the plots are
