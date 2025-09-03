@@ -2874,11 +2874,6 @@ def multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, w
                 plt.close()
 
 
-
-
-
-
-
 #def make_polar_plot
 
 def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, web_category, adfobj, **kwargs):
