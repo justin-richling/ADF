@@ -664,7 +664,7 @@ class AdfInfo(AdfConfig):
             print("Git command failed:", e)
             #return None
             info = None
-        self.git_info = info
+        self.__git_info = info
         return info
 
     # Example usage
@@ -691,7 +691,7 @@ class AdfInfo(AdfConfig):
         except subprocess.CalledProcessError as e:
             print("Error getting git branch:", e.stderr.strip())
             branch =  None
-        self.git_branch = branch
+        self.__git_branch = branch
         # -----------------------------------------
 
     #########
@@ -700,7 +700,7 @@ class AdfInfo(AdfConfig):
     @property
     def git_branch(self):
         """Return the current git branch name if requested."""
-        return self.__branch
+        return self.__git_branch
     @property
     def git_info(self):
         """Return current git env info if requested."""
