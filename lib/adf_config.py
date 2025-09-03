@@ -59,9 +59,17 @@ class AdfConfig(AdfBase):
             raise FileNotFoundError(emsg)
 
         #Open YAML file:
-        #nfil debug_fname = f"ADF_debug_{ext}.log"  -- self.__debug_fname
-        #with open("adf_run_info.txt", "w") as f:
-        #AdfBase.__debug_fname
+        with open(config_file, encoding='UTF-8') as nfil:
+            #Load YAML file:
+            self.__config_dict = yaml.load(nfil, Loader=yaml.SafeLoader)
+
+        #Create search dictionary for variable expansion:
+        self.__search_dict = self.__create_search_dict(self.__config_dict)
+
+        #Create YAML self-reference keyword regex:
+        self.__kword_pattern = re.compile(r'\$\{[a-z_\.\d]+\}')
+
+        # Gather ADF run env info
         print("AdfBase.debug_fname",AdfBase.debug_fname(self))
         log_name = AdfBase.debug_fname(self)
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
@@ -78,15 +86,6 @@ class AdfConfig(AdfBase):
             for key,val in git_info.items():
                 print(f"{key}: {val}")
                 f.write(f"{key}: {val}\n")
-        with open(config_file, encoding='UTF-8') as nfil:
-            #Load YAML file:
-            self.__config_dict = yaml.load(nfil, Loader=yaml.SafeLoader)
-
-        #Create search dictionary for variable expansion:
-        self.__search_dict = self.__create_search_dict(self.__config_dict)
-
-        #Create YAML self-reference keyword regex:
-        self.__kword_pattern = re.compile(r'\$\{[a-z_\.\d]+\}')
 
     #########
 
