@@ -100,7 +100,7 @@ class AdfConfig(AdfBase):
         log_name = AdfBase.debug_fname(self)
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
             msg = "Config file used:"
-            f.write(f"{msg}\n{'-' * (len(msg)-3)}\n")
+            f.write(f"{msg}\n{'-' * (len(msg))}\n")
             f.write(f"  {config_file}\n")
 
             msg = "\n  Config file options:"
@@ -121,12 +121,12 @@ class AdfConfig(AdfBase):
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
             msg = "\nConda env used:"
-            f.write(f"{msg}\n  {'-' * (len(msg)-3)}\n")
+            f.write(f"{msg}\n{'-' * (len(msg))}\n")
             f.write(f"  {active_env}\n")
 
             git_info = self.get_git_info()
             msg = "\nGit Info:"
-            f.write(f"{msg}\n  {'-' * (len(msg)-3)}\n")
+            f.write(f"{msg}\n{'-' * (len(msg))}\n")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
                 f.write(f"  {key}: {val}\n")
