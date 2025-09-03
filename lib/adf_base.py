@@ -58,12 +58,12 @@ class AdfBase:
             dt_str = current_timestamp.strftime('%Y-%m-%d %H:%M:%S')
             ext = f'{str(dt_str).replace(" ","-")}'
             debug_fname = f"ADF_debug_{ext}.log"
-            self.__debug_fname = debug_fname
+            #self.__debug_fname = debug_fname
             logging.basicConfig(filename=debug_fname, level=logging.DEBUG)
             self.__debug_log = logging.getLogger("ADF")
         else:
-            self.__debug_log = None
-
+            debug_fname = f"ADF_debug.log"
+        self.__debug_fname = debug_fname
         
 
     #########
