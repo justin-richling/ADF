@@ -75,21 +75,14 @@ class AdfConfig(AdfBase):
             env_name = None
             try:
                 # Execute 'conda env list' and capture output
-                print(f"HERE 1? {env_name}")
                 result = subprocess.run(['conda', 'env', 'list'], capture_output=True, text=True, check=True)
-                print(f"HERE 2? {env_name}")
                 output_lines = result.stdout.splitlines()
-                print(f"HERE 3? {env_name}")
                 for i,line in enumerate(output_lines):
-                    print(f"HERE 3.{i}? {env_name}")
                     # The active environment is marked with an asterisk (*)
-                    print("line.strip()",line.strip())
                     #if line.strip().startswith('*'):
                     if '*' in line.strip():
-                        print(f"HERE 3.{i}-arg? {env_name}")
                         # Extract the environment name (first part of the line)
                         env_name = line.strip().split()[0]
-                print(f"HERE 4? {env_name}")
                 #print("HERE?")
                 #return None  # No active environment found
             except subprocess.CalledProcessError as e:
@@ -97,7 +90,6 @@ class AdfConfig(AdfBase):
             return env_name
 
         active_env = get_active_conda_environment()
-        print(f"AHHHHH? {active_env}")
         if active_env:
             print(f"Active Conda environment: {active_env}")
         else:
