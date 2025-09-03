@@ -632,7 +632,7 @@ class AdfInfo(AdfConfig):
 
     #########
 
-    def get_git_info():
+    def get_git_info(self):
         import subprocess
         info = {}
 
@@ -662,18 +662,20 @@ class AdfInfo(AdfConfig):
 
         except subprocess.CalledProcessError as e:
             print("Git command failed:", e)
-            return None
-
+            #return None
+            info = None
+        self.git_info = info
         return info
 
     # Example usage
-    git_info = get_git_info()
-    for key, value in git_info.items():
-        print(f"{key}: {value}")
+    #git_info = get_git_info()
+    #for key, value in git_info.items():
+    #    print(f"{key}: {value}")
+    
 
 
 
-    def get_git_branch():
+    def get_git_branch(self):
         import subprocess
         try:
             result = subprocess.run(
@@ -688,18 +690,21 @@ class AdfInfo(AdfConfig):
             #return self.__branch
         except subprocess.CalledProcessError as e:
             print("Error getting git branch:", e.stderr.strip())
-            return None
+            branch =  None
+        self.git_branch = branch
         # -----------------------------------------
 
     #########
 
-    # Example usage
-    branch = get_git_branch()
     # Create property needed to return "user" name to user:
     @property
     def git_branch(self):
-        """Return the "user" name if requested."""
-        return self.__user
+        """Return the current git branch name if requested."""
+        return self.__branch
+    @property
+    def git_info(self):
+        """Return current git env info if requested."""
+        return self.__git_info
 
     # Create property needed to return "user" name to user:
     @property
