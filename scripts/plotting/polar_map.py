@@ -74,7 +74,7 @@ def polar_map(adfobj):
     #read_config_var('multi_case_plots')
     if len(case_names) > 1:
         #Check if multi-plots are desired from yaml file
-        if "polar_map" in adfobj.get_multi_case_info:
+        if "polar_map" in adfobj.get_multi_case_info.keys():
             if adfobj.get_multi_case_info("polar_map"):
                 multi_plots = True
                 multi_dict = OrderedDict()
