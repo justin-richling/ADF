@@ -48,7 +48,7 @@ class AdfBase:
         if not isinstance(debug, bool):
             raise TypeError("'debug' must be a boolean type (True or False)")
 
-        self.__debug_fname = ''
+        #self.__debug_fname = ''
 
         # Get the current date and time
         current_timestamp = datetime.now()
