@@ -1090,6 +1090,8 @@ class AdfWeb(AdfObs):
                                                             multi_plot_page]
                                     #print("multi_mean_html_info[ptype]",multi_mean_html_info[ptype])
                                     #multi_plots[ptype] = f"html_img/multi_case_mean_diag_{ptype}.html"
+                                    print("seasons", seasons)
+                                    
                                     rend_kwarg_dict = {"title": main_title,
                                                         "var_title": var,
                                                         "season_title": season,
