@@ -84,7 +84,8 @@ class AdfConfig(AdfBase):
                     print(f"HERE 3.{i}? {env_name}")
                     # The active environment is marked with an asterisk (*)
                     print("line.strip()",line.strip())
-                    if line.strip().startswith('*'):
+                    #if line.strip().startswith('*'):
+                    if '*' in line.strip():
                         print(f"HERE 3.{i}-arg? {env_name}")
                         # Extract the environment name (first part of the line)
                         env_name = line.strip().split()[0]
