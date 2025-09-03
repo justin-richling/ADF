@@ -103,7 +103,11 @@ class AdfConfig(AdfBase):
             f.write(f"  {config_file}\n")
             f.write("  Config file options:\n")
             for key,val in self.__config_dict.items():
-                f.write(f"  {key}: {val}\n")
+                if isinstance(val,dict):
+                    for key2,val2 in val.items():
+                        f.write(f"  {key2}: {val2}\n")
+                else:
+                    f.write(f"  {key}: {val}\n")
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
             f.write("\nConda env used:\n-----------\n")
