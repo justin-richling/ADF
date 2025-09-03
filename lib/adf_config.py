@@ -65,14 +65,16 @@ class AdfConfig(AdfBase):
         print("AdfBase.debug_fname",AdfBase.debug_fname(self))
         log_name = AdfBase.debug_fname(self)
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
-            f.write(str(config_file))
+            f.write(f"Config file used: {config_file}\n")
             f.write("-----------\n")
-            branch = self.get_git_branch()
-            f.write(str(branch))
+            #branch = self.get_git_branch()
+            #f.write(f"{branch}\n")
             git_info = self.get_git_info()
+            f.write(f"Git Info:\n")
+            f.write("-----------\n")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
-                f.write(f"{key}: {val}")
+                f.write(f"{key}: {val}\n")
         with open(config_file, encoding='UTF-8') as nfil:
             #Load YAML file:
             self.__config_dict = yaml.load(nfil, Loader=yaml.SafeLoader)
@@ -366,7 +368,7 @@ class AdfConfig(AdfBase):
 
 
 
-    def get_git_branch(self):
+    '''def get_git_branch(self):
         import subprocess
         try:
             result = subprocess.run(
@@ -382,7 +384,7 @@ class AdfConfig(AdfBase):
         except subprocess.CalledProcessError as e:
             print("Error getting git branch:", e.stderr.strip())
             branch =  None
-        return branch
+        return branch'''
         # -----------------------------------------
 
     #########
