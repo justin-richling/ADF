@@ -101,16 +101,16 @@ class AdfConfig(AdfBase):
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
             f.write("Config file used: \n-----------\n")
             f.write(f"  {config_file}\n")
-            f.write("\t Config file options:\n")
+            f.write("  Config file options:\n")
             for key,val in self.__config_dict.items():
                 f.write(f"  {key}: {val}\n")
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
-            f.write("Conda env used:\n-----------\n")
+            f.write("\nConda env used:\n-----------\n")
             f.write(f"  {active_env}\n")
 
             git_info = self.get_git_info()
-            f.write("Git Info:\n-----------\n")
+            f.write("\nGit Info:\n-----------\n")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
                 f.write(f"  {key}: {val}\n")
