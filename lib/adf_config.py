@@ -19,6 +19,8 @@ Currently this class does three things:
 import os.path
 import re
 import copy
+import subprocess
+import os
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
@@ -68,9 +70,6 @@ class AdfConfig(AdfBase):
 
         #Create YAML self-reference keyword regex:
         self.__kword_pattern = re.compile(r'\$\{[a-z_\.\d]+\}')
-
-        import subprocess
-        import os
 
         def get_active_conda_environment():
             try:
