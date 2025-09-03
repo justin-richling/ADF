@@ -63,13 +63,16 @@ class AdfConfig(AdfBase):
         #with open("adf_run_info.txt", "w") as f:
         #AdfBase.__debug_fname
         print("AdfBase.debug_fname",AdfBase.debug_fname(self))
-        with open(f"{AdfBase.debug_fname}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
+        log_name = AdfBase.debug_fname(self)
+        with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
             f.write(str(config_file))
-            f.write("-----------")
+            f.write("-----------\n")
             branch = self.get_git_branch()
             f.write(str(branch))
             git_info = self.get_git_info()
-            f.write(str(git_info))
+            for key,val in git_info.items():
+                print(f"{key}: {val}")
+                f.write(f"{key}: {val}")
         with open(config_file, encoding='UTF-8') as nfil:
             #Load YAML file:
             self.__config_dict = yaml.load(nfil, Loader=yaml.SafeLoader)
