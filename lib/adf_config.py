@@ -26,6 +26,7 @@ import copy
 
 import yaml
 from adf_base import AdfBase
+from adf_info import AdfInfo
 
 #+++++++++++++++++++
 #Define config class
@@ -64,8 +65,10 @@ class AdfConfig(AdfBase):
         with open(f"{AdfBase.debug_fname}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
             f.write(str(config_file))
             f.write("-----------")
-            branch = self.get_git_branch()
+            branch = AdfInfo.get_git_branch()
             f.write(str(branch))
+            git_info = AdfInfo.git_info()
+            f.write(str(git_info))
         with open(config_file, encoding='UTF-8') as nfil:
             #Load YAML file:
             self.__config_dict = yaml.load(nfil, Loader=yaml.SafeLoader)
