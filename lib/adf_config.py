@@ -107,8 +107,14 @@ class AdfConfig(AdfBase):
                     f.write(f"  {key}:\n")
                     for key2,val2 in val.items():
                         f.write(f"    {key2}: {val2}\n")
+                
+                if isinstance(val,list):
+                    f.write(f"  {key}:\n")
+                    for val2 in val:
+                        f.write(f"    {val2}\n")
                 else:
                     f.write(f"  {key}: {val}\n")
+                
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
             f.write("\nConda env used:\n-----------\n")
