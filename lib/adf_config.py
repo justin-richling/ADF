@@ -69,23 +69,51 @@ class AdfConfig(AdfBase):
         #Create YAML self-reference keyword regex:
         self.__kword_pattern = re.compile(r'\$\{[a-z_\.\d]+\}')
 
+        import subprocess
+        import os
+
+        def get_active_conda_environment():
+            try:
+                # Execute 'conda env list' and capture output
+                result = subprocess.run(['conda', 'env', 'list'], capture_output=True, text=True, check=True)
+                output_lines = result.stdout.splitlines()
+
+                for line in output_lines:
+                    # The active environment is marked with an asterisk (*)
+                    if line.strip().startswith('*'):
+                        # Extract the environment name (first part of the line)
+                        env_name = line.strip().split()[0]
+                        return env_name
+                return None  # No active environment found
+            except subprocess.CalledProcessError as e:
+                print(f"Error executing conda command: {e}")
+                return None
+
+        active_env = get_active_conda_environment()
+        if active_env:
+            print(f"Active Conda environment: {active_env}")
+        else:
+            print("No active Conda environment found or an error occurred.")
+            active_env = "--"
+
         # Gather ADF run env info
-        print("AdfBase.debug_fname",AdfBase.debug_fname(self))
         log_name = AdfBase.debug_fname(self)
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
-            f.write(f"Config file used: {config_file}\n")
-            f.write("-----------\n")
+            f.write("Config file used: \n-----------\n")
+            f.write(f"  {config_file}\n")
             f.write("\t Config file options:\n")
             for key,val in self.__config_dict.items():
-                f.write(f"{key}: {val}\n")
+                f.write(f"  {key}: {val}\n")
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
+            f.write("Conda env used:\n-----------\n")
+            f.write(f"  {active_env}\n")
+
             git_info = self.get_git_info()
-            f.write(f"Git Info:\n")
-            f.write("-----------\n")
+            f.write("Git Info:\n-----------\n")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
-                f.write(f"{key}: {val}\n")
+                f.write(f"  {key}: {val}\n")
 
     #########
 
