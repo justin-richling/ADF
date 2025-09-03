@@ -351,7 +351,7 @@ class AdfConfig(AdfBase):
             print("Git command failed:", e)
             #return None
             info = None
-        self.__git_info = info
+        #self.__git_info = info
         return info
 
     # Example usage
@@ -378,20 +378,18 @@ class AdfConfig(AdfBase):
         except subprocess.CalledProcessError as e:
             print("Error getting git branch:", e.stderr.strip())
             branch =  None
-        self.__git_branch = branch
+        return branch
         # -----------------------------------------
 
     #########
 
     # Create property needed to return "user" name to user:
-    @property
-    def git_branch(self):
-        """Return the current git branch name if requested."""
-        return self.__git_branch
-    @property
-    def git_info(self):
-        """Return current git env info if requested."""
-        return self.__git_info
+    #def git_branch(self):
+    #    """Return the current git branch name if requested."""
+    #    return self.__git_branch
+    #def git_info(self):
+    #    """Return current git env info if requested."""
+    #    return self.__git_info
 
 #++++++++++++++++++++
 #End Class definition
