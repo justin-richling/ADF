@@ -632,7 +632,7 @@ class AdfInfo(AdfConfig):
 
     #########
 
-    def get_git_info(self):
+    '''def get_git_info(self):
         import subprocess
         info = {}
 
@@ -704,7 +704,7 @@ class AdfInfo(AdfConfig):
     @property
     def git_info(self):
         """Return current git env info if requested."""
-        return self.__git_info
+        return self.__git_info'''
 
     # Create property needed to return "user" name to user:
     @property
