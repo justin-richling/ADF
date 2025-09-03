@@ -108,7 +108,7 @@ class AdfConfig(AdfBase):
                     for key2,val2 in val.items():
                         f.write(f"    {key2}: {val2}\n")
                 
-                if isinstance(val,list):
+                elif isinstance(val,list):
                     f.write(f"  {key}:\n")
                     for val2 in val:
                         f.write(f"    {val2}\n")
