@@ -69,7 +69,7 @@ def polar_map(adfobj):
 
     #CAM simulation variables (this is always assumed to be a list):
     multi_plots = False
-    case_names = adfobj.get_cam_info("cam_case_name", required=True)
+    """case_names = adfobj.get_cam_info("cam_case_name", required=True)
     print("adfobj.get_multi_case_info",adfobj.get_multi_case_info)
     #read_config_var('multi_case_plots')
     if len(case_names) > 1:
@@ -80,7 +80,7 @@ def polar_map(adfobj):
                 multi_dict = OrderedDict()
                 for multi_var in adfobj.get_multi_case_info("polar_map"):
                     if multi_var not in multi_dict:
-                        multi_dict[multi_var] = OrderedDict()
+                        multi_dict[multi_var] = OrderedDict()"""
     #End if (check for multiple cases)
 
     """if multi_plots:
