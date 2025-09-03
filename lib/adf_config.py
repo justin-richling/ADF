@@ -72,6 +72,7 @@ class AdfConfig(AdfBase):
         self.__kword_pattern = re.compile(r'\$\{[a-z_\.\d]+\}')
 
         def get_active_conda_environment():
+            env_name = None
             try:
                 # Execute 'conda env list' and capture output
                 result = subprocess.run(['conda', 'env', 'list'], capture_output=True, text=True, check=True)
@@ -82,11 +83,11 @@ class AdfConfig(AdfBase):
                     if line.strip().startswith('*'):
                         # Extract the environment name (first part of the line)
                         env_name = line.strip().split()[0]
-                        return env_name
-                return None  # No active environment found
+                #print("HERE?")
+                #return None  # No active environment found
             except subprocess.CalledProcessError as e:
                 print(f"Error executing conda command: {e}")
-                return None
+            return env_name
 
         active_env = get_active_conda_environment()
         if active_env:
