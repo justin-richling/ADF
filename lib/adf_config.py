@@ -67,6 +67,9 @@ class AdfConfig(AdfBase):
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
             f.write(f"Config file used: {config_file}\n")
             f.write("-----------\n")
+            f.write("\t Config file options:\n")
+            for key,val in self.__config_dict.items():
+                f.write(f"{key}: {val}\n")
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
             git_info = self.get_git_info()
