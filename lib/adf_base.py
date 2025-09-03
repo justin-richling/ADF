@@ -70,9 +70,9 @@ class AdfBase:
     #########
 
 
-    #def debug_fname(self):
-    #    """Return the "debug_fname" string to the user."""
-    #    return self.__debug_fname
+    def debug_fname(self):
+        """Return the "debug_fname" string to the user."""
+        return self.__debug_fname
 
     def debug_log(self, msg: str):
 
