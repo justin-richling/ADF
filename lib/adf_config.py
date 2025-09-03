@@ -104,7 +104,7 @@ class AdfConfig(AdfBase):
             f.write("  Config file options:\n")
             for key,val in self.__config_dict.items():
                 if isinstance(val,dict):
-                    f.write(f"  {key2}:\n")
+                    f.write(f"  {key}:\n")
                     for key2,val2 in val.items():
                         f.write(f"    {key2}: {val2}\n")
                 else:
