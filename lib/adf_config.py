@@ -99,9 +99,12 @@ class AdfConfig(AdfBase):
         # Gather ADF run env info
         log_name = AdfBase.debug_fname(self)
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
-            f.write("Config file used: \n-----------\n")
+            msg = "Config file used:"
+            f.write(f"{msg}\n  {'-' * (len(msg)-3)}")
             f.write(f"  {config_file}\n")
-            f.write("\n  Config file options: \n  -- -- -- --\n")
+
+            msg = "  Config file options:"
+            f.write(f.write(f"{msg}\n  {'- ' * (len(msg)-3)}"))
             for key,val in self.__config_dict.items():
                 if isinstance(val,dict):
                     f.write(f"  {key}:\n")
@@ -117,11 +120,13 @@ class AdfConfig(AdfBase):
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
-            f.write("\nConda env used:\n-----------\n")
+            msg = "Conda env used:"
+            f.write(f"{msg}\n  {'-' * (len(msg)-3)}")
             f.write(f"  {active_env}\n")
 
             git_info = self.get_git_info()
-            f.write("\nGit Info:\n-----------\n")
+            msg = "Git Info:"
+            f.write(f"{msg}\n  {'-' * (len(msg)-3)}")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
                 f.write(f"  {key}: {val}\n")
