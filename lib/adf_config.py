@@ -60,7 +60,8 @@ class AdfConfig(AdfBase):
         #Open YAML file:
         #nfil debug_fname = f"ADF_debug_{ext}.log"  -- self.__debug_fname
         #with open("adf_run_info.txt", "w") as f:
-        with open(f"{self.__debug_fname}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
+        #AdfBase.__debug_fname
+        with open(f"{AdfBase.__debug_fname}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
             f.write(str(config_file))
             f.write("-----------")
             branch = self.get_git_branch()
