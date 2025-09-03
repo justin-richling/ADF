@@ -104,7 +104,7 @@ class AdfConfig(AdfBase):
             f.write(f"  {config_file}\n")
 
             msg = "  Config file options:"
-            f.write(f.write(f"{msg}\n  {'- ' * (len(msg)-3)}"))
+            f.write(f"{msg}\n  {'- ' * (len(msg)-3)}")
             for key,val in self.__config_dict.items():
                 if isinstance(val,dict):
                     f.write(f"  {key}:\n")
