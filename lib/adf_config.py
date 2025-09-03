@@ -80,9 +80,11 @@ class AdfConfig(AdfBase):
                 print(f"HERE 2? {env_name}")
                 output_lines = result.stdout.splitlines()
                 print(f"HERE 3? {env_name}")
-                for line in output_lines:
+                for i,line in enumerate(output_lines):
+                    print(f"HERE 3.{i}? {env_name}")
                     # The active environment is marked with an asterisk (*)
                     if line.strip().startswith('*'):
+                        print(f"HERE 3.{i}-arg? {env_name}")
                         # Extract the environment name (first part of the line)
                         env_name = line.strip().split()[0]
                 print(f"HERE 4? {env_name}")
