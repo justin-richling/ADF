@@ -1036,11 +1036,6 @@ class AdfWeb(AdfObs):
                     var = web_data.name
                     ext = web_data.plot_ext
                     multi_case = web_data.multi_case
-                    print("\nif not web_data.data_frame: ext",ext)
-                    print("if not web_data.data_frame: ptype",ptype)
-                    print("if not web_data.data_frame: var",var)
-                    print("if not web_data.data_frame: multi_case",multi_case)
-                    print("if not web_data.data_frame: web_data.case",web_data.case)
 
                     #Check if category has been provided for this web data:
                     if web_data.category:
@@ -1072,11 +1067,13 @@ class AdfWeb(AdfObs):
                                 #and if plot_type is in given multi-case plot set:
                                 print("VAR",var)
                                 print("mvars",mvars)
-                                if (var in mvars):
-                                    print(var, mvars)
+                                print("\nif not web_data.data_frame: ext",ext)
+                                print("if not web_data.data_frame: ptype",ptype)
+                                print("if not web_data.data_frame: var",var)
+                                print("if not web_data.data_frame: multi_case",multi_case)
+                                print("if not web_data.data_frame: web_data.case",web_data.case)
+                                print("if not web_data.data_frame: category",category)
                                 if (var in mvars) and (ext in multi_case_plots):
-                                    #print
-                                    print("DOID IT COME HERE 'if (var in mvars) and (ext in multi_case_plots)'")
                                     #Move file to assets directory:
                                     if not web_data.data.is_file():
                                         shutil.copy(web_data.data, web_data.asset_path)
@@ -1091,7 +1088,8 @@ class AdfWeb(AdfObs):
                                     #print("multi_mean_html_info[ptype]",multi_mean_html_info[ptype])
                                     #multi_plots[ptype] = f"html_img/multi_case_mean_diag_{ptype}.html"
                                     print("seasons", seasons)
-                                    
+                                    print("non_seasons[web_data.plot_type]",non_seasons[web_data.plot_type])
+
                                     rend_kwarg_dict = {"title": main_title,
                                                         "var_title": var,
                                                         "season_title": season,
@@ -1126,15 +1124,15 @@ class AdfWeb(AdfObs):
                                     mean_ptype_file = main_site_img_path / multi_mean
     
                                     #Remove keys from main dictionary for this html page
-                                    templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
+                                    #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
 
                                     #Construct individual plot type mean_diag
                                     #html files, if they don't already exist:
                                     tmp = jinenv.get_template('template_multi_case_mean_diag.html')
-                                    templ_rend_kwarg_dict["enumerate"] = jinja_enumerate
-                                    templ_rend_kwarg_dict["list"] = jinja_list
+                                    rend_kwarg_dict["enumerate"] = jinja_enumerate
+                                    rend_kwarg_dict["list"] = jinja_list
         
-                                    mean_rndr = tmp.render(templ_rend_kwarg_dict)
+                                    mean_rndr = tmp.render(rend_kwarg_dict)
 
                                     #Write mean diagnostic plots HTML file:
                                     with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
