@@ -101,7 +101,7 @@ class AdfConfig(AdfBase):
         with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
             f.write("Config file used: \n-----------\n")
             f.write(f"  {config_file}\n")
-            f.write("\n  Config file options: \n-- -- -- --\n")
+            f.write("\n  Config file options: \n  -- -- -- --\n")
             for key,val in self.__config_dict.items():
                 if isinstance(val,dict):
                     f.write(f"  {key}:\n")
