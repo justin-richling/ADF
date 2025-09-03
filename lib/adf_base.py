@@ -63,7 +63,7 @@ class AdfBase:
             self.__debug_log = logging.getLogger("ADF")
         else:
             debug_fname = f"ADF_debug.log"
-        self.__debug_fname = debug_fname
+        #self.__debug_fname = debug_fname
         
 
     #########
