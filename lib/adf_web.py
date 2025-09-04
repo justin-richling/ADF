@@ -623,7 +623,7 @@ class AdfWeb(AdfObs):
                     if multi_case_plots:
                         #Loop over each variable in multi-case plot variables
                         #Check if plot ext is in requested multi-case plot types
-                        if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars):
+                        if (web_data.plot_ext in multi_case_plots.keys()) and (var in mvars) or (main_site_path):
 
                             #Initialize Ordered Dictionary for multi case plot type:
                             if ptype not in multi_plot_html_info:
