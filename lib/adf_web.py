@@ -1072,9 +1072,10 @@ class AdfWeb(AdfObs):
                     #End if
                     if multi_case:
                         #Check for multi-case multi-plots
-                        print("multi_case_plots:",multi_case_plots,"\n")
+                        print("multi_case_plots:",multi_case_plots)
                         if multi_case_plots:
                             print("DID IT COME HERE 'if multi_case_plots'")
+                            print("web_data.case",web_data.case)
                             #This currently runs web_data.case for every case, but in reality
                             #it really only needs to run once since the plots are
                             #already made with all cases.
