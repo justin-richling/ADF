@@ -200,14 +200,14 @@ def cam_taylor_diagram(adfobj):
             #End if (multi-case)
         #End for (cases)
 
-        """ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=False)
+        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=False)
         #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         # add text with variable names:
         txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
         fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
 
-        plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
-        print(f"\t - Plotting Taylor Diagram, {s}")"""
+        #plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+        #print(f"\t - Plotting Taylor Diagram, {s}")
 
         if multi_case:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
