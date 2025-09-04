@@ -507,7 +507,7 @@ class AdfWeb(AdfObs):
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
         #Use this for multi-case diagnostic plots only
-        multi_mean_html_info = OrderedDict()
+        #multi_mean_html_info = OrderedDict()
         #Use this for multi-case with multi-plots
         multi_plot_html_info = OrderedDict()
 
@@ -643,7 +643,7 @@ class AdfWeb(AdfObs):
                         #End if (variable in multi-case plot variables)
                     #End if multi-case multi-plots
 
-                    #Need to isolate multi-case regular plots from the multi-case multi-plots
+                    """#Need to isolate multi-case regular plots from the multi-case multi-plots
                     #QUESTION: Is there a better way?
                     if "multi_plot" not in str(web_data.html_file.name):
                         if ptype not in multi_mean_html_info:
@@ -659,7 +659,7 @@ class AdfWeb(AdfObs):
                         if season not in multi_mean_html_info[ptype][category][var]:
                             multi_mean_html_info[ptype][category][var][season] = p
                         #End if
-                    #End if (not multi-case multi-plots)
+                    #End if (not multi-case multi-plots)"""
                 #End if (multi-case scenario)
 
                 #Individual cases
@@ -1168,7 +1168,8 @@ class AdfWeb(AdfObs):
                                                 "baseline_yrs": baseline_yrs,
                                                 "plottype_title": ptype,
                                                 "imgs": img_data,
-                                                "mydata": multi_mean_html_info[ptype],
+                                                #"mydata": multi_mean_html_info[ptype],
+                                                "mydata": multi_plot_html_info[ptype],
                                                 "plot_types": multi_plot_type_html,
                                                 "multi": multi_layout,
                                                 "case_sites": case_sites,
