@@ -72,7 +72,7 @@ def cam_taylor_diagram(adfobj):
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
-    if not plot_location:
+    """if not plot_location:
         plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
     if isinstance(plot_location, list):
         for pl in plot_location:
@@ -86,11 +86,11 @@ def cam_taylor_diagram(adfobj):
         else:
             print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
             if multi_case:
-                plot_loc = main_site_path
-            else:
-                plot_loc = Path(plot_location[0])
+                multi_plot_loc = main_site_path
+            #else:
+            #   plot_loc = Path(plot_location[0])
     else:
-        plot_loc = Path(plot_location)
+        plot_loc = Path(plot_location)"""
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -200,14 +200,14 @@ def cam_taylor_diagram(adfobj):
             #End if (multi-case)
         #End for (cases)
 
-        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=False)
+        """ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True,multi=False)
         #ax = taylor_plot_finalize(ax, case_names, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
         # add text with variable names:
         txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
         fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
 
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
-        print(f"\t - Plotting Taylor Diagram, {s}")
+        print(f"\t - Plotting Taylor Diagram, {s}")"""
 
         if multi_case:
             plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
@@ -229,7 +229,7 @@ def cam_taylor_diagram(adfobj):
             adfobj.add_website_data(plot_name, "TaylorDiag", None, category=None, season=s, multi_case=True,plot_type = "Special")
 
             print("  ...Taylor Diagram multi-case plots have been generated successfully.")
-        else:
+        """else:
             plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
 
             # Check redo_plot. If set to True: remove old plot, if it already exists:
@@ -247,7 +247,7 @@ def cam_taylor_diagram(adfobj):
             plt.close()
 
             #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")
+            adfobj.add_website_data(plot_name, "TaylorDiag", case_names[0], category=None, season=s, plot_type = "Special")"""
         #End if (multi-case check)
     #Notify user that script has ended:
     print("  ...Taylor Diagrams have been generated successfully.")
