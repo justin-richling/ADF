@@ -50,7 +50,7 @@ def enso_comparison_plots(adfobj):
     # + + + + + + + + + + + + + + + + + + + +
     #  Make Nino variance comparison plots
     # + + + + + + + + + + + + + + + + + + + +
-#                          J   F   M    A  M   J   J   A    S   O    N  D
+    #                          J   F   M    A  M   J   J   A    S   O   N   D
     daysPerMonth = np.asarray([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
 
     ninoSelString =  ['Nino34', 'Nino12', 'Nino3', 'Nino4']
