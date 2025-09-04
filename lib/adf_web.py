@@ -314,7 +314,8 @@ class AdfWeb(AdfObs):
         #End if
 
         #Initialize web data object:
-        web_data = _WebData(web_data, web_name, case_name, multi_plot_ext,
+        web_data = _WebData(web_data, web_name, case_name,
+                            multi_plot_ext = multi_plot_ext,
                             category = category,
                             season = season,
                             non_season = non_season,
