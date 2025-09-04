@@ -1053,7 +1053,8 @@ class AdfWeb(AdfObs):
                     season = web_data.season
                     ptype = web_data.plot_type
                     var = web_data.name
-                    ext = web_data.multi_plot_ext
+                    multi_plot_ext = web_data.multi_plot_ext
+                    ext = web_data.ext
                     multi_case = web_data.multi_case
 
                     #Check if category has been provided for this web data:
@@ -1088,19 +1089,20 @@ class AdfWeb(AdfObs):
                                 print("VAR",var)
                                 print("mvars",mvars)
                                 print("\nif not web_data.data_frame: ext",ext)
+                                print("\nif not web_data.data_frame: multi_plot_ext",multi_plot_ext)
                                 print("if not web_data.data_frame: ptype",ptype)
                                 print("if not web_data.data_frame: var",var)
                                 print("if not web_data.data_frame: multi_case",multi_case)
                                 print("if not web_data.data_frame: web_data.case",web_data.case)
                                 print("if not web_data.data_frame: category",category)
-                                if (var in mvars) and (ext in multi_case_plots):
+                                if (var in mvars) and (multi_plot_ext in multi_case_plots):
                                     #Move file to assets directory:
                                     if not web_data.data.is_file():
                                         shutil.copy(web_data.data, web_data.asset_path)
 
                                     #Create output HTML file path:
                                     img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                                    multi_plot_page = f"{var}_{season}_{ptype}_multi_plot.png"
+                                    multi_plot_page = f"{var}_{season}_{ptype}_{ext}_multi_plot.png"
                                     print("adf_web: multi_plot_page",multi_plot_page)
                                     img_data = [os.path.relpath(main_site_assets_path / multi_plot_page,
                                                             start=main_site_img_path),
@@ -1162,7 +1164,7 @@ class AdfWeb(AdfObs):
 
                         #Loop over any non multi-case multi-plot scenarios
                         #ie multi-case Taylor Diagrams and multi-case QBO
-                        if ext not in multi_case_dict:
+                        if multi_plot_ext not in multi_case_dict:
                             print("multi_case_dict",multi_case_dict,"\n--------------\n")
                             #print("ext not in multi_case_dict",ext)
                             #Move file to assets directory:
