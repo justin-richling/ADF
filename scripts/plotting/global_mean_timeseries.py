@@ -188,7 +188,7 @@ def global_mean_timeseries(adfobj):
 
         adfobj.add_website_data(
             plot_name,
-            f"{field}_GlobalMean",
+            f"{field}",
             None,
             season="ANN",
             multi_case=True,

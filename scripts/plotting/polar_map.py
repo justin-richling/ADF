@@ -93,11 +93,11 @@ def polar_map(adfobj):
                 if multi_var not in multi_dict:
                     multi_dict[multi_var] = OrderedDict()
 
-    # probably want to do this one variable at a time:
+    """# probably want to do this one variable at a time:
     for var in var_list:
         if multi_plots:
             if not adfobj.get_multi_case_info("global_latlon_map"):
-                    multi_dict[var] = OrderedDict()
+                    multi_dict[var] = OrderedDict()"""
 
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
@@ -181,9 +181,6 @@ def polar_map(adfobj):
             if multi_plots:
                 if var in adfobj.get_multi_case_info("polar_map"):
                     multi_dict[var][case_name] = OrderedDict()
-            """multi_dict[var][case_name] = {}
-            multi_dict[var][case_name] = {}
-            multi_dict[var][case_name] = {}"""
 
             plot_loc = Path(plot_locations[case_idx])
 
