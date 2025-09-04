@@ -176,7 +176,12 @@ def global_mean_timeseries(adfobj):
 
         unit = vres.get("new_unit","[-]")
         ax.set_ylabel(getattr(ref_ts_da,"unit", unit)) # add units
-        plot_name = main_site_assets_path / f"{field}_GlobalMean_ANN_TimeSeries_Mean.{plot_type}"
+        #plot_name = main_site_assets_path / f"{field}_GlobalMean_ANN_TimeSeries_Mean.{plot_type}"
+        #plot_name = plot_loc / f"{var}_{s}_LatLon_Mean.{plot_type}"
+        #file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+
+        #plot_name = main_site_assets_path / f"{field}_ANN_TimeSeries_GlobalMean.{plot_type}"
+        plot_name = main_site_assets_path / f"{field}_ANN_TimeSeries_multi_plot.{plot_type}"
 
         conditional_save(adfobj, plot_name, fig)
 
@@ -187,6 +192,7 @@ def global_mean_timeseries(adfobj):
             season="ANN",
             multi_case=True,
             plot_type="TimeSeries",
+            ext="GlobalMean"
         )
 
     #Notify user that script has ended:
