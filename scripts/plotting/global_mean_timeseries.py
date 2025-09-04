@@ -42,6 +42,15 @@ def global_mean_timeseries(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
+    if len(adfobj.data.case_names) > 1:
+        multi_case = True
+
+        main_site_path = adfobj.main_site_paths["main_site_path"]
+        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+
+    else:
+        multi_case = False
+
     # Loop over variables
     for field in adfobj.diag_var_list:
         #Notify user of variable being plotted:
@@ -167,7 +176,7 @@ def global_mean_timeseries(adfobj):
 
         unit = vres.get("new_unit","[-]")
         ax.set_ylabel(getattr(ref_ts_da,"unit", unit)) # add units
-        plot_name = plot_loc / f"{field}_GlobalMean_ANN_TimeSeries_Mean.{plot_type}"
+        plot_name = main_site_assets_path / f"{field}_GlobalMean_ANN_TimeSeries_Mean.{plot_type}"
 
         conditional_save(adfobj, plot_name, fig)
 
