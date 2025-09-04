@@ -2663,7 +2663,7 @@ def multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, w
         print("var",var)
         print("multi_dict_var[case_names[0]].keys()",multi_dict_var[case_names[0]].keys(),"*******\n")
         for season in multi_dict_var[case_names[0]].keys():
-            file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+            file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
             if (not redo_plot) and Path(wks / file_name).is_file():
                 #Continue to next iteration:
                 continue
@@ -2926,7 +2926,7 @@ def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, we
             print(f"Skipping variable {var} since case {case_names[0]} not found in multi_dict_var")
             return
         for season in multi_dict_var[case_names[0]].keys():
-            file_name = f"{var}_{season}_{ptype}_multi_plot.png"
+            file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
             print("file_name in polar in plotting_functions",file_name)
             if (not redo_plot) and Path(wks / file_name).is_file():
                 #Continue to next iteration:
