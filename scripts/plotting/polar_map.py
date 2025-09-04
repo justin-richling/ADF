@@ -73,15 +73,16 @@ def polar_map(adfobj):
     multi_plots = False
     print("adfobj.get_multi_case_info",adfobj.get_multi_case_info)
     #read_config_var('multi_case_plots')
+    print('adfobj.get_multi_case_info("polar_map")',adfobj.get_multi_case_info("polar_map"))
     if len(case_names) > 1:
         #Check if multi-plots are desired from yaml file
-        if "polar_map" in adfobj.get_multi_case_info.keys():
-            if adfobj.get_multi_case_info("polar_map"):
-                multi_plots = True
-                multi_dict = OrderedDict()
-                for multi_var in adfobj.get_multi_case_info("polar_map"):
-                    if multi_var not in multi_dict:
-                        multi_dict[multi_var] = OrderedDict()
+        if adfobj.get_multi_case_info("polar_map"):
+        #if "polar_map" in adfobj.get_multi_case_info.keys():
+            multi_plots = True
+            multi_dict = OrderedDict()
+            for multi_var in adfobj.get_multi_case_info("polar_map"):
+                if multi_var not in multi_dict:
+                    multi_dict[multi_var] = OrderedDict()
     #End if (check for multiple cases)
 
     if multi_plots:
@@ -328,6 +329,7 @@ def polar_map(adfobj):
             
             vres = res.get(var, {})
             print("vres",vres)
+            web_category = vres.get("category", None)
             for hemi in hemis:
 
                 pf.multi_polar_plots(main_site_assets_path, var, hemi, case_names,
