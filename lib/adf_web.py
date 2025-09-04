@@ -56,6 +56,7 @@ class _WebData:
     """
 
     def __init__(self, web_data, web_name, case_name,
+                 ext="Mean",
                  multi_plot_ext = None,
                  category = None,
                  season = None,
@@ -74,6 +75,7 @@ class _WebData:
         self.season     = season
         self.non_season = non_season
         self.plot_type  = plot_type
+        self.ext        = ext
         self.multi_plot_ext   = multi_plot_ext
         self.data_frame = data_frame
         self.html_file  = html_file
@@ -196,6 +198,7 @@ class AdfWeb(AdfObs):
     #########
 
     def add_website_data(self, web_data, web_name, case_name,
+                         ext="Mean",
                          multi_plot_ext = None,
                          category = None,
                          season = None,
@@ -316,6 +319,7 @@ class AdfWeb(AdfObs):
                             season = season,
                             non_season = non_season,
                             plot_type = plot_type,
+                            ext = ext,
                             data_frame = data_frame,
                             html_file = html_file,
                             asset_path = asset_path,
@@ -830,6 +834,7 @@ class AdfWeb(AdfObs):
 
                     rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
+                                       "ext": web_data.ext,
                                        "season_title": web_data.season,
                                        "case_name": web_data.case,
                                        "case_yrs": case_yrs,
