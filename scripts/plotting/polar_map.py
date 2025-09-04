@@ -68,9 +68,9 @@ def polar_map(adfobj):
     plot_locations = adfobj.plot_location
 
     #CAM simulation variables (this is always assumed to be a list):
-    multi_plots = False
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
-    """
+
+    multi_plots = False
     print("adfobj.get_multi_case_info",adfobj.get_multi_case_info)
     #read_config_var('multi_case_plots')
     if len(case_names) > 1:
@@ -81,22 +81,22 @@ def polar_map(adfobj):
                 multi_dict = OrderedDict()
                 for multi_var in adfobj.get_multi_case_info("polar_map"):
                     if multi_var not in multi_dict:
-                        multi_dict[multi_var] = OrderedDict()"""
+                        multi_dict[multi_var] = OrderedDict()
     #End if (check for multiple cases)
 
-    """if multi_plots:
+    if multi_plots:
         #if not adfobj.get_multi_case_info("global_latlon_map"):
         #        multi_dict[var] = OrderedDict()
         if adfobj.get_multi_case_info("polar_map"):
             for multi_var in adfobj.get_multi_case_info("polar_map"):
                 if multi_var not in multi_dict:
-                    multi_dict[multi_var] = OrderedDict()"""
+                    multi_dict[multi_var] = OrderedDict()
 
-    """# probably want to do this one variable at a time:
+    # probably want to do this one variable at a time:
     for var in var_list:
         if multi_plots:
             if not adfobj.get_multi_case_info("global_latlon_map"):
-                    multi_dict[var] = OrderedDict()"""
+                    multi_dict[var] = OrderedDict()
 
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
@@ -177,12 +177,12 @@ def polar_map(adfobj):
         for case_idx, case_name in enumerate(case_names):
 
             #Grab data for desired multi-plots (from yaml file)
-            #if multi_plots:
-            #    if var in adfobj.get_multi_case_info("polar_map"):
-            #        multi_dict[var][case_name] = OrderedDict()
-            #multi_dict[var][case_name] = {}
-            #multi_dict[var][case_name] = {}
-            #multi_dict[var][case_name] = {}
+            if multi_plots:
+                if var in adfobj.get_multi_case_info("polar_map"):
+                    multi_dict[var][case_name] = OrderedDict()
+            """multi_dict[var][case_name] = {}
+            multi_dict[var][case_name] = {}
+            multi_dict[var][case_name] = {}"""
 
             plot_loc = Path(plot_locations[case_idx])
 
@@ -288,10 +288,10 @@ def polar_map(adfobj):
                 use_odata,
                 plot['season']
             )
-            """if var in adfobj.get_multi_case_info("polar_map"):
+            if var in adfobj.get_multi_case_info("polar_map"):
                 multi_dict[var][case_name][plot['season']][plot['type']]["m_data"] = mseason
                 multi_dict[var][case_name][plot['season']][plot['type']]["o_data"] = oseason
-                multi_dict[var][case_name][plot['season']][plot['type']]["diff_data"] = dseason"""
+                multi_dict[var][case_name][plot['season']][plot['type']]["diff_data"] = dseason
 
             # Create plot
             if plot['path'].exists():
@@ -315,7 +315,7 @@ def polar_map(adfobj):
     
 
 
-    """#This will be a list of variables for multi-case plotting based off LatLon plot type
+    #This will be a list of variables for multi-case plotting based off LatLon plot type
     if multi_plots:
         #Notify user that script has started:
         print("\n     Generating polar lat/lon multi-case plots...")
@@ -327,14 +327,14 @@ def polar_map(adfobj):
             #("multi_dict",multi_dict[var],"\n\n")
             
             vres = res.get(var, {})
-            #print("vres",vres)
+            print("vres",vres)
             for hemi in hemis:
 
                 pf.multi_polar_plots(main_site_assets_path, var, hemi, case_names,
                                     [test_nicknames,base_nickname], multi_dict[var],
                                     web_category, adfobj, multi_case=True, **vres)
 
-        print("     ...polar lat/lon multi-case plots have been generated successfully.")"""
+        print("     ...polar lat/lon multi-case plots have been generated successfully.")
 
     print("  ...polar maps have been generated successfully.")
 
