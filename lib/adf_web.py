@@ -640,7 +640,17 @@ class AdfWeb(AdfObs):
                             if season not in multi_plot_html_info[ptype][category][var]:
                                 multi_plot_html_info[ptype][category][var][season] = p
                             #End if
-                        #End if (variable in multi-case plot variables)
+
+                            #Initialize Ordered Dictionary for non season kwarg:
+                            if ptype not in non_seasons:
+                                non_seasons[ptype] = OrderedDict()
+                            #End if
+                            if category not in non_seasons[ptype]:
+                                non_seasons[ptype][category] = OrderedDict()
+                            #End if
+                            if var not in non_seasons[ptype][category]:
+                                non_seasons[ptype][category][var] = non_season
+                                #End if (variable in multi-case plot variables)
                     #End if multi-case multi-plots
 
                     """#Need to isolate multi-case regular plots from the multi-case multi-plots
