@@ -656,7 +656,9 @@ class AdfInfo(AdfConfig):
         #Create directory path where the website will be built:
         website_dir = plot_path / "website"
         Path(website_dir).mkdir(parents=True, exist_ok=True)
-        with open(f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
+        run_info = f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".md")
+        self.__run_info = run_info
+        with open(run_info, "w") as f:
             msg = "Config file used:"
             f.write(f"{msg}\n{'-' * (len(msg))}\n")
             f.write(f"  {config_file}\n")
@@ -875,6 +877,11 @@ class AdfInfo(AdfConfig):
             base_hist_strs = ""
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
+    
+    @property
+    def run_info(self):
+        run_info = self.__run_info
+        return run_info
 
     #########
 
