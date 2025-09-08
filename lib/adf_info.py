@@ -683,7 +683,7 @@ class AdfInfo(AdfConfig):
                 elif isinstance(val,list):
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
                     for val2 in val:
-                        f.write("<a style='font-size:4px;'> </a><br>")
+                        #f.write("<a style='font-size:4px;'> </a><br>")
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
                 else:
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a><br>")
