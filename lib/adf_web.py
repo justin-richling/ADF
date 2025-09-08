@@ -728,7 +728,8 @@ class AdfWeb(AdfObs):
                                             plot_types=plot_types,
                                             avail_plot_types=avail_plot_types,
                                             avail_external_packages=avail_external_packages,
-                                            external_package_links=self.external_package_links)
+                                            external_package_links=self.external_package_links,
+                                            run_info = self.run_info)
 
             #Write Mean diagnostics index HTML file:
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
