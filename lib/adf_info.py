@@ -32,6 +32,7 @@ from pathlib import Path
 import copy
 import os
 import getpass
+import subprocess
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
@@ -44,7 +45,8 @@ import xarray as xr
 
 #ADF modules:
 from adf_config import AdfConfig
-from adf_base   import AdfError
+from adf_base   import AdfError, debug_fname
+
 
 #+++++++++++++++++++
 #Define Obs class
@@ -129,6 +131,75 @@ class AdfInfo(AdfConfig):
             #End if
         #End for
         #-------------------------------------------
+
+
+
+
+
+
+
+        active_env = self.get_active_conda_environment()
+        if active_env:
+            print(f"Active Conda environment: {active_env}")
+        else:
+            print("No active Conda environment found or an error occurred.")
+            active_env = "--"
+
+        # Gather ADF run env info
+        log_name = debug_fname(self)
+        #Create new path object from user-specified plot directory path:
+        plot_path = Path(self.plot_location[0])
+
+        #Create directory path where the website will be built:
+        website_dir = plot_path / "website"
+        Path(website_dir).mkdir(parents=True, exist_ok=True)
+        with open(f"{website_dir} / {log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
+            msg = "Config file used:"
+            f.write(f"{msg}\n{'-' * (len(msg))}\n")
+            f.write(f"  {config_file}\n")
+
+            msg = "\n  Config file options:"
+            f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
+            for key,val in self.__config_dict.items():
+                if isinstance(val,dict):
+                    f.write(f"  {key}:\n")
+                    for key2,val2 in val.items():
+                        f.write(f"    {key2}: {val2}\n")
+                
+                elif isinstance(val,list):
+                    f.write(f"  {key}:\n")
+                    for val2 in val:
+                        f.write(f"    {val2}\n")
+                else:
+                    f.write(f"  {key}: {val}\n")
+                
+            #branch = self.get_git_branch()
+            #f.write(f"{branch}\n")
+            msg = "\nConda env used:"
+            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            f.write(f"  {active_env}\n")
+
+            git_info = self.get_git_info()
+            msg = "\nGit Info:"
+            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            for key,val in git_info.items():
+                print(f"{key}: {val}")
+                f.write(f"  {key}: {val}\n")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
@@ -972,6 +1043,25 @@ class AdfInfo(AdfConfig):
             print(msg)
 
         return syr, eyr
+    
+
+    def get_active_conda_environment(self):
+            env_name = None
+            try:
+                # Execute 'conda env list' and capture output
+                result = subprocess.run(['conda', 'env', 'list'], capture_output=True, text=True, check=True)
+                output_lines = result.stdout.splitlines()
+                for i,line in enumerate(output_lines):
+                    # The active environment is marked with an asterisk (*)
+                    #if line.strip().startswith('*'):
+                    if '*' in line.strip():
+                        # Extract the environment name (first part of the line)
+                        env_name = line.strip().split()[0]
+                #print("HERE?")
+                #return None  # No active environment found
+            except subprocess.CalledProcessError as e:
+                print(f"Error executing conda command: {e}")
+            return env_name
 
 #++++++++++++++++++++
 #End Class definition
