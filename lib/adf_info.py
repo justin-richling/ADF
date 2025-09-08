@@ -726,7 +726,7 @@ class AdfInfo(AdfConfig):
             f.write(f"<br><strong><a {font_22}>Conda env used</a></strong><br>")
             f.write(f"<a {font_16}>{two_space}{active_env}</a>")
             #self.debug_log(f"  {active_env}\n")
-            log_msg += f"\n  {active_env}"
+            log_msg += f"  {active_env}"
             
             git_info = self.get_git_info()
             git_msg = "\nGit Info:"
@@ -740,11 +740,11 @@ class AdfInfo(AdfConfig):
             for key,val in git_info.items():
                 #print(f"{key}: {val}")
                 #self.debug_log(f"  {key}: {val}\n")
-                log_msg += f"\n  {key}: {val}"
+                log_msg += f"  {key}: {val}"
                 f.write(f"{two_space}<a {font_16}><strong>{key}:</strong> {val}</a></><br>")
             f.write("</p>")
 
-            self.debug_log(log_msg)
+            self.debug_log(log_msg+"\n")
     #########
     def hist_str_to_list(self, conf_var, conf_val):
         """
