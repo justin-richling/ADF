@@ -691,13 +691,14 @@ class AdfInfo(AdfConfig):
 
             #msg = "\nConda env used:"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            #f.write(f"  {active_env}\n")
+            f.write(f"\n")
             f.write("<strong>Conda env used</strong><br>")
             f.write(f"`{active_env}`<br>")
 
             git_info = self.get_git_info()
             #msg = "\nGit Info:"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            f.write(f"\n")
             f.write("<strong>Git Info</strong><br>")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
