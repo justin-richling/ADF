@@ -209,9 +209,9 @@ def polar_map(adfobj):
                                 'pressure': pres,
                                 'exists': plot_name.is_file()
                             }
-                            multi_dict[var][case_name][s] = {}
-                            multi_dict[var][case_name][s] = {}
-                            multi_dict[var][case_name][s] = {}
+                            #multi_dict[var][case_name][s] = {}
+                            #multi_dict[var][case_name][s] = {}
+                            #multi_dict[var][case_name][s] = {}
                             plot_info.append(info)
                             if (redo_plot is False) and info['exists']:
                                 adfobj.add_website_data(info['path'], info['var'],
