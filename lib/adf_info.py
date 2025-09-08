@@ -704,7 +704,7 @@ class AdfInfo(AdfConfig):
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
                 else:
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a><br>")
-                    self.debug_log(f"  {key}: {val}:")
+                    #self.debug_log(f"  {key}: {val}:")
                     log_msg += f"\n  {key}: {val}:"
                 
             #branch = self.get_git_branch()
