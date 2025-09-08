@@ -696,14 +696,14 @@ class AdfWeb(AdfObs):
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
             print("index_html_file",index_html_file)
-            """run_info_html_file = \
+            run_info_md_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
-            print("run_info_html_file",run_info_html_file)"""
+            print("run_info_md_file",run_info_md_file)
 
             import markdown
 
             # Read the markdown file
-            with open(self.run_info, "r", encoding="utf-8") as mdfile:
+            with open(run_info_md_file, "r", encoding="utf-8") as mdfile:
                 md_text = mdfile.read()
 
             # Convert markdown to HTML
