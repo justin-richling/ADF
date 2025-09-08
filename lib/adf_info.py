@@ -663,12 +663,12 @@ class AdfInfo(AdfConfig):
             #msg = "Config file used:"
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
             #f.write(f"&nbsp&nbsp{config_file}\n")
-            f.write(f"# Config file used\n")
+            f.write(f"##Config file used\n<br>")
             f.write(f"&nbsp;&nbsp;{config_file}<br><br>")
 
             #msg = "\n  Config file options:"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            f.write("## Config file options\n")
+            f.write("###Config file options\n<br>")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
@@ -693,7 +693,7 @@ class AdfInfo(AdfConfig):
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
             #f.write(f"  {active_env}\n")
             f.write("##Conda env used\n")
-            f.write(f"`{active_env}`\n")
+            f.write(f"`{active_env}`<br>")
 
             git_info = self.get_git_info()
             #msg = "\nGit Info:"
