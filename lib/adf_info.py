@@ -45,7 +45,7 @@ import xarray as xr
 
 #ADF modules:
 from adf_config import AdfConfig
-from adf_base   import AdfError, debug_fname
+from adf_base   import AdfError
 
 
 #+++++++++++++++++++
@@ -146,7 +146,7 @@ class AdfInfo(AdfConfig):
             active_env = "--"
 
         # Gather ADF run env info
-        log_name = debug_fname(self)
+        log_name = self.debug_fname(self)
         #Create new path object from user-specified plot directory path:
         plot_path = Path(self.plot_location[0])
 
