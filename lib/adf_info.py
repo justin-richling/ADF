@@ -686,15 +686,15 @@ class AdfInfo(AdfConfig):
                     #f.write(f"  {key}:<br>")
                     #self.debug_log(f"  {key}:")
                     log_msg += f"\n  {key}:"
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong></a><br>")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
                         #self.debug_log(f"    {key2}: {val2}")
                         log_msg += f"\n    {key2}: {val2}"
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{key2}: {val2}</a><br>")
+                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key2}:</strong> {val2}</a><br>")
                 
                 elif isinstance(val,list):
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong></a><br>")
                     #self.debug_log(f"  {key}:")
                     log_msg += f"\n  {key}:"
                     for val2 in val:
@@ -703,7 +703,7 @@ class AdfInfo(AdfConfig):
                         log_msg += f"\n    {val2}"
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
                 else:
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a><br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong> {val}</a><br>")
                     #self.debug_log(f"  {key}: {val}:")
                     log_msg += f"\n  {key}: {val}:"
                 
@@ -735,7 +735,7 @@ class AdfInfo(AdfConfig):
                 #print(f"{key}: {val}")
                 #self.debug_log(f"  {key}: {val}\n")
                 log_msg += f"\n  {key}: {val}"
-                f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a></><br>")
+                f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong> {val}</a></><br>")
             f.write("</p>")
 
             self.debug_log(log_msg)
