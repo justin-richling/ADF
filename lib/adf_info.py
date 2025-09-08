@@ -663,7 +663,7 @@ class AdfInfo(AdfConfig):
             #msg = "Config file used:"
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
             #f.write(f"&nbsp&nbsp{config_file}\n")
-            f.write(f"<u><a style='font-size:16px'>Config file used</a></u><br>")
+            f.write(f"<u><a style='font-size:24px;'>Config file used</a></u><br>")
             f.write(f"&nbsp;&nbsp;{config_file}<br><br>")
 
             #msg = "\n  Config file options:"
