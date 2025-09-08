@@ -663,12 +663,12 @@ class AdfInfo(AdfConfig):
             #msg = "Config file used:"
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
             #f.write(f"&nbsp&nbsp{config_file}\n")
-            f.write(f"# Config file used\n\n")
-            f.write(f"&nbsp;&nbsp;{config_file}")
+            f.write(f"# Config file used<br>")
+            f.write(f"&nbsp;&nbsp;{config_file}<br><br>")
 
             #msg = "\n  Config file options:"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            f.write("## Config file options\n\n")
+            f.write("## Config file options<br><br>")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
@@ -677,31 +677,31 @@ class AdfInfo(AdfConfig):
                     #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
-                        f.write(f"\t{key2}: {val2}<br>")
+                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;{key2}: {val2}<br>")
                 
                 elif isinstance(val,list):
-                    f.write(f"  {key}:<br>")
+                    f.write(f"&nbsp;&nbsp;{key}:<br>")
                     for val2 in val:
-                        f.write(f"    {val2}<br>")
+                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;{val2}<br>")
                 else:
-                    f.write(f"  {key}: {val}<br>")
+                    f.write(f"&nbsp;&nbsp;{key}: {val}<br>")
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
 
-            msg = "\nConda env used:"
-            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            f.write(f"  {active_env}\n")
-            #f.write("## Conda env used\n\n")
-            #f.write(f"`{active_env}`\n\n")
+            #msg = "\nConda env used:"
+            #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            #f.write(f"  {active_env}\n")
+            f.write("## Conda env used<br><br>")
+            f.write(f"`{active_env}`<br><br>")
 
             git_info = self.get_git_info()
-            msg = "\nGit Info:"
-            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            #f.write("## Git Info\n\n")
+            #msg = "\nGit Info:"
+            #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            f.write("## Git Info<br><br>")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
-                f.write(f"  {key}: {val}\n")
+                f.write(f"&nbsp;&nbsp;{key}: {val}<br>")
 
     #########
     def hist_str_to_list(self, conf_var, conf_val):
