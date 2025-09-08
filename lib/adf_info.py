@@ -664,7 +664,7 @@ class AdfInfo(AdfConfig):
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
             #f.write(f"&nbsp&nbsp{config_file}\n")
             f.write(f"# Config file used\n\n")
-            f.write(f"&nbsp&nbsp{config_file}")
+            f.write(f"&nbsp;&nbsp;{config_file}")
 
             #msg = "\n  Config file options:"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
