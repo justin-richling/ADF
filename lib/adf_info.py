@@ -668,7 +668,7 @@ class AdfInfo(AdfConfig):
 
             #msg = "\n  Config file options:"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            f.write("###Config file options\n<br>")
+            f.write("&nbsp;<u>Config file options</u><br>")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
