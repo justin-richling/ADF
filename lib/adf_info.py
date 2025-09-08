@@ -672,17 +672,17 @@ class AdfInfo(AdfConfig):
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
-                    f.write(f"  {key}:\n")
+                    f.write(f"  {key}:<br>")
                     #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
-                        f.write(f"    {key2}: {val2}\n")
+                        f.write(f"    {key2}: {val2}<br>")
                 
                 elif isinstance(val,list):
-                    f.write(f"  {key}:\n")
+                    f.write(f"  {key}:<br>")
                     for val2 in val:
-                        f.write(f"    {val2}\n")
+                        f.write(f"    {val2}<br>")
                 else:
-                    f.write(f"  {key}: {val}\n")
+                    f.write(f"  {key}: {val}<br>")
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
