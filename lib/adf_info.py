@@ -668,23 +668,23 @@ class AdfInfo(AdfConfig):
 
             #msg = "\n  Config file options:"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            f.write("&nbsp;<u><a style='font-size:22px;color:black'>Config file options</a></u><br>")
+            f.write("&nbsp;<u><a style='font-size:18px;color:black'>Config file options</a></u><br>")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
                     #f.write(f"  {key}:<br>")
-                    f.write(f"&nbsp;&nbsp;{key}:<br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;color:black'>{key}</a>:<br>")
                     #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;{key2}: {val2}<br>")
+                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;color:black'>{key2}</a>: <a style='font-size:16px;color:black'>{val2}</a><br>")
                 
                 elif isinstance(val,list):
-                    f.write(f"&nbsp;&nbsp;{key}:<br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;color:black'>{key}</a>:<br>")
                     for val2 in val:
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;{val2}<br>")
+                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;color:black'>{val2}</a><br>")
                 else:
-                    f.write(f"&nbsp;&nbsp;{key}: {val}<br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;color:black'>{key}</a>: <a style='font-size:16px;color:black'>{val}</a><br>")
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
@@ -693,7 +693,7 @@ class AdfInfo(AdfConfig):
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
             f.write(f"\n")
             f.write("<br><strong><a style='font-size:22px;color:black'>Conda env used</a></strong><br>")
-            f.write(f"`{active_env}`")
+            f.write(f"<a style='font-size:16px;color:black'>{active_env}</a>")
 
             git_info = self.get_git_info()
             #msg = "\nGit Info:"
@@ -702,7 +702,7 @@ class AdfInfo(AdfConfig):
             f.write("<br><br><strong><a style='font-size:22px;color:black'>Git Info</a></strong><br>")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
-                f.write(f"&nbsp;&nbsp;{key}: {val}<br>")
+                f.write(f"&nbsp;&nbsp;<a style='font-size:16px;color:black'>{key}</a>: <a style='font-size:16px;color:black'>{val}</><br>")
 
     #########
     def hist_str_to_list(self, conf_var, conf_val):
