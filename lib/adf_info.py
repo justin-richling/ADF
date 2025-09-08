@@ -673,7 +673,7 @@ class AdfInfo(AdfConfig):
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
                     #f.write(f"  {key}:<br>")
-                    f.write(f"&nbsp&nbsp{key}:<br>")
+                    f.write(f"&nbsp;&nbsp;{key}:<br>")
                     #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
