@@ -662,7 +662,7 @@ class AdfInfo(AdfConfig):
         with open(run_info, "w") as f:
             msg = "Config file used:"
             f.write(f"{msg}\n{'-' * (len(msg))}\n")
-            f.write(f"  {config_file}\n")
+            f.write(f"&nbsp&nbsp{config_file}\n")
             #f.write(f"# Config file used\n\n")
             #f.write(f"`{config_file}`\n\n")
 
