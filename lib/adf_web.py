@@ -695,10 +695,10 @@ class AdfWeb(AdfObs):
             #Also check if index page exists for this case:
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
-            
+            print("index_html_file",index_html_file)
             run_info_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
-
+            print("run_info_html_file",run_info_html_file)
             #Re-et plot types list:
             if web_data.case == 'multi-case':
                 plot_types = multi_plot_type_html
