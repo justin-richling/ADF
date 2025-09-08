@@ -372,6 +372,10 @@ class AdfConfig(AdfBase):
         #without worrying about modifying the actual
         #config variables dictionary:
         return copy.deepcopy(var)
+
+    def config_dict(self):
+        config_dict = self.__config_dict
+        return copy.deepcopy(config_dict)
     
     def get_git_info(self):
         import subprocess
