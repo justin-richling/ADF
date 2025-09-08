@@ -138,53 +138,7 @@ class AdfInfo(AdfConfig):
 
 
 
-        active_env = self.get_active_conda_environment()
-        if active_env:
-            print(f"Active Conda environment: {active_env}")
-        else:
-            print("No active Conda environment found or an error occurred.")
-            active_env = "--"
-
-        # Gather ADF run env info
-        log_name = self.debug_fname()
-        #Create new path object from user-specified plot directory path:
-        plot_path = Path(self.plot_location[0])
-
-        #Create directory path where the website will be built:
-        website_dir = plot_path / "website"
-        Path(website_dir).mkdir(parents=True, exist_ok=True)
-        with open(f"{website_dir} / {log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
-            msg = "Config file used:"
-            f.write(f"{msg}\n{'-' * (len(msg))}\n")
-            f.write(f"  {config_file}\n")
-
-            msg = "\n  Config file options:"
-            f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            for key,val in self.__config_dict.items():
-                if isinstance(val,dict):
-                    f.write(f"  {key}:\n")
-                    for key2,val2 in val.items():
-                        f.write(f"    {key2}: {val2}\n")
-                
-                elif isinstance(val,list):
-                    f.write(f"  {key}:\n")
-                    for val2 in val:
-                        f.write(f"    {val2}\n")
-                else:
-                    f.write(f"  {key}: {val}\n")
-                
-            #branch = self.get_git_branch()
-            #f.write(f"{branch}\n")
-            msg = "\nConda env used:"
-            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            f.write(f"  {active_env}\n")
-
-            git_info = self.get_git_info()
-            msg = "\nGit Info:"
-            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            for key,val in git_info.items():
-                print(f"{key}: {val}")
-                f.write(f"  {key}: {val}\n")
+        
 
 
 
@@ -686,6 +640,54 @@ class AdfInfo(AdfConfig):
         #Print number of processors being used to debug log (if requested):
         self.debug_log(f"ADF is running with {self.__num_procs} processors.")
         # -----------------------------------------
+
+        active_env = self.get_active_conda_environment()
+        if active_env:
+            print(f"Active Conda environment: {active_env}")
+        else:
+            print("No active Conda environment found or an error occurred.")
+            active_env = "--"
+
+        # Gather ADF run env info
+        log_name = self.debug_fname()
+        #Create new path object from user-specified plot directory path:
+        plot_path = Path(self.plot_location[0])
+
+        #Create directory path where the website will be built:
+        website_dir = plot_path / "website"
+        Path(website_dir).mkdir(parents=True, exist_ok=True)
+        with open(f"{website_dir} / {log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
+            msg = "Config file used:"
+            f.write(f"{msg}\n{'-' * (len(msg))}\n")
+            f.write(f"  {config_file}\n")
+
+            msg = "\n  Config file options:"
+            f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
+            for key,val in self.__config_dict.items():
+                if isinstance(val,dict):
+                    f.write(f"  {key}:\n")
+                    for key2,val2 in val.items():
+                        f.write(f"    {key2}: {val2}\n")
+                
+                elif isinstance(val,list):
+                    f.write(f"  {key}:\n")
+                    for val2 in val:
+                        f.write(f"    {val2}\n")
+                else:
+                    f.write(f"  {key}: {val}\n")
+                
+            #branch = self.get_git_branch()
+            #f.write(f"{branch}\n")
+            msg = "\nConda env used:"
+            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            f.write(f"  {active_env}\n")
+
+            git_info = self.get_git_info()
+            msg = "\nGit Info:"
+            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            for key,val in git_info.items():
+                print(f"{key}: {val}")
+                f.write(f"  {key}: {val}\n")
 
     #########
     def hist_str_to_list(self, conf_var, conf_val):
