@@ -98,7 +98,7 @@ class AdfConfig(AdfBase):
 
         # Gather ADF run env info
         log_name = AdfBase.debug_fname(self)
-        with open(f"{log_name}".replace("debug","run_info").replace(".log",".txt"), "w") as f:
+        with open(f"{log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
             msg = "Config file used:"
             f.write(f"{msg}\n{'-' * (len(msg))}\n")
             f.write(f"  {config_file}\n")
