@@ -674,18 +674,18 @@ class AdfInfo(AdfConfig):
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
                     #f.write(f"  {key}:<br>")
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}</a>:<br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
                     #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{key2}</a>: <a style='font-size:16px;'>{val2}</a><br>")
+                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{key2}: {val2}</a><br>")
                 
                 elif isinstance(val,list):
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}</a>:<br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
                     for val2 in val:
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
                 else:
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}</a>: <a style='font-size:16px;'>{val}</a><br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a><br>")
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
@@ -703,7 +703,7 @@ class AdfInfo(AdfConfig):
             f.write("<br><br><strong><a style='font-size:22px;'>Git Info</a></strong><br>")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
-                f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}</a>: <a style='font-size:16px;'>{val}</><br>")
+                f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a></><br>")
             f.write("</p>")
     #########
     def hist_str_to_list(self, conf_var, conf_val):
