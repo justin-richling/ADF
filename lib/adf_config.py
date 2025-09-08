@@ -375,7 +375,7 @@ class AdfConfig(AdfBase):
 
     def config_dict(self):
         config_dict = self.__config_dict
-        return copy.deepcopy(config_dict)
+        return copy.copy(config_dict)
     
     def get_git_info(self):
         import subprocess
