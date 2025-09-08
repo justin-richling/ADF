@@ -265,7 +265,7 @@ def qbo(adfobj):
         print("\n  Generating qbo multi-case plots...")
         
 
-        plot_loc_ts_multi = main_site_assets_path / f'QBO_TimeSeries_Special_multi_plot.{plot_type}'
+        plot_loc_ts_multi = main_site_assets_path / f'QBO_TimeSeries_Special_Mean_multi_plot.{plot_type}'
         fig.savefig(plot_loc_ts_multi, bbox_inches='tight', facecolor='white')
         adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="TimeSeries",
                                 multi_case=True,plot_type="Special", non_season=True)
@@ -342,7 +342,7 @@ def qbo(adfobj):
 
     #
     if multi_case:
-        plot_loc_amp_multi = main_site_assets_path / f'QBO_Amplitude_Special_multi_plot.{plot_type}'
+        plot_loc_amp_multi = main_site_assets_path / f'QBO_Amplitude_Special_Mean_multi_plot.{plot_type}'
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):

@@ -210,7 +210,7 @@ def cam_taylor_diagram(adfobj):
         #print(f"\t - Plotting Taylor Diagram, {s}")
 
         if multi_case:
-            plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_multi_plot.{plot_type}"
+            plot_name = main_site_assets_path / f"TaylorDiag_{s}_Special_Mean_multi_plot.{plot_type}"
 
             # Check redo_plot. If set to True: remove old plot, if it already exists:
             if (not redo_plot) and plot_name.is_file():

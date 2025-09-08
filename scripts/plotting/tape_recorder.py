@@ -337,7 +337,7 @@ def tape_recorder(adfobj):
                         x1_loc, x2_loc, y1_loc, y2_loc,
                         cmap=cmap)
         
-        plot_name_multi = main_site_assets_path / f'{var}_TapeRecorder_ANN_Special_multi_plot.{plot_type}'
+        plot_name_multi = main_site_assets_path / f'{var}_TapeRecorder_ANN_Special_Mean_multi_plot.{plot_type}'
         fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):
