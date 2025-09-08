@@ -695,6 +695,9 @@ class AdfWeb(AdfObs):
             #Also check if index page exists for this case:
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
+            
+            run_info_html_file = \
+                self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
 
             #Re-et plot types list:
             if web_data.case == 'multi-case':
@@ -729,7 +732,7 @@ class AdfWeb(AdfObs):
                                             avail_plot_types=avail_plot_types,
                                             avail_external_packages=avail_external_packages,
                                             external_package_links=self.external_package_links,
-                                            run_info = self.run_info)
+                                            run_info = run_info_html_file)
 
             #Write Mean diagnostics index HTML file:
             with open(index_html_file, 'w', encoding='utf-8') as ofil:
