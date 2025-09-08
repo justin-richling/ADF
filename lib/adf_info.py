@@ -656,18 +656,19 @@ class AdfInfo(AdfConfig):
         #Create directory path where the website will be built:
         website_dir = plot_path / "website"
         Path(website_dir).mkdir(parents=True, exist_ok=True)
-        run_info = f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".md")
-        self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
+        #run_info = f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".txt")
+        self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".txt")
+        run_info = f"{website_dir}/{self.__run_info}"
         with open(run_info, "w") as f:
-            #msg = "Config file used:"
-            #f.write(f"{msg}\n{'-' * (len(msg))}\n")
-            #f.write(f"  {config_file}\n")
-            f.write(f"# Config file used\n\n")
-            f.write(f"`{config_file}`\n\n")
+            msg = "Config file used:"
+            f.write(f"{msg}\n{'-' * (len(msg))}\n")
+            f.write(f"  {config_file}\n")
+            #f.write(f"# Config file used\n\n")
+            #f.write(f"`{config_file}`\n\n")
 
-            #msg = "\n  Config file options:"
-            #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            f.write("## Config file options\n\n")
+            msg = "\n  Config file options:"
+            f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
+            #f.write("## Config file options\n\n")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
@@ -686,16 +687,16 @@ class AdfInfo(AdfConfig):
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
 
-            #msg = "\nConda env used:"
-            #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            #f.write(f"  {active_env}\n")
-            f.write("## Conda env used\n\n")
-            f.write(f"`{active_env}`\n\n")
+            msg = "\nConda env used:"
+            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            f.write(f"  {active_env}\n")
+            #f.write("## Conda env used\n\n")
+            #f.write(f"`{active_env}`\n\n")
 
             git_info = self.get_git_info()
-            #msg = "\nGit Info:"
-            #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            f.write("## Git Info\n\n")
+            msg = "\nGit Info:"
+            f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            #f.write("## Git Info\n\n")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
                 f.write(f"  {key}: {val}\n")
