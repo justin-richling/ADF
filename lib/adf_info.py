@@ -660,12 +660,14 @@ class AdfInfo(AdfConfig):
         self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
         run_info = f"{website_dir}/{self.__run_info}"
         with open(run_info, "w") as f:
-            self.debug_log(f"adf_info: ADF run info:")
-            #self.debug_log(f"adf_histogram: Found variable defaults for {var}")
-            config_file_msg = "Config file used:"
-            msg = f"{config_file_msg}\n{'-' * (len(config_file_msg))}\n"
+            log_msg = f"adf_info: ADF run info:"
+            #self.debug_log(f"adf_info: ADF run info:")
+
+            config_file_msg = "\nConfig file used:"
+            msg = f"{config_file_msg}\n{'-' * (len(config_file_msg))}\n  {config_file}"
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
-            self.debug_log(f"{msg}\n  {config_file}")
+            #self.debug_log(f"{msg}\n  {config_file}")
+            log_msg += msg
 
             f.write("<p style=color:black>")
             f.write(f"<strong><a style='font-size:22px;'>Config file used</a></strong></u><br>")
@@ -674,29 +676,36 @@ class AdfInfo(AdfConfig):
             config_msg = "\n  Config file options:"
             msg = f"{config_msg}\n  {'- ' * (int(len(config_msg)/2)-1)}"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            self.debug_log(msg)
+            #self.debug_log(msg)
+            log_msg += msg
+
             f.write("&nbsp;<u><a style='font-size:18px;'>Config file options</a></u><br>")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
                     #f.write(f"  {key}:<br>")
-                    self.debug_log(f"  {key}:")
+                    #self.debug_log(f"  {key}:")
+                    log_msg += f"\n  {key}:"
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
-                        self.debug_log(f"    {key2}: {val2}")
+                        #self.debug_log(f"    {key2}: {val2}")
+                        log_msg += f"\n    {key2}: {val2}"
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{key2}: {val2}</a><br>")
                 
                 elif isinstance(val,list):
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
-                    self.debug_log(f"  {key}:")
+                    #self.debug_log(f"  {key}:")
+                    log_msg += f"\n  {key}:"
                     for val2 in val:
                         #f.write("<a style='font-size:4px;'> </a><br>")
-                        self.debug_log(f"    {val2}")
+                        #self.debug_log(f"    {val2}")
+                        log_msg += f"\n    {val2}"
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
                 else:
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a><br>")
                     self.debug_log(f"  {key}: {val}:")
+                    log_msg += f"\n  {key}: {val}:"
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
@@ -704,24 +713,32 @@ class AdfInfo(AdfConfig):
             conda_msg = "\n\nConda env used:"
             msg = f"{conda_msg}\n{'-' * (len(conda_msg)-1)}\n"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            self.debug_log(msg)
+            #self.debug_log(msg)
+            log_msg += f"\n  {msg}"
+
             f.write(f"\n")
             f.write("<br><strong><a style='font-size:22px;'>Conda env used</a></strong><br>")
             f.write(f"<a style='font-size:16px;'>&nbsp;&nbsp;{active_env}</a>")
-            self.debug_log(f"  {active_env}\n")
+            #self.debug_log(f"  {active_env}\n")
+            log_msg += f"\n  {active_env}\n"
             
             git_info = self.get_git_info()
             git_msg = "\n\nGit Info:"
             msg = f"{git_msg}\n{'-' * (len(git_msg)-1)}\n"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
-            self.debug_log(msg)
+            #self.debug_log(msg)
+            log_msg += f"\n  {msg}"
+
             f.write(f"\n")
             f.write("<br><br><strong><a style='font-size:22px;'>Git Info</a></strong><br>")
             for key,val in git_info.items():
                 #print(f"{key}: {val}")
-                self.debug_log(f"  {key}: {val}\n")
+                #self.debug_log(f"  {key}: {val}\n")
+                log_msg += f"\n  {key}: {val}\n"
                 f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a></><br>")
             f.write("</p>")
+
+            self.debug_log(log_msg)
     #########
     def hist_str_to_list(self, conf_var, conf_val):
         """
