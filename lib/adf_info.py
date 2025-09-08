@@ -710,7 +710,7 @@ class AdfInfo(AdfConfig):
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
 
-            conda_msg = "\n\nConda env used:"
+            conda_msg = "\nConda env used:"
             msg = f"{conda_msg}\n{'-' * (len(conda_msg)-1)}\n"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
             #self.debug_log(msg)
@@ -720,10 +720,10 @@ class AdfInfo(AdfConfig):
             f.write("<br><strong><a style='font-size:22px;'>Conda env used</a></strong><br>")
             f.write(f"<a style='font-size:16px;'>&nbsp;&nbsp;{active_env}</a>")
             #self.debug_log(f"  {active_env}\n")
-            log_msg += f"\n  {active_env}\n"
+            log_msg += f"\n  {active_env}"
             
             git_info = self.get_git_info()
-            git_msg = "\n\nGit Info:"
+            git_msg = "\nGit Info:"
             msg = f"{git_msg}\n{'-' * (len(git_msg)-1)}\n"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
             #self.debug_log(msg)
@@ -734,7 +734,7 @@ class AdfInfo(AdfConfig):
             for key,val in git_info.items():
                 #print(f"{key}: {val}")
                 #self.debug_log(f"  {key}: {val}\n")
-                log_msg += f"\n  {key}: {val}\n"
+                log_msg += f"\n  {key}: {val}"
                 f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a></><br>")
             f.write("</p>")
 
