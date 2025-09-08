@@ -672,7 +672,7 @@ class AdfInfo(AdfConfig):
             f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{config_file}</a><br><br>")
 
             msg = "\n  Config file options:"
-            msg += f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n"s
+            msg += f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
             self.debug_log(msg)
             f.write("&nbsp;<u><a style='font-size:18px;'>Config file options</a></u><br>")
