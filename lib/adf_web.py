@@ -696,12 +696,26 @@ class AdfWeb(AdfObs):
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
             print("index_html_file",index_html_file)
-            run_info_html_file = \
+            """run_info_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
-            print("run_info_html_file",run_info_html_file)
+            print("run_info_html_file",run_info_html_file)"""
+
+            import markdown
+
+            # Read the markdown file
+            with open(self.run_info, "r", encoding="utf-8") as mdfile:
+                md_text = mdfile.read()
+
+            # Convert markdown to HTML
+            run_info_html = markdown.markdown(md_text)
+
+            # Write the HTML to a file in the website directory
+            run_info_html_file = self.__case_web_paths[web_data.case]['website_dir'] / "run_info.html"
+            with open(run_info_html_file, "w", encoding="utf-8") as htmlfile:
+                htmlfile.write(run_info_html)
 
 
-            #Construct index.html
+            """#Construct index.html
             index_title = "AMP Diagnostics Prototype"
             index_tmpl = jinenv.get_template('template_run_info.html')
             index_rndr = index_tmpl.render(title=index_title,
@@ -714,7 +728,7 @@ class AdfWeb(AdfObs):
             #Write Mean diagnostics index HTML file:
             with open(run_info_html_file, 'w', encoding='utf-8') as ofil:
                 ofil.write(index_rndr)
-            #End with
+            #End with"""
 
 
 
