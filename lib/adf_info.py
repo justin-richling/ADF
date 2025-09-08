@@ -146,7 +146,7 @@ class AdfInfo(AdfConfig):
             active_env = "--"
 
         # Gather ADF run env info
-        log_name = self.debug_fname(self)
+        log_name = self.debug_fname()
         #Create new path object from user-specified plot directory path:
         plot_path = Path(self.plot_location[0])
 
