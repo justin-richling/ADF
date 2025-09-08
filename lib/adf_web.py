@@ -720,7 +720,7 @@ class AdfWeb(AdfObs):
 
             # Convert markdown to HTML
             run_info_html = markdown.markdown(md_text)
-
+            index_title = "AMP Diagnostics Prototype"
             run_info_html_file = self.__case_web_paths[web_data.case]['website_dir'] / "run_info.html"
             run_info_tmpl = jinenv.get_template('template_run_info.html')
             run_info_rndr = run_info_tmpl.render(run_info=run_info_html,
