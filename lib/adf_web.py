@@ -699,6 +699,32 @@ class AdfWeb(AdfObs):
             run_info_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
             print("run_info_html_file",run_info_html_file)
+
+
+            #Construct index.html
+            index_title = "AMP Diagnostics Prototype"
+            index_tmpl = jinenv.get_template('template_run_info.html')
+            index_rndr = index_tmpl.render(title=index_title,
+                                            case_name=web_data.case,
+                                            base_name=data_name,
+                                            case_yrs=case_yrs,
+                                            baseline_yrs=baseline_yrs,
+                                            plot_types=plot_types,
+                                            avail_plot_types=avail_plot_types,
+                                            avail_external_packages=avail_external_packages,
+                                            external_package_links=self.external_package_links,
+                                            run_info = run_info_html_file)
+
+            #Write Mean diagnostics index HTML file:
+            with open(run_info_html_file, 'w', encoding='utf-8') as ofil:
+                ofil.write(index_rndr)
+            #End with
+
+
+
+
+
+
             #Re-et plot types list:
             if web_data.case == 'multi-case':
                 plot_types = multi_plot_type_html
