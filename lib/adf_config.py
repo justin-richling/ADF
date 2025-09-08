@@ -21,6 +21,7 @@ import re
 import copy
 import subprocess
 import os
+from pathlib import Path
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
@@ -98,7 +99,8 @@ class AdfConfig(AdfBase):
 
         # Gather ADF run env info
         log_name = AdfBase.debug_fname(self)
-        with open(f"{log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
+        info_path = Path("website")
+        with open(f"{info_path} / {log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
             msg = "Config file used:"
             f.write(f"{msg}\n{'-' * (len(msg))}\n")
             f.write(f"  {config_file}\n")
