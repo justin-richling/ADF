@@ -671,7 +671,7 @@ class AdfInfo(AdfConfig):
             #self.debug_log(f"adf_info: ADF run info:")
 
             config_file_msg = "\nConfig file used:"
-            msg = f"{config_file_msg}\n{'-' * (len(config_file_msg))}\n  {config_file}"
+            msg = f"{config_file_msg}\n{'-' * (len(config_file_msg))}\n  {config_file}\n"
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
             #self.debug_log(f"{msg}\n  {config_file}")
             log_msg += msg
@@ -740,11 +740,11 @@ class AdfInfo(AdfConfig):
             for key,val in git_info.items():
                 #print(f"{key}: {val}")
                 #self.debug_log(f"  {key}: {val}\n")
-                log_msg += f"  {key}: {val}"
+                log_msg += f"  {key}: {val}\n"
                 f.write(f"{two_space}<a {font_16}><strong>{key}:</strong> {val}</a></><br>")
             f.write("</p>")
 
-            self.debug_log(log_msg+"\n")
+            self.debug_log(log_msg)
     #########
     def hist_str_to_list(self, conf_var, conf_val):
         """
