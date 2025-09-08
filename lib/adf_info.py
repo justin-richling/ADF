@@ -659,6 +659,13 @@ class AdfInfo(AdfConfig):
         #run_info = f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".txt")
         self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
         run_info = f"{website_dir}/{self.__run_info}"
+
+        four_space = "&nbsp;&nbsp;&nbsp;&nbsp;"
+        two_space = "&nbsp;&nbsp;"
+        font_22 = "style='font-size:22px;'"
+        font_18 = "style='font-size:18px;'"
+        font_16 = "style='font-size:16px;'"
+
         with open(run_info, "w") as f:
             log_msg = f"adf_info: ADF run info:"
             #self.debug_log(f"adf_info: ADF run info:")
@@ -670,8 +677,8 @@ class AdfInfo(AdfConfig):
             log_msg += msg
 
             f.write("<p style=color:black>")
-            f.write(f"<strong><a style='font-size:22px;'>Config file used</a></strong></u><br>")
-            f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{config_file}</a><br><br>")
+            f.write(f"<strong><a {font_22}>Config file used</a></strong></u><br>")
+            f.write(f"{two_space}<a {font_16}>{config_file}</a><br><br>")
 
             config_msg = "\n  Config file options:"
             msg = f"{config_msg}\n  {'- ' * (int(len(config_msg)/2)-1)}"
@@ -679,33 +686,32 @@ class AdfInfo(AdfConfig):
             #self.debug_log(msg)
             log_msg += msg
 
-            f.write("&nbsp;<u><a style='font-size:18px;'>Config file options</a></u><br>")
+            f.write(f"&nbsp;<u><a {font_18}>Config file options</a></u><br>")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
                     #f.write(f"  {key}:<br>")
                     #self.debug_log(f"  {key}:")
                     log_msg += f"\n  {key}:"
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong></a><br>")
+                    f.write(f"{two_space}<a {font_16}><strong>{key}:</strong></a><br>")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
                         #self.debug_log(f"    {key2}: {val2}")
                         log_msg += f"\n    {key2}: {val2}"
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key2}:</strong> {val2}</a><br>")
-                
+                        f.write(f"{four_space}<a {font_16}><strong>{key2}:</strong> {val2}</a><br>")
                 elif isinstance(val,list):
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong></a><br>")
+                    f.write(f"{two_space}<a {font_16}><strong>{key}:</strong></a><br>")
                     #self.debug_log(f"  {key}:")
                     log_msg += f"\n  {key}:"
                     for val2 in val:
                         #f.write("<a style='font-size:4px;'> </a><br>")
                         #self.debug_log(f"    {val2}")
                         log_msg += f"\n    {val2}"
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
+                        f.write(f"{four_space}<a {font_16}>{val2}</a><br>")
                 else:
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong> {val}</a><br>")
+                    f.write(f"{two_space}<a {font_16}><strong>{key}:</strong> {val}</a><br>")
                     #self.debug_log(f"  {key}: {val}:")
-                    log_msg += f"\n  {key}: {val}:"
+                    log_msg += f"\n  {key}: {val}"
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
@@ -717,8 +723,8 @@ class AdfInfo(AdfConfig):
             log_msg += f"\n  {msg}"
 
             f.write(f"\n")
-            f.write("<br><strong><a style='font-size:22px;'>Conda env used</a></strong><br>")
-            f.write(f"<a style='font-size:16px;'>&nbsp;&nbsp;{active_env}</a>")
+            f.write(f"<br><strong><a {font_22}>Conda env used</a></strong><br>")
+            f.write(f"<a {font_16}>{two_space}{active_env}</a>")
             #self.debug_log(f"  {active_env}\n")
             log_msg += f"\n  {active_env}"
             
@@ -730,12 +736,12 @@ class AdfInfo(AdfConfig):
             log_msg += f"\n  {msg}"
 
             f.write(f"\n")
-            f.write("<br><br><strong><a style='font-size:22px;'>Git Info</a></strong><br>")
+            f.write(f"<br><br><strong><a {font_22}>Git Info</a></strong><br>")
             for key,val in git_info.items():
                 #print(f"{key}: {val}")
                 #self.debug_log(f"  {key}: {val}\n")
                 log_msg += f"\n  {key}: {val}"
-                f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'><strong>{key}:</strong> {val}</a></><br>")
+                f.write(f"{two_space}<a {font_16}><strong>{key}:</strong> {val}</a></><br>")
             f.write("</p>")
 
             self.debug_log(log_msg)
