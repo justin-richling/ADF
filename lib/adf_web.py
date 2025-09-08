@@ -709,11 +709,7 @@ class AdfWeb(AdfObs):
                                             base_name=data_name,
                                             case_yrs=case_yrs,
                                             baseline_yrs=baseline_yrs,
-                                            plot_types=plot_types,
-                                            avail_plot_types=avail_plot_types,
-                                            avail_external_packages=avail_external_packages,
-                                            external_package_links=self.external_package_links,
-                                            run_info = run_info_html_file)
+                                            )
 
             #Write Mean diagnostics index HTML file:
             with open(run_info_html_file, 'w', encoding='utf-8') as ofil:
