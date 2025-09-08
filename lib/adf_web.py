@@ -700,7 +700,7 @@ class AdfWeb(AdfObs):
                 self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
             print("run_info_md_file",run_info_md_file)
 
-            import markdown
+            """import markdown
 
             # Read the markdown file
             with open(run_info_md_file, "r", encoding="utf-8") as mdfile:
@@ -712,7 +712,20 @@ class AdfWeb(AdfObs):
             # Write the HTML to a file in the website directory
             run_info_html_file = self.__case_web_paths[web_data.case]['website_dir'] / "run_info.html"
             with open(run_info_html_file, "w", encoding="utf-8") as htmlfile:
-                htmlfile.write(run_info_html)
+                htmlfile.write(run_info_html)"""
+            import markdown
+            # Read the markdown file
+            with open(run_info_md_file, "r", encoding="utf-8") as mdfile:
+                md_text = mdfile.read()
+
+            # Convert markdown to HTML
+            run_info_html = markdown.markdown(md_text)
+
+            run_info_html_file = self.__case_web_paths[web_data.case]['website_dir'] / "run_info.html"
+            run_info_tmpl = jinenv.get_template('template_run_info.html')
+            run_info_rndr = run_info_tmpl.render(run_info=run_info_html)
+            with open(run_info_html_file, "w", encoding="utf-8") as htmlfile:
+                htmlfile.write(run_info_rndr)
 
 
             """#Construct index.html
