@@ -693,7 +693,7 @@ class AdfInfo(AdfConfig):
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
             f.write(f"\n")
             f.write("<br><strong><a style='font-size:22px;color:black'>Conda env used</a></strong><br>")
-            f.write(f"<a style='font-size:16px;color:black'>{active_env}</a>")
+            f.write(f"<a style='font-size:16px;color:black'>&nbsp;&nbsp;{active_env}</a>")
 
             git_info = self.get_git_info()
             #msg = "\nGit Info:"
