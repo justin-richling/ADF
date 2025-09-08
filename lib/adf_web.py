@@ -723,7 +723,13 @@ class AdfWeb(AdfObs):
 
             run_info_html_file = self.__case_web_paths[web_data.case]['website_dir'] / "run_info.html"
             run_info_tmpl = jinenv.get_template('template_run_info.html')
-            run_info_rndr = run_info_tmpl.render(run_info=run_info_html)
+            run_info_rndr = run_info_tmpl.render(run_info=run_info_html,
+                                                 title=index_title,
+                                            case_name=web_data.case,
+                                            base_name=data_name,
+                                            case_yrs=case_yrs,
+                                            baseline_yrs=baseline_yrs,
+                                            plot_types=plot_types,)
             with open(run_info_html_file, "w", encoding="utf-8") as htmlfile:
                 htmlfile.write(run_info_rndr)
 
