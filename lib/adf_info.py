@@ -664,7 +664,7 @@ class AdfInfo(AdfConfig):
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
             #f.write(f"&nbsp&nbsp{config_file}\n")
             f.write(f"##Config file used\n<br>")
-            f.write(f"&nbsp;&nbsp;{config_file}<br><br>")
+            f.write(f"  {config_file}<br><br>")
 
             #msg = "\n  Config file options:"
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
@@ -673,18 +673,18 @@ class AdfInfo(AdfConfig):
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
                     #f.write(f"  {key}:<br>")
-                    f.write(f"&nbsp;&nbsp;{key}:<br>")
+                    f.write(f"  {key}:<br>")
                     #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;{key2}: {val2}<br>")
+                        f.write(f"    {key2}: {val2}<br>")
                 
                 elif isinstance(val,list):
-                    f.write(f"&nbsp;&nbsp;{key}:<br>")
+                    f.write(f"  {key}:<br>")
                     for val2 in val:
-                        f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;{val2}<br>")
+                        f.write(f"    {val2}<br>")
                 else:
-                    f.write(f"&nbsp;&nbsp;{key}: {val}<br>")
+                    f.write(f"  {key}: {val}<br>")
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
@@ -701,7 +701,7 @@ class AdfInfo(AdfConfig):
             f.write("##Git Info\n")
             for key,val in git_info.items():
                 print(f"{key}: {val}")
-                f.write(f"&nbsp;&nbsp;{key}: {val}<br>")
+                f.write(f"  {key}: {val}<br>")
 
     #########
     def hist_str_to_list(self, conf_var, conf_val):
