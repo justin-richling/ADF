@@ -663,7 +663,7 @@ class AdfInfo(AdfConfig):
             #msg = "Config file used:"
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
             #f.write(f"&nbsp&nbsp{config_file}\n")
-            f.write("<p style=color:red>")
+            f.write("<p style=color:black>")
             f.write(f"<strong><a style='font-size:22px;'>Config file used</a></strong></u><br><br>")
             f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{config_file}</a><br><br>")
 
@@ -681,7 +681,7 @@ class AdfInfo(AdfConfig):
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{key2}: {val2}</a><br>")
                 
                 elif isinstance(val,list):
-                    f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
+                    f.write(f"&nbsp;&nbsp;<a style='font-size:4px;></a><a style='font-size:16px;'>{key}:</a><br>")
                     for val2 in val:
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
                 else:
