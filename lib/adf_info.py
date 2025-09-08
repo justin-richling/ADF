@@ -657,7 +657,7 @@ class AdfInfo(AdfConfig):
         website_dir = plot_path / "website"
         Path(website_dir).mkdir(parents=True, exist_ok=True)
         run_info = f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".md")
-        self.__run_info = run_info
+        self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
         with open(run_info, "w") as f:
             msg = "Config file used:"
             f.write(f"{msg}\n{'-' * (len(msg))}\n")
