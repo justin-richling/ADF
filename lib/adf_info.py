@@ -657,25 +657,27 @@ class AdfInfo(AdfConfig):
         website_dir = plot_path / "website"
         Path(website_dir).mkdir(parents=True, exist_ok=True)
         #run_info = f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".txt")
-        self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".txt")
+        self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
         run_info = f"{website_dir}/{self.__run_info}"
         with open(run_info, "w") as f:
-            msg = "Config file used:"
-            f.write(f"{msg}\n{'-' * (len(msg))}\n")
-            f.write(f"&nbsp&nbsp{config_file}\n")
-            #f.write(f"# Config file used\n\n")
-            #f.write(f"`{config_file}`\n\n")
+            #msg = "Config file used:"
+            #f.write(f"{msg}\n{'-' * (len(msg))}\n")
+            #f.write(f"&nbsp&nbsp{config_file}\n")
+            f.write(f"# Config file used\n\n")
+            f.write(f"&nbsp&nbsp{config_file}")
 
-            msg = "\n  Config file options:"
-            f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
-            #f.write("## Config file options\n\n")
+            #msg = "\n  Config file options:"
+            #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
+            f.write("## Config file options\n\n")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
-                    f.write(f"  {key}:<br>")
+                    #f.write(f"  {key}:<br>")
+                    f.write(f"&nbsp&nbsp{key}:<br>")
                     #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
-                        f.write(f"    {key2}: {val2}<br>")
+                        #f.write(f"    {key2}: {val2}<br>")
+                        f.write(f"\t{key2}: {val2}<br>")
                 
                 elif isinstance(val,list):
                     f.write(f"  {key}:<br>")
