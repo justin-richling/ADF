@@ -656,7 +656,7 @@ class AdfInfo(AdfConfig):
         #Create directory path where the website will be built:
         website_dir = plot_path / "website"
         Path(website_dir).mkdir(parents=True, exist_ok=True)
-        with open(f"{website_dir} / {log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
+        with open(f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".md"), "w") as f:
             msg = "Config file used:"
             f.write(f"{msg}\n{'-' * (len(msg))}\n")
             f.write(f"  {config_file}\n")
