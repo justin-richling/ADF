@@ -660,50 +660,66 @@ class AdfInfo(AdfConfig):
         self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
         run_info = f"{website_dir}/{self.__run_info}"
         with open(run_info, "w") as f:
-            #msg = "Config file used:"
+            self.debug_log(f"adf_info: ADF run info:")
+            #self.debug_log(f"adf_histogram: Found variable defaults for {var}")
+            msg = "Config file used:"
+            msg += f"{msg}\n{'-' * (len(msg))}\n"
             #f.write(f"{msg}\n{'-' * (len(msg))}\n")
-            #f.write(f"&nbsp&nbsp{config_file}\n")
+            self.debug_log(msg)
+
             f.write("<p style=color:black>")
             f.write(f"<strong><a style='font-size:22px;'>Config file used</a></strong></u><br>")
             f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{config_file}</a><br><br>")
 
-            #msg = "\n  Config file options:"
+            msg = "\n  Config file options:"
+            msg += f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n"s
             #f.write(f"{msg}\n  {'- ' * (int(len(msg)/2)-1)}\n")
+            self.debug_log(msg)
             f.write("&nbsp;<u><a style='font-size:18px;'>Config file options</a></u><br>")
 
             for key,val in AdfConfig.config_dict(self).items():
                 if isinstance(val,dict):
                     #f.write(f"  {key}:<br>")
+                    self.debug_log(f"  {key}:<br>")
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
-                    #f.write(f"### {key}\n")
                     for key2,val2 in val.items():
                         #f.write(f"    {key2}: {val2}<br>")
+                        self.debug_log(f"    {key2}: {val2}<br>")
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{key2}: {val2}</a><br>")
                 
                 elif isinstance(val,list):
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}:</a><br>")
+                    self.debug_log(f"  {key}:<br>")
                     for val2 in val:
                         #f.write("<a style='font-size:4px;'> </a><br>")
+                        self.debug_log(f"    {val2}:<br>")
                         f.write(f"&nbsp;&nbsp;&nbsp;&nbsp;<a style='font-size:16px;'>{val2}</a><br>")
                 else:
                     f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a><br>")
+                    self.debug_log(f"  {key}: {val}:<br>")
                 
             #branch = self.get_git_branch()
             #f.write(f"{branch}\n")
 
-            #msg = "\nConda env used:"
+            msg = "\nConda env used:"
+            msg += f"{msg}\n{'-' * (len(msg)-1)}\n"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            self.debug_log(msg)
             f.write(f"\n")
             f.write("<br><strong><a style='font-size:22px;'>Conda env used</a></strong><br>")
             f.write(f"<a style='font-size:16px;'>&nbsp;&nbsp;{active_env}</a>")
-
+            self.debug_log(f"  {active_env}:<br>")
+            
             git_info = self.get_git_info()
-            #msg = "\nGit Info:"
+            msg = "\nGit Info:"
+            msg += f"{msg}\n{'-' * (len(msg)-1)}\n"
             #f.write(f"{msg}\n{'-' * (len(msg)-1)}\n")
+            self.debug_log(msg)
             f.write(f"\n")
             f.write("<br><br><strong><a style='font-size:22px;'>Git Info</a></strong><br>")
             for key,val in git_info.items():
-                print(f"{key}: {val}")
+                #print(f"{key}: {val}")
+                self.debug_log(f"  {key}: {val}")
                 f.write(f"&nbsp;&nbsp;<a style='font-size:16px;'>{key}: {val}</a></><br>")
             f.write("</p>")
     #########
