@@ -132,29 +132,6 @@ class AdfInfo(AdfConfig):
         #End for
         #-------------------------------------------
 
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #Initialize ADF variable list:
         self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
