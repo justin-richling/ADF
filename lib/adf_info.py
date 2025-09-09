@@ -633,7 +633,7 @@ class AdfInfo(AdfConfig):
         #Create directory path where the website will be built:
         website_dir = plot_path / "website"
         Path(website_dir).mkdir(parents=True, exist_ok=True)
-        #run_info = f"{website_dir}/{log_name}".replace("debug","run_info").replace(".log",".txt")
+
         self.__run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
         run_info = f"{website_dir}/{self.__run_info}"
 
