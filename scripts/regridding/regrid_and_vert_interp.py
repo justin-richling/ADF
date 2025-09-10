@@ -259,7 +259,7 @@ def regrid_and_vert_interp(adf):
                     if ('lat' not in mclim_ds.dims) and ('lat' not in mclim_ds.dims):
                         if ('ncol' in mclim_ds.dims) or ('lndgrid' in mclim_ds.dims):
                             print(f"\t    INFO: Looks like test case '{case_name}' is unstructured, eh?")
-                            print("mclim_ds",mclim_ds)
+                            #print("mclim_ds",mclim_ds)
                             #Check if any a FV file exists if using native grid
                             case_latlon_file = case_latlon_files[case_idx]
                             if not case_latlon_file:
@@ -277,7 +277,7 @@ def regrid_and_vert_interp(adf):
                             case_method = case_methods[case_idx]
                             #print("ds attrs?",mclim_ds.lev.long_name,"\n\n")
                             ds_attrs = mclim_ds.attrs
-                            print("ds_attrs",ds_attrs)
+                            #print("ds_attrs",ds_attrs)
                             # Grid unstructured climo if applicable before regridding
                             rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
