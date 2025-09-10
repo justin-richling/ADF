@@ -286,7 +286,7 @@ def regrid_and_vert_interp(adf):
                                                     )
                             print("After _regrid?",rgdata_interp,"\n\n")
                             rgdata_interp.attrs = ds_attrs
-                            rgdata_interp['lev'].attrs['long_name'] = mclim_ds.lev.long_name
+                            #rgdata_interp['lev'].attrs['long_name'] = mclim_ds.lev.long_name
 
                             rgdata_interp['hybm'] = mclim_ds.hybm
                             rgdata_interp['hyam'] = mclim_ds.hyam
@@ -412,7 +412,7 @@ def regrid_and_vert_interp(adf):
                                                         method=base_method,
                                                        )
                                 tgdata_interp.attrs = ds_attrs
-                                tgdata_interp['lev'].attrs['long_name'] = tclim_ds.lev.long_name
+                                #tgdata_interp['lev'].attrs['long_name'] = tclim_ds.lev.long_name
 
                                 tgdata_interp['hybm'] = tclim_ds.hybm
                                 tgdata_interp['hyam'] = tclim_ds.hyam
