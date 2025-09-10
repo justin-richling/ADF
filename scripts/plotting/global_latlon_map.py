@@ -616,7 +616,10 @@ def aod_latlon(adfobj):
                 ds_cases.append(ds_case_season)
             # End if
         # End if
-
+    #End for
+    if len(ds_cases) == 0:
+        print("\t  WARNING: No model cases found for AOD, skipping AOD panel plots.")
+        return
     # load reference data (observational or baseline)
     if not adfobj.compare_obs:
 
