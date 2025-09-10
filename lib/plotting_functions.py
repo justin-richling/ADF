@@ -2455,6 +2455,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
     #End if
 
+    absmaxdif = float(absmaxdif)
     if max(np.abs(levelsdiff)) > 10*absmaxdif:
         levelsdiff = np.linspace(-1*absmaxdif, absmaxdif, 12)
 
