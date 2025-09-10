@@ -288,9 +288,10 @@ def regrid_and_vert_interp(adf):
                             print("After _regrid?",rgdata_interp,"\n\n")
                             rgdata_interp.attrs = ds_attrs
                             #rgdata_interp['lev'].attrs['long_name'] = mclim_ds.lev.long_name
-
-                            rgdata_interp['hybm'] = mclim_ds.hybm
-                            rgdata_interp['hyam'] = mclim_ds.hyam
+                            if 'lev' in mclim_ds:
+                                rgdata_interp['lev'].attrs['long_name'] = mclim_ds.lev.long_name
+                                rgdata_interp['hybm'] = mclim_ds.hybm
+                                rgdata_interp['hyam'] = mclim_ds.hyam
                             print("After adding attrs??",rgdata_interp,"\n\n")
                             output_test_loc = Path(output_climo_locs[case_idx])
                             rgridded_output_loc   = output_test_loc / "gridded"
@@ -413,10 +414,11 @@ def regrid_and_vert_interp(adf):
                                                         method=base_method,
                                                        )
                                 tgdata_interp.attrs = ds_attrs
-                                #tgdata_interp['lev'].attrs['long_name'] = tclim_ds.lev.long_name
+                                if 'lev' in tclim_ds:
+                                    #tgdata_interp['lev'].attrs['long_name'] = tclim_ds.lev.long_name
 
-                                tgdata_interp['hybm'] = tclim_ds.hybm
-                                tgdata_interp['hyam'] = tclim_ds.hyam
+                                    tgdata_interp['hybm'] = tclim_ds.hybm
+                                    tgdata_interp['hyam'] = tclim_ds.hyam
                                 tgridded_output_loc   = Path(target_loc) / "gridded"
                                 if not tgridded_output_loc.is_dir():
                                     print(f"    {tgridded_output_loc} not found, making new directory")
