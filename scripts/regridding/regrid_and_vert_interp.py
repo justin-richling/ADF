@@ -277,6 +277,7 @@ def regrid_and_vert_interp(adf):
                             case_method = case_methods[case_idx]
                             #print("ds attrs?",mclim_ds.lev.long_name,"\n\n")
                             ds_attrs = mclim_ds.attrs
+                            print("ds_attrs",ds_attrs)
                             # Grid unstructured climo if applicable before regridding
                             rgdata_interp = _regrid(mclim_ds, var,
                                                     comp=comp,
