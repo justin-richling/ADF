@@ -420,7 +420,7 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
     v_to_derive = ['TropicalLandPrecip', 'TropicalOceanPrecip', 'EquatorialPacificStress',
                 'U300', 'ColumnRelativeHumidity', 'ColumnTemperature', 'Land2mTemperature']
     if variable not in v_to_derive:
-        print("HERE",variable)
+        print("HERE",variable,"asfknaksf")
         fils = sorted(Path(location).glob(f"{casename}*_{variable}_*.nc"))
         if len(fils) == 0:
             raise ValueError(f"something went wrong for variable: {variable}")
