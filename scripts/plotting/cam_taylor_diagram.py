@@ -425,8 +425,10 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
         if len(fils) == 0:
             raise ValueError(f"something went wrong for variable: {variable}")
         elif len(fils) > 1:
+            print("HERE1.5")
             ds = xr.open_mfdataset(fils)  # do we ever expect climo files split into pieces?
         else:
+            print("HERE1.75",fils[0])
             ds = xr.open_dataset(fils[0])
         if return_dataset:
             da = ds
