@@ -140,7 +140,7 @@ def create_climo_files(adf, clobber=False, search=None):
         input_location  = Path(input_ts_locs[case_idx])
         output_location = Path(output_locs[case_idx])
 
-        regrid_output_loc   = output_location / "regrid"
+        #regrid_output_loc   = output_location / "gridded"
 
         #Whether to overwrite existing climo files
         clobber = overwrite[case_idx]
