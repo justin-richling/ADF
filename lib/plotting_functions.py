@@ -370,7 +370,7 @@ def global_average(fld, wgt, verbose=False):
     return np.ma.average(avg1)
 
 
-def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, indataset=None):
+def spatial_average(indata, weights=None, spatial_dims=None, unstruct=False):
     """Compute spatial average.
 
     Parameters
