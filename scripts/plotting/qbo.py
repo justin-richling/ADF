@@ -100,7 +100,38 @@ def qbo(adfobj):
 
     #----Read in the case data and baseline
     ncases = len(case_locs)
-    casedat = [pf.load_dataset(sorted(Path(case_locs[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+    #casedat = [pf.load_dataset(sorted(Path(case_locs[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+    casedat = []
+    for i in range(0,ncases,1):
+        """#sorted(Path(case_locs[i]).glob(f"{case_names[i]}.*.U.*.nc")))
+        #Create list of time series files present for variable:
+        # Note that we hard-code for h0 because we only want to make climos of monthly output
+        if i == ncases-1:
+            ts_files = adfobj.data.get_ref_timeseries_file("U")
+        else:
+            ts_files = adfobj.data.get_timeseries_file(case_names[i], "U")
+        
+        #input_location  = Path(input_ts_locs[case_idx])
+
+        #If no files exist, try to move to next variable. --> Means we can not proceed with this variable,
+        # and it'll be problematic later unless there are multiple hist file streams and the variable is in the others
+        if not ts_files:
+            errmsg = f"\t    WARNING: Time series files for variable 'U' not found.  Script will continue to next variable.\n"
+            errmsg += f"\t      The input location searched was: {case_locs[i]}."
+            print(errmsg)
+            logmsg = f"climo file generation: The input location searched was: {case_locs[i]}. The glob pattern was {ts_files}."
+            #Write to debug log if enabled:
+            adfobj.debug_log(logmsg)
+            #  end_diag_script(errmsg) # Previously we would kill the run here.
+            continue"""
+        
+        grid_path = Path(case_locs[i]) / "gridded"
+        if grid_path.is_dir():
+            print("Using gridded file, eh?")
+            case_ts_loc = grid_path
+        else:
+            case_ts_loc = case_locs[i]
+        casedat.append(pf.load_dataset(Path(case_ts_loc).glob(f"{case_names[i]}.*.U.*.nc")))
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
