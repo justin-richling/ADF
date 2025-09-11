@@ -891,7 +891,7 @@ class AdfDiag(AdfWeb):
                 # DOES NOT WORK CORRECTLY!
                 grid_ts = False
                 unstruct_plotting = self.unstructured_plotting
-                if unstruct_plotting:
+                if not unstruct_plotting:
                     # TEMPORARY: do a quick check if this on native grid and regrid
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                     ts_file_ds = xr.open_dataset(ts_0)
