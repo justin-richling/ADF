@@ -16,7 +16,7 @@ from pathlib import Path
 import os
 from adf_base import AdfError
 
-def grid_timeseries(**kwargs):
+def grid_timeseries(adfobj, **kwargs, is_baseline):
     #regrd_ts_loc = Path(test_output_loc[case_idx])
     # Check if time series directory exists, and if not, then create it:
     # Use pathlib to create parent directories, if necessary.
@@ -46,7 +46,16 @@ def grid_timeseries(**kwargs):
 
     for var in diag_var_list:
         print("VAR",var,"\n")
-        ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0])
+        #ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0])
+
+        if is_baseline:
+            ts_files = adfobj.data.get_ref_timeseries_file(var)
+        else:
+            ts_files = adfobj.data.get_timeseries_file(case_name, var)
+
+        ts_ds = adfobj.data.load_timeseries_dataset(ts_files)
+
+        
 
         # Store the original cftime time values
         #print("ts_ds['time']",ts_ds['time'],"\n\n")
@@ -70,7 +79,7 @@ def grid_timeseries(**kwargs):
                          + ".".join([case_name, hist_str, var, time_string, "nc"])
                          )
         regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_gridded.nc")
-        #rgdata = rgdata.assign_attrs(attrs_dict)
+        rgdata = rgdata.assign_attrs(attrs_dict)
         # Restore the original cftime time values
         rgdata = rgdata.assign_coords(time=('time', original_time))
         #print("regridded_file_loc",rgdata.time,"\n\n")
