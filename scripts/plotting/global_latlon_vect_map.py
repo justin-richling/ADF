@@ -326,7 +326,7 @@ def global_latlon_vect_map(adfobj):
                     dmsg = f"\t    WARNING: No regridded baseline file for {base_name} for variable `{data_var[0]}`/`{data_var[1]}`, global lat/lon vect plotting skipped."
                     adfobj.debug_log(dmsg)
                     continue
-                o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
+                o_has_dims = pf.validate_dims(uodata    , ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
                 if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
                     print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
                     continue
@@ -400,84 +400,7 @@ def global_latlon_vect_map(adfobj):
                     dmsg = f"\t    WARNING: No test file for {case_name} for variable `{var}`, global lat/lon mean plotting skipped."
                     adfobj.debug_log(dmsg)
                     continue
-                """u_has_dims = pf.validate_dims(umdata, ["lat", "lon", "lev"])
-                v_has_dims = pf.validate_dims(vmdata, ["lat", "lon", "lev"])
-                if (u_has_dims['has_lev']) and (not pres_levs):
-                    print(f"\t    WARNING: skipping global map for {var} as it has more than lev dimension, but no pressure levels were provided")
-                    continue
-                if (v_has_dims['has_lev']) and (not pres_levs):
-                    print(f"\t    WARNING: skipping global map for {var} as it has more than lev dimension, but no pressure levels were provided")
-                    continue"""
-                
 
-                """# load re-gridded model files:
-                umclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
-                vmclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var_pair}_*.nc"))
-
-                if len(umclim_fils) > 1:
-                    umclim_ds = xr.open_mfdataset(umclim_fils, combine='by_coords')
-                elif len(umclim_fils) == 1:
-                    umclim_ds = xr.open_dataset(umclim_fils[0])
-                else:
-                    print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
-                    print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
-                    print(f"\t      The glob is: {data_src}_{case_name}_{var}_*.nc")
-                    continue
-                #End if
-
-                if len(vmclim_fils) > 1:
-                    vmclim_ds = xr.open_mfdataset(vmclim_fils, combine='by_coords')
-                elif len(vmclim_fils) == 1:
-                    vmclim_ds = xr.open_dataset(vmclim_fils[0])
-                else:
-                    #The vector pair was never processed, so skip varaible:
-                    print(f"\t    WARNING: Missing vector pair '{var_pair}' for variable '{var}', so skipping variable")
-                    continue
-                #End if
-
-                #Extract variable of interest
-                umdata = umclim_ds[var].squeeze()
-                vmdata = vmclim_ds[var_pair].squeeze()
-
-                #Convert units if requested:
-                umdata = umdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
-                vmdata = vmdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)"""
-
-                """#Check dimensions:
-                has_lat, has_lev = pf.zm_validate_dims(umdata)
-
-                # check if there is a lat dimension:
-                if not has_lat:
-                    print(
-                        f"\t -  {var} is missing a lat dimension for '{case_name}', cannot continue to plot."
-                    )
-                    continue
-                # End if"""
-
-                """# update units
-                # NOTE: looks like our climo files don't have all their metadata
-                uodata.attrs['units'] = vres.get("new_unit", uodata.attrs.get('units', 'none'))
-                vodata.attrs['units'] = vres.get("new_unit", vodata.attrs.get('units', 'none'))
-                umdata.attrs['units'] = vres.get("new_unit", umdata.attrs.get('units', 'none'))
-                vmdata.attrs['units'] = vres.get("new_unit", vmdata.attrs.get('units', 'none'))"""
-
-                """#Determine if observations/baseline have the correct dimensions:
-                if has_lev:
-                    has_dims = pf.lat_lon_validate_dims(uodata.isel(lev=0))
-                else:
-                    has_dims = pf.lat_lon_validate_dims(uodata)
-                #End if
-
-                if has_dims:
-                    #If observations/baseline CAM have the correct
-                    #dimensions, does the input CAM run have correct
-                    #dimensions as well?
-                    if has_lev_ref:
-                        has_dims_cam = pf.lat_lon_validate_dims(umdata.isel(lev=0))
-                    else:
-                        has_dims_cam = pf.lat_lon_validate_dims(umdata)
-                    #End if
-                #End if"""
 
 
                 #Determine dimensions of variable:
@@ -558,8 +481,8 @@ def global_latlon_vect_map(adfobj):
                                 continue
                             #End if"""
 
-                            if (not (pres in umdata['lev'])) or (not (pres in uodata['lev'])):
-                                print(f"\t    WARNING: plot_press_levels value '{pres}' not present in {var} [test: {(pres in umdata['lev'])}, ref: {pres in uodata['lev']}], so skipping.")
+                            if (not (lv in umdata['lev'])) or (not (lv in uodata['lev'])):
+                                print(f"\t    WARNING: plot_press_levels value '{lv}' not present in {var} [test: {(lv in umdata['lev'])}, ref: {lv in uodata['lev']}], so skipping.")
                                 continue
 
                             #Loop over season dictionary:
