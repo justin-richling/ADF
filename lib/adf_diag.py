@@ -678,7 +678,7 @@ class AdfDiag(AdfWeb):
                         # but is also not in the history file(s)
                         else:
                             msg = f"\t    WARNING: {var} is not in the history file for case  "
-                            msg += "'{case_name}' nor can it be derived. Script will continue "
+                            msg += f"'{case_name}' nor can it be derived. Script will continue "
                             msg += " to the text variable."
                             print(msg)
                             logmsg = f"create time series for {case_name}:"
