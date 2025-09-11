@@ -173,8 +173,10 @@ def cam_taylor_diagram(adfobj):
                 else:
                     case_climo_loc = case_climo_locs[casenumber]
                 case_x = _retrieve(adfobj, v, case, case_climo_loc)
+                print("HEREasdsd")
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
+                print("HEREasdsd-2")
                 result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
                 print("HERE3")
         #
