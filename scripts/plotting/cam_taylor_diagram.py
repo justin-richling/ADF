@@ -177,6 +177,7 @@ def cam_taylor_diagram(adfobj):
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
                 print("HEREasdsd-2")
+                # THIS IS WHERE IS IS BREAKING!!!
                 result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
                 print("HERE3")
         #
