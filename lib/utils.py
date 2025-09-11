@@ -47,9 +47,6 @@ def grid_timeseries(adfobj, **kwargs):
         raise AdfError(msg)
 
     for var in diag_var_list:
-        print("VAR",var,"\n")
-        #ts_ds = xr.open_dataset(sorted(ts_dir.glob(f"*.{var}.*nc"))[0])
-
         if is_baseline:
             ts_files = adfobj.data.get_ref_timeseries_file(var)
         else:
@@ -61,7 +58,6 @@ def grid_timeseries(adfobj, **kwargs):
                          )
         ts_outfil_str = ts_outfil_str.replace(".nc","_gridded.nc")
 
-        print("ts_outfil_str",ts_outfil_str,"\n")
         if not ts_files:
             print(f"    No time series files found for variable '{var}' in case '{case_name}', skipping gridding for this variable.")
             continue
@@ -101,10 +97,7 @@ def grid_timeseries(adfobj, **kwargs):
                                     #"climatology_files": climatology_files_str,
                                     "native_grid_to_latlon":f"xesmf Regridder; method: {method}"
                                 }
-        """ts_outfil_str = (str(ts_dir)
-                         + os.sep
-                         + ".".join([case_name, hist_str, var, time_string, "nc"])
-                         )"""
+
         regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_gridded.nc")
         rgdata = rgdata.assign_attrs(attrs_dict)
         # Restore the original cftime time values
@@ -226,29 +219,16 @@ def  unstructure_regrid(model_dataset, var_name, comp, wgt_file, method, latlon_
         print("Looks like no lat lon file is supplied. God speed!")
 
     model_dataset[var_name] = model_dataset[var_name].fillna(0)
-    #mdata = model_dataset[var_name]
 
     if comp == "lnd":
         model_dataset['landfrac'] = model_dataset['landfrac'].fillna(0)
-        #mdata = mdata * model_dataset.landfrac  # weight flux by land frac
         model_dataset[var_name] = model_dataset[var_name] * model_dataset.landfrac  # weight flux by land frac
         s_data = model_dataset.landmask#.isel(time=0)
         d_data = latlon_ds.landmask
-
-        """# Combine dimensions from both datasets while keeping ds2 attributes
-        d_data = xr.Dataset(
-            coords={"lat": latlon_ds["lat"], "lon": latlon_ds["lon"], "time": time_file["time"]},
-            attrs=latlon_ds.attrs  # Copy attributes from ds2
-        )
-        print("AHHHHHH",d_data,"\n\n")
-        # Add the 'temperature' variable from ds2 to new_ds
-        d_data["landmask"] = time_file["landmask"]
-        print("AHHHHHH2",d_data,"\n\n")
-        d_data = d_data.landmask"""
     else:
-        s_data = None #mdata.isel(time=0)
-        d_data = None #latlon_ds[var_name]
-    print("AHHHHHH3",d_data,"\n\n")
+        s_data = None
+        d_data = None
+
     #Grid model data to match target grid lat/lon:
     regridder = make_se_ts_regridder(weight_file=wgt_file,
                                     s_data = s_data,
