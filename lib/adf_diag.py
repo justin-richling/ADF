@@ -893,7 +893,7 @@ class AdfDiag(AdfWeb):
                 unstruct_plotting = self.unstructured_plotting
                 if not unstruct_plotting:
                     is_baseline = False
-                    if (not self.get_basic_info("compare_obs")) and (case_name == self.ref_case_label):
+                    if (not self.get_basic_info("compare_obs")) and (case_name == AdfData.ref_case_label):
                         is_baseline = True
                     # TEMPORARY: do a quick check if this on native grid and regrid
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
