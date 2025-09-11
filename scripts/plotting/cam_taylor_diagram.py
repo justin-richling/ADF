@@ -57,9 +57,6 @@ def cam_taylor_diagram(adfobj):
     eyear_cases = adfobj.climo_yrs["eyears"]
 
     case_climo_locs = adfobj.get_cam_info('cam_climo_loc', required=True)
-    """if (Path(case_climo_loc) / "regrid").is_dir():
-        case_climo_loc = Path(case_climo_loc) / "regrid"
-    """
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
@@ -169,10 +166,10 @@ def cam_taylor_diagram(adfobj):
         for v in var_list:
             base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
-                grid_path = Path(case_climo_locs[casenumber]) / "regrid"
+                grid_path = Path(case_climo_locs[casenumber]) / "gridded"
                 if grid_path.is_dir():
                     print("Using gridded file, eh?")
-                    case_climo_loc = Path(case_climo_locs[casenumber]) / "regrid"
+                    case_climo_loc = grid_path
                 else:
                     case_climo_loc = case_climo_locs[casenumber]
                 case_x = _retrieve(adfobj, v, case, case_climo_loc)
