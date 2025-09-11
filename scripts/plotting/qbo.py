@@ -35,7 +35,7 @@ def qbo(adfobj):
 
     #Extract relevant info from the ADF:
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
+    case_locs = adfobj.get_cam_info('cam_ts_loc', required=True)
     base_name = adfobj.get_baseline_info('cam_case_name')
     base_loc = adfobj.get_baseline_info('cam_ts_loc')
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
@@ -91,7 +91,7 @@ def qbo(adfobj):
 
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
-        case_loc.append(base_loc)
+        case_locs.append(base_loc)
         case_names.append(base_name)
     #End if
 
@@ -99,8 +99,8 @@ def qbo(adfobj):
     obs = xr.open_dataset(obsdir+"/U_ERA5_5S_5N_1979_2019.nc").U_5S_5N
 
     #----Read in the case data and baseline
-    ncases = len(case_loc)
-    casedat = [pf.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+    ncases = len(case_locs)
+    casedat = [pf.load_dataset(sorted(Path(case_locs[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
@@ -123,7 +123,7 @@ def qbo(adfobj):
     for i in range(0,ncases,1):
         has_dims = pf.validate_dims(casedat[i].U, ['lon'])
         if not has_dims['has_lon']:
-            print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_loc[i]}', cannot continue to plot.")
+            print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_locs[i]}', cannot continue to plot.")
         else:
             casedatzm.append(casedat[i].U.mean("lon"))
     if len(casedatzm) == 0:
