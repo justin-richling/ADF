@@ -16,7 +16,7 @@ from pathlib import Path
 import os
 from adf_base import AdfError
 
-def grid_timeseries(adfobj, **kwargs, is_baseline):
+def grid_timeseries(adfobj, **kwargs):
     #regrd_ts_loc = Path(test_output_loc[case_idx])
     # Check if time series directory exists, and if not, then create it:
     # Use pathlib to create parent directories, if necessary.
@@ -31,6 +31,8 @@ def grid_timeseries(adfobj, **kwargs, is_baseline):
     case_name = kwargs["case_name"]
     hist_str = kwargs["hist_str"]
     time_string = kwargs["time_string"]
+    is_baseline = kwargs["is_baseline"]
+    #is_baseline = kwargs.get("is_baseline")
 
     regrd_ts_loc = ts_dir / "regrid"
     Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
