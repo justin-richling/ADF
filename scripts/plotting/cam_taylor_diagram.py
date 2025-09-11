@@ -56,9 +56,10 @@ def cam_taylor_diagram(adfobj):
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
-    case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
-    if (Path(case_climo_loc) / "regrid").is_dir():
+    case_climo_locs = adfobj.get_cam_info('cam_climo_loc', required=True)
+    """if (Path(case_climo_loc) / "regrid").is_dir():
         case_climo_loc = Path(case_climo_loc) / "regrid"
+    """
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
@@ -168,7 +169,9 @@ def cam_taylor_diagram(adfobj):
         for v in var_list:
             base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
-                case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber])
+                if (Path(case_climo_locs[casenumber]) / "regrid").is_dir():
+                    case_climo_loc = Path(case_climo_locs[casenumber]) / "regrid"
+                case_x = _retrieve(adfobj, v, case, case_climo_loc)
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
                 result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
