@@ -115,7 +115,7 @@ def global_latlon_map(adfobj):
         #kwargs["mesh_file"] = mesh_file
     else:
         unstructured=False
-    print("kwargs", kwargs)
+    #print("kwargs", kwargs)
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]

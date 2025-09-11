@@ -69,7 +69,7 @@ def global_latlon_vect_map(adfobj):
         #kwargs["mesh_file"] = mesh_file
     else:
         unstructured=False
-    print("kwargs", kwargs)
+    #print("kwargs", kwargs)
 
     #CAM simulation variables:
     case_names = adfobj.get_cam_info("cam_case_name", required=True)

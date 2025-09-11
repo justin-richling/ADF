@@ -42,7 +42,7 @@ def polar_map(adfobj):
         #kwargs["mesh_file"] = mesh_file
     else:
         unstructured=False
-    print("kwargs", kwargs)
+    #print("kwargs", kwargs)
 
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
