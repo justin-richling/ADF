@@ -40,9 +40,9 @@ def make_se_regridder(weight_file, s_data, d_data,
     if isinstance(d_data, xr.DataArray):
         d_mask = xr.DataArray(d_data.values, dims=("lat", "lon"))  
         dummy_out['mask']= d_mask
-    print("VAR:",var)            
-    print("---------------\ndummy_in",dummy_in,"\n\n")
-    print("dummy_out",dummy_out,"\n\n")
+    #print("VAR:",var)            
+    #print("---------------\ndummy_in",dummy_in,"\n\n")
+    #print("dummy_out",dummy_out,"\n\n")
 
 
     # do source and destination grids need masks here?
