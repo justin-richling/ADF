@@ -176,6 +176,7 @@ def cam_taylor_diagram(adfobj):
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
                 result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
+                print("HERE3")
         #
         # -- PLOTTING (one per season) --
         #
@@ -419,6 +420,7 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
     v_to_derive = ['TropicalLandPrecip', 'TropicalOceanPrecip', 'EquatorialPacificStress',
                 'U300', 'ColumnRelativeHumidity', 'ColumnTemperature', 'Land2mTemperature']
     if variable not in v_to_derive:
+        print("HERE")
         fils = sorted(Path(location).glob(f"{casename}*_{variable}_*.nc"))
         if len(fils) == 0:
             raise ValueError(f"something went wrong for variable: {variable}")
@@ -431,6 +433,7 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
         else:
             da = ds[variable]
     else:
+        print("HERE2")
         func = get_derive_func(variable)
         da = func(adfobj, casename, location)  # these ONLY return DataArray
         if return_dataset:
