@@ -1238,7 +1238,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             else:
                 #  - contourf to show magnitude w/ colorbar
                 #  - vectors (colored or not) to show flow --> subjective (?) choice for how to thin out vectors to be legible
-                ax[i].contourf(lons, lats, fld, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True,)
+                img.append(ax[i].contourf(lons, lats, fld, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True,))
                 #ua, va = other_wrap_fields[i]
                 ax[i].quiver(lons[skip], lats[skip], ua[skip], va[skip], fld.values[skip], transform=ccrs.PlateCarree(), cmap='Reds')
                 #ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
@@ -1343,23 +1343,23 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
         ax2.set_title(base_title, loc='left', fontsize=tiFontSize)
 
     #Set stats: area_avg
-    ax1.set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
+    ax[0].set_title(f"Mean: {mdl_mag.weighted(wgt).mean().item():5.2f}\nMax: {mdl_mag.max():5.2f}\nMin: {mdl_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-    ax2.set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.max():5.2f}\nMin: {obs_mag.min():5.2f}", loc='right',
+    ax[1].set_title(f"Mean: {obs_mag.weighted(wgt).mean().item():5.2f}\nMax: {obs_mag.max():5.2f}\nMin: {obs_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
-    ax3.set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {diff_mag.min():5.2f}", loc='right',
+    ax[2].set_title(f"Mean: {diff_mag.weighted(wgt).mean().item():5.2f}\nMax: {diff_mag.max():5.2f}\nMin: {diff_mag.min():5.2f}", loc='right',
                        fontsize=tiFontSize)
     #ax4.set_title(f"Mean: {pct_mag.weighted(wgt).mean().item():5.2f}\nMax: {pct_mag.max():5.2f}\nMin: {pct_mag.min():5.2f}", loc='right',
     #                   fontsize=tiFontSize)
 
 
     # set rmse title:
-    ax3.set_title(f"RMSE: ", fontsize=tiFontSize)
-    ax3.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
+    ax[2].set_title(f"RMSE: ", fontsize=tiFontSize)
+    ax[2].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=tiFontSize)
 
     if "units" in kwargs:
-        ax3.set_ylabel(f"[{kwargs['units']}]")
-        ax3.set_ylabel(f"[{kwargs['units']}]")
+        ax[2].set_ylabel(f"[{kwargs['units']}]")
+        ax[2].set_ylabel(f"[{kwargs['units']}]")
     #End if
 
     """# Add cosmetic plot features:
@@ -1376,7 +1376,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     #End for
 
     # Add colorbar to vector plot:
-    cb_c2_ax = inset_axes(ax2,
+    cb_c2_ax = inset_axes(ax[1],
                    width="5%",  # width = 5% of parent_bbox width
                    height="100%",  # height : 100%
                    loc='lower left',
@@ -1391,7 +1391,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
     #ax3.quiver(lons[skip], lats[skip], udiffld[skip], vdiffld[skip], transform=ccrs.PlateCarree())
 
     # Add color bar to difference plot:
-    cb_d_ax = inset_axes(ax3,
+    cb_d_ax = inset_axes(ax[2],
                    width="5%",  # width = 5% of parent_bbox width
                    height="100%",  # height : 100%
                    loc='lower left',
