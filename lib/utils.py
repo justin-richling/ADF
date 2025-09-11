@@ -55,6 +55,11 @@ def grid_timeseries(adfobj, **kwargs):
         else:
             ts_files = adfobj.data.get_timeseries_file(case_name, var)
 
+        ts_outfil_str = (str(ts_dir)
+                         + os.sep
+                         + ".".join([case_name, hist_str, var, time_string, "nc"])
+                         )
+
         print("ts_files",ts_files,"\n")
         if not ts_files:
             print(f"    No time series files found for variable '{var}' in case '{case_name}', skipping gridding for this variable.")
@@ -74,8 +79,9 @@ def grid_timeseries(adfobj, **kwargs):
 
         # Load the time series dataset
         ts_ds = adfobj.data.load_timeseries_dataset(ts_files)
-
-        
+        if ts_ds is None:
+            print(f"    No time series data set for variable '{var}' in case '{case_name}', skipping gridding for this variable.")
+            continue
 
         # Store the original cftime time values
         #print("ts_ds['time']",ts_ds['time'],"\n\n")
@@ -94,10 +100,10 @@ def grid_timeseries(adfobj, **kwargs):
                                     #"climatology_files": climatology_files_str,
                                     "native_grid_to_latlon":f"xesmf Regridder; method: {method}"
                                 }
-        ts_outfil_str = (str(ts_dir)
+        """ts_outfil_str = (str(ts_dir)
                          + os.sep
                          + ".".join([case_name, hist_str, var, time_string, "nc"])
-                         )
+                         )"""
         regridded_file_loc = regrd_ts_loc / Path(ts_outfil_str).parts[-1].replace(".nc","_gridded.nc")
         rgdata = rgdata.assign_attrs(attrs_dict)
         # Restore the original cftime time values
