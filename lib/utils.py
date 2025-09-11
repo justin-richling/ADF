@@ -55,6 +55,7 @@ def grid_timeseries(adfobj, **kwargs):
         else:
             ts_files = adfobj.data.get_timeseries_file(case_name, var)
 
+        print("ts_files",ts_files,"\n")
         ts_ds = adfobj.data.load_timeseries_dataset(ts_files)
 
         
