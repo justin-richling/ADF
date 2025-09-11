@@ -131,7 +131,7 @@ def qbo(adfobj):
             case_ts_loc = grid_path
         else:
             case_ts_loc = case_locs[i]
-        casedat.append(pf.load_dataset(Path(case_ts_loc).glob(f"{case_names[i]}.*.U.*.nc")))
+        casedat.append(pf.load_dataset(sorted(Path(case_ts_loc).glob(f"{case_names[i]}.*.U.*.nc"))))
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
