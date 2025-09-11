@@ -1497,7 +1497,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         #print("Plotting functions mdlfld",mdlfld,"\n\n")
         wrap_fields = (mdlfld, obsfld, pctld, diffld)
         #area_avg = [global_average(x, wgt) for x in wrap_fields]
-        area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True, indataset=indataset) for x in wrap_fields]
+        area_avg = [spatial_average(x, wgt,spatial_dims=None,unstruct=True) for x in wrap_fields]
         #spatial_average(indata, weights=None, spatial_dims=None, unstruct=False, indataset=None)
         #spatial_average(indata, weights=None, spatial_dims=None)
         if area_avg is None:
