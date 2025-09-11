@@ -57,6 +57,8 @@ def cam_taylor_diagram(adfobj):
     eyear_cases = adfobj.climo_yrs["eyears"]
 
     case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
+    if (Path(case_climo_loc) / "regrid").is_dir():
+        case_climo_loc = Path(case_climo_loc) / "regrid"
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
