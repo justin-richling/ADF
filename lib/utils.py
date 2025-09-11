@@ -59,6 +59,20 @@ def grid_timeseries(adfobj, **kwargs):
         if not ts_files:
             print(f"    No time series files found for variable '{var}' in case '{case_name}', skipping gridding for this variable.")
             continue
+
+        # Check if clobber is true for file
+        if Path(ts_outfil_str).is_file():
+            #if overwrite_ts[case_idx]:
+            if 2==1:
+                Path(ts_outfil_str).unlink()
+            else:
+                #msg = f"[{__name__}] Warning: '{var}' file was found "
+                msg = f"\t    INFO: '{var}' gridded file was found "
+                msg += "and overwrite is False. Will use existing file."
+                print(msg)
+                continue
+
+        # Load the time series dataset
         ts_ds = adfobj.data.load_timeseries_dataset(ts_files)
 
         
