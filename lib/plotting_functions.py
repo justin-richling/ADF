@@ -1227,7 +1227,6 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
             norm = cp_info['norm1']
 
         ua, va = other_wrap_fields[i]
-        print("ua",ua)
 
         # Unstructured grid check
         if not unstructured:
