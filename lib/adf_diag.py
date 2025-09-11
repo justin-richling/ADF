@@ -892,11 +892,14 @@ class AdfDiag(AdfWeb):
                 grid_ts = False
                 unstruct_plotting = self.unstructured_plotting
                 if not unstruct_plotting:
+                    is_baseline = False
+                    if (not self.get_basic_info("compare_obs")) and (case_name == self.ref_case_label):
+                        is_baseline = True
                     # TEMPORARY: do a quick check if this on native grid and regrid
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                     ts_file_ds = xr.open_dataset(ts_0)
 
-                    if adf_utils.check_unstructured(ts_file_ds, case_name):
+                    if adf_utils.check_unstructured(ts_file_ds, case_name, is_baseline):
                         print()
                         latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
                         print("latlon_file",latlon_file,"\n")
@@ -914,7 +917,7 @@ class AdfDiag(AdfWeb):
                                   "case_name":case_name, "hist_str":hist_str,
                                   "time_string":time_string, "comp":comp,"time_file":time_file
                                 }
-                        adf_utils.grid_timeseries(**kwargs)
+                        adf_utils.grid_timeseries(self, **kwargs)
 
             # End for hist_str
         # End cases loop
