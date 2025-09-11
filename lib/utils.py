@@ -61,7 +61,7 @@ def grid_timeseries(adfobj, **kwargs):
                          )
         ts_outfil_str = ts_outfil_str.replace(".nc","_gridded.nc")
 
-        print("ts_files",ts_files,"\n")
+        print("ts_outfil_str",ts_outfil_str,"\n")
         if not ts_files:
             print(f"    No time series files found for variable '{var}' in case '{case_name}', skipping gridding for this variable.")
             continue
