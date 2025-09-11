@@ -430,10 +430,13 @@ def _retrieve(adfobj, variable, casename, location, return_dataset=False):
         else:
             print("HERE1.75",fils[0])
             ds = xr.open_dataset(fils[0])
+            print("HERE1.85")
         if return_dataset:
             da = ds
         else:
+            print("HERE1.95")
             da = ds[variable]
+            print("HERE1.99")
     else:
         print("HERE2")
         func = get_derive_func(variable)
