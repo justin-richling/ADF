@@ -733,7 +733,6 @@ def _interpolate_levs(model_dataset, var_name, **kwargs):
             #Don't process variable:
             return None
         #End if
-        print("array in has_lev:",rgdata_interp)
     else:
         #Just rename variable:
         rgdata_interp = rgdata

@@ -194,7 +194,6 @@ class AdfData:
     def load_climo_dataset(self, case, field, **kwargs):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_climo_file(case, field)
-        print("case fils", case, fils)
         if not fils:
             return None
         return self.load_dataset(fils, **kwargs)
@@ -204,7 +203,6 @@ class AdfData:
         """Retrieve the climo file path(s) for variablename for a specific case."""
         caseindex = (self.case_names).index(case) # the entry for specified case
         a = self.adf.get_cam_info("cam_climo_loc", required=True) # list of paths (could be multiple cases)
-        print("case cam_climo_loc", a)
         model_cl_loc = Path(a[caseindex])
         return sorted(model_cl_loc.glob(f"{case}_{variablename}_climo.nc"))
 
@@ -219,7 +217,6 @@ class AdfData:
     def load_reference_climo_dataset(self, case, field, **kwargs):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         fils = self.get_reference_climo_file(field)
-        print("base fils", case, fils)
         if not fils:
             return None
         return self.load_dataset(fils, **kwargs)
@@ -231,7 +228,6 @@ class AdfData:
             fils = self.ref_var_loc.get(var, None)
             return [fils] if fils is not None else None
         ref_loc = self.adf.get_baseline_info("cam_climo_loc")
-        print("baseline cam_climo_loc", ref_loc)
         # NOTE: originally had this looking for *_baseline.nc
         fils = sorted(Path(ref_loc).glob(f"{self.ref_case_label}_{var}_climo.nc"))
         if fils:

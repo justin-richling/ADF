@@ -736,7 +736,6 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, r
             #Don't process variable:
             return None
         #End if
-        print("array in has_lev:",rgdata_interp)
     else:
         #Just rename variable:
         rgdata_interp = rgdata
@@ -880,29 +879,6 @@ def _regrid(model_dataset, var_name, comp, wgt_file, method, latlon_file, **kwar
         rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
     if comp == "lnd":
         rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
-
-
-
-    """if comp == "lnd":
-        if method == 'coservative':
-            rgdata = regrid_se_data_conservative(regridder, model_dataset, comp_grid)
-        if method == 'bilinear':
-            rgdata = regrid_se_data_bilinear(regridder, model_dataset, comp_grid)
-        rgdata[var_name] = (rgdata[var_name] / rgdata.landfrac)
-
-    if comp == "atm":
-        if method == 'coservative':
-            if 'lev' in model_dataset.dims:
-                rgdata = regrid_3d_conservative(regridder, model_dataset)
-                print("WHAT THE HELL IS HAPPENING:",rgdata,"\n\n\n")
-            else:
-                rgdata = regrid_atm_se_data_conservative(regridder, model_dataset, comp_grid)
-        if method == 'bilinear':
-            rgdata = regrid_atm_se_data_bilinear(regridder, model_dataset, comp_grid)
-    """
-
-    #rgdata['lat'] = latlon_ds.lat #???
-    if comp == "lnd":
         rgdata['landmask'] = latlon_ds.landmask
         rgdata['landfrac'] = rgdata.landfrac.isel(time=0)
 
