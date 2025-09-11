@@ -218,14 +218,14 @@ def regrid_and_vert_interp(adf):
                 #Check again if re-gridded file already exists:
                 if not regridded_file_loc.is_file():
 
-                    #Create list of regridding target files (we should explore intake as an alternative to having this kind of repeated code)
+                    """#Create list of regridding target files (we should explore intake as an alternative to having this kind of repeated code)
                     # NOTE: This breaks if you have files from different cases in same directory!
                     if adf.compare_obs:
                         #For now, only grab one file (but convert to list for use below):
                         tclim_fils = [tclimo_loc]
                     else:
                        tclim_fils = adf.data.get_reference_climo_file(var)
-                    #End if
+                    #End if"""
 
                     #Write to debug log if enabled:
                     #adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
@@ -234,9 +234,9 @@ def regrid_and_vert_interp(adf):
                     if tclim_ds is None:
                         print(f"\t    WARNING: regridding {var} failed, no climo file for case '{target}'. Continuing to next variable.")
                         continue
-                    else:
-                        #Open single file as new xarray dataset:
-                        tclim_ds = xr.open_dataset(tclim_fils[0])
+                    #else:
+                    #    #Open single file as new xarray dataset:
+                    #    tclim_ds = xr.open_dataset(tclim_fils[0])
                     #End if
 
                     mclim_ds = adf.data.load_climo_dataset(case_name, var)
