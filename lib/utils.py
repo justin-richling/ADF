@@ -34,7 +34,7 @@ def grid_timeseries(adfobj, **kwargs):
     is_baseline = kwargs["is_baseline"]
     #is_baseline = kwargs.get("is_baseline")
 
-    regrd_ts_loc = ts_dir / "regrid"
+    regrd_ts_loc = ts_dir / "gridded"
     Path(regrd_ts_loc).mkdir(parents=True, exist_ok=True)
     # Check that path actually exists:
     if not regrd_ts_loc.is_dir():
