@@ -56,6 +56,9 @@ def grid_timeseries(adfobj, **kwargs):
             ts_files = adfobj.data.get_timeseries_file(case_name, var)
 
         print("ts_files",ts_files,"\n")
+        if not ts_files:
+            print(f"    No time series files found for variable '{var}' in case '{case_name}', skipping gridding for this variable.")
+            continue
         ts_ds = adfobj.data.load_timeseries_dataset(ts_files)
 
         
