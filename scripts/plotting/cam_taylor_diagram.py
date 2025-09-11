@@ -169,8 +169,12 @@ def cam_taylor_diagram(adfobj):
         for v in var_list:
             base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
-                if (Path(case_climo_locs[casenumber]) / "regrid").is_dir():
+                grid_path = Path(case_climo_locs[casenumber]) / "regrid"
+                if grid_path.is_dir():
+                    print("Using gridded file, eh?")
                     case_climo_loc = Path(case_climo_locs[casenumber]) / "regrid"
+                else:
+                    case_climo_loc = case_climo_locs[casenumber]
                 case_x = _retrieve(adfobj, v, case, case_climo_loc)
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
