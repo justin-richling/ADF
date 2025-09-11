@@ -235,10 +235,10 @@ def amwg_table(adf):
             # Note that we hard-code for h0 because we only want to make climos of monthly output
             if is_baseline:
                 #ts_files = adf.data.get_ref_timeseries_file(var)
-                data = load_reference_timeseries_da(var)
+                data = adf.load_reference_timeseries_da(var)
             else:
                 #ts_files = adf.data.get_timeseries_file(case_name, var)
-                data = load_timeseries_da(case_name, var)
+                data = adf.load_timeseries_da(case_name, var)
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
