@@ -892,9 +892,12 @@ class AdfDiag(AdfWeb):
                 grid_ts = False
                 unstruct_plotting = self.unstructured_plotting
                 if not unstruct_plotting:
-                    is_baseline = False
-                    if (not self.get_basic_info("compare_obs")) and (case_name == AdfData.ref_case_label):
+                    #is_baseline = False
+                    """if (not self.get_basic_info("compare_obs")) and (case_name == AdfData.ref_case_label):
                         is_baseline = True
+                    
+                    if baseline:
+                        case_names"""
                     # TEMPORARY: do a quick check if this on native grid and regrid
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                     ts_file_ds = xr.open_dataset(ts_0)
@@ -916,7 +919,7 @@ class AdfDiag(AdfWeb):
                                   "method":method, "diag_var_list":self.diag_var_list,
                                   "case_name":case_name, "hist_str":hist_str,
                                   "time_string":time_string, "comp":comp,"time_file":time_file,
-                                  "is_baseline":is_baseline
+                                  "is_baseline":baseline
                                 }
                         adf_utils.grid_timeseries(self, **kwargs)
 
