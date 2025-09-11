@@ -899,7 +899,7 @@ class AdfDiag(AdfWeb):
                     ts_0 = sorted(Path(ts_dir).glob("*.nc"))[0]
                     ts_file_ds = xr.open_dataset(ts_0)
 
-                    if adf_utils.check_unstructured(ts_file_ds, case_name, is_baseline):
+                    if adf_utils.check_unstructured(ts_file_ds, case_name):
                         print()
                         latlon_file   = self.latlon_files[f"{case_type_string}_latlon_file"]
                         print("latlon_file",latlon_file,"\n")
@@ -915,7 +915,8 @@ class AdfDiag(AdfWeb):
                         kwargs = {"ts_dir":ts_dir, "latlon_file":latlon_file, "wgts_file":wgts_file,
                                   "method":method, "diag_var_list":self.diag_var_list,
                                   "case_name":case_name, "hist_str":hist_str,
-                                  "time_string":time_string, "comp":comp,"time_file":time_file
+                                  "time_string":time_string, "comp":comp,"time_file":time_file,
+                                  "is_baseline":is_baseline
                                 }
                         adf_utils.grid_timeseries(self, **kwargs)
 
