@@ -59,6 +59,7 @@ def grid_timeseries(adfobj, **kwargs):
                          + os.sep
                          + ".".join([case_name, hist_str, var, time_string, "nc"])
                          )
+        ts_outfil_str = ts_outfil_str.replace(".nc","_gridded.nc")
 
         print("ts_files",ts_files,"\n")
         if not ts_files:
