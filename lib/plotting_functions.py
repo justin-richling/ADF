@@ -2057,10 +2057,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
-    
-    # determine levels & color normalization:
-    minval = np.min([np.min(adata), np.min(bdata)])
-    maxval = np.max([np.max(adata), np.max(bdata)])
 
     # Start color map/bar configurations
     # ----------------------------------
@@ -2175,7 +2171,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     #print("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1)
     if levels1 is None:
-        dprint("Setting the levels from max/min", debug=debug)
+        dprint("\tSetting the levels from max/min", debug=debug)
         levels1 = np.linspace(minval, maxval, 12)
     #print("\tLEVELS: ",type(levels1)," - ",levels1)
 
@@ -2206,6 +2202,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #End if
 
     # Difference options -- Check in kwargs for colormap and levels
+    # determine levels & color normalization:
+    minval = np.min(diffdata)
+    maxval = np.max(diffdata)
     # COLOR MAP
     #----------
     cmapdiff = 'coolwarm'
@@ -2288,7 +2287,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     #dprint("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
     if levelsdiff is None:
-        dprint("Setting the diff levels from max/min", debug=debug)
+        dprint("\tSetting the diff levels from max/min", debug=debug)
         levelsdiff = np.linspace(minval, maxval, 12)
     #dprint("\tLEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
 
@@ -2296,10 +2295,22 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         absmaxdif = np.max(np.abs(diffdata))
         levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
 
+    # color normalization for difference
+    if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
+        #print("\tIS IT HERE?")
+        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
+    else:
+        #print("\tOR HERE?")
+        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
+    dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
+
     
     # Percent Difference options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #----------
+    # determine levels & color normalization:
+    minval = np.min(diffdata)
+    maxval = np.max(diffdata)
     if "pct_diff_colormap" in plot_type_dict:
         cmappct = plot_type_dict["pct_diff_colormap"]
     else:
@@ -2340,16 +2351,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         plot_log_p = False
 
-    # color normalization for difference
-    if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
-        #print("\tIS IT HERE?")
-        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
-    else:
-        #print("\tOR HERE?")
-        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-    dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
-    
-    
 
     # extract any MPL kwargs that should be passed on:
     subplots_opt = {}
