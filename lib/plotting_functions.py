@@ -2064,6 +2064,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
     maxval = np.max([np.max(adata), np.max(bdata)])
+    dprint("\tCase Min:", np.min(adata), debug=debug)
+    dprint("\tCase Max:", np.max(adata), debug=debug)
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
@@ -2075,12 +2077,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #cmap1 = 'fakemap'
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
-        dprint("\tcmap:", cmap, debug=debug)
+        #dprint("\tcmap:", cmap, debug=debug)
         if (isinstance(cmap, dict)) and ("lev" in kwargs):
             cmap1 = cmap.get(kwargs["lev"], cmap1)
         else:
             cmap1 = cmap
-        dprint("\tcmap1:", cmap1, debug=debug)
+       # dprint("\tcmap1:", cmap1, debug=debug)
     if cmap1 not in plt.colormaps():
         print(f"\t{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
         try:
@@ -2095,8 +2097,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cm = None
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
-        dprint("\tMin:", np.min(adata), debug=debug)
-        dprint("\tMax:", np.max(adata), debug=debug)
         if not cm:
             print(f"\t{cmap1} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
             if adata.name == "PRECT":
@@ -2123,9 +2123,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #    cmap1 = 'coolwarm'
         else:
             cmap1 = cm
-    dprint("\tSelected cmap:",cmap1, debug=debug)
-
-    dprint(f"\n\t{adata.name} cmap1 ",cmap1, debug=debug)
+    dprint(f"\n\t{adata.name} colormap ",cmap1, debug=debug)
     
     # CONTOUR LEVELS
     #---------------
@@ -2313,8 +2311,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     # determine levels & color normalization:
-    minval = np.min(diffdata)
-    maxval = np.max(diffdata)
+    #minval = np.min(diffdata)
+    #maxval = np.max(diffdata)
     if "pct_diff_colormap" in plot_type_dict:
         cmappct = plot_type_dict["pct_diff_colormap"]
     else:
