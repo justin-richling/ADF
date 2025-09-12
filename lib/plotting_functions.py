@@ -2058,8 +2058,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     debug = False
     if kwargs["plot_type"] == "zonal_mean":
         debug = True
-
-    dprint("TRY THIS BOI\n---------------\n",adata.name, debug=debug)
+    boi = f"TRY THIS BOI\n---------------\n{adata.name}"
+    if "lev" in kwargs:
+        boi += f" - {kwargs["lev"]}"
+    dprint(boi, debug=debug)
     
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
