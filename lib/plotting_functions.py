@@ -2149,7 +2149,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if locfil.is_file():
                 data = read_ncl_colormap(locfil)
             else:
-                data = read_ncl_colormap(url)
+                try:
+                    data = read_ncl_colormap(url)
+                except urllib.error.HTTPError:
+                    print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
+            print("type(data)",type(data))
             cm, cmr = ncl_to_mpl(data, cmap1)
         except:
             cm = None
@@ -2339,8 +2343,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
 
     #cmap1 = 'fakemap'
-    if "colormap" in plot_type_dict:
-        cmap_diff = plot_type_dict["colormap"]
+    if "diff_colormap" in plot_type_dict:
+        cmap_diff = plot_type_dict["diff_colormap"]
        
         if (isinstance(cmap_diff, dict)) and ("hemi" in kwargs):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
