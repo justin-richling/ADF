@@ -1300,6 +1300,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
+            print("******* GLOBAL LAT LON levels:",levels,"\n *******\n")
             if mdlfld.name == "PRECT":
                 #print("cp_info['pct_colorbar_opt']",cp_info['pct_colorbar_opt'])
                 img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))#extend='max'
