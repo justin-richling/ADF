@@ -2082,7 +2082,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             cmap1 = cmap
     if cmap1 not in plt.colormaps():
-        dprint(f"\t{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map", debug=debug)
+        print(f"\t{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
         try:
             url = guess_ncl_url(cmap1)
             locfil = Path(".") / f"{cmap1}.rgb"
@@ -2103,7 +2103,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 """cmap1 = 'GnBu'
                 if cmap1 not in plt.colormaps():
                     cmap1 = 'BrBG'"""
-                print("ITS COMEING OT PRECT????")
+                dprint("ITS COMEING OT PRECT????", debug=debug)
 
                 # Improved brown to blue with alpha
                 # Explicit color stops with relative positions (from 0 to 1)
@@ -2148,14 +2148,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 "contour_levels_range must have 3 entries: min, max, step"
                 levels1 = np.arange(*levels_range)
             else:
-                print("contour_levels_range must have 3 entries: min, max, step")
+                dprint("contour_levels_range must have 3 entries: min, max, step", debug=debug)
         if (isinstance(levels_range, dict)) and ("lev" in kwargs):
             range_vals = levels_range.get(kwargs["lev"])
             #print("range_vals is dict AND plot_type?",range_vals)
             if len(range_vals) == 3:
                 levels1 = np.arange(*range_vals)
             else:
-                print("contour_levels_range[lev] must have 3 entries: min, max, step")
+                dprint("contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
         if 1==1:#levels1:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
     if 'contour_levels_linspace' in plot_type_dict:
@@ -2164,18 +2164,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if len(levels_linspace) == 3:
                 levels1 = np.linspace(*levels_linspace)
             else:
-                print("contour_levels_linspace must have 3 entries: min, max, step")
+                dprint("contour_levels_linspace must have 3 entries: min, max, step", debug=debug)
         if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
             range_vals = levels_linspace.get(kwargs["lev"])
             if len(range_vals) == 3:
                 levels1 = np.linspace(*range_vals)
             else:
-                print("contour_levels_linspace[lev] must have 3 entries: min, max, step")
+                dprint("contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
         if 1==1:#levels1:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     #print("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1)
     if levels1 is None:
-        print("Setting the levels from max/min")
+        dprint("Setting the levels from max/min", debug=debug)
         levels1 = np.linspace(minval, maxval, 12)
     #print("\tLEVELS: ",type(levels1)," - ",levels1)
 
@@ -2259,14 +2259,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 "diff_contour_range must have 3 entries: min, max, step"
                 levelsdiff = np.arange(*levels_range)
             else:
-                print("diff_contour_range must have 3 entries: min, max, step")
+                dprint("diff_contour_range must have 3 entries: min, max, step", debug=debug)
         if (isinstance(levels_range, dict)) and ("lev" in kwargs):
             range_vals = levels_range.get(kwargs["lev"])
             #print("range_vals is dict AND plot_type?",range_vals)
             if len(range_vals) == 3:
                 levelsdiff = np.arange(*range_vals)
             else:
-                print("diff_contour_range[lev] must have 3 entries: min, max, step")
+                dprint("diff_contour_range[lev] must have 3 entries: min, max, step", debug=debug)
 
         if 1==1:#levelsdiff:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
@@ -2276,21 +2276,21 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if len(levels_linspace) == 3:
                 levelsdiff = np.linspace(*levels_linspace)
             else:
-                print("diff_contour_linspace must have 3 entries: min, max, step")
+                dprint("diff_contour_linspace must have 3 entries: min, max, step", debug=debug)
         if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
             range_vals = levels_linspace.get(kwargs["lev"])
             if len(range_vals) == 3:
                 levelsdiff = np.linspace(*range_vals)
             else:
-                print("diff_contour_linspace[lev] must have 3 entries: min, max, step")
+                dprint("diff_contour_linspace[lev] must have 3 entries: min, max, step", debug=debug)
 
         if 1==1:#levelsdiff:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
-    #print("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff)
+    #dprint("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
     if levelsdiff is None:
-        print("Setting the levels from max/min")
+        dprint("Setting the diff levels from max/min", debug=debug)
         levelsdiff = np.linspace(minval, maxval, 12)
-    #print("\tLEVELS: ",type(levelsdiff)," - ",levelsdiff)
+    #dprint("\tLEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
 
     if levelsdiff is None:
         absmaxdif = np.max(np.abs(diffdata))
