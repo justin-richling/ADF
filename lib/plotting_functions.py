@@ -2073,10 +2073,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #cmap1 = 'fakemap'
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
+        dprint("\tcmap:", cmap, debug=debug)
         if (isinstance(cmap, dict)) and ("lev" in kwargs):
             cmap1 = cmap.get(kwargs["lev"], cmap1)
         else:
             cmap1 = cmap
+        dprint("\tcmap1:", cmap1, debug=debug)
     if cmap1 not in plt.colormaps():
         print(f"\t{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
         try:
