@@ -2038,6 +2038,38 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             return 'sequential'"""
     
+
+    # ------------------------------------------------------
+    # Helper: normalize plot_type_dict (handles polar_map + hemi)
+    # ------------------------------------------------------
+    def resolve_plot_type_dict(kwargs):
+        """
+        Normalize kwargs[plot_type] so the rest of the code
+        always sees a flat dict (not nested nh/sh).
+        """
+        plot_type = kwargs.get("plot_type")
+        if not plot_type:
+            return None, kwargs
+
+        plot_type_dict = kwargs.get(plot_type, kwargs)
+
+        # Special case: polar_map with hemispheres
+        if plot_type == "polar_map":
+            hemi = kwargs.get("hemi")  # user must pass "nh" or "sh"
+            if isinstance(plot_type_dict, dict) and hemi in plot_type_dict:
+                hemi_dict = plot_type_dict[hemi]
+
+                # Case 1: full dict (e.g. {200: "terrain", 850: "Spectral"})
+                if isinstance(hemi_dict, dict):
+                    return plot_type, hemi_dict
+
+                # Case 2: flat value/list (e.g. [-10, 50, 5] or "Spectral")
+                else:
+                    return plot_type, {None: hemi_dict}  # wrap for uniform access
+
+        return plot_type, plot_type_dict
+
+    
     # Start color map/bar configurations
     # ----------------------------------
     def dprint(*args, debug=False, **kwargs):
@@ -2052,9 +2084,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             plot_type_dict = kwargs[plot_type]
         else:
             plot_type_dict = kwargs
-
     else:
         plot_type = None
+
     debug = False
     if kwargs["plot_type"] == "zonal_mean":
         debug = True
@@ -2080,11 +2112,33 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
         #dprint("\tcmap:", cmap, debug=debug)
-        if (isinstance(cmap, dict)) and ("lev" in kwargs):
+        """if (isinstance(cmap, dict)) and ("lev" in kwargs):
             cmap1 = cmap.get(kwargs["lev"], cmap1)
         else:
             cmap1 = cmap
+       """
+       
+        if (isinstance(cmap, dict)) and ("hemi" in kwargs):
+            print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
+            cmap_hemi1 = cmap.get(kwargs["hemi"])
+            if (isinstance(cmap_hemi1, dict)) and ("lev" in kwargs):
+                cmap1 = cmap.get(kwargs["lev"], cmap1)
+            else:
+                cmap1 = cmap_hemi1
+        else:
+            # if cmap is a dict but NOT polar plots
+            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+
+
+
+            if (isinstance(cmap, dict)) and ("lev" in kwargs):
+                cmap1 = cmap.get(kwargs["lev"])
+            else:
+                cmap1 = cmap
+       
        # dprint("\tcmap1:", cmap1, debug=debug)
+
+
     if cmap1 not in plt.colormaps():
         print(f"\t{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
         try:
@@ -2135,10 +2189,19 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         levels = plot_type_dict['contour_levels']
         if isinstance(levels, list):
             levels1 = levels
-        if (isinstance(levels, dict)) and ("lev" in kwargs):
-            levels1 = levels.get(kwargs["lev"])
-            if not isinstance(levels, list):
-                dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)
+        if (isinstance(levels, dict)) and ("hemi" in kwargs):
+            levels_hemi1 = levels.get(kwargs["hemi"])
+            if (isinstance(levels_hemi1, dict)) and ("lev" in kwargs):
+                levels1 = levels.get(kwargs["lev"])
+            else:
+                levels1 = levels_hemi1
+        else:
+            if (isinstance(levels, dict)) and ("lev" in kwargs):
+                levels1 = levels.get(kwargs["lev"])
+            else:
+                levels1 = levels
+        #if not isinstance(levels1, list):
+        #    dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)
         if 1==1:#levels1:
             dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
     if 'contour_levels_range' in plot_type_dict:
@@ -2149,13 +2212,35 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = np.arange(*levels_range)
             else:
                 dprint("contour_levels_range must have 3 entries: min, max, step", debug=debug)
-        if (isinstance(levels_range, dict)) and ("lev" in kwargs):
+        
+        if (isinstance(levels_range, dict)) and ("hemi" in kwargs):
+            levels_range_hemi1 = cmap.get(kwargs["hemi"])
+            if (isinstance(levels_range_hemi1, dict)) and ("lev" in kwargs):
+                range_vals = levels_range.get(kwargs["lev"])
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
+            else:
+                levels1 = levels_range_hemi1
+        else:
+            # if cmap is a dict but NOT polar plots
+            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+
+            if (isinstance(levels_range, dict)) and ("lev" in kwargs):
+                range_vals = levels_range.get(kwargs["lev"])
+            else:
+                levels1 = levels_range
+        
+        """if (isinstance(levels_range, dict)) and ("lev" in kwargs):
             range_vals = levels_range.get(kwargs["lev"])
             #print("range_vals is dict AND plot_type?",range_vals)
             if len(range_vals) == 3:
                 levels1 = np.arange(*range_vals)
             else:
-                dprint("contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
+                dprint("contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)"""
+        
+        
         if 1==1:#levels1:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
     if 'contour_levels_linspace' in plot_type_dict:
@@ -2165,12 +2250,38 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = np.linspace(*levels_linspace)
             else:
                 dprint("contour_levels_linspace must have 3 entries: min, max, step", debug=debug)
-        if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
+        
+        
+        """if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
             range_vals = levels_linspace.get(kwargs["lev"])
             if len(range_vals) == 3:
                 levels1 = np.linspace(*range_vals)
             else:
-                dprint("contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
+                dprint("contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)"""
+        
+
+        if (isinstance(levels_linspace, dict)) and ("hemi" in kwargs):
+            levels_linspace_hemi1 = cmap.get(kwargs["hemi"])
+            if (isinstance(levels_linspace_hemi1, dict)) and ("lev" in kwargs):
+                range_vals = levels_linspace.get(kwargs["lev"])
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
+            else:
+                levels1 = levels_linspace_hemi1
+        else:
+            # if cmap is a dict but NOT polar plots
+            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+
+            if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
+                range_vals = levels_linspace.get(kwargs["lev"])
+            else:
+                levels1 = levels_linspace
+        
+        
+        
+        
         if 1==1:#levels1:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
@@ -2211,15 +2322,34 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     maxval = np.max(diffdata)
     # COLOR MAP
     #----------
-    cmapdiff = 'coolwarm'
-    if "diff_colormap" in plot_type_dict:
+    cmapdiff = "GnBu"
+    """if "diff_colormap" in plot_type_dict:
         cmap_diff = plot_type_dict["diff_colormap"]
         #if isinstance(cmap_diff, dict) and "plot_type" in kwargs:
         if (isinstance(cmap_diff, dict)) and (plot_type):
             cmapdiff = cmap_diff.get(plot_type)
         else:
             cmapdiff = cmap_diff
-    #print("cmapdiff",cmapdiff,"\n")
+    #print("cmapdiff",cmapdiff,"\n")"""
+    if "diff_colormap" in plot_type_dict:
+        cmap_diff = plot_type_dict["diff_colormap"]
+
+    if (isinstance(cmap_diff, dict)) and ("hemi" in kwargs):
+        cmapdiff_hemi1 = cmap_diff.get(kwargs["hemi"])
+        if (isinstance(cmapdiff_hemi1, dict)) and ("lev" in kwargs):
+            cmapdiff = cmap_diff.get(kwargs["lev"])
+        else:
+            cmapdiff = cmapdiff_hemi1
+    else:
+        # if cmap is a dict but NOT polar plots
+        # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+
+
+
+        if (isinstance(cmap_diff, dict)) and ("lev" in kwargs):
+            cmapdiff = cmap_diff.get(kwargs["lev"])
+        else:
+            cmapdiff = cmap_diff
 
     if cmapdiff not in plt.colormaps():
         dprint(f"\tDifference: {cmapdiff} is not a matplotlib standard color map. Trying if this an NCL color map")
@@ -2242,16 +2372,30 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # CONTOUR LEVELS
     #---------------
     levelsdiff = None
-    #levels1 = None
     no_norm = False
     if 'diff_contour_levels' in plot_type_dict:
-        levels = plot_type_dict['diff_contour_levels']
-        if isinstance(levels, list):
-            levelsdiff = levels
-        if (isinstance(levels, dict)) and ("lev" in kwargs):
+        levels_diff = plot_type_dict['diff_contour_levels']
+        if isinstance(levels_diff, list):
+            levelsdiff = levels_diff
+
+        
+        if (isinstance(levels_diff, dict)) and ("hemi" in kwargs):
+            levels_diff_hemi1 = levels_diff.get(kwargs["hemi"])
+            if (isinstance(levels_diff_hemi1, dict)) and ("lev" in kwargs):
+                levels_diff = levels_diff.get(kwargs["lev"])
+            else:
+                levels_diff = levels_diff_hemi1
+        else:
+            if (isinstance(levels_diff, dict)) and ("lev" in kwargs):
+                levels_diff = levels_diff.get(kwargs["lev"])
+            else:
+                levels_diff = levels_diff
+
+        
+        """if (isinstance(levels, dict)) and ("lev" in kwargs):
             levelsdiff = levels.get(kwargs["lev"])
             if not isinstance(levels, list):
-                dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)
+                dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)"""
 
         if 1==1:#levelsdiff:
             dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
@@ -2263,30 +2407,81 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levelsdiff = np.arange(*levels_range)
             else:
                 dprint("diff_contour_range must have 3 entries: min, max, step", debug=debug)
-        if (isinstance(levels_range, dict)) and ("lev" in kwargs):
+        
+        
+        if (isinstance(levels_range, dict)) and ("hemi" in kwargs):
+            levelsdiff_range_hemi1 = levels_range.get(kwargs["hemi"])
+            if (isinstance(levelsdiff_range_hemi1, dict)) and ("lev" in kwargs):
+                range_vals = levels_range.get(kwargs["lev"])
+                if len(range_vals) == 3:
+                    levelsdiff = np.arange(*range_vals)
+                else:
+                    dprint("diff_contour_range[lev] must have 3 entries: min, max, step", debug=debug)
+            else:
+                levelsdiff = levelsdiff_range_hemi1
+        else:
+            # if cmap is a dict but NOT polar plots
+            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+
+            if (isinstance(levels_range, dict)) and ("lev" in kwargs):
+                range_vals = levels_range.get(kwargs["lev"])
+            else:
+                levelsdiff = levels_range
+        
+        
+        
+        """if (isinstance(levels_range, dict)) and ("lev" in kwargs):
             range_vals = levels_range.get(kwargs["lev"])
             #print("range_vals is dict AND plot_type?",range_vals)
             if len(range_vals) == 3:
                 levelsdiff = np.arange(*range_vals)
             else:
-                dprint("diff_contour_range[lev] must have 3 entries: min, max, step", debug=debug)
+                dprint("diff_contour_range[lev] must have 3 entries: min, max, step", debug=debug)"""
 
+        
+        
+        
         if 1==1:#levelsdiff:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
     if 'diff_contour_linspace' in plot_type_dict:
-        levels_linspace = plot_type_dict['diff_contour_linspace']
-        if isinstance(levels_linspace, list):
-            if len(levels_linspace) == 3:
-                levelsdiff = np.linspace(*levels_linspace)
+        levelsdiff_linspace = plot_type_dict['diff_contour_linspace']
+        if isinstance(levelsdiff_linspace, list):
+            if len(levelsdiff_linspace) == 3:
+                levelsdiff = np.linspace(*levelsdiff_linspace)
             else:
                 dprint("diff_contour_linspace must have 3 entries: min, max, step", debug=debug)
-        if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
+        
+        
+        if (isinstance(levelsdiff_linspace, dict)) and ("hemi" in kwargs):
+            levelsdiff_linspace_hemi1 = levelsdiff_linspace.get(kwargs["hemi"])
+            if (isinstance(levelsdiff_linspace_hemi1, dict)) and ("lev" in kwargs):
+                range_vals = levelsdiff_linspace.get(kwargs["lev"])
+                if len(range_vals) == 3:
+                    levelsdiff = np.arange(*range_vals)
+                else:
+                    dprint("u[lev] must have 3 entries: min, max, step", debug=debug)
+            else:
+                levelsdiff = levelsdiff_linspace_hemi1
+        else:
+            # if cmap is a dict but NOT polar plots
+            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+
+            if (isinstance(levelsdiff_linspace, dict)) and ("lev" in kwargs):
+                range_vals = levelsdiff_linspace.get(kwargs["lev"])
+            else:
+                levelsdiff = levelsdiff_linspace
+        
+        
+        
+        """if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
             range_vals = levels_linspace.get(kwargs["lev"])
             if len(range_vals) == 3:
                 levelsdiff = np.linspace(*range_vals)
             else:
-                dprint("diff_contour_linspace[lev] must have 3 entries: min, max, step", debug=debug)
+                dprint("diff_contour_linspace[lev] must have 3 entries: min, max, step", debug=debug)"""
 
+        
+        
         if 1==1:#levelsdiff:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     #dprint("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
