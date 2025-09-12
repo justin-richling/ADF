@@ -2042,7 +2042,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         print("\tOK THIS WORKSQ")
     if "plot_type" in kwargs:
         plot_type = kwargs["plot_type"]
-        plot_type_dict = kwargs[plot_type]
+        plot_type_dict = {}
+        if plot_type in kwargs:
+            plot_type_dict = kwargs[plot_type]
     else:
         plot_type = None
     debug = False
