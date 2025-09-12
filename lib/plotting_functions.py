@@ -2103,6 +2103,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 """cmap1 = 'GnBu'
                 if cmap1 not in plt.colormaps():
                     cmap1 = 'BrBG'"""
+                print("ITS COMEING OT PRECT????")
 
                 # Improved brown to blue with alpha
                 # Explicit color stops with relative positions (from 0 to 1)
@@ -2118,8 +2119,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
                 # Create colormap
                 cmap1 = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
-            else:
-                cmap1 = 'coolwarm'
+            #else:
+            #    cmap1 = 'coolwarm'
         else:
             cmap1 = cm
     dprint("\tSelected cmap:",cmap1, debug=debug)
