@@ -1,3 +1,9 @@
+#+++++++++++++
+# Available ADF Default Plot Types
+#+++++++++++++
+default_ptypes: ["Tables","LatLon","LatLon_Vector","Zonal","Meridional",
+                  "NHPolar","SHPolar","TimeSeries","Special"]
+
 PRECT:
   #colormap: "GnBu"
   # test the new colormap building method with 'fakemap', check if in matplotlib, 
