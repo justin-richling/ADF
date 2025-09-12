@@ -2223,14 +2223,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     dprint("contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
             else:
                 levels1 = levels_range_hemi1
-        else:
+        #else:
             # if cmap is a dict but NOT polar plots
             # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
 
-            if (isinstance(levels_range, dict)) and ("lev" in kwargs):
+        if (isinstance(levels_range, dict)) and ("lev" in kwargs) and ("hemi" not in kwargs):
                 range_vals = levels_range.get(kwargs["lev"])
-            else:
-                levels1 = levels_range
+        else:
+                evels1 = levels_range
         
         """if (isinstance(levels_range, dict)) and ("lev" in kwargs):
             range_vals = levels_range.get(kwargs["lev"])
