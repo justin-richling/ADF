@@ -2126,16 +2126,16 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap1 = cmap.get(kwargs["lev"], cmap1)
             else:
                 cmap1 = cmap_hemi1
-        else:
+        #else:
             # if cmap is a dict but NOT polar plots
             # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
 
 
 
-            if (isinstance(cmap, dict)) and ("lev" in kwargs):
-                cmap1 = cmap.get(kwargs["lev"])
-            else:
-                cmap1 = cmap
+        elif (isinstance(cmap, dict)) and ("lev" in kwargs):
+            cmap1 = cmap.get(kwargs["lev"])
+        else:
+            cmap1 = cmap
        
        # dprint("\tcmap1:", cmap1, debug=debug)
 
@@ -2333,22 +2333,28 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             cmapdiff = cmap_diff
     #print("cmapdiff",cmapdiff,"\n")"""
-    if "diff_colormap" in plot_type_dict:
-        cmap_diff = plot_type_dict["diff_colormap"]
-
-    if (isinstance(cmap_diff, dict)) and ("hemi" in kwargs):
-        cmapdiff_hemi1 = cmap_diff.get(kwargs["hemi"])
-        if (isinstance(cmapdiff_hemi1, dict)) and ("lev" in kwargs):
-            cmapdiff = cmap_diff.get(kwargs["lev"])
-        else:
-            cmapdiff = cmapdiff_hemi1
-    else:
-        # if cmap is a dict but NOT polar plots
-        # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+    
 
 
 
-        if (isinstance(cmap_diff, dict)) and ("lev" in kwargs):
+    #cmap1 = 'fakemap'
+    if "colormap" in plot_type_dict:
+        cmap_diff = plot_type_dict["colormap"]
+       
+        if (isinstance(cmap_diff, dict)) and ("hemi" in kwargs):
+            print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
+            cmapdiff_hemi1 = cmap_diff.get(kwargs["hemi"])
+            if (isinstance(cmapdiff_hemi1, dict)) and ("lev" in kwargs):
+                cmapdiff = cmap_diff.get(kwargs["lev"])
+            else:
+                cmapdiff = cmapdiff_hemi1
+        #else:
+            # if cmap is a dict but NOT polar plots
+            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
+
+
+
+        elif (isinstance(cmap_diff, dict)) and ("lev" in kwargs):
             cmapdiff = cmap_diff.get(kwargs["lev"])
         else:
             cmapdiff = cmap_diff
