@@ -2409,19 +2409,19 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if 1==1:#levelsdiff:
             dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
     if 'diff_contour_range' in plot_type_dict:
-        levels_range = plot_type_dict['diff_contour_range']
-        if isinstance(levels_range, list):
-            if len(levels_range) == 3:
+        levelsdiff_range = plot_type_dict['diff_contour_range']
+        if isinstance(levelsdiff_range, list):
+            if len(levelsdiff_range) == 3:
                 "diff_contour_range must have 3 entries: min, max, step"
-                levelsdiff = np.arange(*levels_range)
+                levelsdiff = np.arange(*levelsdiff_range)
             else:
                 dprint("diff_contour_range must have 3 entries: min, max, step", debug=debug)
         
         
-        if (isinstance(levels_range, dict)) and ("hemi" in kwargs):
-            levelsdiff_range_hemi1 = levels_range.get(kwargs["hemi"])
+        if (isinstance(levelsdiff_range, dict)) and ("hemi" in kwargs):
+            levelsdiff_range_hemi1 = levelsdiff_range.get(kwargs["hemi"])
             if (isinstance(levelsdiff_range_hemi1, dict)) and ("lev" in kwargs):
-                range_vals = levels_range.get(kwargs["lev"])
+                range_vals = levelsdiff_range.get(kwargs["lev"])
                 if len(range_vals) == 3:
                     levelsdiff = np.arange(*range_vals)
                 else:
@@ -2432,14 +2432,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             # if cmap is a dict but NOT polar plots
             # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
 
-        elif (isinstance(levels_range, dict)) and ("lev" in kwargs):
-                range_vals = levels_range.get(kwargs["lev"])
+        elif (isinstance(levelsdiff_range, dict)) and ("lev" in kwargs):
+                range_vals = levelsdiff_range.get(kwargs["lev"])
                 if len(range_vals) == 3:
-                    levels1 = np.arange(*range_vals)
+                    levelsdiff = np.arange(*range_vals)
                 else:
                     dprint("POLAR diff_contour_range[lev] must have 3 entries: min, max, step", debug=debug)
         else:
-            levelsdiff = levels_range
+            levelsdiff = levelsdiff_range
         
         
         
@@ -2482,7 +2482,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         elif (isinstance(levelsdiff_linspace, dict)) and ("lev" in kwargs):
                 range_vals = levelsdiff_linspace.get(kwargs["lev"])
                 if len(range_vals) == 3:
-                    levels1 = np.arange(*range_vals)
+                    levelsdiff = np.arange(*range_vals)
                 else:
                     dprint("POLAR diff_contour_linspace[lev] must have 3 entries: min, max, step", debug=debug)
         else:
