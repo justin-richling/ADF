@@ -2042,6 +2042,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         print("\tOK THIS WORKSQ")
     if "plot_type" in kwargs:
         plot_type = kwargs["plot_type"]
+        plot_type_dict = kwargs[plot_type]
     else:
         plot_type = None
     debug = False
@@ -2071,11 +2072,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap1 = 'fakemap'#'viridis'
-    if "colormap" in kwargs:
-        cmap = kwargs["colormap"]
+    if "colormap" in plot_type_dict:
+        cmap = plot_type_dict["colormap"]
         #if isinstance(cmap, dict) and "plot_type" in kwargs:
-        if (isinstance(cmap, dict)) and (plot_type):
-            cmap_lev1 = cmap.get(plot_type, 'viridis')
+        if (isinstance(cmap, dict)) and (plot_type_dict):
+            cmap_lev1 = cmap.get(plot_type_dict, 'viridis')
             if isinstance(cmap_lev1, dict) and "lev" in kwargs:
                 cmap1 = cmap_lev1.get(kwargs["lev"], 'viridis')
             else:
@@ -2131,72 +2132,52 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #---------------
     levels1 = None
     no_norm = False
-    if 'contour_levels' in kwargs:
-        levels = kwargs['contour_levels']
+    if 'contour_levels' in plot_type_dict:
+        levels = plot_type_dict['contour_levels']
         if isinstance(levels, list):
             levels1 = levels
-        #elif isinstance(levels, dict) and "plot_type" in kwargs:
-        elif (isinstance(levels, dict)) and (plot_type):
-            levels_ptype = levels.get(plot_type)
-            if isinstance(levels_ptype, dict) and "lev" in kwargs:
-                levels1 = levels_ptype.get(kwargs["lev"])
-            else:
-                levels1 = levels_ptype
-        dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
-    if 'contour_levels_range' in kwargs:
-        levels_range = kwargs['contour_levels_range']
-        ##print("\n\nAHHHH contour_levels_range",levels_range)
+        if (isinstance(levels, dict)) and ("lev" in kwargs):
+            levels1 = levels.get(kwargs["lev"])
+            if not isinstance(levels, list):
+                dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)
+        if levels1:
+            dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
+    if 'contour_levels_range' in plot_type_dict:
+        levels_range = plot_type_dict['contour_levels_range']
         if isinstance(levels_range, list):
-            assert len(levels_range) == 3, "contour_levels_range must have 3 entries: min, max, step"
-            levels1 = np.arange(*levels_range)
-        #elif isinstance(levels_range, dict) and "plot_type" in kwargs:
-        elif (isinstance(levels_range, dict)) and (plot_type):
-            range_vals_ptype = levels_range.get(plot_type)
-            ##print("\n\nAHHHH range_vals_ptype",range_vals_ptype)
-            if isinstance(range_vals_ptype, dict) and "lev" in kwargs:
-                range_vals = range_vals_ptype.get(kwargs["lev"])
-                #print("range_vals is dict AND plot_type?",range_vals)
-                assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
+            if len(levels_range) == 3:
+                "contour_levels_range must have 3 entries: min, max, step"
+                levels1 = np.arange(*levels_range)
+            else:
+                print("contour_levels_range must have 3 entries: min, max, step")
+        if (isinstance(levels_range, dict)) and ("lev" in kwargs):
+            range_vals = levels_range.get(kwargs["lev"])
+            #print("range_vals is dict AND plot_type?",range_vals)
+            if len(range_vals) == 3:
                 levels1 = np.arange(*range_vals)
-            if isinstance(range_vals_ptype, list):
-                #print(f"looks like this the contour level range is a list and is applied for all plot types, not just the current one: '{plot_type}'")
-                levels1 = np.arange(*range_vals_ptype)
             else:
-                range_vals = range_vals_ptype
-                #print("range_vals is dict but no plot_type?",range_vals)
-        dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
-    #print("\tHOW ABOUT PLOT_TYPE:",plot_type)
-    if 'contour_levels_linspace' in kwargs:
-        levels_linspace = kwargs['contour_levels_linspace']
-        dprint("\n\n\tAHHHH contour_levels_linspace",levels_linspace, debug=debug)
+                print("contour_levels_range[lev] must have 3 entries: min, max, step")
+        if levels1:
+            dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
+    if 'contour_levels_linspace' in plot_type_dict:
+        levels_linspace = plot_type_dict['contour_levels_linspace']
         if isinstance(levels_linspace, list):
-            assert len(levels_linspace) == 3, "contour_levels_linspace must have 3 entries: min, max, step"
-            levels1 = np.linspace(*levels_linspace)
-        #elif isinstance(levels_range, dict) and "plot_type" in kwargs:
-        elif (isinstance(levels_linspace, dict)) and (plot_type):
-            linspace_vals_ptype = levels_linspace.get(plot_type)
-            dprint("\n\nA\tHHHH linspace_vals_ptype",linspace_vals_ptype, debug=debug)
-            #if isinstance(linspace_vals_ptype, dict) and "lev" in kwargs:
-            if isinstance(linspace_vals_ptype, dict):
-                if "lev" in kwargs:
-                    range_vals = linspace_vals_ptype.get(kwargs["lev"],None)
-                if not range_vals:
-                    range_vals = linspace_vals_ptype
-                #print("range_vals is dict AND plot_type?",range_vals)
-                assert len(range_vals) == 3, "contour_levels_linspace[lev] must have 3 entries: min, max, step"
-                levels1 = np.linspace(*range_vals)
-            if isinstance(linspace_vals_ptype, list):
-                #print(f"looks like this the contour level range is a list and is applied for all plot types, not just the current one: '{plot_type}'")
-                levels1 = np.linspace(*linspace_vals_ptype)
+            if len(levels_linspace) == 3:
+                levels1 = np.linspace(*levels_linspace)
             else:
-                #print("\tIS IT COMEINMG DHOEJTOK")
-                range_vals = linspace_vals_ptype
-                #print("range_vals is dict but no plot_type?",range_vals)
-        dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
+                print("contour_levels_linspace must have 3 entries: min, max, step")
+        if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
+            range_vals = levels_linspace.get(kwargs["lev"])
+            if len(range_vals) == 3:
+                levels1 = np.linspace(*range_vals)
+            else:
+                print("contour_levels_linspace[lev] must have 3 entries: min, max, step")
+        if levels1:
+            dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     #print("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1)
     if levels1 is None:
+        print("Setting the levels from max/min")
         levels1 = np.linspace(minval, maxval, 12)
-
     #print("\tLEVELS: ",type(levels1)," - ",levels1)
 
     if kwargs.get('non_linear', False):
@@ -2217,7 +2198,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         levels1 = []
     #End if
 
-    if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
+    if ('colormap' not in plot_type_dict) and ('contour_levels' not in plot_type_dict):
         if ((minval < 0) and (0 < maxval)) and mplv > 2:
             norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
         else:
@@ -2229,8 +2210,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmapdiff = 'coolwarm'
-    if "diff_colormap" in kwargs:
-        cmap_diff = kwargs["diff_colormap"]
+    if "diff_colormap" in plot_type_dict:
+        cmap_diff = plot_type_dict["diff_colormap"]
         #if isinstance(cmap_diff, dict) and "plot_type" in kwargs:
         if (isinstance(cmap_diff, dict)) and (plot_type):
             cmapdiff = cmap_diff.get(plot_type)
@@ -2259,64 +2240,58 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # CONTOUR LEVELS
     #---------------
     levelsdiff = None
-    if "diff_contour_levels" in kwargs:
-        diff_levels = kwargs["diff_contour_levels"]
-        if isinstance(diff_levels, list):
-            levelsdiff = diff_levels
-        #elif isinstance(levels, dict) and "lev" in kwargs:
-        #elif isinstance(levels, dict) and "plot_type" in kwargs:
-        elif (isinstance(diff_levels, dict)) and (plot_type):
-            levelsdiff_ptype = diff_levels.get(plot_type)
-            if isinstance(levelsdiff_ptype, dict) and "lev" in kwargs:
-                levelsdiff = levelsdiff_ptype.get(kwargs["lev"])
+    #levels1 = None
+    no_norm = False
+    if 'diff_contour_levels' in plot_type_dict:
+        levels = plot_type_dict['diff_contour_levels']
+        if isinstance(levels, list):
+            levelsdiff = levels
+        if (isinstance(levels, dict)) and ("lev" in kwargs):
+            levelsdiff = levels.get(kwargs["lev"])
+            if not isinstance(levels, list):
+                dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)
+
+        if levelsdiff:
+            dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
+    if 'diff_contour_range' in plot_type_dict:
+        levels_range = plot_type_dict['diff_contour_range']
+        if isinstance(levels_range, list):
+            if len(levels_range) == 3:
+                "diff_contour_range must have 3 entries: min, max, step"
+                levelsdiff = np.arange(*levels_range)
             else:
-                levelsdiff = levels_ptype
-    if "diff_contour_range" in kwargs:
-        levelsdiff_range = kwargs["diff_contour_range"]
-        #print("tpye(levels_range)",type(levels_range))
-        if isinstance(levelsdiff_range, list):
-            assert len(levelsdiff_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*levelsdiff_range)
-        #elif isinstance(levelsdiff_range, dict) and "plot_type" in kwargs:
-        elif (isinstance(levelsdiff_range, dict)) and (plot_type):
-            #if kwargs["plot_type"] == kwargs["curr_plot_type"]
-            if plot_type in levelsdiff_range:
-                diffrange_vals_ptype = levelsdiff_range.get(plot_type)
-                #print("\n\nAHHHH diffrange_vals_ptype",diffrange_vals_ptype)
-                if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
-                    diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
-                    #print("diffrange_vals is dict AND plot_type?",diffrange_vals)
-                    assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
-                    levelsdiff = np.arange(*diffrange_vals)
-                else:
-                    diffrange_vals = diffrange_vals_ptype
-                    #print("diffrange_vals is dict but no plot_type?",diffrange_vals,"\n\n")
+                print("diff_contour_range must have 3 entries: min, max, step")
+        if (isinstance(levels_range, dict)) and ("lev" in kwargs):
+            range_vals = levels_range.get(kwargs["lev"])
+            #print("range_vals is dict AND plot_type?",range_vals)
+            if len(range_vals) == 3:
+                levelsdiff = np.arange(*range_vals)
             else:
-                ah = 0
-                #print(f"looks like the current plot type: '{plot_type}' has no special arguments")
-    if "diff_contour_linspace" in kwargs:
-        levelsdiff_linspace = kwargs["diff_contour_linspace"]
-        #print("tpye(levels_range)",type(levels_range))
-        if isinstance(levelsdiff_linspace, list):
-            assert len(levelsdiff_linspace) == 3, "diff_contour_range must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*levelsdiff_linspace)
-        #elif isinstance(levelsdiff_range, dict) and "plot_type" in kwargs:
-        elif (isinstance(levelsdiff_linspace, dict)) and (plot_type):
-            #if kwargs["plot_type"] == kwargs["curr_plot_type"]
-            if plot_type in levelsdiff_linspace:
-                difflinspace_vals_ptype = levelsdiff_linspace.get(plot_type)
-                #print("\n\nAHHHH diffrange_vals_ptype",diffrange_vals_ptype)
-                if isinstance(difflinspace_vals_ptype, dict) and "lev" in kwargs:
-                    diffrange_vals = difflinspace_vals_ptype.get(kwargs["lev"])
-                    #print("diffrange_vals is dict AND plot_type?",diffrange_vals)
-                    assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
-                    levelsdiff = np.arange(*diffrange_vals)
-                else:
-                    diffrange_vals = difflinspace_vals_ptype
-                    #print("diffrange_vals is dict but no plot_type?",diffrange_vals,"\n\n")
+                print("diff_contour_range[lev] must have 3 entries: min, max, step")
+
+        if levelsdiff:
+            dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
+    if 'diff_contour_linspace' in plot_type_dict:
+        levels_linspace = plot_type_dict['diff_contour_linspace']
+        if isinstance(levels_linspace, list):
+            if len(levels_linspace) == 3:
+                levelsdiff = np.linspace(*levels_linspace)
             else:
-                ah = 0
-                #print(f"looks like the current plot type: '{plot_type}' has no special arguments")
+                print("diff_contour_linspace must have 3 entries: min, max, step")
+        if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
+            range_vals = levels_linspace.get(kwargs["lev"])
+            if len(range_vals) == 3:
+                levelsdiff = np.linspace(*range_vals)
+            else:
+                print("diff_contour_linspace[lev] must have 3 entries: min, max, step")
+
+        if levelsdiff:
+            dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
+    #print("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff)
+    if levelsdiff is None:
+        print("Setting the levels from max/min")
+        levelsdiff = np.linspace(minval, maxval, 12)
+    #print("\tLEVELS: ",type(levelsdiff)," - ",levelsdiff)
 
     if levelsdiff is None:
         absmaxdif = np.max(np.abs(diffdata))
@@ -2326,8 +2301,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # Percent Difference options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #----------
-    if "pct_diff_colormap" in kwargs:
-        cmappct = kwargs["pct_diff_colormap"]
+    if "pct_diff_colormap" in plot_type_dict:
+        cmappct = plot_type_dict["pct_diff_colormap"]
     else:
         cmappct = "PuOr_r"
     #End if
@@ -2352,11 +2327,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # CONTOUR LEVELS
     #---------------
-    if "pct_diff_contour_levels" in kwargs:
-        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
-    elif "pct_diff_contour_range" in kwargs:
-            assert len(kwargs['pct_diff_contour_range']) == 3, "pct_diff_contour_range must have exactly three entries: min, max, step"
-            levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
+    if "pct_diff_contour_levels" in plot_type_dict:
+        levelspctdiff = plot_type_dict["pct_diff_contour_levels"]  # a list of explicit contour levels
+    elif "pct_diff_contour_range" in plot_type_dict:
+            assert len(plot_type_dict['pct_diff_contour_range']) == 3, "pct_diff_contour_range must have exactly three entries: min, max, step"
+            levelspctdiff = np.arange(*plot_type_dict['pct_diff_contour_range'])
     else:
         levelspctdiff = [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
     pctnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
