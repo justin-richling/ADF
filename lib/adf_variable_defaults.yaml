@@ -1830,7 +1830,6 @@ U:
       200: [-10, 31, 2.5]
       850: [-10, 13, 2.5]
     #diff_contour_range:
-
   zonal_mean:
     colormap: "ncl_default"
     contour_levels_range: [-10, 30, 15] # These will be applied to all zonal mean plots?
