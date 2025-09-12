@@ -1301,7 +1301,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
             if mdlfld.name == "PRECT":
-                print("cp_info['pct_colorbar_opt']",cp_info['pct_colorbar_opt'])
+                #print("cp_info['pct_colorbar_opt']",cp_info['pct_colorbar_opt'])
                 img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))#extend='max'
             else:
                 img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, extend='max', **cp_info['contourf_opt']))
