@@ -1843,9 +1843,9 @@ def read_ncl_colormap(fil):
         if pars.scheme in ['http', 'https', 'ftp']:
             filename = Path.cwd() / fil.split("/")[-1]
             if filename.is_file():
-                print(f"File already downloaded as {filename}")
+                print(f"\tFile already downloaded as {filename}")
             else:
-                print(f"File will be downloaded and saved as {filename}")
+                print(f"\tFile will be downloaded and saved as {filename}")
                 download_ncl_colormap(fil, str(filename))
         else:
             is_url = False
@@ -1853,7 +1853,7 @@ def read_ncl_colormap(fil):
     elif isinstance(fil, Path):
         filename = fil
     else:
-        raise ValueError(f"ERROR: what to do with type {type(fil)}")
+        raise ValueError(f"\tERROR: what to do with type {type(fil)}")
         
     # NCL's colormaps are not regularized enough to just use read_csv. 
     # We have to determine how many lines to skip because it varies.
@@ -1893,7 +1893,7 @@ def ncl_to_mpl(nclmap, name):
         try:
             vals = nclmap / 255
         except:
-            print(f"ERROR: could not divide by 255. {type(nclmap) = }")
+            print(f"\tERROR: could not divide by 255. {type(nclmap) = }")
             print(nclmap)
             return None
     else:
@@ -1930,13 +1930,13 @@ def load_colormap(cmap_name):
     if cmap_name in plt.colormaps():
         return cmap_name
     else:
-        print(f"{cmap_name} not a standard Matplotlib colormap. Trying NCL...")
+        print(f"\t{cmap_name} not a standard Matplotlib colormap. Trying NCL...")
         url = guess_ncl_url(cmap_name)
         locfil = Path(".") / f"{cmap_name}.rgb"
         data = read_ncl_colormap(locfil) if locfil.is_file() else read_ncl_colormap(url)
         cm, cmr = ncl_to_mpl(data, cmap_name)
         if not cm:
-            print(f"Failed to load {cmap_name}. Defaulting to 'coolwarm'.")
+            print(f"\tFailed to load {cmap_name}. Defaulting to 'coolwarm'.")
             return 'coolwarm'
         return cm
 
