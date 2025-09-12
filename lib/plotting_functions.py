@@ -2230,7 +2230,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if (isinstance(levels_range, dict)) and ("lev" in kwargs) and ("hemi" not in kwargs):
                 range_vals = levels_range.get(kwargs["lev"])
         else:
-                evels1 = levels_range
+                levels1 = levels_range
         
         """if (isinstance(levels_range, dict)) and ("lev" in kwargs):
             range_vals = levels_range.get(kwargs["lev"])
