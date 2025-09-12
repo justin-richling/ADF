@@ -2255,17 +2255,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = np.linspace(*levels_linspace)
             else:
                 dprint("contour_levels_linspace must have 3 entries: min, max, step", debug=debug)
-        
-        
-        """if (isinstance(levels_linspace, dict)) and ("lev" in kwargs):
-            range_vals = levels_linspace.get(kwargs["lev"])
-            if len(range_vals) == 3:
-                levels1 = np.linspace(*range_vals)
-            else:
-                dprint("contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)"""
+
         
 
-        if (isinstance(levels_linspace, dict)) and ("hemi" in kwargs):
+        elif (isinstance(levels_linspace, dict)) and ("hemi" in kwargs):
             levels_linspace_hemi1 = cmap.get(kwargs["hemi"])
             if (isinstance(levels_linspace_hemi1, dict)) and ("lev" in kwargs):
                 range_vals = levels_linspace.get(kwargs["lev"])
@@ -2412,13 +2405,13 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         levelsdiff_range = plot_type_dict['diff_contour_range']
         if isinstance(levelsdiff_range, list):
             if len(levelsdiff_range) == 3:
-                "diff_contour_range must have 3 entries: min, max, step"
+                print("diff_contour_range has 3 entries: min, max, step")
                 levelsdiff = np.arange(*levelsdiff_range)
             else:
                 dprint("diff_contour_range must have 3 entries: min, max, step", debug=debug)
         
         
-        if (isinstance(levelsdiff_range, dict)) and ("hemi" in kwargs):
+        elif (isinstance(levelsdiff_range, dict)) and ("hemi" in kwargs):
             levelsdiff_range_hemi1 = levelsdiff_range.get(kwargs["hemi"])
             if (isinstance(levelsdiff_range_hemi1, dict)) and ("lev" in kwargs):
                 range_vals = levelsdiff_range.get(kwargs["lev"])
@@ -2465,7 +2458,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 dprint("diff_contour_linspace must have 3 entries: min, max, step", debug=debug)
         
         
-        if (isinstance(levelsdiff_linspace, dict)) and ("hemi" in kwargs):
+        elif (isinstance(levelsdiff_linspace, dict)) and ("hemi" in kwargs):
             levelsdiff_linspace_hemi1 = levelsdiff_linspace.get(kwargs["hemi"])
             if (isinstance(levelsdiff_linspace_hemi1, dict)) and ("lev" in kwargs):
                 range_vals = levelsdiff_linspace.get(kwargs["lev"])
