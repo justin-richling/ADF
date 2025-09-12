@@ -2088,7 +2088,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
 
     debug = False
-    if kwargs["plot_type"] == "zonal_mean":
+    if kwargs["plot_type"] == "global_latlon_map":
         debug = True
     boi = f"TRY THIS BOI\n---------------\n{adata.name}"
     if "lev" in kwargs:
