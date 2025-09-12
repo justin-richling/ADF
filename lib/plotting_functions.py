@@ -2037,9 +2037,15 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             return 'diverging'
         else:
             return 'sequential'"""
-    print("TRY THIS BOI\n---------------\n",adata.name)
-    if adata.name == "PRECT":
-        print("\tOK THIS WORKSQ")
+    
+    # Start color map/bar configurations
+    # ----------------------------------
+    def dprint(*args, debug=False, **kwargs):
+        """Debug print that only prints if debug=True"""
+        if debug:
+            print(*args, **kwargs)
+    #if adata.name == "PRECT":
+    #    print("\tOK THIS WORKSQ")
     if "plot_type" in kwargs:
         plot_type = kwargs["plot_type"]
         plot_type_dict = {}
@@ -2050,6 +2056,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     debug = False
     if kwargs["plot_type"] == "global_latlon_map":
         debug = True
+
+    dprint("TRY THIS BOI\n---------------\n",adata.name, debug=debug)
     
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
@@ -2057,14 +2065,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
-
-    # Start color map/bar configurations
-    # ----------------------------------
-    def dprint(*args, debug=False, **kwargs):
-        """Debug print that only prints if debug=True"""
-        if debug:
-            print(*args, **kwargs)
-
 
     # Case/Baseline  options -- Check in kwargs for colormap and levels
     # COLOR MAP
