@@ -2073,16 +2073,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # Case/Baseline  options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #---------
-    cmap1 = 'fakemap'#'viridis'
+    cmap1 = 'viridis'
+    #cmap1 = 'fakemap'
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
-        #if isinstance(cmap, dict) and "plot_type" in kwargs:
-        if (isinstance(cmap, dict)) and (plot_type_dict):
-            cmap_lev1 = cmap.get(plot_type_dict, 'viridis')
-            if isinstance(cmap_lev1, dict) and "lev" in kwargs:
-                cmap1 = cmap_lev1.get(kwargs["lev"], 'viridis')
-            else:
-                cmap1 = cmap_lev1
+        if (isinstance(cmap, dict)) and ("lev" in kwargs):
+            cmap1 = cmap.get(kwargs["lev"], cmap1)
         else:
             cmap1 = cmap
     if cmap1 not in plt.colormaps():
@@ -2142,7 +2138,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             levels1 = levels.get(kwargs["lev"])
             if not isinstance(levels, list):
                 dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)
-        if levels1:
+        if 1==1:#levels1:
             dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
     if 'contour_levels_range' in plot_type_dict:
         levels_range = plot_type_dict['contour_levels_range']
@@ -2159,7 +2155,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = np.arange(*range_vals)
             else:
                 print("contour_levels_range[lev] must have 3 entries: min, max, step")
-        if levels1:
+        if 1==1:#levels1:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
     if 'contour_levels_linspace' in plot_type_dict:
         levels_linspace = plot_type_dict['contour_levels_linspace']
@@ -2174,7 +2170,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = np.linspace(*range_vals)
             else:
                 print("contour_levels_linspace[lev] must have 3 entries: min, max, step")
-        if levels1:
+        if 1==1:#levels1:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     #print("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1)
     if levels1 is None:
@@ -2253,7 +2249,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if not isinstance(levels, list):
                 dprint("\tTHIS IS NOTNOTNOTNOTNOTNOT A LIST OF VALUES", debug=debug)
 
-        if levelsdiff:
+        if 1==1:#levelsdiff:
             dprint("\tTHIS IS A LIST OF VALUES", debug=debug)
     if 'diff_contour_range' in plot_type_dict:
         levels_range = plot_type_dict['diff_contour_range']
@@ -2271,7 +2267,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 print("diff_contour_range[lev] must have 3 entries: min, max, step")
 
-        if levelsdiff:
+        if 1==1:#levelsdiff:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
     if 'diff_contour_linspace' in plot_type_dict:
         levels_linspace = plot_type_dict['diff_contour_linspace']
@@ -2287,7 +2283,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 print("diff_contour_linspace[lev] must have 3 entries: min, max, step")
 
-        if levelsdiff:
+        if 1==1:#levelsdiff:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     #print("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff)
     if levelsdiff is None:
