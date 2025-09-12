@@ -2056,7 +2056,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         plot_type = None
     debug = False
-    if kwargs["plot_type"] == "global_latlon_map":
+    if kwargs["plot_type"] == "zonal_mean":
         debug = True
 
     dprint("TRY THIS BOI\n---------------\n",adata.name, debug=debug)
@@ -2171,11 +2171,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 dprint("contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
         if 1==1:#levels1:
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
-    #print("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1)
+    dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
     if levels1 is None:
         dprint("\tSetting the levels from max/min", debug=debug)
         levels1 = np.linspace(minval, maxval, 12)
-    #print("\tLEVELS: ",type(levels1)," - ",levels1)
+    dprint("\tLEVELS: ",type(levels1)," - ",levels1, debug=debug)
 
     if kwargs.get('non_linear', False):
         cmap_obj = cm.get_cmap(cmap1)
