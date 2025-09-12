@@ -2154,7 +2154,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 except urllib.error.HTTPError:
                     print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
             print("type(data)",type(data))
-            cm, cmr = ncl_to_mpl(data, cmap1)
+            if isinstance(data, np.ndarray):
+                cm, cmr = ncl_to_mpl(data, cmap1)
+            else:
+                cm = None
         except:
             cm = None
         #ncl_colors[cm.name] = cm
@@ -2366,19 +2369,27 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     if cmapdiff not in plt.colormaps():
         dprint(f"\tDifference: {cmapdiff} is not a matplotlib standard color map. Trying if this an NCL color map")
-        url = guess_ncl_url(cmapdiff)
-        locfil = Path(".") / f"{cmapdiff}.rgb"
-        if locfil.is_file():
-            data = read_ncl_colormap(locfil)
-        else:
-            try:
-                data = read_ncl_colormap(url)
-            except urllib.error.HTTPError:
-                print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
-        print("type(data)",type(data))
-        cm, cmr = ncl_to_mpl(data, cmapdiff)
-        #f isinstance(data):
+        try:
+            url = guess_ncl_url(cmapdiff)
+            locfil = Path(".") / f"{cmapdiff}.rgb"
+            if locfil.is_file():
+                data = read_ncl_colormap(locfil)
+            else:
+                try:
+                    data = read_ncl_colormap(url)
+                except urllib.error.HTTPError:
+                    print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
+            print("type(data)",type(data))
+            if isinstance(data, np.ndarray):
+                cm, cmr = ncl_to_mpl(data, cmap1)
+            else:
+                cm = None
+        except:
+            cm = None
+        #if isinstance(data):
         #    cm, cmr = ncl_to_mpl(data, cmapdiff)
+        #else:
+        #    cm = None
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
         
