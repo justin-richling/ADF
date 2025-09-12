@@ -299,12 +299,6 @@ def global_latlon_map(adfobj):
 
                     #Loop over seasons:
                     for s in seasons:
-                        if s == "ANN":
-                            print("Press",pres)
-                            vres["prizzint"] = True
-                        else:
-                            vres["prizzint"] = False
-
                         plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
                         if doplot[plot_name] is None:
                             continue
