@@ -2371,7 +2371,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 data = read_ncl_colormap(url)
             except urllib.error.HTTPError:
                 print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
+        print("type(data)",type(data))
         cm, cmr = ncl_to_mpl(data, cmapdiff)
+        #f isinstance(data):
+        #    cm, cmr = ncl_to_mpl(data, cmapdiff)
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
         
