@@ -1811,28 +1811,29 @@ RELHUM:
   pct_diff_colormap: "PuOr_r"
 
 U:
-  ##colormap: "Blues"
-  colormap:
-    global_latlon_map:
-      200: "coolwarm"
-      #850: "rainbow"
-    polar_map:
-      200: "terrain"
-      850: "Spectral"
-  contour_levels_range:
-    polar_map:
-      200: [-10, 31, 2.5]
-      850: [-10, 13, 2.5]
-    global_latlon_map:
+  global_latlon_map:
+    colormap:
+      200: "Blues"
+      #850: "Spectral"
+    contour_levels_range:
+      contour_levels_range:
       200: [-10, 51, 2.5]
       850: [-10, 31, 2.5]
-  contour_levels_linspace:
-    zonal_mean: [-10, 30, 15]
-  diff_colormap: "BrBG"
-  diff_contour_range:
-    global_latlon_map:
+    diff_contour_range:
       200: [-15, 15, 2]
       850: [-5, 5, 0.5]
+  polar_map:
+    colormap:
+      200: "terrain"
+      850: "Spectral"
+    contour_levels_range:
+      200: [-10, 31, 2.5]
+      850: [-10, 13, 2.5]
+    #diff_contour_range:
+
+  zonal_mean:
+    colormap: "ncl_default"
+    contour_levels: [-10, 30, 15] # These will be applied to all zonal mean plots?
   scale_factor: 1
   add_offset: 0
   new_unit: "ms$^{-1}$"
@@ -1845,8 +1846,6 @@ U:
   vector_pair: "V"
   vector_name: "Wind"
   category: "State"
-  pct_diff_contour_levels: [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
-  pct_diff_colormap: "PuOr_r"
 
 V:
   colormap: "Blues"
