@@ -86,7 +86,7 @@ PSL:
 U:
   global_latlon_map:
     colormap: # if not specified, default to viridis for any missing values nested (levs, ie 850) or not
-      200: "Blues"
+      200: "ncl_default"
       #850: "Spectral"
     contour_levels_range:
       200: [-10, 51, 2.5]
