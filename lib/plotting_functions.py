@@ -1824,6 +1824,7 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
 
 import numpy as np
 import matplotlib as mpl
+import urllib
 from urllib.parse import urlparse
 from urllib.request import urlretrieve
 from pathlib import Path
@@ -2366,7 +2367,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if locfil.is_file():
             data = read_ncl_colormap(locfil)
         else:
-            data = read_ncl_colormap(url)
+            try:
+                data = read_ncl_colormap(url)
+            except urllib.error.HTTPError:
+                print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
         cm, cmr = ncl_to_mpl(data, cmapdiff)
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
