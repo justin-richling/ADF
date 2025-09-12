@@ -2092,7 +2092,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         debug = True
     boi = f"TRY THIS BOI\n---------------\n{adata.name}"
     if "lev" in kwargs:
-        boi += f" - {kwargs["lev"]}"
+        boi += f' - {kwargs["lev"]}'
     dprint(boi, debug=debug)
     
     # determine levels & color normalization:
