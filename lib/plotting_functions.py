@@ -2398,7 +2398,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmapdiff = 'coolwarm'
         else:
             cmapdiff = cm
-
+    dprint(f"\n\t{adata.name} diff colormap ",cmapdiff, debug=debug)
     # CONTOUR LEVELS
     #---------------
     levelsdiff = None
