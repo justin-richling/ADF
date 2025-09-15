@@ -2128,16 +2128,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         cmap = plot_type_dict["colormap"]
         dprint("\tUser supplied cmap:", cmap, debug=debug)
 
+        #polar_names
+        if isinstance(cmap, dict):
+            print("\n\ncmap.keys()",cmap.keys(),"\n\n")
+
         if (isinstance(cmap, str)):
             cmap_case = cmap
             print(cmap)
             dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all of this map', debug=debug)
 
         # check if this is a dictionary of hemispheres
-        #polar_names
-        if isinstance(cmap, dict):
-            print("\n\ncmap.keys()",cmap.keys(),"\n\n")
-        if (isinstance(cmap, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in cmap.keys())):
+        elif (isinstance(cmap, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in cmap.keys())):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
             cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
             if (isinstance(cmap_hemi1, str)):
