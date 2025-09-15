@@ -2138,7 +2138,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap1 = cmap
             dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
        
-        dprint("\tcmap1:", cmap1, debug=debug)
+        print("\tcmap1 raw:", cmap1, debug=debug)
 
 
     #if cmap1 not in plt.colormaps():
