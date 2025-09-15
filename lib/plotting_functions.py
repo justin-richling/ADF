@@ -2040,7 +2040,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             return 'sequential'"""
     
-
+    ncl_defaults = ["ncl_default"]
     # ------------------------------------------------------
     # Helper: normalize plot_type_dict (handles polar_map + hemi)
     # ------------------------------------------------------
@@ -2141,7 +2141,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         dprint("\tcmap1:", cmap1, debug=debug)
 
 
-    if cmap1 not in plt.colormaps():
+    #if cmap1 not in plt.colormaps():
+    if cmap1 in ncl_defaults:
         print(f"\t{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
         try:
             url = guess_ncl_url(cmap1)
