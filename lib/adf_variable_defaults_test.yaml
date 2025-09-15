@@ -110,7 +110,7 @@ U:
         200: "terrain"
         850: "Spectral"
       sh:
-        200: "scipy_spectral"
+        200: "nipy_spectral"
         850: "HoobaDoopFloppityFloop"
     contour_levels_range:
       200: [-10, 31, 2.5]
