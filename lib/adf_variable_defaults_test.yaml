@@ -10,9 +10,9 @@ PRECT:
   # if not check NCL, if nothing after that, default to viridis
   #colormap: "fakemap"
   polar_map:
-    colormap:
-      nh: "fakemap"
-      sh: "GnBu"
+    colormap: "fakemap"
+      #nh: "fakemap"
+      #sh: "GnBu"
   global_latlon_map:
     colormap: "BrBg"
   contour_levels_range: [0, 12, 1]
