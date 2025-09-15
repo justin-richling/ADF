@@ -2150,6 +2150,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             print(f"I give up, here is the default: {cmap_case}")
         print("\tcmap1 raw:", cmap_case)
 
+    
     if cmap_case in ncl_defaults:
         print(f"\tTrying {cmap_case} as an NCL color map:")
         try:
@@ -2197,8 +2198,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #    cmap1 = 'coolwarm'
         else:
             cmap_case = cm
-    
-    if cmap_case not in plt.colormaps():
+
+    if not cmap_case:
         print(f"\tI give up, defaulting to 'viridis'")
         cmap_case = cmap1
     
