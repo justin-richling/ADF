@@ -2125,7 +2125,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
             cmap_hemi1 = cmap.get(kwargs["hemi"])
             if (isinstance(cmap_hemi1, dict)) and ("lev" in kwargs):
-                cmap1 = cmap.get(kwargs["lev"], cmap1)
+                if 'lev' in kwargs["hemi"]:
+                    cmap1 = cmap.get(kwargs["hemi"]["lev"], cmap1)
                 print(f'Looks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}')
             else:
                 cmap1 = cmap_hemi1
