@@ -2090,6 +2090,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
 
     debug = False
+    #if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
     if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
         debug = True
     boi = f"TRY THIS BOI\n---------------\n{adata.name}"
@@ -2125,12 +2126,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap_hemi1 = cmap.get(kwargs["hemi"])
             if (isinstance(cmap_hemi1, dict)) and ("lev" in kwargs):
                 cmap1 = cmap.get(kwargs["lev"], cmap1)
+                print(f'Looks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}')
             else:
                 cmap1 = cmap_hemi1
+                print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
         elif (isinstance(cmap, dict)) and ("lev" in kwargs):
+            print(f'Looks like it has vertical levels: {kwargs["lev"]}')
+            
             cmap1 = cmap.get(kwargs["lev"])
         else:
             cmap1 = cmap
+            dprint(f'Looks like it single value cmap. This could be a variety of settings', debug=debug)
        
        # dprint("\tcmap1:", cmap1, debug=debug)
 
