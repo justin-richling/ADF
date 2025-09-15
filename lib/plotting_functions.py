@@ -2111,6 +2111,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap1 = 'viridis'
+    cmap_case = None
     #cmap1 = 'fakemap'
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
