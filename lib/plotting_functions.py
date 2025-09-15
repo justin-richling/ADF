@@ -2088,6 +2088,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             plot_type_dict = kwargs
     else:
         plot_type = None
+        if "colormap" in kwargs:
+            if (isinstance(kwargs["colormap"], str)):
+                cmap_case = cmap
+                print(cmap)
+                print(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
 
     debug = False
     if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
@@ -2120,7 +2125,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if (isinstance(cmap, str)):
             cmap_case = cmap
             print(cmap)
-            dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
+            dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all of this map', debug=debug)
 
         # check if this is a dictionary of hemispheres
         if (isinstance(cmap, dict)) and (("hemi" in kwargs) and (kwargs["hemi"] in cmap.keys())):
