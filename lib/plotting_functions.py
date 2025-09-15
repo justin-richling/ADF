@@ -2127,12 +2127,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap1 = cmap.get(kwargs["lev"], cmap1)
             else:
                 cmap1 = cmap_hemi1
-        #else:
-            # if cmap is a dict but NOT polar plots
-            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
-
-
-
         elif (isinstance(cmap, dict)) and ("lev" in kwargs):
             cmap1 = cmap.get(kwargs["lev"])
         else:
