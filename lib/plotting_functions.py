@@ -2117,7 +2117,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         dprint("\tUser supplied cmap:", cmap, debug=debug)
 
         # check if this is a dictionary of hemispheres
-        if (isinstance(cmap, dict)) and (kwargs["hemi"] in cmap.keys()):
+        if (isinstance(cmap, dict)) and (("hemi" in kwargs) and (kwargs["hemi"] in cmap.keys())):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
             cmap_hemi1 = cmap.get(kwargs["hemi"])
             if (isinstance(cmap_hemi1, str)):
@@ -2131,7 +2131,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #    print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
         
         # check if this is a dictionary of vertical levels
-        elif (isinstance(cmap, dict)) and (kwargs["lev"] in cmap.keys()):
+        elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
             print(f'Looks like it has vertical levels: {kwargs["lev"]}')
             cmap1 = cmap.get(kwargs["lev"])
         else:
