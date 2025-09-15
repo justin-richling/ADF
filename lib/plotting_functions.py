@@ -2364,48 +2364,61 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # determine levels & color normalization:
     minval = np.min(diffdata)
     maxval = np.max(diffdata)
+    
+    
     # COLOR MAP
     #----------
     cmapdiff = "BrBG"
-    """if "diff_colormap" in plot_type_dict:
-        cmap_diff = plot_type_dict["diff_colormap"]
-        #if isinstance(cmap_diff, dict) and "plot_type" in kwargs:
-        if (isinstance(cmap_diff, dict)) and (plot_type):
-            cmapdiff = cmap_diff.get(plot_type)
-        else:
-            cmapdiff = cmap_diff
-    #print("cmapdiff",cmapdiff,"\n")"""
     
-
-
-
+    cmap1 = 'viridis'
+    cmap_diff = None
     #cmap1 = 'fakemap'
     if "diff_colormap" in plot_type_dict:
-        cmap_diff = plot_type_dict["diff_colormap"]
-       
-        if (isinstance(cmap_diff, dict)) and ("hemi" in kwargs):
+        cmapdiff = plot_type_dict["diff_colormap"]
+        dprint("\tUser supplied diff cmap:", cmapdiff, debug=debug)
+
+        #polar_names
+        if isinstance(cmapdiff, dict):
+            print("\n\cmapdiff.keys()",cmapdiff.keys(),"\n\n")
+
+        if (isinstance(cmapdiff, str)):
+            cmap_diff = cmapdiff
+            print(cmapdiff)
+            dprint(f'Looks like it single value cmapdiff. This could be a variety of settings\nWill apply to all of this map', debug=debug)
+
+        # check if this is a dictionary of hemispheres
+        elif (isinstance(cmapdiff, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in cmapdiff.keys())):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
-            cmapdiff_hemi1 = cmap_diff.get(kwargs["hemi"])
-            if (isinstance(cmapdiff_hemi1, dict)) and ("lev" in kwargs):
-                cmapdiff = cmap_diff.get(kwargs["lev"])
-            else:
-                cmapdiff = cmapdiff_hemi1
-        #else:
-            # if cmap is a dict but NOT polar plots
-            # OR if cmap is NOT a dict and polar plots - plot all hemis the same colormap
-
-
-
-        elif (isinstance(cmap_diff, dict)) and ("lev" in kwargs):
-            cmapdiff = cmap_diff.get(kwargs["lev"])
+            cmapdiff_hemi1 = cmapdiff.get(polar_names[kwargs["hemi"]])
+            if (isinstance(cmapdiff_hemi1, str)):
+                print(f'Looks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmapdiff')
+                cmap_diff = cmapdiff_hemi1
+            if (isinstance(cmapdiff_hemi1, dict)) and (kwargs["lev"] in cmapdiff_hemi1.keys()):
+                print(f'Looks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}')
+                cmap_diff = cmapdiff_hemi1.get(kwargs["lev"])
+            #else:
+            #    cmap1 = cmap_hemi1
+            #    print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
+        
+        # check if this is a dictionary of vertical levels
+        elif (isinstance(cmapdiff, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmapdiff.keys())):
+            print(f'Looks like it has vertical levels: {kwargs["lev"]}')
+            cmap_diff = cmapdiff.get(kwargs["lev"])
+        #elif (isinstance(cmap, dict)) and ("lev" in kwargs):
+        #    print(f'Looks like it has vertical levels: {kwargs["lev"]} BUT not in the defaults dict {cmap}')
+        #    cmap1 = cmap.get(kwargs["lev"])
         else:
-            cmapdiff = cmap_diff
+            #cmap1 = cmap
+            #print(cmap)
+            #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
+            print(f"I give up, here is the default: {cmap_diff}")
+        print("\tcmapdiff raw:", cmap_diff)
 
-    if cmapdiff not in plt.colormaps():
-        dprint(f"\tDifference: {cmapdiff} is not a matplotlib standard color map. Trying if this an NCL color map")
+    if cmap_diff in ncl_defaults:
+        print(f"\tTrying {cmap_diff} as an NCL color map:")
         try:
-            url = guess_ncl_url(cmapdiff)
-            locfil = Path(".") / f"{cmapdiff}.rgb"
+            url = guess_ncl_url(cmap_diff)
+            locfil = Path(".") / f"{cmap_diff}.rgb"
             if locfil.is_file():
                 data = read_ncl_colormap(locfil)
             else:
@@ -2415,24 +2428,60 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
             print("type(data)",type(data))
             if isinstance(data, np.ndarray):
-                cm, cmr = ncl_to_mpl(data, cmapdiff)
+                cm, cmr = ncl_to_mpl(data, cmap_diff)
             else:
                 cm = None
         except:
             cm = None
-        #if isinstance(data):
-        #    cm, cmr = ncl_to_mpl(data, cmapdiff)
-        #else:
-        #    cm = None
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
-        
         if not cm:
-            dprint(f"\tDifference: {cmapdiff} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots", debug=debug)
-            cmapdiff = 'coolwarm'
+            print(f"\t{cmap_diff} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
+            if adata.name == "PRECT":
+ 
+                dprint("ITS COMEING OT PRECT????", debug=debug)
+
+                # Improved brown to blue with alpha
+                # Explicit color stops with relative positions (from 0 to 1)
+                # Define the color stops with RGBA and precise positions
+                colors = [
+                            (0.00, (1.0, 1.0, 1.0, 0.02)),             # very dry, near white
+                            (0.10, (210/255, 180/255, 140/255, 0.2)),  # dry tan (sand)
+                            (0.25, (139/255, 90/255, 43/255, 0.4)),    # earthy brown
+                            (0.45, (107/255, 142/255, 35/255, 0.6)),   # olive green (moist)
+                            (0.70, (60/255, 179/255, 113/255, 0.8)),   # medium sea green (wet)
+                            (1.00, (0/255, 100/255, 200/255, 1.0))     # saturated blue
+                        ]
+
+                # Create colormap
+                cmap_diff = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
+            else:
+                cmap_diff = 'coolwarm'
         else:
-            cmapdiff = cm
-    dprint(f"\n\t{adata.name} diff colormap ",cmapdiff, debug=debug)
+            cmap_diff = cm
+    print("ALMOST FINAL CHECK:",cmap_diff)
+    if isinstance(cmap_diff, str):
+        if (cmap_diff not in plt.colormaps()) and (cmap_diff not in ncl_defaults):
+            print("*****if (cmap_diff not in plt.colormaps()) and (cmap_diff not in ncl_defaults):****\n",cmap_diff,"NOT in NCL or matplotlib, huh?")
+            cmap_diff = None
+    print("CLOSE TO FINAL CHECK:",cmap_diff)
+    if not cmap_diff:
+        print(f"\tI give up, defaulting to 'viridis'")
+        cmap_diff = cmapdiff
+    
+    dprint(f"\n\t{adata.name} FINAL diff colormap ",cmap_diff, debug=debug)
+
+
+
+
+
+
+
+
+    
+    
+    
+    
     # CONTOUR LEVELS
     #---------------
     levelsdiff = None
