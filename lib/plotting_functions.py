@@ -2466,7 +2466,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap_diff = None
     print("CLOSE TO FINAL CHECK:",cmap_diff)
     if not cmap_diff:
-        print(f"\tI give up, defaulting to 'viridis'")
+        print(f"\tI give up, defaulting to 'BrBG'")
         cmap_diff = cmapdiff
     
     dprint(f"\n\t{adata.name} FINAL diff colormap ",cmap_diff, debug=debug)
