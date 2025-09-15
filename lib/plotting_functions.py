@@ -2124,8 +2124,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 print(f'Looks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap')
                 cmap1 = cmap_hemi1
             if (isinstance(cmap_hemi1, dict)) and (kwargs["lev"] in cmap_hemi1.keys()):
-                cmap1 = cmap_hemi1.get(cmap_hemi1["lev"])
                 print(f'Looks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}')
+                cmap1 = cmap_hemi1.get(cmap_hemi1["lev"])
             #else:
             #    cmap1 = cmap_hemi1
             #    print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
@@ -2434,7 +2434,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         levelsdiff_range = plot_type_dict['diff_contour_range']
         if isinstance(levelsdiff_range, list):
             if len(levelsdiff_range) == 3:
-                print("diff_contour_range has 3 entries: min, max, step")
+                #print("diff_contour_range has 3 entries: min, max, step")
                 levelsdiff = np.arange(*levelsdiff_range)
             else:
                 dprint("diff_contour_range must have 3 entries: min, max, step", debug=debug)
