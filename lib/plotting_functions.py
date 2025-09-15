@@ -2459,12 +2459,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap_diff = 'coolwarm'
         else:
             cmap_diff = cm
-    print("ALMOST FINAL CHECK:",cmap_diff)
+    dprint("ALMOST FINAL CHECK:",cmap_diff, debug=debug)
     if isinstance(cmap_diff, str):
         if (cmap_diff not in plt.colormaps()) and (cmap_diff not in ncl_defaults):
-            print("*****if (cmap_diff not in plt.colormaps()) and (cmap_diff not in ncl_defaults):****\n",cmap_diff,"NOT in NCL or matplotlib, huh?")
+            dprint("*****if (cmap_diff not in plt.colormaps()) and (cmap_diff not in ncl_defaults):****\n",cmap_diff,"NOT in NCL or matplotlib, huh?", debug=debug)
             cmap_diff = None
-    print("CLOSE TO FINAL CHECK:",cmap_diff)
+    dprint("CLOSE TO FINAL CHECK:",cmap_diff, debug=debug)
     if not cmap_diff:
         print(f"\tI give up, defaulting to 'BrBG'")
         cmap_diff = cmapdiff
