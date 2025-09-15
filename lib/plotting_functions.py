@@ -2117,7 +2117,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         dprint("\tUser supplied cmap:", cmap, debug=debug)
 
         if (isinstance(cmap, str)):
-            cmap1 = cmap
+            cmap_case = cmap
             print(cmap)
             dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
 
@@ -2127,10 +2127,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap_hemi1 = cmap.get(kwargs["hemi"])
             if (isinstance(cmap_hemi1, str)):
                 print(f'Looks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap')
-                cmap1 = cmap_hemi1
+                cmap_case = cmap_hemi1
             if (isinstance(cmap_hemi1, dict)) and (kwargs["lev"] in cmap_hemi1.keys()):
                 print(f'Looks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}')
-                cmap1 = cmap_hemi1.get(cmap_hemi1["lev"])
+                cmap_case = cmap_hemi1.get(cmap_hemi1["lev"])
             #else:
             #    cmap1 = cmap_hemi1
             #    print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
@@ -2138,7 +2138,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         # check if this is a dictionary of vertical levels
         elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
             print(f'Looks like it has vertical levels: {kwargs["lev"]}')
-            cmap1 = cmap.get(kwargs["lev"])
+            cmap_case = cmap.get(kwargs["lev"])
         #elif (isinstance(cmap, dict)) and ("lev" in kwargs):
         #    print(f'Looks like it has vertical levels: {kwargs["lev"]} BUT not in the defaults dict {cmap}')
         #    cmap1 = cmap.get(kwargs["lev"])
@@ -2146,16 +2146,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #cmap1 = cmap
             #print(cmap)
             #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
-            print(f"I give up, here is the default: {cmap1}")
-        print("\tcmap1 raw:", cmap1)
+            print(f"I give up, here is the default: {cmap_case}")
+        print("\tcmap1 raw:", cmap_case)
 
-
-    #if cmap1 not in plt.colormaps():
-    if cmap1 in ncl_defaults:
-        print(f"\tTrying {cmap1} as an NCL color map:")
+    if cmap_case in ncl_defaults:
+        print(f"\tTrying {cmap_case} as an NCL color map:")
         try:
-            url = guess_ncl_url(cmap1)
-            locfil = Path(".") / f"{cmap1}.rgb"
+            url = guess_ncl_url(cmap_case)
+            locfil = Path(".") / f"{cmap_case}.rgb"
             if locfil.is_file():
                 data = read_ncl_colormap(locfil)
             else:
@@ -2165,7 +2163,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
             print("type(data)",type(data))
             if isinstance(data, np.ndarray):
-                cm, cmr = ncl_to_mpl(data, cmap1)
+                cm, cmr = ncl_to_mpl(data, cmap_case)
             else:
                 cm = None
         except:
@@ -2173,7 +2171,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
         if not cm:
-            print(f"\t{cmap1} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
+            print(f"\t{cmap_case} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
             if adata.name == "PRECT":
                 """cmap1 = 'GnBu'
                 if cmap1 not in plt.colormaps():
@@ -2193,12 +2191,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                         ]
 
                 # Create colormap
-                cmap1 = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
+                cmap_case = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
             #else:
             #    cmap1 = 'coolwarm'
         else:
-            cmap1 = cm
-    dprint(f"\n\t{adata.name} FINAL colormap ",cmap1, debug=debug)
+            cmap_case = cm
+    
+    if cmap_case not in plt.colormaps():
+        print(f"\tI give up, defaulting to 'viridis'")
+        cmap_case = cmap1
+    
+    dprint(f"\n\t{adata.name} FINAL colormap ",cmap_case, debug=debug)
     
     # CONTOUR LEVELS
     #---------------
@@ -2391,7 +2394,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
             print("type(data)",type(data))
             if isinstance(data, np.ndarray):
-                cm, cmr = ncl_to_mpl(data, cmap1)
+                cm, cmr = ncl_to_mpl(data, cmapdiff)
             else:
                 cm = None
         except:
