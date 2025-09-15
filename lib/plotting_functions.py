@@ -2041,6 +2041,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             return 'sequential'"""
     
     ncl_defaults = ["ncl_default"]
+    
+   # polar_names = {"nh":"NHPolar",
+   #                "sh":"SHPolar"}
+
+    polar_names = {"NHPolar":"nh",
+                   "SHPolar":"sh"}
     # ------------------------------------------------------
     # Helper: normalize plot_type_dict (handles polar_map + hemi)
     # ------------------------------------------------------
@@ -2106,8 +2112,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
     maxval = np.max([np.max(adata), np.max(bdata)])
-    dprint("\tCase Min:", np.min(adata), debug=debug)
-    dprint("\tCase Max:", np.max(adata), debug=debug)
+    #dprint("\tCase Min:", np.min(adata), debug=debug)
+    #dprint("\tCase Max:", np.max(adata), debug=debug)
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
@@ -2128,11 +2134,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all of this map', debug=debug)
 
         # check if this is a dictionary of hemispheres
+        #polar_names
         if isinstance(cmap, dict):
             print("\n\ncmap.keys()",cmap.keys(),"\n\n")
-        if (isinstance(cmap, dict)) and (("hemi" in kwargs) and (kwargs["hemi"] in cmap.keys())):
+        if (isinstance(cmap, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in cmap.keys())):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
-            cmap_hemi1 = cmap.get(kwargs["hemi"])
+            cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
             if (isinstance(cmap_hemi1, str)):
                 print(f'Looks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap')
                 cmap_case = cmap_hemi1
