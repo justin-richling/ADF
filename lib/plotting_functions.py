@@ -2134,10 +2134,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
             print(f'Looks like it has vertical levels: {kwargs["lev"]}')
             cmap1 = cmap.get(kwargs["lev"])
+        elif (isinstance(cmap, dict)) and ("lev" in kwargs):
+            print(f'Looks like it has vertical levels: {kwargs["lev"]}')
+            cmap1 = cmap.get(kwargs["lev"])
         else:
             cmap1 = cmap
+            print(cmap)
             dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
-       
+
         print("\tcmap1 raw:", cmap1)
 
 
