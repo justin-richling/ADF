@@ -33,6 +33,10 @@ PRECT:
 # SWCF, LWCF, and PSL are in current ADF configuration
 SWCF:
   colormap: "Blues"
+  polar_map:
+    colormap:
+      nh: "fakemap"
+      sh: "Blues"
   contour_levels_range: [-150, 50, 10]
   diff_colormap: "BrBG"
   diff_contour_range: [-20, 20, 2]
