@@ -135,6 +135,8 @@ U:
 
 
 Q: # example of no specific values for plotting, so it will default all values to using max and min, not suggested...
+  #global_latlon_map:
+  #  colormap:
   polar_map:
     colormap:
       nh: "terrain"
@@ -175,3 +177,28 @@ T:
   obs_file: "T_ERA5_monthly_climo_197901-202112.nc"
   obs_name: "ERA5"
   obs_var_name: "T"
+
+
+RELHUM:
+  colormap: "Oranges"
+  polar_map:
+    colormap: "Blues"
+      #nh: "terrain"
+        #200: "terrain"
+        #850: "Spectral"
+      #sh: "nipy_spectral"
+        #200: "scipy_spectral"
+        #850: "HoobaDoopFloppityFloop"
+  contour_levels_range: [0, 105, 5]
+  diff_colormap: "BrBG"
+  diff_contour_range: [-15, 15, 2]
+  scale_factor: 1
+  add_offset: 0
+  new_unit: "Fraction"
+  mpl:
+    colorbar:
+      label : "Fraction"
+  obs_file: "ERAI_all_climo.nc"
+  obs_name: "ERAI"
+  obs_var_name: "RELHUM"
+  category: "State"
