@@ -2090,7 +2090,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
 
     debug = False
-    if kwargs["plot_type"] == "global_latlon_map":
+    if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
         debug = True
     boi = f"TRY THIS BOI\n---------------\n{adata.name}"
     if "lev" in kwargs:
@@ -2332,7 +2332,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     maxval = np.max(diffdata)
     # COLOR MAP
     #----------
-    cmapdiff = "GnBu"
+    cmapdiff = "BrBG"
     """if "diff_colormap" in plot_type_dict:
         cmap_diff = plot_type_dict["diff_colormap"]
         #if isinstance(cmap_diff, dict) and "plot_type" in kwargs:
