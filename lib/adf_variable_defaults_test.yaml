@@ -11,10 +11,10 @@ PRECT:
   #colormap: "fakemap"
   polar_map:
     colormap:
-      nh:
-        "fakemap"
-      sh:
-        "GnBu"
+      nh: "fakemap"
+      sh: "GnBu"
+  global_latlon_map:
+    colormap: "BrBg"
   contour_levels_range: [0, 12, 1]
   diff_colormap: "seismic"
   diff_contour_range: [-10, 10, 0.5]
