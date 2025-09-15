@@ -2129,7 +2129,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
         # check if this is a dictionary of hemispheres
         if isinstance(cmap, dict):
-            print("cmap.keys()",cmap.keys())
+            print("\n\ncmap.keys()",cmap.keys(),"\n\n")
         if (isinstance(cmap, dict)) and (("hemi" in kwargs) and (kwargs["hemi"] in cmap.keys())):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
             cmap_hemi1 = cmap.get(kwargs["hemi"])
