@@ -2693,7 +2693,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'diff_colorbar_opt': diff_colorbar_opt,
             'pct_colorbar_opt': pct_colorbar_opt,
             'normdiff': normdiff,
-            'cmapdiff': cmapdiff,
+            'cmapdiff': cmap_diff,
             'levelsdiff': levelsdiff,
             'pctnorm': pctnorm,
             'cmappct': cmappct,
