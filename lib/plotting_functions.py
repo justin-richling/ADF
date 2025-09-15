@@ -2208,15 +2208,16 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
                 # Create colormap
                 cmap_case = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
-            #else:
-            #    cmap1 = 'coolwarm'
+            else:
+                cmap_case = 'coolwarm'
         else:
             cmap_case = cm
-
+    print("ALMOST FINAL CHECK:",cmap_case)
     if cmap_case:
         if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
+            print("*****if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):****",cmap_case)
             cmap_case = None
-
+    print("CLOSE TO FINAL CHECK:",cmap_case)
     if not cmap_case:
         print(f"\tI give up, defaulting to 'viridis'")
         cmap_case = cmap1
