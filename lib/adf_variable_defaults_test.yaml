@@ -114,7 +114,7 @@ U:
     #diff_contour_range: # default to figuring our the contour levels from difference from max/min
   zonal_mean:
     colormap: "ncl_default"
-    contour_levels_linspace: [-10, 30, 15] # These will be applied to all zonal mean plots?
+    contour_levels_linspace: [-10, 30, 15] # These will be applied to all zonal 3d mean plots?
   scale_factor: 1
   add_offset: 0
   new_unit: "ms$^{-1}$"
