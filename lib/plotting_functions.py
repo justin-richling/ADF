@@ -2091,7 +2091,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     debug = False
     #if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
-    if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
+    if kwargs["plot_type"] in ["polar_map"]:
         debug = True
     boi = f"TRY THIS BOI\n---------------\n{adata.name}"
     if "lev" in kwargs:
@@ -2138,7 +2138,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap1 = cmap
             dprint(f'Looks like it single value cmap. This could be a variety of settings', debug=debug)
        
-       # dprint("\tcmap1:", cmap1, debug=debug)
+        dprint("\tcmap1:", cmap1, debug=debug)
 
 
     if cmap1 not in plt.colormaps():
@@ -2188,7 +2188,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #    cmap1 = 'coolwarm'
         else:
             cmap1 = cm
-    dprint(f"\n\t{adata.name} colormap ",cmap1, debug=debug)
+    dprint(f"\n\t{adata.name} FINAL colormap ",cmap1, debug=debug)
     
     # CONTOUR LEVELS
     #---------------
