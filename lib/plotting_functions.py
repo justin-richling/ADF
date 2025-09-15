@@ -2116,6 +2116,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         cmap = plot_type_dict["colormap"]
         dprint("\tUser supplied cmap:", cmap, debug=debug)
 
+        if (isinstance(cmap, str)):
+            cmap1 = cmap
+            print(cmap)
+            dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
+
         # check if this is a dictionary of hemispheres
         if (isinstance(cmap, dict)) and (("hemi" in kwargs) and (kwargs["hemi"] in cmap.keys())):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
@@ -2134,14 +2139,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
             print(f'Looks like it has vertical levels: {kwargs["lev"]}')
             cmap1 = cmap.get(kwargs["lev"])
-        elif (isinstance(cmap, dict)) and ("lev" in kwargs):
-            print(f'Looks like it has vertical levels: {kwargs["lev"]}')
-            cmap1 = cmap.get(kwargs["lev"])
+        #elif (isinstance(cmap, dict)) and ("lev" in kwargs):
+        #    print(f'Looks like it has vertical levels: {kwargs["lev"]} BUT not in the defaults dict {cmap}')
+        #    cmap1 = cmap.get(kwargs["lev"])
         else:
-            cmap1 = cmap
-            print(cmap)
-            dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
-
+            #cmap1 = cmap
+            #print(cmap)
+            #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
+            print(f"I give up, here is the default: {cmap1}")
         print("\tcmap1 raw:", cmap1)
 
 
