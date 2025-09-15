@@ -2090,8 +2090,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
 
     debug = False
-    #if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
-    if kwargs["plot_type"] in ["polar_map"]:
+    if kwargs["plot_type"] in ["global_latlon_map","polar_map"]:
+    #if kwargs["plot_type"] in ["polar_map"]:
         debug = True
     boi = f"TRY THIS BOI\n---------------\n{adata.name}"
     if "lev" in kwargs:
@@ -2138,7 +2138,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap1 = cmap
             dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
        
-        print("\tcmap1 raw:", cmap1, debug=debug)
+        print("\tcmap1 raw:", cmap1)
 
 
     #if cmap1 not in plt.colormaps():
