@@ -131,6 +131,14 @@ U:
 
 
 Q: # example of no specific values for plotting, so it will default all values to using max and min, not suggested...
+  polar_map:
+    colormap:
+      nh: "terrain"
+        #200: "terrain"
+        #850: "Spectral"
+      sh: "scipy_spectral"
+        #200: "scipy_spectral"
+        #850: "HoobaDoopFloppityFloop"
   category: "State"
   obs_file: "Q_ERA5_monthly_climo_197901-202112.nc"
   obs_name: "ERA5"
@@ -145,6 +153,7 @@ T:
     contour_levels_range: [200, 301, 5] # This range will be applied to all levels in global lat/lon 
   polar_map: # example of changing multiple features for both vertical levels
     colormap:
+      # In theory these should plot both hemispheres with these colorbars at these levels...
       200: "terrain"
       850: "Spectral"
     contour_levels_range:
