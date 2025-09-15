@@ -2152,7 +2152,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     #if cmap1 not in plt.colormaps():
     if cmap1 in ncl_defaults:
-        print(f"\t{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
+        print(f"\tTrying {cmap1} as an NCL color map:")
         try:
             url = guess_ncl_url(cmap1)
             locfil = Path(".") / f"{cmap1}.rgb"
