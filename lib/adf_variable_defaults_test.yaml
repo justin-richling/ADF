@@ -140,7 +140,7 @@ Q: # example of no specific values for plotting, so it will default all values t
       nh: "terrain"
         #200: "terrain"
         #850: "Spectral"
-      sh: "scipy_spectral"
+      sh: "nipy_spectral"
         #200: "scipy_spectral"
         #850: "HoobaDoopFloppityFloop"
   category: "State"
