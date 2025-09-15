@@ -2648,7 +2648,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'pctnorm': pctnorm,
             'cmappct': cmappct,
             'levelspctdiff':levelspctdiff,
-            'cmap1': cmap1,
+            'cmap1': cmap_case,
             'norm1': norm1,
             'levels1': levels1,
             'plot_log_p': plot_log_p
