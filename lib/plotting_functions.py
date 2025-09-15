@@ -2213,7 +2213,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             cmap_case = cm
     print("ALMOST FINAL CHECK:",cmap_case)
-    if cmap_case:
+    if isinstance(cmap_case, str):
         if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
             print("*****if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):****",cmap_case)
             cmap_case = None
