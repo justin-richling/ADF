@@ -2114,30 +2114,29 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #cmap1 = 'fakemap'
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
-        #dprint("\tcmap:", cmap, debug=debug)
-        """if (isinstance(cmap, dict)) and ("lev" in kwargs):
-            cmap1 = cmap.get(kwargs["lev"], cmap1)
-        else:
-            cmap1 = cmap
-       """
-       
-        if (isinstance(cmap, dict)) and ("hemi" in kwargs):
+        dprint("\tUser supplied cmap:", cmap, debug=debug)
+
+        # check if this is a dictionary of hemispheres
+        if (isinstance(cmap, dict)) and (kwargs["hemi"] in cmap.keys()):
             print("\tOH BOY POLAR HEMI BOI",kwargs["hemi"])
             cmap_hemi1 = cmap.get(kwargs["hemi"])
-            if (isinstance(cmap_hemi1, dict)) and ("lev" in kwargs):
-                if 'lev' in kwargs["hemi"]:
-                    cmap1 = cmap.get(kwargs["hemi"]["lev"], cmap1)
-                print(f'Looks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}')
-            else:
+            if (isinstance(cmap_hemi1, str)):
+                print(f'Looks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap')
                 cmap1 = cmap_hemi1
-                print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
-        elif (isinstance(cmap, dict)) and ("lev" in kwargs):
+            if (isinstance(cmap_hemi1, dict)) and (kwargs["lev"] in cmap_hemi1.keys()):
+                cmap1 = cmap_hemi1.get(cmap_hemi1["lev"])
+                print(f'Looks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}')
+            #else:
+            #    cmap1 = cmap_hemi1
+            #    print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
+        
+        # check if this is a dictionary of vertical levels
+        elif (isinstance(cmap, dict)) and (kwargs["lev"] in cmap.keys()):
             print(f'Looks like it has vertical levels: {kwargs["lev"]}')
-            
             cmap1 = cmap.get(kwargs["lev"])
         else:
             cmap1 = cmap
-            dprint(f'Looks like it single value cmap. This could be a variety of settings', debug=debug)
+            dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
        
         dprint("\tcmap1:", cmap1, debug=debug)
 
