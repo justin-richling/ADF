@@ -1942,7 +1942,7 @@ def load_colormap(cmap_name):
             return 'coolwarm'
         return cm
 
-def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
+"""def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
     # kind = "contour_levels" or "diff_contour_levels" etc
     levels = kwargs.get(kind)
     range_key = kind.replace('levels', 'levels_range')
@@ -1978,7 +1978,7 @@ def get_levels_from_kwargs(kind, kwargs, minval, maxval, default_num=12):
             if isinstance(selected, dict):
                 return np.linspace(*selected.get(kwargs.get("lev")))
             return np.linspace(*selected)
-    return np.linspace(minval, maxval, default_num)
+    return np.linspace(minval, maxval, default_num)"""
 
 
 
@@ -2041,17 +2041,27 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             return 'sequential'"""
     
     ncl_defaults = ["ncl_default"]
-    
-   # polar_names = {"nh":"NHPolar",
-   #                "sh":"SHPolar"}
 
     polar_names = {"NHPolar":"nh",
                    "SHPolar":"sh"}
-    # ------------------------------------------------------
+    # -----------------------------------------------------------
     # Helper: normalize plot_type_dict (handles polar_map + hemi)
-    # ------------------------------------------------------
+    # -----------------------------------------------------------
     def get_cmap(plotty):
         """
+        Gather colormap from variable defaults file, if applicapble.
+          - This will try and get the cmap name from yaml file, and if
+            it is not there, will default to 'viridis' for cases and 'BrBG' for differences
+
+        Parameters
+        ----------
+        plotty : str
+            "case" or "diff"
+        
+        Returns
+        -------
+        cmap_case : str
+            the colormap name to use
         """
         cmap_case = None
         if plotty == "diff":
@@ -2060,7 +2070,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if plotty == "case":
             colormap = "colormap"
             cmap1 = 'viridis'
-        print(f"\t********\n\tPlotty:{plotty}\n*******\n")
+
         if colormap in plot_type_dict:
             cmap = plot_type_dict[colormap]
             dprint("\tUser supplied cmap:", cmap, debug=debug)
