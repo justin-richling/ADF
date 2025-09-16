@@ -2337,10 +2337,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmapdiff = "BrBG"
-    
     cmap1 = 'viridis'
     cmap_diff = None
-    #cmap1 = 'fakemap'
     if "diff_colormap" in plot_type_dict:
         cmapdiff = plot_type_dict["diff_colormap"]
         dprint("\tUser supplied diff cmap:", cmapdiff, debug=debug)
@@ -2360,22 +2358,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if (isinstance(cmapdiff_hemi1, dict)) and (kwargs["lev"] in cmapdiff_hemi1.keys()):
                 dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
                 cmap_diff = cmapdiff_hemi1.get(kwargs["lev"])
-            #else:
-            #    cmap1 = cmap_hemi1
-            #    print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
-        
         # check if this is a dictionary of vertical levels
         elif (isinstance(cmapdiff, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmapdiff.keys())):
             dprint(f'\tLooks like it has vertical levels: {kwargs["lev"]}',debug=debug)
             cmap_diff = cmapdiff.get(kwargs["lev"])
-        #elif (isinstance(cmap, dict)) and ("lev" in kwargs):
-        #    print(f'Looks like it has vertical levels: {kwargs["lev"]} BUT not in the defaults dict {cmap}')
-        #    cmap1 = cmap.get(kwargs["lev"])
         else:
-            #cmap1 = cmap
-            #print(cmap)
-            #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
-            dprint(f"\tI TOTALLY give up, here is the default: {cmap_diff}",debug=debug)
+            dprint(f"\tI TOTALLY give up, here is the default cmapdiff: {cmapdiff}",debug=debug)
         dprint("\tcmapdiff raw:", cmap_diff,debug=debug)
 
     if cmap_diff in ncl_defaults:
@@ -2423,17 +2411,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap_diff = 'coolwarm'
         else:
             cmap_diff = cm
-    dprint("\tALMOST FINAL CHECK:",cmap_diff, debug=debug)
+    dprint("\tALMOST FINAL CHECK DIFF:",cmap_diff, debug=debug)
     if isinstance(cmap_diff, str):
         if (cmap_diff not in plt.colormaps()) and (cmap_diff not in ncl_defaults):
             dprint("*****\n\tif (cmap_diff not in plt.colormaps()) and (cmap_diff not in ncl_defaults):\n****\n",cmap_diff,"NOT in NCL or matplotlib, huh?", debug=debug)
             cmap_diff = None
-    dprint("\tCLOSE TO FINAL CHECK:",cmap_diff, debug=debug)
+    dprint("\tCLOSE TO FINAL CHECK DIFF:",cmap_diff, debug=debug)
     if not cmap_diff:
         dprint(f"\tI give up, defaulting to 'BrBG'",debug=debug)
         cmap_diff = cmapdiff
     
-    dprint(f"\n\t{adata.name} FINAL diff colormap ",cmap_diff, debug=debug)
+    dprint(f"\n\t{adata.name} FINAL DIFF colormap ",cmap_diff, debug=debug)
 
 
 
