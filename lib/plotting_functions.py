@@ -2053,7 +2053,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     def get_cmap(plotty):
         """
         """
-        map_case = None
+        cmap_case = None
         if plotty == "diff":
             colormap = "diff_colormap"
             cmap1 = 'BrBG'
@@ -2169,6 +2169,172 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             cmap_case = cmap1
         
         return cmap_case
+    
+
+    def get_contours(plotty, cmap1):
+        """
+        """
+        levels1 = None
+        no_norm = False
+        range_vals = []
+        if plotty == "diff":
+            contour_levels = "contour_levels"
+        if plotty == "case":
+            contour_levels = "contour_levels"
+            contour_levels_range = "contour_levels_range"
+            contour_levels_linspace = "contour_levels_linspace"
+
+        if 'contour_levels' in plot_type_dict:
+            levels = plot_type_dict['contour_levels']
+            if isinstance(levels, list):
+                levels1 = levels
+            elif (isinstance(levels, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels.keys())):
+                levels_hemi1 = levels.get(polar_names[kwargs["hemi"]])
+                if (isinstance(levels_hemi1, str)):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this range',debug=debug)
+                    levels1 = levels_hemi1
+                if (isinstance(levels_hemi1, dict)) and (kwargs["lev"] in levels_hemi1.keys()):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
+                    levels1 = levels_hemi1.get(kwargs["lev"])
+            # check if this is a dictionary of vertical levels
+            elif (isinstance(levels, dict)) and (("lev" in kwargs) and (kwargs["lev"] in levels.keys())):
+                print(f'\tLooks like it has vertical levels: {kwargs["lev"]}')
+                levels1 = levels.get(kwargs["lev"])
+            else:
+                levels1 = levels
+        else:
+            if "contour_levels" in kwargs:
+                if (isinstance(kwargs["contour_levels"], list)):
+                    #cmap_case = cmap
+                    #dprint(cmap,debug=debug)
+                    levels1 = kwargs["contour_levels"]
+                    dprint(f'\tLooks like it single value range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
+
+        if 'contour_levels_range' in plot_type_dict:
+            levels_range = plot_type_dict['contour_levels_range']
+            if isinstance(levels_range, list):
+                if len(levels_range) == 3:
+                    levels1 = np.arange(*levels_range)
+                else:
+                    dprint("\tcontour_levels_range must have 3 entries: min, max, step", debug=debug)
+            #elif (isinstance(levels_range, dict)) and ("hemi" in kwargs):
+            elif (isinstance(levels_range, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels_range.keys())):
+                levels_range_hemi1 = levels_range.get(polar_names[kwargs["hemi"]])
+                if (isinstance(levels_range_hemi1, list)):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this range',debug=debug)
+                    range_vals = levels_range_hemi1
+                if (isinstance(levels_range_hemi1, dict)) and (kwargs["lev"] in levels_range_hemi1.keys()):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
+                    range_vals = levels_range_hemi1.get(kwargs["lev"])
+                
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("\tPOLAR contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
+
+            #elif (isinstance(levels_range, dict)) and ("lev" in kwargs) and ("hemi" not in kwargs):
+            elif (isinstance(levels_range, dict)) and (("lev" in kwargs) and (kwargs["lev"] in levels_range.keys())):
+                range_vals = levels_range.get(kwargs["lev"])
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("\tNO POLAR contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
+            else:
+                    levels1 = levels_range
+        else:
+            if "contour_levels_range" in kwargs:
+                if (isinstance(kwargs["contour_levels_range"], list)):
+                    #cmap_case = cmap
+                    #dprint(cmap,debug=debug)
+                    range_vals = kwargs["contour_levels_range"]
+                    if len(range_vals) == 3:
+                        levels1 = np.arange(*range_vals)
+                    else:
+                        dprint("\tNO POLAR contour_levels_range must have 3 entries: min, max, step", debug=debug)
+                    dprint(f'\tLooks like it single value range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
+            
+            dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
+        
+        if 'contour_levels_linspace' in plot_type_dict:
+            levels_linspace = plot_type_dict['contour_levels_linspace']
+            if isinstance(levels_linspace, list):
+                if len(levels_linspace) == 3:
+                    levels1 = np.linspace(*levels_linspace)
+                else:
+                    dprint("\tcontour_levels_linspace must have 3 entries: min, max, step", debug=debug)
+            elif (isinstance(levels_linspace, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels_linspace.keys())):
+                levels_linspace_hemi1 = levels_linspace.get(polar_names[kwargs["hemi"]])
+                if (isinstance(levels_linspace_hemi1, list)):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this range',debug=debug)
+                    range_vals = levels_linspace_hemi1
+                if (isinstance(levels_linspace_hemi1, dict)) and (kwargs["lev"] in levels_linspace_hemi1.keys()):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
+                    range_vals = levels_linspace_hemi1.get(kwargs["lev"])
+                
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("\tPOLAR contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
+                    levels1 = levels_linspace_hemi1
+            #elif (isinstance(levels_range, dict)) and ("lev" in kwargs) and ("hemi" not in kwargs):
+            elif (isinstance(levels_linspace, dict)) and (("lev" in kwargs) and (kwargs["lev"] in levels_linspace.keys())):
+                range_vals = levels_linspace.get(kwargs["lev"])
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("\tNO POLAR contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
+            else:
+                    levels1 = levels_linspace
+        else:
+            if "contour_levels_linspace" in kwargs:
+                if (isinstance(kwargs["contour_levels_linspace"], list)):
+                    #cmap_case = cmap
+                    #dprint(cmap,debug=debug)
+                    range_vals = kwargs["contour_levels_linspace"]
+                    if len(range_vals) == 3:
+                        levels1 = np.arange(*range_vals)
+                    else:
+                        dprint("\tNO POLAR contour_levels_linspace must have 3 entries: min, max, step", debug=debug)
+                    dprint(f'\tLooks like it single value linspace. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
+
+        dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
+        if levels1 is None:
+            dprint("\tSetting the levels from max/min", debug=debug)
+            levels1 = np.linspace(minval, maxval, 12)
+        dprint("\tLEVELS: ",type(levels1)," - ",levels1, debug=debug)
+
+
+
+
+
+
+        if kwargs.get('non_linear', False):
+            cmap_obj = cm.get_cmap(cmap1)
+            norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+        #End if
+
+        #if adata.name == "PRECT":
+        #    norm1=None
+
+        #Check if the minval and maxval are actually different.  If not,
+        #then set "levels1" to be an empty list, which will cause the
+        #plotting scripts to add a label instead of trying to plot a variable
+        #with no contours:
+        if minval == maxval:
+            levels1 = []
+        #End if
+
+        if ('colormap' not in plot_type_dict) and ('contour_levels' not in plot_type_dict):
+            if ((minval < 0) and (0 < maxval)) and mplv > 2:
+                norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
+            else:
+                norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+            #End if
+        #End if
+
+        return levels1, norm1
    
 
     
@@ -2217,129 +2383,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # Case/Baseline  options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #---------
-    cmap1 = 'viridis'
-    cmap_case = None
-    '''#cmap1 = 'fakemap'
-    dprint("WOWOWOWOW",kwargs,"\n",debug=debug)
-    if "colormap" in plot_type_dict:
-        cmap = plot_type_dict["colormap"]
-        dprint("\tUser supplied cmap:", cmap, debug=debug)
-        if "hemi" in kwargs:
-            print("\t",polar_names[kwargs["hemi"]])
-
-        if (isinstance(cmap, str)):
-            cmap_case = cmap
-            dprint(cmap,debug=debug)
-            dprint(f'\tLooks like it single value cmap. This could be a variety of settings\nWill apply to all of this map', debug=debug)
-
-        # check if this is a dictionary of hemispheres with vertical levels (ie 3d Polar)
-        elif (isinstance(cmap, dict)) and ((("hemi" in kwargs) and ("lev" in kwargs)) and (polar_names[kwargs["hemi"]] in cmap.keys())):
-            dprint("\tOH BOY 3D POLAR HEMI BOI",kwargs["hemi"],debug=debug)
-            cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
-            if (isinstance(cmap_hemi1, str)):
-                dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap',debug=debug)
-                cmap_case = cmap_hemi1
-            if (isinstance(cmap_hemi1, dict)) and (kwargs["lev"] in cmap_hemi1.keys()):
-                dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
-                cmap_case = cmap_hemi1.get(kwargs["lev"])
-
-        # check if this is a dictionary of hemispheres without vertical levels (ie 2d Polar)
-        elif (isinstance(cmap, dict)) and (("hemi" in kwargs) and ("lev" not in kwargs)):
-            dprint("\tOH BOY 2D POLAR HEMI BOI",kwargs["hemi"],debug=debug)
-            cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
-            if (isinstance(cmap_hemi1, str)):
-                dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels',debug=debug)
-                cmap_case = cmap_hemi1
-        
-        # check if this is a dictionary of vertical levels (ie 3d no Polar)
-        elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
-            dprint(f'\tLooks like it has vertical levels: {kwargs["lev"]}',debug=debug)
-            cmap_case = cmap.get(kwargs["lev"])
-
-        else:
-            #cmap1 = cmap
-            #print(cmap)
-            #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
-            dprint(f"\tI give up, here is the default: {cmap_case}",debug=debug)
-        dprint("\tcmap1 raw:", cmap_case,debug=debug)
-    else:
-        if "colormap" in kwargs:
-            if (isinstance(kwargs["colormap"], str)):
-                cmap_case = cmap
-                dprint(cmap,debug=debug)
-                dprint(f'\tLooks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
-        else:
-            cmap_case = cmap1
-    
-    if cmap_case in ncl_defaults:
-        dprint(f"\tTrying {cmap_case} as an NCL color map:",debug=debug)
-        try:
-            url = guess_ncl_url(cmap_case)
-            locfil = Path(".") / f"{cmap_case}.rgb"
-            if locfil.is_file():
-                data = read_ncl_colormap(locfil)
-            else:
-                try:
-                    data = read_ncl_colormap(url)
-                except urllib.error.HTTPError:
-                    print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
-            print("\ttype(data)",type(data))
-            if isinstance(data, np.ndarray):
-                cm, cmr = ncl_to_mpl(data, cmap_case)
-            else:
-                cm = None
-        except:
-            cm = None
-        #ncl_colors[cm.name] = cm
-        #ncl_colors[cmr.name] = cmr
-        if not cm:
-            print(f"\t{cmap_case} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
-            if adata.name == "PRECT":
-                """cmap1 = 'GnBu'
-                if cmap1 not in plt.colormaps():
-                    cmap1 = 'BrBG'"""
-                dprint("\tITS COMEING OT PRECT????", debug=debug)
-
-                # Improved brown to blue with alpha
-                # Explicit color stops with relative positions (from 0 to 1)
-                # Define the color stops with RGBA and precise positions
-                colors = [
-                            (0.00, (1.0, 1.0, 1.0, 0.02)),             # very dry, near white
-                            (0.10, (210/255, 180/255, 140/255, 0.2)),  # dry tan (sand)
-                            (0.25, (139/255, 90/255, 43/255, 0.4)),    # earthy brown
-                            (0.45, (107/255, 142/255, 35/255, 0.6)),   # olive green (moist)
-                            (0.70, (60/255, 179/255, 113/255, 0.8)),   # medium sea green (wet)
-                            (1.00, (0/255, 100/255, 200/255, 1.0))     # saturated blue
-                        ]
-
-                # Create colormap
-                cmap_case = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
-            else:
-                cmap_case = 'coolwarm'
-        else:
-            cmap_case = cm
-    dprint("\tALMOST FINAL CHECK:",cmap_case,debug=debug)
-    if isinstance(cmap_case, str):
-        if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
-            dprint("*****\n\tif (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):\n****\n",cmap_case,"NOT in NCL or matplotlib, huh?",debug=debug)
-            cmap_case = None
-    dprint("\tCLOSE TO FINAL CHECK:",cmap_case,debug=debug)
-    if not cmap_case:
-        dprint(f"\tI give up, defaulting to 'viridis'",debug=debug)
-        cmap_case = cmap1'''
-    
     cmap_case = get_cmap("case")
-    
     dprint(f"\n\t{adata.name} FINAL colormap ",cmap_case, debug=debug)
     
 
 
-
+    levels1, norm1 = get_contours("case", cmap_case)
 
 
     # CONTOUR LEVELS
     #---------------
-    levels1 = None
+    """levels1 = None
     no_norm = False
     range_vals = []
     if 'contour_levels' in plot_type_dict:
@@ -2490,7 +2544,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
         #End if
-    #End if
+    #End if"""
 
     # Difference options -- Check in kwargs for colormap and levels
     # determine levels & color normalization:
@@ -2588,11 +2642,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     dprint(f"\n\t{adata.name} FINAL DIFF colormap ",cmap_diff, debug=debug)
 
 
-
+    levelsdiff, _ = get_contours("diff", cmap_diff)
 
     # CONTOUR LEVELS
     #---------------
-    levelsdiff = None
+    '''levelsdiff = None
     no_norm = False
     range_vals = []
     if 'diff_contour_levels' in plot_type_dict:
@@ -2706,7 +2760,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 else:
                     dprint("\tNO POLAR diff_contour_linspace must have 3 entries: min, max, step", debug=debug)
                 dprint(f'\tLooks like it single value diff linspace. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
-
+    '''
     #dprint("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
     if levelsdiff is None:
         dprint("\tSetting the diff levels from max/min", debug=debug)
@@ -2805,435 +2859,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'levels1': levels1,
             'plot_log_p': plot_log_p
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
-    """Preparation for making contour plots.
-
-    Prepares for making contour plots of adata, bdata, diffdata, and pctdata, which is
-    presumably the difference between adata and bdata.
-    - set colormap from kwargs or defaults to coolwarm
-    - set contour levels from kwargs or 12 evenly spaced levels to span the data
-    - normalize colors based on specified contour levels or data range
-    - set option for linear or log pressure when applicable
-    - similar settings for difference, defaults to symmetric about zero
-    - separates Matplotlib kwargs into their own dicts
-
-    Parameters
-    ----------
-    adata, bdata, diffdata, pctdata
-        the data to be plotted
-    kwargs : dict, optional
-        plotting options
-
-    Returns
-    -------
-    dict
-        a dict with the following:
-        - 'subplots_opt': mpl kwargs for subplots
-        - 'contourf_opt': mpl kwargs for contourf
-        - 'colorbar_opt': mpl kwargs for colorbar
-        - 'diff_colorbar_opt' : mpl kwargs for difference colorbar
-        - 'normdiff': color normalization for difference panel
-        - 'cmapdiff': colormap for difference panel
-        - 'levelsdiff': contour levels for difference panel
-        - 'cmap1': color map for a and b panels
-        - 'norm1': color normalization for a and b panels
-        - 'levels1' : contour levels for a and b panels
-        - 'plot_log_p' : true/false whether to plot log(pressure) axis
-    """
-
-    if "plot_type" in kwargs:
-        plot_type = kwargs["plot_type"]
-    else:
-        plot_type = None
-
-    # determine levels & color normalization:
-    minval = np.min([np.min(adata), np.min(bdata)])
-    maxval = np.max([np.max(adata), np.max(bdata)])
-
-    # determine norm to use (deprecate this once minimum MPL version is high enough)
-    normfunc, mplv = use_this_norm()
-
-    cmap1 = 'viridis'
-    if "colormap" in kwargs:
-        cmap = kwargs["colormap"]
-        if (isinstance(cmap, dict)) and (plot_type):
-            cmap_lev1 = cmap.get(plot_type, 'viridis')
-            if isinstance(cmap_lev1, dict) and "lev" in kwargs:
-                cmap1 = cmap_lev1.get(kwargs["lev"], 'viridis')
-            else:
-                cmap1 = cmap_lev1
-        else:
-            cmap1 = cmap
-
-    if cmap1 not in plt.colormaps():
-        print(f"{cmap1} is not a matplotlib standard color map. Trying if this an NCL color map")
-        url = guess_ncl_url(cmap1)
-        locfil = "." / f"{cmap1}.rgb"
-        if locfil.is_file():
-            data = read_ncl_colormap(locfil)
-        else:
-            data = read_ncl_colormap(url)
-        cm, cmr = ncl_to_mpl(data, cmap1)
-        if not cm:
-            print(f"{cmap1} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots")
-            cmap1 = 'coolwarm'
-        else:
-            cmap1 = cm
-
-    print("\ncmap1 ",cmap1)
-    levels1 = None
-    if 'contour_levels' in kwargs:
-        levels = kwargs['contour_levels']
-        if isinstance(levels, list):
-            levels1 = levels
-        elif (isinstance(levels, dict)) and (plot_type):
-            levels_ptype = levels.get(plot_type)
-            if isinstance(levels_ptype, dict) and "lev" in kwargs:
-                levels1 = levels_ptype.get(kwargs["lev"])
-            else:
-                levels1 = levels_ptype
-    if 'contour_levels_range' in kwargs:
-        levels_range = kwargs['contour_levels_range']
-        if isinstance(levels_range, list):
-            assert len(levels_range) == 3, "contour_levels_range must have 3 entries: min, max, step"
-            levels1 = np.arange(*levels_range)
-        elif (isinstance(levels_range, dict)) and (plot_type):
-            range_vals_ptype = levels_range.get(plot_type)
-            if isinstance(range_vals_ptype, dict) and "lev" in kwargs:
-                range_vals = range_vals_ptype.get(kwargs["lev"])
-                assert len(range_vals) == 3, "contour_levels_range[lev] must have 3 entries: min, max, step"
-                levels1 = np.arange(*range_vals)
-            if isinstance(range_vals_ptype, list):
-                levels1 = np.arange(*range_vals_ptype)
-            else:
-                range_vals = range_vals_ptype
-    if 'contour_levels_linspace' in kwargs:
-        levels_linspace = kwargs['contour_levels_linspace']
-        if isinstance(levels_linspace, list):
-            assert len(levels_linspace) == 3, "contour_levels_linspace must have 3 entries: min, max, step"
-            levels1 = np.linspace(*levels_linspace)
-        elif (isinstance(levels_linspace, dict)) and (plot_type):
-            linspace_vals_ptype = levels_linspace.get(plot_type)
-            if isinstance(linspace_vals_ptype, dict):
-                if "lev" in kwargs:
-                    range_vals = linspace_vals_ptype.get(kwargs["lev"],None)
-                if not range_vals:
-                    range_vals = linspace_vals_ptype
-                assert len(range_vals) == 3, "contour_levels_linspace[lev] must have 3 entries: min, max, step"
-                levels1 = np.linspace(*range_vals)
-            if isinstance(linspace_vals_ptype, list):
-                levels1 = np.linspace(*linspace_vals_ptype)
-            else:
-                range_vals = linspace_vals_ptype
-    if levels1 is None:
-        levels1 = np.linspace(minval, maxval, 12)
-
-    if kwargs.get('non_linear', False):
-        cmap_obj = cm.get_cmap(cmap1)
-        norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
-    else:
-        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    #End if
-
-    #Check if the minval and maxval are actually different.  If not,
-    #then set "levels1" to be an empty list, which will cause the
-    #plotting scripts to add a label instead of trying to plot a variable
-    #with no contours:
-    if minval == maxval:
-        levels1 = []
-    #End if
-
-    if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-        if ((minval < 0) and (0 < maxval)) and mplv > 2:
-            norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
-        else:
-            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-        #End if
-    #End if
-
-    # Difference options -- Check in kwargs for colormap and levels
-    cmapdiff = 'coolwarm'
-    if "diff_colormap" in kwargs:
-        cmap_diff = kwargs["diff_colormap"]
-        if (isinstance(cmap_diff, dict)) and (plot_type):
-            cmapdiff = cmap_diff.get(plot_type)
-        else:
-            cmapdiff = cmap_diff
-
-    if cmapdiff not in plt.colormaps():
-        print(f"Difference: {cmapdiff} is not a matplotlib standard color map. Trying if this an NCL color map")
-        url = guess_ncl_url(cmapdiff)
-        locfil = "." / f"{cmapdiff}.rgb"
-        if locfil.is_file():
-            data = read_ncl_colormap(locfil)
-        else:
-            data = read_ncl_colormap(url)
-        cm, cmr = ncl_to_mpl(data, cmapdiff)
-        if not cm:
-            print(f"Difference: {cmapdiff} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots")
-            cmapdiff = 'coolwarm'
-        else:
-            cmapdiff = cm
-
-
-    levelsdiff = None
-    if "diff_contour_levels" in kwargs:
-        diff_levels = kwargs["diff_contour_levels"]
-        if isinstance(diff_levels, list):
-            levelsdiff = diff_levels
-        elif (isinstance(diff_levels, dict)) and (plot_type):
-            levelsdiff_ptype = diff_levels.get(plot_type)
-            if isinstance(levelsdiff_ptype, dict) and "lev" in kwargs:
-                levelsdiff = levelsdiff_ptype.get(kwargs["lev"])
-            else:
-                levelsdiff = levels_ptype
-    if "diff_contour_range" in kwargs:
-        levelsdiff_range = kwargs["diff_contour_range"]
-        if isinstance(levelsdiff_range, list):
-            assert len(levelsdiff_range) == 3, "diff_contour_range must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*levelsdiff_range)
-        elif (isinstance(levelsdiff_range, dict)) and (plot_type):
-            if plot_type in levelsdiff_range:
-                diffrange_vals_ptype = levelsdiff_range.get(plot_type)
-                if isinstance(diffrange_vals_ptype, dict) and "lev" in kwargs:
-                    diffrange_vals = diffrange_vals_ptype.get(kwargs["lev"])
-                    assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
-                    levelsdiff = np.arange(*diffrange_vals)
-                else:
-                    diffrange_vals = diffrange_vals_ptype
-    if "diff_contour_linspace" in kwargs:
-        levelsdiff_linspace = kwargs["diff_contour_linspace"]
-        if isinstance(levelsdiff_linspace, list):
-            assert len(levelsdiff_linspace) == 3, "diff_contour_range must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*levelsdiff_linspace)
-        elif (isinstance(levelsdiff_linspace, dict)) and (plot_type):
-            if plot_type in levelsdiff_linspace:
-                difflinspace_vals_ptype = levelsdiff_linspace.get(plot_type)
-                if isinstance(difflinspace_vals_ptype, dict) and "lev" in kwargs:
-                    diffrange_vals = difflinspace_vals_ptype.get(kwargs["lev"])
-                    assert len(diffrange_vals) == 3, "diff_contour_range[lev] must have exactly three entries: min, max, step"
-                    levelsdiff = np.arange(*diffrange_vals)
-                else:
-                    diffrange_vals = difflinspace_vals_ptype
-
-    if levelsdiff is None:
-        absmaxdif = np.max(np.abs(diffdata))
-        levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
-
-    # Percent Difference options -- Check in kwargs for colormap and levels
-    if "pct_diff_colormap" in kwargs:
-        cmappct = kwargs["pct_diff_colormap"]
-    else:
-        cmappct = "PuOr_r"
-    #End if
-
-    if cmappct not in plt.colormaps():
-        print(f"Percent Difference: {cmappct} is not a matplotlib standard color map. Trying if this an NCL color map")
-        url = guess_ncl_url(cmappct)
-        locfil = "." / f"{cmappct}.rgb"
-        if locfil.is_file():
-            data = read_ncl_colormap(locfil)
-        else:
-            data = read_ncl_colormap(url)
-        cm, cmr = ncl_to_mpl(data, cmappct)
-        if not cm:
-            print(f"Percent Difference: {cmappct} is not a matplotlib or NCL color map. Defaulting to 'coolwarm' for test/base plots")
-            cmappct = 'PuOr_r'
-        else:
-            cmappct = cm
-
-    if "pct_diff_contour_levels" in kwargs:
-        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
-    elif "pct_diff_contour_range" in kwargs:
-            assert len(kwargs['pct_diff_contour_range']) == 3, "pct_diff_contour_range must have exactly three entries: min, max, step"
-            levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
-    else:
-        levelspctdiff = [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
-    pctnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
-
-    if "plot_log_pressure" in kwargs:
-        plot_log_p = kwargs["plot_log_pressure"]
-    else:
-        plot_log_p = False
-
-    # color normalization for difference
-    if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
-        normdiff = normfunc(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff), vcenter=0.0)
-    else:
-        normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-
-    subplots_opt = {}
-    contourf_opt = {}
-    colorbar_opt = {}
-    diff_colorbar_opt = {}
-    pct_colorbar_opt = {}
-
-    # extract any MPL kwargs that should be passed on:
-    if 'mpl' in kwargs:
-        subplots_opt.update(kwargs['mpl'].get('subplots',{}))
-        contourf_opt.update(kwargs['mpl'].get('contourf',{}))
-        colorbar_opt.update(kwargs['mpl'].get('colorbar',{}))
-        diff_colorbar_opt.update(kwargs['mpl'].get('diff_colorbar',{}))
-        pct_colorbar_opt.update(kwargs['mpl'].get('pct_diff_colorbar',{}))
-    #End ifs
-    return {'subplots_opt': subplots_opt,
-            'contourf_opt': contourf_opt,
-            'colorbar_opt': colorbar_opt,
-            'diff_colorbar_opt': diff_colorbar_opt,
-            'pct_colorbar_opt': pct_colorbar_opt,
-            'normdiff': normdiff,
-            'cmapdiff': cmapdiff,
-            'levelsdiff': levelsdiff,
-            'pctnorm': pctnorm,
-            'cmappct': cmappct,
-            'levelspctdiff':levelspctdiff,
-            'cmap1': cmap1,
-            'norm1': norm1,
-            'levels1': levels1,
-            'plot_log_p': plot_log_p
-            }'''
-
-
-
-'''def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
-    if 'prizzint' not in kwargs:
-        kwargs['prizzint'] = None
-    # Default values
-    plot_type = kwargs.get("plot_type", None)
-    cmap1 = kwargs.get("colormap", 'viridis')
-    cmapdiff = kwargs.get("diff_colormap", 'coolwarm')
-    cmappct = kwargs.get("pct_diff_colormap", 'PuOr_r')
-    plot_log_p = kwargs.get("plot_log_pressure", False)
-
-    # Determine min and max values for the data
-    minval, maxval = np.min([np.min(adata), np.min(bdata)]), np.max([np.max(adata), np.max(bdata)])
-
-    # Determine the norm function to use
-    normfunc, mplv = use_this_norm()
-
-    # Color map handling
-    def get_colormap(cmap_key, default_cmap):
-        cmap = kwargs.get(cmap_key, default_cmap)
-        if isinstance(cmap, dict) and plot_type:
-            cmap_lev = cmap.get(plot_type, default_cmap)
-            if isinstance(cmap_lev, dict) and "lev" in kwargs:
-                return cmap_lev.get(kwargs["lev"], default_cmap)
-            return cmap_lev
-        return cmap
-
-    # Check if a colormap is valid or needs to be fetched from NCL
-    def validate_colormap(cmap):
-        if cmap not in plt.colormaps():
-            print(f"{cmap} is not a matplotlib standard color map. Trying if this is an NCL color map.")
-            url = guess_ncl_url(cmap)
-            locfil = Path(".") / f"{cmap}.rgb"
-            data = read_ncl_colormap(locfil) if locfil.is_file() else read_ncl_colormap(url)
-            cm, cmr = ncl_to_mpl(data, cmap)
-            if not cm:
-                print(f"{cmap} is not a valid color map. Defaulting to 'coolwarm'.")
-                return 'coolwarm'
-            return cm
-        return cmap
-
-    cmap1 = validate_colormap(get_colormap("colormap", 'viridis'))
-    cmapdiff = validate_colormap(get_colormap("diff_colormap", 'coolwarm'))
-    cmappct = validate_colormap(cmappct)
-
-    if kwargs['prizzint'] == True:
-        print("cmap1",cmap1)
-        print("cmapdiff",cmapdiff)
-        print("cmappct",cmappct)
-
-    # Levels handling
-    def get_levels(levels_key, default_levels):
-        levels = kwargs.get(levels_key, None)
-        if isinstance(levels, list):
-            return levels
-        elif isinstance(levels, dict) and plot_type:
-            levels_ptype = levels.get(plot_type)
-            if isinstance(levels_ptype, dict) and "lev" in kwargs:
-                return levels_ptype.get(kwargs["lev"])
-            return levels_ptype
-        return default_levels
-
-    levels1 = get_levels('contour_levels', np.linspace(minval, maxval, 12))
-    levelsdiff = get_levels('diff_contour_levels', np.linspace(-np.max(np.abs(diffdata)), np.max(np.abs(diffdata)), 12))
-    levelspctdiff = kwargs.get("pct_diff_contour_levels", [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100])
-    
-    # Handle contour levels ranges
-    def get_contour_range(range_key, default_range):
-        range_vals = kwargs.get(range_key, None)
-        if isinstance(range_vals, list) and len(range_vals) == 3:
-            return np.arange(*range_vals)
-        elif isinstance(range_vals, dict) and plot_type:
-            if plot_type in range_vals:
-                range_vals_ptype = range_vals.get(plot_type)
-                if isinstance(range_vals_ptype, dict) and "lev" in kwargs:
-                    return np.arange(*range_vals_ptype.get(kwargs["lev"]))
-                return np.arange(*range_vals_ptype)
-        return default_range
-
-    levels1 = get_contour_range('contour_levels_range', levels1)
-    levelsdiff = get_contour_range('diff_contour_range', levelsdiff)
-    levelspctdiff = get_contour_range('pct_diff_contour_range', levelspctdiff)
-
-    # Norm handling
-    norm1 = mpl.colors.BoundaryNorm(levels1, len(levels1)) if kwargs.get('non_linear', False) else mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    normdiff = mpl.colors.BoundaryNorm(levelsdiff, len(levelsdiff)) if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2 else mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-    pctnorm = mpl.colors.BoundaryNorm(levelspctdiff, 256)
-
-    # Return all options in a dictionary
-    subplots_opt, contourf_opt, colorbar_opt, diff_colorbar_opt, pct_colorbar_opt = {}, {}, {}, {}, {}
-    if 'mpl' in kwargs:
-        subplots_opt.update(kwargs['mpl'].get('subplots', {}))
-        contourf_opt.update(kwargs['mpl'].get('contourf', {}))
-        colorbar_opt.update(kwargs['mpl'].get('colorbar', {}))
-        diff_colorbar_opt.update(kwargs['mpl'].get('diff_colorbar', {}))
-        pct_colorbar_opt.update(kwargs['mpl'].get('pct_diff_colorbar', {}))
-
-    return {
-        'subplots_opt': subplots_opt,
-        'contourf_opt': contourf_opt,
-        'colorbar_opt': colorbar_opt,
-        'diff_colorbar_opt': diff_colorbar_opt,
-        'pct_colorbar_opt': pct_colorbar_opt,
-        'normdiff': normdiff,
-        'cmapdiff': cmapdiff,
-        'levelsdiff': levelsdiff,
-        'pctnorm': pctnorm,
-        'cmappct': cmappct,
-        'levelspctdiff': levelspctdiff,
-        'cmap1': cmap1,
-        'norm1': norm1,
-        'levels1': levels1,
-        'plot_log_p': plot_log_p
-    }
-'''
-
-
-
-
-
-
-
-
-
-
 
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
