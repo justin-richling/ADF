@@ -2056,10 +2056,10 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         map_case = None
         if plotty == "diff":
             colormap = "diff_colormap"
-            cmap1 = 'viridis'
+            cmap1 = 'BrBG'
         if plotty == "case":
             colormap = "colormap"
-            cmap1 = 'BrBG'
+            cmap1 = 'viridis'
         print(f"\t********\nPlotty:{plotty}\n*******\n")
         if colormap in plot_type_dict:
             cmap = plot_type_dict[colormap]
