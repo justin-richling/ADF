@@ -2069,11 +2069,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             plot_type_dict = kwargs
     else:
         plot_type = None
-        if "colormap" in kwargs:
-            if (isinstance(kwargs["colormap"], str)):
-                cmap_case = cmap
-                dprint(cmap,debug=debug)
-                dprint(f'\tLooks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
+        plot_type_dict = {}
 
     debug = False
     #if (kwargs["plot_type"] in ["global_latlon_map","polar_map"]) and (kwargs["season"]=="ANN"):
@@ -2143,7 +2139,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
             dprint(f"\tI give up, here is the default: {cmap_case}",debug=debug)
         dprint("\tcmap1 raw:", cmap_case,debug=debug)
-
+    else:
+        if "colormap" in kwargs:
+            if (isinstance(kwargs["colormap"], str)):
+                cmap_case = cmap
+                dprint(cmap,debug=debug)
+                dprint(f'\tLooks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
+    
+    
     if cmap_case in ncl_defaults:
         dprint(f"\tTrying {cmap_case} as an NCL color map:",debug=debug)
         try:
@@ -2231,6 +2234,13 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             levels1 = levels.get(kwargs["lev"])
         else:
             levels1 = levels
+    else:
+        if "contour_levels" in kwargs:
+            if (isinstance(kwargs["contour_levels"], list)):
+                #cmap_case = cmap
+                #dprint(cmap,debug=debug)
+                levels1 = kwargs["contour_levels"]
+                dprint(f'\tLooks like it single value range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
 
     if 'contour_levels_range' in plot_type_dict:
         levels_range = plot_type_dict['contour_levels_range']
@@ -2239,7 +2249,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 levels1 = np.arange(*levels_range)
             else:
                 dprint("\tcontour_levels_range must have 3 entries: min, max, step", debug=debug)
-        
         #elif (isinstance(levels_range, dict)) and ("hemi" in kwargs):
         elif (isinstance(levels_range, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels_range.keys())):
             levels_range_hemi1 = levels_range.get(polar_names[kwargs["hemi"]])
@@ -2263,9 +2272,21 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 dprint("\tNO POLAR contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
         else:
-                levels1 = levels_range  
+                levels1 = levels_range
+    else:
+        if "contour_levels_range" in kwargs:
+            if (isinstance(kwargs["contour_levels_range"], list)):
+                #cmap_case = cmap
+                #dprint(cmap,debug=debug)
+                range_vals = kwargs["contour_levels_range"]
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("\tNO POLAR contour_levels_range must have 3 entries: min, max, step", debug=debug)
+                dprint(f'\tLooks like it single value range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
         
         dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
+    
     if 'contour_levels_linspace' in plot_type_dict:
         levels_linspace = plot_type_dict['contour_levels_linspace']
         if isinstance(levels_linspace, list):
@@ -2296,8 +2317,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 dprint("\tNO POLAR contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
         else:
                 levels1 = levels_linspace
+    else:
+        if "contour_levels_linspace" in kwargs:
+            if (isinstance(kwargs["contour_levels_linspace"], list)):
+                #cmap_case = cmap
+                #dprint(cmap,debug=debug)
+                range_vals = kwargs["contour_levels_linspace"]
+                if len(range_vals) == 3:
+                    levels1 = np.arange(*range_vals)
+                else:
+                    dprint("\tNO POLAR contour_levels_linspace must have 3 entries: min, max, step", debug=debug)
+                dprint(f'\tLooks like it single value linspace. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
 
-        dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.LINSPACE", debug=debug)
     dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
     if levels1 is None:
         dprint("\tSetting the levels from max/min", debug=debug)
@@ -2456,6 +2487,13 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             levelsdiff = levels_diff.get(kwargs["lev"])
         else:
             levelsdiff = levels_diff
+    else:
+        if "diff_contour_levels" in kwargs:
+            if (isinstance(kwargs["diff_contour_levels"], list)):
+                #cmap_case = cmap
+                #dprint(cmap,debug=debug)
+                levelsdiff = kwargs["diff_contour_levels"]
+                dprint(f'\tLooks like it single value range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
 
     if 'diff_contour_range' in plot_type_dict:
         levelsdiff_range = plot_type_dict['diff_contour_range']
@@ -2488,7 +2526,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 dprint("\tNO POLAR diff_contour_range[lev] must have 3 entries: min, max, step", debug=debug)
         else:
-                levelsdiff = levelsdiff_range  
+                levelsdiff = levelsdiff_range
+    else:
+        if "diff_contour_range" in kwargs:
+            if (isinstance(kwargs["diff_contour_range"], list)):
+                #cmap_case = cmap
+                #dprint(cmap,debug=debug)
+                range_vals = kwargs["diff_contour_range"]
+                if len(range_vals) == 3:
+                    levelsdiff = np.arange(*range_vals)
+                else:
+                    dprint("\tNO POLAR diff_contour_range must have 3 entries: min, max, step", debug=debug)
+                dprint(f'\tLooks like it single value diff range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
     
     if 'diff_contour_linspace' in plot_type_dict:
         levelsdiff_linspace = plot_type_dict['diff_contour_linspace']
@@ -2520,6 +2569,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 dprint("\tNO POLAR diff_contour_linspace[lev] must have 3 entries: min, max, step", debug=debug)
         else:
                 levelsdiff = levelsdiff_linspace
+    else:
+        if "diff_contour_linspace" in kwargs:
+            if (isinstance(kwargs["diff_contour_linspace"], list)):
+                #cmap_case = cmap
+                #dprint(cmap,debug=debug)
+                range_vals = kwargs["diff_contour_linspace"]
+                if len(range_vals) == 3:
+                    levelsdiff = np.arange(*range_vals)
+                else:
+                    dprint("\tNO POLAR diff_contour_linspace must have 3 entries: min, max, step", debug=debug)
+                dprint(f'\tLooks like it single value diff linspace. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
 
     #dprint("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
     if levelsdiff is None:
