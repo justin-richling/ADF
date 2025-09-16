@@ -2483,6 +2483,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #levels1, norm1 = get_contours("case", cmap_case)
     levels1 = resolve_levels("case", plot_type_dict, kwargs, polar_names, debug=False)
     
+    dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
+    if levels1 is None:
+        dprint("\tSetting the levels from max/min", debug=debug)
+        levels1 = np.linspace(minval, maxval, 12)
+    dprint("\tLEVELS: ",type(levels1)," - ",levels1, debug=debug)
     
     if kwargs.get('non_linear', False):
         cmap_obj = cm.get_cmap(cmap_case)
@@ -2521,14 +2526,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #---------------
     #levelsdiff, _ = get_contours("diff", cmap_diff)
     levelsdiff = resolve_levels("diff", plot_type_dict, kwargs, polar_names, debug=False)
-    
-    #dprint("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
-    if levelsdiff is None:
-        dprint("\tSetting the diff levels from max/min", debug=debug)
-        levelsdiff = np.linspace(minval, maxval, 12)
-    #dprint("\tLEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
 
     if levelsdiff is None:
+        dprint("\tSetting the diff levels from max/min", debug=debug)
         absmaxdif = np.max(np.abs(diffdata))
         levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
 
