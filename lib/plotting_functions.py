@@ -2178,14 +2178,16 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         no_norm = False
         range_vals = []
         if plotty == "diff":
-            contour_levels = "contour_levels"
+            contour_levels = "diff_contour_levels"
+            contour_levels_range = "diff_contour_range"
+            contour_levels_linspace = "diff_contour_linspace"
         if plotty == "case":
             contour_levels = "contour_levels"
             contour_levels_range = "contour_levels_range"
             contour_levels_linspace = "contour_levels_linspace"
 
-        if 'contour_levels' in plot_type_dict:
-            levels = plot_type_dict['contour_levels']
+        if contour_levels in plot_type_dict:
+            levels = plot_type_dict[contour_levels]
             if isinstance(levels, list):
                 levels1 = levels
             elif (isinstance(levels, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels.keys())):
@@ -2203,15 +2205,15 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                 levels1 = levels
         else:
-            if "contour_levels" in kwargs:
-                if (isinstance(kwargs["contour_levels"], list)):
+            if contour_levels in kwargs:
+                if (isinstance(kwargs[contour_levels], list)):
                     #cmap_case = cmap
                     #dprint(cmap,debug=debug)
-                    levels1 = kwargs["contour_levels"]
+                    levels1 = kwargs[contour_levels]
                     dprint(f'\tLooks like it single value range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
 
-        if 'contour_levels_range' in plot_type_dict:
-            levels_range = plot_type_dict['contour_levels_range']
+        if contour_levels_range in plot_type_dict:
+            levels_range = plot_type_dict[contour_levels_range]
             if isinstance(levels_range, list):
                 if len(levels_range) == 3:
                     levels1 = np.arange(*levels_range)
@@ -2242,11 +2244,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                     levels1 = levels_range
         else:
-            if "contour_levels_range" in kwargs:
-                if (isinstance(kwargs["contour_levels_range"], list)):
+            if contour_levels_range in kwargs:
+                if (isinstance(kwargs[contour_levels_range], list)):
                     #cmap_case = cmap
                     #dprint(cmap,debug=debug)
-                    range_vals = kwargs["contour_levels_range"]
+                    range_vals = kwargs[contour_levels_range]
                     if len(range_vals) == 3:
                         levels1 = np.arange(*range_vals)
                     else:
@@ -2255,8 +2257,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             
             dprint("\tTHESE ARE ARGUMENTS FOR A RANGE OF VALUES FOR NP.ARANGE", debug=debug)
         
-        if 'contour_levels_linspace' in plot_type_dict:
-            levels_linspace = plot_type_dict['contour_levels_linspace']
+        if contour_levels_linspace in plot_type_dict:
+            levels_linspace = plot_type_dict[contour_levels_linspace]
             if isinstance(levels_linspace, list):
                 if len(levels_linspace) == 3:
                     levels1 = np.linspace(*levels_linspace)
@@ -2286,11 +2288,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             else:
                     levels1 = levels_linspace
         else:
-            if "contour_levels_linspace" in kwargs:
-                if (isinstance(kwargs["contour_levels_linspace"], list)):
+            if contour_levels_linspace in kwargs:
+                if (isinstance(kwargs[contour_levels_linspace], list)):
                     #cmap_case = cmap
                     #dprint(cmap,debug=debug)
-                    range_vals = kwargs["contour_levels_linspace"]
+                    range_vals = kwargs[contour_levels_linspace]
                     if len(range_vals) == 3:
                         levels1 = np.arange(*range_vals)
                     else:
