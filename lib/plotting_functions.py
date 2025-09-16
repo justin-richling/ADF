@@ -2180,6 +2180,23 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     def get_contours(plotty, cmap1):
         """
+        Gather contour levels from variable defaults file, if applicapble.
+            - This will try and get the contour levels from yaml file, and if
+              it is not there, will default to 12 evenly spaced levels to span the data
+
+        Parameters
+        ----------
+        plotty : str
+            "case" or "diff"
+        cmap1 : str
+            the colormap name to use (for determining if diverging or sequential)
+
+        Returns
+        -------
+        levels1 : list or np.ndarray
+            the contour levels to use
+        norm1 : mpl.colors.BoundaryNorm or mpl.colors.Normalize
+            the color normalization to use
         """
         levels1 = None
         range_vals = []
