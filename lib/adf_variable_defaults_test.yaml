@@ -76,7 +76,7 @@ PSL:
   polar_map:
     colormap: "rainbow"
   contour_levels_range: [980, 1053, 4]
-  diff_colormap: "PuOr_r"
+  #diff_colormap: "PuOr_r"
   diff_contour_range: [-9, 9.1, 0.5]
   scale_factor: 0.01
   add_offset: 0
