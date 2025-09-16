@@ -2060,7 +2060,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if plotty == "case":
             colormap = "colormap"
             cmap1 = 'viridis'
-        print(f"\t********\nPlotty:{plotty}\n*******\n")
+        print(f"\t********\n\tPlotty:{plotty}\n*******\n")
         if colormap in plot_type_dict:
             cmap = plot_type_dict[colormap]
             dprint("\tUser supplied cmap:", cmap, debug=debug)
@@ -2097,9 +2097,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap_case = cmap.get(kwargs["lev"])
 
             else:
-                #cmap1 = cmap
-                #print(cmap)
-                #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
                 dprint(f"\tI give up, here is the default: {cmap_case}",debug=debug)
             dprint("\tcmap1 raw:", cmap_case,debug=debug)
         else:
@@ -2175,7 +2172,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         """
         """
         levels1 = None
-        no_norm = False
         range_vals = []
         if plotty == "diff":
             contour_levels = "diff_contour_levels"
@@ -2217,7 +2213,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     levels1 = np.arange(*levels_range)
                 else:
                     dprint("\tcontour_levels_range must have 3 entries: min, max, step", debug=debug)
-            #elif (isinstance(levels_range, dict)) and ("hemi" in kwargs):
+
             elif (isinstance(levels_range, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels_range.keys())):
                 levels_range_hemi1 = levels_range.get(polar_names[kwargs["hemi"]])
                 if (isinstance(levels_range_hemi1, list)):
@@ -2243,8 +2239,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             if contour_levels_range in kwargs:
                 if (isinstance(kwargs[contour_levels_range], list)):
-                    #cmap_case = cmap
-                    #dprint(cmap,debug=debug)
                     range_vals = kwargs[contour_levels_range]
                     if len(range_vals) == 3:
                         levels1 = np.arange(*range_vals)
@@ -2273,7 +2267,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 else:
                     dprint("\tPOLAR contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
                     levels1 = levels_linspace_hemi1
-            #elif (isinstance(levels_range, dict)) and ("lev" in kwargs) and ("hemi" not in kwargs):
+
             elif (isinstance(levels_linspace, dict)) and (("lev" in kwargs) and (kwargs["lev"] in levels_linspace.keys())):
                 range_vals = levels_linspace.get(kwargs["lev"])
                 if len(range_vals) == 3:
@@ -2285,8 +2279,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             if contour_levels_linspace in kwargs:
                 if (isinstance(kwargs[contour_levels_linspace], list)):
-                    #cmap_case = cmap
-                    #dprint(cmap,debug=debug)
                     range_vals = kwargs[contour_levels_linspace]
                     if len(range_vals) == 3:
                         levels1 = np.arange(*range_vals)
