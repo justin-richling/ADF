@@ -2162,7 +2162,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 cmap_case = None
         dprint("\tCLOSE TO FINAL CHECK:",cmap_case,debug=debug)
         if not cmap_case:
-            dprint(f"\tI give up, defaulting to 'viridis'",debug=debug)
+            dprint(f"\tI give up, defaulting to '{cmap1}'",debug=debug)
             cmap_case = cmap1
         
         return cmap_case
