@@ -143,11 +143,7 @@ Q: # example of no specific values for plotting, so it will default all values t
   polar_map:
     colormap:
       nh: "terrain"
-        #200: "terrain"
-        #850: "Spectral"
       sh: "nipy_spectral"
-        #200: "scipy_spectral"
-        #850: "HoobaDoopFloppityFloop"
   category: "State"
   obs_file: "Q_ERA5_monthly_climo_197901-202112.nc"
   obs_name: "ERA5"
