@@ -2103,6 +2103,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
         dprint("\tUser supplied cmap:", cmap, debug=debug)
+        if "hemi" in kwargs:
+            print("\t",polar_names[kwargs["hemi"]])
 
         if (isinstance(cmap, str)):
             cmap_case = cmap
@@ -2119,9 +2121,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             if (isinstance(cmap_hemi1, dict)) and (kwargs["lev"] in cmap_hemi1.keys()):
                 dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
                 cmap_case = cmap_hemi1.get(kwargs["lev"])
-            #else:
-            #    cmap1 = cmap_hemi1
-            #    print(f'Looks like polar {kwargs["hemi"]} but no vertical levels')
+
+        # check if this is a dictionary of hemispheres
+        elif (isinstance(cmap, dict)) and (("hemi" in kwargs) and ("lev" not in kwargs)):
+            dprint("\tOH BOY POLAR HEMI BOI",kwargs["hemi"],debug=debug)
+            cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
+            if (isinstance(cmap_hemi1, str)):
+                dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels',debug=debug)
+                cmap_case = cmap_hemi1
         
         # check if this is a dictionary of vertical levels
         elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
