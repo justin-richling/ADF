@@ -2050,6 +2050,125 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # ------------------------------------------------------
     # Helper: normalize plot_type_dict (handles polar_map + hemi)
     # ------------------------------------------------------
+    def get_cmap(plotty):
+        """
+        """
+        map_case = None
+        if plotty == "diff":
+            colormap = "diff_colormap"
+            cmap1 = 'viridis'
+        if plotty == "case":
+            colormap = "colormap"
+            cmap1 = 'BuGR'
+        print(f"\t********\nPlotty:{plotty}\n*******\n")
+        if colormap in plot_type_dict:
+            cmap = plot_type_dict[colormap]
+            dprint("\tUser supplied cmap:", cmap, debug=debug)
+            if "hemi" in kwargs:
+                print("\t",polar_names[kwargs["hemi"]])
+
+            if (isinstance(cmap, str)):
+                cmap_case = cmap
+                dprint(cmap,debug=debug)
+                dprint(f'\tLooks like it single value cmap. This could be a variety of settings\nWill apply to all of this map', debug=debug)
+
+            # check if this is a dictionary of hemispheres with vertical levels (ie 3d Polar)
+            elif (isinstance(cmap, dict)) and ((("hemi" in kwargs) and ("lev" in kwargs)) and (polar_names[kwargs["hemi"]] in cmap.keys())):
+                dprint("\tOH BOY 3D POLAR HEMI BOI",kwargs["hemi"],debug=debug)
+                cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
+                if (isinstance(cmap_hemi1, str)):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap',debug=debug)
+                    cmap_case = cmap_hemi1
+                if (isinstance(cmap_hemi1, dict)) and (kwargs["lev"] in cmap_hemi1.keys()):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
+                    cmap_case = cmap_hemi1.get(kwargs["lev"])
+
+            # check if this is a dictionary of hemispheres without vertical levels (ie 2d Polar)
+            elif (isinstance(cmap, dict)) and (("hemi" in kwargs) and ("lev" not in kwargs)):
+                dprint("\tOH BOY 2D POLAR HEMI BOI",kwargs["hemi"],debug=debug)
+                cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
+                if (isinstance(cmap_hemi1, str)):
+                    dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels',debug=debug)
+                    cmap_case = cmap_hemi1
+            
+            # check if this is a dictionary of vertical levels (ie 3d no Polar)
+            elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
+                dprint(f'\tLooks like it has vertical levels: {kwargs["lev"]}',debug=debug)
+                cmap_case = cmap.get(kwargs["lev"])
+
+            else:
+                #cmap1 = cmap
+                #print(cmap)
+                #dprint(f'Looks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var', debug=debug)
+                dprint(f"\tI give up, here is the default: {cmap_case}",debug=debug)
+            dprint("\tcmap1 raw:", cmap_case,debug=debug)
+        else:
+            if colormap in kwargs:
+                if (isinstance(kwargs[colormap], str)):
+                    cmap_case = cmap
+                    dprint(cmap,debug=debug)
+                    dprint(f'\tLooks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
+            else:
+                cmap_case = cmap1
+        
+        if cmap_case in ncl_defaults:
+            dprint(f"\tTrying {cmap_case} as an NCL color map:",debug=debug)
+            try:
+                url = guess_ncl_url(cmap_case)
+                locfil = Path(".") / f"{cmap_case}.rgb"
+                if locfil.is_file():
+                    data = read_ncl_colormap(locfil)
+                else:
+                    try:
+                        data = read_ncl_colormap(url)
+                    except urllib.error.HTTPError:
+                        print("\tHAHAHAHAHAHAHAHAHAHAHAHAHAhA file dont exist, yoiu dumb")
+                print("\ttype(data)",type(data))
+                if isinstance(data, np.ndarray):
+                    cm, cmr = ncl_to_mpl(data, cmap_case)
+                else:
+                    cm = None
+            except:
+                cm = None
+            #ncl_colors[cm.name] = cm
+            #ncl_colors[cmr.name] = cmr
+            if not cm:
+                print(f"\t{cmap_case} is not a matplotlib or NCL color map. Defaulting to 'something' for test/base plots")
+                if adata.name == "PRECT":
+                    """cmap1 = 'GnBu'
+                    if cmap1 not in plt.colormaps():
+                        cmap1 = 'BrBG'"""
+                    dprint("\tITS COMEING OT PRECT????", debug=debug)
+
+                    # Improved brown to blue with alpha
+                    # Explicit color stops with relative positions (from 0 to 1)
+                    # Define the color stops with RGBA and precise positions
+                    colors = [
+                                (0.00, (1.0, 1.0, 1.0, 0.02)),             # very dry, near white
+                                (0.10, (210/255, 180/255, 140/255, 0.2)),  # dry tan (sand)
+                                (0.25, (139/255, 90/255, 43/255, 0.4)),    # earthy brown
+                                (0.45, (107/255, 142/255, 35/255, 0.6)),   # olive green (moist)
+                                (0.70, (60/255, 179/255, 113/255, 0.8)),   # medium sea green (wet)
+                                (1.00, (0/255, 100/255, 200/255, 1.0))     # saturated blue
+                            ]
+
+                    # Create colormap
+                    cmap_case = LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
+                else:
+                    cmap_case = 'coolwarm'
+            else:
+                cmap_case = cm
+        dprint("\tALMOST FINAL CHECK:",cmap_case,debug=debug)
+        if isinstance(cmap_case, str):
+            if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
+                dprint("*****\n\tif (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):\n****\n",cmap_case,"NOT in NCL or matplotlib, huh?",debug=debug)
+                cmap_case = None
+        dprint("\tCLOSE TO FINAL CHECK:",cmap_case,debug=debug)
+        if not cmap_case:
+            dprint(f"\tI give up, defaulting to 'viridis'",debug=debug)
+            cmap_case = cmap1
+        
+        return cmap_case
    
 
     
@@ -2100,7 +2219,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #---------
     cmap1 = 'viridis'
     cmap_case = None
-    #cmap1 = 'fakemap'
+    '''#cmap1 = 'fakemap'
     dprint("WOWOWOWOW",kwargs,"\n",debug=debug)
     if "colormap" in plot_type_dict:
         cmap = plot_type_dict["colormap"]
@@ -2136,9 +2255,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         elif (isinstance(cmap, dict)) and (("lev" in kwargs) and (kwargs["lev"] in cmap.keys())):
             dprint(f'\tLooks like it has vertical levels: {kwargs["lev"]}',debug=debug)
             cmap_case = cmap.get(kwargs["lev"])
-        #elif (isinstance(cmap, dict)) and ("lev" in kwargs):
-        #    print(f'Looks like it has vertical levels: {kwargs["lev"]} BUT not in the defaults dict {cmap}')
-        #    cmap1 = cmap.get(kwargs["lev"])
+
         else:
             #cmap1 = cmap
             #print(cmap)
@@ -2209,7 +2326,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     dprint("\tCLOSE TO FINAL CHECK:",cmap_case,debug=debug)
     if not cmap_case:
         dprint(f"\tI give up, defaulting to 'viridis'",debug=debug)
-        cmap_case = cmap1
+        cmap_case = cmap1'''
+    
+    cmap_case = get_cmap("case")
     
     dprint(f"\n\t{adata.name} FINAL colormap ",cmap_case, debug=debug)
     
@@ -2381,7 +2500,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     
     # COLOR MAP
     #----------
-    cmapdiff = "BrBG"
+    '''cmapdiff = "BrBG"
     cmap1 = 'viridis'
     cmap_diff = None
     if "diff_colormap" in plot_type_dict:
@@ -2464,8 +2583,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     dprint("\tCLOSE TO FINAL CHECK DIFF:",cmap_diff, debug=debug)
     if not cmap_diff:
         dprint(f"\tI give up, defaulting to 'BrBG'",debug=debug)
-        cmap_diff = cmapdiff
-    
+        cmap_diff = cmapdiff'''
+    cmap_diff = get_cmap("diff")
     dprint(f"\n\t{adata.name} FINAL DIFF colormap ",cmap_diff, debug=debug)
 
 
