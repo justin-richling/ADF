@@ -2079,6 +2079,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     boi = f"TRY THIS BOI\n---------------\n{adata.name}"
     if "lev" in kwargs:
         boi += f' - {kwargs["lev"]}'
+    if "hemi" in kwargs:
+        boi += f' - {kwargs["lev"]}: {kwargs["lev"]} '
     dprint("\t",boi, debug=debug)
     
     # determine levels & color normalization:
