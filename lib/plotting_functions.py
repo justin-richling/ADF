@@ -2178,7 +2178,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         return cmap_case
     
 
-    def get_contours(plotty, cmap1):
+    '''def get_contours(plotty, cmap1):
         """
         Gather contour levels from variable defaults file, if applicapble.
             - This will try and get the contour levels from yaml file, and if
@@ -2209,10 +2209,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             contour_levels_range = "contour_levels_range"
             contour_levels_linspace = "contour_levels_linspace"
 
+        # Look for a list of contour values first
+        # If it is a list of size 3, the ADF will get confused so default to min/max range
         if contour_levels in plot_type_dict:
             levels = plot_type_dict[contour_levels]
             if isinstance(levels, list):
-                levels1 = levels
+                if len(levels_range) == 3:
+                    print("\tcontour levels must be more than 3, ambiguous what to do with 3 vals")
+                elif len(levels) < 3:
+                    print("\tnot enough contour levels, ambiguous what to do with < 3 vals")
+                else:
+                    levels1 = levels
             elif (isinstance(levels, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels.keys())):
                 levels_hemi1 = levels.get(polar_names[kwargs["hemi"]])
                 if (isinstance(levels_hemi1, str)):
@@ -2239,7 +2246,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 if len(levels_range) == 3:
                     levels1 = np.arange(*levels_range)
                 else:
-                    dprint("\tcontour_levels_range must have 3 entries: min, max, step", debug=debug)
+                    dprint("\tcontour range must have 3 entries: min, max, step", debug=debug)
 
             elif (isinstance(levels_range, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels_range.keys())):
                 levels_range_hemi1 = levels_range.get(polar_names[kwargs["hemi"]])
@@ -2253,14 +2260,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 if len(range_vals) == 3:
                     levels1 = np.arange(*range_vals)
                 else:
-                    dprint("\tPOLAR contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
+                    print("\tPOLAR contour range for lev must have 3 entries: min, max, step")
 
             elif (isinstance(levels_range, dict)) and (("lev" in kwargs) and (kwargs["lev"] in levels_range.keys())):
                 range_vals = levels_range.get(kwargs["lev"])
                 if len(range_vals) == 3:
                     levels1 = np.arange(*range_vals)
                 else:
-                    dprint("\tNO POLAR contour_levels_range[lev] must have 3 entries: min, max, step", debug=debug)
+                    print("\tNO POLAR contour range for lev must have 3 entries: min, max, step")
             else:
                     levels1 = levels_range
         else:
@@ -2270,7 +2277,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     if len(range_vals) == 3:
                         levels1 = np.arange(*range_vals)
                     else:
-                        dprint("\tNO POLAR contour_levels_range must have 3 entries: min, max, step", debug=debug)
+                        print("\tNO POLAR contour range must have 3 entries: min, max, step")
                     dprint(f'\tLooks like it single value range. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
         
         if contour_levels_linspace in plot_type_dict:
@@ -2279,7 +2286,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 if len(levels_linspace) == 3:
                     levels1 = np.linspace(*levels_linspace)
                 else:
-                    dprint("\tcontour_levels_linspace must have 3 entries: min, max, step", debug=debug)
+                    print("\tcontour linspace must have 3 entries: min, max, step")
             elif (isinstance(levels_linspace, dict)) and (("hemi" in kwargs) and (polar_names[kwargs["hemi"]] in levels_linspace.keys())):
                 levels_linspace_hemi1 = levels_linspace.get(polar_names[kwargs["hemi"]])
                 if (isinstance(levels_linspace_hemi1, list)):
@@ -2292,7 +2299,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 if len(range_vals) == 3:
                     levels1 = np.arange(*range_vals)
                 else:
-                    dprint("\tPOLAR contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
+                    print("\tPOLAR contour linspace[lev] must have 3 entries: min, max, step")
                     levels1 = levels_linspace_hemi1
 
             elif (isinstance(levels_linspace, dict)) and (("lev" in kwargs) and (kwargs["lev"] in levels_linspace.keys())):
@@ -2300,7 +2307,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 if len(range_vals) == 3:
                     levels1 = np.arange(*range_vals)
                 else:
-                    dprint("\tNO POLAR contour_levels_linspace[lev] must have 3 entries: min, max, step", debug=debug)
+                    print("\tNO POLAR contour linspace for lev must have 3 entries: min, max, step")
             else:
                     levels1 = levels_linspace
         else:
@@ -2310,8 +2317,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     if len(range_vals) == 3:
                         levels1 = np.arange(*range_vals)
                     else:
-                        dprint("\tNO POLAR contour_levels_linspace must have 3 entries: min, max, step", debug=debug)
-                    dprint(f'\tLooks like it single value linspace. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
+                        print("\tNO POLAR contour linspace must have 3 entries: min, max, step")
+                    dprint(f'\tLooks like it single value linspace. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)"""
 
         dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
         if levels1 is None:
@@ -2342,7 +2349,84 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             #End if
         #End if
 
-        return levels1, norm1
+        return levels1, norm1'''
+    
+
+    def resolve_hemi_level(data, kwargs, polar_names, debug=False):
+        """Resolve hemisphere and/or vertical level specific values from a dict."""
+        hemi = kwargs.get("hemi")
+        lev = kwargs.get("lev")
+
+        if hemi and polar_names.get(hemi) in data:
+            hemi_data = data[polar_names[hemi]]
+            if isinstance(hemi_data, dict) and lev in hemi_data:
+                if debug:
+                    print(f"\tPolar {hemi} with vertical level {lev}")
+                return hemi_data[lev]
+            if debug:
+                print(f"\tPolar {hemi} without vertical levels")
+            return hemi_data
+        elif lev and lev in data:
+            if debug:
+                print(f"\tVertical level {lev}")
+            return data[lev]
+
+        return None
+
+
+    def resolve_levels(plotty, plot_type_dict, kwargs, polar_names, debug=False):
+        """Resolve contour levels based on user input and defaults."""
+        levels1 = None
+
+        # Map keys based on plot type
+        key_map = {
+            "diff": ("diff_contour_levels", "diff_contour_range", "diff_contour_linspace"),
+            "case": ("contour_levels", "contour_levels_range", "contour_levels_linspace"),
+        }
+        contour_levels, contour_range, contour_linspace = key_map.get(plotty, (None, None, None))
+
+        def process_entry(entry, kind):
+            """Handle lists and dicts for levels/ranges/linspace."""
+            if isinstance(entry, list):
+                if len(entry) == 3:
+                    if kind == "range":
+                        return np.arange(*entry)
+                    elif kind == "linspace":
+                        return np.linspace(*entry)
+                    else:
+                        return entry
+                elif len(entry) < 3:
+                    print(f"\tNot enough {kind} entries (<3) — ambiguous")
+                else:
+                    return entry
+            elif isinstance(entry, dict):
+                resolved = resolve_hemi_level(entry, kwargs, polar_names, debug)
+                if isinstance(resolved, list) and len(resolved) == 3:
+                    if kind == "range":
+                        return np.arange(*resolved)
+                    elif kind == "linspace":
+                        return np.linspace(*resolved)
+                return resolved
+            else:
+                return entry
+
+        # Priority: explicit contour levels → range → linspace
+        for key, kind in [(contour_levels, "levels"),
+                        (contour_range, "range"),
+                        (contour_linspace, "linspace")]:
+            entry = None
+            if key in plot_type_dict:
+                entry = plot_type_dict[key]
+            elif key in kwargs:
+                entry = kwargs[key]
+
+            if entry is not None:
+                levels1 = process_entry(entry, kind)
+                if levels1 is not None:
+                    break  # stop once a valid setting is found
+
+        return levels1
+
    
 
     
@@ -2396,7 +2480,32 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     
     # CONTOUR LEVELS
     #---------------
-    levels1, norm1 = get_contours("case", cmap_case)
+    #levels1, norm1 = get_contours("case", cmap_case)
+    levels1 = resolve_levels("case", plot_type_dict, kwargs, polar_names, debug=False)
+    
+    
+    if kwargs.get('non_linear', False):
+        cmap_obj = cm.get_cmap(cmap_case)
+        norm1 = mpl.colors.BoundaryNorm(levels1, cmap_obj.N)
+    else:
+        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
+    #End if
+
+    #Check if the minval and maxval are actually different.  If not,
+    #then set "levels1" to be an empty list, which will cause the
+    #plotting scripts to add a label instead of trying to plot a variable
+    #with no contours:
+    if minval == maxval:
+        levels1 = []
+    #End if
+
+    if ('colormap' not in plot_type_dict) and ('contour_levels' not in plot_type_dict):
+        if ((minval < 0) and (0 < maxval)) and mplv > 2:
+            norm1 = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
+        else:
+            norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
+        #End if
+    #End if
     
     # Difference options -- Check in kwargs for colormap and levels
     # determine levels & color normalization:
@@ -2410,7 +2519,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # CONTOUR LEVELS
     #---------------
-    levelsdiff, _ = get_contours("diff", cmap_diff)
+    #levelsdiff, _ = get_contours("diff", cmap_diff)
+    levelsdiff = resolve_levels("diff", plot_type_dict, kwargs, polar_names, debug=False)
     
     #dprint("\tPRE CHECK LEVELS: ",type(levelsdiff)," - ",levelsdiff, debug=debug)
     if levelsdiff is None:
