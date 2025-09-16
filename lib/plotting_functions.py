@@ -2080,9 +2080,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     if "lev" in kwargs:
         boi += f' - {kwargs["lev"]}'
     if "hemi" in kwargs:
-        boi += f' - {kwargs["lev"]}: {kwargs["lev"]} '
-    dprint("\t",boi, debug=debug)
+        boi += f' : {kwargs["hemi"]}'
     
+    #if ("lev" in kwargs) and ("hemi" in kwargs):
+    #    boi += f' - {kwargs["lev"]}: {kwargs["hemi"]}'
+    dprint("\t",boi, debug=debug)
+
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
     maxval = np.max([np.max(adata), np.max(bdata)])
