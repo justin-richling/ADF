@@ -2112,18 +2112,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
         # check if this is a dictionary of hemispheres with vertical levels (ie 3d Polar)
         elif (isinstance(cmap, dict)) and ((("hemi" in kwargs) and ("lev" in kwargs)) and (polar_names[kwargs["hemi"]] in cmap.keys())):
-            dprint("\tOH BOY POLAR HEMI BOI",kwargs["hemi"],debug=debug)
+            dprint("\tOH BOY 3D POLAR HEMI BOI",kwargs["hemi"],debug=debug)
             cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
-            #if (isinstance(cmap_hemi1, str)):
-            #    dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap',debug=debug)
-            #    cmap_case = cmap_hemi1
+            if (isinstance(cmap_hemi1, str)):
+                dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels\nall vert levs get this cmap',debug=debug)
+                cmap_case = cmap_hemi1
             if (isinstance(cmap_hemi1, dict)) and (kwargs["lev"] in cmap_hemi1.keys()):
                 dprint(f'\tLooks like polar {kwargs["hemi"]} and has vertical levels: {kwargs["lev"]}',debug=debug)
                 cmap_case = cmap_hemi1.get(kwargs["lev"])
 
         # check if this is a dictionary of hemispheres without vertical levels (ie 2d Polar)
         elif (isinstance(cmap, dict)) and (("hemi" in kwargs) and ("lev" not in kwargs)):
-            dprint("\tOH BOY POLAR HEMI BOI",kwargs["hemi"],debug=debug)
+            dprint("\tOH BOY 2D POLAR HEMI BOI",kwargs["hemi"],debug=debug)
             cmap_hemi1 = cmap.get(polar_names[kwargs["hemi"]])
             if (isinstance(cmap_hemi1, str)):
                 dprint(f'\tLooks like polar {kwargs["hemi"]} but no vertical levels',debug=debug)
