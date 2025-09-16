@@ -15,9 +15,9 @@ PRECT:
       #sh: "GnBu"
   global_latlon_map:
     colormap: "BrBG"
-  contour_levels_range: [0, 12, 1]
+  contour_levels_range: [0, 13, 1]
   diff_colormap: "seismic"
-  diff_contour_range: [-10, 10, 0.5]
+  diff_contour_range: [-10, 10.1, 0.5]
   scale_factor: 86400000
   add_offset: 0
   new_unit: "mm d$^{-1}$"
@@ -37,9 +37,9 @@ SWCF:
     colormap:
       nh: "fakemap"
       sh: "Blues"
-  contour_levels_range: [-150, 50, 10]
+  contour_levels_range: [-150, 51, 10]
   diff_colormap: "BrBG"
-  diff_contour_range: [-20, 20, 2]
+  diff_contour_range: [-20, 21, 2]
   scale_factor: 1
   add_offset: 0
   new_unit: "Wm$^{-2}$"
@@ -56,9 +56,9 @@ SWCF:
 
 LWCF:
   colormap: "Oranges"
-  contour_levels_range: [-10, 100, 5]
+  contour_levels_range: [-10, 101, 5]
   diff_colormap: "BrBG"
-  diff_contour_range: [-15, 15, 1]
+  diff_contour_range: [-15, 16, 1]
   scale_factor: 1
   add_offset: 0
   new_unit: "Wm$^{-2}$"
@@ -75,9 +75,9 @@ PSL:
   colormap: "Oranges"
   polar_map:
     colormap: "rainbow"
-  contour_levels_range: [980, 1052, 4]
+  contour_levels_range: [980, 1053, 4]
   diff_colormap: "PuOr_r"
-  diff_contour_range: [-9, 9, 0.5]
+  diff_contour_range: [-9, 9.1, 0.5]
   scale_factor: 0.01
   add_offset: 0
   new_unit: "hPa"
@@ -102,8 +102,8 @@ U:
       200: [-10, 51, 2.5]
       850: [-10, 31, 2.5]
     diff_contour_range:
-      200: [-15, 15, 2]
-      850: [-5, 5, 0.5]
+      200: [-15, 16, 2]
+      850: [-5, 5.1, 0.5]
   polar_map:
     colormap:
       nh:
@@ -116,8 +116,8 @@ U:
       200: [-10, 31, 2.5]
       850: [-10, 13, 2.5]
     diff_contour_range:
-      200: [-15, 15, 2]
-      850: [-5, 5, 0.5]
+      200: [-15, 16, 2]
+      850: [-5, 5.1, 0.5]
     #diff_contour_range: # default to figuring our the contour levels from difference from max/min
   zonal_mean:
     colormap: "ncl_default"
@@ -166,11 +166,11 @@ T:
       200: "terrain"
       850: "Spectral"
     contour_levels_range:
-      200: [200, 230, 1]
-      850: [250, 300, 2.5]
+      200: [200, 231, 1]
+      850: [250, 303, 2.5]
     diff_contour_range:
-      200: [-5, 6, 0.25]
-      850: [-5, 5, 0.5]
+      200: [-5, 6.1, 0.25]
+      850: [-5, 5.1, 0.5]
   zonal_mean:
     colormap: "ncl_default"
     contour_levels: [200, 205, 210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300]
@@ -193,7 +193,7 @@ RELHUM:
         #850: "HoobaDoopFloppityFloop"
   contour_levels_range: [0, 105, 5]
   diff_colormap: "BrBG"
-  diff_contour_range: [-15, 15, 2]
+  diff_contour_range: [-15, 16, 2]
   scale_factor: 1
   add_offset: 0
   new_unit: "Fraction"
