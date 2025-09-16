@@ -2105,8 +2105,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         else:
             if colormap in kwargs:
                 if (isinstance(kwargs[colormap], str)):
-                    cmap_case = cmap1
-                    dprint(cmap,debug=debug)
+                    cmap_case = kwargs[colormap]
+                    dprint(cmap_case,debug=debug)
                     dprint(f'\tLooks like it single value cmap. This could be a variety of settings\nWill apply to all maps of this var!', debug=debug)
             else:
                 cmap_case = cmap1
