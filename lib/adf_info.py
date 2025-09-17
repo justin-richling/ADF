@@ -86,6 +86,8 @@ class AdfInfo(AdfConfig):
         # Expand CVDP climo info variable strings:
         if self.__cvdp_info is not None:
             self.expand_references(self.__cvdp_info)
+            cvdp_default_loc = Path("externals/CVDP/")
+            self.__cvdp_info.get("cvdp_codebase_loc",cvdp_default_loc)
         # End if
 
         # Add MDTF info to object:
