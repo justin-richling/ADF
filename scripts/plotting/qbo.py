@@ -8,11 +8,8 @@ import matplotlib.colors as mcolors
 import matplotlib as mpl
 import plotting_functions as pf
 
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
-
-warnings.formatwarning = my_formatwarning
+import adf_utils as utils
+warnings.formatwarning = utils.my_formatwarning
 
 def qbo(adfobj):
     """

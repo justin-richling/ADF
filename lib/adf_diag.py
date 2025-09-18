@@ -1528,10 +1528,8 @@ def _load_dataset(fils):
     import warnings  # use to warn user about missing files.
 
     #Format warning messages:
-    def my_formatwarning(msg, *args, **kwargs):
-        """Issue `msg` as warning."""
-        return str(msg) + '\n'
-    warnings.formatwarning = my_formatwarning
+    import adf_utils as utils
+    warnings.formatwarning = utils.my_formatwarning
 
     if len(fils) == 0:
         warnings.warn("\t    WARNING: Input file list is empty.")

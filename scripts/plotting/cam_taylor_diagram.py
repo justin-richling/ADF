@@ -23,11 +23,9 @@ from matplotlib.legend_handler import HandlerTuple
 from plotting_functions import pres_from_hybrid
 import warnings  # use to warn user about missing files.
 
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
+import adf_utils as utils
+warnings.formatwarning = utils.my_formatwarning
 
-warnings.formatwarning = my_formatwarning
 #
 # --- Main Function Shares Name with Module: cam_taylor_diagram ---
 #

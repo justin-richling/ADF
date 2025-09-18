@@ -34,9 +34,8 @@ import cartopy.crs as ccrs
 from plotting_functions import pres_from_hybrid, prep_contour_plot
 
 
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + "\n"
+import adf_utils as utils
+warnings.formatwarning = utils.my_formatwarning
 
 
 warnings.formatwarning = my_formatwarning

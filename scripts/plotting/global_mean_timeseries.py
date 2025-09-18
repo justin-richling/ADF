@@ -15,13 +15,8 @@ import plotting_functions as pf
 import matplotlib.ticker as ticker
 
 
-def my_formatwarning(msg, *args, **kwargs):
-    """custom warning"""
-    # ignore everything except the message
-    return str(msg) + "\n"
-
-
-warnings.formatwarning = my_formatwarning
+import adf_utils as utils
+warnings.formatwarning = utils.my_formatwarning
 
 
 def global_mean_timeseries(adfobj):

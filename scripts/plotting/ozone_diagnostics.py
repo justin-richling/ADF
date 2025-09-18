@@ -102,11 +102,8 @@ from matplotlib.legend_handler import HandlerTuple
 from scipy.stats import pearsonr
 import sys
 
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
-
-warnings.formatwarning = my_formatwarning
+import adf_utils as utils
+warnings.formatwarning = utils.my_formatwarning
 
 #Notify user that script has started:
 msg = "\n  Generating ozone plots..."
