@@ -2348,7 +2348,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # Case/Baseline  options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #---------
-    cmap_case = get_cmap("case")
+    #get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=None)
+    cmap_case = get_cmap("case", plot_type_dict, kwargs, polar_names, debug=False, adata=None)
     dprint(f"\n\t{adata.name} FINAL colormap ",cmap_case, debug=debug)
     
     # CONTOUR LEVELS
@@ -2392,7 +2393,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # COLOR MAP
     #----------
-    cmap_diff = get_cmap("diff")
+    cmap_diff = get_cmap("diff", plot_type_dict, kwargs, polar_names, debug=False, adata=None)
     dprint(f"\n\t{adata.name} FINAL DIFF colormap ",cmap_diff, debug=debug)
 
     # CONTOUR LEVELS
