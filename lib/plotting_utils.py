@@ -44,12 +44,8 @@ from pathlib import Path
 import re
 
 from adf_diag import AdfDiag
-from adf_base import AdfError
-import plotting_utils as plot_utils
-import adf_utils as utils
 
 import warnings  # use to warn user about missing files.
-
 #Format warning messages:
 def my_formatwarning(msg, *args, **kwargs):
     """Issue `msg` as warning."""
@@ -416,6 +412,7 @@ def ncl_to_mpl(nclmap, name):
             return None
     else:
         print(f"{name} seems to be 0-1")
+        #adf.debug_log(msg)
         vals = nclmap
     assert vals.shape[1] == 3, 'vals.shape should be (N,3)'
     ncolors = vals.shape[0]

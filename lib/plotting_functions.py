@@ -273,7 +273,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
     #End if
 
     # -- end options'''
-    #print("polar kwargs:",kwargs,"n")
+
     cp_info = plot_utils.prep_contour_plot(d1, d2, dif, pct, **kwargs)
 
     levelsdiff = cp_info['levelsdiff']
