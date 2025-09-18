@@ -1821,6 +1821,30 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
 
 
 
+def resolve_hemi_level(data, kwargs, polar_names, debug=False):
+    """Resolve hemisphere and/or vertical level specific values from a dict."""
+    hemi = kwargs.get("hemi")
+    lev = kwargs.get("lev")
+
+    if hemi and polar_names.get(hemi) in data:
+        hemi_data = data[polar_names[hemi]]
+        if isinstance(hemi_data, dict) and lev in hemi_data:
+            if debug:
+                print(f"\tPolar {hemi} with vertical level {lev}")
+            return hemi_data[lev]
+        if debug:
+            print(f"\tPolar {hemi} without vertical levels")
+        return hemi_data
+    elif lev and lev in data:
+        if debug:
+            print(f"\tVertical level {lev}")
+        return data[lev]
+
+    return None
+
+
+ncl_defaults = ["ncl_default"]
+
 
 import numpy as np
 import matplotlib as mpl
@@ -1941,6 +1965,92 @@ def load_colormap(cmap_name):
             print(f"\tFailed to load {cmap_name}. Defaulting to 'coolwarm'.")
             return 'coolwarm'
         return cm
+    
+
+def try_load_ncl_cmap(cmap_case, adata=None, debug=False):
+    """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
+    print(f"\tTrying {cmap_case} as an NCL color map:")
+    try:
+        url = guess_ncl_url(cmap_case)
+        locfil = Path(".") / f"{cmap_case}.rgb"
+        if locfil.is_file():
+            data = read_ncl_colormap(locfil)
+        else:
+            try:
+                data = read_ncl_colormap(url)
+            except urllib.error.HTTPError:
+                print("\tNCL colormap file not found")
+
+        if isinstance(data, np.ndarray):
+            cm, cmr = ncl_to_mpl(data, cmap_case)
+            return cm
+    except Exception:
+        pass
+
+    # PRECT special colormap
+    if adata and adata.name == "PRECT":
+        print("\tUsing custom PRECT colormap")
+        colors = [
+            (0.00, (1.0, 1.0, 1.0, 0.02)),
+            (0.10, (210/255, 180/255, 140/255, 0.2)),
+            (0.25, (139/255, 90/255, 43/255, 0.4)),
+            (0.45, (107/255, 142/255, 35/255, 0.6)),
+            (0.70, (60/255, 179/255, 113/255, 0.8)),
+            (1.00, (0/255, 100/255, 200/255, 1.0)),
+        ]
+        return LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
+
+    return "viridis"
+
+
+def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=None):
+    """
+    Gather colormap from variable defaults file, if applicable.
+    Falls back to 'viridis' (case) or 'BrBG' (diff) if none is found.
+    """
+
+    key_map = {
+        "diff": ("diff_colormap", "BrBG"),
+        "case": ("colormap", "viridis"),
+    }
+    colormap_key, default_cmap = key_map.get(plotty, ("colormap", "viridis"))
+
+    cmap_case = None
+
+    # Priority 1: YAML dict
+    if colormap_key in plot_type_dict:
+        cmap_entry = plot_type_dict[colormap_key]
+        print(f"\tUser supplied cmap: {cmap_entry}")
+
+        if isinstance(cmap_entry, str):
+            cmap_case = cmap_entry
+            print(f"\tSingle value cmap: {cmap_case}")
+        elif isinstance(cmap_entry, dict):
+            resolved = resolve_hemi_level(cmap_entry, kwargs, polar_names, debug)
+            if isinstance(resolved, str):
+                cmap_case = resolved
+
+    # Priority 2: kwargs dict
+    elif colormap_key in kwargs and isinstance(kwargs[colormap_key], str):
+        cmap_case = kwargs[colormap_key]
+        print(f"\tUser supplied cmap in kwargs: {cmap_case}")
+
+    # Priority 3: fallback default
+    if not cmap_case:
+        print(f"\tNo cmap found, defaulting to {default_cmap}")
+        cmap_case = default_cmap
+
+    # NCL support
+    if cmap_case in ncl_defaults:
+        cmap_case = try_load_ncl_cmap(cmap_case, adata=adata, debug=debug)
+
+    # Final check: must exist in matplotlib or NCL
+    if isinstance(cmap_case, str):
+        if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
+            print(f"\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}")
+            cmap_case = default_cmap
+
+    return cmap_case
 
 
 
@@ -1980,14 +2090,13 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         - 'plot_log_p' : true/false whether to plot log(pressure) axis
     """
     
-    ncl_defaults = ["ncl_default"]
 
     polar_names = {"NHPolar":"nh",
                    "SHPolar":"sh"}
     # -----------------------------------------------------------
     # Helper: normalize plot_type_dict (handles polar_map + hemi)
     # -----------------------------------------------------------
-    def get_cmap(plotty):
+    '''def get_cmap(plotty):
         """
         Gather colormap from variable defaults file, if applicapble.
           - This will try and get the cmap name from yaml file, and if
@@ -2014,8 +2123,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         if colormap in plot_type_dict:
             cmap = plot_type_dict[colormap]
             dprint("\tUser supplied cmap:", cmap, debug=debug)
-            if "hemi" in kwargs:
-                print("\t",polar_names[kwargs["hemi"]])
 
             if (isinstance(cmap, str)):
                 cmap_case = cmap
@@ -2115,9 +2222,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             dprint(f"\tI give up, defaulting to '{cmap1}'",debug=debug)
             cmap_case = cmap1
         
-        return cmap_case
+        return cmap_case'''
 
-    def resolve_hemi_level(data, kwargs, polar_names, debug=False):
+    '''def resolve_hemi_level(data, kwargs, polar_names, debug=False):
         """Resolve hemisphere and/or vertical level specific values from a dict."""
         hemi = kwargs.get("hemi")
         lev = kwargs.get("lev")
@@ -2136,7 +2243,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                 print(f"\tVertical level {lev}")
             return data[lev]
 
-        return None
+        return None'''
 
 
     def resolve_levels(plotty, plot_type_dict, kwargs, polar_names, debug=False):
