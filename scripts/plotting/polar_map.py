@@ -6,7 +6,7 @@ import numpy as np
 
 # ADF library
 import adf_utils as utils
-import plottin_functions as pf
+import plotting_functions as pf
 
 def polar_map(adfobj):
     """
