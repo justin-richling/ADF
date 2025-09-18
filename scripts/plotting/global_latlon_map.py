@@ -24,10 +24,10 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 import cartopy.crs as ccrs
-import cartopy.feature as cfeature
 from cartopy.util import add_cyclic_point
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import plotting_functions as pf
+import plotting_utils as plot_utils
 import adf_utils as utils
 
 # Warnings
@@ -78,13 +78,13 @@ def global_latlon_map(adfobj):
 
         
     The `plotting_functions` module is needed for:
-    pf.get_central_longitude()
+    plot_utils.get_central_longitude()
         determine central longitude for global plots
     utils.lat_lon_validate_dims()
         makes sure latitude and longitude are valid
     utils.seasonal_mean()
         calculate seasonal mean
-    pf.plot_map_and_save()
+    plot_utils.plot_map_and_save()
         send information to make the plot and save the file
     utils.zm_validate_dims()
         Checks on pressure level dimension
@@ -163,7 +163,7 @@ def global_latlon_map(adfobj):
         # For global maps, also set the central longitude:
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
-        vres['central_longitude'] = pf.get_central_longitude(adfobj)
+        vres['central_longitude'] = plot_utils.get_central_longitude(adfobj)
 
         # load reference data (observational or baseline)
         if not adfobj.compare_obs:

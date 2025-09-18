@@ -37,6 +37,8 @@ def global_latlon_vect_map(adfobj):
 
     #ADF diagnostic utility functions:
     import adf_utils as utils
+    import plotting_utils as plot_utils
+    import plotting_functions as pf
 
     # Warnings
     import warnings  # use to warn user about missing files.
@@ -191,7 +193,7 @@ def global_latlon_vect_map(adfobj):
         # For global maps, also set the central longitude:
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
-        vres['central_longitude'] = pf.get_central_longitude(adfobj)
+        vres['central_longitude'] = plot_utils.get_central_longitude(adfobj)
 
         #Determine observations to compare against:
         if adfobj.compare_obs:
