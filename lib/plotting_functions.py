@@ -2159,7 +2159,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
                     elif kind == "linspace":
                         return np.linspace(*entry)
                     else:
-                        return entry
+                        print("\tLevels specified as list of 3 values, please add more values. Will get contrours from data range.")
+                        return None #entry
                 elif len(entry) < 3:
                     print(f"\tNot enough {kind} entries (<3) — ambiguous")
                 else:
