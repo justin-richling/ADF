@@ -31,7 +31,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
-from plotting_functions import pres_from_hybrid, prep_contour_plot
+from plotting_utils import prep_contour_plot
 
 
 import adf_utils as utils

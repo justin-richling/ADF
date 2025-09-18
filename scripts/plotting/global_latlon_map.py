@@ -28,11 +28,11 @@ import cartopy.feature as cfeature
 from cartopy.util import add_cyclic_point
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import plotting_functions as pf
+import adf_utils as utils
 
 # Warnings
 import warnings  # use to warn user about missing files.
 #     - Format warning messages:
-import adf_utils as utils
 warnings.formatwarning = utils.my_formatwarning
 
 #########
@@ -80,13 +80,13 @@ def global_latlon_map(adfobj):
     The `plotting_functions` module is needed for:
     pf.get_central_longitude()
         determine central longitude for global plots
-    pf.lat_lon_validate_dims()
+    utils.lat_lon_validate_dims()
         makes sure latitude and longitude are valid
-    pf.seasonal_mean()
+    utils.seasonal_mean()
         calculate seasonal mean
     pf.plot_map_and_save()
         send information to make the plot and save the file
-    pf.zm_validate_dims()
+    utils.zm_validate_dims()
         Checks on pressure level dimension
     """
 
@@ -185,7 +185,7 @@ def global_latlon_map(adfobj):
             adfobj.debug_log(dmsg)
             continue
 
-        o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
+        o_has_dims = utils.validate_dims(odata, ["lat", "lon", "lev"]) # T iff dims are (lat,lon) -- can't plot unless we have both
         if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
             print(f"\t    WARNING: skipping global map for {var} as REFERENCE does not have both lat and lon")
             continue
@@ -214,7 +214,7 @@ def global_latlon_map(adfobj):
                 continue
 
             #Determine dimensions of variable:
-            has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+            has_dims = utils.validate_dims(mdata, ["lat", "lon", "lev"])
             if (not has_dims['has_lat']) or (not has_dims['has_lon']):
                 print(f"\t    WARNING: skipping global map for {var} for case {case_name} as it does not have both lat and lon")
                 continue
@@ -258,8 +258,8 @@ def global_latlon_map(adfobj):
                         continue
 
                     if weight_season:
-                        mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                        oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                        mseasons[s] = utils.seasonal_mean(mdata, season=s, is_climo=True)
+                        oseasons[s] = utils.seasonal_mean(odata, season=s, is_climo=True)
                     else:
                         #Just average months as-is:
                         mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
@@ -304,8 +304,8 @@ def global_latlon_map(adfobj):
                             continue
 
                         if weight_season:
-                            mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                            oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                            mseasons[s] = utils.seasonal_mean(mdata, season=s, is_climo=True)
+                            oseasons[s] = utils.seasonal_mean(odata, season=s, is_climo=True)
                         else:
                             #Just average months as-is:
                             mseasons[s] = mdata.sel(time=seasons[s]).mean(dim='time')
@@ -688,10 +688,10 @@ def monthly_to_seasonal(ds,obs=False):
             if '_n' not in varname:
                 ds_season = xr.zeros_like(da_season)
                 for s in seasons:
-                    dataarrays.append(pf.seasonal_mean(ds, season=s, is_climo=True))
+                    dataarrays.append(utils.seasonal_mean(ds, season=s, is_climo=True))
     else:
         for s in seasons:
-            dataarrays.append(pf.seasonal_mean(ds, season=s, is_climo=True))
+            dataarrays.append(utils.seasonal_mean(ds, season=s, is_climo=True))
 
     # Use xr.concat to combine along a new 'season' dimension
     ds_season = xr.concat(dataarrays, dim='season')

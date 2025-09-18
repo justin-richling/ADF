@@ -5,7 +5,7 @@ import xarray as xr
 import numpy as np
 
 # ADF library
-import plotting_functions as pf
+import adf_utils as utils
 
 def polar_map(adfobj):
     """
@@ -160,7 +160,7 @@ def polar_map(adfobj):
             else:
                 oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
            
-            oclim_ds = pf.load_dataset(oclim_fils)
+            oclim_ds = utils.load_dataset(oclim_fils)
             if oclim_ds is None:
                 print("\t    WARNING: Did not find any regridded reference climo files. Will try to skip.")
                 print(f"\t    INFO: Data Location, dclimo_loc is {dclimo_loc}")
@@ -184,7 +184,7 @@ def polar_map(adfobj):
                 # load re-gridded model files:
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
 
-                mclim_ds = pf.load_dataset(mclim_fils)
+                mclim_ds = utils.load_dataset(mclim_fils)
                 if mclim_ds is None:
                     print("\t    WARNING: Did not find any regridded test climo files. Will try to skip.")
                     print(f"\t    INFO: Data Location, mclimo_rg_loc, is {mclimo_rg_loc}")
@@ -213,12 +213,12 @@ def polar_map(adfobj):
                     # Note: assume obs are set to have same untis as model.
 
                 #Determine dimensions of variable:
-                has_dims = pf.lat_lon_validate_dims(odata)
+                has_dims = utils.lat_lon_validate_dims(odata)
                 if has_dims:
                     #If observations/baseline CAM have the correct
                     #dimensions, does the input CAM run have correct
                     #dimensions as well?
-                    has_dims_cam = pf.lat_lon_validate_dims(mdata)
+                    has_dims_cam = utils.lat_lon_validate_dims(mdata)
 
                     #If both fields have the required dimensions, then
                     #proceed with plotting:
@@ -240,8 +240,8 @@ def polar_map(adfobj):
                         #Loop over season dictionary:
                         for s in seasons:
                             vres["season"] = s
-                            mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                            oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                            mseasons[s] = utils.seasonal_mean(mdata, season=s, is_climo=True)
+                            oseasons[s] = utils.seasonal_mean(odata, season=s, is_climo=True)
                             # difference: each entry should be (lat, lon)
                             dseasons[s] = mseasons[s] - oseasons[s]
                             dseasons[s].attrs['units'] = mseasons[s].attrs['units']
@@ -303,7 +303,7 @@ def polar_map(adfobj):
                 elif pres_levs: #Is the user wanting to interpolate to a specific pressure level?
 
                     #Check that case inputs have the correct dimensions (including "lev"):
-                    has_lat, has_lev = pf.zm_validate_dims(mdata)  # assumes will work for both mdata & odata
+                    has_lat, has_lev = utils.zm_validate_dims(mdata)  # assumes will work for both mdata & odata
 
                     # check if there is a lat dimension:
                     if not has_lat:
@@ -314,7 +314,7 @@ def polar_map(adfobj):
                     # End if
 
                     #Check that case inputs have the correct dimensions (including "lev"):
-                    has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
+                    has_lat_ref, has_lev_ref = utils.zm_validate_dims(odata)
 
                     # check if there is a lat dimension:
                     if not has_lat_ref:
@@ -350,8 +350,8 @@ def polar_map(adfobj):
                             #Loop over season dictionary:
                             for s in seasons:
                                 vres["season"] = s
-                                mseasons[s] = (pf.seasonal_mean(mdata, season=s, is_climo=True)).sel(lev=pres)
-                                oseasons[s] = (pf.seasonal_mean(odata, season=s, is_climo=True)).sel(lev=pres)
+                                mseasons[s] = (utils.seasonal_mean(mdata, season=s, is_climo=True)).sel(lev=pres)
+                                oseasons[s] = (utils.seasonal_mean(odata, season=s, is_climo=True)).sel(lev=pres)
                                 # difference: each entry should be (lat, lon)
                                 dseasons[s] = mseasons[s] - oseasons[s]
                                 dseasons[s].attrs['units'] = mseasons[s].attrs['units']

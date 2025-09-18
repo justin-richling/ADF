@@ -9,7 +9,7 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 import glob
 from pathlib import Path
-import plotting_functions as pf
+import adf_utils as utils
 
 def tape_recorder(adfobj):
     """
@@ -195,7 +195,7 @@ def tape_recorder(adfobj):
         #Grab time slice based on requested years (if applicable)
         dat = dat.sel(time=slice(str(start_years[idx]).zfill(4),str(end_years[idx]).zfill(4)))
 
-        has_dims = pf.validate_dims(dat[var], ['lon'])
+        has_dims = utils.validate_dims(dat[var], ['lon'])
         if not has_dims['has_lon']:
             print(f"\t    WARNING: Variable {var} is missing a lat dimension for '{key}', cannot continue to plot.")
         else:
