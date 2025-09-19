@@ -670,12 +670,13 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         msg_detail += f' : {kwargs["hemi"]}'
     if plot_type:
         msg_detail += f" for {plot_type} plot"
-    start_msg = msg + f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}"
+    start_msg = msg + f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}\n"
     #adfobj.debug_log(start_msg)
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
     maxval = np.max([np.max(adata), np.max(bdata)])
+    print("minval",minval,"maxval",maxval)
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
@@ -697,6 +698,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
+    print("vmin",vmin,"vmax",vmax)
     extend = 'neither'
     if minval < vmin and maxval > vmax:
         extend = 'both'
