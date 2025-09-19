@@ -521,7 +521,7 @@ def try_load_ncl_cmap(cmap_case, adata=None, debug=False):
     return "viridis"
 
 
-def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=None):
+def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     """
     Gather colormap from variable defaults file, if applicable.
     Falls back to 'viridis' (case) or 'BrBG' (diff) if none is found.
@@ -544,7 +544,7 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
         if isinstance(cmap_entry, str):
             cmap_case = cmap_entry
         elif isinstance(cmap_entry, dict):
-            resolved = resolve_hemi_level(cmap_entry, kwargs, polar_names, debug)
+            resolved = resolve_hemi_level(cmap_entry, kwargs, polar_names)
             if isinstance(resolved, str):
                 cmap_case = resolved
 
@@ -561,7 +561,7 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
 
     # NCL support
     if cmap_case in ncl_defaults:
-        cmap_case = try_load_ncl_cmap(cmap_case, adata=adata, debug=debug)
+        cmap_case = try_load_ncl_cmap(cmap_case, adata=adata)
 
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
@@ -569,7 +569,7 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
             msg += f"\n\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}"
             cmap_case = default_cmap
     
-    adf_base.AdfBase.debug_log(msg)
+    adfobj.debug_log(msg)
 
     return cmap_case
 
@@ -738,7 +738,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # Case/Baseline  options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #---------
-    cmap_case = get_cmap("case", plot_type_dict, kwargs, polar_names, adata=None)
+    cmap_case = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, adata=None)
     msg += f"\n\t{adata.name} FINAL colormap: {cmap_case}"
     
     # CONTOUR LEVELS
@@ -790,7 +790,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # COLOR MAP
     #----------
-    cmap_diff = get_cmap("diff", plot_type_dict, kwargs, polar_names, adata=None)
+    cmap_diff = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names, adata=None)
     msg += f"\n\t{adata.name} FINAL DIFF colormap: {cmap_diff}"
 
     # CONTOUR LEVELS
