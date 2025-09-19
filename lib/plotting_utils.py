@@ -309,28 +309,6 @@ def meridional_plot_preslon(ax, lon, lev, data, **kwargs):
     return img, ax
 
 
-
-'''def resolve_hemi_level(data, kwargs, polar_names, debug=False):
-    """Resolve hemisphere and/or vertical level specific values from a dict."""
-    hemi = kwargs.get("hemi")
-    lev = kwargs.get("lev")
-
-    if hemi and polar_names.get(hemi) in data:
-        hemi_data = data[polar_names[hemi]]
-        if isinstance(hemi_data, dict) and lev in hemi_data:
-            if debug:
-                print(f"\tPolar {hemi} with vertical level {lev}")
-            return hemi_data[lev]
-        if debug:
-            print(f"\tPolar {hemi} without vertical levels")
-        return hemi_data
-    elif lev and lev in data:
-        if debug:
-            print(f"\tVertical level {lev}")
-        return data[lev]
-
-    return None'''
-
 # Color Map Functions
 #--------------------
 
@@ -683,7 +661,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
         plot_type_dict = {}
     #print(f"{msg}\n  {'-' * (len(msg)-3)}")
-    msg = f"{__file__}: prep_contour_plot()"
+    msg = f"{script_name}: prep_contour_plot()"
     msg_detail = msg + f"\n\tPreparing contours for {adata.name}"
     if "lev" in kwargs:
         msg_detail += f' - {kwargs["lev"]}'
@@ -691,7 +669,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         msg_detail += f' : {kwargs["hemi"]}'
     if plot_type:
         msg_detail += f" for {plot_type} plot"
-    msg += f"\n\t{'-' * (len(msg_detail)-2)}"
+    #msg += f"\n\t{'-' * (len(msg_detail)-2)}"
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
