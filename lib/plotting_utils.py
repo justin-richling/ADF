@@ -485,9 +485,10 @@ def load_colormap(cmap_name):
         return cm
     
 
-def try_load_ncl_cmap(cmap_case, adata=None, debug=False):
+def try_load_ncl_cmap(adfobj, cmap_case):
     """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
-    print(f"\tTrying {cmap_case} as an NCL color map:")
+    msg = f"try_load_ncl_cmap:"
+    msg += f"\n\tTrying {cmap_case} as an NCL color map:"
     try:
         url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
@@ -497,27 +498,16 @@ def try_load_ncl_cmap(cmap_case, adata=None, debug=False):
             try:
                 data = read_ncl_colormap(url)
             except urllib.error.HTTPError:
-                print("\tNCL colormap file not found")
+                msg += f"\n\tNCL colormap file not found"
 
         if isinstance(data, np.ndarray):
             cm, cmr = ncl_to_mpl(data, cmap_case)
+            adfobj.debug_log(msg)
             return cm
     except Exception:
         pass
 
-    # PRECT special colormap
-    if adata and adata.name == "PRECT":
-        print("\tUsing custom PRECT colormap")
-        colors = [
-            (0.00, (1.0, 1.0, 1.0, 0.02)),
-            (0.10, (210/255, 180/255, 140/255, 0.2)),
-            (0.25, (139/255, 90/255, 43/255, 0.4)),
-            (0.45, (107/255, 142/255, 35/255, 0.6)),
-            (0.70, (60/255, 179/255, 113/255, 0.8)),
-            (1.00, (0/255, 100/255, 200/255, 1.0)),
-        ]
-        return LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
-
+    adfobj.debug_log(msg)
     return "viridis"
 
 
@@ -561,7 +551,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
 
     # NCL support
     if cmap_case in ncl_defaults:
-        cmap_case = try_load_ncl_cmap(cmap_case, adata=adata)
+        cmap_case = try_load_ncl_cmap(adfobj, cmap_case, adata=adata)
 
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
