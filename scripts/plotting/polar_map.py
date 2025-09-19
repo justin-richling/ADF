@@ -288,7 +288,7 @@ def polar_map(adfobj):
                                         hemi = "SH"
                                     #End if
 
-                                    pf.make_polar_plot(plot_name, case_nickname, base_nickname,
+                                    pf.make_polar_plot(adfobj, plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], pseasons[s], hemisphere=hemi, obs=obs, **vres)
@@ -400,7 +400,7 @@ def polar_map(adfobj):
                                             hemi = "SH"
                                         #End if
 
-                                        pf.make_polar_plot(plot_name, case_nickname, base_nickname,
+                                        pf.make_polar_plot(adfobj, plot_name, case_nickname, base_nickname,
                                                      [syear_cases[case_idx],eyear_cases[case_idx]],
                                                      [syear_baseline,eyear_baseline],
                                                      mseasons[s], oseasons[s], dseasons[s], pseasons[s],

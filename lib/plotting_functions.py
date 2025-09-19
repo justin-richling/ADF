@@ -97,7 +97,7 @@ seasons = {"ANN": np.arange(1,13,1),
 #################
 
 
-def make_polar_plot(wks, case_nickname, base_nickname,
+def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
                     case_climo_yrs, baseline_climo_yrs,
                     d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,pctchange:Optional[xr.DataArray]=None,
                     domain:Optional[list]=None, hemisphere:Optional[str]=None, obs=False, **kwargs):
@@ -274,6 +274,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
     # -- end options'''
 
+    kwargs["adfobj"] = adfobj
     cp_info = plot_utils.prep_contour_plot(d1, d2, dif, pct, **kwargs)
 
     levelsdiff = cp_info['levelsdiff']
@@ -418,7 +419,7 @@ def make_polar_plot(wks, case_nickname, base_nickname,
 
 #######
 
-def plot_map_vect_and_save(wks, case_nickname, base_nickname,
+def plot_map_vect_and_save(adfobj, wks, case_nickname, base_nickname,
                            case_climo_yrs, baseline_climo_yrs,
                            plev, umdlfld_nowrap, vmdlfld_nowrap,
                            uobsfld_nowrap, vobsfld_nowrap,
@@ -666,7 +667,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 #######
 
-def plot_map_and_save(wks, case_nickname, base_nickname,
+def plot_map_and_save(adfobj, wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
                       mdlfld, obsfld, diffld, pctld, obs=False, **kwargs):
     """This plots mdlfld, obsfld, diffld in a 3-row panel plot of maps.
@@ -721,6 +722,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         + This is experimental, and if you find yourself doing much with this, you probably should write a new plotting script that does not rely on this module.
     When these are not provided, colormap is set to 'coolwarm' and limits/levels are set by data range.
     """
+    kwargs["adfobj"] = adfobj
 
     #nice formatting for tick labels
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
@@ -983,7 +985,7 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
 
 
 
-def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
+def plot_zonal_mean_and_save(adfobj, wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
                              adata, bdata, has_lev, log_p, obs=False, **kwargs):
 
@@ -1022,6 +1024,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
                shrink: 0.4
           ```
     """
+    kwargs["adfobj"] = adfobj
 
     # style the plot:
     # We should think about how to do plot customization and defaults.
@@ -1171,7 +1174,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
 
 
-def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
+def plot_meridional_mean_and_save(adfobj, wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
                              adata, bdata, has_lev, latbounds=None, obs=False, **kwargs):
 
@@ -1238,6 +1241,8 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
                 shrink: 0.4
             ```
         """
+    kwargs["adfobj"] = adfobj
+
     # apply averaging:
     import numbers  # built-in; just checking on the latbounds input
     if latbounds is None:

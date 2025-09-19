@@ -456,7 +456,7 @@ def global_latlon_vect_map(adfobj):
                                 #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
                                 #   *Any other entries will be ignored.
                                 # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
-                                pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
+                                pf.plot_map_vect_and_save(adfobj, plot_name, case_nickname, base_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
                                                         [syear_baseline,eyear_baseline],lv,
                                                         umseasons[s], vmseasons[s],
@@ -518,7 +518,7 @@ def global_latlon_vect_map(adfobj):
                                                       udseasons[s], vdseasons[s], obs, **vres)
 
                             #Add plot to website (if enabled):
-                            adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,
+                            adfobj.add_website_data(adfobj, plot_name, var_name, case_name, category=web_category,
                                                     season=s, plot_type="LatLon_Vector")
 
                         #End for
