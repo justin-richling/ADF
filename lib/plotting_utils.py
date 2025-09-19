@@ -686,6 +686,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #---------------
     #levels1, norm1 = get_contours("case", cmap_case)
     levels1 = resolve_levels("case", plot_type_dict, kwargs, polar_names, debug=False)
+
+    # Check whether data exceeds limits
+    vmin, vmax = levels1[0], levels1[-1]
+    extend = 'neither'
+    if minval < vmin and maxval > vmax:
+        extend = 'both'
+    elif minval < vmin:
+        extend = 'min'
+    elif maxval > vmax:
+        extend = 'max'
+
+
     
     dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
     if levels1 is None:
@@ -821,7 +833,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'cmap1': cmap_case,
             'norm1': norm1,
             'levels1': levels1,
-            'plot_log_p': plot_log_p
+            'plot_log_p': plot_log_p,
+            'extend':extend
             }
 
 
