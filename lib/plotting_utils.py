@@ -569,7 +569,7 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
             msg += f"\n\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}"
             cmap_case = default_cmap
     
-    adf_base.AdfBase.debug_log(AdfBase, msg)
+    adf_base.AdfBase.debug_log(msg)
 
     return cmap_case
 
