@@ -862,7 +862,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
     #msg = "prep_contour_plot:"
     msg += "\n\t\n----------------------------------------------------\n"
-    AdfBase.debug_log(msg)
+    AdfBase.debug_log(msg=msg)
 
     
     # Percent Difference options -- Check in kwargs for colormap and levels
