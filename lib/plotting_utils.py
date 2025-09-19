@@ -544,7 +544,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
         }
         contour_levels, contour_range, contour_linspace = key_map.get(plotty, (None, None, None))
 
-        def process_entry(entry, kind, msg):
+        def process_entry(entry, kind):
             msg = f"{script_name}: resolve_levels(): process_entry()"
             """Handle lists and dicts for levels/ranges/linspace."""
             if isinstance(entry, list):
