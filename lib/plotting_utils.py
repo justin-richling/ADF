@@ -286,7 +286,7 @@ def zonal_plot_preslat(ax, lat, lev, data, **kwargs):
     else:
         cmap = 'Spectral_r'
 
-    img = ax.contourf(mlat, mlev, data.transpose('lat', 'lev'), cmap=cmap, **kwargs)
+    img = ax.contourf(mlat, mlev, data.transpose('lat', 'lev'), cmap=cmap, extend='both', **kwargs)
 
     minor_locator = mpl.ticker.FixedLocator(lev)
     ax.yaxis.set_minor_locator(minor_locator)
@@ -304,7 +304,7 @@ def meridional_plot_preslon(ax, lon, lev, data, **kwargs):
     else:
         cmap = 'Spectral_r'
 
-    img = ax.contourf(mlon, mlev, data.transpose('lon', 'lev'), cmap=cmap, **kwargs)
+    img = ax.contourf(mlon, mlev, data.transpose('lon', 'lev'), cmap=cmap, extend='both', **kwargs)
 
     minor_locator = mpl.ticker.FixedLocator(lev)
     ax.yaxis.set_minor_locator(minor_locator)
