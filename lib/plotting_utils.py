@@ -66,7 +66,7 @@ seasons = {"ANN": np.arange(1,13,1),
             }
 
 script_name = os.path.splitext(os.path.basename(__file__))[0]
-#print("\tscript_name",script_name,"\n\n")
+
 #################
 #HELPER FUNCTIONS
 #################
@@ -678,8 +678,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap_case = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names)
-    msg = f"\n\tFinal case colormap: {cmap_case}\n\n"
-    #msg += f"\n\tFinal case colormap: {cmap_case}\n\n"
+    msg = f"\n\tFinal case colormap: {cmap_case}"
     
     # CONTOUR LEVELS
     #---------------
@@ -688,7 +687,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
         levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\tFinal levels: {type(levels1)}\n\t\t{levels1}\n\n"
+    msg += f"\n\tFinal levels: {type(levels1)}\n\t\t{levels1}\n"
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
@@ -732,7 +731,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmap_diff = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names)
-    msg += f"\n\tFinal difference colormap: {cmap_diff}\n\n"
+    msg += f"\n\tFinal difference colormap: {cmap_diff}\n"
 
     # CONTOUR LEVELS
     #---------------
