@@ -669,7 +669,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         msg_detail += f' : {kwargs["hemi"]}'
     if plot_type:
         msg_detail += f" for {plot_type} plot"
-    start_msg += f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}"
+    start_msg = msg + f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}"
     adfobj.debug_log(start_msg)
 
     # determine levels & color normalization:
