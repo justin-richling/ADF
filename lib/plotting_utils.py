@@ -492,7 +492,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
 
     # NCL support
     if cmap_case in ncl_defaults:
-        cmap_case = try_load_ncl_cmap(adfobj, cmap_case)
+        cmap_case, msg = try_load_ncl_cmap(adfobj, cmap_case)
 
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
