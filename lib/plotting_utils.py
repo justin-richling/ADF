@@ -561,21 +561,21 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
                         #adfobj.debug_log(msg)
-                        return np.arange(*entry)
+                        return np.arange(*entry), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
                         #adfobj.debug_log(msg)
-                        return np.linspace(*entry)
+                        return np.linspace(*entry), msg
                     else:
                         msg += f"\n\tLevels specified for {plotty} as list of 3 values, please add more values."
                         msg += " Will get contrours from data range."
                         #adfobj.debug_log(msg)
-                        return None #entry
+                        return None, msg #entry
                 elif len(entry) < 3:
                     msg += f"\n\tNot enough {kind} entries for {plotty} (<3) — ambiguous"
                     #adfobj.debug_log(msg)
                 else:
-                    return entry
+                    return entry, msg
             elif isinstance(entry, dict):
                 resolved = resolve_hemi_level(adfobj, entry, kwargs, polar_names, msg)
                 if isinstance(resolved, list) and len(resolved) == 3:
@@ -606,7 +606,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                 if levels1 is not None:
                     break  # stop once a valid setting is found
 
-        return levels1
+        return levels1, msg
 
 
 def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
