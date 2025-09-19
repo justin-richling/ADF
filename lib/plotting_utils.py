@@ -662,7 +662,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type_dict = {}
     #print(f"{msg}\n  {'-' * (len(msg)-3)}")
     msg = f"{script_name}: prep_contour_plot()"
-    msg_detail = f"\n\tPreparing contours for {adata.name}"
+    msg_detail = f"\n\n\tPreparing contour map for {adata.name}"
     if "lev" in kwargs:
         msg_detail += f' - {kwargs["lev"]}'
     if "hemi" in kwargs:
@@ -682,7 +682,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap_case = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, adata=None)
-    msg += f"\n\tFinal case colormap: {cmap_case}"
+    msg += f"\n\tFinal case colormap: {cmap_case}\n"
     
     # CONTOUR LEVELS
     #---------------
@@ -734,7 +734,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmap_diff = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names, adata=None)
-    msg += f"\n\tFinal difference colormap: {cmap_diff}"
+    msg += f"\n\tFinal difference colormap: {cmap_diff}\n"
 
     # CONTOUR LEVELS
     #---------------
@@ -831,7 +831,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         pct_colorbar_opt.update(kwargs['mpl'].get('pct_diff_colorbar',{}))
     #End ifs
 
-    msg += "\n\t\n----------------------------------------------------\n"
+    msg += "\n----------------------------------------------------\n"
     adfobj.debug_log(msg=msg)
 
     return {'subplots_opt': subplots_opt,
