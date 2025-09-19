@@ -380,17 +380,19 @@ def download_ncl_colormap(url, dest):
     urlretrieve(url, dest)
 
 
-def read_ncl_colormap(fil):
+def read_ncl_colormap(adfobj, fil):
     # determine if fil is a URL:
     # if so, we have to download it
+
+    msg = f"read_ncl_colormap:"
     if isinstance(fil, str):
         pars = urlparse(fil)
         if pars.scheme in ['http', 'https', 'ftp']:
             filename = Path.cwd() / fil.split("/")[-1]
             if filename.is_file():
-                print(f"\tFile already downloaded as {filename}")
+                msg += f"\n\tFile already downloaded as {filename}"
             else:
-                print(f"\tFile will be downloaded and saved as {filename}")
+                msg += f"\n\tFile will be downloaded and saved as {filename}"
                 download_ncl_colormap(fil, str(filename))
         else:
             is_url = False
@@ -424,26 +426,28 @@ def read_ncl_colormap(fil):
                 try: 
                     row = [float(r) for r in line_vals]
                 except:
-                    print("ERROR")
-                    print(line_vals)
+                    msg += f"\n\tERROR reading RGB file {line_vals}"
                 if table_exists:
                     table = np.vstack([table, row])
                 else:
                     table = np.array(row)
                     table_exists=True
+    adfobj.debug_log(msg)
     return table
 
 
-def ncl_to_mpl(nclmap, name):
+def ncl_to_mpl(adfobj, nclmap, name):
+    msg = f"ncl_to_mpl:"
     if nclmap.max() > 1:
         try:
             vals = nclmap / 255
         except:
-            print(f"\tERROR: could not divide by 255. {type(nclmap) = }")
-            print(nclmap)
+            msg += f"\n\tERROR: could not divide by 255. {type(nclmap) = }"
+            msg += f" {nclmap}"
+            adfobj.debug_log(msg)
             return None
     else:
-        print(f"{name} seems to be 0-1")
+        msg += f"{name} seems to be 0-1"
         #adf.debug_log(msg)
         vals = nclmap
     assert vals.shape[1] == 3, 'vals.shape should be (N,3)'
@@ -458,6 +462,7 @@ def ncl_to_mpl(nclmap, name):
     # ALLOW MPL TO KNOW ABOUT THE COLORMAP:
     # mpl.colormaps.register(cmap=my_cmap)
     # mpl.colormaps.register(cmap=my_cmap_r)
+    adfobj.debug_log(msg)
     return my_cmap, my_cmap_r
 
 
@@ -470,18 +475,21 @@ def choose_colormap_type(levels, threshold_symmetry=0.25):
     return 'diverging' if crosses_zero and is_symmetric else 'sequential'
 
 
-def load_colormap(cmap_name):
+def load_colormap(adfobj, cmap_name):
+    msg = f"load_colormap:"
     if cmap_name in plt.colormaps():
         return cmap_name
     else:
-        print(f"\t{cmap_name} not a standard Matplotlib colormap. Trying NCL...")
+        msg += f"\n\t{cmap_name} not a standard Matplotlib colormap. Trying NCL..."
         url = guess_ncl_url(cmap_name)
         locfil = Path(".") / f"{cmap_name}.rgb"
         data = read_ncl_colormap(locfil) if locfil.is_file() else read_ncl_colormap(url)
-        cm, cmr = ncl_to_mpl(data, cmap_name)
+        cm, cmr = ncl_to_mpl(adfobj, data, cmap_name)
         if not cm:
-            print(f"\tFailed to load {cmap_name}. Defaulting to 'coolwarm'.")
+            msg += f"\n\tFailed to load {cmap_name}. Defaulting to 'coolwarm'."
+            adfobj.debug_log(msg)
             return 'coolwarm'
+        adfobj.debug_log(msg)
         return cm
     
 
@@ -508,7 +516,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         pass
 
     adfobj.debug_log(msg)
-    return "viridis"
+    return "coolwarm"
 
 
 def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
@@ -712,7 +720,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
         plot_type_dict = {}
 
-    msg = f"\ntprep_contour_plot\n---------------\n{adata.name}"
+    msg = f"\n\tprep_contour_plot\n\t---------------\n\t{adata.name}"
     if "lev" in kwargs:
         msg += f' - {kwargs["lev"]}'
     if "hemi" in kwargs:
