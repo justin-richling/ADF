@@ -67,10 +67,8 @@ from adf_base import AdfError
 import plotting_utils as plot_utils
 import adf_utils as utils
 
-import warnings  # use to warn user about missing files.
-
 #Format warning messages:
-import adf_utils as utils
+import warnings  # use to warn user about missing files.
 warnings.formatwarning = utils.my_formatwarning
 
 #Set non-X-window backend for matplotlib:
@@ -1047,8 +1045,8 @@ def plot_zonal_mean_and_save(adfobj, wks, case_nickname, base_nickname,
     if has_lev:
 
         # calculate zonal average:
-        azm = plot_utils.zonal_mean_xr(adata)
-        bzm = plot_utils.zonal_mean_xr(bdata)
+        azm = utils.zonal_mean_xr(adata)
+        bzm = utils.zonal_mean_xr(bdata)
 
         # calculate difference:
         diff = azm - bzm
@@ -1128,8 +1126,8 @@ def plot_zonal_mean_and_save(adfobj, wks, case_nickname, base_nickname,
         line2 = Line2D([0], [0], label=base_title,
                         color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
-        azm = plot_utils.zonal_mean_xr(adata)
-        bzm = plot_utils.zonal_mean_xr(bdata)
+        azm = utils.zonal_mean_xr(adata)
+        bzm = utils.zonal_mean_xr(bdata)
         diff = azm - bzm
         
         # calculate the percent change
