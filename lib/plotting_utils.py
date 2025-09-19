@@ -544,7 +544,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
         if isinstance(cmap_entry, str):
             cmap_case = cmap_entry
         elif isinstance(cmap_entry, dict):
-            resolved = resolve_hemi_level(cmap_entry, kwargs, polar_names)
+            resolved = resolve_hemi_level(adfobj, cmap_entry, kwargs, polar_names)
             if isinstance(resolved, str):
                 cmap_case = resolved
 
