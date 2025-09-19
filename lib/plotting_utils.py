@@ -532,7 +532,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     colormap_key, default_cmap = key_map.get(plotty, ("colormap", "viridis"))
 
     cmap_case = None
-    msg = f"get_cmap:"
+    msg = f"\nget_cmap:"
 
     # Priority 1: YAML dict
     if colormap_key in plot_type_dict:
@@ -721,11 +721,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type_dict = {}
     #print(f"{msg}\n  {'-' * (len(msg)-3)}")
     msg = f"\n\tprep_contour_plot: {adata.name}"
-    msg += f"{msg}\n\t{'-' * (len(msg)-3)}"
     if "lev" in kwargs:
         msg += f' - {kwargs["lev"]}'
     if "hemi" in kwargs:
         msg += f' : {kwargs["hemi"]}'
+    msg += f"\n\t{'-' * (len(msg)-2)}"
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
@@ -738,16 +738,16 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap_case = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, adata=None)
-    msg += f"\n\tFINAL colormap: {cmap_case}"
+    msg += f"\n\tFinal case colormap: {cmap_case}"
     
     # CONTOUR LEVELS
     #---------------
     levels1 = resolve_levels(adfobj, "case", plot_type_dict, kwargs, polar_names)
-    msg += f"\n\tPRE CHECK LEVELS: {type(levels1)}\n\t\t{levels1}\n"
+    msg += f"\n\tPre check levels: {type(levels1)}\n\t\t{levels1}\n"
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
         levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\tFINAL LEVELS: {type(levels1)}\n\t\t{levels1}\n"
+    msg += f"\n\tFinal levels: {type(levels1)}\n\t\t{levels1}\n"
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
@@ -790,24 +790,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmap_diff = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names, adata=None)
-    msg += f"\n\tFINAL DIFF colormap: {cmap_diff}"
+    msg += f"\n\tFinal difference colormap: {cmap_diff}"
 
     # CONTOUR LEVELS
     #---------------
     levelsdiff = resolve_levels(adfobj, "diff", plot_type_dict, kwargs, polar_names)
 
-    msg += f"\n\tPRE CHECK LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
-    if levels1 is None:
-        msg += "\n\tSetting the levels from max/min"
-        levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\tFINAL LEVELS: {type(levels1)}\n\t\t- {levels1}\n"
-
-    msg += f"\n\tPRE CHECK DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
+    msg += f"\n\tPre check difference LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
     if levelsdiff is None:
-        msg += f"\n\tSetting the diff levels from max/min"
+        msg += f"\n\tSetting the difference levels from max/min"
         absmaxdif = np.max(np.abs(diffdata))
         levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
-    msg += f"\n\tFINAL DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
+    msg += f"\n\tFinal difference levels: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
 
     # Check whether data exceeds limits
     vmin, vmax = levelsdiff[0], levelsdiff[-1]
