@@ -27,15 +27,10 @@ _meridional_plot_preslon
 """
 
 #import statements:
-from typing import Optional
 import numpy as np
 import xarray as xr
-import pandas as pd
 import matplotlib as mpl
-#nice formatting for tick labels
-import geocat.comp as gcomp
-
-from matplotlib.colors import LinearSegmentedColormap
+import os
 
 import urllib
 from urllib.parse import urlparse
@@ -44,7 +39,6 @@ from pathlib import Path
 import re
 
 from adf_diag import AdfDiag
-import adf_base
 
 import warnings  # use to warn user about missing files.
 #Format warning messages:
@@ -71,37 +65,7 @@ seasons = {"ANN": np.arange(1,13,1),
             "SON": [9, 10, 11]
             }
 
-
-
-'''class AdfData:
-    """A class instantiated with an AdfDiag object. 
-       Methods provide means to load data. 
-       This class does not interact with plotting, 
-       just provides access to data locations and loading data.
-
-       A future need is to add some kind of frequency/sampling
-       parameters to allow for non-h0 files. 
-
-    """
-    def __init__(self, adfobj):
-        self.adf = adfobj  # provides quick access to the AdfDiag object
-        # paths 
-        self.model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
-
-        # variables (and info for unit transform)
-        # use self.adf.diag_var_list and self.adf.self.adf.variable_defaults
-
-        # case names and nicknames
-        self.case_names = adfobj.get_cam_info("cam_case_name", required=True)
-        self.test_nicknames = adfobj.case_nicknames["test_nicknames"]
-        self.base_nickname = adfobj.case_nicknames["base_nickname"]
-        self.ref_nickname = self.base_nickname
-
-        # define reference data
-        self.set_reference() # specify "ref_labels" -> called "data_list" in zonal_mean (name of data source)
-
-    def set_reference(self):
-'''
+script_name = os.path.splitext(os.path.basename(__file__))[0]
 
 #################
 #HELPER FUNCTIONS
@@ -384,7 +348,7 @@ def read_ncl_colormap(adfobj, fil):
     # determine if fil is a URL:
     # if so, we have to download it
 
-    msg = f"read_ncl_colormap:"
+    msg = f"{script_name}: read_ncl_colormap()"
     if isinstance(fil, str):
         pars = urlparse(fil)
         if pars.scheme in ['http', 'https', 'ftp']:
@@ -437,7 +401,7 @@ def read_ncl_colormap(adfobj, fil):
 
 
 def ncl_to_mpl(adfobj, nclmap, name):
-    msg = f"ncl_to_mpl:"
+    msg = f"{script_name}: ncl_to_mpl()"
     if nclmap.max() > 1:
         try:
             vals = nclmap / 255
@@ -476,7 +440,7 @@ def choose_colormap_type(levels, threshold_symmetry=0.25):
 
 
 def load_colormap(adfobj, cmap_name):
-    msg = f"load_colormap:"
+    msg = f"{script_name}: load_colormap()"
     if cmap_name in plt.colormaps():
         return cmap_name
     else:
@@ -495,7 +459,7 @@ def load_colormap(adfobj, cmap_name):
 
 def try_load_ncl_cmap(adfobj, cmap_case):
     """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
-    msg = f"try_load_ncl_cmap:"
+    msg = f"{script_name}: try_load_ncl_cmap()"
     msg += f"\n\tTrying {cmap_case} as an NCL color map:"
     try:
         url = guess_ncl_url(cmap_case)
@@ -532,7 +496,8 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     colormap_key, default_cmap = key_map.get(plotty, ("colormap", "viridis"))
 
     cmap_case = None
-    msg = f"{__file__}: get_cmap()"
+    
+    msg = f"{script_name}: get_cmap()"
 
     # Priority 1: YAML dict
     if colormap_key in plot_type_dict:
@@ -576,7 +541,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
 #----------------------------
 def resolve_hemi_level(adfobj, data, kwargs, polar_names):
     """Resolve hemisphere and/or vertical level specific values from a dict."""
-    msg = f"{__file__}: resolve_hemi_level()"
+    msg = f"{script_name}: resolve_hemi_level()"
     hemi = kwargs.get("hemi")
     lev = kwargs.get("lev")
 
@@ -601,7 +566,7 @@ def resolve_hemi_level(adfobj, data, kwargs, polar_names):
 def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
         """Resolve contour levels based on user input and defaults."""
         levels1 = None
-        msg = f"{__file__}:resolve_levels()"
+        msg = f"{script_name}: resolve_levels()"
 
         # Map keys based on plot type
         key_map = {
