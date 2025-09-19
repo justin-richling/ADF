@@ -322,11 +322,11 @@ def download_ncl_colormap(url, dest):
     urlretrieve(url, dest)
 
 
-def read_ncl_colormap(adfobj, fil):
+def read_ncl_colormap(adfobj, fil, msg=""):
     # determine if fil is a URL:
     # if so, we have to download it
 
-    msg = f"{script_name}: read_ncl_colormap()"
+    msg += f"{script_name}: read_ncl_colormap()"
     if isinstance(fil, str):
         pars = urlparse(fil)
         if pars.scheme in ['http', 'https', 'ftp']:
@@ -374,20 +374,20 @@ def read_ncl_colormap(adfobj, fil):
                 else:
                     table = np.array(row)
                     table_exists=True
-    adfobj.debug_log(msg)
-    return table
+    #adfobj.debug_log(msg)
+    return table, msg
 
 
-def ncl_to_mpl(adfobj, nclmap, name):
-    msg = f"{script_name}: ncl_to_mpl()"
+def ncl_to_mpl(adfobj, nclmap, name, msg=""):
+    msg += f"{script_name}: ncl_to_mpl()"
     if nclmap.max() > 1:
         try:
             vals = nclmap / 255
         except:
             msg += f"\n\tERROR: could not divide by 255. {type(nclmap) = }"
             msg += f" {nclmap}"
-            adfobj.debug_log(msg)
-            return None
+            #adfobj.debug_log(msg)
+            return None, msg
     else:
         msg += f"{name} seems to be 0-1"
         #adf.debug_log(msg)
@@ -404,8 +404,9 @@ def ncl_to_mpl(adfobj, nclmap, name):
     # ALLOW MPL TO KNOW ABOUT THE COLORMAP:
     # mpl.colormaps.register(cmap=my_cmap)
     # mpl.colormaps.register(cmap=my_cmap_r)
-    adfobj.debug_log(msg)
-    return my_cmap, my_cmap_r
+
+    #adfobj.debug_log(msg)
+    return my_cmap, my_cmap_r, msg
 
 
 def choose_colormap_type(levels, threshold_symmetry=0.25):
@@ -417,25 +418,25 @@ def choose_colormap_type(levels, threshold_symmetry=0.25):
     return 'diverging' if crosses_zero and is_symmetric else 'sequential'
 
 
-def load_colormap(adfobj, cmap_name):
-    msg = f"{script_name}: load_colormap()"
+def load_colormap(adfobj, cmap_name, msg=""):
+    msg += f"{script_name}: load_colormap()"
     if cmap_name in plt.colormaps():
-        return cmap_name
+        return cmap_name, msg
     else:
         msg += f"\n\t{cmap_name} not a standard Matplotlib colormap. Trying NCL..."
         url = guess_ncl_url(cmap_name)
         locfil = Path(".") / f"{cmap_name}.rgb"
-        data = read_ncl_colormap(locfil) if locfil.is_file() else read_ncl_colormap(url)
-        cm, cmr = ncl_to_mpl(adfobj, data, cmap_name)
+        data, msg = read_ncl_colormap(locfil,msg) if locfil.is_file() else read_ncl_colormap(url,msg)
+        cm, cmr, msg = ncl_to_mpl(adfobj, data, cmap_name, msg)
         if not cm:
             msg += f"\n\tFailed to load {cmap_name}. Defaulting to 'coolwarm'."
-            adfobj.debug_log(msg)
-            return 'coolwarm'
-        adfobj.debug_log(msg)
-        return cm
+            #adfobj.debug_log(msg)
+            return 'coolwarm', msg
+        #adfobj.debug_log(msg)
+        return cm, msg
     
 
-def try_load_ncl_cmap(adfobj, cmap_case):
+def try_load_ncl_cmap(adfobj, cmap_case, msg=""):
     """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
     msg = f"{script_name}: try_load_ncl_cmap()"
     msg += f"\n\tTrying {cmap_case} as an NCL color map:"
@@ -443,7 +444,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
-            data = read_ncl_colormap(locfil)
+            data, msg = read_ncl_colormap(locfil, msg)
         else:
             try:
                 data = read_ncl_colormap(url)
@@ -451,17 +452,17 @@ def try_load_ncl_cmap(adfobj, cmap_case):
                 msg += f"\n\tNCL colormap file not found"
 
         if isinstance(data, np.ndarray):
-            cm, cmr = ncl_to_mpl(data, cmap_case)
-            adfobj.debug_log(msg)
-            return cm
+            cm, cmr, msg = ncl_to_mpl(data, cmap_case, msg)
+            #adfobj.debug_log(msg)
+            return cm, msg
     except Exception:
         pass
 
-    adfobj.debug_log(msg)
-    return "coolwarm"
+    #adfobj.debug_log(msg)
+    return "coolwarm", msg
 
 
-def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
+def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
     """
     Gather colormap from variable defaults file, if applicable.
     Falls back to 'viridis' (case) or 'BrBG' (diff) if none is found.
@@ -475,7 +476,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
 
     cmap_case = None
     
-    msg = f"{script_name}: get_cmap()"
+    msg += f"{script_name}: get_cmap()"
 
     # Priority 1: YAML dict
     if colormap_key in plot_type_dict:
@@ -510,16 +511,16 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
             msg += f"\n\tInvalid cmap '{cmap_case}' for {plotty}, defaulting to {default_cmap}"
             cmap_case = default_cmap
     
-    adfobj.debug_log(msg)
+    #adfobj.debug_log(msg)
 
-    return cmap_case
+    return cmap_case, msg
 
 
 # Conour Plot Prep Functions
 #----------------------------
-def resolve_hemi_level(adfobj, data, kwargs, polar_names):
+def resolve_hemi_level(adfobj, data, kwargs, polar_names, msg=""):
     """Resolve hemisphere and/or vertical level specific values from a dict."""
-    msg = f"{script_name}: resolve_hemi_level()"
+    msg += f"{script_name}: resolve_hemi_level()"
     hemi = kwargs.get("hemi")
     lev = kwargs.get("lev")
 
@@ -527,24 +528,24 @@ def resolve_hemi_level(adfobj, data, kwargs, polar_names):
         hemi_data = data[polar_names[hemi]]
         if isinstance(hemi_data, dict) and lev in hemi_data:
             msg += f"\n\tPolar {hemi} with vertical level {lev}"
-            adfobj.debug_log(msg)
-            return hemi_data[lev]
+            #adfobj.debug_log(msg)
+            return hemi_data[lev], msg
         msg += f"\n\tPolar {hemi} without vertical levels"
-        adfobj.debug_log(msg)
-        return hemi_data
+        #adfobj.debug_log(msg)
+        return hemi_data, msg
     elif lev and lev in data:
         msg += f"\n\tVertical level {lev}"
-        adfobj.debug_log(msg)
-        return data[lev]
+        #adfobj.debug_log(msg)
+        return data[lev], msg
 
-    return None
+    return None, msg
 
 
 
-def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
+def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
         """Resolve contour levels based on user input and defaults."""
         levels1 = None
-        msg = f"{script_name}: resolve_levels()"
+        msg += f"{script_name}: resolve_levels()"
 
         # Map keys based on plot type
         key_map = {
@@ -559,36 +560,36 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
                 if len(entry) == 3:
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
-                        adfobj.debug_log(msg)
+                        #adfobj.debug_log(msg)
                         return np.arange(*entry)
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
-                        adfobj.debug_log(msg)
+                        #adfobj.debug_log(msg)
                         return np.linspace(*entry)
                     else:
                         msg += f"\n\tLevels specified for {plotty} as list of 3 values, please add more values."
                         msg += " Will get contrours from data range."
-                        adfobj.debug_log(msg)
+                        #adfobj.debug_log(msg)
                         return None #entry
                 elif len(entry) < 3:
                     msg += f"\n\tNot enough {kind} entries for {plotty} (<3) — ambiguous"
-                    adfobj.debug_log(msg)
+                    #adfobj.debug_log(msg)
                 else:
                     return entry
             elif isinstance(entry, dict):
-                resolved = resolve_hemi_level(adfobj, entry, kwargs, polar_names)
+                resolved = resolve_hemi_level(adfobj, entry, kwargs, polar_names, msg)
                 if isinstance(resolved, list) and len(resolved) == 3:
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
-                        adfobj.debug_log(msg)
-                        return np.arange(*resolved)
+                        #adfobj.debug_log(msg)
+                        return np.arange(*resolved), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
                         adfobj.debug_log(msg)
-                        return np.linspace(*resolved)
-                return resolved
+                        return np.linspace(*resolved), msg
+                return resolved, msg
             else:
-                return entry
+                return entry, msg
 
         # Priority: explicit contour levels → range → linspace
         for key, kind in [(contour_levels, "levels"),
@@ -601,7 +602,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
                 entry = kwargs[key]
 
             if entry is not None:
-                levels1 = process_entry(entry, kind, msg)
+                levels1, msg = process_entry(entry, kind, msg)
                 if levels1 is not None:
                     break  # stop once a valid setting is found
 
@@ -670,7 +671,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     if plot_type:
         msg_detail += f" for {plot_type} plot"
     start_msg = msg + f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}"
-    adfobj.debug_log(start_msg)
+    #adfobj.debug_log(start_msg)
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
@@ -682,12 +683,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # Case/Baseline  options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #---------
-    cmap_case = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, adata=None)
-    msg = f"\n\tFinal case colormap: {cmap_case}\n"
+    cmap_case, msg = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, msg=start_msg)
+    msg += f"\n\tFinal case colormap: {cmap_case}\n"
     
     # CONTOUR LEVELS
     #---------------
-    levels1 = resolve_levels(adfobj, "case", plot_type_dict, kwargs, polar_names)
+    levels1, msg = resolve_levels(adfobj, "case", plot_type_dict, kwargs, polar_names, msg)
     msg += f"\n\tPre check levels: {type(levels1)}\n\t\t{levels1}\n"
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
@@ -734,12 +735,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # COLOR MAP
     #----------
-    cmap_diff = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names, adata=None)
+    cmap_diff, msg = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names, msg)
     msg += f"\n\tFinal difference colormap: {cmap_diff}\n"
 
     # CONTOUR LEVELS
     #---------------
-    levelsdiff = resolve_levels(adfobj, "diff", plot_type_dict, kwargs, polar_names)
+    levelsdiff, msg = resolve_levels(adfobj, "diff", plot_type_dict, kwargs, polar_names, msg)
 
     msg += f"\n\tPre check difference LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
     if levelsdiff is None:
