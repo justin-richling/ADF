@@ -486,7 +486,7 @@ def try_load_ncl_cmap(cmap_case, adata=None, debug=False):
         ]
         return LinearSegmentedColormap.from_list("refined_brown_to_blue", colors)
 
-    return "coolwarm"
+    return "viridis"
 
 
 def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=None):
