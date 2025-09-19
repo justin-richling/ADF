@@ -66,7 +66,7 @@ seasons = {"ANN": np.arange(1,13,1),
             }
 
 script_name = os.path.splitext(os.path.basename(__file__))[0]
-
+print("\tscript_name",script_name,"\n\n")
 #################
 #HELPER FUNCTIONS
 #################
