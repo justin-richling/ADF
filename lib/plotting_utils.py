@@ -669,7 +669,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         msg_detail += f' : {kwargs["hemi"]}'
     if plot_type:
         msg_detail += f" for {plot_type} plot"
-    #msg += f"\n\t{'-' * (len(msg_detail)-2)}"
+    msg += f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}"
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
