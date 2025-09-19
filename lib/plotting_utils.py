@@ -534,15 +534,15 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
     colormap_key, default_cmap = key_map.get(plotty, ("colormap", "viridis"))
 
     cmap_case = None
+    msg = f"get_cmap:"
 
     # Priority 1: YAML dict
     if colormap_key in plot_type_dict:
         cmap_entry = plot_type_dict[colormap_key]
-        print(f"\tUser supplied cmap: {cmap_entry}")
+        msg += f"\n\tUser supplied cmap: {cmap_entry}"
 
         if isinstance(cmap_entry, str):
             cmap_case = cmap_entry
-            print(f"\tSingle value cmap: {cmap_case}")
         elif isinstance(cmap_entry, dict):
             resolved = resolve_hemi_level(cmap_entry, kwargs, polar_names, debug)
             if isinstance(resolved, str):
@@ -551,11 +551,12 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
     # Priority 2: kwargs dict
     elif colormap_key in kwargs and isinstance(kwargs[colormap_key], str):
         cmap_case = kwargs[colormap_key]
-        print(f"\tUser supplied cmap in kwargs: {cmap_case}")
+        msg += f"\n\tUser supplied cmap: {cmap_case}"
 
     # Priority 3: fallback default
     if not cmap_case:
-        print(f"\tNo cmap found, defaulting to {default_cmap}")
+        #print(f"\tNo cmap found, defaulting to {default_cmap}")
+        msg += f"\n\tNo cmap found, defaulting to {default_cmap}"
         cmap_case = default_cmap
 
     # NCL support
@@ -565,8 +566,10 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
         if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
-            print(f"\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}")
+            msg += f"\n\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}"
             cmap_case = default_cmap
+    
+    AdfBase.debug_log(msg)
 
     return cmap_case
 
@@ -862,7 +865,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
     #msg = "prep_contour_plot:"
     msg += "\n\t\n----------------------------------------------------\n"
-    AdfBase.debug_log(msg=msg)
+    AdfBase.debug_log(AdfBase, msg=msg)
 
     
     # Percent Difference options -- Check in kwargs for colormap and levels
