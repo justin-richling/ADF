@@ -44,6 +44,7 @@ from pathlib import Path
 import re
 
 from adf_diag import AdfDiag
+from adf_base import AdfBase
 
 import warnings  # use to warn user about missing files.
 #Format warning messages:
@@ -585,14 +586,14 @@ def resolve_hemi_level(data, kwargs, polar_names, debug=False):
             msg = f"resolve_hemi_level:"
             msg += f"\n\tPolar {hemi} with vertical level {lev}"
             #msg += f"checking constituents for '{var}'"
-            AdfDiag.debug_log(msg)
+            AdfBase.debug_log(msg)
             return hemi_data[lev]
         #if debug:
         #print(f"\tPolar {hemi} without vertical levels")
         msg = f"resolve_hemi_level:"
         msg += f"\n\tPolar {hemi} without vertical levels"
         #msg += f"checking constituents for '{var}'"
-        AdfDiag.debug_log(msg)
+        AdfBase.debug_log(msg)
         return hemi_data
     elif lev and lev in data:
         #if debug:
@@ -600,7 +601,7 @@ def resolve_hemi_level(data, kwargs, polar_names, debug=False):
         msg = f"resolve_hemi_level:"
         msg += f"\n\tVertical level {lev}"
         #msg += f"checking constituents for '{var}'"
-        AdfDiag.debug_log(msg)
+        AdfBase.debug_log(msg)
         return data[lev]
 
     return None
@@ -861,7 +862,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
     #msg = "prep_contour_plot:"
     msg += "\n\t\n----------------------------------------------------\n"
-    AdfDiag.debug_log(msg)
+    AdfBase.debug_log(msg)
 
     
     # Percent Difference options -- Check in kwargs for colormap and levels
