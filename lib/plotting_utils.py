@@ -537,7 +537,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     # Priority 1: YAML dict
     if colormap_key in plot_type_dict:
         cmap_entry = plot_type_dict[colormap_key]
-        msg += f"\n\tUser supplied cmap: {cmap_entry}"
+        msg += f"\n\tUser supplied cmap for {plotty}: {cmap_entry}"
 
         if isinstance(cmap_entry, str):
             cmap_case = cmap_entry
@@ -549,12 +549,12 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     # Priority 2: kwargs dict
     elif colormap_key in kwargs and isinstance(kwargs[colormap_key], str):
         cmap_case = kwargs[colormap_key]
-        msg += f"\n\tUser supplied cmap: {cmap_case}"
+        msg += f"\n\tUser supplied cmap for {plotty}: {cmap_case}"
 
     # Priority 3: fallback default
     if not cmap_case:
         #print(f"\tNo cmap found, defaulting to {default_cmap}")
-        msg += f"\n\tNo cmap found, defaulting to {default_cmap}"
+        msg += f"\n\tNo cmap  for {plotty} found, defaulting to {default_cmap}"
         cmap_case = default_cmap
 
     # NCL support
@@ -564,7 +564,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
         if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
-            msg += f"\n\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}"
+            msg += f"\n\tInvalid cmap '{cmap_case}' for {plotty}, defaulting to {default_cmap}"
             cmap_case = default_cmap
     
     adfobj.debug_log(msg)
@@ -617,20 +617,20 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
             if isinstance(entry, list):
                 if len(entry) == 3:
                     if kind == "range":
-                        msg += "\n\tLevels specified for numpy.arange."
+                        msg += f"\n\tLevels specified for {plotty}: numpy.arange."
                         adfobj.debug_log(msg)
                         return np.arange(*entry)
                     elif kind == "linspace":
-                        msg += "\n\tLevels specified for numpy.linspace."
+                        msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
                         adfobj.debug_log(msg)
                         return np.linspace(*entry)
                     else:
-                        msg += "\n\tLevels specified as list of 3 values, please add more values."
+                        msg += f"\n\tLevels specified for {plotty} as list of 3 values, please add more values."
                         msg += " Will get contrours from data range."
                         adfobj.debug_log(msg)
                         return None #entry
                 elif len(entry) < 3:
-                    msg += f"\n\tNot enough {kind} entries (<3) — ambiguous"
+                    msg += f"\n\tNot enough {kind} entries for {plotty} (<3) — ambiguous"
                     adfobj.debug_log(msg)
                 else:
                     return entry
@@ -638,11 +638,11 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
                 resolved = resolve_hemi_level(adfobj, entry, kwargs, polar_names)
                 if isinstance(resolved, list) and len(resolved) == 3:
                     if kind == "range":
-                        msg += "\n\tLevels specified for numpy.arange."
+                        msg += f"\n\tLevels specified for {plotty}: numpy.arange."
                         adfobj.debug_log(msg)
                         return np.arange(*resolved)
                     elif kind == "linspace":
-                        msg += "\n\tLevels specified for numpy.linspace."
+                        msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
                         adfobj.debug_log(msg)
                         return np.linspace(*resolved)
                 return resolved
@@ -742,11 +742,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # CONTOUR LEVELS
     #---------------
     levels1 = resolve_levels(adfobj, "case", plot_type_dict, kwargs, polar_names)
-    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levels1)} - {levels1}"
+    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levels1)}\n\t\t- {levels1}"
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
         levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)} - {levels1}"
+    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)}\n\t\t- {levels1}"
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
@@ -795,18 +795,18 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #---------------
     levelsdiff = resolve_levels(adfobj, "diff", plot_type_dict, kwargs, polar_names)
 
-    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levelsdiff)} - {levelsdiff}"
+    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levelsdiff)}\n\t\t- {levelsdiff}"
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
         levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)} - {levels1}"
+    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)}\n\t\t- {levels1}"
 
-    msg += f"\n\t{adata.name} PRE CHECK DIFFERENCE LEVELS: {type(levelsdiff)} - {levelsdiff}"
+    msg += f"\n\t{adata.name} PRE CHECK DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t- {levelsdiff}"
     if levelsdiff is None:
         msg += f"\n\t{adata.name} Setting the diff levels from max/min"
         absmaxdif = np.max(np.abs(diffdata))
         levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
-    msg += f"\n\t{adata.name} FINAL DIFFERENCE LEVELS: {type(levelsdiff)} - {levelsdiff}"
+    msg += f"\n\t{adata.name} FINAL DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t- {levelsdiff}"
 
     # Check whether data exceeds limits
     vmin, vmax = levelsdiff[0], levelsdiff[-1]
