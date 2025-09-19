@@ -581,7 +581,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                     print(msg)
                     return entry, msg
             elif isinstance(entry, dict):
-                resolved = resolve_hemi_level(adfobj, entry, kwargs, polar_names, msg)
+                resolved, msg = resolve_hemi_level(adfobj, entry, kwargs, polar_names, msg)
                 if isinstance(resolved, list) and len(resolved) == 3:
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
