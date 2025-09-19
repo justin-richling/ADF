@@ -737,7 +737,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #---------------
     levelsdiff = resolve_levels(adfobj, "diff", plot_type_dict, kwargs, polar_names)
 
-    msg += f"\n\tPre check difference LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
+    msg += f"\n\tPre check difference levels: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
     if levelsdiff is None:
         msg += f"\n\tSetting the difference levels from max/min"
         absmaxdif = np.max(np.abs(diffdata))
