@@ -532,7 +532,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     colormap_key, default_cmap = key_map.get(plotty, ("colormap", "viridis"))
 
     cmap_case = None
-    msg = f"\nget_cmap:"
+    msg = f"{__file__}: get_cmap()"
 
     # Priority 1: YAML dict
     if colormap_key in plot_type_dict:
@@ -576,22 +576,20 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
 #----------------------------
 def resolve_hemi_level(adfobj, data, kwargs, polar_names):
     """Resolve hemisphere and/or vertical level specific values from a dict."""
+    msg = f"{__file__}: resolve_hemi_level()"
     hemi = kwargs.get("hemi")
     lev = kwargs.get("lev")
 
     if hemi and polar_names.get(hemi) in data:
         hemi_data = data[polar_names[hemi]]
         if isinstance(hemi_data, dict) and lev in hemi_data:
-            msg = f"resolve_hemi_level:"
             msg += f"\n\tPolar {hemi} with vertical level {lev}"
             adfobj.debug_log(msg)
             return hemi_data[lev]
-        msg = f"resolve_hemi_level:"
         msg += f"\n\tPolar {hemi} without vertical levels"
         adfobj.debug_log(msg)
         return hemi_data
     elif lev and lev in data:
-        msg = f"resolve_hemi_level:"
         msg += f"\n\tVertical level {lev}"
         adfobj.debug_log(msg)
         return data[lev]
@@ -603,7 +601,7 @@ def resolve_hemi_level(adfobj, data, kwargs, polar_names):
 def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
         """Resolve contour levels based on user input and defaults."""
         levels1 = None
-        msg = f"resolve_levels:"
+        msg = f"{__file__}:resolve_levels()"
 
         # Map keys based on plot type
         key_map = {
@@ -720,12 +718,15 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
         plot_type_dict = {}
     #print(f"{msg}\n  {'-' * (len(msg)-3)}")
-    msg = f"\n\tprep_contour_plot: {adata.name}"
+    msg = f"{__file__}: prep_contour_plot()"
+    msg_detail = msg + f"\n\tPreparing contours for {adata.name}"
     if "lev" in kwargs:
-        msg += f' - {kwargs["lev"]}'
+        msg_detail += f' - {kwargs["lev"]}'
     if "hemi" in kwargs:
-        msg += f' : {kwargs["hemi"]}'
-    msg += f"\n\t{'-' * (len(msg)-2)}"
+        msg_detail += f' : {kwargs["hemi"]}'
+    if plot_type:
+        msg_detail += f" for {plot_type} plot"
+    msg += f"\n\t{'-' * (len(msg_detail)-2)}"
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
