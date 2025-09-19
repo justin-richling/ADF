@@ -497,7 +497,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, adata=None):
     # Priority 3: fallback default
     if not cmap_case:
         #print(f"\tNo cmap found, defaulting to {default_cmap}")
-        msg += f"\n\tNo cmap  for {plotty} found, defaulting to {default_cmap}"
+        msg += f"\n\tNo cmap for {plotty} found, defaulting to {default_cmap}"
         cmap_case = default_cmap
 
     # NCL support
@@ -660,7 +660,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         plot_type = None
         plot_type_dict = {}
-    #print(f"{msg}\n  {'-' * (len(msg)-3)}")
+
     msg = f"{script_name}: prep_contour_plot()"
     msg_detail = f"\n\n\tPreparing contour map for {adata.name}"
     if "lev" in kwargs:
@@ -763,8 +763,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
 
-
-    
     # Percent Difference options -- Check in kwargs for colormap and levels
     # COLOR MAP
     #----------
@@ -815,7 +813,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         plot_log_p = False
 
-
     # extract any MPL kwargs that should be passed on:
     subplots_opt = {}
     contourf_opt = {}
@@ -832,7 +829,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #End ifs
 
     msg += "\n----------------------------------------------------\n"
-    adfobj.debug_log(msg=msg)
+    adfobj.debug_log(msg)
 
     return {'subplots_opt': subplots_opt,
             'contourf_opt': contourf_opt,
