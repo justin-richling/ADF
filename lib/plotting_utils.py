@@ -569,7 +569,7 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
             msg += f"\n\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}"
             cmap_case = default_cmap
     
-    AdfBase.debug_log(msg)
+    AdfBase.debug_log(AdfBase, msg)
 
     return cmap_case
 
@@ -589,14 +589,14 @@ def resolve_hemi_level(data, kwargs, polar_names, debug=False):
             msg = f"resolve_hemi_level:"
             msg += f"\n\tPolar {hemi} with vertical level {lev}"
             #msg += f"checking constituents for '{var}'"
-            AdfBase.debug_log(msg)
+            AdfBase.debug_log(AdfBase, msg)
             return hemi_data[lev]
         #if debug:
         #print(f"\tPolar {hemi} without vertical levels")
         msg = f"resolve_hemi_level:"
         msg += f"\n\tPolar {hemi} without vertical levels"
         #msg += f"checking constituents for '{var}'"
-        AdfBase.debug_log(msg)
+        AdfBase.debug_log(AdfBase, msg)
         return hemi_data
     elif lev and lev in data:
         #if debug:
@@ -604,7 +604,7 @@ def resolve_hemi_level(data, kwargs, polar_names, debug=False):
         msg = f"resolve_hemi_level:"
         msg += f"\n\tVertical level {lev}"
         #msg += f"checking constituents for '{var}'"
-        AdfBase.debug_log(msg)
+        AdfBase.debug_log(AdfBase, msg)
         return data[lev]
 
     return None
