@@ -736,6 +736,14 @@ def zm_validate_dims(fld):
     return has_lat, has_lev
 
 
+def zonal_mean_xr(fld):
+    """Average over all dimensions except `lev` and `lat`."""
+    if isinstance(fld, xr.DataArray):
+        d = fld.dims
+        davgovr = [dim for dim in d if dim not in ('lev','lat')]
+    else:
+        raise IOError("zonal_mean_xr requires Xarray DataArray input.")
+    return fld.mean(dim=davgovr)
 
 #####################
 #END HELPER FUNCTIONS
