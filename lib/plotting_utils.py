@@ -561,20 +561,24 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
                         #adfobj.debug_log(msg)
+                        print(msg)
                         return np.arange(*entry), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
                         #adfobj.debug_log(msg)
+                        print(msg)
                         return np.linspace(*entry), msg
                     else:
                         msg += f"\n\tLevels specified for {plotty} as list of 3 values, please add more values."
                         msg += " Will get contrours from data range."
                         #adfobj.debug_log(msg)
+                        print(msg)
                         return None, msg #entry
                 elif len(entry) < 3:
                     msg += f"\n\tNot enough {kind} entries for {plotty} (<3) — ambiguous"
                     #adfobj.debug_log(msg)
                 else:
+                    print(msg)
                     return entry, msg
             elif isinstance(entry, dict):
                 resolved = resolve_hemi_level(adfobj, entry, kwargs, polar_names, msg)
@@ -582,13 +586,17 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
                         #adfobj.debug_log(msg)
+                        print(msg)
                         return np.arange(*resolved), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
-                        adfobj.debug_log(msg)
+                        #adfobj.debug_log(msg)
+                        print(msg)
                         return np.linspace(*resolved), msg
+                print(msg)
                 return resolved, msg
             else:
+                print(msg)
                 return entry, msg
 
         # Priority: explicit contour levels → range → linspace
@@ -605,7 +613,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                 levels1, msg = process_entry(entry, kind, msg)
                 if levels1 is not None:
                     break  # stop once a valid setting is found
-
+        print(msg)
         return levels1, msg
 
 
