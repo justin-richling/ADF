@@ -74,6 +74,7 @@ class AdfBase:
         """Return the "debug_fname" string to the user."""
         return self.__debug_fname
 
+    @property
     def debug_log(self, msg: str):
 
         """
