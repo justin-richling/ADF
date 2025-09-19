@@ -71,37 +71,6 @@ seasons = {"ANN": np.arange(1,13,1),
             }
 
 
-
-'''class AdfData:
-    """A class instantiated with an AdfDiag object. 
-       Methods provide means to load data. 
-       This class does not interact with plotting, 
-       just provides access to data locations and loading data.
-
-       A future need is to add some kind of frequency/sampling
-       parameters to allow for non-h0 files. 
-
-    """
-    def __init__(self, adfobj):
-        self.adf = adfobj  # provides quick access to the AdfDiag object
-        # paths 
-        self.model_rgrid_loc = adfobj.get_basic_info("cam_regrid_loc", required=True)
-
-        # variables (and info for unit transform)
-        # use self.adf.diag_var_list and self.adf.self.adf.variable_defaults
-
-        # case names and nicknames
-        self.case_names = adfobj.get_cam_info("cam_case_name", required=True)
-        self.test_nicknames = adfobj.case_nicknames["test_nicknames"]
-        self.base_nickname = adfobj.case_nicknames["base_nickname"]
-        self.ref_nickname = self.base_nickname
-
-        # define reference data
-        self.set_reference() # specify "ref_labels" -> called "data_list" in zonal_mean (name of data source)
-
-    def set_reference(self):
-'''
-
 #################
 #HELPER FUNCTIONS
 #################
@@ -317,7 +286,7 @@ def zonal_plot_preslat(ax, lat, lev, data, **kwargs):
     else:
         cmap = 'Spectral_r'
 
-    img = ax.contourf(mlat, mlev, data.transpose('lat', 'lev'), cmap=cmap, **kwargs)
+    img = ax.contourf(mlat, mlev, data.transpose('lat', 'lev'), cmap=cmap, extend='both', **kwargs)
 
     minor_locator = mpl.ticker.FixedLocator(lev)
     ax.yaxis.set_minor_locator(minor_locator)
@@ -335,7 +304,7 @@ def meridional_plot_preslon(ax, lon, lev, data, **kwargs):
     else:
         cmap = 'Spectral_r'
 
-    img = ax.contourf(mlon, mlev, data.transpose('lon', 'lev'), cmap=cmap, **kwargs)
+    img = ax.contourf(mlon, mlev, data.transpose('lon', 'lev'), cmap=cmap, extend='both', **kwargs)
 
     minor_locator = mpl.ticker.FixedLocator(lev)
     ax.yaxis.set_minor_locator(minor_locator)
@@ -580,27 +549,19 @@ def resolve_hemi_level(data, kwargs, polar_names, debug=False):
     if hemi and polar_names.get(hemi) in data:
         hemi_data = data[polar_names[hemi]]
         if isinstance(hemi_data, dict) and lev in hemi_data:
-            #if debug:
-            #print(f"\tPolar {hemi} with vertical level {lev}")
-            msg = f"resolve_hemi_level:"
-            msg += f"\n\tPolar {hemi} with vertical level {lev}"
-            #msg += f"checking constituents for '{var}'"
-            AdfDiag.debug_log(msg)
+            if debug:
+                print(f"\tPolar {hemi} with vertical level {lev}")
+                msg = f"resolve_hemi_level:"
+                msg += "\n\tLooks like this a CAM-CHEM run, "
+                msg += f"checking constituents for '{var}'"
+                self.debug_log(msg)
             return hemi_data[lev]
-        #if debug:
-        #print(f"\tPolar {hemi} without vertical levels")
-        msg = f"resolve_hemi_level:"
-        msg += f"\n\tPolar {hemi} without vertical levels"
-        #msg += f"checking constituents for '{var}'"
-        AdfDiag.debug_log(msg)
+        if debug:
+            print(f"\tPolar {hemi} without vertical levels")
         return hemi_data
     elif lev and lev in data:
-        #if debug:
-        #print(f"\tVertical level {lev}")
-        msg = f"resolve_hemi_level:"
-        msg += f"\n\tVertical level {lev}"
-        #msg += f"checking constituents for '{var}'"
-        AdfDiag.debug_log(msg)
+        if debug:
+            print(f"\tVertical level {lev}")
         return data[lev]
 
     return None
@@ -704,6 +665,11 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     
     # Start color map/bar configurations
     # ----------------------------------
+    def dprint(*args, debug=False, **kwargs):
+        """Debug print that only prints if debug=True"""
+        if debug:
+            print(*args, **kwargs)
+
     if "plot_type" in kwargs:
         plot_type = kwargs["plot_type"]
         if plot_type in kwargs:
@@ -714,17 +680,17 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type = None
         plot_type_dict = {}
 
-    """boi = f"TRY THIS BOI\n---------------\n{adata.name}"
+    debug = False
+    if (kwargs["plot_type"] in ["global_latlon_map","polar_map"]) and (kwargs["season"]=="ANN"):
+    #if (kwargs["plot_type"] in ["global_latlon_map","polar_map"]):
+    #if kwargs["plot_type"] in ["polar_map"]:
+        debug = True
+    boi = f"TRY THIS BOI\n---------------\n{adata.name}"
     if "lev" in kwargs:
         boi += f' - {kwargs["lev"]}'
     if "hemi" in kwargs:
         boi += f' : {kwargs["hemi"]}'
     dprint("\t",boi, debug=debug)
-    msg = "prep_contour_plot:"
-    msg += f"\n\tPolar {hemi} without vertical levels"
-    #msg += f"checking constituents for '{var}'"
-    AdfDiag.debug_log(msg)"""
-
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
@@ -737,30 +703,12 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap_case = get_cmap("case", plot_type_dict, kwargs, polar_names, debug=False, adata=None)
-    #dprint(f"\n\t{adata.name} FINAL colormap ",cmap_case, debug=debug)
-    msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} FINAL colormap: {cmap_case}"
-    #AdfDiag.debug_log(msg)
+    dprint(f"\n\t{adata.name} FINAL colormap ",cmap_case, debug=debug)
     
     # CONTOUR LEVELS
     #---------------
     #levels1, norm1 = get_contours("case", cmap_case)
     levels1 = resolve_levels("case", plot_type_dict, kwargs, polar_names, debug=False)
-    
-    #dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
-    #msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levels1)} - {levels1}"
-    #AdfDiag.debug_log(msg)
-    if levels1 is None:
-        #dprint("\tSetting the levels from max/min", debug=debug)
-        #msg = "prep_contour_plot:"
-        msg += "\n\tSetting the levels from max/min"
-        #AdfDiag.debug_log(msg)
-        levels1 = np.linspace(minval, maxval, 12)
-    #dprint("\tLEVELS: ",type(levels1)," - ",levels1, debug=debug)
-    #msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)} - {levels1}"
-    #AdfDiag.debug_log(msg)
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
@@ -771,6 +719,14 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         extend = 'min'
     elif maxval > vmax:
         extend = 'max'
+
+
+    
+    dprint("\tPRE CHECK LEVELS: ",type(levels1)," - ",levels1, debug=debug)
+    if levels1 is None:
+        dprint("\tSetting the levels from max/min", debug=debug)
+        levels1 = np.linspace(minval, maxval, 12)
+    dprint("\tLEVELS: ",type(levels1)," - ",levels1, debug=debug)
     
     if kwargs.get('non_linear', False):
         cmap_obj = cm.get_cmap(cmap_case)
@@ -803,53 +759,16 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmap_diff = get_cmap("diff", plot_type_dict, kwargs, polar_names, debug=False, adata=None)
-    #dprint(f"\n\t{adata.name} FINAL DIFF colormap ",cmap_diff, debug=debug)
-    #msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} FINAL DIFF colormap: {cmap_diff}"
-    #AdfDiag.debug_log(msg)
+    dprint(f"\n\t{adata.name} FINAL DIFF colormap ",cmap_diff, debug=debug)
 
     # CONTOUR LEVELS
     #---------------
     levelsdiff = resolve_levels("diff", plot_type_dict, kwargs, polar_names, debug=False)
 
-    #msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levels1)} - {levels1}"
-    #AdfDiag.debug_log(msg)
-    if levels1 is None:
-        #dprint("\tSetting the levels from max/min", debug=debug)
-        #msg = "prep_contour_plot:"
-        msg += "\n\tSetting the levels from max/min"
-        #AdfDiag.debug_log(msg)
-        levels1 = np.linspace(minval, maxval, 12)
-    #dprint("\tLEVELS: ",type(levels1)," - ",levels1, debug=debug)
-    #msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)} - {levels1}"
-    #AdfDiag.debug_log(msg)
-
-    #msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} PRE CHECK DIFFERENCE LEVELS: {type(levelsdiff)} - {levelsdiff}"
-    #AdfDiag.debug_log(msg)
     if levelsdiff is None:
-        #dprint("\tSetting the diff levels from max/min", debug=debug)
-        #msg = "prep_contour_plot:"
-        msg += f"\n\t{adata.name} Setting the diff levels from max/min"
-        #AdfDiag.debug_log(msg)
+        dprint("\tSetting the diff levels from max/min", debug=debug)
         absmaxdif = np.max(np.abs(diffdata))
         levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
-    #msg = "prep_contour_plot:"
-    msg += f"\n\t{adata.name} FINAL DIFFERENCE LEVELS: {type(levelsdiff)} - {levelsdiff}"
-    #AdfDiag.debug_log(msg)
-
-
-    # Check whether data exceeds limits
-    vmin, vmax = levelsdiff[0], levelsdiff[-1]
-    extend_diff = 'neither'
-    if minval < vmin and maxval > vmax:
-        extend_diff = 'both'
-    elif minval < vmin:
-        extend_diff = 'min'
-    elif maxval > vmax:
-        extend_diff = 'max'
 
     # color normalization for difference
     if ((np.min(levelsdiff) < 0) and (0 < np.max(levelsdiff))) and mplv > 2:
@@ -858,10 +777,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     else:
         #print("\tOR HERE?")
         normdiff = mpl.colors.Normalize(vmin=np.min(levelsdiff), vmax=np.max(levelsdiff))
-    #dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
-    #msg = "prep_contour_plot:"
-    msg += "\n\t\n----------------------------------------------------\n"
-    AdfDiag.debug_log(msg)
+    dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
 
     
     # Percent Difference options -- Check in kwargs for colormap and levels
@@ -941,8 +857,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
             'norm1': norm1,
             'levels1': levels1,
             'plot_log_p': plot_log_p,
-            'extend': extend,
-            'extend_diff': extend_diff
+            'extend': extend
             }
 
 
