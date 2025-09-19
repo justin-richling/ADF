@@ -662,7 +662,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         plot_type_dict = {}
     #print(f"{msg}\n  {'-' * (len(msg)-3)}")
     msg = f"{script_name}: prep_contour_plot()"
-    msg_detail = msg + f"\n\tPreparing contours for {adata.name}"
+    msg_detail = f"\n\tPreparing contours for {adata.name}"
     if "lev" in kwargs:
         msg_detail += f' - {kwargs["lev"]}'
     if "hemi" in kwargs:
