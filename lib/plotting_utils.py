@@ -218,16 +218,6 @@ def get_central_longitude(*args):
 #  -- zonal & meridional mean code --
 #
 
-def zonal_mean_xr(fld):
-    """Average over all dimensions except `lev` and `lat`."""
-    if isinstance(fld, xr.DataArray):
-        d = fld.dims
-        davgovr = [dim for dim in d if dim not in ('lev','lat')]
-    else:
-        raise IOError("zonal_mean_xr requires Xarray DataArray input.")
-    return fld.mean(dim=davgovr)
-
-
 def _plot_line(axobject, xdata, ydata, color, **kwargs):
     """Create a generic line plot and check for some ways to annotate."""
 
@@ -447,7 +437,7 @@ def try_load_ncl_cmap(adfobj, cmap_case, msg=""):
             data, msg = read_ncl_colormap(locfil, msg)
         else:
             try:
-                data = read_ncl_colormap(url)
+                data, msg = read_ncl_colormap(url)
             except urllib.error.HTTPError:
                 msg += f"\n\tNCL colormap file not found"
 
@@ -691,7 +681,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap_case, msg = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, msg=start_msg)
-    msg += f"\n\tFinal case colormap: {cmap_case}\n"
+    msg += f"\n\tFinal case colormap: {cmap_case}\n\n"
     
     # CONTOUR LEVELS
     #---------------
@@ -700,7 +690,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
         levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\tFinal levels: {type(levels1)}\n\t\t{levels1}\n"
+    msg += f"\n\tFinal levels: {type(levels1)}\n\t\t{levels1}\n\n"
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
@@ -744,7 +734,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmap_diff, msg = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names, msg)
-    msg += f"\n\tFinal difference colormap: {cmap_diff}\n"
+    msg += f"\n\tFinal difference colormap: {cmap_diff}\n\n"
 
     # CONTOUR LEVELS
     #---------------
