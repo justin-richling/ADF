@@ -66,7 +66,7 @@ seasons = {"ANN": np.arange(1,13,1),
             }
 
 script_name = os.path.splitext(os.path.basename(__file__))[0]
-print("\tscript_name",script_name,"\n\n")
+#print("\tscript_name",script_name,"\n\n")
 #################
 #HELPER FUNCTIONS
 #################
@@ -497,7 +497,6 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
 
     # Priority 3: fallback default
     if not cmap_case:
-        #print(f"\tNo cmap found, defaulting to {default_cmap}")
         msg += f"\n\tNo cmap for {plotty} found, defaulting to {default_cmap}"
         cmap_case = default_cmap
 
@@ -561,24 +560,24 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
                         #adfobj.debug_log(msg)
-                        print(msg)
+                        #print(msg)
                         return np.arange(*entry), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
                         #adfobj.debug_log(msg)
-                        print(msg)
+                        #print(msg)
                         return np.linspace(*entry), msg
                     else:
                         msg += f"\n\tLevels specified for {plotty} as list of 3 values, please add more values."
                         msg += " Will get contrours from data range."
                         #adfobj.debug_log(msg)
-                        print(msg)
+                        #print(msg)
                         return None, msg #entry
                 elif len(entry) < 3:
                     msg += f"\n\tNot enough {kind} entries for {plotty} (<3) — ambiguous"
                     #adfobj.debug_log(msg)
                 else:
-                    print(msg)
+                    #print(msg)
                     return entry, msg
             elif isinstance(entry, dict):
                 resolved, msg = resolve_hemi_level(adfobj, entry, kwargs, polar_names, msg)
@@ -586,17 +585,17 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
                         #adfobj.debug_log(msg)
-                        print(msg)
+                        #print(msg)
                         return np.arange(*resolved), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
                         #adfobj.debug_log(msg)
-                        print(msg)
+                        #print(msg)
                         return np.linspace(*resolved), msg
-                print(msg)
+                #print(msg)
                 return resolved, msg
             else:
-                print(msg)
+                #print(msg)
                 return entry, msg
 
         # Priority: explicit contour levels → range → linspace
@@ -613,7 +612,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names, msg=""):
                 levels1, msg = process_entry(entry, kind, msg)
                 if levels1 is not None:
                     break  # stop once a valid setting is found
-        print(msg)
+        #print(msg)
         return levels1, msg
 
 
@@ -684,7 +683,6 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
     maxval = np.max([np.max(adata), np.max(bdata)])
-    print("minval",minval,"maxval",maxval)
 
     # determine norm to use (deprecate this once minimum MPL version is high enough)
     normfunc, mplv = use_this_norm()
@@ -706,7 +704,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
-    print("vmin",vmin,"vmax",vmax)
+
     extend = 'neither'
     if minval < vmin and maxval > vmax:
         extend = 'both'
