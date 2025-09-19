@@ -569,7 +569,7 @@ def get_cmap(plotty, plot_type_dict, kwargs, polar_names, debug=False, adata=Non
             msg += f"\n\tInvalid cmap '{cmap_case}', defaulting to {default_cmap}"
             cmap_case = default_cmap
     
-    adf_base.debug_log(AdfBase, msg)
+    adf_base.AdfBase.debug_log(AdfBase, msg)
 
     return cmap_case
 
@@ -589,14 +589,14 @@ def resolve_hemi_level(data, kwargs, polar_names, debug=False):
             msg = f"resolve_hemi_level:"
             msg += f"\n\tPolar {hemi} with vertical level {lev}"
             #msg += f"checking constituents for '{var}'"
-            adf_base.debug_log(msg)
+            adf_base.AdfBase.debug_log(msg)
             return hemi_data[lev]
         #if debug:
         #print(f"\tPolar {hemi} without vertical levels")
         msg = f"resolve_hemi_level:"
         msg += f"\n\tPolar {hemi} without vertical levels"
         #msg += f"checking constituents for '{var}'"
-        adf_base.debug_log(msg)
+        adf_base.AdfBase.debug_log(msg)
         return hemi_data
     elif lev and lev in data:
         #if debug:
@@ -604,7 +604,7 @@ def resolve_hemi_level(data, kwargs, polar_names, debug=False):
         msg = f"resolve_hemi_level:"
         msg += f"\n\tVertical level {lev}"
         #msg += f"checking constituents for '{var}'"
-        adf_base.debug_log(msg)
+        adf_base.AdfBase.debug_log(msg)
         return data[lev]
 
     return None
@@ -865,7 +865,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     #dprint("\tnormdiff",normdiff,"\n----------------------------------------------------\n", debug=debug)
     #msg = "prep_contour_plot:"
     msg += "\n\t\n----------------------------------------------------\n"
-    adf_base.debug_log(msg=msg)
+    adf_base.AdfBase.debug_log(msg=msg)
 
     
     # Percent Difference options -- Check in kwargs for colormap and levels
