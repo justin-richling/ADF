@@ -669,7 +669,8 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         msg_detail += f' : {kwargs["hemi"]}'
     if plot_type:
         msg_detail += f" for {plot_type} plot"
-    msg += f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}"
+    start_msg += f"{msg_detail}\n\t{'-' * (len(msg_detail)-2)}"
+    adfobj.debug_log(start_msg)
 
     # determine levels & color normalization:
     minval = np.min([np.min(adata), np.min(bdata)])
@@ -682,7 +683,7 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap_case = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, adata=None)
-    msg += f"\n\tFinal case colormap: {cmap_case}\n"
+    msg = f"\n\tFinal case colormap: {cmap_case}\n"
     
     # CONTOUR LEVELS
     #---------------
