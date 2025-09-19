@@ -544,46 +544,46 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
         }
         contour_levels, contour_range, contour_linspace = key_map.get(plotty, (None, None, None))
 
-        def process_entry(entry, kind):
-            msg = f"{script_name}: resolve_levels(): process_entry()"
+        def process_entry(entry, kind, msg):
+            msg += f"\n\tprocess_entry()"
             """Handle lists and dicts for levels/ranges/linspace."""
             if isinstance(entry, list):
                 if len(entry) == 3:
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
-                        adfobj.debug_log(msg)
-                        return np.arange(*entry)
+                        #adfobj.debug_log(msg)
+                        return np.arange(*entry), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
-                        adfobj.debug_log(msg)
-                        return np.linspace(*entry)
+                        #adfobj.debug_log(msg)
+                        return np.linspace(*entry), msg
                     else:
                         msg += f"\n\tLevels specified for {plotty} as list of 3 values, please add more values."
                         msg += " Will get contrours from data range."
-                        adfobj.debug_log(msg)
-                        return None
+                        #adfobj.debug_log(msg)
+                        return None, msg
                 elif len(entry) < 3:
                     msg += f"\n\tNot enough {kind} entries for {plotty} (<3) — ambiguous"
-                    adfobj.debug_log(msg)
+                    #adfobj.debug_log(msg)
                 else:
-                    adfobj.debug_log(msg)
-                    return entry
+                    #adfobj.debug_log(msg)
+                    return entry, msg
             elif isinstance(entry, dict):
                 resolved = resolve_hemi_level(adfobj, entry, kwargs, polar_names)
                 if isinstance(resolved, list) and len(resolved) == 3:
                     if kind == "range":
                         msg += f"\n\tLevels specified for {plotty}: numpy.arange."
-                        adfobj.debug_log(msg)
-                        return np.arange(*resolved)
+                        #adfobj.debug_log(msg)
+                        return np.arange(*resolved), msg
                     elif kind == "linspace":
                         msg += f"\n\tLevels specified for {plotty}: numpy.linspace."
-                        adfobj.debug_log(msg)
-                        return np.linspace(*resolved)
-                adfobj.debug_log(msg)
-                return resolved
+                        #adfobj.debug_log(msg)
+                        return np.linspace(*resolved), msg
+                #adfobj.debug_log(msg)
+                return resolved, msg
             else:
-                adfobj.debug_log(msg)
-                return entry
+                #adfobj.debug_log(msg)
+                return entry, msg
 
         # Priority: explicit contour levels → range → linspace
         for key, kind in [(contour_levels, "levels"),
@@ -596,7 +596,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
                 entry = kwargs[key]
 
             if entry is not None:
-                levels1 = process_entry(entry, kind)
+                levels1, msg = process_entry(entry, kind, msg)
                 if levels1 is not None:
                     break  # stop once a valid setting is found
         adfobj.debug_log(msg)
