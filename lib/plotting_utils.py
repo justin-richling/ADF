@@ -738,16 +738,16 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #---------
     cmap_case = get_cmap(adfobj, "case", plot_type_dict, kwargs, polar_names, adata=None)
-    msg += f"\n\t{adata.name} FINAL colormap: {cmap_case}"
+    msg += f"\n\tFINAL colormap: {cmap_case}"
     
     # CONTOUR LEVELS
     #---------------
     levels1 = resolve_levels(adfobj, "case", plot_type_dict, kwargs, polar_names)
-    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levels1)}\n\t\t{levels1}\n"
+    msg += f"\n\tPRE CHECK LEVELS: {type(levels1)}\n\t\t{levels1}\n"
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
         levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)}\n\t\t{levels1}\n"
+    msg += f"\n\tFINAL LEVELS: {type(levels1)}\n\t\t{levels1}\n"
 
     # Check whether data exceeds limits
     vmin, vmax = levels1[0], levels1[-1]
@@ -790,24 +790,24 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
     # COLOR MAP
     #----------
     cmap_diff = get_cmap(adfobj, "diff", plot_type_dict, kwargs, polar_names, adata=None)
-    msg += f"\n\t{adata.name} FINAL DIFF colormap: {cmap_diff}"
+    msg += f"\n\tFINAL DIFF colormap: {cmap_diff}"
 
     # CONTOUR LEVELS
     #---------------
     levelsdiff = resolve_levels(adfobj, "diff", plot_type_dict, kwargs, polar_names)
 
-    msg += f"\n\t{adata.name} PRE CHECK LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
+    msg += f"\n\tPRE CHECK LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
     if levels1 is None:
         msg += "\n\tSetting the levels from max/min"
         levels1 = np.linspace(minval, maxval, 12)
-    msg += f"\n\t{adata.name} FINAL LEVELS: {type(levels1)}\n\t\t- {levels1}\n"
+    msg += f"\n\tFINAL LEVELS: {type(levels1)}\n\t\t- {levels1}\n"
 
-    msg += f"\n\t{adata.name} PRE CHECK DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
+    msg += f"\n\tPRE CHECK DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
     if levelsdiff is None:
-        msg += f"\n\t{adata.name} Setting the diff levels from max/min"
+        msg += f"\n\tSetting the diff levels from max/min"
         absmaxdif = np.max(np.abs(diffdata))
         levelsdiff = np.linspace(-absmaxdif, absmaxdif, 12)
-    msg += f"\n\t{adata.name} FINAL DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
+    msg += f"\n\tFINAL DIFFERENCE LEVELS: {type(levelsdiff)}\n\t\t{levelsdiff}\n"
 
     # Check whether data exceeds limits
     vmin, vmax = levelsdiff[0], levelsdiff[-1]
