@@ -416,7 +416,7 @@ def load_colormap(adfobj, cmap_name):
         msg += f"\n\t{cmap_name} not a standard Matplotlib colormap. Trying NCL..."
         url = guess_ncl_url(cmap_name)
         locfil = Path(".") / f"{cmap_name}.rgb"
-        data = read_ncl_colormap(locfil,msg) if locfil.is_file() else read_ncl_colormap(url)
+        data = read_ncl_colormap(locfil) if locfil.is_file() else read_ncl_colormap(url)
         cm, cmr = ncl_to_mpl(adfobj, data, cmap_name)
         if not cm:
             msg += f"\n\tFailed to load {cmap_name}. Defaulting to 'coolwarm'."
@@ -492,7 +492,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
 
     # NCL support
     if cmap_case in ncl_defaults:
-        cmap_case, msg = try_load_ncl_cmap(adfobj, cmap_case)
+        cmap_case = try_load_ncl_cmap(adfobj, cmap_case)
 
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
