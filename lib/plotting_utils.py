@@ -455,9 +455,17 @@ def try_load_ncl_cmap(adfobj, cmap_case):
     except Exception:
         print(f"\n\tWHATTTTT")
         pass
-
+    
+    url = guess_ncl_url(cmap_case)
+    data = read_ncl_colormap(url)
+    print(type(data))
+    cm, cmr = ncl_to_mpl(data, cmap_case)
     adfobj.debug_log(msg)
-    return "coolwarm"
+    if cm:
+        return cm
+    else:
+        adfobj.debug_log(msg)
+        return "coolwarm"
 
 
 def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
