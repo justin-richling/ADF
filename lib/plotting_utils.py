@@ -312,11 +312,11 @@ def download_ncl_colormap(url, dest):
     urlretrieve(url, dest)
 
 
-def read_ncl_colormap(adfobj, fil):
+def read_ncl_colormap(adfobj, fil, msg):
     # determine if fil is a URL:
     # if so, we have to download it
 
-    msg = f"{script_name}: read_ncl_colormap()"
+    msg += f"\n\t{script_name}: read_ncl_colormap()"
     if isinstance(fil, str):
         pars = urlparse(fil)
         if pars.scheme in ['http', 'https', 'ftp']:
@@ -364,20 +364,20 @@ def read_ncl_colormap(adfobj, fil):
                 else:
                     table = np.array(row)
                     table_exists=True
-    adfobj.debug_log(msg)
-    return table
+    #adfobj.debug_log(msg)
+    return table, msg
 
 
-def ncl_to_mpl(adfobj, nclmap, name):
-    msg = f"{script_name}: ncl_to_mpl()"
+def ncl_to_mpl(adfobj, nclmap, name, msg):
+    msg += f"\n\t{script_name}: ncl_to_mpl()"
     if nclmap.max() > 1:
         try:
             vals = nclmap / 255
         except:
             msg += f"\n\tERROR: could not divide by 255. {type(nclmap) = }"
             msg += f" {nclmap}"
-            adfobj.debug_log(msg)
-            return None
+            #adfobj.debug_log(msg)
+            return None, msg
     else:
         msg += f"\n\t{name} seems to be 0-1"
         vals = nclmap
@@ -394,11 +394,11 @@ def ncl_to_mpl(adfobj, nclmap, name):
     # mpl.colormaps.register(cmap=my_cmap)
     # mpl.colormaps.register(cmap=my_cmap_r)
 
-    adfobj.debug_log(msg)
-    return my_cmap, my_cmap_r
+    #adfobj.debug_log(msg)
+    return my_cmap, my_cmap_r, msg
 
 
-def choose_colormap_type(levels, threshold_symmetry=0.25):
+"""def choose_colormap_type(levels, threshold_symmetry=0.25):
     levels = np.array(levels)
     minval, maxval = np.min(levels), np.max(levels)
     crosses_zero = (minval < 0) and (maxval > 0)
@@ -423,32 +423,32 @@ def load_colormap(adfobj, cmap_name):
             adfobj.debug_log(msg)
             return 'coolwarm'
         adfobj.debug_log(msg)
-        return cm
+        return cm"""
     
 
-def try_load_ncl_cmap(adfobj, cmap_case):
+def try_load_ncl_cmap(adfobj, cmap_case, msg):
     """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
-    msg = f"{script_name}: try_load_ncl_cmap()"
+    msg += f"\n\t{script_name}: try_load_ncl_cmap()"
     msg += f"\n\tTrying {cmap_case} as an NCL color map:"
     try:
         url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
-            data = read_ncl_colormap(adfobj, locfil)
+            data, msg = read_ncl_colormap(adfobj, locfil, msg)
         else:
             try:
-                data = read_ncl_colormap(adfobj, url)
+                data, msg = read_ncl_colormap(adfobj, url, msg)
             except urllib.error.HTTPError:
                 msg += f"\n\tNCL colormap file not found"
         if isinstance(data, np.ndarray):
-            cm, cmr = ncl_to_mpl(adfobj, data, cmap_case)
-            adfobj.debug_log(msg)
-            return cm
+            cm, cmr, msg = ncl_to_mpl(adfobj, data, cmap_case, msg)
+            #adfobj.debug_log(msg)
+            return cm, msg
     except Exception:
         pass
 
-    adfobj.debug_log(msg)
-    return "coolwarm"
+    #adfobj.debug_log(msg)
+    return "coolwarm", msg
 
 
 def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
@@ -491,7 +491,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
 
     # NCL support
     if cmap_case in ncl_defaults:
-        cmap_case = try_load_ncl_cmap(adfobj, cmap_case)
+        cmap_case, msg = try_load_ncl_cmap(adfobj, cmap_case, msg)
 
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
