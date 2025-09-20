@@ -442,6 +442,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
                 msg += f"\n\tNCL colormap file not found"
 
         if isinstance(data, np.ndarray):
+            print("IS IT COMING HERE?")
             cm, cmr = ncl_to_mpl(data, cmap_case)
             adfobj.debug_log(msg)
             return cm
