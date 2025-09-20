@@ -312,7 +312,7 @@ def download_ncl_colormap(url, dest):
     urlretrieve(url, dest)
 
 
-def read_ncl_colormap(fil, msg):
+def read_ncl_colormap(adfobj, fil, msg):
     # determine if fil is a URL:
     # if so, we have to download it
 
@@ -364,11 +364,11 @@ def read_ncl_colormap(fil, msg):
                 else:
                     table = np.array(row)
                     table_exists=True
-    #adfobj.debug_log(msg)
+    adfobj.debug_log(msg)
     return table, msg
 
 
-def ncl_to_mpl(nclmap, name, msg):
+def ncl_to_mpl(adfobj, nclmap, name, msg):
     msg += f"\n\t{script_name}: ncl_to_mpl()"
     if nclmap.max() > 1:
         try:
@@ -393,7 +393,7 @@ def ncl_to_mpl(nclmap, name, msg):
     # mpl.colormaps.register(cmap=my_cmap)
     # mpl.colormaps.register(cmap=my_cmap_r)
 
-    #adfobj.debug_log(msg)
+    adfobj.debug_log(msg)
     return my_cmap, my_cmap_r, msg
 
 
@@ -433,20 +433,20 @@ def try_load_ncl_cmap(adfobj, cmap_case, msg):
         url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
-            data, msg = read_ncl_colormap(locfil, msg)
+            data, msg = read_ncl_colormap(adfobj, locfil, msg)
         else:
             try:
-                data, msg = read_ncl_colormap(url, msg)
+                data, msg = read_ncl_colormap(adfobj, url, msg)
             except urllib.error.HTTPError:
                 msg += f"\n\t\tNCL colormap file not found"
         if isinstance(data, np.ndarray):
             cm, cmr, msg = ncl_to_mpl(data, cmap_case, msg)
-            #adfobj.debug_log(msg)
+            adfobj.debug_log(msg)
             return cm, msg
     except Exception:
         pass
 
-    #adfobj.debug_log(msg)
+    adfobj.debug_log(msg)
     return "coolwarm", msg
 
 
@@ -777,9 +777,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         url = guess_ncl_url(cmappct)
         locfil = "." / f"{cmappct}.rgb"
         if locfil.is_file():
-            data, msg = read_ncl_colormap(locfil)
+            data, msg = read_ncl_colormap(adfobj, locfil)
         else:
-            data, msg = read_ncl_colormap( url)
+            data, msg = read_ncl_colormap(adfobj, url)
         cm, cmr = ncl_to_mpl(data, cmappct)
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
