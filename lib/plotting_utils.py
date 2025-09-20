@@ -438,7 +438,9 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         else:
             try:
                 data = read_ncl_colormap(url)
+                print(f"\n\tNCL colormap file found!")
             except urllib.error.HTTPError:
+                print(f"\n\tNCL colormap file not found")
                 msg += f"\n\tNCL colormap file not found"
 
         if isinstance(data, np.ndarray):
@@ -494,6 +496,8 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
     # NCL support
     if cmap_case in ncl_defaults:
         cmap_case = try_load_ncl_cmap(adfobj, cmap_case)
+
+    print(f"\n\tWHAT IUS HIS COLORMAP: {cmap_case}")
 
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
