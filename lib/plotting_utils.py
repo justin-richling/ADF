@@ -432,40 +432,31 @@ def try_load_ncl_cmap(adfobj, cmap_case):
     """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
     msg = f"{script_name}: try_load_ncl_cmap()"
     msg += f"\n\tTrying {cmap_case} as an NCL color map:"
-    '''try:
-        url = guess_ncl_url(cmap_case)
-        """locfil = Path(".") / f"{cmap_case}.rgb"
+    try:
+        url = guess_ncl_url(adfobj, cmap_case)
+        locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
-            print(f"\n\tIS file:")
             data = read_ncl_colormap(locfil)
             print(type(data))
         else:
             try:
-                data = read_ncl_colormap(url)
+                data = read_ncl_colormap(adfobj, url)
             except urllib.error.HTTPError:
                 msg += f"\n\tNCL colormap file not found"
-        print(f"\n\tTry to overwrite from url:")"""
+        """print(f"\n\tTry to overwrite from url:")
         data = read_ncl_colormap(url)
-        print(type(data))
+        print(type(data))"""
         if isinstance(data, np.ndarray):
             print("IS IT COMING HERE?")
-            cm, cmr = ncl_to_mpl(data, cmap_case)
+            cm, cmr = ncl_to_mpl(adfobj, data, cmap_case)
             adfobj.debug_log(msg)
             return cm
     except Exception:
         print(f"\n\tWHATTTTT")
-        pass'''
-    
-    url = guess_ncl_url(cmap_case)
-    data = read_ncl_colormap(url)
-    print(type(data))
-    cm, cmr = ncl_to_mpl(data, cmap_case)
+        pass
+
     adfobj.debug_log(msg)
-    if cm:
-        return cm
-    else:
-        adfobj.debug_log(msg)
-        return "coolwarm"
+    return "coolwarm"
 
 
 def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
