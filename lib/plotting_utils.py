@@ -432,7 +432,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
     """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
     msg = f"{script_name}: try_load_ncl_cmap()"
     msg += f"\n\tTrying {cmap_case} as an NCL color map:"
-    try:
+    '''try:
         url = guess_ncl_url(cmap_case)
         """locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
@@ -454,7 +454,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
             return cm
     except Exception:
         print(f"\n\tWHATTTTT")
-        pass
+        pass'''
     
     url = guess_ncl_url(cmap_case)
     data = read_ncl_colormap(url)
