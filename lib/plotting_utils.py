@@ -323,6 +323,7 @@ def read_ncl_colormap(adfobj, fil):
             filename = Path.cwd() / fil.split("/")[-1]
             if filename.is_file():
                 msg += f"\n\tFile already downloaded as {filename}"
+                print(f"\n\tFile already downloaded as {filename}")
             else:
                 msg += f"\n\tFile will be downloaded and saved as {filename}"
                 download_ncl_colormap(fil, str(filename))
@@ -359,6 +360,7 @@ def read_ncl_colormap(adfobj, fil):
                     row = [float(r) for r in line_vals]
                 except:
                     msg += f"\n\tERROR reading RGB file {line_vals}"
+                    print(f"\n\tERROR reading RGB file {line_vals}")
                 if table_exists:
                     table = np.vstack([table, row])
                 else:
