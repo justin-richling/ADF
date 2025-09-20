@@ -440,7 +440,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
             print(f"\n\tIS file:")
             data = read_ncl_colormap(locfil)
         else:
-            print(f"\n\NOT file:")
+            print(f"\nNOT file:")
             try:
                 print(f"\n\tTrying {cmap_case} from URL:")
                 data = read_ncl_colormap(url)
