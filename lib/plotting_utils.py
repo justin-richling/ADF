@@ -434,10 +434,13 @@ def try_load_ncl_cmap(adfobj, cmap_case):
     try:
         print(f"\n\tTrying {cmap_case} from file:")
         url = guess_ncl_url(cmap_case)
+        print(f"\n\tguess_ncl_url worke??:")
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
+            print(f"\n\tIS file:")
             data = read_ncl_colormap(locfil)
         else:
+            print(f"\n\NOT file:")
             try:
                 print(f"\n\tTrying {cmap_case} from URL:")
                 data = read_ncl_colormap(url)
