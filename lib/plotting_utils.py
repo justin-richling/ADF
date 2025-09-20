@@ -436,12 +436,13 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         if locfil.is_file():
             print(f"\n\tIS file:")
             data = read_ncl_colormap(locfil)
+            print(type(data))
         else:
             try:
                 data = read_ncl_colormap(url)
             except urllib.error.HTTPError:
                 msg += f"\n\tNCL colormap file not found"
-        print(type(data))
+        print(f"\n\tTry to overwrite from url:")
         data = read_ncl_colormap(url)
         print(type(data))
         if isinstance(data, np.ndarray):
