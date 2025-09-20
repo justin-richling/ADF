@@ -323,7 +323,6 @@ def read_ncl_colormap(adfobj, fil):
             filename = Path.cwd() / fil.split("/")[-1]
             if filename.is_file():
                 msg += f"\n\tFile already downloaded as {filename}"
-                print(f"\n\tFile already downloaded as {filename}")
             else:
                 msg += f"\n\tFile will be downloaded and saved as {filename}"
                 download_ncl_colormap(fil, str(filename))
@@ -360,7 +359,6 @@ def read_ncl_colormap(adfobj, fil):
                     row = [float(r) for r in line_vals]
                 except:
                     msg += f"\n\tERROR reading RGB file {line_vals}"
-                    print(f"\n\tERROR reading RGB file {line_vals}")
                 if table_exists:
                     table = np.vstack([table, row])
                 else:
@@ -418,7 +416,7 @@ def load_colormap(adfobj, cmap_name):
         msg += f"\n\t{cmap_name} not a standard Matplotlib colormap. Trying NCL..."
         url = guess_ncl_url(cmap_name)
         locfil = Path(".") / f"{cmap_name}.rgb"
-        data = read_ncl_colormap(locfil) if locfil.is_file() else read_ncl_colormap(url)
+        data = read_ncl_colormap(adfobj, locfil) if locfil.is_file() else read_ncl_colormap(adfobj, url)
         cm, cmr = ncl_to_mpl(adfobj, data, cmap_name)
         if not cm:
             msg += f"\n\tFailed to load {cmap_name}. Defaulting to 'coolwarm'."
@@ -433,10 +431,10 @@ def try_load_ncl_cmap(adfobj, cmap_case):
     msg = f"{script_name}: try_load_ncl_cmap()"
     msg += f"\n\tTrying {cmap_case} as an NCL color map:"
     try:
-        url = guess_ncl_url(adfobj, cmap_case)
+        url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
-            data = read_ncl_colormap(locfil)
+            data = read_ncl_colormap(adfobj, locfil)
             print(type(data))
         else:
             try:
@@ -447,12 +445,10 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         data = read_ncl_colormap(url)
         print(type(data))"""
         if isinstance(data, np.ndarray):
-            print("IS IT COMING HERE?")
             cm, cmr = ncl_to_mpl(adfobj, data, cmap_case)
             adfobj.debug_log(msg)
             return cm
     except Exception:
-        print(f"\n\tWHATTTTT")
         pass
 
     adfobj.debug_log(msg)
@@ -788,9 +784,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         url = guess_ncl_url(cmappct)
         locfil = "." / f"{cmappct}.rgb"
         if locfil.is_file():
-            data = read_ncl_colormap(locfil)
+            data = read_ncl_colormap(adfobj, locfil)
         else:
-            data = read_ncl_colormap(url)
+            data = read_ncl_colormap(adfobj, url)
         cm, cmr = ncl_to_mpl(data, cmappct)
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
