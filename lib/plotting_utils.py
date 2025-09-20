@@ -312,7 +312,7 @@ def download_ncl_colormap(url, dest):
     urlretrieve(url, dest)
 
 
-def read_ncl_colormap(adfobj, fil, msg):
+def read_ncl_colormap(fil, msg):
     # determine if fil is a URL:
     # if so, we have to download it
 
@@ -322,9 +322,9 @@ def read_ncl_colormap(adfobj, fil, msg):
         if pars.scheme in ['http', 'https', 'ftp']:
             filename = Path.cwd() / fil.split("/")[-1]
             if filename.is_file():
-                msg += f"\n\tFile already downloaded as {filename}"
+                msg += f"\n\t\tFile already downloaded as {filename}"
             else:
-                msg += f"\n\tFile will be downloaded and saved as {filename}"
+                msg += f"\n\t\tFile will be downloaded and saved as {filename}"
                 download_ncl_colormap(fil, str(filename))
         else:
             is_url = False
@@ -332,7 +332,7 @@ def read_ncl_colormap(adfobj, fil, msg):
     elif isinstance(fil, Path):
         filename = fil
     else:
-        raise ValueError(f"\tERROR: what to do with type {type(fil)}")
+        raise ValueError(f"\t\tERROR: what to do with type {type(fil)}")
         
     # NCL's colormaps are not regularized enough to just use read_csv. 
     # We have to determine how many lines to skip because it varies.
@@ -358,7 +358,7 @@ def read_ncl_colormap(adfobj, fil, msg):
                 try: 
                     row = [float(r) for r in line_vals]
                 except:
-                    msg += f"\n\tERROR reading RGB file {line_vals}"
+                    msg += f"\n\t\tERROR reading RGB file {line_vals}"
                 if table_exists:
                     table = np.vstack([table, row])
                 else:
@@ -368,18 +368,17 @@ def read_ncl_colormap(adfobj, fil, msg):
     return table, msg
 
 
-def ncl_to_mpl(adfobj, nclmap, name, msg):
+def ncl_to_mpl(nclmap, name, msg):
     msg += f"\n\t{script_name}: ncl_to_mpl()"
     if nclmap.max() > 1:
         try:
             vals = nclmap / 255
         except:
-            msg += f"\n\tERROR: could not divide by 255. {type(nclmap) = }"
+            msg += f"\n\t\tERROR: could not divide by 255. {type(nclmap) = }"
             msg += f" {nclmap}"
-            #adfobj.debug_log(msg)
             return None, msg
     else:
-        msg += f"\n\t{name} seems to be 0-1"
+        msg += f"\n\t\t{name} seems to be 0-1"
         vals = nclmap
     assert vals.shape[1] == 3, 'vals.shape should be (N,3)'
     ncolors = vals.shape[0]
@@ -429,19 +428,19 @@ def load_colormap(adfobj, cmap_name):
 def try_load_ncl_cmap(adfobj, cmap_case, msg):
     """Try to load an NCL colormap, fallback to PRECT special case or 'coolwarm'."""
     msg += f"\n\t{script_name}: try_load_ncl_cmap()"
-    msg += f"\n\tTrying {cmap_case} as an NCL color map:"
+    msg += f"\n\t\tTrying {cmap_case} as an NCL color map:"
     try:
         url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
-            data, msg = read_ncl_colormap(adfobj, locfil, msg)
+            data, msg = read_ncl_colormap(locfil, msg)
         else:
             try:
-                data, msg = read_ncl_colormap(adfobj, url, msg)
+                data, msg = read_ncl_colormap(url, msg)
             except urllib.error.HTTPError:
-                msg += f"\n\tNCL colormap file not found"
+                msg += f"\n\t\tNCL colormap file not found"
         if isinstance(data, np.ndarray):
-            cm, cmr, msg = ncl_to_mpl(adfobj, data, cmap_case, msg)
+            cm, cmr, msg = ncl_to_mpl(data, cmap_case, msg)
             #adfobj.debug_log(msg)
             return cm, msg
     except Exception:
@@ -465,12 +464,12 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
 
     cmap_case = None
     
-    msg = f"{script_name}: get_cmap()"
+    msg = f"\n\t{script_name}: get_cmap()"
 
     # Priority 1: YAML dict
     if colormap_key in plot_type_dict:
         cmap_entry = plot_type_dict[colormap_key]
-        msg += f"\n\tUser supplied cmap for {plotty}: {cmap_entry}"
+        msg += f"\n\t\tUser supplied cmap for {plotty}: {cmap_entry}"
 
         if isinstance(cmap_entry, str):
             cmap_case = cmap_entry
@@ -482,11 +481,11 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
     # Priority 2: kwargs dict
     elif colormap_key in kwargs and isinstance(kwargs[colormap_key], str):
         cmap_case = kwargs[colormap_key]
-        msg += f"\n\tUser supplied cmap for {plotty}: {cmap_case}"
+        msg += f"\n\t\tUser supplied cmap for {plotty}: {cmap_case}"
 
     # Priority 3: fallback default
     if not cmap_case:
-        msg += f"\n\tNo cmap for {plotty} found, defaulting to {default_cmap}"
+        msg += f"\n\t\tNo cmap for {plotty} found, defaulting to {default_cmap}"
         cmap_case = default_cmap
 
     # NCL support
@@ -496,7 +495,7 @@ def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
     # Final check: must exist in matplotlib or NCL
     if isinstance(cmap_case, str):
         if (cmap_case not in plt.colormaps()) and (cmap_case not in ncl_defaults):
-            msg += f"\n\tInvalid cmap '{cmap_case}' for {plotty}, defaulting to {default_cmap}"
+            msg += f"\n\t\tInvalid cmap '{cmap_case}' for {plotty}, defaulting to {default_cmap}"
             cmap_case = default_cmap
     
     adfobj.debug_log(msg)
@@ -778,9 +777,9 @@ def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
         url = guess_ncl_url(cmappct)
         locfil = "." / f"{cmappct}.rgb"
         if locfil.is_file():
-            data = read_ncl_colormap(adfobj, locfil)
+            data, msg = read_ncl_colormap(locfil)
         else:
-            data = read_ncl_colormap(adfobj, url)
+            data, msg = read_ncl_colormap( url)
         cm, cmr = ncl_to_mpl(data, cmappct)
         #ncl_colors[cm.name] = cm
         #ncl_colors[cmr.name] = cmr
