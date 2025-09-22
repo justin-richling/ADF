@@ -138,7 +138,7 @@ def tape_recorder(adfobj):
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True,
-                                category="Seasonal Cycle", plot_type="Middle Atmosphere")
+                                category="Seasonal Cycle", plot_type="Middle Atmosphere", ext="SeasonalCycle_Mean")
         return
 
     elif (redo_plot) and plot_name.is_file():
@@ -243,7 +243,7 @@ def tape_recorder(adfobj):
 
     #Add plot to website (if enabled):
     adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True,
-                                category="Seasonal Cycle", plot_type="Middle Atmosphere")
+                                category="Seasonal Cycle", plot_type="Middle Atmosphere", ext="SeasonalCycle_Mean")
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")
