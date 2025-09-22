@@ -257,7 +257,7 @@ def seasonal_cycle(adfobj):
             if (not redo_plot) and plot_name.is_file():
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                 adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
-                                        plot_type="WACCM", category="Seasonal Cycle",
+                                        plot_type="Middle Atmosphere", category="Seasonal Cycle",
                                         ext="SeasonalCycle_Mean",non_season=True)
             
             elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
@@ -268,7 +268,7 @@ def seasonal_cycle(adfobj):
                 comparison_plots(plot_name, cam_var, case_names, nicknames, case_ds_dict,
                                     obs_ds_dict, season, interval, comp_plots_dict, obs_cam_vars)
                 adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
-                                        plot_type="WACCM", category="Seasonal Cycle",
+                                        plot_type="Middle Atmosphere", category="Seasonal Cycle",
                                         ext="SeasonalCycle_Mean",non_season=True)
             #End if
         #End for
@@ -294,7 +294,7 @@ def seasonal_cycle(adfobj):
             #Add already-existing plot to website (if enabled):
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN",
-                                    plot_type="WACCM", category="Seasonal Cycle",
+                                    plot_type="Middle Atmosphere", category="Seasonal Cycle",
                                     ext="SeasonalCycle_Mean")
         elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
             #If redo plot, delete the file
@@ -303,7 +303,7 @@ def seasonal_cycle(adfobj):
 
             polar_cap_temp(plot_name, hemi, case_names, cases_coords, cases_monthly, merra2_monthly, pcap_dict)
             adfobj.add_website_data(plot_name, f"{hemi.upper()}PolarCapT", case_name, season="ANN",
-                                    plot_type="WACCM", category="Seasonal Cycle",
+                                    plot_type="Middle Atmosphere", category="Seasonal Cycle",
                                     ext="SeasonalCycle_Mean")
         #End if
     #End for
@@ -335,7 +335,7 @@ def seasonal_cycle(adfobj):
         if (not redo_plot) and plot_name.is_file():
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
             adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                                        plot_type="WACCM",
+                                        plot_type="Middle Atmosphere",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
                                         )
@@ -348,7 +348,7 @@ def seasonal_cycle(adfobj):
             #pf.cold_point_temp(plot_name, case_names, cases_coords, cases_monthly)
             month_vs_lat_plot(var, var_dict, plot_name, case_names, nicknames, climo_yrs, cases_coords, cases_monthly, vert_lev)
             adfobj.add_website_data(plot_name, "CPT", case_name, season="ANN",
-                                        plot_type="WACCM",
+                                        plot_type="Middle Atmosphere",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
                                         )
@@ -377,7 +377,7 @@ def seasonal_cycle(adfobj):
         if (not redo_plot) and plot_name.is_file():
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
             adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
-                                        plot_type="WACCM",
+                                        plot_type="Middle Atmosphere",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
                                         )
@@ -389,7 +389,7 @@ def seasonal_cycle(adfobj):
 
             month_vs_lat_plot(var, var_dict, plot_name, case_names, nicknames, climo_yrs, cases_coords, cases_monthly, vert_lev)
             adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
-                                        plot_type="WACCM",
+                                        plot_type="Middle Atmosphere",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
                                         )
@@ -406,7 +406,7 @@ def seasonal_cycle(adfobj):
     if (not redo_plot) and plot_name.is_file():
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
-                                    plot_type="WACCM",
+                                    plot_type="Middle Atmosphere",
                                     ext="SeasonalCycle_Mean",
                                     category="Seasonal Cycle",
                                     )
@@ -418,7 +418,7 @@ def seasonal_cycle(adfobj):
 
         waccm_qbo(plot_name, case_names, nicknames, cases_coords, merra2, syear_cases, eyear_cases)
         adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
-                                    plot_type="WACCM",
+                                    plot_type="Middle Atmosphere",
                                     ext="SeasonalCycle_Mean",
                                     category="Seasonal Cycle",
                                     )
@@ -1384,7 +1384,7 @@ def waccm_qbo(plot_name, case_names, nicknames, case_runs, merra2, syear_cases, 
     fig, axes = plt.subplot_mosaic(mos_str,figsize=(12,5*len(case_names)))
 
     y = 1.00
-    y_lims = [100,0.1]
+    y_lims = [100,1]
 
     contour_levels = np.arange(-35, 36, 2.5)
 
