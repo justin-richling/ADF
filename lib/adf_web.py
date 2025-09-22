@@ -408,7 +408,7 @@ class AdfWeb(AdfObs):
                 plot_type_html[plot_type] = os.path.join("html_table", "mean_tables.html")
             else:
                 print("Tragedy!", plot_type.replace("_"," "), f"mean_diag_{plot_type}.html")
-                plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_img", f"mean_diag_{plot_type}.html")
+                plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_img", f"mean_diag_{plot_type.replace(" ","_")}.html")
             #End if
         #End for
 
@@ -421,7 +421,7 @@ class AdfWeb(AdfObs):
                                                                    "mean_tables.html")
                 else:
                     multi_plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_img",
-                                                                   f"mean_diag_{plot_type}.html")
+                                                                   f"mean_diag_{.replace(" ","_")}.html")
                 #End if
             #End for
         else:

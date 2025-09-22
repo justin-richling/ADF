@@ -97,14 +97,14 @@ def seasonal_cycle(adfobj):
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
-    if 'waccm_seasonal_cycle' in res:
-        seas_cyc_res = res['waccm_seasonal_cycle']
+    if 'seasonal_cycle' in res:
+        seas_cyc_res = res['seasonal_cycle']
     else:
-        errmsg = "Missing 'waccm_seasonal_cycle' options in variable defaults yaml file.\n"
+        errmsg = "Missing 'easonal_cycle' options in variable defaults yaml file.\n"
         errmsg += "Please make sure to include these for the seasonal cycle plots!"
         print(errmsg)
-        logmsg = "WACCM seasonal cycle:"
-        logmsg = "Missing 'waccm_seasonal_cycle' argument in variable defaults yaml file."
+        logmsg = "Middle_Atmosphere seasonal cycle:"
+        logmsg = "Missing 'seasonal_cycle' argument in variable defaults yaml file."
         adfobj.debug_log(logmsg)
         return
 
@@ -172,7 +172,7 @@ def seasonal_cycle(adfobj):
         syr = syear_cases[idx]
         eyr = eyear_cases[idx]
 
-        # Make or access the WACCM zonal mean file
+        # Make or access the Middle_Atmosphere zonal mean file
         ncfile = make_zm_files(adfobj,hist_loc,hist_str,case_name,calc_var_list,syr,eyr,return_ds=True)
 
         # Set up creation of individual CAM data dictionaries
@@ -253,7 +253,7 @@ def seasonal_cycle(adfobj):
                 season = "season"
             #End if
 
-            plot_name = plot_loc / f"{cam_var}_zm_{interval}_WACCM_SeasonalCycle_Mean.{plot_type}"
+            plot_name = plot_loc / f"{cam_var}_zm_{interval}_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
             if (not redo_plot) and plot_name.is_file():
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                 adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
@@ -285,7 +285,7 @@ def seasonal_cycle(adfobj):
         #Notify user of variable being plotted:
         print(f"\t - polar temp maps for {hemi}")
 
-        plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+        plot_name = plot_loc / f"{hemi.upper()}PolarCapT_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
 
         # Check redo_plot. If set to True: remove old plot, if it already exists:
         redo_plot = adfobj.get_basic_info('redo_plot')
@@ -330,7 +330,7 @@ def seasonal_cycle(adfobj):
     for vert_lev in vert_levs:
         #Notify user of variable being plotted:
         print(f"\t - cold point temp maps for {vert_lev}hPa")
-        plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+        plot_name = plot_loc / f"CPT_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
@@ -372,7 +372,7 @@ def seasonal_cycle(adfobj):
     for vert_lev in vert_levs:
         #Notify user of variable being plotted:
         print(f"\t - mixing ratio maps for {vert_lev}hPa")
-        plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+        plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
@@ -398,11 +398,11 @@ def seasonal_cycle(adfobj):
 
 
 
-    #WACCM QBO
+    #Middle Atmosphere QBO
     #---------
     # Notify user that script has started:
-    print("\n\t Making WACCM QBO...")
-    plot_name = plot_loc / f"QBO_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
+    print("\n\t Making Middle Atmosphere QBO...")
+    plot_name = plot_loc / f"QBO_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
     if (not redo_plot) and plot_name.is_file():
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, "QBO", case_name, season="ANN",
@@ -1286,7 +1286,7 @@ def month_vs_lat_plot(var, var_dict, plot_name, case_names, case_nicknames, clim
 
 ########
 
-#WACCM QBO
+#Middle Atmosphere QBO
 import numpy as np
 
 def qbo_amplitude(data):
