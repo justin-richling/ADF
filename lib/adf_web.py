@@ -302,6 +302,7 @@ class AdfWeb(AdfObs):
             html_name = f'plot_page_{web_data.stem.replace(" ","_")}.html'
             print("html_name",html_name,"\n")
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
+            print("html_file",html_file,"\n")
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
 
@@ -660,15 +661,15 @@ class AdfWeb(AdfObs):
                 print("web_data.ext",web_data.ext)
                 rend_kwarg_dict = {"title": main_title,
                                        "var_title": web_data.name,
-                                       "ext": web_data.ext,
+                                       #"ext": web_data.ext,
                                        "season_title": web_data.season,
                                        "case_name": web_data.case,
                                        "case_yrs": case_yrs,
                                        "base_name": data_name,
                                        "baseline_yrs": baseline_yrs,
                                        "plottype_title": web_data.plot_type,
-                                       "plottype_file_ext": web_data.plot_type.replace(" ","_"),
-                                       "html_name": web_data.html_name,
+                                       #"plottype_file_ext": web_data.plot_type.replace(" ","_"),
+                                       "html_file": web_data.html_file,
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
