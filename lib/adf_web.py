@@ -690,22 +690,6 @@ class AdfWeb(AdfObs):
                 #Construct individual plot type mean_diag html files
                 mean_tmpl = jinenv.get_template('template_mean_diag.html')
 
-                rend_kwarg_dict = {"title": main_title,
-                                       "var_title": web_data.name,
-                                       "ext": web_data.ext,
-                                       "season_title": web_data.season,
-                                       "case_name": web_data.case,
-                                       "case_yrs": case_yrs,
-                                       "base_name": data_name,
-                                       "baseline_yrs": baseline_yrs,
-                                       "plottype_title": web_data.plot_type,
-                                       "plottype_file_ext": web_data.plot_type.replace(" ","_"),
-                                       #"html_file": web_data.html_file,
-                                       "imgs": img_data,
-                                       "mydata": mean_html_info[web_data.plot_type],
-                                       "plot_types": plot_types,
-                                       "seasons": seasons,
-                                       "non_seasons": non_seasons[web_data.plot_type]}
                 rend_kwarg_dict["enumerate"] = jinja_enumerate
                 rend_kwarg_dict["list"] = jinja_list
                 mean_rndr = mean_tmpl.render(rend_kwarg_dict)
