@@ -658,7 +658,7 @@ class AdfWeb(AdfObs):
                     plot_types = plot_type_html
                 #End if
                 print("web_data.name",web_data.name)
-                for item in web_data:
+                for item in list(dir(web_data)):
                     print("ajns  - ",item)
                 print("web_data.ext",web_data.ext,"\n")
                 rend_kwarg_dict = {"title": main_title,
