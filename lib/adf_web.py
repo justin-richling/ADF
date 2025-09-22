@@ -664,6 +664,7 @@ class AdfWeb(AdfObs):
                                        "base_name": data_name,
                                        "baseline_yrs": baseline_yrs,
                                        "plottype_title": web_data.plot_type,
+                                       "plottype_file_ext": web_data.plot_type.replace(" ","_"),
                                        "imgs": img_data,
                                        "mydata": mean_html_info[web_data.plot_type],
                                        "plot_types": plot_types,
