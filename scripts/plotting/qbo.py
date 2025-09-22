@@ -66,10 +66,8 @@ def qbo(adfobj):
     #End if
 
     #Set path for QBO figures:
-    plot_loc_ts  = Path(plot_locations[0]) / f'QBO_TimeSeries_Middle_Atmosphere_Mean.{plot_type}'
-    print("qbo ts plot_name:",plot_loc_ts)
-    plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Middle_Atmosphere_Mean.{plot_type}'
-    print("qbo amp plot_name:",plot_loc_amp)
+    plot_loc_ts  = Path(plot_locations[0]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
+    plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:
@@ -79,8 +77,8 @@ def qbo(adfobj):
     if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_loc_ts}' and '{plot_loc_amp}' exist and clobber is false.")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True, plot_type="Middle Atmosphere")
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True, plot_type="Middle Atmosphere")
+        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
+        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
 
         #Continue to next iteration:
         return
@@ -173,7 +171,7 @@ def qbo(adfobj):
     fig.savefig(plot_loc_ts, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True, plot_type="Middle Atmosphere")
+    adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
 
     #-----------------
 
@@ -200,7 +198,7 @@ def qbo(adfobj):
     fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
 
     #Add plot to website (if enabled):
-    adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True, plot_type="Middle Atmosphere")
+    adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
 
     #-------------------
 
