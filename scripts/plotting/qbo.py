@@ -67,7 +67,9 @@ def qbo(adfobj):
 
     #Set path for QBO figures:
     plot_loc_ts  = Path(plot_locations[0]) / f'QBO_TimeSeries_Middle_Atmosphere_Mean.{plot_type}'
+    print("qbo ts plot_name:",plot_loc_ts)
     plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Middle_Atmosphere_Mean.{plot_type}'
+    print("qbo amp plot_name:",plot_loc_amp)
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:

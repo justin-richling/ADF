@@ -254,6 +254,7 @@ def seasonal_cycle(adfobj):
             #End if
 
             plot_name = plot_loc / f"{cam_var}_zm_{interval}_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
+            print("seas cyc plot_name:",plot_name)
             if (not redo_plot) and plot_name.is_file():
                 adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                 adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
