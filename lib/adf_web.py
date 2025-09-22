@@ -297,7 +297,7 @@ class AdfWeb(AdfObs):
             #End if
             asset_path = None
         else:
-            html_name = f'plot_page_{web_data.stem}.html'
+            html_name = f'plot_page_{web_data.stem.replace(" ","_")}.html'
             html_file = self.__case_web_paths[case_name]["img_pages_dir"] / html_name
             asset_path = self.__case_web_paths[case_name]['assets_dir'] / web_data.name
         #End if
