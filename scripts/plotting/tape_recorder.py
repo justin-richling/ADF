@@ -128,7 +128,7 @@ def tape_recorder(adfobj):
     var = "Q"
 
     #This may have to change if other variables are desired in this plot type?
-    plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Middle_Atmosphere_Mean.{plot_type}"
+    plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
     print("tape plot_name:",plot_name)
 
     print(f"\t - Plotting annual tape recorder for {var}")
