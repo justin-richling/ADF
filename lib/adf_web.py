@@ -407,7 +407,7 @@ class AdfWeb(AdfObs):
             if plot_type == 'Tables':
                 plot_type_html[plot_type] = os.path.join("html_table", "mean_tables.html")
             else:
-                print("Tragedy!", plot_type.replace("_"," "), f"mean_diag_{plot_type}.html")
+                #print("Tragedy!", plot_type.replace("_"," "), f"mean_diag_{plot_type}.html")
                 plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_img", f'mean_diag_{plot_type.replace(" ","_")}.html')
             #End if
         #End for
@@ -702,7 +702,6 @@ class AdfWeb(AdfObs):
             if web_data.case == 'multi-case':
                 plot_types = multi_plot_type_html
             else:
-                case1 = web_data.case
                 plot_types = plot_type_html
             plot_types = plot_type_html
             #End if
