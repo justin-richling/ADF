@@ -263,7 +263,7 @@ def create_TEM_files(adf):
 
             if "zalat" in ds_h0.dims:
                 zm_name = "zalat"
-            if "zmlat" in ds_h0.dims:
+            elif "zmlat" in ds_h0.dims:
                 zm_name = "zmlat"
             else:
                 print(f"Something went wrong with the zonal mean lat coordinate for {case_name}")
