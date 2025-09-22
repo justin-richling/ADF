@@ -407,6 +407,7 @@ class AdfWeb(AdfObs):
             if plot_type == 'Tables':
                 plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_table", "mean_tables.html")
             else:
+                print("Tragedy!", plot_type.replace("_"," "))
                 plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_img", f"mean_diag_{plot_type}.html")
             #End if
         #End for
