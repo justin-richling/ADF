@@ -405,9 +405,9 @@ class AdfWeb(AdfObs):
         plot_type_html = OrderedDict()
         for plot_type in self.__plot_type_order:
             if plot_type == 'Tables':
-                plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_table", "mean_tables.html")
+                plot_type_html[plot_type] = os.path.join("html_table", "mean_tables.html")
             else:
-                print("Tragedy!", plot_type.replace("_"," "))
+                print("Tragedy!", plot_type.replace("_"," "), f"mean_diag_{plot_type}.html")
                 plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_img", f"mean_diag_{plot_type}.html")
             #End if
         #End for
@@ -417,7 +417,7 @@ class AdfWeb(AdfObs):
             multi_plot_type_html = OrderedDict()
             for plot_type in self.__plot_type_multi:
                 if plot_type == 'Tables':
-                    multi_plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_table",
+                    multi_plot_type_html[plot_type] = os.path.join("html_table",
                                                                    "mean_tables.html")
                 else:
                     multi_plot_type_html[plot_type.replace("_"," ")] = os.path.join("html_img",
