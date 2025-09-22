@@ -678,7 +678,7 @@ class AdfWeb(AdfObs):
                 #End with
 
                 #Mean plot type html file name
-                mean_ptype_file = img_pages_dir / f"mean_diag_{web_data.plot_type.replace(" ","_")}.html"
+                mean_ptype_file = img_pages_dir / f'mean_diag_{web_data.plot_type.replace(" ","_")}.html'
 
                 #Construct individual plot type mean_diag html files
                 mean_tmpl = jinenv.get_template('template_mean_diag.html')
