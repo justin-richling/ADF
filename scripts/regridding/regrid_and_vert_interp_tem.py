@@ -52,9 +52,9 @@ def regrid_and_vert_interp_tem(adf):
     output_loc       = adf.get_basic_info("cam_regrid_loc", required=True)
     if "qbo" in adf.plotting_scripts:
         var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
-                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM","PS","PMID"]
+                    "PSITEM","DELF","UTENDVTEM","UTENDWTEM","PS","PMID"]
     else:
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD","PS","PMID"]
+        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","DELF","PS","PMID"]
         var_cor_list = ["Uzm","THzm","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
     var_defaults     = adf.variable_defaults
 
