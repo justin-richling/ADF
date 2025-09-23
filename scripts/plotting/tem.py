@@ -151,7 +151,7 @@ def tem(adf):
         #Set TEM file for baseline
         #input_loc_idx = Path(tem_base_loc)
         if regrid_tem_files:
-            print("USING REGRIDDED RIGHT BOI?")
+            print("USING REGRIDDED RIGHT BOI? BASE")
             base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
         else:
             base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
@@ -203,6 +203,7 @@ def tem(adf):
             output_loc_idx = Path(tem_loc)
 
             if regrid_tem_files:
+                print("USING REGRIDDED RIGHT BOI? CASE")
                 case_file_name = f'{base_name}_{case_name}.TEMdiag_regridded.nc'
             else:
                 case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
