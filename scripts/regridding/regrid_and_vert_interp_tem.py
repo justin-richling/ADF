@@ -234,7 +234,19 @@ def regrid_and_vert_interp_tem(adf):
                         #Open single file as new xarray dataset:
                         tclim_ds = xr.open_dataset(tclim_fils[0],decode_times=False)
                     #End if
-                    tclim_ds = tclim_ds.rename({'zmlat': 'lat'})
+
+                    possible_lat_names = ['zalat', 'zmlat', 'lat']
+
+                    # Find the one that exists in the dataset
+                    for name in possible_lat_names:
+                        if name in tclim_ds.coords:
+                            t_lat_coord_name = name
+                            print("lat_coord_name", t_lat_coord_name, case_name)
+                            break
+                    else:
+                        raise ValueError("No known latitude coordinate found in dataset.")
+
+                    tclim_ds = tclim_ds.rename({t_lat_coord_name: 'lat'})
 
                     #Generate CAM climatology (climo) file list:
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag*.nc"))
@@ -252,7 +264,16 @@ def regrid_and_vert_interp_tem(adf):
                         mclim_ds = xr.open_dataset(mclim_fils[0],decode_times=False)
                     #End if
 
-                    mclim_ds = mclim_ds.rename({'zmlat': 'lat'})
+                    # Find the one that exists in the dataset
+                    for name in possible_lat_names:
+                        if name in mclim_ds.coords:
+                            m_lat_coord_name = name
+                            print("lat_coord_name", m_lat_coord_name, case_name)
+                            break
+                    else:
+                        raise ValueError("No known latitude coordinate found in dataset.")
+
+                    mclim_ds = mclim_ds.rename({m_lat_coord_name: 'lat'})
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
 
@@ -271,7 +292,7 @@ def regrid_and_vert_interp_tem(adf):
                     if rgdata_interp is None:
                         continue
 
-                    rgdata_interp = rgdata_interp.rename({'lat': 'zmlat'})
+                    rgdata_interp = rgdata_interp.rename({'lat': t_lat_coord_name})
                     rgdata_interps.append(rgdata_interp)
 
                     #Now vertically interpolate baseline (target) climatology,
