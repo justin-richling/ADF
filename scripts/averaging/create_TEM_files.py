@@ -424,6 +424,9 @@ def calc_tem(ds, zm_name):
     H = 7000.
     g0 = 9.80665
 
+    if "zmlat" not in ds.coords:
+        ds = ds.rename({zm_name: "zmlat"})
+
     nlat = ds[zm_name].size
     nlev = ds['lev'].size
 
