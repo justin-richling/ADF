@@ -245,7 +245,7 @@ def regrid_and_vert_interp_tem(adf):
                             break
                     else:
                         raise ValueError("No known latitude coordinate found in dataset.")
-
+                    print("\n",tclim_ds,"\n")
                     tclim_ds = tclim_ds.rename({t_lat_coord_name: 'lat'})
 
                     #Generate CAM climatology (climo) file list:
