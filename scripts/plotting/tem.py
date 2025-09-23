@@ -97,6 +97,7 @@ def tem(adf):
     if Path(f"{output_loc}/tem").is_dir():
         regrid_tem_files = True
         tem_case_locs = [f"{output_loc}/tem"]
+        print("HERE right?",tem_case_locs)
         if not adf.compare_obs:
             tem_base_loc = f"{output_loc}/tem"
     else:
@@ -150,6 +151,7 @@ def tem(adf):
         #Set TEM file for baseline
         #input_loc_idx = Path(tem_base_loc)
         if regrid_tem_files:
+            print("USING REGRIDDED RIGHT BOI?")
             base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
         else:
             base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
