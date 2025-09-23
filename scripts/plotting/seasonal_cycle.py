@@ -770,10 +770,12 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
 
         plt.xticks(np.arange(-90,91,45),rotation=40)
         ax.tick_params(axis='x', labelsize=8)
-        if idx > 0:
+        """if idx > 0:
             plt.yticks([])
         else:
-            plt.ylabel('hPa',fontsize=10)
+            plt.ylabel('hPa',fontsize=10)"""
+
+        plt.ylabel('hPa',fontsize=10)
         ax.tick_params(axis='y', labelsize=8)
 
         #Set individual plot title
