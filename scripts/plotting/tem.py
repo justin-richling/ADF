@@ -361,13 +361,13 @@ def tem(adf):
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
-                if 'zmlat' in mseasons.dims:
-                    mseasons = mseasons.rename({"zmlat": "zalat"})
+                #if 'zmlat' in mseasons.dims:
+                #    mseasons = mseasons.rename({"zmlat": "zalat"})
                 mlat = mseasons['zalat']
                 mlev = mseasons['lev']
 
-                if 'zmlat' in oseasons.dims:
-                    oseasons = oseasons.rename({"zmlat": "zalat"})
+                #if 'zmlat' in oseasons.dims:
+                #    oseasons = oseasons.rename({"zmlat": "zalat"})
                 olat = oseasons['zalat']
                 olev = oseasons['lev']
 
