@@ -252,7 +252,7 @@ def polar_map(adfobj):
                             pseasons[s] = pseasons[s].fillna(0.0)
 
                             # make plots: northern and southern hemisphere separately:
-                            for hemi_type in ["NHPolar", "SHPolar"]:
+                            for hemi_type in ["NH_Polar", "SH_Polar"]:
 
                                 #Create plot name and path:
                                 plot_name = plot_loc / f"{var}_{s}_{hemi_type}_Mean.{plot_type}"
@@ -279,7 +279,7 @@ def polar_map(adfobj):
                                     # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
 
                                     #Determine hemisphere to plot based on plot file name:
-                                    if hemi_type == "NHPolar":
+                                    if hemi_type == "NH_Polar":
                                         hemi = "NH"
                                     else:
                                         hemi = "SH"
@@ -359,7 +359,7 @@ def polar_map(adfobj):
                                 pseasons[s] = pseasons[s].fillna(0.0)
 
                                 # make plots: northern and southern hemisphere separately:
-                                for hemi_type in ["NHPolar", "SHPolar"]:
+                                for hemi_type in ["NH_Polar", "SH_Polar"]:
 
                                     #Create plot name and path:
                                     plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
@@ -387,7 +387,7 @@ def polar_map(adfobj):
                                         # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
 
                                         #Determine hemisphere to plot based on plot file name:
-                                        if hemi_type == "NHPolar":
+                                        if hemi_type == "NH_Polar":
                                             hemi = "NH"
                                         else:
                                             hemi = "SH"
