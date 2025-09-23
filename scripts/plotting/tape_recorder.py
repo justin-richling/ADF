@@ -129,7 +129,7 @@ def tape_recorder(adfobj):
 
     #This may have to change if other variables are desired in this plot type?
     plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
-    plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Middle_Atmosphere_Mean.{plot_type}"
+    #plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Middle_Atmosphere_Mean.{plot_type}"
     print("tape plot_name:",plot_name)
 
     print(f"\t - Plotting annual tape recorder for {var}")
@@ -139,9 +139,9 @@ def tape_recorder(adfobj):
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
         adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True,
-                                #category="Seasonal Cycle",
+                                category="Seasonal Cycle",
                                 plot_type="Middle Atmosphere",
-                                #ext="SeasonalCycle_Mean"
+                                ext="SeasonalCycle_Mean"
                                 )
         return
 
@@ -247,9 +247,9 @@ def tape_recorder(adfobj):
 
     #Add plot to website (if enabled):
     adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", None, season="ANN", multi_case=True,
-                                #category="Seasonal Cycle",
+                                category="Seasonal Cycle",
                                 plot_type="Middle Atmosphere",
-                                #ext="SeasonalCycle_Mean"
+                                ext="SeasonalCycle_Mean"
                                 )
 
     #Notify user that script has ended:
