@@ -404,6 +404,7 @@ def tem(adf):
                 else:
                     dseasons = None
 
+                print("\ndseasons",dseasons,"\n")
                 #Gather contour plot options
                 cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
