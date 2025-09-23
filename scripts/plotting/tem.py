@@ -364,7 +364,18 @@ def tem(adf):
                 #if 'zmlat' in mseasons.dims:
                 #    mseasons = mseasons.rename({"zmlat": "zalat"})
                 print("\n",mseasons,"\n")
-                mlat = mseasons['zalat']
+
+                possible_lat_names = ['zalat', 'zmlat', 'lat']
+
+                # Find the one that exists in the dataset
+                for name in possible_lat_names:
+                    if name in mseasons.coords:
+                        t_lat_coord_name = name
+                        print("lat_coord_name", t_lat_coord_name, case_name)
+                        break
+                else:
+                    raise ValueError("No known latitude coordinate found in dataset.")
+                mlat = mseasons[t_lat_coord_name]
                 mlev = mseasons['lev']
 
                 #if 'zmlat' in oseasons.dims:
