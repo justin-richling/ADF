@@ -266,11 +266,19 @@ def create_TEM_files(adf):
             ds_h0 = xr.open_mfdataset(hist0_files,decode_times=True, combine='nested', concat_dim='time')
 
             if "zalat" in ds_h0.dims:
+                zm_name0 = "zalat"
+            elif "zmlat" in ds_h0.dims:
+                zm_name0 = "zmlat"
+            elif "lat" in ds_h0.dims:
+                zm_name0 = "lat"
+            else:
+                print(f"Something went wrong with the h0* lat coordinate for {case_name}")
+                return
+            
+            if "zalat" in ds_h0.dims:
                 zm_name = "zalat"
             elif "zmlat" in ds_h0.dims:
                 zm_name = "zmlat"
-            elif "lat" in ds_h0.dims:
-                zm_name = "lat"
             else:
                 print(f"Something went wrong with the zonal mean lat coordinate for {case_name}")
                 return
@@ -297,7 +305,7 @@ def create_TEM_files(adf):
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
                 if idx == 0:
-                    dstem0 = calc_tem(ds.squeeze().isel(time=idx), zm_name)
+                    dstem0 = calc_tem(ds.squeeze().isel(time=idx), zm_name0)
                 else:
                     dstem = calc_tem(ds.squeeze().isel(time=idx), zm_name)
                     if "zalat" in dstem.dims:
