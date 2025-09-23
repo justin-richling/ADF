@@ -306,6 +306,7 @@ def create_TEM_files(adf):
             for idx,_ in enumerate(ds.time.values):
                 if idx == 0:
                     print("ZERO")
+                    print("zm_name0", zm_name0)
                     dstem0 = calc_tem(ds_h0.squeeze().isel(time=idx), zm_name0)
                 else:
                     print("NON ZERO",idx)
