@@ -369,6 +369,7 @@ def tem(adf):
 
                 #if 'zmlat' in oseasons.dims:
                 #    oseasons = oseasons.rename({"zmlat": "zalat"})
+                print("\n",oseasons,"\n")
                 olat = oseasons['zalat']
                 olev = oseasons['lev']
 
