@@ -307,7 +307,7 @@ def create_TEM_files(adf):
                 if idx == 0:
                     print("ZERO")
                     print("zm_name0", zm_name0)
-                    dstem0 = calc_tem(ds_h0.squeeze().isel(time=idx), zm_name0)
+                    dstem0 = calc_tem0(ds_h0.squeeze().isel(time=idx))
                 else:
                     print("NON ZERO",idx)
                     dstem = calc_tem(ds.squeeze().isel(time=idx), zm_name)
@@ -593,3 +593,59 @@ def calc_tem(ds, zm_name):
                                       ))
 
     return dstem
+
+
+
+def calc_tem0(ds):
+    """
+    # calc_tem() function to calculate TEM diagnostics on CAM/WACCM output
+    # This assumes the data have already been organized into zonal mean fluxes
+    # Uzm, THzm, VTHzm, Vzm, UVzm, UWzm, Wzm
+    # note that calculations are performed on model interface levels, which is ok
+    # in the stratosphere but not in the troposphere.  If interested in tropospheric
+    # TEM diagnostics, make sure input fields have been interpolated to true pressure levels.
+
+    # The code follows the 'TEM recipe' from Appendix A of Gerber, E. P. and Manzini, E.:
+    # The Dynamics and Variability Model Intercomparison Project (DynVarMIP) for CMIP6:
+    # assessing the stratosphere–troposphere system, Geosci. Model Dev., 9, 3413–3425,
+    # https://doi.org/10.5194/gmd-9-3413-2016, 2016 and the corrigendum.
+
+    # pdf available here: https://gmd.copernicus.org/articles/9/3413/2016/gmd-9-3413-2016.pdf,
+    # https://gmd.copernicus.org/articles/9/3413/2016/gmd-9-3413-2016-corrigendum.pdf
+
+    # Output from post-processing function
+
+    # Table A1. Momentum budget variable list (2-D monthly / daily zonal means, YZT).
+
+    # Name      Long name [unit]
+
+    # epfy      northward component of the Eliassen–Palm flux [m3 s−2]
+    # epfz      upward component of the Eliassen–Palm flux [m3 s−2]
+    # vtem      Transformed Eulerian mean northward wind [m s−1]
+    # wtem      Transformed Eulerian mean upward wind [m s−1]
+    # psitem    Transformed Eulerian mean mass stream function [kg s−1]
+    # utendepfd tendency of eastward wind due to Eliassen–Palm flux divergence [m s−2]
+    # utendvtem tendency of eastward wind due to TEM northward wind advection and the Coriolis term [m s−2]
+    # utendwtem tendency of eastward wind due to TEM upward wind advection [m s−2]
+
+    # this utility based on python code developed by Isla Simpson 25 Feb 2021
+    # initial coding of stand alone function by Dan Marsh 16 Dec 2022
+
+    # NOTE: function expects an xarray dataset with dataarrays of dimension (nlev,nlat)
+    # to process more than one timestep iterate over time.
+    """
+
+    #Average time dimension over time bounds, if bounds exist:
+    if 'time_bnds' in ds:
+        time_bounds_name = 'time_bnds'
+    elif 'time_bounds' in ds:
+        time_bounds_name = 'time_bounds'
+
+    dstem0 = xr.Dataset(data_vars=dict(date = ds.date,
+                                      datesec = ds.datesec,
+                                      time_bnds = time_bounds_name,
+                                      hybm=ds.hybm,
+                                      hyam=ds.hyam,
+                                      ))
+
+    return dstem0
