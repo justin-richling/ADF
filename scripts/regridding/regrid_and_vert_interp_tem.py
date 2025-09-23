@@ -247,7 +247,8 @@ def regrid_and_vert_interp_tem(adf):
                         raise ValueError("No known latitude coordinate found in dataset.")
                     print("\n",tclim_ds,"\n")
                     if t_lat_coord_name != 'lat':
-                        tclim_ds = tclim_ds.rename({t_lat_coord_name: 'lat'})
+                        if 'lat' not in tclim_ds.coords:
+                            tclim_ds = tclim_ds.rename({t_lat_coord_name: 'lat'})
 
                     #Generate CAM climatology (climo) file list:
                     mclim_fils = sorted(mclimo_loc.glob(f"{case_name}.TEMdiag*.nc"))
@@ -275,7 +276,8 @@ def regrid_and_vert_interp_tem(adf):
                         raise ValueError("No known latitude coordinate found in dataset.")
 
                     if m_lat_coord_name != 'lat':
-                        mclim_ds = mclim_ds.rename({m_lat_coord_name: 'lat'})
+                        if 'lat' not in mclim_ds.coords:
+                            mclim_ds = mclim_ds.rename({m_lat_coord_name: 'lat'})
                     #Create keyword arguments dictionary for regridding function:
                     regrid_kwargs = {}
 
