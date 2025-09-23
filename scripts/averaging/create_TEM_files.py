@@ -310,11 +310,11 @@ def create_TEM_files(adf):
                     dstem0 = calc_tem0(ds_h0.squeeze().isel(time=idx))
                 else:
                     print("NON ZERO",idx)
-                    dstem = calc_tem(ds.squeeze().isel(time=idx), zm_name)
                     if "zalat" in dstem.dims:
                         zm_name = "zalat"
                     if "zmlat" in dstem.dims:
                         zm_name = "zmlat"
+                    dstem = calc_tem(ds.squeeze().isel(time=idx), zm_name)
                     dstem0 = xr.concat([dstem0, dstem],'time')
                 #End if
             #End if
