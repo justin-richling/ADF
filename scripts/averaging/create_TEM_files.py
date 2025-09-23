@@ -343,7 +343,7 @@ def create_TEM_files(adf):
 
             # Step 2: Interpolate ds2 to standard latitudes
             # List of possible coordinate names
-            possible_lat_names = ['lat', 'zalat', 'zmlat']
+            possible_lat_names = ['zalat', 'zmlat', 'lat']
 
             # Find the one that exists in the dataset
             for name in possible_lat_names:
