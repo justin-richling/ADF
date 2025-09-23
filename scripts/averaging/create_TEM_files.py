@@ -336,7 +336,7 @@ def create_TEM_files(adf):
                 dstem0 = xr.decode_cf(dstem0)
 
             # Step 1: Your standard latitudes
-            za_lats = dstem[zm_name].values
+            za_lats = dstem[zm_name0].values
 
             # Step 2: Interpolate ds2 to standard latitudes
             # List of possible coordinate names
