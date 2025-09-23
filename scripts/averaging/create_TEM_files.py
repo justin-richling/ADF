@@ -423,7 +423,7 @@ def calc_tem(ds, zm_name):
     om = 7.29212e-5
     H = 7000.
     g0 = 9.80665
-
+    print("zm_name",zm_name)
     if "zmlat" not in ds.coords:
         ds = ds.rename({zm_name: "zmlat"})
 
