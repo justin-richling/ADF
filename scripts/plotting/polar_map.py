@@ -262,7 +262,7 @@ def polar_map(adfobj):
                                     #Add already-existing plot to website (if enabled):
                                     adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                                            season=s, plot_type=hemi_type)
+                                                            season=s, plot_type=hemi_type.replace("Polar", " Polar"))
 
                                     #Continue to next iteration:
                                     continue
@@ -292,7 +292,7 @@ def polar_map(adfobj):
 
                                     #Add plot to website (if enabled):
                                     adfobj.add_website_data(plot_name, var, case_name, category=web_category,
-                                                            season=s, plot_type=hemi_type)
+                                                            season=s, plot_type=hemi_type.replace("Polar", " Polar"))
 
                     else: #mdata dimensions check
                         print(f"\t    WARNING: skipping polar map for {var} as it doesn't have only lat/lon dims.")
@@ -370,7 +370,7 @@ def polar_map(adfobj):
                                         adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
                                                                 case_name, category=web_category,
-                                                                season=s, plot_type=hemi_type)
+                                                                season=s, plot_type=hemi_type.replace("Polar", " Polar"))
 
                                         #Continue to next iteration:
                                         continue
@@ -401,7 +401,7 @@ def polar_map(adfobj):
                                         #Add plot to website (if enabled):
                                         adfobj.add_website_data(plot_name, f"{var}_{pres}hpa",
                                                                 case_name, category=web_category,
-                                                                season=s, plot_type=hemi_type)
+                                                                season=s, plot_type=hemi_type.replace("Polar", " Polar"))
 
                             #End for (seasons)
                         #End for (pressure level)

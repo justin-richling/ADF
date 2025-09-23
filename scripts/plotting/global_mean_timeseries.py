@@ -177,7 +177,7 @@ def global_mean_timeseries(adfobj):
             None,
             season="ANN",
             multi_case=True,
-            plot_type="TimeSeries",
+            plot_type="Time Series",
         )
 
     #Notify user that script has ended:
