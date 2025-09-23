@@ -305,8 +305,10 @@ def create_TEM_files(adf):
             #iterate over the times in a dataset
             for idx,_ in enumerate(ds.time.values):
                 if idx == 0:
+                    print("ZERO")
                     dstem0 = calc_tem(ds.squeeze().isel(time=idx), zm_name0)
                 else:
+                    print("NON ZERO",idx)
                     dstem = calc_tem(ds.squeeze().isel(time=idx), zm_name)
                     if "zalat" in dstem.dims:
                         zm_name = "zalat"
