@@ -349,7 +349,7 @@ def create_TEM_files(adf):
             for name in possible_lat_names:
                 if name in ds_h0.coords:
                     lat_coord_name = name
-                    print("lat_coord_name", lat_coord_name)
+                    print("lat_coord_name", lat_coord_name, case_name)
                     break
             else:
                 raise ValueError("No known latitude coordinate found in dataset.")
