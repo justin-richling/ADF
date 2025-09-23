@@ -250,7 +250,7 @@ def regrid_and_vert_interp_tem(adf):
                         if 'lat' not in tclim_ds.coords:
                             tclim_ds = tclim_ds.rename({t_lat_coord_name: 'lat'})
                         else:
-                            ds = ds.drop_vars('lat')
+                            tclim_ds = tclim_ds.drop_vars('lat')
                             tclim_ds = tclim_ds.rename({t_lat_coord_name: 'lat'})
 
                     #Generate CAM climatology (climo) file list:
