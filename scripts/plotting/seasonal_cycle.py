@@ -706,7 +706,7 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
 
     #Set up plot
     fig = plt.figure(figsize=(casenum*4,nrows*5))
-
+    prev_major_ticks = []
     for idx,case_name in enumerate(case_names):
 
         data_coords = case_ds_dict["coords"][case_name]
@@ -764,7 +764,12 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
 
         # Find the next value below highest vertical level
         prev_major_tick = 10 ** (np.floor(np.log10(np.nanmin(data_lev))))
-        y_lims = [float(lim) for lim in [1e3,prev_major_tick]]
+        prev_major_ticks.append(prev_major_tick)
+        if idx > 0:
+            major_tick = max(prev_major_ticks[0],prev_major_tick)
+        
+        
+        y_lims = [float(lim) for lim in [1e3,major_tick]]
         print("y_lims",y_lims)
         ax.set_ylim(y_lims)
 
@@ -829,7 +834,8 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
 
         # Find the next value below highest vertical level
         prev_major_tick = 10 ** (np.floor(np.log10(np.nanmin(data_lev))))
-        y_lims = [float(lim) for lim in [1e3,prev_major_tick]]
+        y_lims = [float(lim) for lim in [1e3,major_tick]]
+        #y_lims = [float(lim) for lim in [1e3,prev_major_tick]]
         ax.set_ylim(y_lims)
 
 
@@ -894,7 +900,8 @@ def comparison_plots(plot_name, cam_var, case_names, case_nicknames, case_ds_dic
 
             # Find the next value below highest vertical level
             prev_major_tick = 10 ** (np.floor(np.log10(np.nanmin(data_lev))))
-            y_lims = [float(lim) for lim in [1e3,prev_major_tick]]
+            y_lims = [float(lim) for lim in [1e3,major_tick]]
+            #y_lims = [float(lim) for lim in [1e3,prev_major_tick]]
 
             ax.set_ylim(y_lims)
 
