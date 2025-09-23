@@ -419,7 +419,7 @@ def global_latlon_vect_map(adfobj):
                                     #Add already-existing plot to website (if enabled):
                                     adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
                                     adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
-                                                            season=s, plot_type="LatLon_Vector")
+                                                            season=s, plot_type="LatLon Vector")
 
                                     #Continue to next iteration:
                                     continue
@@ -447,7 +447,7 @@ def global_latlon_vect_map(adfobj):
 
                                 #Add plot to website (if enabled):
                                 adfobj.add_website_data(plot_name, f"{var_name}_{lv}hpa", case_name, category=web_category,
-                                                        season=s, plot_type="LatLon_Vector")
+                                                        season=s, plot_type="LatLon Vector")
 
                             #End for (seasons)
                         #End for (pressure levels)
@@ -501,7 +501,7 @@ def global_latlon_vect_map(adfobj):
 
                             #Add plot to website (if enabled):
                             adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,
-                                                    season=s, plot_type="LatLon_Vector")
+                                                    season=s, plot_type="LatLon Vector")
 
                         #End for
                     #End if (has_lev)
