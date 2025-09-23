@@ -427,10 +427,10 @@ def calc_tem(ds, zm_name):
     if "zmlat" not in ds.coords:
         ds = ds.rename({zm_name: "zmlat"})
 
-    nlat = ds[zm_name].size
+    nlat = ds["zmlat"].size
     nlev = ds['lev'].size
 
-    latrad = np.radians(ds[zm_name])
+    latrad = np.radians(ds["zmlat"])
     coslat = np.cos(latrad)
     coslat2d = np.tile(coslat,(nlev,1))
 
