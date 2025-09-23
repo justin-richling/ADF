@@ -381,7 +381,15 @@ def tem(adf):
                 #if 'zmlat' in oseasons.dims:
                 #    oseasons = oseasons.rename({"zmlat": "zalat"})
                 print("\n",oseasons,"\n")
-                olat = oseasons['zalat']
+                # Find the one that exists in the dataset
+                for name in possible_lat_names:
+                    if name in oseasons.coords:
+                        o_lat_coord_name = name
+                        print("lat_coord_name", o_lat_coord_name, case_name)
+                        break
+                else:
+                    raise ValueError("No known latitude coordinate found in dataset.")
+                olat = oseasons[o_lat_coord_name]
                 olev = oseasons['lev']
 
                 #print(mseasons,"\n")
