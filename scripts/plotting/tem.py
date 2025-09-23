@@ -363,7 +363,7 @@ def tem(adf):
 
                 #if 'zmlat' in mseasons.dims:
                 #    mseasons = mseasons.rename({"zmlat": "zalat"})
-                print("\n",mseasons,"\n")
+                print("\nmseasons",mseasons,"\n")
 
                 possible_lat_names = ['zalat', 'zmlat', 'lat']
 
@@ -380,7 +380,7 @@ def tem(adf):
 
                 #if 'zmlat' in oseasons.dims:
                 #    oseasons = oseasons.rename({"zmlat": "zalat"})
-                print("\n",oseasons,"\n")
+                print("\noseasons",oseasons,"\n")
                 # Find the one that exists in the dataset
                 for name in possible_lat_names:
                     if name in oseasons.coords:
