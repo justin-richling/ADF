@@ -217,13 +217,19 @@ def tem(adf):
             for s in seasons:
 
                 #Location to save plots
-                plot_name = plot_location / f"{var}_{s}_WACCM_SeasonalCycle_Mean.png"
+                #plot_name = plot_location / f"{var}_{s}_WACCM_SeasonalCycle_Mean.png"
+                plot_name = plot_location / f"{var}_{s}_WACCM_TEM_Mean.png"
 
                 # Check redo_plot. If set to True: remove old plot, if it already exists:
                 if (not redo_plot) and plot_name.is_file():
                     #Add already-existing plot to website (if enabled):
                     adf.debug_log(f"'{plot_name}' exists and clobber is false.")
-                    adf.add_website_data(plot_name, var, None, season=s, plot_type="WACCM",ext="SeasonalCycle_Mean",category="TEM",multi_case=True)
+                    adf.add_website_data(plot_name, var, None, season=s, plot_type="Middle Atmosphere",
+                                         ext="TEM_Mean",category="TEM",multi_case=True)
+                    
+                    """adfobj.add_website_data(plot_name, f"{cam_var}_zm", case_name, season=interval,
+                                        plot_type="Middle Atmosphere", category="Seasonal Cycle",
+                                        ext="SeasonalCycle_Mean",non_season=True)"""
 
                 elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
                     if plot_name.is_file():
@@ -550,8 +556,11 @@ def tem(adf):
                 fig.savefig(plot_name, bbox_inches='tight', dpi=300)
 
                 #Add plot to website (if enabled):
-                adf.add_website_data(plot_name, var, case_name, season=s, plot_type="WACCM",
-                                     ext="SeasonalCycle_Mean",category="TEM")
+                #adf.add_website_data(plot_name, var, case_name, season=s, plot_type="WACCM",
+                #                    ext="SeasonalCycle_Mean",category="TEM")
+                
+                adf.add_website_data(plot_name, var, None, season=s, plot_type="Middle Atmosphere",
+                                         ext="TEM_Mean",category="TEM",multi_case=True)
 
                 plt.close()
     print("  ...TEM plots have been generated successfully.")
