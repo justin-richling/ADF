@@ -373,11 +373,11 @@ def seasonal_cycle(adfobj):
     for vert_lev in vert_levs:
         #Notify user of variable being plotted:
         print(f"\t - mixing ratio maps for {vert_lev}hPa")
-        plot_name = plot_loc / f"MixRatio_{vert_lev}hPa_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
+        plot_name = plot_loc / f"H2O_{vert_lev}hPa_ANN_Middle_Atmosphere_SeasonalCycle_Mean.{plot_type}"
 
         if (not redo_plot) and plot_name.is_file():
             adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
-            adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
+            adfobj.add_website_data(plot_name, f"H2O_{vert_lev}hPa", case_name, season="ANN",
                                         plot_type="Middle Atmosphere",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
@@ -389,7 +389,7 @@ def seasonal_cycle(adfobj):
                 plot_name.unlink()
 
             month_vs_lat_plot(var, var_dict, plot_name, case_names, nicknames, climo_yrs, cases_coords, cases_monthly, vert_lev)
-            adfobj.add_website_data(plot_name, f"MixRatio_{vert_lev}hPa", case_name, season="ANN",
+            adfobj.add_website_data(plot_name, f"H2O_{vert_lev}hPa", case_name, season="ANN",
                                         plot_type="Middle Atmosphere",
                                         ext="SeasonalCycle_Mean",
                                         category="Seasonal Cycle",
