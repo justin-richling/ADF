@@ -539,7 +539,7 @@ def plot_pre_mon(fig, data, ci, cmin, cmax, expname, x1=None, x2=None, y1=None, 
     ax.set_xticklabels([])
     ax.set_xticks(monticks2[1:13], minor=True)
     ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], minor=True, fontsize=14)
-    ax.set_title(expname, fontsize=16)
+    ax.set_title(expname, fontsize=8)
 
     return ax
 
