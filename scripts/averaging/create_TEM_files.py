@@ -426,7 +426,10 @@ def calc_tem(ds, zm_name):
     print("zm_name",zm_name,"\n")
     print("ds.coords",ds.coords,"\n")
     if "zmlat" not in ds.coords:
-        ds = ds.rename({zm_name: "zmlat"})
+        if "zalat" in ds.coords:
+            ds = ds.rename({"zalat": "zmlat"})
+        else:
+            ds = ds.rename({zm_name: "zmlat"})
 
     nlat = ds["zmlat"].size
     nlev = ds['lev'].size
