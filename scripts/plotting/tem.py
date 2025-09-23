@@ -363,6 +363,7 @@ def tem(adf):
 
                 #if 'zmlat' in mseasons.dims:
                 #    mseasons = mseasons.rename({"zmlat": "zalat"})
+                print("\n",mseasons,"\n")
                 mlat = mseasons['zalat']
                 mlev = mseasons['lev']
 
