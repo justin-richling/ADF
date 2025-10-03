@@ -445,6 +445,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         if isinstance(data, np.ndarray):
             print("It does look like data is a numpy array", type(data))
             cm, cmr = ncl_to_mpl(data, cmap_case)
+            print("WHAT???")
             adfobj.debug_log(msg)
             print("cm",cm)
             return cm
