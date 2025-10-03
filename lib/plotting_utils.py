@@ -370,6 +370,7 @@ def read_ncl_colormap(adfobj, fil):
 
 def ncl_to_mpl(adfobj, nclmap, name):
     msg = f"\n\t{script_name}: ncl_to_mpl()"
+    print(msg)
     if nclmap.max() > 1:
         try:
             vals = nclmap / 255
@@ -442,14 +443,16 @@ def try_load_ncl_cmap(adfobj, cmap_case):
             except urllib.error.HTTPError:
                 msg += f"\n\t\tNCL colormap file not found"
         if isinstance(data, np.ndarray):
+            print("It does look like data is a numpy array", type(data))
             cm, cmr = ncl_to_mpl(data, cmap_case)
             adfobj.debug_log(msg)
+            print("cm",cm)
             return cm
         else:
             print("Doesn't look like data is a numpy array?", type(data))
     except Exception:
         pass
-
+    print("NOT HERE RIUGHR?")
     adfobj.debug_log(msg)
     return "coolwarm"
 
