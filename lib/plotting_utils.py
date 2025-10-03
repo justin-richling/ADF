@@ -371,6 +371,7 @@ def read_ncl_colormap(adfobj, fil):
                 else:
                     table = np.array(row)
                     table_exists=True
+    print("TBALE",table)
     adfobj.debug_log(msg)
     return table
 
