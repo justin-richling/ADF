@@ -450,12 +450,25 @@ def try_load_ncl_cmap(adfobj, cmap_case):
                 data = read_ncl_colormap(adfobj, url)
             except urllib.error.HTTPError:
                 msg += f"\n\t\tNCL colormap file not found"
-        if isinstance(data, np.ndarray):
+        """if isinstance(data, np.ndarray):
             print("It does look like data is a numpy array", type(data))
-            cm, cmr = ncl_to_mpl(data, cmap_case)
-            print("WHAT???")
+            cm, cmr = ncl_to_mpl(data, cmap_case) # this is somehow breaking the loop and going to print("NOT HERE RIUGHR?")???
+            print("WHAT???") # this is not getting printed????
             adfobj.debug_log(msg)
             print("cm",cm)
+            return cm"""
+        if isinstance(data, np.ndarray):
+            print("It does look like data is a numpy array", type(data))
+            try:
+                cm, cmr = ncl_to_mpl(data, cmap_case)
+            except Exception as e:
+                print("Exception in ncl_to_mpl:", e)
+                import traceback; traceback.print_exc()
+                adfobj.debug_log(f"Exception in ncl_to_mpl: {e}")
+                return "coolwarm"
+            print("WHAT???")
+            adfobj.debug_log(msg)
+            print("cm", cm)
             return cm
         else:
             print("Doesn't look like data is a numpy array?", type(data))
