@@ -345,6 +345,7 @@ def read_ncl_colormap(adfobj, fil):
     # ASSUME ALL NCL COLORMAPS ARE N rows BY 3 COLUMNS,
     # AND THE VALUES ARE INTEGERS 0-255.
     with open(filename) as f:
+        print("IT MADE IT THIS FAR RIGHT?")
         table_exists = False
         for count, line in enumerate(f):
             line_str = line.strip() # remove leading/trailing whitespace
@@ -360,6 +361,7 @@ def read_ncl_colormap(adfobj, fil):
                 try: 
                     row = [float(r) for r in line_vals]
                 except:
+                    print(f"\n\t\tERROR reading RGB file {line_vals}")
                     msg += f"\n\t\tERROR reading RGB file {line_vals}"
                     adfobj.debug_log(msg)
                     return None
