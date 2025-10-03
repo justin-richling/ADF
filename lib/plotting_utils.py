@@ -326,12 +326,10 @@ def read_ncl_colormap(adfobj, fil):
             else:
                 msg += f"\n\t\tFile will be downloaded and saved as {filename}"
                 download_ncl_colormap(fil, str(filename))
-            print("               ->>>>>>>>",msg)
         else:
             is_url = False
             filename = Path(fil)
     elif isinstance(fil, Path):
-        print("THIS IS A PAHT RIGHT?", fil)
         filename = fil
     else:
         raise ValueError(f"\t\tERROR: what to do with type {type(fil)}")
@@ -344,9 +342,7 @@ def read_ncl_colormap(adfobj, fil):
 
     # ASSUME ALL NCL COLORMAPS ARE N rows BY 3 COLUMNS,
     # AND THE VALUES ARE INTEGERS 0-255.
-    print("IT MADE IT THIS FAR RIGHT??????????????????????????????")
     with open(filename) as f:
-        print("IT MADE IT THIS FAR RIGHT?")
         table_exists = False
         for count, line in enumerate(f):
             line_str = line.strip() # remove leading/trailing whitespace
@@ -362,7 +358,6 @@ def read_ncl_colormap(adfobj, fil):
                 try: 
                     row = [float(r) for r in line_vals]
                 except:
-                    print(f"\n\t\tERROR reading RGB file {line_vals}")
                     msg += f"\n\t\tERROR reading RGB file {line_vals}"
                     adfobj.debug_log(msg)
                     return None
@@ -371,7 +366,6 @@ def read_ncl_colormap(adfobj, fil):
                 else:
                     table = np.array(row)
                     table_exists=True
-    print("TBALE",table)
     adfobj.debug_log(msg)
     return table
 
@@ -414,23 +408,14 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
-            print("HERE")
             data = read_ncl_colormap(adfobj, locfil)
-            print("is data a numpy array?", type(data))
         else:
             try:
                 data = read_ncl_colormap(adfobj, url)
             except urllib.error.HTTPError:
                 msg += f"\n\t\tNCL colormap file not found"
-        """if isinstance(data, np.ndarray):
-            print("It does look like data is a numpy array", type(data))
-            cm, cmr = ncl_to_mpl(data, cmap_case) # this is somehow breaking the loop and going to print("NOT HERE RIUGHR?")???
-            print("WHAT???") # this is not getting printed????
-            adfobj.debug_log(msg)
-            print("cm",cm)
-            return cm"""
+
         if isinstance(data, np.ndarray):
-            print("It does look like data is a numpy array", type(data))
             try:
                 cm, cmr = ncl_to_mpl(adfobj, data, cmap_case)
             except Exception as e:
@@ -438,15 +423,11 @@ def try_load_ncl_cmap(adfobj, cmap_case):
                 import traceback; traceback.print_exc()
                 adfobj.debug_log(f"Exception in ncl_to_mpl: {e}")
                 return "coolwarm"
-            print("WHAT???")
             adfobj.debug_log(msg)
-            print("cm", cm)
             return cm
-        else:
-            print("Doesn't look like data is a numpy array?", type(data))
     except Exception:
         pass
-    print("NOT HERE RIUGHR?")
+
     adfobj.debug_log(msg)
     return "coolwarm"
 
