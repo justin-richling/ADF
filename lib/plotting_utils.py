@@ -435,6 +435,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         if locfil.is_file():
             print("HERE")
             data = read_ncl_colormap(adfobj, locfil)
+            print("is data a numpy array?", type(data))
         else:
             try:
                 data = read_ncl_colormap(adfobj, url)
@@ -445,7 +446,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
             adfobj.debug_log(msg)
             return cm
         else:
-            print("Doesn't look like data is an numpy array?", type(data))
+            print("Doesn't look like data is a numpy array?", type(data))
     except Exception:
         pass
 
