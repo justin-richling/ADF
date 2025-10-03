@@ -404,34 +404,6 @@ def ncl_to_mpl(adfobj, nclmap, name):
 
     adfobj.debug_log(msg)
     return my_cmap, my_cmap_r
-
-
-"""def choose_colormap_type(levels, threshold_symmetry=0.25):
-    levels = np.array(levels)
-    minval, maxval = np.min(levels), np.max(levels)
-    crosses_zero = (minval < 0) and (maxval > 0)
-    symmetry_ratio = abs(abs(maxval) - abs(minval)) / max(abs(maxval), abs(minval))
-    is_symmetric = symmetry_ratio < threshold_symmetry
-    return 'diverging' if crosses_zero and is_symmetric else 'sequential'
-
-
-def load_colormap(adfobj, cmap_name):
-    msg = f"{script_name}: load_colormap()"
-    if cmap_name in plt.colormaps():
-        adfobj.debug_log(msg)
-        return cmap_name
-    else:
-        msg += f"\n\t{cmap_name} not a standard Matplotlib colormap. Trying NCL..."
-        url = guess_ncl_url(cmap_name)
-        locfil = Path(".") / f"{cmap_name}.rgb"
-        data = read_ncl_colormap(adfobj, locfil) if locfil.is_file() else read_ncl_colormap(adfobj, url)
-        cm, cmr = ncl_to_mpl(adfobj, data, cmap_name)
-        if not cm:
-            msg += f"\n\tFailed to load {cmap_name}. Defaulting to 'coolwarm'."
-            adfobj.debug_log(msg)
-            return 'coolwarm'
-        adfobj.debug_log(msg)
-        return cm"""
     
 
 def try_load_ncl_cmap(adfobj, cmap_case):
