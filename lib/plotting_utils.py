@@ -443,6 +443,8 @@ def try_load_ncl_cmap(adfobj, cmap_case):
             cm, cmr = ncl_to_mpl(data, cmap_case)
             adfobj.debug_log(msg)
             return cm
+        else:
+            print("Doesn't look like data is an numpy array?", type(data))
     except Exception:
         pass
 
