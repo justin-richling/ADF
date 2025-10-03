@@ -433,6 +433,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         url = guess_ncl_url(cmap_case)
         locfil = Path(".") / f"{cmap_case}.rgb"
         if locfil.is_file():
+            print("HERE")
             data = read_ncl_colormap(adfobj, locfil)
         else:
             try:
