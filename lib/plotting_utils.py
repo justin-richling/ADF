@@ -344,6 +344,7 @@ def read_ncl_colormap(adfobj, fil):
 
     # ASSUME ALL NCL COLORMAPS ARE N rows BY 3 COLUMNS,
     # AND THE VALUES ARE INTEGERS 0-255.
+    print("IT MADE IT THIS FAR RIGHT??????????????????????????????")
     with open(filename) as f:
         print("IT MADE IT THIS FAR RIGHT?")
         table_exists = False
