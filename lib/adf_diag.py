@@ -1527,13 +1527,11 @@ def _load_dataset(fils):
     -----
     When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
     """
-    import warnings  # use to warn user about missing files.
+    import adf_utils as utils
 
     #Format warning messages:
-    def my_formatwarning(msg, *args, **kwargs):
-        """Issue `msg` as warning."""
-        return str(msg) + '\n'
-    warnings.formatwarning = my_formatwarning
+    import warnings  # use to warn user about missing files
+    warnings.formatwarning = utils.my_formatwarning
 
     if len(fils) == 0:
         warnings.warn("\t    WARNING: Input file list is empty.")

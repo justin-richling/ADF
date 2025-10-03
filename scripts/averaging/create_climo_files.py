@@ -1,15 +1,13 @@
 """
 Module to create (monthly) climatology files.
 """
-import warnings  # use to warn user about missing files.
 import multiprocessing as mp
 import numpy as np
 import xarray as xr  # module-level import so all functions can get to it.
 
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
-warnings.formatwarning = my_formatwarning
+import warnings  # use to warn user about missing files.
+import adf_utils as utils
+warnings.formatwarning = utils.my_formatwarning
 
 def get_time_slice_by_year(time, startyear, endyear):
     """
