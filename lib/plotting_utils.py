@@ -460,7 +460,7 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         if isinstance(data, np.ndarray):
             print("It does look like data is a numpy array", type(data))
             try:
-                cm, cmr = ncl_to_mpl(data, cmap_case)
+                cm, cmr = ncl_to_mpl(adfobj, data, cmap_case)
             except Exception as e:
                 print("Exception in ncl_to_mpl:", e)
                 import traceback; traceback.print_exc()
