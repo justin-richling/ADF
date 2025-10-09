@@ -1089,16 +1089,15 @@ class AdfDiag(AdfWeb):
                 if "  webpage_title  " in line:
                     line = '  webpage_title = "ADF/CVDP Comparison"'
                 if "directory path of CVDP NCL scripts" in line:
-                    line = '  zp = "' + cvdp_dir + '/ncl_scripts/"'
+                    line = '  zp = "' + cvdp_dir + '/scripts/"'
                 if "  modular = " in line:
                     line = '  modular = "True"'
                 if "  modular_list = " in line:
                     line = '  modular_list = "'
-                    line += "psl.nam_nao,psl.pna_npo,tas.trends_timeseries,snd.trends,"
-                    line += "psl.trends,amo,pdo,sst.indices,pr.trends_timeseries,"
-                    line += "psl.sam_psa,sst.mean_stddev,"
-                    line += "psl.mean_stddev,pr.mean_stddev,sst.trends_timeseries,"
-                    line += 'tas.mean_stddev,ipo"'
+                    line += "amv,sst.indicies,psl.trends_timeseries,pdv,pr.trends_timeseries,"
+                    line += "soi,nam,nao,sam_psa,pna_npo,tas.trends_timeseries,ipv,"
+                    line += "sst.mean_stddev,psl.mean_stddev,pr.mean_stddev,tas.mean_stddev,"
+                    line += "sst.trends_timeseries"
                 if self.get_cvdp_info("cvdp_tar"):
                     if "  tar_output  " in line:
                         line = '  tar_output = "True"'
