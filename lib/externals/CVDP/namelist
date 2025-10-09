@@ -1,21 +1,32 @@
-CESM2 LENS 1001.001 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1001.001.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1021.002 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1021.002.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1041.003 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1041.003.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1061.004 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1061.004.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1081.005 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1081.005.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1101.006 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1101.006.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1121.007 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1121.007.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1141.008 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1141.008.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1161.009 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1161.009.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
-CESM2 LENS 1181.010 | /glade/campaign/cgd/cesm/CESM2-LE/{atm,lnd,ocn,ice}/proc/tseries/month_1/{MOC,SNOWDP,TS,TREFHT,PSL,PRECT,aice}/b.e21.B{HIST,SSP370}cmip6.f09_g17.LE2-1181.010.{cam.h0,clm2.h0,pop.h,cice.h}* | 1950 | 2049
+CESM2-LENS 1001.001 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1001.001.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1021.002 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1021.002.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1041.003 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1041.003.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1061.004 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1061.004.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1081.005 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1081.005.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1101.006 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1101.006.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1121.007 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1121.007.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1141.008 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1141.008.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1161.009 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1161.009.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
+CESM2-LENS 1181.010 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1181.010.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 1-CESM2-LENS CMIP6 Forcing
 
-CESM1 LENS #1 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.001.*.nc | 1950 | 2049
-CESM1 LENS #2 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.002.*.nc | 1950 | 2049
-CESM1 LENS #3 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.003.*.nc | 1950 | 2049
-CESM1 LENS #4 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.004.*.nc | 1950 | 2049
-CESM1 LENS #5 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.005.*.nc | 1950 | 2049
-CESM1 LENS #6 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.006.*.nc | 1950 | 2049
-CESM1 LENS #7 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.007.*.nc | 1950 | 2049
-CESM1 LENS #8 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.008.*.nc | 1950 | 2049
-CESM1 LENS #9 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.009.*.nc | 1950 | 2049
-CESM1 LENS #10 | /glade/campaign/cesm/collections/cesmLE/CESM-CAM5-BGC-LE/{atm,ice,lnd,ocn}/proc/tseries/monthly/*/b.e11.B*C5CNBDRD.f09_g16.010.*.nc | 1950 | 2049
+CESM2-LENS 1011.001 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1011.001.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1031.002 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1031.002.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1051.003 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1051.003.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1071.004 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1071.004.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1091.005 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1091.005.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1111.006 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1111.006.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1131.007 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1131.007.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1151.008 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1151.008.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1171.009 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1171.009.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+CESM2-LENS 1191.010 | /project/mojave/cesm2/LENS/{atm,ice,ocn}/month_1/*/*1191.010.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 2-CESM2-LENS SMBB Forcing
+
+CESM1-LENS 001 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.001.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 002 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.002.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 003 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.003.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 004 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.004.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 005 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.005.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 006 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.006.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 007 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.007.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 008 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.008.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 009 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.009.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
+CESM1-LENS 010 | /project/mojave/cesm1/LENS/{atm,ice,ocn}/month_1/*/b.e11.B*C5CNBDRD.f09_g16.010.{cam.h0,pop.h,cice.h}* | 1920 | 2100 | 3-CESM1-LENS
