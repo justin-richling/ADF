@@ -97,6 +97,37 @@ PSL:
   obs_var_name: "PSL"
 
 
+
+
+U:
+  global_latlon_map:
+    colormap: "Blues"
+  contour_levels_range: [-10, 90, 5]
+  diff_colormap: "BrBG"
+  diff_contour_range: [-15, 15, 2]
+  scale_factor: 1
+  add_offset: 0
+  new_unit: "ms$^{-1}$"
+  mpl:
+    colorbar:
+      label : "ms$^{-1}$"
+  obs_file: "U_ERA5_monthly_climo_197901-202112.nc"
+  obs_name: "ERA5"
+  obs_var_name: "U"
+  vector_pair: "V"
+  vector_name: "Wind"
+  category: "State"
+  pct_diff_contour_levels: [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
+  pct_diff_colormap: "PuOr_r"
+
+
+
+
+
+
+
+
+
 # Here are some examples of specifiying features like colormap, contour level values, difference values, etc.
 # based on plot type and if 3d, the vertical level (in model levels).
 # These are new features to the configuration and plotting routines.
