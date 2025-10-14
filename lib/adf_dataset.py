@@ -3,10 +3,8 @@ import xarray as xr
 
 import warnings # use to warn user about missing files
 
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
-warnings.formatwarning = my_formatwarning
+import adf_utils as utils
+warnings.formatwarning = utils.my_formatwarning
 
 # "reference data"
 # It is often just a "baseline case", 

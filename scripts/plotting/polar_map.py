@@ -1,10 +1,10 @@
 """Module to make polar stereographic maps."""
 from pathlib import Path
-import xarray as xr
 import numpy as np
 
 # ADF library
 import plotting_functions as pf
+import adf_utils as utils
 
 def get_hemisphere(hemi_type):
     """Helper function to convert plot type to hemisphere code.
@@ -40,8 +40,8 @@ def process_seasonal_data(mdata, odata, season):
     pseason : xarray.DataArray
         Seasonal means for test, reference, difference, and percent difference    
     """
-    mseason = pf.seasonal_mean(mdata, season=season, is_climo=True)
-    oseason = pf.seasonal_mean(odata, season=season, is_climo=True)
+    mseason = utils.seasonal_mean(mdata, season=season, is_climo=True)
+    oseason = utils.seasonal_mean(odata, season=season, is_climo=True)
     
     # Calculate differences
     dseason = mseason - oseason
@@ -136,6 +136,7 @@ def polar_map(adfobj):
 
         # Get variable-specific settings
         vres = res.get(var, {})
+        vres["plot_type"] = __name__
         web_category = vres.get("category", None)
 
         # Get all plot info and check existence
@@ -230,7 +231,7 @@ def polar_map(adfobj):
                 mdata = mdata.sel(lev=plot['pressure'])
                 odata_level = odata.sel(lev=plot['pressure'])
             else:
-                if not pf.lat_lon_validate_dims(mdata):
+                if not utils.lat_lon_validate_dims(mdata):
                     continue
 
             # Calculate seasonal means and differences
@@ -245,12 +246,15 @@ def polar_map(adfobj):
             if plot['path'].exists():
                 plot['path'].unlink()
 
+            hemisphere = get_hemisphere(plot['type'])
+            vres["hemi"] = hemisphere
+
             pf.make_polar_plot(
-                plot['path'], test_nicknames[case_idx], base_nickname,
+                adfobj, plot['path'], test_nicknames[case_idx], base_nickname,
                 [syear_cases[case_idx], eyear_cases[case_idx]],
                 [syear_baseline, eyear_baseline],
                 mseason, oseason, dseason, pseason,
-                hemisphere=get_hemisphere(plot['type']),
+                hemisphere=hemisphere,
                 obs=adfobj.compare_obs, **vres
             )
 

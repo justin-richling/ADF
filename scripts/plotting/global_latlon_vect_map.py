@@ -30,13 +30,22 @@ def global_latlon_vect_map(adfobj):
 
     #Import necessary modules:
     #------------------------
+    import sys
+    import os
 
     # data loading / analysis
     import xarray as xr
     import numpy as np
 
-    #CAM diagnostic plotting functions:
+    #ADF diagnostic utility functions:
+    import adf_utils as utils
+    import plotting_utils as plot_utils
     import plotting_functions as pf
+
+    # Warnings
+    import warnings  # use to warn user about missing files.
+    #     - Format warning messages:
+    warnings.formatwarning = utils.my_formatwarning
     #-------------------------
 
     # Steps:
@@ -133,6 +142,9 @@ def global_latlon_vect_map(adfobj):
                "SON": [9, 10, 11]
                }
 
+    main_script = os.path.basename(sys.argv[0])
+    vres = {"plot_tpye":main_script}
+
     #Initialize skipped variables set:
     skip_vars = set()
 
@@ -155,8 +167,11 @@ def global_latlon_vect_map(adfobj):
 
         else:
             adfobj.debug_log(f"global_latlon_vect_map: Skipping '{var}' as no variable defaults were found")
-            continue
+            web_category = None
+            #continue
         #End if
+
+        vres["plot_type"] = __name__
 
         #Make sure that variable is part of a vector pair:
         if "vector_pair" in vres:
@@ -177,7 +192,7 @@ def global_latlon_vect_map(adfobj):
         # For global maps, also set the central longitude:
         # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
         # otherwise defaults to 180
-        vres['central_longitude'] = pf.get_central_longitude(adfobj)
+        vres['central_longitude'] = plot_utils.get_central_longitude(adfobj)
 
         #Determine observations to compare against:
         if adfobj.compare_obs:
@@ -271,7 +286,7 @@ def global_latlon_vect_map(adfobj):
             vodata = vodata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
             #Check zonal mean dimensions
-            has_lat_ref, has_lev_ref = pf.zm_validate_dims(uodata)
+            has_lat_ref, has_lev_ref = utils.zm_validate_dims(uodata)
 
             # check if there is a lat dimension:
             if not has_lat_ref:
@@ -330,7 +345,7 @@ def global_latlon_vect_map(adfobj):
                 vmdata = vmdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
 
                 #Check dimensions:
-                has_lat, has_lev = pf.zm_validate_dims(umdata)
+                has_lat, has_lev = utils.zm_validate_dims(umdata)
 
                 # check if there is a lat dimension:
                 if not has_lat:
@@ -349,9 +364,9 @@ def global_latlon_vect_map(adfobj):
 
                 #Determine if observations/baseline have the correct dimensions:
                 if has_lev:
-                    has_dims = pf.lat_lon_validate_dims(uodata.isel(lev=0))
+                    has_dims = utils.lat_lon_validate_dims(uodata.isel(lev=0))
                 else:
-                    has_dims = pf.lat_lon_validate_dims(uodata)
+                    has_dims = utils.lat_lon_validate_dims(uodata)
                 #End if
 
                 if has_dims:
@@ -359,9 +374,9 @@ def global_latlon_vect_map(adfobj):
                     #dimensions, does the input CAM run have correct
                     #dimensions as well?
                     if has_lev_ref:
-                        has_dims_cam = pf.lat_lon_validate_dims(umdata.isel(lev=0))
+                        has_dims_cam = utils.lat_lon_validate_dims(umdata.isel(lev=0))
                     else:
-                        has_dims_cam = pf.lat_lon_validate_dims(umdata)
+                        has_dims_cam = utils.lat_lon_validate_dims(umdata)
                     #End if
                 #End if
 
@@ -399,12 +414,14 @@ def global_latlon_vect_map(adfobj):
                                 continue
                             #End if
 
+                            vres['lev'] = int(lv)
+
                             #Loop over season dictionary:
                             for s in seasons:
-                                umseasons[s] = (pf.seasonal_mean(umdata, season=s, is_climo=True)).sel(lev=lv)
-                                vmseasons[s] = (pf.seasonal_mean(vmdata, season=s, is_climo=True)).sel(lev=lv)
-                                uoseasons[s] = (pf.seasonal_mean(uodata, season=s, is_climo=True)).sel(lev=lv)
-                                voseasons[s] = (pf.seasonal_mean(vodata, season=s, is_climo=True)).sel(lev=lv)
+                                umseasons[s] = (utils.seasonal_mean(umdata, season=s, is_climo=True)).sel(lev=lv)
+                                vmseasons[s] = (utils.seasonal_mean(vmdata, season=s, is_climo=True)).sel(lev=lv)
+                                uoseasons[s] = (utils.seasonal_mean(uodata, season=s, is_climo=True)).sel(lev=lv)
+                                voseasons[s] = (utils.seasonal_mean(vodata, season=s, is_climo=True)).sel(lev=lv)
                                 # difference: each entry should be (lat, lon)
                                 udseasons[s] = umseasons[s] - uoseasons[s]
                                 vdseasons[s] = vmseasons[s] - voseasons[s]
@@ -438,7 +455,7 @@ def global_latlon_vect_map(adfobj):
                                 #   colormap, contour_levels, diff_colormap, diff_contour_levels, tiString, tiFontSize, mpl
                                 #   *Any other entries will be ignored.
                                 # NOTE: If we were doing all the plotting here, we could use whatever we want from the provided YAML file.
-                                pf.plot_map_vect_and_save(plot_name, case_nickname, base_nickname,
+                                pf.plot_map_vect_and_save(adfobj, plot_name, case_nickname, base_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
                                                         [syear_baseline,eyear_baseline],lv,
                                                         umseasons[s], vmseasons[s],
@@ -455,10 +472,10 @@ def global_latlon_vect_map(adfobj):
 
                         #Loop over season dictionary:
                         for s in seasons:
-                            umseasons[s] = pf.seasonal_mean(umdata, season=s, is_climo=True)
-                            vmseasons[s] = pf.seasonal_mean(vmdata, season=s, is_climo=True)
-                            uoseasons[s] = pf.seasonal_mean(uodata, season=s, is_climo=True)
-                            voseasons[s] = pf.seasonal_mean(vodata, season=s, is_climo=True)
+                            umseasons[s] = utils.seasonal_mean(umdata, season=s, is_climo=True)
+                            vmseasons[s] = utils.seasonal_mean(vmdata, season=s, is_climo=True)
+                            uoseasons[s] = utils.seasonal_mean(uodata, season=s, is_climo=True)
+                            voseasons[s] = utils.seasonal_mean(vodata, season=s, is_climo=True)
                             # difference: each entry should be (lat, lon)
                             udseasons[s] = umseasons[s] - uoseasons[s]
                             vdseasons[s] = vmseasons[s] - voseasons[s]
@@ -500,7 +517,7 @@ def global_latlon_vect_map(adfobj):
                                                       udseasons[s], vdseasons[s], obs, **vres)
 
                             #Add plot to website (if enabled):
-                            adfobj.add_website_data(plot_name, var_name, case_name, category=web_category,
+                            adfobj.add_website_data(adfobj, plot_name, var_name, case_name, category=web_category,
                                                     season=s, plot_type="LatLon_Vector")
 
                         #End for

@@ -14,17 +14,19 @@ plot_file_op
 # Import standard modules:
 from pathlib import Path
 import numpy as np
-import warnings
 
 # Import local modules:
 import plotting_functions as pf
 from aod_latlon import aod_latlon 
+import adf_utils as utils
+import plotting_utils as plot_utils
+import plotting_functions as pf
 
 # Format warning messages:
-def my_formatwarning(msg, *args, **kwargs):
-    """Issue `msg` as warning."""
-    return str(msg) + '\n'
-warnings.formatwarning = my_formatwarning
+# Warnings
+import warnings  # use to warn user about missing files.
+#     - Format warning messages:
+warnings.formatwarning = utils.my_formatwarning
 
 #########
 
@@ -69,15 +71,15 @@ def global_latlon_map(adfobj):
 
         
     The `plotting_functions` module is needed for:
-    pf.get_central_longitude()
+    plot_utils.get_central_longitude()
         determine central longitude for global plots
-    pf.lat_lon_validate_dims()
+    utils.lat_lon_validate_dims()
         makes sure latitude and longitude are valid
-    pf.seasonal_mean()
+    utils.seasonal_mean()
         calculate seasonal mean
-    pf.plot_map_and_save()
+    plot_utils.plot_map_and_save()
         send information to make the plot and save the file
-    pf.zm_validate_dims()
+    utils.zm_validate_dims()
         Checks on pressure level dimension
     """
 
@@ -101,12 +103,13 @@ def global_latlon_map(adfobj):
 
 def process_variable(adfobj, var, seasons, pres_levs, plot_type, redo_plot):
     vres = adfobj.variable_defaults.get(var, {})
+    vres["plot_type"] = __name__
     web_category = vres.get("category", None)
 
     # For global maps, also set the central longitude:
     # can be specified in adfobj basic info as 'central_longitude' or supplied as a number,
     # otherwise defaults to 180
-    vres['central_longitude'] = pf.get_central_longitude(adfobj)
+    vres['central_longitude'] = plot_utils.get_central_longitude(adfobj)
 
     # Load reference data
     odata = load_reference_data(adfobj, var)
@@ -139,7 +142,7 @@ def load_reference_data(adfobj, var):
         print(f"\t    WARNING: No reference data found for {var}")
         return None
 
-    o_has_dims = pf.validate_dims(odata, ["lat", "lon", "lev"])
+    o_has_dims = utils.validate_dims(odata, ["lat", "lon", "lev"])
     if (not o_has_dims['has_lat']) or (not o_has_dims['has_lon']):
         print(f"\t    WARNING: Reference data missing lat/lon dimensions")
         return None
@@ -157,7 +160,7 @@ def process_case(adfobj, case_name, case_idx, var, odata, seasons,
     if mdata is None:
         return
 
-    has_dims = pf.validate_dims(mdata, ["lat", "lon", "lev"])
+    has_dims = utils.validate_dims(mdata, ["lat", "lon", "lev"])
     if (not has_dims['has_lat']) or (not has_dims['has_lon']):
         print(f"\t    WARNING: Model data missing lat/lon dimensions")
         return
@@ -191,8 +194,8 @@ def get_plot_config(adfobj):
 def process_seasonal_data(mdata, odata, season, weight_season=True):
     """Helper function to calculate seasonal means and differences."""
     if weight_season:
-        mseason = pf.seasonal_mean(mdata, season=season, is_climo=True)
-        oseason = pf.seasonal_mean(odata, season=season, is_climo=True)
+        mseason = utils.seasonal_mean(mdata, season=season, is_climo=True)
+        oseason = utils.seasonal_mean(odata, season=season, is_climo=True)
     else:
         mseason = mdata.sel(time=season).mean(dim='time')
         oseason = odata.sel(time=season).mean(dim='time')
@@ -378,7 +381,7 @@ def process_2d_plots(adfobj, mdata, odata, case_name, case_nickname,
             process_seasonal_data(mdata, odata, s)
 
         # Generate plot
-        pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+        pf.plot_map_and_save(adfobj, plot_name, case_nickname, adfobj.data.ref_nickname,
                             [syear_case, eyear_case],
                             [syear_baseline, eyear_baseline],
                             mseasons[s], oseasons[s], dseasons[s], pseasons[s],
@@ -403,6 +406,8 @@ def process_3d_plots(adfobj, mdata, odata, case_name, case_nickname,
                   f"ref: {pres in odata['lev']}], so skipping.")
             continue
 
+        vres['lev'] = int(pres)
+
         for s in seasons.keys():
             plot_name = plot_loc / f"{var}_{pres}hpa_{s}_LatLon_Mean.{plot_type}"
             if doplot[plot_name] is None:
@@ -413,7 +418,7 @@ def process_3d_plots(adfobj, mdata, odata, case_name, case_nickname,
                 process_seasonal_data(mdata, odata, s)
 
             # Generate plot
-            pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+            pf.plot_map_and_save(adfobj, plot_name, case_nickname, adfobj.data.ref_nickname,
                                 [syear_case, eyear_case],
                                 [syear_baseline, eyear_baseline],
                                 mseasons[s].sel(lev=pres), 

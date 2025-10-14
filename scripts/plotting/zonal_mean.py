@@ -3,13 +3,9 @@ import numpy as np
 import xarray as xr
 import plotting_functions as pf
 
+import adf_utils as utils
 import warnings  # use to warn user about missing files.
-
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
-
-warnings.formatwarning = my_formatwarning
+warnings.formatwarning = utils.my_formatwarning
 
 def zonal_mean(adfobj):
 
@@ -160,7 +156,10 @@ def zonal_mean(adfobj):
 
         else:
             vres = {}
+            web_category = None
         #End if
+
+        vres["plot_type"] = __name__
 
         # load reference data (observational or baseline)
         if not adfobj.compare_obs:
@@ -178,7 +177,7 @@ def zonal_mean(adfobj):
             continue
 
         #Check zonal mean dimensions
-        has_lat_ref, has_lev_ref = pf.zm_validate_dims(odata)
+        has_lat_ref, has_lev_ref = utils.zm_validate_dims(odata)
 
         # check if there is a lat dimension:
         # if not, skip test cases and move to next variable
@@ -209,7 +208,7 @@ def zonal_mean(adfobj):
             # determine whether it's 2D or 3D
             # 3D triggers search for surface pressure
             # check data dimensions:
-            has_lat, has_lev = pf.zm_validate_dims(mdata)
+            has_lat, has_lev = utils.zm_validate_dims(mdata)
 
             # check if there is a lat dimension:
             if not has_lat:
@@ -242,7 +241,6 @@ def zonal_mean(adfobj):
 
             #Loop over season dictionary:
             for s in seasons:
-                
                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                 # I'll just call this one "Zonal_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                 # NOTE: Up to this point, nothing really differs from global_latlon_map,
@@ -257,8 +255,8 @@ def zonal_mean(adfobj):
                 # This could be re-visited for efficiency or improved code structure.
 
                 #Seasonal Averages
-                mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                mseasons[s] = utils.seasonal_mean(mdata, season=s, is_climo=True)
+                oseasons[s] = utils.seasonal_mean(odata, season=s, is_climo=True)
 
                 #Set the file name
                 plot_name = plot_loc / f"{var}_{s}_Zonal_Mean.{plot_type}"
@@ -273,7 +271,7 @@ def zonal_mean(adfobj):
                 if plot_name not in zonal_skip:
 
                     #Create new plot:
-                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+                    pf.plot_zonal_mean_and_save(adfobj, plot_name, case_nickname, adfobj.data.ref_nickname,
                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
                                                     [syear_baseline,eyear_baseline],
                                                     mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
@@ -285,7 +283,7 @@ def zonal_mean(adfobj):
                 #Create log-pressure plots as well (if applicable)
                 if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
 
-                    pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
+                    pf.plot_zonal_mean_and_save(adfobj, plot_name_log, case_nickname, adfobj.data.ref_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
                                                         [syear_baseline,eyear_baseline],
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)

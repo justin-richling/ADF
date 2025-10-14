@@ -7,7 +7,7 @@ from I. Simpson's directory (to be generalized).
 
 from pathlib import Path
 from types import NoneType
-import warnings  # use to warn user about missing files.
+
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,13 +15,9 @@ import plotting_functions as pf
 import matplotlib.ticker as ticker
 
 
-def my_formatwarning(msg, *args, **kwargs):
-    """custom warning"""
-    # ignore everything except the message
-    return str(msg) + "\n"
-
-
-warnings.formatwarning = my_formatwarning
+import adf_utils as utils
+import warnings  # use to warn user about missing files.
+warnings.formatwarning = utils.my_formatwarning
 
 
 def global_mean_timeseries(adfobj):
@@ -54,7 +50,10 @@ def global_mean_timeseries(adfobj):
             adfobj.debug_log(f"global_mean_timeseries: Found variable defaults for {field}")
         else:
             vres = {}
+            web_category = None
         #End if
+
+        vres["plot_type"] = __name__
 
         # reference time series (DataArray)
         ref_ts_da = adfobj.data.load_reference_timeseries_da(field)
@@ -70,7 +69,7 @@ def global_mean_timeseries(adfobj):
             continue
         else:
             # check data dimensions:
-            has_lat_ref, has_lev_ref = pf.zm_validate_dims(ref_ts_da)
+            has_lat_ref, has_lev_ref = utils.zm_validate_dims(ref_ts_da)
 
             # check if this is a "2-d" varaible:
             if has_lev_ref:
@@ -89,10 +88,10 @@ def global_mean_timeseries(adfobj):
             # End if
 
             # reference time series global average
-            ref_ts_da_ga = pf.spatial_average(ref_ts_da, weights=None, spatial_dims=None)
+            ref_ts_da_ga = utils.spatial_average(ref_ts_da, weights=None, spatial_dims=None)
 
             # annually averaged
-            ref_ts_da = pf.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
+            ref_ts_da = utils.annual_mean(ref_ts_da_ga, whole_years=True, time_name="time")
         # End if
 
         # Loop over model cases:
@@ -126,7 +125,7 @@ def global_mean_timeseries(adfobj):
 
             # If no reference, we still need to check if this is a "2-d" varaible:
             # check data dimensions:
-            has_lat_case, has_lev_case = pf.zm_validate_dims(c_ts_da)
+            has_lat_case, has_lev_case = utils.zm_validate_dims(c_ts_da)
 
             # If 3-d variable, notify user, flag and move to next test case
             if has_lev_case:
@@ -148,8 +147,8 @@ def global_mean_timeseries(adfobj):
             # End if
 
             # Gather spatial avg for test case
-            c_ts_da_ga = pf.spatial_average(c_ts_da)
-            case_ts[labels[case_name]] = pf.annual_mean(c_ts_da_ga)
+            c_ts_da_ga = utils.spatial_average(c_ts_da)
+            case_ts[labels[case_name]] = utils.annual_mean(c_ts_da_ga)
 
         # If this case is 3-d or missing variable, then break the loop and go to next variable
         if skip_var:
