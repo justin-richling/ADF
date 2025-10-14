@@ -1,16 +1,12 @@
 """                                                                    .
-Generic computation and plotting helper functions
+Generic computation helper functions
 
 Functions
 ---------
 load_dataset()
     generalized load dataset method used for plotting/analysis functions
-get_difference_colors(values)
-    Provide a color norm and colormap assuming `values` is a difference field.
 mask_land_or_ocean(arr, msk, use_nan=False)
     Apply a land or ocean mask to provided variable.
-get_central_longitude(*args)
-    Determine central longitude for maps.
 global_average(fld, wgt, verbose=False)
     pure numpy global average.
 spatial_average(indata, weights=None, spatial_dims=None)
@@ -23,21 +19,6 @@ seasonal_mean(data, season=None, is_climo=None):
     Calculates the time-weighted seasonal average (or average over all time).
 domain_stats(data, domain):
     Provides statistics in specified region.
-make_polar_plot(wks, case_nickname, base_nickname,
-                    case_climo_yrs, baseline_climo_yrs,
-                    d1:xr.DataArray, d2:xr.DataArray, difference:Optional[xr.DataArray]=None,
-                    domain:Optional[list]=None, hemisphere:Optional[str]=None, **kwargs):
-    Make a stereographic polar plot for the given data and hemisphere.
-plot_map_vect_and_save(wks, case_nickname, base_nickname,
-                           case_climo_yrs, baseline_climo_yrs,
-                           plev, umdlfld_nowrap, vmdlfld_nowrap,
-                           uobsfld_nowrap, vobsfld_nowrap,
-                           udiffld_nowrap, vdiffld_nowrap, **kwargs):
-    Plots a vector field on a map.
-plot_map_and_save(wks, case_nickname, base_nickname,
-                      case_climo_yrs, baseline_climo_yrs,
-                      mdlfld, obsfld, diffld, **kwargs):
-    Map plots of `mdlfld`, `obsfld`, and their difference, `diffld`.
 pres_from_hybrid(psfc, hya, hyb, p0=100000.):
     Converts a hybrid level to a pressure
 vert_remap(x_mdl, p_mdl, plev)
@@ -54,18 +35,6 @@ lat_lon_validate_dims(fld)
     Check if input field has lat and lon.
 zm_validate_dims(fld)
     Check for dimensions for zonal average.
-zonal_plot(lat, data, ax=None, color=None, **kwargs)
-    Make a line plot or pressure-latitude plot of `data`.
-meridional_plot(lon, data, ax=None, color=None, **kwargs)
-    Make a line plot or pressure-longitude plot of `data`.
-prep_contour_plot
-    Preparation for making contour plots.
-plot_zonal_mean_and_save
-    zonal mean plot
-plot_meridional_mean_and_save
-    meridioanl mean plot
-square_contour_difference
-    Produce filled contours of fld1, fld2, and their difference with square axes.
 
 Notes
 -----
@@ -76,7 +45,6 @@ Notes
 import numpy as np
 import xarray as xr
 import pandas as pd
-import matplotlib as mpl
 import geocat.comp as gcomp
 
 from adf_base import AdfError
@@ -88,16 +56,6 @@ def my_formatwarning(msg, *args, **kwargs):
     """Issue `msg` as warning."""
     return str(msg) + '\n'
 warnings.formatwarning = my_formatwarning
-
-#Set non-X-window backend for matplotlib:
-mpl.use('Agg')
-
-#Now import pyplot:
-import matplotlib.pyplot as plt
-
-empty_message = "No Valid\nData Points"
-props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
-
 
 #Set seasonal ranges:
 seasons = {"ANN": np.arange(1,13,1),
@@ -433,7 +391,6 @@ def seasonal_mean(data, season=None, is_climo=None):
 
 #######
 
-#Polar Plot functions
 
 def domain_stats(data, domain):
     """Provides statistics in specified region.

@@ -1,5 +1,5 @@
 """                                                                    .
-Generic computation and plotting helper functions
+Generic plotting helper functions
 
 Functions
 ---------
@@ -39,13 +39,11 @@ from pathlib import Path
 import re
 
 from adf_diag import AdfDiag
+import adf_utils as utils
 
 import warnings  # use to warn user about missing files.
-#Format warning messages:
-def my_formatwarning(msg, *args, **kwargs):
-    """Issue `msg` as warning."""
-    return str(msg) + '\n'
-warnings.formatwarning = my_formatwarning
+warnings.formatwarning = utils.my_formatwarning
+
 
 #Set non-X-window backend for matplotlib:
 mpl.use('Agg')
