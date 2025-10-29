@@ -1021,6 +1021,30 @@ class AdfDiag(AdfWeb):
         syears_baseline = None
         eyears_baseline = None
 
+        regrid_check = self.get_cvdp_info.get("regrid_check", True)
+        regrid_to_res = self.get_cvdp_info.get("regrid_to_res", self.var_obs_dict["TREFHT"]["obs_file"])
+        remove_trend_obs = self.get_cvdp_info.get("remove_trend_obs", "QuadraticTrend")
+        remove_trend_model = self.get_cvdp_info.get("remove_trend_model", "QuadraticTrend")
+
+        """
+        if self.get_cvdp_info("regrid_check"):
+            a=4
+        else:
+            regrid_check = True
+        if self.get_cvdp_info("regrid_to_res"):
+            a=4
+        else:
+            regrid_to_res = self.var_obs_dict["TREFHT"]["obs_file"]
+        if self.get_cvdp_info("remove_trend_obs"):
+            a=4
+        else:
+            remove_trend_obs = "QuadraticTrend"
+        if self.get_cvdp_info("remove_trend_model"):
+            a=4
+        else:
+            remove_trend_model = "QuadraticTrend"
+        """
+
         # check to see if there is a CAM baseline case. If there is, read in relevant information.
         if not self.get_basic_info("compare_obs"):
             case_name_baseline = self.get_baseline_info("cam_case_name")
@@ -1098,6 +1122,16 @@ class AdfDiag(AdfWeb):
                     line += "soi,nam,nao,sam_psa,pna_npo,tas.trends_timeseries,ipv,"
                     line += "sst.mean_stddev,psl.mean_stddev,pr.mean_stddev,tas.mean_stddev,"
                     line += "sst.trends_timeseries"
+                if " regrid_check = " in line:
+                    line = " regrid_check = " + regrid_check
+                if " regrid_to_res = " in line:
+                    line = " regrid_to_res = " + regrid_to_res
+                if " regrid_dir = " in line:
+                    line = " regrid_dir = " + cvdp_dir
+                if " remove_trend_obs = " in line:
+                    line = " remove_trend_obs = " + remove_trend_obs
+                if " remove_trend_model = " in line:
+                    line = " remove_trend_model = " + remove_trend_model
                 if self.get_cvdp_info("cvdp_tar"):
                     if "  tar_output  " in line:
                         line = '  tar_output = "True"'
