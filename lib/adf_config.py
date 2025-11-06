@@ -188,6 +188,9 @@ class AdfConfig(AdfBase):
                         self.end_diag_fail(ermsg)
                 #--------------------------
 
+                for i in self.__search_dict.keys():
+                    print(f"AHHHHHH: {i}")
+                print()
                 #Throw an error if keyword not in dictionary:
                 if kword_match_str_key not in self.__search_dict.keys():
                     ermsg = f"ERROR: Variable '{kword_match_str}'"
