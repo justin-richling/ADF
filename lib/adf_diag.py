@@ -417,19 +417,36 @@ class AdfDiag(AdfWeb):
         #cam_ts_done[case_name]
 
         # Check if all values are None
-        if all(value is None for value in calc_cam_ts):
-            print("All values in calc_cam_ts are None.")
-            emsg = "  Configuration file indicates time series files don't need to be calculated."
-            print(emsg)
-            no_msg = True
+        if baseline:
+            # Check if all values are None
+            if not calc_cam_ts:
+                print("All values in calc_cam_ts are None.")
+                emsg = "  Configuration file indicates time series files don't need to be calculated."
+                print(emsg)
+                no_msg = True
+        else:
+            if all(value is None for value in calc_cam_ts):
+                print("All values in calc_cam_ts are None.")
+                emsg = "  Configuration file indicates time series files don't need to be calculated."
+                print(emsg)
+                no_msg = True
 
         # Check if all values are None
-        if all(value is None for value in cam_ts_done):
-            print("All values in cam_ts_done are None.")
-            emsg = "  Configuration file indicates time series files have been pre-computed."
-            emsg += f" Will rely on those files directly."
-            print(emsg)
-            no_msg = True
+        if baseline:
+            # Check if all values are None
+            if not cam_ts_done:
+                print("All values in cam_ts_done are None.")
+                emsg = "  Configuration file indicates time series files have been pre-computed."
+                emsg += f" Will rely on those files directly. ITS HERE RIGHT BOIIOIIOI"
+                print(emsg)
+                no_msg = True
+        else:
+            if all(value is None for value in cam_ts_done):
+                print("All values in cam_ts_done are None.")
+                emsg = "  Configuration file indicates time series files have been pre-computed."
+                emsg += f" Will rely on those files directly."
+                print(emsg)
+                no_msg = True
 
         """if baseline:
             # Check if all values are None
