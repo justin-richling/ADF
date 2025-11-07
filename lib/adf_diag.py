@@ -374,7 +374,7 @@ class AdfDiag(AdfWeb):
             #cam_ts_done = self.get_cam_info("cam_ts_done")
             #calc_cam_ts = self.get_cam_info("calc_cam_ts")
             
-            calc_cam_ts = self.calc_ts["test"]
+            calc_cam_ts = self.calc_ts_dict["test"]
             
             cam_ts_done = self.ts_done_dict["test"]
 
