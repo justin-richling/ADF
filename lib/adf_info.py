@@ -464,8 +464,8 @@ class AdfInfo(AdfConfig):
             self.__test_hist_locs[case_names[i]] = hist_loc
         test_hist_locs = copy.copy(self.__test_hist_locs)
 
-        hist_locs_dict = {"test":test_hist_locs,"baseline":baseline_hist_loc}
-        #hist_locs_dict = {"test":test_hist_locs,"baseline":{data_name:baseline_hist_loc}}
+        #hist_locs_dict = {"test":test_hist_locs,"baseline":baseline_hist_loc}
+        hist_locs_dict = {"test":test_hist_locs,"baseline":{data_name:baseline_hist_loc}}
         self.__hist_locs_dict = hist_locs_dict
         ###########################################################
 
@@ -492,7 +492,7 @@ class AdfInfo(AdfConfig):
 
         test_ts_locs = copy.copy(self.__test_ts_locs)
         ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
-        #ts_locs_dict = {"test":test_ts_locs,"baseline":{data_name:bl_ts_loc}}
+        ts_locs_dict = {"test":test_ts_locs,"baseline":{data_name:bl_ts_loc}}
         self.__cam_ts_locs_dict = ts_locs_dict
         ###########################################################
 
@@ -519,7 +519,7 @@ class AdfInfo(AdfConfig):
 
         test_ts_done = copy.copy(self.__test_ts_done)
         ts_done_dict = {"test":test_ts_done,"baseline":bl_ts_done}
-        #ts_done_dict = {"test":test_ts_done,"baseline":{data_name:bl_ts_done}}
+        ts_done_dict = {"test":test_ts_done,"baseline":{data_name:bl_ts_done}}
         self.__ts_done_dict = ts_done_dict
         ###########################################################
 
@@ -540,7 +540,7 @@ class AdfInfo(AdfConfig):
 
         test_overwrite_ts = copy.copy(self.__test_overwrite_ts)
         overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":bl_overwrite_ts}
-        #overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":{data_name:bl_overwrite_ts}}
+        overwrite_ts_dict = {"test":test_overwrite_ts,"baseline":{data_name:bl_overwrite_ts}}
         self.__cam_overwrite_ts_dict = overwrite_ts_dict
         ###########################################################
 
@@ -561,7 +561,7 @@ class AdfInfo(AdfConfig):
 
         calc_cam_ts = copy.copy(self.__calc_cam_ts)
         calc_cam_ts_dict = {"test":calc_cam_ts,"baseline":calc_bl_ts}
-        #calc_cam_ts_dict = {"test":calc_cam_ts,"baseline":{data_name:calc_bl_ts}}
+        calc_cam_ts_dict = {"test":calc_cam_ts,"baseline":{data_name:calc_bl_ts}}
         self.__calc_cam_ts_dict = calc_cam_ts_dict
         ###########################################################
 
@@ -582,7 +582,7 @@ class AdfInfo(AdfConfig):
 
         cam_ts_save = copy.copy(self.__cam_ts_save)
         cam_ts_save_dict = {"test":cam_ts_save,"baseline":cam_bl_ts_save}
-        #cam_ts_save_dict = {"test":cam_ts_save,"baseline":{data_name:cam_bl_ts_save}}
+        cam_ts_save_dict = {"test":cam_ts_save,"baseline":{data_name:cam_bl_ts_save}}
         self.__cam_ts_save_dict = cam_ts_save_dict
         ###########################################################
 
@@ -610,7 +610,7 @@ class AdfInfo(AdfConfig):
 
         overwrite_climo = copy.copy(self.__overwrite_climo)
         overwrite_climo_dict = {"test":overwrite_climo,"baseline":bl_overwrite_climo}
-        #overwrite_climo_dict = {"test":overwrite_climo,"baseline":{data_name:bl_overwrite_climo}}
+        overwrite_climo_dict = {"test":overwrite_climo,"baseline":{data_name:bl_overwrite_climo}}
         self.__overwrite_climo_dict = overwrite_climo_dict
         ###########################################################
 
@@ -631,7 +631,7 @@ class AdfInfo(AdfConfig):
 
         test_climo_locs = copy.copy(self.__test_climo_locs)
         climo_locs_dict = {"test":test_climo_locs,"baseline":bl_climo_loc}
-        #climo_locs_dict = {"test":test_climo_locs,"baseline":{data_name:bl_climo_loc}}
+        climo_locs_dict = {"test":test_climo_locs,"baseline":{data_name:bl_climo_loc}}
         self.__cam_climo_locs_dict = climo_locs_dict
         ###########################################################
 
@@ -652,7 +652,7 @@ class AdfInfo(AdfConfig):
 
         calc_test_climo = copy.copy(self.__calc_test_climo)
         calc_test_climo_dict = {"test":calc_test_climo,"baseline":calc_bl_climo}
-        #calc_test_climo_dict = {"test":calc_test_climo,"baseline":{data_name:calc_bl_climo}}
+        calc_test_climo_dict = {"test":calc_test_climo,"baseline":{data_name:calc_bl_climo}}
         self.__calc_climo_dict = calc_test_climo_dict
         ###########################################################
 

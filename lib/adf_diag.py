@@ -371,6 +371,7 @@ class AdfDiag(AdfWeb):
             # Use test case settings, which are already lists:
             
             case_names = self.get_cam_info("cam_case_name", required=True)
+            #baseline_name = adf.data.ref_case_label
             
             #cam_ts_done = self.get_cam_info("cam_ts_done")
             #calc_cam_ts = self.get_cam_info("calc_cam_ts")
