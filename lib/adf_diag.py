@@ -350,6 +350,7 @@ class AdfDiag(AdfWeb):
             
             #calc_cam_ts = [self.get_baseline_info("calc_cam_ts")]
             calc_cam_ts = self.calc_ts_dict["baseline"]
+            print("baseline calc_cam_ts",calc_cam_ts)
             
             cam_ts_done = self.ts_done_dict["baseline"]
             
