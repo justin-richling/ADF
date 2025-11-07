@@ -546,7 +546,11 @@ class AdfDiag(AdfWeb):
                     no_msg = True
                     continue
                 # End if"""
-
+            if not ts_dir:
+                emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
+                print(emsg)
+                no_msg = True
+                continue
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
 
