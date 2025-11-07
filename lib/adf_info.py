@@ -179,6 +179,7 @@ class AdfInfo(AdfConfig):
         self.__bl_overwrite_climo = False
         self.__calc_bl_climo = True
         """
+        bl_ts_done = False
 
         #Initialize "compare_obs" variable:
         self.__compare_obs = self.get_basic_info('compare_obs')
