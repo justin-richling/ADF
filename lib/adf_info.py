@@ -421,7 +421,7 @@ class AdfInfo(AdfConfig):
 
         test_syears = copy.copy(self.__test_syears)
         syears_dict = {"test":test_syears,"baseline":syear_baseline}
-        #syears_dict = {"test":test_syears,"baseline":{data_name:syear_baseline}}
+        syears_dict = {"test":test_syears,"baseline":{data_name:syear_baseline}}
         self.__syears_dict = syears_dict
 
         #End years (not currently required):
@@ -440,7 +440,7 @@ class AdfInfo(AdfConfig):
 
         test_eyears = copy.copy(self.__test_eyears)
         eyears_dict = {"test":test_eyears,"baseline":eyear_baseline}
-        #eyears_dict = {"test":test_eyears,"baseline":{data_name:eyear_baseline}}
+        eyears_dict = {"test":test_eyears,"baseline":{data_name:eyear_baseline}}
         self.__eyears_dict = eyears_dict
         ###########################################################
 
