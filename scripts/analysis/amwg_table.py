@@ -128,17 +128,22 @@ def amwg_table(adf):
     output_locs = adf.plot_location
 
     #CAM simulation variables (these quantities are always lists):
-    case_names    = adf.get_cam_info("cam_case_name", required=True)
+    test_case_names    = adf.get_cam_info("cam_case_name", required=True)
+    case_names = list(test_case_names.values())
     #input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
-    input_locs = adf.ts_locs_dict["test"]
+    test_input_locs = adf.ts_locs_dict["test"]
+    input_locs = list(test_input_locs.values())
 
     #adf.get_baseline_info("cam_climo_loc")
     #input_climo_locs = adf.get_cam_info("cam_climo_loc")
-    input_climo_locs = adf.climo_locs_dict["test"]
+    test_input_climo_locs = adf.climo_locs_dict["test"]
+    input_climo_locs = list(test_input_climo_locs.values())
 
     #Grab case years
-    syear_cases = adf.climo_yrs["syears"]
-    eyear_cases = adf.climo_yrs["eyears"]
+    test_syear_cases = adf.climo_yrs["syears"]
+    test_eyear_cases = adf.climo_yrs["eyears"]
+    syear_cases = list(test_syear_cases.values())
+    eyear_cases = list(test_eyear_cases.values())
 
     
 
