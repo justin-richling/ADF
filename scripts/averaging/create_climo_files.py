@@ -98,6 +98,8 @@ def create_climo_files(adf, clobber=False, search=None):
     start_year = adf.climo_yrs["syears"]
     end_year   = adf.climo_yrs["eyears"]
 
+    ts_saves = adf.ts_save_dict["test"]
+
     """#If variables weren't provided in config file, then make them a list
     #containing only None-type entries:
     if not calc_climos:
@@ -130,6 +132,8 @@ def create_climo_files(adf, clobber=False, search=None):
         #ovr_bl            = adf.get_baseline_info("cam_overwrite_climo")
         ovr_bl            = adf.overwrite_climo_dict["baseline"]#[baseline_name]
 
+        bl_ts_save = adf.ts_save_dict["baseline"]
+
         #Extract baseline years:
         bl_syr = adf.climo_yrs["syear_baseline"]
         bl_eyr = adf.climo_yrs["eyear_baseline"]
@@ -149,6 +153,8 @@ def create_climo_files(adf, clobber=False, search=None):
         start_years = {**start_year, **bl_syr}
         #end_year.append(bl_eyr)
         end_years = {**end_year, **bl_eyr}
+
+        ts_save = {**ts_saves, **bl_ts_save}
     #else:
         #base_name = adf.data.ref_labels[var]
     #-----------------------------------------
@@ -237,6 +243,11 @@ def create_climo_files(adf, clobber=False, search=None):
         with mp.Pool(processes=number_of_cpu) as p:
             result = p.starmap(process_variable, list_of_arguments)
 
+        if ts_save[case_name]:
+            print(f"\t    Time series files crare flagged for deletion, doing that now BOI for case '{case_name}' have been removed from {input_location}.")
+            for p in input_location.iterdir():
+                if p.is_file():
+                    p.unlink() 
     #End of model case loop
     #----------------------
 
