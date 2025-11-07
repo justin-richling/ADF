@@ -243,7 +243,7 @@ def create_climo_files(adf, clobber=False, search=None):
         with mp.Pool(processes=number_of_cpu) as p:
             result = p.starmap(process_variable, list_of_arguments)
 
-        if ts_save[case_name]:
+        if not ts_save[case_name]:
             print(f"\t    Time series files crare flagged for deletion, doing that now BOI for case '{case_name}' have been removed from {input_location}.")
             for p in input_location.iterdir():
                 if p.is_file():
