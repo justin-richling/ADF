@@ -225,10 +225,8 @@ class AdfInfo(AdfConfig):
 
             #
             baseline_hist_loc = self.get_baseline_info('cam_hist_loc')
-            if baseline_hist_loc is None:
-                baseline_hist_loc = [None]
-            else:
-                baseline_hist_loc = [baseline_hist_loc]
+            #if baseline_hist_loc is None:
+            #   baseline_hist_loc = [None]
 
             # Read hist_str (component.hist_num, eg cam.h0) from the yaml file
             baseline_hist_str = self.get_baseline_info("hist_str")
@@ -270,6 +268,7 @@ class AdfInfo(AdfConfig):
             #Check if time series files already exist,
             #if so don't rely on climo years from history location
             if (bl_ts_done) and (input_ts_bl):
+                print("NOT HERE RIGHT")
                 baseline_hist_loc = None
 
                 #Grab baseline time series file location
@@ -305,7 +304,8 @@ class AdfInfo(AdfConfig):
             # End if
 
             # Check if history file path exists:
-            if any(baseline_hist_loc):
+            #if any(baseline_hist_loc):
+            if baseline_hist_loc:
                 print("AYGUVHBIJNOKML<")
                 #Check if user provided
                 if not baseline_hist_str:
@@ -718,7 +718,7 @@ class AdfInfo(AdfConfig):
                 #ug = Path()
                 print("WoOOooHAHahahAhsd",starting_location.is_dir())
                 file_list = sorted(starting_location.glob('*'+hist_str+'.*.nc'))
-                print("file_list",file_list)
+                #print("file_list",file_list)
                 if len(file_list) == 0:
                     print("\tYeah, it's an empty list. Why did this not get checked before getting here. I mean come on.\n")
                 else:
