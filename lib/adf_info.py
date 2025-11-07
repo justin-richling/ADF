@@ -312,7 +312,7 @@ class AdfInfo(AdfConfig):
                 #    if not isinstance(baseline_hist_str, list):
                 #        baseline_hist_str = [baseline_hist_str]
                 #Initialize baseline history string list
-                #self.__base_hist_str = baseline_hist_str
+                self.__base_hist_str = baseline_hist_str
 
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
