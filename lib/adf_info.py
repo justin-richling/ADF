@@ -225,6 +225,7 @@ class AdfInfo(AdfConfig):
 
             #
             baseline_hist_loc = self.get_baseline_info('cam_hist_loc')
+            print("baseline_hist_loc",baseline_hist_loc,"\n\n")
             #if baseline_hist_loc is None:
             #   baseline_hist_loc = [None]
 
