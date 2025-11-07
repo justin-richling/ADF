@@ -498,7 +498,7 @@ class AdfInfo(AdfConfig):
         
         cam_ts_done   = self.get_cam_info("cam_ts_done")
         if cam_ts_done is None:
-            cam_ts_done = [True]*len(case_names)
+            cam_ts_done = [False]*len(case_names)
         else:
             #Check if any time series files are pre-made
             if len(cam_ts_done) == len(case_names):
