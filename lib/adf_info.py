@@ -304,6 +304,7 @@ class AdfInfo(AdfConfig):
 
             # Check if history file path exists:
             if any(baseline_hist_loc):
+                print("AYGUVHBIJNOKML<")
                 #Check if user provided
                 if not baseline_hist_str:
                     baseline_hist_str = ['cam.h0a']
