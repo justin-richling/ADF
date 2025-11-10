@@ -229,7 +229,8 @@ def amwg_table(adf):
             #input_locs.append(input_loc)
 
         #Save the baseline to the first case's plots directory:
-        output_locs.append(output_location)
+        #output_locs.append(output_location)
+        #output_locs = {**test_input_locs, **input_climo_loc}
     else:
         print("AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
