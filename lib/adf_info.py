@@ -391,13 +391,11 @@ class AdfInfo(AdfConfig):
         #Create plot location variable for potential use by the website generator.
         #Please note that this is also assumed to be the output location for the analyses scripts:
         #-------------------------------------------------------------------------
-        self.__plot_location = [] #Must be a list to manage multiple cases
+        #self.__plot_location = [] #Must be a list to manage multiple cases
+        self.__plot_location = {} #Must be a list to manage multiple cases
 
         #Plot directory:
         plot_dir = self.get_basic_info('cam_diag_plot_loc', required=True)
-
-        #Case names:
-        case_names = self.get_cam_info('cam_case_name', required=True)
 
         # Read hist_str (component.hist_num, eg cam.h0a) from the yaml file
         cam_hist_str = self.__hist_str
@@ -781,7 +779,8 @@ class AdfInfo(AdfConfig):
             #Set the final directory name and save it to plot_location:
             direc_name = f"{case_name_long}_vs_{data_name_long}"
             plot_loc = os.path.join(plot_dir, direc_name)
-            self.__plot_location.append(plot_loc)
+            #self.__plot_location.append(plot_loc)
+            self.__plot_location[case_name] = plot_loc
 
             #If first iteration, then save directory name for use by baseline:
             first_case_dir = ''
@@ -805,7 +804,8 @@ class AdfInfo(AdfConfig):
         #generator.  These files will be stored in the same location as the first
         #listed case.
         if not self.compare_obs:
-            self.__plot_location.append(os.path.join(plot_dir, first_case_dir))
+            self.__plot_locatio[data_name] = os.path.join(plot_dir, first_case_dir)
+            #self.__plot_location.append(os.path.join(plot_dir, first_case_dir))
         #End if
 
         #-------------------------------------------------------------------------
