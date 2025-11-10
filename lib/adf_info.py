@@ -195,7 +195,7 @@ class AdfInfo(AdfConfig):
 
             #Also set data name for use below:
             data_name = "Obs"
-            base_nickname = "Obs"
+            bl_nickname = "Obs"
 
             #Set the baseline years to empty strings:
             syear_baseline = ""
@@ -367,11 +367,6 @@ class AdfInfo(AdfConfig):
                     print(msg)
                     eyear_baseline = base_found_eyr
             #End if
-
-            #Grab baseline nickname
-            base_nickname = self.get_baseline_info('case_nickname')
-            if base_nickname is None:
-                base_nickname = data_name
 
             #Get integer for baseline years for searching climo files
             syear_baseline = int(syear_baseline)

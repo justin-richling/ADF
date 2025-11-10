@@ -52,9 +52,9 @@ class AdfData:
 
         # case names and nicknames
         self.case_names = adfobj.get_cam_info("cam_case_name", required=True)
-        self.test_nicknames = adfobj.case_nicknames["test_nicknames"]
-        self.base_nickname = adfobj.case_nicknames["base_nickname"]
-        self.ref_nickname = self.base_nickname
+        #self.test_nicknames = adfobj.case_nicknames["test_nicknames"]
+        #self.base_nickname = adfobj.case_nicknames["base_nickname"]
+        #self.ref_nickname = self.base_nickname
 
         # define reference data
         self.set_reference() # specify "ref_labels" -> called "data_list" in zonal_mean (name of data source)

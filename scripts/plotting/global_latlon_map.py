@@ -303,11 +303,20 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
     None
     """
     # Get case nickname and years
-    case_nickname = adfobj.data.test_nicknames[case_idx]
+    #case_nickname = adfobj.data.test_nicknames[case_idx]
+    case_nickname = adfobj.case_nicknames["test"][case_name]
+
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    # load reference data (observational or baseline)
+    if not adfobj.compare_obs:
+        base_name = adfobj.data.ref_case_label
+        base_nickname = adfobj.case_nicknames["baseline"][base_name]
+    else:
+        base_name = adfobj.data.ref_labels[var]
+        base_nickname = "Obs"
     
     # Check if files exist and build doplot dict
     doplot = check_existing_plots(adfobj, var, plot_loc, plot_type, 
@@ -326,7 +335,7 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
 
     if not has_dims['has_lev']:
         # Process 2D data
-        process_2d_plots(adfobj, mdata, odata, case_name, case_nickname,
+        process_2d_plots(adfobj, mdata, odata, case_name, case_nickname, base_nickname,
                         var, seasons, plot_loc, plot_type, doplot,
                         mseasons, oseasons, dseasons, pseasons,
                         syear_cases[case_name], eyear_cases[case_name],
@@ -334,7 +343,7 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
                         web_category, vres)
     else:
         # Process 3D data with pressure levels
-        process_3d_plots(adfobj, mdata, odata, case_name, case_nickname, 
+        process_3d_plots(adfobj, mdata, odata, case_name, case_nickname, base_nickname,
                         var, seasons, pres_levs, plot_loc, plot_type, doplot,
                         mseasons, oseasons, dseasons, pseasons,
                         syear_cases[case_name], eyear_cases[case_name],
@@ -363,7 +372,7 @@ def check_existing_plots(adfobj, var, plot_loc, plot_type, case_name,
     return doplot
 
 
-def process_2d_plots(adfobj, mdata, odata, case_name, case_nickname,
+def process_2d_plots(adfobj, mdata, odata, case_name, case_nickname, base_nickname,
                     var, seasons, plot_loc, plot_type, doplot,
                     mseasons, oseasons, dseasons, pseasons,
                     syear_case, eyear_case, syear_baseline, eyear_baseline,
@@ -379,7 +388,7 @@ def process_2d_plots(adfobj, mdata, odata, case_name, case_nickname,
             process_seasonal_data(mdata, odata, s)
 
         # Generate plot
-        pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+        pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                             [syear_case, eyear_case],
                             [syear_baseline, eyear_baseline],
                             mseasons[s], oseasons[s], dseasons[s], pseasons[s],
@@ -390,7 +399,7 @@ def process_2d_plots(adfobj, mdata, odata, case_name, case_nickname,
                                category=web_category,
                                season=s, plot_type="LatLon")
 
-def process_3d_plots(adfobj, mdata, odata, case_name, case_nickname,
+def process_3d_plots(adfobj, mdata, odata, case_name, case_nickname, base_nickname,
                     var, seasons, pres_levs, plot_loc, plot_type, doplot,
                     mseasons, oseasons, dseasons, pseasons, 
                     syear_case, eyear_case, syear_baseline, eyear_baseline,
@@ -414,7 +423,7 @@ def process_3d_plots(adfobj, mdata, odata, case_name, case_nickname,
                 process_seasonal_data(mdata, odata, s)
 
             # Generate plot
-            pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+            pf.plot_map_and_save(plot_name, case_nickname, base_nickname,
                                 [syear_case, eyear_case],
                                 [syear_baseline, eyear_baseline],
                                 mseasons[s].sel(lev=pres), 
