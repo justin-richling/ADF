@@ -213,6 +213,9 @@ class AdfInfo(AdfConfig):
 
             #Set data name to baseline case name:
             data_name = self.get_baseline_info('cam_case_name', required=True)
+            bl_nickname = self.get_baseline_info('case_nickname')
+            if bl_nickname is None:
+                bl_nickname = data_name
 
             self.__base_hist_str = None
 
@@ -469,31 +472,49 @@ class AdfInfo(AdfConfig):
         self.__hist_locs_dict = hist_locs_dict
         ###########################################################
 
+        #Nicknames
+        ##################
+        cam_hist_locs = self.get_cam_info('cam_hist_loc')
+        if cam_hist_locs is None:
+            cam_hist_locs = [None]*len(case_names)
+        else:
+            #Check if any time series files are pre-made
+            if len(cam_hist_locs) != len(case_names):
+                print("Oh boy there is a mismatched lengths for history locs and case names!")
+                # ADF ERROR HERE BOI!
 
+        self.__test_hist_locs = {}
+        for i,hist_loc in enumerate(cam_hist_locs):
+            self.__test_hist_locs[case_names[i]] = hist_loc
+        test_hist_locs = copy.copy(self.__test_hist_locs)
 
+        #hist_locs_dict = {"test":test_hist_locs,"baseline":baseline_hist_loc}
+        hist_locs_dict = {"test":test_hist_locs,"baseline":{data_name:baseline_hist_loc}}
+        self.__hist_locs_dict = hist_locs_dict
+        ###########################################################
 
 
         #Input time series locs
         #######################
-        input_ts_locs = self.get_cam_info("cam_ts_loc")
-        if input_ts_locs is None:
-            input_ts_locs = [None]*len(case_names)
+        test_nicknames = self.get_cam_info("case_nickname")
+        if test_nicknames is None:
+            test_nicknames = case_names
         else:
             #Check if any time series files are pre-made
-            if len(input_ts_locs) != len(case_names):
+            if len(test_nicknames) != len(case_names):
                 print("Oh boy there is a mismatched lengths for time series locs and case names!")
                 # ADF ERROR HERE BOI!
             else:
                 print()
 
-        self.__test_ts_locs = {}
-        for i,ts_loc in enumerate(input_ts_locs):
-            self.__test_ts_locs[case_names[i]] = ts_loc
+        self.__test_nicknames = {}
+        for i,nickname in enumerate(test_nicknames):
+            self.__test_nicknames[case_names[i]] = nickname
 
-        test_ts_locs = copy.copy(self.__test_ts_locs)
-        ts_locs_dict = {"test":test_ts_locs,"baseline":bl_ts_loc}
-        ts_locs_dict = {"test":test_ts_locs,"baseline":{data_name:bl_ts_loc}}
-        self.__cam_ts_locs_dict = ts_locs_dict
+        test_nicknames = copy.copy(self.__test_nicknames)
+        nicknames_dict = {"test":test_nicknames,"baseline":bl_nickname}
+        nicknames_dict = {"test":test_nicknames,"baseline":{data_name:bl_nickname}}
+        self.__case_nicknames_dict = nicknames_dict
         ###########################################################
 
 
@@ -982,6 +1003,12 @@ class AdfInfo(AdfConfig):
         #    base_hist_strs = ""
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
+    
+    @property
+    def case_nicknames(self):
+        """Return the test case and baseline nicknames to the user if requested."""
+
+        return self.__case_nicknames_dict
 
     @property
     def calc_climo_dict(self):
