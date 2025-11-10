@@ -256,9 +256,9 @@ class AdfInfo(AdfConfig):
             # Climatology info
             #-----------------
             bl_climo_loc = self.get_baseline_info("cam_climo_loc")
-            #calc_bl_climo = self.get_cam_info("calc_cam_climo")
-            if bl_climo_loc is None:
-                bl_climo_loc = True
+            calc_bl_climo = self.get_baseline_info("calc_cam_climo")
+            if calc_bl_climo is None:
+                calc_bl_climo = True
             # Check if any climo files are pre-made
             bl_overwrite_climo = self.get_baseline_info("cam_overwrite_climo")
             if bl_overwrite_climo is None:
