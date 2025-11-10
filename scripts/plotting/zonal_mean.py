@@ -84,7 +84,7 @@ def zonal_mean(adfobj):
     #Loop over model cases:
     for case_idx, case_name in enumerate(adfobj.data.case_names):
         #Set output plot location:
-        plot_loc = Path(plot_locations[case_idx])
+        plot_loc = Path(plot_locations[case_name])
 
         #Check if plot output directory exists, and if not, then create it:
         if not plot_loc.is_dir():
@@ -188,10 +188,10 @@ def zonal_mean(adfobj):
         for case_idx, case_name in enumerate(adfobj.data.case_names):
 
             #Set case nickname:
-            case_nickname = adfobj.data.test_nicknames[case_idx]
+            case_nickname = adfobj.data.test_nicknames[case_name]
 
             #Set output plot location:
-            plot_loc = Path(plot_locations[case_idx])
+            plot_loc = Path(plot_locations[case_name])
 
             # load re-gridded model files:
             mdata = adfobj.data.load_regrid_da(case_name, var)
