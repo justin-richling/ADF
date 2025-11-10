@@ -126,6 +126,7 @@ def amwg_table(adf):
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
     output_locs = adf.plot_location
+    print("output_locs",output_locs,"\n")
 
     #CAM simulation variables (these quantities are always lists):
     case_names    = adf.get_cam_info("cam_case_name", required=True)
@@ -214,11 +215,13 @@ def amwg_table(adf):
             else:
                 print(f"\t - AMWG table for '{baseline_name}' does not exist.")
                 print('\t  check here:',output_csv_file,"\n")
-            input_locs.append(None)
+            #input_locs.append(None)
+            input_locs = {**test_input_locs, **input_climo_loc}
             pass#return
         else:
             #input_loc = adf.get_baseline_info("cam_climo_loc")
-            input_locs.append(input_loc)
+            #input_locs.append(input_loc)
+            input_locs = {**test_input_locs, **input_climo_loc}
 
         #case_names.append(baseline_name)
         #if input_loc:
