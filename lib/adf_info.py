@@ -366,11 +366,6 @@ class AdfInfo(AdfConfig):
                     msg += f"{data_name}, using last found year: {base_climo_yrs[-1]}\n"
                     print(msg)
                     eyear_baseline = base_found_eyr
-
-                #Grab baseline nickname
-                base_nickname = self.get_baseline_info('case_nickname')
-                if base_nickname is None:
-                    base_nickname = data_name
             #End if
 
             #Grab baseline nickname
@@ -387,8 +382,8 @@ class AdfInfo(AdfConfig):
         #End if (compare_obs)
 
         #Initialize case nicknames:
-        self.__test_nicknames = test_nicknames
-        self.__base_nickname = base_nickname
+        #self.__test_nicknames = test_nicknames
+        #self.__base_nickname = base_nickname
 
         #Save starting and ending years as object variables:
         self.__syear_baseline = syear_baseline
@@ -1012,7 +1007,6 @@ class AdfInfo(AdfConfig):
     @property
     def case_nicknames(self):
         """Return the test case and baseline nicknames to the user if requested."""
-
         return self.__case_nicknames_dict
 
     @property
