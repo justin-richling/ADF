@@ -196,7 +196,7 @@ def amwg_table(adf):
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_names[0]])
-        if input_ts_loc is None:
+        if input_ts_loc[baseline_name] is None:
             #print("User indicates no time series files will be used")
             #print()
             emsg = "\n  User indicates no time series files will be used."
