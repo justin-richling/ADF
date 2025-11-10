@@ -430,7 +430,7 @@ def amwg_table(adf):
             
 
             if is_climo:
-                data = pf.seasonal_mean(data, season="ANN", is_climo=True)
+                data = utils.seasonal_mean(data, season="ANN", is_climo=True)
                 #Conditional Formatting depending on type of float
                 if np.abs(data) < 1:
                     formatter = ".3g"
