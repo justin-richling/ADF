@@ -21,9 +21,6 @@ except ImportError:
     sys.exit(1)
 #End except
 
-#Import ADF-specific modules:
-import plotting_functions as pf
-
 def amwg_table(adf):
 
     """
@@ -98,13 +95,14 @@ def amwg_table(adf):
 
     # and then in time it is DJF JJA ANN
 
+    #Notify user that script has started:
+    msg = "\n  Calculating AMWG variable tables..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
+
     # within each domain and season
     # the result is just a table of
     # VARIABLE-NAME, RUN VALUE, OBS VALUE, RUN-OBS, RMSE
     #----------------------
-
-    #Notify user that script has started:
-    print("\n  Generating AMWG tables...")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
@@ -142,38 +140,6 @@ def amwg_table(adf):
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
 
-    
-
-
-    #Check if user wants to skip time series file creation
-    '''if not input_locs:
-        #print("User indicates no time series files will be used")
-        #print()
-        emsg = "\n  User indicates no time series files will be used."
-        emsg += " Looking if table already exisits:"
-        print(emsg)
-
-        #if ah:
-        for case_idx, case_name in enumerate(case_names):
-            #Convert output location string to a Path object:
-            output_location = Path(output_locs[case_idx])
-            #Create output file name:
-            output_csv_file = output_location / f"amwg_table_{case_name}.csv"
-            if Path(output_csv_file).is_file():
-                print(f"\t - AMWG table for '{case_name}' exists, adding to website.")
-                table_df = pd.read_csv(output_csv_file)
-                # last step is to add table dataframe to website (if enabled):
-                adf.add_website_data(table_df, case_name, case_name, plot_type="Tables")
-            else:
-                print(f"\t - AMWG table for '{case_name}' does not exist.")
-                print('\t  check here:',output_csv_file,"\n")
-        #input_locs = []
-        pass#return
-    else:'''
-    #if 1==1:
-    #    input_locs = [None]*len(case_names)
-    #End if
-    #print("\nTest input_locs",input_locs,"\n")
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
@@ -220,7 +186,7 @@ def amwg_table(adf):
         #output_locs.append(output_location)
         #output_locs = {**test_input_locs, **input_climo_loc}
     else:
-        print("AMWG table doesn't currently work with obs, so obs table won't be created.")
+        print("\t WARNING: AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
     #-----------------------------------------
@@ -402,7 +368,7 @@ def amwg_table(adf):
 
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
-                print(f"\t    ** Variable '{var}' has a vertical dimension, "+\
+                print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\
                       "which is currently not supported for the AMWG Table. Skipping...")
                 #Skip this variable and move to the next variable in var_list:
                 continue
@@ -423,14 +389,14 @@ def amwg_table(adf):
                         ofrac = xr.where(ofrac<0,0,ofrac)
 
                         # apply ocean fraction mask to variable
-                        data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
+                        data = utils.mask_land_or_ocean(data, ofrac, use_nan=True)
                         #data = var_tmp
                     else:
-                        print(f"OCNFRAC not found, unable to apply mask to '{var}'")
+                        print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
                     #End if
                 else:
                     #Currently only an ocean mask is supported, so print warning here:
-                    wmsg = "Currently the only variable mask option is 'ocean',"
+                    wmsg = "\t    WARNING: Currently the only variable mask option is 'ocean',"
                     wmsg += f"not '{var_default_dict['mask'].lower()}'"
                     print(wmsg)
                 #End if
@@ -446,12 +412,12 @@ def amwg_table(adf):
                 # flags that we have spatial dimensions
                 # Note: that could be 'lev' which should trigger different behavior
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
-                data = pf.spatial_average(data)  # changes data "in place"
+                data = utils.spatial_average(data)  # changes data "in place"
 
             """# In order to get correct statistics, average to annual or seasonal
             data = pf.annual_mean(data, whole_years=True, time_name='time')
 
-            # create a dataframe:
+            # Set values for columns
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
 
@@ -492,7 +458,7 @@ def amwg_table(adf):
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
 
-            # Add entries to Pandas structure:
+            # Add entries to Pandas structure and create a dataframe:
             df = pd.DataFrame(dfentries)
 
             # Check if the output CSV file exists,
