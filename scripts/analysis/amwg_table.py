@@ -195,7 +195,7 @@ def amwg_table(adf):
         eyears = {**eyear_cases, **eyear_baseline}
 
         #Convert output location string to a Path object:
-        output_location = Path(output_locs[0])
+        output_location = Path(output_locs[case_names[0]])
         if not input_loc:
             #print("User indicates no time series files will be used")
             #print()
