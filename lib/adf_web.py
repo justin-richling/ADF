@@ -133,7 +133,7 @@ class AdfWeb(AdfObs):
         for case_idx, case_name in enumerate(case_names):
 
             #Create new path object from user-specified plot directory path:
-            plot_path = Path(self.plot_location[case_idx])
+            plot_path = Path(self.plot_location[case_name])
 
             #Create directory path where the website will be built:
             website_dir = plot_path / "website"
