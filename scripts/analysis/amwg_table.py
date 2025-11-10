@@ -178,12 +178,12 @@ def amwg_table(adf):
         #Extract CAM baseline variaables:
         baseline_name     = adf.get_baseline_info("cam_case_name", required=True)
         #input_loc = adf.get_baseline_info("cam_ts_loc", required=True)
-        input_loc = adf.ts_locs_dict["baseline"]
-        print("\nBaseline input_locs",input_loc,"\n")
+        input_ts_loc = adf.ts_locs_dict["baseline"]
+        print("\nBaseline input_ts_loc",input_ts_loc,"\n")
         #input_climo_loc = adf.get_baseline_info("cam_climo_loc")
         input_climo_loc = adf.climo_locs_dict["baseline"]#[baseline_name]
         #input_climo_locs.append(input_climo_loc)
-        input_locs = {**test_input_locs, **input_climo_loc}
+        #input_locs = {**test_input_locs, **input_climo_loc}
 
         #Grab baseline years (which may be empty strings if using Obs):
         syear_baseline = adf.climo_yrs["syear_baseline"]
@@ -196,7 +196,7 @@ def amwg_table(adf):
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_names[0]])
-        if not input_loc:
+        if not input_ts_loc:
             #print("User indicates no time series files will be used")
             #print()
             emsg = "\n  User indicates no time series files will be used."
@@ -221,7 +221,7 @@ def amwg_table(adf):
         else:
             #input_loc = adf.get_baseline_info("cam_climo_loc")
             #input_locs.append(input_loc)
-            input_locs = {**test_input_locs, **input_climo_loc}
+            input_locs = {**test_input_locs, **input_ts_loc}
 
         #case_names.append(baseline_name)
         #if input_loc:
