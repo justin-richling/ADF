@@ -216,8 +216,6 @@ def regrid_and_vert_interp(adf):
                        tclim_fils = sorted(tclimo_loc.glob(f"{target}*_{var}_climo.nc"))
 
                     #End if
-                    print(sorted(tclimo_loc.glob("*_climo.nc")))
-                    print("REGRID tclim_fils",tclim_fils,"\n")
 
                     #Write to debug log if enabled:
                     adf.debug_log(f"regrid_example: tclim_fils (n={len(tclim_fils)}): {tclim_fils}")
