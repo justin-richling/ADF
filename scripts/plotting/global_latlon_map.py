@@ -306,15 +306,15 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
     #case_nickname = adfobj.data.test_nicknames[case_idx]
     case_nickname = adfobj.case_nicknames["test"][case_name]
 
-    syear_cases = adfobj.syear_dict["test"]
-    eyear_cases = adfobj.eyear_dict["test"]
+    syear_cases = adfobj.syears_dict["test"]
+    eyear_cases = adfobj.eyears_dict["test"]
 
     # load reference data (observational or baseline)
     if not adfobj.compare_obs:
         base_name = adfobj.data.ref_case_label
         base_nickname = adfobj.case_nicknames["baseline"][base_name]
-        syear_baseline = adfobj.syear_dict["baseline"][base_name]
-        eyear_baseline = adfobj.eyear_dict["baseline"][base_name]
+        syear_baseline = adfobj.syears_dict["baseline"][base_name]
+        eyear_baseline = adfobj.eyears_dict["baseline"][base_name]
     else:
         base_name = adfobj.data.ref_labels[var]
         base_nickname = "Obs"
