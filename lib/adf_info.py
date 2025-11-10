@@ -214,6 +214,8 @@ class AdfInfo(AdfConfig):
             #Set data name to baseline case name:
             data_name = self.get_baseline_info('cam_case_name', required=True)
 
+            self.__base_hist_str = None
+
             #Attempt to grab baseline start_years (not currently required):
             syear_baseline = self.get_baseline_info('start_year')
             if not syear_baseline:
@@ -976,8 +978,8 @@ class AdfInfo(AdfConfig):
         cam_hist_strs = copy.copy(self.__hist_str)
         if self.__base_hist_str:
             base_hist_strs = copy.copy(self.__base_hist_str)
-        else:
-            base_hist_strs = ""
+        #else:
+        #    base_hist_strs = ""
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
 
