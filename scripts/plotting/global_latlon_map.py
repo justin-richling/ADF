@@ -329,7 +329,7 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
         process_2d_plots(adfobj, mdata, odata, case_name, case_nickname,
                         var, seasons, plot_loc, plot_type, doplot,
                         mseasons, oseasons, dseasons, pseasons,
-                        syear_cases[case_idx], eyear_cases[case_idx],
+                        syear_cases[case_name], eyear_cases[case_name],
                         syear_baseline, eyear_baseline,
                         web_category, vres)
     else:
@@ -337,7 +337,7 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
         process_3d_plots(adfobj, mdata, odata, case_name, case_nickname, 
                         var, seasons, pres_levs, plot_loc, plot_type, doplot,
                         mseasons, oseasons, dseasons, pseasons,
-                        syear_cases[case_idx], eyear_cases[case_idx],
+                        syear_cases[case_name], eyear_cases[case_name],
                         syear_baseline, eyear_baseline,
                         web_category, vres)
 
