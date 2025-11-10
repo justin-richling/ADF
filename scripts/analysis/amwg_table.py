@@ -59,6 +59,7 @@ def amwg_table(adf):
 
     #Import necessary modules:
     from adf_base import AdfError
+    import adf_utils as utils
 
     #Additional information:
     #----------------------
@@ -367,7 +368,7 @@ def amwg_table(adf):
             #End if"""
 
             #Load model variable data from file:
-            ds = pf.load_dataset(files)
+            ds = utils.load_dataset(files)
 
             if not is_climo:
                 #Average time dimension over time bounds, if bounds exist:
