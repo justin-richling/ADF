@@ -150,7 +150,8 @@ def load_reference_data(adfobj, var):
 def process_case(adfobj, case_name, case_idx, var, odata, seasons, 
                 pres_levs, plot_type, redo_plot, vres, web_category):
     """Process individual case data and generate plots."""
-    plot_loc = Path(adfobj.plot_location[case_idx])
+    #plot_loc = Path(adfobj.plot_location[case_idx])
+    plot_loc = Path(adfobj.plot_location[case_name])
     plot_loc.mkdir(parents=True, exist_ok=True)
 
     mdata = adfobj.data.load_regrid_da(case_name, var)
