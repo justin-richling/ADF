@@ -172,6 +172,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
         #if not calc_climos[case_idx]:
+        print("WHAT calc_climoss[case_name]",calc_climoss[case_name])
         if not calc_climoss[case_name]:
             continue
 
@@ -182,6 +183,9 @@ def create_climo_files(adf, clobber=False, search=None):
         #input_location  = Path(input_ts_locs[case_idx])
         #output_location = Path(output_locs[case_idx])
         input_location  = Path(input_ts_locss[case_name])
+        if input_location is None:
+            errmsg = f"\t Config file indicates climos for case '{case_name}' do not need to be calculated."
+            print(errmsg)
         output_location = Path(output_locss[case_name])
 
         #Whether to overwrite existing climo files
