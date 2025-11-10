@@ -444,7 +444,7 @@ def amwg_table(adf):
                 row_values = [var, unit_str] + [mean_final] + ["-","-","-","-","-","-"]
             else:
                 # In order to get correct statistics, average to annual or seasonal
-                data = pf.annual_mean(data, whole_years=True, time_name='time')
+                data = utils.annual_mean(data, whole_years=True, time_name='time')
                 if var == "RESTOM":
                     print("data AFTER annual mean",data,"\n")
                     print(len(data),"\n\n")
