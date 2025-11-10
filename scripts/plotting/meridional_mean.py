@@ -69,8 +69,8 @@ def meridional_mean(adfobj):
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
         base_nickname = adfobj.case_nicknames["baseline"][base_name]
-        syear_baseline = adfobj.syears["syear_baseline"][base_name]
-        eyear_baseline = adfobj.eyears["eyear_baseline"][base_name]
+        syear_baseline = adfobj.syears_dict["baseline"][base_name]
+        eyear_baseline = adfobj.eyears_dict["baseline"][base_name]
     #End if
 
     #Grab all case nickname(s)

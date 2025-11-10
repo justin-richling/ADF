@@ -163,8 +163,8 @@ def zonal_mean(adfobj):
             base_name = adfobj.data.ref_case_label
             base_nickname = adfobj.case_nicknames["baseline"][base_name]
             #Grab baseline years (which may be empty strings if using Obs):
-            syear_baseline = adfobj.syears["syear_baseline"][base_name]
-            eyear_baseline = adfobj.eyears["eyear_baseline"][base_name]
+            syear_baseline = adfobj.syears_dict["baseline"][base_name]
+            eyear_baseline = adfobj.eyears_dict["baseline"][base_name]
         else:
             base_name = adfobj.data.ref_labels[var]
             base_nickname = "Obs"
