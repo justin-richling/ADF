@@ -196,28 +196,15 @@ def amwg_table(adf):
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[case_names[0]])
-        if not input_ts_loc:
+        if input_ts_loc is None:
             #print("User indicates no time series files will be used")
             #print()
             emsg = "\n  User indicates no time series files will be used."
             emsg += " Looking if table already exisits:"
             print(emsg)
 
-            #if ah:
-            #for case_idx, case_name in enumerate(case_names):
-            #Create output file name:
-            output_csv_file = output_location / f"amwg_table_{baseline_name}.csv"
-            if Path(output_csv_file).is_file():
-                print(f"\t - AMWG table for '{baseline_name}' exists, adding to website.")
-                table_df = pd.read_csv(output_csv_file)
-                # last step is to add table dataframe to website (if enabled):
-                adf.add_website_data(table_df, baseline_name, baseline_name, plot_type="Tables")
-            else:
-                print(f"\t - AMWG table for '{baseline_name}' does not exist.")
-                print('\t  check here:',output_csv_file,"\n")
-            #input_locs.append(None)
             input_locs = {**test_input_locs, **input_climo_loc}
-            pass#return
+            #pass#return
         else:
             #input_loc = adf.get_baseline_info("cam_climo_loc")
             #input_locs.append(input_loc)
