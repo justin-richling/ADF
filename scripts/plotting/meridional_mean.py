@@ -161,10 +161,10 @@ def meridional_mean(adfobj):
             for case_idx, case_name in enumerate(case_names):
 
                 #Set case nickname:
-                case_nickname = test_nicknames[case_idx]
+                case_nickname = test_nicknames[case_name]
 
                 #Set output plot location:
-                plot_loc = Path(plot_locations[case_idx])
+                plot_loc = Path(plot_locations[case_name])
 
                 #Check if plot output directory exists, and if not, then create it:
                 if not plot_loc.is_dir():
@@ -243,7 +243,7 @@ def meridional_mean(adfobj):
 
                     #Create new plot:
                     pf.plot_meridional_mean_and_save(plot_name, case_nickname, base_nickname,
-                                                [syear_cases[case_idx],eyear_cases[case_idx]],
+                                                [syear_cases[case_name],eyear_cases[case_name]],
                                                 [syear_baseline,eyear_baseline],
                                                 mseasons[s], oseasons[s], has_lev, latbounds=slice(-5,5), obs=obs, **vres)
 
