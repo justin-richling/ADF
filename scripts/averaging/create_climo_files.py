@@ -172,7 +172,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #Check if climatology is being calculated.
         #If not then just continue on to the next case:
         #if not calc_climos[case_idx]:
-        print("WHAT calc_climoss[case_name]",calc_climoss[case_name])
+        print("WHAT calc_climoss[case_name]",case_name, calc_climoss[case_name])
         if not calc_climoss[case_name]:
             continue
 
