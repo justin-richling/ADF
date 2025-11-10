@@ -279,6 +279,7 @@ def amwg_table(adf):
         print(f"\n  Calculating AMWG variable table for '{case_name}'...")
     
         #Loop over CAM output variables:
+        print_climo_msg = True
         for var in var_list:
             is_climo = False # default to time series
             #Generate input file path:
@@ -304,10 +305,12 @@ def amwg_table(adf):
                     warnings.warn(errmsg)
                     continue
                 else:
-                    print(f"\t ** User supplied climo files for {var} in {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
+                    if print_climo_msg:
+                        print(f"\t ** User supplied climo files for {case_name}, will make only global mean (no other stats) for each variable. Thanks and have a nice day.")
                     files = try_files
                     input_location = try_input_location
                     is_climo = True
+                    print_climo_msg = False
             #End if
 
             """if not input_location:
