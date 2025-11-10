@@ -291,8 +291,8 @@ def amwg_table(adf):
         for var in var_list:
             is_climo = False # default to time series
             #Generate input file path:
-            if input_locs[case_idx]:
-                input_location = Path(input_locs[case_idx])
+            if input_locs[case_name]:
+                input_location = Path(input_locs[case_name])
                 #print("\n\tTS input_location",input_location)
 
                 filenames = f'{case_name}.*.{var}.*nc'
@@ -306,7 +306,7 @@ def amwg_table(adf):
                 msg = f"\t    ** Time series files for variable '{var}' not found.  Checking on climo files."
                 print(msg)
                 filenames = f'{case_name}_{var}_climo.nc'
-                try_input_location = Path(input_climo_locs[case_idx])
+                try_input_location = Path(input_climo_locs[case_name])
                 try_files = sorted(try_input_location.glob(filenames))
                 if not try_files:
                     errmsg = f"\t    ** Climo files for variable '{var}' not found.  Script will continue to next variable."
