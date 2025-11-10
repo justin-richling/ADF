@@ -143,6 +143,7 @@ def create_climo_files(adf, clobber=False, search=None):
         #input_ts_locs.append(input_ts_baseline)
         # Create a new dictionary by combining dict1 and dict2
         input_ts_locss = {**input_ts_locs, **input_ts_baseline}
+        print("CALC CLIMNO: input_ts_locss",input_ts_locss)
         #output_locs.append(output_bl_loc)
         output_locss = {**output_locs, **output_bl_loc}
         #calc_climos.append(calc_bl_climos)
