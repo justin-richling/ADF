@@ -180,7 +180,7 @@ def amwg_table(adf):
         input_loc = adf.ts_locs_dict["baseline"]
         print("\nBaseline input_locs",input_loc,"\n")
         #input_climo_loc = adf.get_baseline_info("cam_climo_loc")
-        input_climo_loc = adf.climo_locs_dict["baseline"][baseline_name]
+        input_climo_loc = adf.climo_locs_dict["baseline"]#[baseline_name]
         #input_climo_locs.append(input_climo_loc)
         input_locs = {**test_input_locs, **input_climo_loc}
 
