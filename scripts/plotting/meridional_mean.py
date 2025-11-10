@@ -35,8 +35,11 @@ def meridional_mean(adfobj):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
     #Grab case years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    #syear_cases = adfobj.climo_yrs["syears"]
+    #eyear_cases = adfobj.climo_yrs["eyears"]
+    syear_cases = adfobj.syears_dict["test"]
+    eyear_cases = adfobj.eyears_dict["test"]
+
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -45,6 +48,11 @@ def meridional_mean(adfobj):
     if adfobj.get_basic_info("compare_obs"):
         #Set obs call for observation details for plot titles
         obs = True
+
+        base_name = adfobj.data.ref_labels[var]
+        base_nickname = "Obs"
+        syear_baseline = ""
+        eyear_baseline = ""
 
         #Extract variable-obs dictionary:
         var_obs_dict = adfobj.var_obs_dict
@@ -60,15 +68,17 @@ def meridional_mean(adfobj):
         data_name = adfobj.data.ref_case_label
         data_list = [data_name] # gets used as just the name to search for climo files HAS TO BE LIST
         data_loc  = model_rgrid_loc #Just use the re-gridded model data path
+        base_nickname = adfobj.case_nicknames["baseline"][base_name]
+        syear_baseline = adfobj.syears["syear_baseline"][base_name]
+        eyear_baseline = adfobj.eyears["eyear_baseline"][base_name]
     #End if
 
     #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"][data_name]
-    base_nickname = adfobj.case_nicknames["base_nickname"][data_name]
+    test_nicknames = adfobj.case_nicknames["test"]
 
-    #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
-    base_nickname = adfobj.case_nicknames["base_nickname"]
+    
+
+
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in the config YAML file.

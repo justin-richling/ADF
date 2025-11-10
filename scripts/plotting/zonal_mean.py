@@ -49,8 +49,10 @@ def zonal_mean(adfobj):
     plot_locations = adfobj.plot_location
 
     #Grab case years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    #syear_cases = adfobj.climo_yrs["syears"]
+    #eyear_cases = adfobj.climo_yrs["eyears"]
+    syear_cases = adfobj.syears_dict["test"]
+    eyear_cases = adfobj.eyears_dict["test"]
 
     test_nicknames = adfobj.case_nicknames["test"]
 
@@ -160,12 +162,16 @@ def zonal_mean(adfobj):
         if not adfobj.compare_obs:
             base_name = adfobj.data.ref_case_label
             base_nickname = adfobj.case_nicknames["baseline"][base_name]
+            #Grab baseline years (which may be empty strings if using Obs):
+            syear_baseline = adfobj.syears["syear_baseline"][base_name]
+            eyear_baseline = adfobj.eyears["eyear_baseline"][base_name]
         else:
             base_name = adfobj.data.ref_labels[var]
             base_nickname = "Obs"
-        #Grab baseline years (which may be empty strings if using Obs):
-        syear_baseline = adfobj.climo_yrs["syear_baseline"][base_name]
-        eyear_baseline = adfobj.climo_yrs["eyear_baseline"][base_name]
+            #Grab baseline years (which may be empty strings if using Obs):
+            syear_baseline = ""
+            eyear_baseline = ""
+        
 
         # Gather reference variable data
         odata = adfobj.data.load_reference_regrid_da(base_name, var)
