@@ -371,7 +371,7 @@ def aod_panel_latlon(adfobj, plot_titles, plot_params, data, season, obs_name, c
     """
     # Get plot configuration
     file_type = adfobj.read_config_var("diag_basic_info").get('plot_type', 'png')
-    plot_dir = adfobj.plot_location[0]
+    plot_dir = adfobj.plot_location[case_names[0]]
     plotfile = Path(plot_dir) / f'AOD_diff_{obs_name.replace(" ","_")}_{season}_LatLon_Mean.{file_type}'
 
     # Check if plot should be regenerated
