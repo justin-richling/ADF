@@ -52,10 +52,6 @@ def zonal_mean(adfobj):
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
-    #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"][base_name]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"][base_name]
-
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
@@ -163,6 +159,9 @@ def zonal_mean(adfobj):
             base_name = adfobj.data.ref_case_label
         else:
             base_name = adfobj.data.ref_labels[var]
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = adfobj.climo_yrs["syear_baseline"][base_name]
+        eyear_baseline = adfobj.climo_yrs["eyear_baseline"][base_name]
 
         # Gather reference variable data
         odata = adfobj.data.load_reference_regrid_da(base_name, var)
