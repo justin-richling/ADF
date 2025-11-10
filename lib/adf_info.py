@@ -804,7 +804,7 @@ class AdfInfo(AdfConfig):
         #generator.  These files will be stored in the same location as the first
         #listed case.
         if not self.compare_obs:
-            self.__plot_locatio[data_name] = os.path.join(plot_dir, first_case_dir)
+            self.__plot_location[data_name] = os.path.join(plot_dir, first_case_dir)
             #self.__plot_location.append(os.path.join(plot_dir, first_case_dir))
         #End if
 
