@@ -181,15 +181,17 @@ def amwg_table(adf):
         print("\nBaseline input_locs",input_loc,"\n")
         #input_climo_loc = adf.get_baseline_info("cam_climo_loc")
         input_climo_loc = adf.climo_locs_dict["baseline"][baseline_name]
-        input_climo_locs.append(input_climo_loc)
-        input_locs = {**test_input_locs, **input_loc}
+        #input_climo_locs.append(input_climo_loc)
+        input_locs = {**test_input_locs, **input_climo_loc}
 
         #Grab baseline years (which may be empty strings if using Obs):
         syear_baseline = adf.climo_yrs["syear_baseline"]
         eyear_baseline = adf.climo_yrs["eyear_baseline"]
 
-        syear_cases.append(syear_baseline)
-        eyear_cases.append(eyear_baseline)
+        #syear_cases.append(syear_baseline)
+        #eyear_cases.append(eyear_baseline)
+        syears = {**syear_cases, **syear_baseline}
+        eyears = {**eyear_cases, **eyear_baseline}
 
         #Convert output location string to a Path object:
         output_location = Path(output_locs[0])
@@ -235,11 +237,11 @@ def amwg_table(adf):
     #Initialize list of case name csv files for case comparison check later
     csv_list = []
     for case_idx, case_name in enumerate(case_names):
-        syear = syear_cases[case_idx]
-        eyear = eyear_cases[case_idx]
+        syear = syears[case_name]
+        eyear = eyears[case_name]
 
         #Convert output location string to a Path object:
-        output_location = Path(output_locs[case_idx])
+        output_location = Path(output_locs[case_name])
 
         """#Generate input file path:
         input_location = input_locs[case_idx]
