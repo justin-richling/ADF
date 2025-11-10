@@ -52,6 +52,8 @@ def zonal_mean(adfobj):
     syear_cases = adfobj.climo_yrs["syears"]
     eyear_cases = adfobj.climo_yrs["eyears"]
 
+    test_nicknames = adfobj.case_nicknames["test"]
+
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
@@ -157,8 +159,10 @@ def zonal_mean(adfobj):
         # load reference data (observational or baseline)
         if not adfobj.compare_obs:
             base_name = adfobj.data.ref_case_label
+            base_nickname = adfobj.case_nicknames["baseline"][base_name]
         else:
             base_name = adfobj.data.ref_labels[var]
+            base_nickname = "Obs"
         #Grab baseline years (which may be empty strings if using Obs):
         syear_baseline = adfobj.climo_yrs["syear_baseline"][base_name]
         eyear_baseline = adfobj.climo_yrs["eyear_baseline"][base_name]
@@ -188,7 +192,7 @@ def zonal_mean(adfobj):
         for case_idx, case_name in enumerate(adfobj.data.case_names):
 
             #Set case nickname:
-            case_nickname = adfobj.data.test_nicknames[case_name]
+            case_nickname = test_nicknames[case_name]
 
             #Set output plot location:
             plot_loc = Path(plot_locations[case_name])
@@ -268,7 +272,7 @@ def zonal_mean(adfobj):
                 if plot_name not in zonal_skip:
 
                     #Create new plot:
-                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
                                                     [syear_cases[case_name],eyear_cases[case_name]],
                                                     [syear_baseline,eyear_baseline],
                                                     mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
@@ -280,7 +284,7 @@ def zonal_mean(adfobj):
                 #Create log-pressure plots as well (if applicable)
                 if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
 
-                    pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
+                    pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, base_nickname,
                                                         [syear_cases[case_name],eyear_cases[case_name]],
                                                         [syear_baseline,eyear_baseline],
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
