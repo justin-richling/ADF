@@ -131,6 +131,7 @@ def regrid_and_vert_interp(adf):
     rgclimo_loc = Path(output_loc)
     if not adf.compare_obs:
         tclimo_loc  = Path(target_loc)
+        print("REGRID tclimo_loc",tclimo_loc)
     #------------------------------------
 
     #Check if re-gridded directory exists, and if not, then create it:
