@@ -217,7 +217,7 @@ def amwg_table(adf):
                 print('\t  check here:',output_csv_file,"\n")
             #input_locs.append(None)
             input_locs = {**test_input_locs, **input_climo_loc}
-            pass#return
+            #pass#return
         else:
             #input_loc = adf.get_baseline_info("cam_climo_loc")
             #input_locs.append(input_loc)
