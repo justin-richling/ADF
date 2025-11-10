@@ -113,6 +113,7 @@ def regrid_and_vert_interp(adf):
 
         #Extract model baseline variables:
         target_loc = adf.get_baseline_info("cam_climo_loc", required=True)
+        target_loc = adf.climo_locs_dict["baseline"][adf.data.ref_case_label]
         target_list = [adf.get_baseline_info("cam_case_name", required=True)]
     #End if
 
