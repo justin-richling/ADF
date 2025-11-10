@@ -2,13 +2,10 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 import plotting_functions as pf
+
+import adf_utils as utils
 import warnings  # use to warn user about missing files.
-
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
-
-warnings.formatwarning = my_formatwarning
+warnings.formatwarning = utils.my_formatwarning
 
 def meridional_mean(adfobj):
 
@@ -22,7 +19,8 @@ def meridional_mean(adfobj):
     """
 
     #Notify user that script has started:
-    print("\n  Generating meridional mean plots...")
+    msg = "\n  Generating meridional mean plots..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     #Extract needed quantities from ADF object:
     #-----------------------------------------
@@ -36,18 +34,15 @@ def meridional_mean(adfobj):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
-    #Grab baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    #Grab case years
+    syear_cases = adfobj.climo_yrs["syears"]
+    eyear_cases = adfobj.climo_yrs["eyears"]
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
     # we will do a simple check and switch options as needed:
     if adfobj.get_basic_info("compare_obs"):
-
-        data_name = adfobj.data.ref_labels[var_list[0]]
-
         #Set obs call for observation details for plot titles
         obs = True
 
@@ -106,6 +101,8 @@ def meridional_mean(adfobj):
 
     #Loop over variables:
     for var in var_list:
+        #Notify user of variable being plotted:
+        print(f"\t - meridional mean plots for {var}")
 
         if adfobj.compare_obs:
             #Check if obs exist for the variable:
@@ -128,9 +125,6 @@ def meridional_mean(adfobj):
             data_var = var
         #End if
 
-        #Notify user of variable being plotted:
-        print(f"\t - meridional mean plots for {var}")
-
         # Check res for any variable specific options that need to be used BEFORE going to the plot:
         if var in res:
             vres = res[var]
@@ -151,7 +145,7 @@ def meridional_mean(adfobj):
             else:
                 oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
             #End if
-            oclim_ds = pf.load_dataset(oclim_fils)
+            oclim_ds = utils.load_dataset(oclim_fils)
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
@@ -169,7 +163,7 @@ def meridional_mean(adfobj):
 
                 # load re-gridded model files:
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
-                mclim_ds = pf.load_dataset(mclim_fils)
+                mclim_ds = utils.load_dataset(mclim_fils)
 
                 # stop if data is invalid:
                 if (oclim_ds is None) or (mclim_ds is None):
@@ -199,11 +193,11 @@ def meridional_mean(adfobj):
 
                 # determine whether it's 2D or 3D
                 # 3D triggers search for surface pressure
-                validate_lat_lev = pf.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
+                validate_lat_lev = utils.validate_dims(mdata, ['lat', 'lev']) # keys=> 'has_lat', 'has_lev', with T/F values
 
                 #Notify user of level dimension:
                 if validate_lat_lev['has_lev']:
-                    print(f"\t   {var} has lev dimension.")
+                    print(f"\t    INFO: {var} has lev dimension.")
                     has_lev = True
                 else:
                     has_lev = False
@@ -233,8 +227,8 @@ def meridional_mean(adfobj):
                     elif (redo_plot) and plot_name.is_file():
                         plot_name.unlink()
 
-                    mseasons[s] = pf.seasonal_mean(mdata, season=s, is_climo=True)
-                    oseasons[s] = pf.seasonal_mean(odata, season=s, is_climo=True)
+                    mseasons[s] = utils.seasonal_mean(mdata, season=s, is_climo=True)
+                    oseasons[s] = utils.seasonal_mean(odata, season=s, is_climo=True)
 
 
                     #Create new plot:
