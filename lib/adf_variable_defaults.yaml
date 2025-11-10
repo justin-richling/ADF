@@ -69,7 +69,8 @@
 # Available ADF Default Plot Types
 #+++++++++++++
 default_ptypes: ["Tables","LatLon","LatLon_Vector","Zonal","Meridional",
-                  "NHPolar","SHPolar","Special","WACCM"]
+                 "NHPolar","SHPolar","TimeSeries","ENSO","GlobalHistogramTS", 
+                 "GlobalHistogramClimo","Special"]
 
 #+++++++++++++
 # Constants
@@ -176,44 +177,97 @@ AODVISdn:
   obs_name: "MODIS"
   obs_var_name: "AOD_550_Dark_Target_Deep_Blue_Combined_Mean_Mean"
 
-  aod_diags:
-    plot_params:
-      range_min: -0.4
-      range_max: 0.4
-      nlevel: 17
-
-    plot_params_relerr:
-      range_max: 100
-      range_min: -100
-      nlevel: 21
-
-
 BURDENBC:
   category: "Aerosols"
+  colormap: "plasma_r"
+  scale_factor: 1000000
+  add_offset: 0
+  new_unit: 'g m$^{-2}$'
+  diff_colormap: "RdBu_r"
+  obs_file: "BURDENBC_MERRA2_monthly_climo_1degree_200001-202506.nc"
+  obs_var_name: "BURDENBC"
+  obs_name: "MERRA2"
+  obs_scale_factor: 1000000
+  obs_add_offset: 0
 
 BURDENDUST:
   category: "Aerosols"
+  colormap: "plasma_r"
+  scale_factor: 1000000
+  add_offset: 0
+  new_unit: 'g m$^{-2}$'
+  diff_contour_range: [-1000, 1100, 100]
+  diff_colormap: "RdBu_r"
+  obs_file: "BURDENDUST_CAMS_monthly_climo_1degree_200301-202412.nc"
+  obs_var_name: "BURDENDUST"
+  obs_name: "CAMS"
+  obs_scale_factor: 1000000
+  obs_add_offset: 0
 
 BURDENPOM:
   category: "Aerosols"
+  colormap: "plasma_r"
+  scale_factor: 1000000
+  add_offset: 0
+  new_unit: 'g m$^{-2}$'
+  diff_colormap: "RdBu_r"
+
 
 BURDENSEASALT:
   category: "Aerosols"
+  colormap: "plasma_r"
+  scale_factor: 1000000
+  add_offset: 0
+  new_unit: 'g m$^{-2}$'
+  diff_contour_range: [-200, 200, 25]
+  diff_colormap: "RdBu_r"
+  obs_file: "BURDENSEASALT_CAMS_monthly_climo_1degree_200301-202412.nc"
+  obs_var_name: "BURDENSEASALT"
+  obs_name: "CAMS"
+  obs_scale_factor: 1000000
+  obs_add_offset: 0
 
 BURDENSO4:
   category: "Aerosols"
+  colormap: "plasma_r"
+  scale_factor: 1000000
+  add_offset: 0
+  new_unit: 'g m$^{-2}$'
+  diff_colormap: "RdBu_r"
+  obs_file: "BURDENSO4_CAMS_monthly_climo_1degree_200301-202412.nc"
+  obs_name: "CAMS"
+  obs_var_name: "BURDENSO4"
+  obs_scale_factor: 1000000
+  obs_add_offset: 0
 
 BURDENSOA:
   category: "Aerosols"
+  colormap: "plasma_r"
+  scale_factor: 1000000
+  add_offset: 0
+  new_unit: 'g m$^{-2}$'
+  diff_colormap: "RdBu_r"
 
 DMS:
   category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
 
 SO2:
   category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
 
 SOAG:
   category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
 
 BC:
   colormap: "RdBu_r"
@@ -296,8 +350,145 @@ SeaSalt:
       ticks: [-10,8,6,4,2,0,-2,-4,-6,-8,-10]
   category: "Aerosols"
   derivable_from: ["ncl_a1", "ncl_a2", "ncl_a3"]
-
-
+  
+bc_a1:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+bc_a4:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+dst_a1:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+dst_a2:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+dst_a3:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+ncl_a1:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+ncl_a2:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+ncl_a3:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+num_a1:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+num_a2:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+num_a3:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+num_a4:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+num_a5:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+pom_a1:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+pom_a4:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+so4_a1:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+so4_a2:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+so4_a3:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+soa_a1:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+soa_a2:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0e-9
+  new_unit: "ug/kg"
+SAD_TROP:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0
+  new_unit: "cm2/cm3"
+SAD_AERO:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0
+  new_unit: "cm2/cm3"
+SAD_SULFC:
+  category: "Aerosols"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1.0
+  new_unit: "cm2/cm3"
 
 #+++++++++++++++++
 # Category: Budget
@@ -375,24 +566,607 @@ VTGWORO:
 #+++++++++++++++++
 # Category: Composition
 #+++++++++++++++++
-
-CFC11:
+CO:
   category: "Composition"
-
-CFC12:
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO01:
   category: "Composition"
-
-CH4:
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO02:
   category: "Composition"
-
-H2O2:
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO03:
   category: "Composition"
-
-H2SO4:
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO04:
   category: "Composition"
-
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO05:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO06:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO07:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO08:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO09:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO10:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO11:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO12:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO13:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+O3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
 N2O:
   category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HNO3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+NO:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000000.0
+  new_unit: "pptv"
+NO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000000.0
+  new_unit: "pptv"
+NOX:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000000.0
+  new_unit: "pptv"
+NOY:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000000.0
+  new_unit: "pptv"
+OH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000000.0
+  new_unit: "pptv"
+BIGALK:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C2H4:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C2H5O2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C2H5OH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C2H5OOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C2H6:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C3H6:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C3H7O2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C3H7OOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+C3H8:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CCL4:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CFC11:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CFC113:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CFC114:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CFC115:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CFC12:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH2O:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3BR:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3CCL3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3CHO:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3CL:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3CO3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3COCH3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3COCHO:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3COOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3COOOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3O2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3OH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH3OOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CH4:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CHBR3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CLO:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CLONO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CLOX:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CLOY:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+CO2:
+  category: "Composition"
+  #contour_levels_range: [300,450,10.0]
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000.0
+  new_unit: "ppmv"
+E90:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+GLYALD:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+GLYOXAL:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+H2402:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+H2O2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+H2SO4:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HCFC141B:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HCFC142B:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HCFC22:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HCL:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HCL_GAS:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HNO3_GAS:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HO2NO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HOBR:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HYAC:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+HYDRALD:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+ISOP:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+ISOPNO3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+ISOPO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+ISOPOOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+MACR:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+MACRO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+MACROOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+MVK:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+N2O5:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+NH3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+NH4:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+NO3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+O3S:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+OCLO:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+OCS:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+ONITR:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+PAN:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+POOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+RO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+ROOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+SO3:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+SOAE:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+TERP:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+XO2:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
+XOOH:
+  category: "Composition"
+  colormap: "jet"
+  diff_colormap: "gist_ncar"
+  scale_factor: 1000000000.0
+  new_unit: "ppbv"
 
 
 #+++++++++++++++++
@@ -720,7 +1494,6 @@ OCNFRAC:
 LANDFRAC:
   category: "Surface variables"
 
-
 #+++++++++++++++++
 # Category: State
 #+++++++++++++++++
@@ -810,6 +1583,10 @@ OMEGA:
 
 OMEGA500:
   category: "State"
+  scale_factor: 864
+  add_offset: 0
+  new_unit: "hPa d$^{-1}$"
+  hist_bins: [-105, -100,  -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55, -50,  -45,  -40,  -35,  -30,  -25,  -20,  -15,  -10,   -5,    0, 5,   10,   15,   20,   25,   30,   35,   40,   45,   50,   55, 60,   65,   70,   75,   80,   85,   90,   95,  100]
 
 PINT:
   category: "State"
@@ -836,6 +1613,7 @@ QRS:
 #+++++++++++++++++
 # Category: TOA energy flux
 #+++++++++++++++++
+
 RESTOM:
   colormap: "RdBu_r"
   contour_levels_range: [-100, 100, 5]
@@ -1104,6 +1882,71 @@ TOT_CLD_VISTAU:
 TOT_ICLD_VISTAU:
   category: "COSP"
 
+CLDTOT_CAL:
+  colormap: "cividis"
+  contour_levels_range: [0, 105, 5]
+  diff_colormap: "RdBu_r"
+  diff_contour_range: [-40, 40, 5]
+  scale_factor: 1.
+  add_offset: 0
+  new_unit: "Percent"
+  obs_file: "CALIPSO_GOCCP_3.1.2_climo_200606-202012.nc"
+  obs_name: "CALIPSO"
+  obs_var_name: "CLDTOT_CAL"
+  category: "COSP"
+
+CLDHGH_CAL:
+  colormap: "cividis"
+  contour_levels_range: [0, 105, 5]
+  diff_colormap: "RdBu_r"
+  diff_contour_range: [-40, 40, 5]
+  scale_factor: 1.
+  add_offset: 0
+  new_unit: "Percent"
+  obs_file: "CALIPSO_GOCCP_3.1.2_climo_200606-202012.nc"
+  obs_name: "CALIPSO"
+  obs_var_name: "CLDHGH_CAL"
+  category: "COSP"
+
+CLDMED_CAL:
+  colormap: "cividis"
+  contour_levels_range: [0, 105, 5]
+  diff_colormap: "RdBu_r"
+  diff_contour_range: [-40, 40, 5]
+  scale_factor: 1.
+  add_offset: 0
+  new_unit: "Percent"
+  obs_file: "CALIPSO_GOCCP_3.1.2_climo_200606-202012.nc"
+  obs_name: "CALIPSO"
+  obs_var_name: "CLDMED_CAL"
+  category: "COSP"
+
+CLDLOW_CAL:
+  colormap: "cividis"
+  contour_levels_range: [0, 105, 5]
+  diff_colormap: "RdBu_r"
+  diff_contour_range: [-40, 40, 5]
+  scale_factor: 1.
+  add_offset: 0
+  new_unit: "Percent"
+  obs_file: "CALIPSO_GOCCP_3.1.2_climo_200606-202012.nc"
+  obs_name: "CALIPSO"
+  obs_var_name: "CLDLOW_CAL"
+  category: "COSP"
+
+CLD_CAL:
+  colormap: "cividis"
+  contour_levels_range: [0, 105, 5]
+  diff_colormap: "RdBu_r"
+  diff_contour_range: [-40, 40, 5]
+  scale_factor: 1.
+  add_offset: 0
+  new_unit: "Percent"
+  obs_file: "CALIPSO_GOCCP_3.1.2_climo_200606-202012.nc"
+  obs_name: "CALIPSO"
+  obs_var_name: "CLD_CAL"
+  category: "COSP"
+
 
 #+++++++++++++++++
 # Category: Other
@@ -1128,322 +1971,103 @@ OMEGAT:
 #++++++++++++++
 # Category: TEM
 #++++++++++++++
+
 uzm:
-  colormap: "Spectral"
-  contour_levels_range: [-60,61,8]
-  diff_contour_range: [-35,36,5]
-  ylim: [1e3,1e-1]
+  ylim: [1e3,1]
   units: m s-1
-  mpl:
-    colorbar:
-      #ticks: [-5,-1,-0.2,0.2,1,5]
-      label : "m/s"
-  long_name: Zonal mean zonal wind ($\bar{u}$)
+  long_name: Zonal-Mean zonal wind
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "uzm"
 
 vzm:
-  colormap: "RdBu_r"
-  ylim: [1e3,1e-1]
+  ylim: [1e3,1]
   units: m s-1
-  long_name: Zonal-Mean meridional wind ($\bar{v}$) 
+  long_name: Zonal-Mean meridional wind
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "vzm"
 
-thzm:
-  #contour_levels_range: []
-  #diff_contour_range: []
-  # E = exp(kappa*z/H), such that Theta = T * E
-  colormap: "Spectral_r"
-  #contour_levels_range: [185,300,6]
-  contour_levels_range: [185,300,6]
-  diff_contour_range: [-40,41,5]
-  ylim: [1e3,1e-1]
-  mpl:
-    colorbar:
-      #ticks: [-5,-1,-0.2,0.2,1,5]
-      label : "K"
-  long_name: Zonal mean temperature ($\bar{T}$)
-  obs_file: "TEM_ERA5.nc"
-  obs_name: "ERA5"
-  obs_var_name: "uzm"
-
 epfy:
-  #colormap: "RdYlBu_r"
-  colormap: "RdBu_r"
-  #contour_levels_range: [-1e8,1.1e8,.05e8]
-  contour_adjust: 1e7
-  #contour_levels: [-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7]
-  #contour_levels: [-5e7,-4e7,-3e7,-2e7,-1e7,-0.8e7,-0.6e7,-0.4e7,-0.2e7,-0.1e7,0,0.1e7,0.2e7,0.4e7,0.6e7,0.8e7,1e7,2e7,3e7,4e7,5e7]
-  #contour_levels: [-5e6,-4e6,-3e6,-2e6,-1e6,-0.8e6,-0.6e6,-0.4e6,-0.2e6,-0.1e6,0,0.1e6,0.2e6,0.4e6,0.6e6,0.8e6,1e6,2e6,3e6,4e6,5e6]
-  contour_levels: [-5e8,-4e8,-3e8,-2e8,-1e8,-0.8e8,-0.6e8,-0.4e8,-0.2e8,-0.1e8,0,0.1e8,0.2e8,0.4e8,0.6e8,0.8e8,1e8,2e8,3e8,4e8,5e8]
-  #non_linear_levels: True
-  diff_contour_range: [-2e7,2e7,0.2e7]
-  ylim: [1e3,1e-1]
-  #units: K
-  mpl:
-    colorbar:
-      #ticks: [-5,-1,-0.2,0.2,1,5]
-      label : "m3/s2"
-  long_name: EP Flux - meridional component ($F_{y}$)
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: northward component of the Eliassen–Palm flux
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "epfy"
 
 epfz:
-  #colormap: "RdYlBu_r"
-  colormap: "Spectral"
-  #contour_levels_range: [-3e6,3.1e6,0.25e6]
-  contour_adjust: 1e6
-  contour_levels: [-5e6,-4e6,-3e6,-2e6,-1e6,-0.8e6,-0.6e6,-0.4e6,-0.2e6,-0.1e6,0,0.1e6,0.2e6,0.4e6,0.6e6,0.8e6,1e6,2e6,3e6,4e6,5e6]
-  non_linear_levels: True
-  diff_contour_range: [-1e5,1.1e5,0.1e5]
-  ylim: [1e3,1e-1]
-  #units: m3 s−2
-  mpl:
-    colorbar:
-      #ticks: [-5,-1,-0.2,0.2,1,5]
-      label : "m3/s2"
-  long_name: EP Flux - vertical component ($F_{z}$)
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: upward component of the Eliassen–Palm flux
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "epfz"
 
 vtem:
-  #colormap: "RdYlBu_r"
-  colormap: "Spectral"
-  #contour_levels_range: [-0.5,0.6,0.05]
-  contour_levels: [-5,-4,-3,-2,-1,-0.8,-0.6,-0.4,-0.2,-0.1,0,0.1,0.2,0.4,0.6,0.8,1,2,3,4,5]
-  non_linear_levels: True
-  diff_contour_range: [-2,2.1,0.2]
-  ylim: [1e3,1e-1]
-  mpl:
-    colorbar:
-      ticks: [-5,-1,-0.2,0.2,1,5]
-      label : "m/s"
-  #mpl:
-  #  colorbar:
-  #    label : "ug/m3"
-  #    ticks: [0.05,0.2,0.4,1,2,6,24,90]
-  #  diff_colorbar:
-  #    label : "ug/m3"
-  #    ticks: [-10,8,6,4,2,0,-2,-4,-6,-8,-10]
-  long_name: TEM meridional wind ($\bar{v}^{*}$)
+  ylim: [1e2,1]
+  units: m/s
+  long_name: Transformed Eulerian mean northward wind
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "vtem"
 
 wtem:
-  #colormap: "RdYlBu_r"
-  colormap: "Spectral"
-  #contour_levels_range: [-5e-1,5.1e-1,0.5e-1]
-  contour_levels: [-2,-1.7,-1.4,-1.1,-0.8,-0.65,-0.5,-0.35,-0.2,-0.1,0,0.1,0.2,0.35,0.5,0.65,0.8,1.1,1.4,1.7,2]
-  #contour_levels: [-0.2,-0.17,-0.14,-0.11,-0.08,-0.065,-0.05,-0.035,-0.02,-0.01,0,0.01,0.02,0.035,0.05,0.065,0.08,0.11,0.14,0.17,0.2]
-  #contour_levels: [-0.002,-0.0017,-0.0014,-0.0011,-0.0008,-0.00065,-0.0005,-0.00035,-0.0002,-0.0001,0,0.0001,0.0002,0.00035,0.0005,0.00065,0.0008,0.0011,0.0014,0.0017,0.002]
-  #contour_levels: [-0.02,-0.017,-0.014,-0.011,-0.008,-0.0065,-0.005,-0.0035,-0.002,-0.001,0,0.001,0.002,0.0035,0.005,0.0065,0.008,0.011,0.014,0.017,0.02]
-  scale_factor: 100
-  non_linear_levels: True
-  diff_contour_range: [-2,2.1,0.2]
-  ylim: [1e3,1e-1]
-  mpl:
-    colorbar:
-      ticks: [-2,-0.8,-0.2,0.2,0.8,2]
-      #ticks: [-0.2,-0.08,-0.02,0.02,0.08,2]
-      label : "cm/s"
-  units: cm/s
-  long_name: TEM vertical wind ($\bar{w}^{*}$)
+  ylim: [1e2,1]
+  units: m/s
+  long_name: Transformed Eulerian mean upward wind
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "wtem"
 
 psitem:
-  #colormap: "RdYlBu_r"
-  colormap: "Spectral"
-  #contour_levels_range: [-3e11,3e11,.3e11]
-  contour_levels: [-3e11,-2e11,-1e11,-0.8e11,-0.6e11,-0.4e11,-0.2e11,-0.1e11,0,0.1e11,0.2e11,0.4e11,0.6e11,0.8e11,1e11,2e11,3e11]
-  contour_adjust: 1e11
-  non_linear_levels: True
-  diff_contour_range: [-5e10,5.1e10,.5e10]
-  ylim: [1e3,1e-1]
-  mpl:
-    colorbar:
-      #ticks: [-0.5,0.5,0.05]
-      label : "kg/s"
-  units: kg/s
-  long_name: TEM mass stream function ($\bar{\chi}^{*}$)
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: Transformed Eulerian mean mass stream function
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "psitem"
 
 utendepfd:
-  #colormap: "RdYlBu_r"
-  colormap: "Spectral"
-  #contour_levels_range: [-2e-4,2e-4,2e-5]
-  contour_adjust: 1e-4
-  contour_levels: [-3e-4,-2e-4,-1e-4,-0.8e-4,-0.6e-4,-0.4e-4,-0.2e-4,-0.1e-4,0,0.1e-4,0.2e-4,0.4e-4,0.6e-4,0.8e-4,1e-4,2e-4,3e-4]
-  non_linear_levels: True
-  diff_contour_range: [-1e-4,1.1e-4,.1e-4]
-  ylim: [1e3,1e-1]
-  mpl:
-    colorbar:
-      #ticks: [-0.5,0.5,0.05]
-      label : "m/s2"
-  long_name: EP flux divergence ($\nabla \cdot F$)
+  ylim: [1e2,1]
+  units: m3 s−2
   long_name: tendency of eastward wind due to Eliassen-Palm flux divergence
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendepfd"
 
 utendvtem:
-  #colormap: "RdYlBu_r"
-  colormap: "Spectral"
-  #contour_levels_range: []
-  #diff_contour_range: []
-  ylim: [1e3,1e-1]
-  long_name: EP flux divergence - meridional component ($F_{yy}$)
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: tendency of eastward wind due to TEM northward wind advection and the coriolis term
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendvtem"
 
 utendwtem:
-  #colormap: "RdYlBu_r"
-  colormap: "Spectral"
-  #contour_levels_range: []
-  #diff_contour_range: []
-  ylim: [1e3,1e-1]
-  long_name: EP flux divergence - vertical component ($F_{zz})
+  ylim: [1e2,1]
+  units: m3 s−2
+  long_name: tendency of eastward wind due to TEM upward wind advection
   obs_file: "TEM_ERA5.nc"
   obs_name: "ERA5"
   obs_var_name: "utendwtem"
 
-#lat_vs_month:
-#  Q: {"slat":-90,"nlat":90,"levels":[0.5,5,0.4],
-#      "cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
-#      "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100}
-
-#  T: {"slat":-45,"nlat":45,"levels":[190,221,2x],
-#      "cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)","tick_inter":15,"units":"K",
-#      "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"lev":90}
-
-#var_dict = {"Q":{"slat":-90,"nlat":90,"levels":np.arange(0.5,5,0.2),"cmap":'RdYlBu_r',"title":f"H$_{2}$O Mixing Ratio",
-#                "y_labels":["90S","60S","30S","EQ","30N","60N","90N"],"tick_inter":30,"units":"ppmv","lev":100},
-#            "T":{"slat":-45,"nlat":45,"levels":np.arange(190,221,2),"cmap":'RdBu_r',"title":"Cold Point Tropopause (CPT)",
-#                "y_labels":["45S","30S","15S","EQ","15N","30N","45N"],"tick_inter":15,"units":"K","lev":90}}
-
+#######
 
 
 
 # Plot Specific formatting
 ##########################
-#NOTE: If using any obs file that is in the ADF default directory, provide just the file name
-#      ex: MERRA2_met.nc -> is an ADF default obs file
-#
-#      If providing your own path for obs file (not using ADF defaults), provide the full path and file name
-#      ex: /glade/work/richling/ADF/different_MERRA2.nc
 
-# WACCM seasonal cycle plots
-#---------------------------
-waccm_seasonal_cycle:
-  calc_var_list: ['U','T','V','UU','VU','VT','OMEGAU','OMEGA','O3','Q','UTEND_VDIFF']
-  #calc_var_list = ['U','T','V','O3','Q','UTEND_VDIFF']
-  calc_var_list: ['U','T','Q']
-
-  merra2_vars: ['U','T','V','lat','lev']
-  saber_vars: ['u','temp','lat','lev']
-  #merra2_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/MERRA2_met.nc"
-  #saber_file: "/glade/work/richling/ADF/ADF_dev/notebooks/chem-diags/SABER_monthly_2002-2014.nc"
-  
-  merra2_file: "MERRA2_met.nc"
-  #merra2_file: "MERRA2_met_FAKESIES.nc"
-  saber_file: "SABER_monthly_2002-2014.nc"
-  #swoosh_file: 
-
-  obs_cam_vars:
-    saber:
-      U: "u"
-      T: "temp"
-    merra: 
-      U: "U"
-      T: "T"
-    swoosh:
-      O3: "O3"
-
-# Latitude vs Month
-lat_vs_month:
-  T: 
-    slat: -45
-    nlat: 45
-    levels: [190,221,2]
-    diff_levels: [-5,5.1,0.5]
-    cmap: 'RdBu_r'
-    title: "Cold Point Tropopause (CPT) Temps"
-    tick_inter: 15
-    units: "K"
-    y_labels: ["45S","30S","15S","EQ","15N","30N","45N"]
-    plot_vert_levs: [90]
-    cmap: 'RdYlBu_r'
-    diff_cmap: "BrBG"
-  
-  Q: 
-    slat: -90
-    nlat: 90
-    levels: [0.5,5.3,0.3]
-    #diff_levels: [-2,2.1,.2]
-    diff_levels: [-1.2,1.3,0.12]
-    cmap: 'RdYlBu_r'
-    title: "H$_{2}$O Mixing Ratio"
-    y_labels: ["90S","60S","30S","EQ","30N","60N","90N"]
-    tick_inter: 30
-    units: "ppmv"
-    plot_vert_levs: [90,100]
-    cmap: 'RdYlBu_r'
-    diff_cmap: "BrBG"
-
-# Comparison plots for SABER/MERRA2/SWOOSH
-comparison_plots:
-  cam_vars: ["U","T"]
-  #NOTE: If using month number for month, you must keep it as an integer, not a string!
-  interval: [6,12,"DJF","JJA"]
-
-  U:
-    levs: [-120, 121, 10]
-    diff_levs: [-30, 31, 3]
-    units: "m/s"
-  T: 
-    levs: [140, 300, 10]
-    diff_levs: [-40, 41, 4]
-    units: "K"
-
-# Polar Cap Temps
-pcap_plots:
-  T: 
-    levs: [140, 300, 10]
-    diff_levs: [-40, 41, 4]
-    units: "K"
-
-# Tape Recorder plot
-#-------------------
-tape_recorder:
-  mls:
-    #obs_file: "mls_h2o_latNpressNtime_3d_monthly_v5_FAKESIES.nc"
-    obs_file: "mls_h2o_latNpressNtime_3d_monthly_v5.nc"
-
-  era5:
-    obs_file: "ERA5_Q_10Sto10N_1980to2020.nc"
-
+# Chemistry and Aerosol Budget Tables
+#------------------------------------
 budget_tables:
   # INPUTS
   #list of the gaseous variables to be caculated.
-  GAS_VARIABLES: ["CH4",'CH3COCH3','CO']
+  GAS_VARIABLES: ['CH4','CH3CCL3', 'CO', 'O3', 'ISOP', 'MTERP', 'CH3OH', 'CH3COCH3','DMS','DMS_OASISS']
 
   # list of the aerosol variables to be caculated.
   AEROSOL_VARIABLES: ['AOD','SOA', 'SALT', 'DUST', 'POM', 'BC', 'SO4']
-  #AEROSOL_VARIABLES: ['AOD','SO4']
-
-  #list of all the variables to be caculated.
-  #VARIABLES: GAS_VARIABLES + AEROSOL_VARIABLES
 
   # For the case that outputs are saved for a specific region.
   # i.e., when using fincllonlat in user_nl_cam
@@ -1456,13 +2080,11 @@ budget_tables:
   # tropopause is defiend as o3>150ppb. If needed, change accordingly.
   Tropospheric: True
 
-
   ### NOT WORKING FOR NOW
   # To calculate the budgets only for a region
   # Lat/Lon extent
   limit: (20,20,40,120)
   regional: False
-
 
   #Dictionary for Molecular weights. Keys must be consistent with variable name
   # For aerosols, the MW is used only for chemical loss, chemical production, and elevated emission calculations
@@ -1480,7 +2102,10 @@ budget_tables:
         'DUST':168.0456,
         'CH3CCL3':133.4042,
         'CH3OH':32,
-        'CH3COCH3':58}
+        'CH3COCH3':58,
+        'DMS':62.136,
+        'DMS_OASISS':62.136,
+        'AOD':1}
 
   # Avogadro's Number
   AVO: 6.022e23
@@ -1489,11 +2114,32 @@ budget_tables:
   # Mw air
   Mwair: 28.97
 
-
   # The variables in the list below must be aerosols - do not add AOD and DAOD
-  # no need to change this list, unless for a specific need!
+  # WARNING: no need to change this list, unless for a specific need!
   AEROSOLS: ['SOA', 'SALT', 'DUST', 'POM', 'BC', 'SO4']
 
-  pkl_data: True
 #-----------
+
+
+
+# Plot Specific formatting
+##########################
+
+# AOD 4-Panel plots vs MERRA and MODIS
+#-------------------------------------
+aod_diags:
+    plot_params:
+      range_min: -0.4
+      range_max: 0.4
+      nlevel: 17
+      colormap: "bwr"
+
+    plot_params_relerr:
+      range_max: 100
+      range_min: -100
+      nlevel: 21
+      colormap: "PuOr_r"
+
+#-----------
+
 #End of File
