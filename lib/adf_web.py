@@ -200,7 +200,7 @@ class AdfWeb(AdfObs):
             self._write_run_info_to_log(config_file, active_env)
         #Do nothing if user is not requesting a website to be generated:
         if self.create_html and self.debug_log:
-            plot_path = Path(self.plot_location[0])
+            plot_path = Path(self.plot_location[case_names[0]])
 
             #Create directory path where the website will be built:
             website_dir = plot_path / "website"
