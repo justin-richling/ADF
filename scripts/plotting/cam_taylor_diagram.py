@@ -60,9 +60,6 @@ def cam_taylor_diagram(adfobj):
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
 
-    
-    plot_loc = Path(plot_location)
-
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
     # Until those are both treated the same (via intake-esm or similar)
@@ -130,55 +127,56 @@ def cam_taylor_diagram(adfobj):
     # LOOP OVER SEASON
     #
     for case in case_names:
-        print(f"\t - Case to be plotted: {case}")   
-    for s in seasons:
+        print(f"\t - Case to be plotted: {case}")
+        plot_loc = Path(plot_location[case]) 
+        for s in seasons:
 
-        plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
-        print(f"\t - Plotting Taylor Diagram, {s}")
+            plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
+            print(f"\t - Plotting Taylor Diagram, {s}")
 
-        # Check redo_plot. If set to True: remove old plot, if it already exists:
-        if (not redo_plot) and plot_name.is_file():
-            #Add already-existing plot to website (if enabled):
-            adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+            # Check redo_plot. If set to True: remove old plot, if it already exists:
+            if (not redo_plot) and plot_name.is_file():
+                #Add already-existing plot to website (if enabled):
+                adfobj.debug_log(f"'{plot_name}' exists and clobber is false.")
+                adfobj.add_website_data(plot_name, "TaylorDiag", None, season=s, multi_case=True)
+
+                #Continue to next iteration:
+                continue
+            elif (redo_plot) and plot_name.is_file():
+                plot_name.unlink()
+
+            # hold the data in a DataFrame for each case
+            # variable | correlation | stddev ratio | bias
+            df_template = pd.DataFrame(index=var_list, columns=['corr', 'ratio', 'bias'])
+            result_by_case = {cname: df_template.copy() for cname in case_names}
+            #
+            # LOOP OVER VARIABLES
+            #
+            for v in var_list:
+                base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
+                for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
+                    case_x = _retrieve(adfobj, v, case, case_climo_loc[case])
+                    # ASSUMING `time` is 1-12, get the current season:
+                    case_x = case_x.sel(time=seasons[s]).mean(dim='time')
+                    result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
+            #
+            # -- PLOTTING (one per season) --
+            #
+            fig, ax = taylor_plot_setup(title=f"Taylor Diagram - {s}",
+                                        baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
+
+            for i, case in enumerate(case_names):
+                ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
+
+            ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
+            # add text with variable names:
+            txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
+            fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
+            fig.savefig(plot_name, bbox_inches='tight')
+            adfobj.debug_log(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
+
+            #Add plot to website (if enabled):
             adfobj.add_website_data(plot_name, "TaylorDiag", None, season=s, multi_case=True)
-
-            #Continue to next iteration:
-            continue
-        elif (redo_plot) and plot_name.is_file():
-            plot_name.unlink()
-
-        # hold the data in a DataFrame for each case
-        # variable | correlation | stddev ratio | bias
-        df_template = pd.DataFrame(index=var_list, columns=['corr', 'ratio', 'bias'])
-        result_by_case = {cname: df_template.copy() for cname in case_names}
-        #
-        # LOOP OVER VARIABLES
-        #
-        for v in var_list:
-            base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
-            for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
-                case_x = _retrieve(adfobj, v, case, case_climo_loc[case])
-                # ASSUMING `time` is 1-12, get the current season:
-                case_x = case_x.sel(time=seasons[s]).mean(dim='time')
-                result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
-        #
-        # -- PLOTTING (one per season) --
-        #
-        fig, ax = taylor_plot_setup(title=f"Taylor Diagram - {s}",
-                                    baseline=f"Baseline: {base_nickname}  yrs: {syear_baseline}-{eyear_baseline}")
-
-        for i, case in enumerate(case_names):
-            ax = plot_taylor_data(ax, result_by_case[case], case_color=case_colors[i], use_bias=True)
-
-        ax = taylor_plot_finalize(ax, test_nicknames, case_colors, syear_cases, eyear_cases, needs_bias_labels=True)
-        # add text with variable names:
-        txtstrs = [f"{i+1} - {v}" for i, v in enumerate(var_list)]
-        fig.text(0.9, 0.9, "\n".join(txtstrs), va='top')
-        fig.savefig(plot_name, bbox_inches='tight')
-        adfobj.debug_log(f"\t Taylor Diagram: completed {s}. \n\t File: {plot_name}")
-
-        #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_name, "TaylorDiag", None, season=s, multi_case=True)
 
     #Notify user that script has ended:
     print("  ...Taylor Diagrams have been generated successfully.")
