@@ -128,7 +128,7 @@ diag_cam_climo:
     # eg. cam.h0 or ocn.pop.h.ecosys.nday1 or hist_str: [cam.h2,cam.h0]  
     # Only affects timeseries as everything else uses the created timeseries 
     # Default: 
-    hist_str: cam.h0
+    hist_str: cam.h0a
 
     #Calculate climatologies?
     #If false, the climatology files will not be created:
@@ -290,7 +290,7 @@ diag_cam_baseline_climo:
     # eg. cam.h0 or ocn.pop.h.ecosys.nday1 or hist_str: [cam.h2,cam.h0]  
     # Only affects timeseries as everything else uses the created timeseries 
     # Default: 
-    hist_str: cam.h0
+    hist_str: cam.h0a
 
     #Calculate cam baseline climatologies?
     #If false, the climatology files will not be created:
@@ -388,6 +388,8 @@ diag_cvdp_info:
 # If mdtf_run: true, the MDTF will be set up and 
 # run in background mode, likely completing after the ADF has completed.
 #
+# WARNING: This currently only runs on CASPER (not derecho)
+#
 # The variables required depend on the diagnostics (PODs) selected. 
 # AMWG-developed PODS and their required variables:
 #   (Note that PRECT can be computed from PRECC & PRECL)
@@ -417,12 +419,6 @@ diag_mdtf_info:
     conda_env_root     : ${mdtf_codebase_path}/miniconda2/envs.MDTFv3.1.20230412/
     OBS_DATA_ROOT      : ${mdtf_codebase_path}/obs_data
 
-
-
-    # Set to default for same as the ADF plot_location. Anything else here overrides that
-    OUTPUT_DIR         : default
-    WORKING_DIR        : default
-
     # SET this to a writable dir. The ADF will place ts files here for the MDTF to read (adds the casename)
     MODEL_DATA_ROOT     : ${diag_cam_climo.cam_ts_loc}/mdtf/inputdata/model     
 
@@ -432,8 +428,8 @@ diag_mdtf_info:
     # Intermediate/output file settings
     make_variab_tar: false     # tar up MDTF results
     save_ps : false     # save postscript figures in addition to bitmaps
-    save_nc : true      # save netCDF files of processed data (recommend true when starting with new model data)
-    overwrite: true     # overwrite results in OUTPUT_DIR; otherwise results saved under a unique name
+    save_nc : false      # save netCDF files of processed data (recommend true when starting with new model data)
+    overwrite: true     # overwrite results in OUTPUT_DIR; otherwise results will be saved under a unique name
 
     # Settings used in debugging:
     verbose  : 3       # Log verbosity level.
@@ -472,6 +468,7 @@ regridding_scripts:
 #These scripts must be located in "scripts/analysis":
 analysis_scripts:
     - amwg_table
+    #- aerosol_gas_tables
 
 #List of plotting scripts being used.
 #These scripts must be located in "scripts/plotting":
@@ -483,6 +480,8 @@ plotting_scripts:
     - polar_map
     - cam_taylor_diagram
     - qbo
+    - ozone_diagnostics
+    - MOPITT
     #- tape_recorder
     #- tem
     #- regional_map_multicase #To use this please un-comment and fill-out
@@ -507,10 +506,13 @@ diag_var_list:
     - FSNT
     - FLNT
     - LANDFRAC
+    - O3
+    - CO
 
 #<Add more variables here.>
 # MDTF recommended variables
-#    - OMEGA
+#    - FLUT
+#    - OMEGA500
 #    - PRECT
 #    - PS
 #    - PSL

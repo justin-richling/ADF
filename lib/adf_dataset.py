@@ -69,7 +69,7 @@ class AdfData:
                 self.ref_case_label = "Obs"
             else:
             #if not self.adf.var_obs_dict:
-                warnings.warn("\t WARNING: reference is observations, but no observations found to plot against.")
+                warnings.warn("\t    WARNING: reference is observations, but no observations found to plot against.")
         else:
             self.ref_var_loc = {}
             self.ref_var_nam = {}
@@ -355,12 +355,13 @@ class AdfData:
         res = self.adf.variable_defaults
         if variablename in res:
             vres = res[variablename]
-            if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
-                scale_factor = vres.get("obs_scale_factor",1)
-                add_offset = vres.get("obs_add_offset", 0)
-            else:
-                scale_factor = vres.get("scale_factor",1)
-                add_offset = vres.get("add_offset", 0)
+            if variablename in self.ref_labels:
+                if (case == self.ref_labels[variablename]) and (self.adf.compare_obs):
+                    scale_factor = vres.get("obs_scale_factor",1)
+                    add_offset = vres.get("obs_add_offset", 0)
+                else:
+                    scale_factor = vres.get("scale_factor",1)
+                    add_offset = vres.get("add_offset", 0)
         return add_offset, scale_factor
 
     #------------------

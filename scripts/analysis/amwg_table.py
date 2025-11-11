@@ -140,6 +140,10 @@ def amwg_table(adf):
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
 
+    #Grab case years
+    syear_cases = adf.climo_yrs["syears"]
+    eyear_cases = adf.climo_yrs["eyears"]
+
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
         #Extract CAM baseline variaables:
@@ -181,6 +185,13 @@ def amwg_table(adf):
         #if input_loc:
         case_names.append(baseline_name)
             #input_locs.append(input_loc)
+
+        #Grab baseline years (which may be empty strings if using Obs):
+        syear_baseline = adf.climo_yrs["syear_baseline"]
+        eyear_baseline = adf.climo_yrs["eyear_baseline"]
+
+        syear_cases.append(syear_baseline)
+        eyear_cases.append(eyear_baseline)
 
         #Save the baseline to the first case's plots directory:
         #output_locs.append(output_location)
