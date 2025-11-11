@@ -29,23 +29,38 @@ def qbo(adfobj):
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     #Extract relevant info from the ADF:
-    case_names = adfobj.get_cam_info('cam_case_name', required=True)
-    case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
-    base_name = adfobj.get_baseline_info('cam_case_name')
-    base_loc = adfobj.get_baseline_info('cam_ts_loc')
+    #case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    #case_loc = adfobj.get_cam_info('cam_ts_loc', required=True)
+    #base_name = adfobj.get_baseline_info('cam_case_name')
+    #base_loc = adfobj.get_baseline_info('cam_ts_loc')
     obsdir = adfobj.get_basic_info('obs_data_loc', required=True)
+    
     plot_locations = adfobj.plot_location
-    plot_type = adfobj.get_basic_info('plot_type')
 
     #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
-    base_nickname = adfobj.case_nicknames["base_nickname"]
-    case_nicknames = test_nicknames + [base_nickname]
+    #test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    #base_nickname = adfobj.case_nicknames["base_nickname"]
+    #case_nicknames = test_nicknames + [base_nickname]
+
+    case_names = adfobj.get_cam_info('cam_case_name', required=True)
+    base_name = adfobj.data.ref_case_label
+        
+    #input_ts_baseline = adf.get_baseline_info("cam_ts_loc", required=True)
+    case_loc = adfobj.ts_locs_dict["test"]
+    base_loc = adfobj.ts_locs_dict["baseline"]
+    #Grab case years
+    syear_cases = adfobj.syears_dict["test"]
+    eyear_cases = adfobj.eyears_dict["test"]
+
+    test_nicknames = adfobj.case_nicknames["test"]
+    base_nickname = adfobj.case_nicknames["baseline"]
+    case_nicknames = {**test_nicknames, **base_nickname} #test_nicknames + [base_nickname]
 
     # check if existing plots need to be redone
     redo_plot = adfobj.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
 
+    plot_type = adfobj.get_basic_info('plot_type')
     if not plot_type:
         plot_type = 'png'
     #End if
@@ -86,7 +101,8 @@ def qbo(adfobj):
 
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
-        case_loc.append(base_loc)
+        #case_loc.append(base_loc)
+        climo_locs = {**case_loc, **base_loc}
         case_names.append(base_name)
     #End if
 
@@ -94,33 +110,39 @@ def qbo(adfobj):
     obs = xr.open_dataset(obsdir+"/U_ERA5_5S_5N_1979_2019.nc").U_5S_5N
 
     #----Read in the case data and baseline
-    ncases = len(case_loc)
-    casedat = [utils.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+    ncases = len(climo_locs)
+    #casedat = [utils.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
+
+    casedat = {}
+    for case in case_names:
+        casedat[case] = utils.load_dataset(sorted(Path(climo_locs[case]).glob(f"{case}.*.U.*.nc")))
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
-    for idx, dat in enumerate(casedat):
+    for case,dat in casedat.items():
         if 'U' not in dat.variables:
-            warnings.warn(f"\t    WARNING: Case {case_names[idx]} contains no 'U' field, skipping...")
-            bad_idxs.append(idx)
+            warnings.warn(f"\t    WARNING: Case {case} contains no 'U' field, skipping...")
+            bad_idxs.append(case)
         #End if
     #End for
 
     #Pare list down to cases that actually contain a zonal wind field (U):
     if bad_idxs:
-        for bad_idx in bad_idxs:
-            casedat.pop(bad_idx)
+        for case in bad_idxs:
+            casedat.pop(case)
         #End for
     #End if
 
     #----Calculate the zonal mean
-    casedatzm = []
-    for i in range(0,ncases,1):
-        has_dims = utils.validate_dims(casedat[i].U, ['lon'])
+    #casedatzm = []
+    casedatzm = {}
+    for case in case_names:
+        has_dims = utils.validate_dims(casedat[case].U, ['lon'])
         if not has_dims['has_lon']:
-            print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_loc[i]}', cannot continue to plot.")
+            print(f"\t    WARNING: Variable U is missing a lat dimension for '{case_loc[case]}', cannot continue to plot.")
         else:
-            casedatzm.append(casedat[i].U.mean("lon"))
+            #casedatzm.append(casedat[case].U.mean("lon"))
+            casedatzm[case] = casedat[case].U.mean("lon")
     if len(casedatzm) == 0:
         print(f"\t  WARNING: No available cases found, exiting script.")
         exitmsg = "\tNo QBO plots will be made."
@@ -133,11 +155,11 @@ def qbo(adfobj):
         return
 
     #----Calculate the 5S-5N average
-    casedat_5S_5N = [ cosweightlat(casedatzm[i],-5,5) for i in range(0,ncases,1) ]
+    casedat_5S_5N = { case:cosweightlat(casedatzm[case],-5,5) for case in case_names }
 
     #----Find the minimum number of years across dataset for plotting the timeseries.
     nyobs = np.floor(obs.time.size/12.)
-    nycase = [ np.floor(casedat_5S_5N[i].time.size/12.) for i in range(0,ncases,1) ]
+    nycase = [ np.floor(casedat_5S_5N[case].time.size/12.) for case in case_names ]
     nycase.append(nyobs)
     minny = int(np.min(nycase))
 
@@ -149,10 +171,10 @@ def qbo(adfobj):
     ax = plotqbotimeseries(fig, obs, minny, x1[0], x2[0], y1[0], y2[0],'ERA5')
 
     casecount=0
-    for icase in range(0,ncases,1):
+    for icase, case in enumerate(case_names):
         if (icase < 11 ): # only only going to work with 12 panels currently
-            ax = plotqbotimeseries(fig, casedat_5S_5N[icase],minny,
-                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_names[icase])
+            ax = plotqbotimeseries(fig, casedat_5S_5N[case],minny,
+                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_names[case])
             casecount=casecount+1
         else:
             warnings.warn("The QBO diagnostics can only manage up to twelve cases!")
@@ -172,7 +194,7 @@ def qbo(adfobj):
 
     #---Dunkerton and Delisi QBO amplitude
     obsamp = calcddamp(obs)
-    modamp = [ calcddamp(casedat_5S_5N[i]) for i in range(0,ncases,1) ]
+    modamp = { case:calcddamp(casedat_5S_5N[case]) for case in case_names }
 
     fig = plt.figure(figsize=(16,16))
 
@@ -186,8 +208,8 @@ def qbo(adfobj):
 
     ax.plot(obsamp, -np.log10(obsamp.pre), color='black', linewidth=2, label='ERA5')
 
-    for icase in range(0,ncases,1):
-        ax.plot(modamp[icase], -np.log10(modamp[icase].lev), linewidth=2, label=case_nicknames[icase])
+    for case in case_names:
+        ax.plot(modamp[case], -np.log10(modamp[case].lev), linewidth=2, label=case_nicknames[case])
 
     ax.legend(loc='upper left')
     fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
