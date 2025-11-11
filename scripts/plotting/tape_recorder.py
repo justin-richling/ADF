@@ -198,6 +198,11 @@ def tape_recorder(adfobj):
     #for idx,key in enumerate(case_nicknames):
     for idx,case in enumerate(case_names):
         # Search for files
+        if ts_locs[case] is None:
+            dmsg = f"\t No time series location found for '{case}', case will be skipped."
+            print(dmsg)
+            adfobj.debug_log(dmsg)
+            continue
         ts_loc = Path(ts_locs[case])
         hist_str = hist_strs[idx]
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
