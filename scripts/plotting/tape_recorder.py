@@ -42,11 +42,11 @@ def tape_recorder(adfobj):
 
     #Grab history strings:
     cam_hist_strs = adfobj.hist_string["test_hist_str"]
-
+    print("cam_hist_strs",cam_hist_strs)
     # Filter the list to include only strings that are exactly in the possible h0 strings
     # - Search for either h0 or h0a
     substrings = {"cam.h0","cam.h0a"}
-    case_hist_strs = []
+    case_hist_strs = {}
     for cam_case_str in cam_hist_strs:
         # Check each possible h0 string
         for string in cam_case_str:
@@ -86,11 +86,6 @@ def tape_recorder(adfobj):
         base_nickname = adfobj.case_nicknames["baseline"]
         case_nicknames = {**test_nicknames, **base_nickname}
 
-        #data_start_year = adfobj.climo_yrs["syear_baseline"]
-        #data_end_year = adfobj.climo_yrs["eyear_baseline"]
-        #start_years = start_years+[data_start_year]
-        #end_years = end_years+[data_end_year]
-
         start_years_bl = adfobj.syears_dict["baseline"]
         end_years_bl = adfobj.eyears_dict["baseline"]
         syears = {**start_years, **start_years_bl}
@@ -99,8 +94,13 @@ def tape_recorder(adfobj):
         #Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
         # Filter the list to include only strings that are exactly in the substrings list
-        base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
-        hist_strs = case_hist_strs + base_hist_strs
+        base_hist_strs = {}
+        for string in baseline_hist_strs:
+            if string in substrings:
+                base_hist_strs[data_name] = string
+        #base_hist_strs = [string for string in baseline_hist_strs if string in substrings]
+        #hist_strs = case_hist_strs + base_hist_strs
+        hist_strs = {**case_hist_strs, **base_hist_strs}
     else:
         hist_strs = case_hist_strs
         case_nicknames = test_nicknames
