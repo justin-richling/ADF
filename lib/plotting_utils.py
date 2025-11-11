@@ -218,7 +218,7 @@ def get_central_longitude(*args):
         #End if
     else:
         # this is the `else` on the for loop --> if non of the arguments meet the criteria, do this.
-        print("No valid central longitude specified. Defaults to 180.")
+        #print("No valid central longitude specified. Defaults to 180.")
         return 180
     #End if
 
