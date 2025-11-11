@@ -186,13 +186,6 @@ def amwg_table(adf):
         case_names.append(baseline_name)
             #input_locs.append(input_loc)
 
-        #Grab baseline years (which may be empty strings if using Obs):
-        syear_baseline = adf.climo_yrs["syear_baseline"]
-        eyear_baseline = adf.climo_yrs["eyear_baseline"]
-
-        syear_cases.append(syear_baseline)
-        eyear_cases.append(eyear_baseline)
-
         #Save the baseline to the first case's plots directory:
         #output_locs.append(output_location)
         #output_locs = {**test_input_locs, **input_climo_loc}
