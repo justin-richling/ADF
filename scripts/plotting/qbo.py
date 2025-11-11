@@ -117,6 +117,7 @@ def qbo(adfobj):
 
     casedat = {}
     for case in case_names:
+        print("ts_locs[case]",ts_locs[case])
         if ts_locs[case] is not None:
             casedat[case] = utils.load_dataset(sorted(Path(ts_locs[case]).glob(f"{case}.*.U.*.nc")))
 
@@ -135,7 +136,7 @@ def qbo(adfobj):
             casedat.pop(case)
         #End for
     #End if
-
+    print("casedat",casedat)
     #----Calculate the zonal mean
     #casedatzm = []
     casedatzm = {}
