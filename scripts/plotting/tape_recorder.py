@@ -92,7 +92,7 @@ def tape_recorder(adfobj):
 
         #Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
-        if base_hist_strs is not None:
+        if baseline_hist_strs is not None:
             # Filter the list to include only strings that are exactly in the substrings list
             base_hist_strs = {}
             for string in baseline_hist_strs:
