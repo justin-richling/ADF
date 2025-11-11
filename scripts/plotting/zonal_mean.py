@@ -108,7 +108,7 @@ def zonal_mean(adfobj):
                     #Continue to next iteration:
                     adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s,
                                             plot_type="Zonal", category="Log-P")
-                    pass
+                    continue
 
                 elif (redo_plot) and plot_name_log.is_file():
                     plot_name_log.unlink()
