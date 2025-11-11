@@ -350,9 +350,7 @@ class AdfDiag(AdfWeb):
             # Use baseline settings, while converting them all
             # to lists:
             case_names = [self.get_baseline_info("cam_case_name", required=True)]
-            #cam_ts_done = [self.get_baseline_info("cam_ts_done")]
-            
-            #calc_cam_ts = [self.get_baseline_info("calc_cam_ts")]
+
             calc_cam_ts = self.calc_ts_dict["baseline"]
             print("baseline calc_cam_ts",calc_cam_ts)
             
@@ -376,9 +374,6 @@ class AdfDiag(AdfWeb):
             
             case_names = self.get_cam_info("cam_case_name", required=True)
             #baseline_name = adf.data.ref_case_label
-            
-            #cam_ts_done = self.get_cam_info("cam_ts_done")
-            #calc_cam_ts = self.get_cam_info("calc_cam_ts")
             
             calc_cam_ts = self.calc_ts_dict["test"]
             
@@ -413,7 +408,7 @@ class AdfDiag(AdfWeb):
 
         print(baseline,"calc_cam_ts",calc_cam_ts)
         print(baseline,"cam_ts_done",cam_ts_done,"\n")
-
+        '''
         # Check if all values are None
         if baseline:
             # Check if all values are None
@@ -445,6 +440,9 @@ class AdfDiag(AdfWeb):
                 emsg += f" Will rely on those files directly."
                 print(emsg)
                 no_msg = True
+        '''
+
+        
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
@@ -454,7 +452,7 @@ class AdfDiag(AdfWeb):
             end_year = end_years[case_name]
             overwrite = overwrite_ts[case_name]
 
-            if (not calc_cam_ts[case_name]) and (not all(value is None for value in calc_cam_ts)):
+            if (not calc_cam_ts[case_name]) and (not all(value is None for value in calc_cam_ts)) or (not ts_dir):
                 emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
                 print(emsg)
                 no_msg = True
@@ -467,11 +465,11 @@ class AdfDiag(AdfWeb):
                 no_msg = True
                 continue
 
-            if not ts_dir:
-                emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
-                print(emsg)
-                no_msg = True
-                continue
+            #if not ts_dir:
+            #    emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
+            #    print(emsg)
+            #    no_msg = True
+            #    continue
             # Create path object for the CAM history file(s) location:
             starting_location = Path(cam_hist_locs[case_idx])
 
