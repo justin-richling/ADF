@@ -15,7 +15,8 @@ def create_TEM_files(adf):
     """
 
     #Notify user that script has started:
-    print("\n  Generating CAM TEM diagnostics files...")
+    msg = "\n  Generating CAM TEM diagnostics files..."
+    print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
     #Special ADF variables
     #CAM simulation variables (these quantities are always lists):
@@ -456,7 +457,7 @@ def calc_tem(ds):
 
     dstem = xr.Dataset(data_vars=dict(date = ds.date,
                                       datesec = ds.datesec,
-                                      time_bnds = ds.time_bounds,
+                                      time_bnds = ds.time_bnds,
                                       uzm = uzm,
                                       vzm = vzm,
                                       epfy = epfy,
