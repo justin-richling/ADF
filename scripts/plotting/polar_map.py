@@ -71,24 +71,35 @@ def polar_map(adfobj):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
     #Grab case years
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    syear_cases = adfobj.syears_dict["test"]
+    eyear_cases = adfobj.eyears_dict["test"]
+
+    test_nicknames = adfobj.case_nicknames["test"][case_name]
 
     # if doing comparison to obs, but no observations are found, quit
     if adfobj.get_basic_info("compare_obs"):
         var_obs_dict = adfobj.var_obs_dict
+        syear_baseline = ""
+        eyear_baseline = ""
+        base_name = base_nickname = "Obs"
         if not var_obs_dict:
             print("\t No observations found to plot against, so no polar maps will be generated.")
             return
+    else:
+        base_name = adfobj.data.ref_case_label
+        base_nickname = adfobj.case_nicknames["baseline"][base_name]
+        syear_baseline = adfobj.syears_dict["baseline"][base_name]
+        eyear_baseline = adfobj.eyears_dict["baseline"][base_name]
 
-
+    """
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
     #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    #test_nicknames = adfobj.case_nicknames["test_nicknames"]
     base_nickname = adfobj.case_nicknames["base_nickname"]
+    """
 
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -143,7 +154,7 @@ def polar_map(adfobj):
         all_plots_exist = True
         
         for case_idx, case_name in enumerate(case_names):
-            plot_loc = Path(plot_locations[case_idx])
+            plot_loc = Path(plot_locations[case_name])
 
             tmp_ds = adfobj.data.load_regrid_dataset(case_name, var)
             if tmp_ds is None:
@@ -160,7 +171,7 @@ def polar_map(adfobj):
                                 'path': plot_name,
                                 'var': f"{var}_{pres}hpa",
                                 'case': case_name,
-                                'case_idx': case_idx,
+                                #'case_idx': case_idx,
                                 'season': s,
                                 'type': hemi_type,
                                 'pressure': pres,
@@ -179,7 +190,7 @@ def polar_map(adfobj):
                             'path': plot_name,
                             'var': var,
                             'case': case_name,
-                            'case_idx': case_idx,
+                            #'case_idx': case_idx,
                             'season': s,
                             'type': hemi_type,
                             'exists': plot_name.is_file()
@@ -207,8 +218,8 @@ def polar_map(adfobj):
                 continue
                 
             case_name = plot['case']
-            case_idx = plot['case_idx']
-            plot_loc = Path(plot_locations[case_idx])
+            #case_idx = plot['case_idx']
+            plot_loc = Path(plot_locations[case_name])
 
             # Ensure plot directory exists
             plot_loc.mkdir(parents=True, exist_ok=True)
@@ -246,8 +257,8 @@ def polar_map(adfobj):
                 plot['path'].unlink()
 
             pf.make_polar_plot(
-                plot['path'], test_nicknames[case_idx], base_nickname,
-                [syear_cases[case_idx], eyear_cases[case_idx]],
+                plot['path'], test_nicknames[case_name], base_nickname,
+                [syear_cases[case_name], eyear_cases[case_name]],
                 [syear_baseline, eyear_baseline],
                 mseason, oseason, dseason, pseason,
                 hemisphere=get_hemisphere(plot['type']),
