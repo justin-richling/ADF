@@ -49,31 +49,19 @@ def cam_taylor_diagram(adfobj):
     case_names = adfobj.get_cam_info('cam_case_name', required=True)  # Loop over these
 
     #Grab all case nickname(s)
-    test_nicknames = adfobj.case_nicknames["test_nicknames"]
+    syear_cases = adfobj.syears_dict["test"]
+    eyear_cases = adfobj.eyears_dict["test"]
 
-    syear_cases = adfobj.climo_yrs["syears"]
-    eyear_cases = adfobj.climo_yrs["eyears"]
+    test_nicknames = adfobj.case_nicknames["test"]
 
-    case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
+    #case_climo_loc = adfobj.get_cam_info('cam_climo_loc', required=True)
+    case_climo_loc = adfobj.climo_locs_dict["test"]
 
     # ADF variable which contains the output path for plots and tables:
     plot_location = adfobj.plot_location
-    if not plot_location:
-        plot_location = adfobj.get_basic_info("cam_diag_plot_loc")
-    if isinstance(plot_location, list):
-        for pl in plot_location:
-            plpth = Path(pl)
-            #Check if plot output directory exists, and if not, then create it:
-            if not plpth.is_dir():
-                print(f"\t    {pl} not found, making new directory")
-                plpth.mkdir(parents=True)
-        if len(plot_location) == 1:
-            plot_loc = Path(plot_location[0])
-        else:
-            print(f"Ambiguous plotting location since all cases go on same plot. Will put them in first location: {plot_location[0]}")
-            plot_loc = Path(plot_location[0])
-    else:
-        plot_loc = Path(plot_location)
+
+    
+    plot_loc = Path(plot_location)
 
     # CAUTION:
     # "data" here refers to either obs or a baseline simulation,
@@ -86,15 +74,18 @@ def cam_taylor_diagram(adfobj):
     else:
         data_name = adfobj.get_baseline_info('cam_case_name', required=True)
         data_list = data_name # should not be needed (?)
-        data_loc = adfobj.get_baseline_info("cam_climo_loc", required=True)
+        #data_loc = adfobj.get_baseline_info("cam_climo_loc", required=True)
+        data_loc = adfobj.climo_locs_dict["baseline"][data_name]
 
         #Grab baseline case nickname
-        base_nickname = adfobj.case_nicknames["base_nickname"]
+        base_nickname = adfobj.case_nicknames["baseline"][data_name]
     #End if
 
     #Extract baseline years (which may be empty strings if using Obs):
-    syear_baseline = adfobj.climo_yrs["syear_baseline"]
-    eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    #syear_baseline = adfobj.climo_yrs["syear_baseline"]
+    #eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
+    syear_baseline = adfobj.syears_dict["baseline"][data_name]
+    eyear_baseline = adfobj.eyears_dict["baseline"][data_name]
 
     res = adfobj.variable_defaults # dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
@@ -138,6 +129,8 @@ def cam_taylor_diagram(adfobj):
     #
     # LOOP OVER SEASON
     #
+    for case in case_names:
+        print(f"\t - Case to be plotted: {case}")   
     for s in seasons:
 
         plot_name = plot_loc / f"TaylorDiag_{s}_Special_Mean.{plot_type}"
@@ -164,7 +157,7 @@ def cam_taylor_diagram(adfobj):
         for v in var_list:
             base_x = _retrieve(adfobj, v, data_name, data_loc) # get the baseline field
             for casenumber, case in enumerate(case_names):     # LOOP THROUGH CASES
-                case_x = _retrieve(adfobj, v, case, case_climo_loc[casenumber])
+                case_x = _retrieve(adfobj, v, case, case_climo_loc[case])
                 # ASSUMING `time` is 1-12, get the current season:
                 case_x = case_x.sel(time=seasons[s]).mean(dim='time')
                 result_by_case[case].loc[v] = taylor_stats_single(case_x, base_x)
@@ -573,7 +566,7 @@ def taylor_plot_finalize(wks, test_nicknames, casecolors, syear_cases, eyear_cas
     n = 0
     for case_idx, (s, c) in enumerate(zip(test_nicknames, casecolors)):
 
-            wks.text(0.052, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[case_idx]}-{eyear_cases[case_idx]}",
+            wks.text(0.052, bottom_of_text + n*height_of_lines, f"{s}  yrs: {syear_cases[s]}-{eyear_cases[s]}",
             color=c, ha='left', va='bottom', transform=wks.transAxes, fontsize=10)
             n += 1
     # BIAS LEGEND
