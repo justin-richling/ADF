@@ -174,7 +174,7 @@ def qbo(adfobj):
     for icase, case in enumerate(case_names):
         if (icase < 11 ): # only only going to work with 12 panels currently
             ax = plotqbotimeseries(fig, casedat_5S_5N[case],minny,
-                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case_names[case])
+                x1[icase+1],x2[icase+1],y1[icase+1],y2[icase+1], case)
             casecount=casecount+1
         else:
             warnings.warn("The QBO diagnostics can only manage up to twelve cases!")
