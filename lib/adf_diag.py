@@ -735,15 +735,6 @@ class AdfDiag(AdfWeb):
                     # Check if variable has a "lev" dimension according to first file:
                     has_lev = bool("lev" in hist_file_ds[var].dims or "ilev" in hist_file_ds[var].dims)
 
-                    # Create full path name, file name template:
-                    # $cam_case_name.$hist_str.$variable.YYYYMM-YYYYMM.nc
-
-                    ts_outfil_str = (
-                        ts_dir
-                        + os.sep
-                        + ".".join([case_name, hist_str, var, time_string, "nc"])
-                    )
-
                     # Check if files already exist in time series directory:
                     ts_file_list = glob.glob(ts_outfil_str)
 
