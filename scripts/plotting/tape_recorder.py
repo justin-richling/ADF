@@ -47,21 +47,19 @@ def tape_recorder(adfobj):
     # - Search for either h0 or h0a
     substrings = {"cam.h0","cam.h0a"}
     case_hist_strs = {}
-    for cam_case_str in cam_hist_strs:
+    for idx,cam_case_str in enumerate(cam_hist_strs):
         # Check each possible h0 string
+        case_hist_strs[case] = []
         for string in cam_case_str:
             if string in substrings:
-               case_hist_strs.append(string)
+               case_hist_strs[case_names[idx]].append(string)
                break
 
     #Grab test case climo years
-    #start_years = adfobj.climo_yrs["syears"]
-    #end_years = adfobj.climo_yrs["eyears"]
     start_years = adfobj.syears_dict["test"]
     end_years = adfobj.eyears_dict["test"]
 
     #Grab test case nickname(s)
-    #test_nicknames = adfobj.case_nicknames['test_nicknames']
     test_nicknames = adfobj.case_nicknames["test"]
     
     
@@ -204,7 +202,7 @@ def tape_recorder(adfobj):
             adfobj.debug_log(dmsg)
             continue
         ts_loc = Path(ts_locs[case])
-        hist_str = hist_strs[idx]
+        hist_str = hist_strs[case]
         fils = sorted(ts_loc.glob(f'*{hist_str}.{var}.*.nc'))
         dat = adfobj.data.load_timeseries_dataset(fils)
 
