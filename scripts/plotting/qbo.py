@@ -120,6 +120,8 @@ def qbo(adfobj):
         print("ts_locs[case]",ts_locs[case])
         if ts_locs[case] is not None:
             casedat[case] = utils.load_dataset(sorted(Path(ts_locs[case]).glob(f"{case}.*.U.*.nc")))
+        else:
+            case_names.remove(case)
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
