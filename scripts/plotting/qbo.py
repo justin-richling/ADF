@@ -102,7 +102,7 @@ def qbo(adfobj):
     #Check if model vs model run, and if so, append baseline to case lists:
     if not adfobj.compare_obs:
         #case_loc.append(base_loc)
-        climo_locs = {**case_loc, **base_loc}
+        ts_locs = {**case_loc, **base_loc}
         case_names.append(base_name)
     #End if
 
@@ -110,12 +110,12 @@ def qbo(adfobj):
     obs = xr.open_dataset(obsdir+"/U_ERA5_5S_5N_1979_2019.nc").U_5S_5N
 
     #----Read in the case data and baseline
-    ncases = len(climo_locs)
+    ncases = len(ts_locs)
     #casedat = [utils.load_dataset(sorted(Path(case_loc[i]).glob(f"{case_names[i]}.*.U.*.nc"))) for i in range(0,ncases,1)]
 
     casedat = {}
     for case in case_names:
-        casedat[case] = utils.load_dataset(sorted(Path(climo_locs[case]).glob(f"{case}.*.U.*.nc")))
+        casedat[case] = utils.load_dataset(sorted(Path(ts_locs[case]).glob(f"{case}.*.U.*.nc")))
 
     #Find indices for all case datasets that don't contain a zonal wind field (U):
     bad_idxs = []
