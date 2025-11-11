@@ -115,8 +115,8 @@ def process_variable(adfobj, var, seasons, pres_levs, plot_type, redo_plot):
         return
 
     #Loop over model cases:
-    for case_idx, case_name in enumerate(adfobj.data.case_names):
-        process_case(adfobj, case_name, case_idx, var, odata, 
+    for case_name in adfobj.data.case_names:
+        process_case(adfobj, case_name, var, odata, 
                     seasons, pres_levs, plot_type, redo_plot,
                     vres, web_category)
 
@@ -147,12 +147,11 @@ def load_reference_data(adfobj, var):
     return odata
 
 
-def process_case(adfobj, case_name, case_idx, var, odata, seasons, 
+def process_case(adfobj, case_name, var, odata, seasons, 
                 pres_levs, plot_type, redo_plot, vres, web_category):
     """Process individual case data and generate plots."""
-    #plot_loc = Path(adfobj.plot_location[case_idx])
+
     plot_loc = Path(adfobj.plot_location[case_name])
-    #plot_loc.mkdir(parents=True, exist_ok=True)
 
     mdata = adfobj.data.load_regrid_da(case_name, var)
     if mdata is None:
@@ -168,7 +167,7 @@ def process_case(adfobj, case_name, case_idx, var, odata, seasons,
         print(f"\t    WARNING: 3D variable found but no pressure levels specified")
         return
 
-    process_plots(adfobj, mdata, odata, case_name, case_idx,
+    process_plots(adfobj, mdata, odata, case_name,
                  var, seasons, pres_levs, plot_loc, plot_type,
                  redo_plot, vres, web_category, has_dims)
 
@@ -263,7 +262,7 @@ def plot_file_op(adfobj, plot_name, var, case_name, season, web_category, redo_p
         return True
 
 
-def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons, 
+def process_plots(adfobj, mdata, odata, case_name, var, seasons, 
                  pres_levs, plot_loc, plot_type, redo_plot, vres, web_category, has_dims):
     """Process and generate plots for different seasons and pressure levels.
     
@@ -277,8 +276,6 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
         Reference/observation data
     case_name : str
         Name of current case
-    case_idx : int
-        Index of current case
     var : str
         Variable name
     seasons : dict
@@ -303,7 +300,6 @@ def process_plots(adfobj, mdata, odata, case_name, case_idx, var, seasons,
     None
     """
     # Get case nickname and years
-    #case_nickname = adfobj.data.test_nicknames[case_idx]
     case_nickname = adfobj.case_nicknames["test"][case_name]
 
     syear_cases = adfobj.syears_dict["test"]
