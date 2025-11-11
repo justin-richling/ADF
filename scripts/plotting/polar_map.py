@@ -74,7 +74,7 @@ def polar_map(adfobj):
     syear_cases = adfobj.syears_dict["test"]
     eyear_cases = adfobj.eyears_dict["test"]
 
-    test_nicknames = adfobj.case_nicknames["test"][case_name]
+    test_nicknames = adfobj.case_nicknames["test"]
 
     # if doing comparison to obs, but no observations are found, quit
     if adfobj.get_basic_info("compare_obs"):
