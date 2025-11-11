@@ -400,12 +400,6 @@ class AdfDiag(AdfWeb):
             case_type_string = "case"
 
             hist_str_list = self.hist_string["test_hist_str"]
-
-        #print("overwrite_ts",overwrite_ts,"\n")
-
-        # Notify user that script has started:
-        #print(f"\n  Writing time series files to {ts_dir}")
-
         # End if
 
         # Read hist_str (component.hist_num) from the yaml file, or set to default
@@ -419,7 +413,6 @@ class AdfDiag(AdfWeb):
 
         print(baseline,"calc_cam_ts",calc_cam_ts)
         print(baseline,"cam_ts_done",cam_ts_done,"\n")
-        #cam_ts_done[case_name]
 
         # Check if all values are None
         if baseline:
@@ -452,54 +445,9 @@ class AdfDiag(AdfWeb):
                 emsg += f" Will rely on those files directly."
                 print(emsg)
                 no_msg = True
-
-        """if baseline:
-            # Check if all values are None
-            if not calc_cam_ts:
-                print("All values in calc_cam_ts are None.")
-                emsg = "  Configuration file indicates time series files don't need to be calculated."
-                print(emsg)
-                no_msg = True
-        else:
-            # Check if all values are None
-            if all(value is None for value in calc_cam_ts):
-                print("All values in calc_cam_ts are None.")
-                emsg = "  Configuration file indicates time series files don't need to be calculated."
-                print(emsg)
-                no_msg = True
-
-        if baseline:
-            # Check if all values are None
-            if not cam_ts_done:
-                print("All values in cam_ts_done are None.")
-                emsg = "  Configuration file indicates time series files have been pre-computed."
-                emsg += f" Will rely on those files directly. ITS HERE RIGHT BOIIOIIOI"
-                print(emsg)
-                no_msg = True
-        else:
-            # Check if all values are None
-            if all(value is None for value in cam_ts_done):
-                print("All values in cam_ts_done are None.")
-                emsg = "  Configuration file indicates time series files have been pre-computed."
-                emsg += f" Will rely on those files directly."
-                print(emsg)
-                no_msg = True"""
 
         # Loop over cases:
         for case_idx, case_name in enumerate(case_names):
-            print("case_name",case_name,"\n")
-
-            """if baseline:
-                ts_dir = ts_dirs
-                start_year = start_years
-                end_year = end_years
-                overwrite = overwrite_ts
-            else:
-                ts_dir = ts_dirs[case_name]
-                start_year = start_years[case_name]
-                end_year = end_years[case_name]
-                overwrite = overwrite_ts[case_name]"""
-
 
             ts_dir = ts_dirs[case_name]
             start_year = start_years[case_name]
@@ -519,37 +467,6 @@ class AdfDiag(AdfWeb):
                 no_msg = True
                 continue
 
-            """#Check whether the user needs to use time series files at all
-            #or are missing the time series files all together.
-            if baseline:
-                if (not calc_cam_ts[case_name]) and (not calc_cam_ts):
-                    emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
-                    print(emsg)
-                    no_msg = True
-                    continue
-            else:
-                if (not calc_cam_ts[case_name]) and (not all(value is None for value in calc_cam_ts)):
-                    emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
-                    print(emsg)
-                    no_msg = True
-                    continue
-            
-            if baseline:
-                if (cam_ts_done[case_name]) and (not calc_cam_ts):
-                    emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
-                    emsg += f" Will rely on those files directly."
-                    print(emsg)
-                    no_msg = True
-                    continue
-                # End if
-            else:
-                if (cam_ts_done[case_name]) and (not all(value is None for value in calc_cam_ts)):
-                    emsg = f"  Configuration file indicates time series files have been pre-computed for '{case_name}'."
-                    emsg += f" Will rely on those files directly."
-                    print(emsg)
-                    no_msg = True
-                    continue
-                # End if"""
             if not ts_dir:
                 emsg = f"  Configuration file indicates time series files don't need to be calculated for '{case_name}'."
                 print(emsg)
@@ -572,9 +489,6 @@ class AdfDiag(AdfWeb):
             # Check if history files actually exqist. If not then kill script:
             hist_str_case = hist_str_list[case_idx]
             for hist_str in hist_str_case:
-
-                # Notify user that script has started:
-                print(f"\n  Writing time series files to {ts_dir}")
 
                 print(f"\t Processing time series for {case_type_string} {case_name}, {hist_str} files:")
                 if not list(starting_location.glob("*" + hist_str + ".*.nc")):
@@ -965,9 +879,6 @@ class AdfDiag(AdfWeb):
         """
 
         # Extract climatology calculation config options:
-        calc_climo = self.get_cam_info("calc_cam_climo")
-        print("calc_climo1",calc_climo)
-
         """
         # Check if climo calculation config option is a list:
         if isinstance(calc_climo, list):
@@ -976,9 +887,7 @@ class AdfDiag(AdfWeb):
         # End if
         print("calc_climo2",calc_climo)
         """
-
         calc_climo   = self.calc_climo_dict["test"]
-        print("calc_climo3",calc_climo)
 
         # Next check if a baseline simulation is being used
         # and no other model cases need climatologies calculated:
@@ -995,10 +904,10 @@ class AdfDiag(AdfWeb):
         else:
             # Just set to False:
             calc_bl_climo = False
+        # End if
         """
 
         calc_bl_climo   = self.calc_climo_dict["baseline"]
-        # End if
         print("calc_climo or calc_bl_climo",calc_climo, calc_bl_climo)
         # Check if a user wants any climatologies to be calculated:
         if calc_climo or calc_bl_climo:
