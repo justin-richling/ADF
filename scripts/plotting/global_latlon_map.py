@@ -152,7 +152,7 @@ def process_case(adfobj, case_name, case_idx, var, odata, seasons,
     """Process individual case data and generate plots."""
     #plot_loc = Path(adfobj.plot_location[case_idx])
     plot_loc = Path(adfobj.plot_location[case_name])
-    plot_loc.mkdir(parents=True, exist_ok=True)
+    #plot_loc.mkdir(parents=True, exist_ok=True)
 
     mdata = adfobj.data.load_regrid_da(case_name, var)
     if mdata is None:
