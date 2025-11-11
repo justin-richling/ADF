@@ -328,7 +328,7 @@ class AdfInfo(AdfConfig):
 
                 #Grab first possible hist string, just looking for years of run
                 base_hist_str = baseline_hist_str[0]
-                starting_location = Path(baseline_hist_locs)
+                starting_location = Path(baseline_hist_loc)
                 print(f"\tChecking history files in '{starting_location}'")
                 file_list = sorted(starting_location.glob("*" + base_hist_str + ".*.nc"))
 
@@ -364,7 +364,7 @@ class AdfInfo(AdfConfig):
                 #  $CASE.cam.h#.YYYY<other date info>.nc
                 base_climo_yrs = [int(str(i).partition(f"{base_hist_str}.")[2][0:4]) for i in file_list]
                 if not base_climo_yrs:
-                    msg = f"\t ERROR: No climo years found in {baseline_hist_locs}, "
+                    msg = f"\t ERROR: No climo years found in {baseline_hist_loc}, "
                     raise AdfError(msg)
 
                 base_climo_yrs = sorted(np.unique(base_climo_yrs))
