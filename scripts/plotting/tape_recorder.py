@@ -32,7 +32,6 @@ def tape_recorder(adfobj):
 
     #Special ADF variable which contains the output paths for plots:
     plot_location = adfobj.plot_location
-    plot_loc = Path(plot_location[0])
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
@@ -144,6 +143,7 @@ def tape_recorder(adfobj):
     var = "Q"
 
     #This may have to change if other variables are desired in this plot type?
+    plot_loc = Path(plot_location[case_names[0]])
     plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
 
     print(f"\t - Plotting annual tape recorder for {var}")
