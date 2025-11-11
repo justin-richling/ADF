@@ -76,12 +76,12 @@ def qbo(adfobj):
     #End if
 
     #Set path for QBO figures:
-    plot_loc_ts  = Path(plot_locations[0]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
-    plot_loc_amp = Path(plot_locations[0]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
+    plot_loc_ts  = Path(plot_locations[case_names[0]]) / f'QBO_TimeSeries_Special_Mean.{plot_type}'
+    plot_loc_amp = Path(plot_locations[case_names[0]]) / f'QBO_Amplitude_Special_Mean.{plot_type}'
 
     #Until a multi-case plot directory exists, let user know
     #that the QBO plot will be kept in the first case directory:
-    print(f"\t QBO plots will be saved here: {plot_locations[0]}")
+    print(f"\t QBO plots will be saved here: {plot_locations[case_names[0]]}")
 
     # Check redo_plot. If set to True: remove old plots, if they already exist:
     if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
