@@ -725,7 +725,7 @@ class AdfDiag(AdfWeb):
 
                     # Check if clobber is true for file
                     if Path(ts_outfil_str).is_file():
-                        if overwrite_ts[case_idx]:
+                        if overwrite_ts[case_name]:
                             Path(ts_outfil_str).unlink()
                         else:
                             #msg = f"[{__name__}] Warning: '{var}' file was found "
@@ -1228,12 +1228,12 @@ class AdfDiag(AdfWeb):
             row = [
                 case_name,
                 " | ",
-                str(cam_ts_loc[case_idx]),
+                str(cam_ts_loc[case_name]),
                 os.sep,
                 " | ",
-                str(syears[case_idx]),
+                str(syears[case_name]),
                 " | ",
-                str(eyears[case_idx]),
+                str(eyears[case_name]),
             ]
             row_list.append("".join(row))
         # End for
