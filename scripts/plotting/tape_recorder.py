@@ -49,10 +49,11 @@ def tape_recorder(adfobj):
     case_hist_strs = {}
     for idx,cam_case_str in enumerate(cam_hist_strs):
         # Check each possible h0 string
+        case = case_names[idx]
         case_hist_strs[case] = []
         for string in cam_case_str:
             if string in substrings:
-               case_hist_strs[case_names[idx]].append(string)
+               case_hist_strs[case].append(string)
                break
 
     #Grab test case climo years
