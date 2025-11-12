@@ -342,11 +342,11 @@ class AdfData:
         #add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset
         da = self.update_unit(variablename, da)
-        #if variablename in self.adf.variable_defaults:
-        #    vres = self.adf.variable_defaults[variablename]
-        #    da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
-        #else:
-        #    da.attrs['units'] = 'none'
+        if variablename in self.adf.variable_defaults:
+            vres = self.adf.variable_defaults[variablename]
+            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+        else:
+            da.attrs['units'] = 'none'
         return da
 
     def update_unit(self, variablename, da):
