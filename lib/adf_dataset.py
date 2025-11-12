@@ -131,19 +131,20 @@ class AdfData:
             ts_files = sorted(ts_loc.glob(ts_filenames))
             return ts_files
         
-    def load_reference_timeseries_dataset(self, case, field):
+    def load_reference_timeseries_dataset(self, field):
         """Return a data set for variable field."""
+        case = self.ref_case_label
         fils = self.get_timeseries_file(case, field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find time series file(s) for case: {case}, variable: {field}")
             return None
         return self.load_dataset(fils, type="tseries")
     
-    def load_reference_timeseries_da(self, case, field):
+    def load_reference_timeseries_da(self, field):
         """Return a DataArray time series to be used as reference 
           (aka baseline) for variable field.
         """
-        #case = self.ref_case_label
+        case = self.ref_case_label
         fils = self.get_ref_timeseries_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find reference time series file(s), variable: {field}")
@@ -197,17 +198,18 @@ class AdfData:
             return fils
         return None
     
-    def load_reference_climo_dataset(self, case, field):
+    def load_reference_climo_dataset(self, field):
         """Return Dataset for climo of field"""
+        case = self.ref_case_label
         fils = self.get_reference_climo_file(case, field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
             return None
         return self.load_dataset(fils)
 
-    def load_reference_climo_da(self, case, field):
+    def load_reference_climo_da(self, field):
         """Return DataArray from reference (aka baseline) climo file"""
-        #case = self.ref_case_label
+        case = self.ref_case_label
         fils = self.get_reference_climo_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
@@ -247,8 +249,9 @@ class AdfData:
 
 
     # Reference case (baseline/obs)
-    def get_ref_regrid_file(self, case, field):
+    def get_ref_regrid_file(self, field):
         """Return list of reference regridded files"""
+        case = self.ref_case_label
         if self.adf.compare_obs:
             obs_loc = self.ref_var_loc.get(field, None)
             if obs_loc:
@@ -261,8 +264,9 @@ class AdfData:
         return fils
 
 
-    def load_reference_regrid_dataset(self, case, field):
+    def load_reference_regrid_dataset(self, field):
         """Return a data set to be used as reference (aka baseline) for variable field."""
+        case = self.ref_case_label
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
@@ -270,9 +274,9 @@ class AdfData:
         return self.load_dataset(fils)
 
     
-    def load_reference_regrid_da(self, case, field):
+    def load_reference_regrid_da(self, field):
         """Return a data array to be used as reference (aka baseline) for variable field."""
-        #case = self.ref_case_label
+        case = self.ref_case_label
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
