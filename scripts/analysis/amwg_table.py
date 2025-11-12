@@ -234,8 +234,10 @@ def amwg_table(adf):
             #    data = adf.data.load_timeseries_da(case_name, var)
             
             #ts_files = adf.data.get_timeseries_files(case_name, var)
-            ds = utils.load_dataset(ts_files)
-            data = ds[var]
+            #ds = utils.load_dataset(ts_files)
+            #data = ds[var]
+
+            data = adf.data.load_da(ts_files, var, case_name, type="tseries")
 
             #print("From xarray opening file, no post procesessing of units unit_str",unit_str)
             # convert units column
