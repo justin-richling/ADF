@@ -180,7 +180,7 @@ def meridional_mean(adfobj):
                 #odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
 
                 # Gather reference variable data
-                odata = adfobj.data.load_reference_regrid_da(base_name, data_var)
+                odata = adfobj.data.load_reference_regrid_da(data_var)
                 mdata = adfobj.data.load_regrid_da(case_name, data_var)
                 #mdata = mclim_ds[var].squeeze()
 
