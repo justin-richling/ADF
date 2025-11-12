@@ -338,6 +338,7 @@ class AdfData:
     def update_unit(self, variablename, da):
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
+            print("['units'] ",da.attrs['units'])
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
             da.attrs['original_unit'] = da.attrs.get('units', 'none')
         else:
