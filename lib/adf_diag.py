@@ -715,7 +715,13 @@ class AdfDiag(AdfWeb):
                     # Example ncatted command (you can modify it with the specific attribute changes you need)
                     #cmd_ncatted = ["ncatted", "-O", "-a", f"adf_user,global,a,c,{self.user}", ts_outfil_str]
                     # Step 1: Convert Path objects to strings and concatenate the list of historical files into a single string
-                    hist_files_str = ', '.join(str(f.name) for f in hist_files)
+                    #hist_files_str = ', '.join(str(f.name) for f in hist_files)
+                    #hist_files_str = ', '.join(str(f.name) for f in [hist_files[0],hist_files[-1]])
+
+                    if len(hist_files) > 2:
+                        hist_files_str = f"{hist_files[0].name}, ..., {hist_files[-1].name}"
+                    else:
+                        hist_files_str = ', '.join(str(f.name) for f in hist_files)
                     hist_locs_str = ', '.join(str(loc) for loc in cam_hist_locs)
 
                     # Step 2: Create the ncatted command to add both global attributes
