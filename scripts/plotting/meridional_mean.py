@@ -134,9 +134,15 @@ def meridional_mean(adfobj):
             vres = {}
         #End if
 
+        # load reference data (observational or baseline)
+        if not adfobj.compare_obs:
+            base_name = adfobj.data.ref_case_label
+        else:
+            base_name = adfobj.data.ref_labels[data_var]
+
         #loop over different data sets to plot model against:
         for data_src in data_list:
-            # load data (observational) comparison files
+            """# load data (observational) comparison files
             # (we should explore intake as an alternative to having this kind of repeated code):
             if adfobj.compare_obs:
                 #For now, only grab one file (but convert to list for use below)
@@ -145,6 +151,7 @@ def meridional_mean(adfobj):
                 oclim_fils = sorted(dclimo_loc.glob(f"{data_src}_{var}_baseline.nc"))
             #End if
             oclim_ds = utils.load_dataset(oclim_fils)
+            """
 
             #Loop over model cases:
             for case_idx, case_name in enumerate(case_names):
@@ -160,26 +167,31 @@ def meridional_mean(adfobj):
                     print(f"    {plot_loc} not found, making new directory")
                     plot_loc.mkdir(parents=True)
 
-                # load re-gridded model files:
+                """# load re-gridded model files:
                 mclim_fils = sorted(mclimo_rg_loc.glob(f"{data_src}_{case_name}_{var}_*.nc"))
-                mclim_ds = utils.load_dataset(mclim_fils)
+                mclim_ds = utils.load_dataset(mclim_fils)"""
 
-                # stop if data is invalid:
+                """# stop if data is invalid:
                 if (oclim_ds is None) or (mclim_ds is None):
                     warnings.warn(f"invalid data, skipping meridional mean plot of {var}")
-                    continue
+                    continue"""
 
                 #Extract variable of interest
-                odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
-                mdata = mclim_ds[var].squeeze()
+                #odata = oclim_ds[data_var].squeeze()  # squeeze in case of degenerate dimensions
 
-                # APPLY UNITS TRANSFORMATION IF SPECIFIED:
+                # Gather reference variable data
+                odata = adfobj.data.load_reference_regrid_da(base_name, data_var)
+                mdata = adfobj.data.load_regrid_da(case_name, data_var)
+                #mdata = mclim_ds[var].squeeze()
+
+                """# APPLY UNITS TRANSFORMATION IF SPECIFIED:
                 # NOTE: looks like our climo files don't have all their metadata
                 mdata = mdata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
                 # update units
                 mdata.attrs['units'] = vres.get("new_unit", mdata.attrs.get('units', 'none'))
+                """
 
-                # Do the same for the baseline case if need be:
+                """# Do the same for the baseline case if need be:
                 if not adfobj.compare_obs:
                     odata = odata * vres.get("scale_factor",1) + vres.get("add_offset", 0)
                     # update units
@@ -189,6 +201,7 @@ def meridional_mean(adfobj):
                     odata = odata * vres.get("obs_scale_factor",1) + vres.get("obs_add_offset", 0)
                     # Note: we are going to assume that the specification ensures the conversion makes the units the same.
                     #       Doesn't make sense to add a different unit.
+                """
 
                 # determine whether it's 2D or 3D
                 # 3D triggers search for surface pressure
