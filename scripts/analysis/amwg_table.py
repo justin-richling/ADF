@@ -228,11 +228,20 @@ def amwg_table(adf):
             else:
                 data = adf.data.load_timeseries_da(case_name, var)
             #ds = utils.load_dataset(ts_files)
-            #ata = ds[var]
+            #data = ds[var]
+            # convert units column
+            """import re
+
+            def latex_exp_to_html(text):
+                return re.sub(r'\$\^\{?(-?\d+)\}?\$', r'<sup>\1</sup>', text)
+            data['unit_html'] = data['unit'].apply(latex_exp_to_html)"""
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
-                unit_str = data.units
+                if data.units is None:
+                    unit_str = '--'
+                else:
+                    unit_str = data.units
             else:
                 unit_str = '--'
 
