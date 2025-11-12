@@ -332,10 +332,8 @@ class AdfData:
         da = da * scale_factor + add_offset
         da.attrs['scale_factor'] = scale_factor
         da.attrs['add_offset'] = add_offset
-        #da.attrs['units'] = units
         da = self.update_unit(variablename, da, units)
         da.attrs['original_unit'] = units
-        print("['units'] ",da.attrs['units'])
         print("\t da.attrs",da.attrs)
         return da
 
