@@ -153,6 +153,7 @@ def amwg_table(adf):
         #Save the baseline to the first case's plots directory:
         output_locs.append(output_locs[0])
     else:
+        baseline_name = "Obs"
         print("\t WARNING: AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
 
@@ -222,8 +223,12 @@ def amwg_table(adf):
             #End if
 
             #Load model variable data from file:
-            ds = utils.load_dataset(ts_files)
-            data = ds[var]
+            if case_name == baseline_name:
+                data = adf.load_reference_timeseries_da(var)
+            else:
+                data = adf.load_timeseries_da(case_name, var)
+            #ds = utils.load_dataset(ts_files)
+            #ata = ds[var]
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
