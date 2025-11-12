@@ -204,8 +204,13 @@ def amwg_table(adf):
             print(f"\t - Variable '{var}' being added to table")
 
             #Create list of time series files present for variable:
-            ts_filenames = f'{case_name}.*.{var}.*nc'
-            ts_files = sorted(input_location.glob(ts_filenames))
+            #ts_filenames = f'{case_name}.*.{var}.*nc'
+            #ts_files = sorted(input_location.glob(ts_filenames))
+
+            if case_name == baseline_name:
+                ts_files = adf.data.get_ref_timeseries_file(baseline_name, var)
+            else:
+                ts_files = adf.data.get_timeseries_files(case_name, var)
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
@@ -223,20 +228,15 @@ def amwg_table(adf):
             #End if
 
             #Load model variable data from file:
-            if case_name == baseline_name:
-                data = adf.data.load_reference_timeseries_da(baseline_name, var)
-            else:
-                data = adf.data.load_timeseries_da(case_name, var)
+            #if case_name == baseline_name:
+            #    data = adf.data.load_reference_timeseries_da(baseline_name, var)
+            #else:
+            #    data = adf.data.load_timeseries_da(case_name, var)
+            
+            #ts_files = adf.data.get_timeseries_files(case_name, var)
             ds = utils.load_dataset(ts_files)
-            data2 = ds[var]
-            #Extract units string, if available:
-            if hasattr(data2, 'units'):
-                if data2.units == "none":
-                    unit_str = '--'
-                else:
-                    unit_str = data2.units
-            else:
-                unit_str = '--'
+            data = ds[var]
+
             print("From xarray opening file, no post procesessing of units unit_str",unit_str)
             # convert units column
             """import re
@@ -247,25 +247,10 @@ def amwg_table(adf):
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
-                if data.units == "none":
-                    unit_str = '--'
-                else:
-                    unit_str = data.units
+                unit_str = data.units
             else:
                 unit_str = '--'
             print("USING unit_str from adf.data.da_func",unit_str)
-            unit_str = utils.latex_unit_to_html(unit_str)
-            print("USING FORMATTED (TRY) unit_str from adf.data.da_func",unit_str)
-
-
-            examples = ["Wm$^{-2}$", "ms$^{-1}$", "kgm$^{-3}$", "Pa$^{-1}$", "m s$^{2}$"]
-            for ex in examples:
-                print(ex, "-> plain:", utils.latex_unit_to_plain(ex),
-                        " | html:", utils.latex_unit_to_html(ex))
-
-
-
-
 
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
