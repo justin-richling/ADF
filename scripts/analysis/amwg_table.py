@@ -208,7 +208,7 @@ def amwg_table(adf):
             #ts_files = sorted(input_location.glob(ts_filenames))
 
             if case_name == baseline_name:
-                ts_files = adf.data.get_ref_timeseries_file(baseline_name, var)
+                ts_files = adf.data.get_ref_timeseries_file(var)
             else:
                 ts_files = adf.data.get_timeseries_file(case_name, var)
 
