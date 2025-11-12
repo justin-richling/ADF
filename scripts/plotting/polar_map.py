@@ -45,11 +45,11 @@ def process_seasonal_data(mdata, odata, season):
     
     # Calculate differences
     dseason = mseason - oseason
-    #dseason.attrs['units'] = mseason.attrs['units']
+    dseason.attrs['units'] = mseason.attrs['units']
     
     # Calculate percent change
     pseason = (mseason - oseason) / np.abs(oseason) * 100.0
-    #season.attrs['units'] = '%'
+    season.attrs['units'] = '%'
     pseason = pseason.where(np.isfinite(pseason), np.nan)
     pseason = pseason.fillna(0.0)
     
