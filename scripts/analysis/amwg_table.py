@@ -238,7 +238,7 @@ def amwg_table(adf):
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
-                if data.units is None:
+                if data.units == "none":
                     unit_str = '--'
                 else:
                     unit_str = data.units
