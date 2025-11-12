@@ -135,12 +135,9 @@ def amwg_table(adf):
     input_climo_locs = adf.climo_locs_dict["test"]
 
     #Grab case years
-    syear_cases = adf.climo_yrs["syears"]
-    eyear_cases = adf.climo_yrs["eyears"]
+    syear_cases = adf.syears_dict["test"]
+    eyear_cases = adf.eyears_dict["test"]
 
-    #Grab case years
-    syear_cases = adf.climo_yrs["syears"]
-    eyear_cases = adf.climo_yrs["eyears"]
 
     #Check if a baseline simulation is also being used:
     if not adf.get_basic_info("compare_obs"):
@@ -151,8 +148,8 @@ def amwg_table(adf):
         input_climo_loc = adf.climo_locs_dict["baseline"]#[baseline_name]
 
         #Grab baseline years (which may be empty strings if using Obs):
-        syear_baseline = adf.climo_yrs["syear_baseline"]
-        eyear_baseline = adf.climo_yrs["eyear_baseline"]
+        syear_baseline = adf.eyears_dict["baseline"]
+        eyear_baseline = adf.eyears_dict["baseline"]
 
         syears = {**syear_cases, **syear_baseline}
         eyears = {**eyear_cases, **eyear_baseline}
@@ -242,7 +239,7 @@ def amwg_table(adf):
 
             #Load model variable data from file:
             ds = utils.load_dataset(files)
-
+            '''
             if not is_climo:
                 #Average time dimension over time bounds, if bounds exist:
                 if 'time_bnds' in ds:
@@ -252,6 +249,7 @@ def amwg_table(adf):
                     ds['time'] = time
                     ds.assign_coords(time=time)
                     ds = xr.decode_cf(ds)
+            '''    
 
             if len(files) > 1:
                 # Slice for years 0500 to 0521
