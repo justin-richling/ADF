@@ -305,49 +305,32 @@ class AdfData:
             ds = xr.open_dataset(sfil)
         if ds is None:
             warnings.warn(f"\t    WARNING: invalid data on load_dataset")
-        # assign time to midpoint of interval (even if it is already)
-        if 'time_bnds' in ds:
-            t = ds['time_bnds'].mean(dim='nbnd')
-            t.attrs = ds['time'].attrs
-            ds = ds.assign_coords({'time':t})
-        elif 'time_bounds' in ds:
-            t = ds['time_bounds'].mean(dim='nbnd')
-            t.attrs = ds['time'].attrs
-            ds = ds.assign_coords({'time':t})
-        else:
-            if type == "tseries":
+        if type == "tseries":
+            # assign time to midpoint of interval (even if it is already)
+            if 'time_bnds' in ds:
+                t = ds['time_bnds'].mean(dim='nbnd')
+                t.attrs = ds['time'].attrs
+                ds = ds.assign_coords({'time':t})
+            elif 'time_bounds' in ds:
+                t = ds['time_bounds'].mean(dim='nbnd')
+                t.attrs = ds['time'].attrs
+                ds = ds.assign_coords({'time':t})
+            else:
                 warnings.warn("\t    INFO: dataset does not have time bounds info.")
         return ds
 
     # Load DataArray
-    def load_da(self, fils, variablename, case):
+    def load_da(self, fils, variablename, case, type=None):
         """Return xarray DataArray from files(s) w/ optional scale factor, offset, and/or new units"""
         ds = self.load_dataset(fils)
         if ds is None:
             warnings.warn(f"\t    WARNING: Load failed for {variablename}")
             return None
-        # assign time to midpoint of interval (even if it is already)
-        if 'time_bnds' in ds:
-            t = ds['time_bnds'].mean(dim='nbnd')
-            t.attrs = ds['time'].attrs
-            ds = ds.assign_coords({'time':t})
-        elif 'time_bounds' in ds:
-            t = ds['time_bounds'].mean(dim='nbnd')
-            t.attrs = ds['time'].attrs
-            ds = ds.assign_coords({'time':t})
-        else:
-            warnings.warn("\t    INFO: data array does not have time bounds info.")
+
         da = (ds[variablename]).squeeze()
         add_offset, scale_factor = self.get_value_converters(case, variablename)
-        #scale_factor = kwargs.get('scale_factor', 1)
-        #add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset
         da = self.update_unit(variablename, da)
-        #if variablename in self.adf.variable_defaults:
-        #    vres = self.adf.variable_defaults[variablename]
-        #    da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
-        #else:
-        #    da.attrs['units'] = 'none'
         return da
 
     def update_unit(self, variablename, da):
