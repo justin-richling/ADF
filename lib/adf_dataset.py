@@ -337,7 +337,7 @@ class AdfData:
         else:
             warnings.warn("\t    INFO: data array does not have time bounds info.")
         da = (ds[variablename]).squeeze()
-        da = self.update_unit(self, variablename, da)
+        da = self.update_unit(variablename, da)
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         #scale_factor = kwargs.get('scale_factor', 1)
         #add_offset = kwargs.get('add_offset', 0)
