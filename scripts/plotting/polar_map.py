@@ -49,7 +49,7 @@ def process_seasonal_data(mdata, odata, season):
     
     # Calculate percent change
     pseason = (mseason - oseason) / np.abs(oseason) * 100.0
-    season.attrs['units'] = '%'
+    pseason.attrs['units'] = '%'
     pseason = pseason.where(np.isfinite(pseason), np.nan)
     pseason = pseason.fillna(0.0)
     
