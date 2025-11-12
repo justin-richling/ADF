@@ -337,11 +337,11 @@ class AdfData:
         else:
             warnings.warn("\t    INFO: data array does not have time bounds info.")
         da = (ds[variablename]).squeeze()
-        da = self.update_unit(variablename, da)
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         #scale_factor = kwargs.get('scale_factor', 1)
         #add_offset = kwargs.get('add_offset', 0)
         da = da * scale_factor + add_offset
+        da = self.update_unit(variablename, da)
         #if variablename in self.adf.variable_defaults:
         #    vres = self.adf.variable_defaults[variablename]
         #    da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
