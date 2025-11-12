@@ -51,10 +51,9 @@ def global_mean_timeseries(adfobj):
             vres = {}
         #End if
 
-        # reference time series (DataArray)
-        ref_ts_da = adfobj.data.load_reference_timeseries_da(field)
-
         base_name = adfobj.data.ref_case_label
+        # reference time series (DataArray)
+        ref_ts_da = adfobj.data.load_reference_timeseries_da(base_name, field)
 
         # Check to see if this field is available
         if ref_ts_da is None:
