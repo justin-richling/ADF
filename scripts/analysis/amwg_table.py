@@ -210,7 +210,7 @@ def amwg_table(adf):
             if case_name == baseline_name:
                 ts_files = adf.data.get_ref_timeseries_file(baseline_name, var)
             else:
-                ts_files = adf.data.get_timeseries_files(case_name, var)
+                ts_files = adf.data.get_timeseries_file(case_name, var)
 
             # If no files exist, try to move to next variable. --> Means we can not proceed with this variable, and it'll be problematic later.
             if not ts_files:
