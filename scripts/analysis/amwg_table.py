@@ -227,8 +227,17 @@ def amwg_table(adf):
                 data = adf.data.load_reference_timeseries_da(baseline_name, var)
             else:
                 data = adf.data.load_timeseries_da(case_name, var)
-            #ds = utils.load_dataset(ts_files)
-            #data = ds[var]
+            ds = utils.load_dataset(ts_files)
+            data2 = ds[var]
+            #Extract units string, if available:
+            if hasattr(data2, 'units'):
+                if data2.units == "none":
+                    unit_str = '--'
+                else:
+                    unit_str = data2.units
+            else:
+                unit_str = '--'
+            print("unit_str",unit_str)
             # convert units column
             """import re
 
