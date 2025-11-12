@@ -326,8 +326,8 @@ class AdfData:
         if ds is None:
             warnings.warn(f"\t    WARNING: Load failed for {variablename}")
             return None
-        print("['units'] ",ds.attrs['units'])
         da = (ds[variablename]).squeeze()
+        print("['units'] ",da.attrs['units'])
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         da = da * scale_factor + add_offset
         da.attrs['scale_factor'] = scale_factor
