@@ -270,9 +270,9 @@ class AdfData:
         return self.load_dataset(fils)
 
     
-    def load_reference_regrid_da(self, field):
+    def load_reference_regrid_da(self, case, field):
         """Return a data array to be used as reference (aka baseline) for variable field."""
-        case = self.ref_case_label
+        #case = self.ref_case_label
         fils = self.get_ref_regrid_file(case, field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
