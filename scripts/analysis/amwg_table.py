@@ -237,7 +237,7 @@ def amwg_table(adf):
                     unit_str = data2.units
             else:
                 unit_str = '--'
-            print("unit_str",unit_str)
+            print("From xarray opening file, no post procesessing of units unit_str",unit_str)
             # convert units column
             """import re
 
@@ -253,7 +253,7 @@ def amwg_table(adf):
                     unit_str = data.units
             else:
                 unit_str = '--'
-            print("unit_str",unit_str)
+            print("USING unit_str from adf.data.da_func",unit_str)
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
                 print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\
