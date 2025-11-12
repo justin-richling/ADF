@@ -227,33 +227,13 @@ def amwg_table(adf):
                 continue
             #End if
 
-            #Load model variable data from file:
-            #if case_name == baseline_name:
-            #    data = adf.data.load_reference_timeseries_da(baseline_name, var)
-            #else:
-            #    data = adf.data.load_timeseries_da(case_name, var)
-            
-            #ts_files = adf.data.get_timeseries_files(case_name, var)
-            #ds = utils.load_dataset(ts_files)
-            #data = ds[var]
-
             data = adf.data.load_da(ts_files, var, case_name, type="tseries")
-
-            #print("From xarray opening file, no post procesessing of units unit_str",unit_str)
-            # convert units column
-            """import re
-
-            def latex_exp_to_html(text):
-                return re.sub(r'\$\^\{?(-?\d+)\}?\$', r'<sup>\1</sup>', text)
-            data['unit_html'] = data['unit'].apply(latex_exp_to_html)"""
 
             #Extract units string, if available:
             if hasattr(data, 'units'):
                 unit_str = data.units
             else:
                 unit_str = '--'
-            #print("USING unit_str from adf.data.da_func",unit_str)
-            print("From xarray opening file, no post procesessing of units unit_str",unit_str)
 
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
