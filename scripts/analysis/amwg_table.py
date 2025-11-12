@@ -254,6 +254,17 @@ def amwg_table(adf):
             else:
                 unit_str = '--'
             print("USING unit_str from adf.data.da_func",unit_str)
+
+
+            examples = ["Wm$^{-2}$", "ms$^{-1}$", "kgm$^{-3}$", "Pa$^{-1}$", "m s$^{2}$"]
+            for ex in examples:
+                print(ex, "-> plain:", utils.latex_unit_to_plain(ex),
+                        " | html:", utils.latex_unit_to_html(ex))
+
+
+
+
+
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
                 print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\

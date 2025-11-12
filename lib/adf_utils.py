@@ -702,5 +702,99 @@ def zonal_mean_xr(fld):
         raise IOError("zonal_mean_xr requires Xarray DataArray input.")
     return fld.mean(dim=davgovr)
 
+
+
+
+
+import re
+
+# A reasonably complete list of common SI and derived unit symbols.
+# Extend this list if you use other symbols (e.g., '°C', '°', 'deg', 'u' for micro, etc.).
+SI_UNITS = sorted([
+    "kg","mol","cd","Hz","Pa","J","W","N","C","V","F","ohm","S","T","H",
+    "lm","lx","Bq","Gy","Sv","kat",
+    "m","s","A","K","g","L","l","rad","sr","eV"
+], key=len, reverse=True)  # sort by length so multi-letter units match first
+
+# compile for performance
+UNIT_RE_PART = "|".join(re.escape(u) for u in SI_UNITS)
+# pattern to find tokens optionally followed by exponent $^{...}$
+TOKEN_WITH_EXP_RE = re.compile(rf'({UNIT_RE_PART})(?:\$\^\{{?(-?\d+)\}}?\$)?')
+
+def latex_unit_to_plain(unit_str: str) -> str:
+    """
+    Convert strings like:
+      - "Wm$^{-2}$" -> "W/m2"
+      - "ms$^{-1}$" -> "m/s"
+      - "kgm$^{-3}$" -> "kg/m3"
+      - "Pa"        -> "Pa"
+    Heuristic:
+      - Negative exponents are turned into division when possible.
+      - Exponent -1 becomes '/unit'; exponent -n becomes '/unitn' for plain text.
+      - Positive exponents remain as appended number (e.g., m^2 -> m2).
+    """
+    # Find successive tokens and build output
+    pos = 0
+    out_tokens = []
+    # iterate matches left-to-right
+    for m in TOKEN_WITH_EXP_RE.finditer(unit_str):
+        start, end = m.span()
+        # Append any literal text between previous pos and this token (rare in these strings)
+        if start > pos:
+            out_tokens.append(unit_str[pos:start])
+        token, exp_str = m.group(1), m.group(2)
+        if exp_str is None:  # no exponent, just append token
+            out_tokens.append(token)
+        else:
+            exp = int(exp_str)
+            if exp == -1:
+                # division by the token
+                out_tokens.append("/" + token)
+            elif exp < -1:
+                out_tokens.append("/" + token + str(abs(exp)))
+            else:  # exp > 0
+                # keep as token with exponent attached (plain): m2, kg3, etc.
+                out_tokens.append(token + str(exp))
+        pos = end
+    # append remainder
+    if pos < len(unit_str):
+        out_tokens.append(unit_str[pos:])
+    # Join and then do a tidy pass to collapse accidental doubles like 'W/kg/m2' etc.
+    result = "".join(out_tokens)
+    # If you prefer '*' between numerator tokens rather than adjacency, add replacements here.
+    return result
+
+def latex_unit_to_html(unit_str: str) -> str:
+    """
+    Same as above but produces HTML with <sup> for exponents not converted into division.
+    Examples:
+      - "Wm$^{-2}$" -> "W/m<sup>2</sup>"
+      - "ms$^{-1}$" -> "m/s"
+      - "kgm$^{-3}$" -> "kg/m<sup>3</sup>"
+      - "m s$^{2}$" -> "m s<sup>2</sup>"
+    """
+    pos = 0
+    out_tokens = []
+    for m in TOKEN_WITH_EXP_RE.finditer(unit_str):
+        start, end = m.span()
+        if start > pos:
+            out_tokens.append(unit_str[pos:start])
+        token, exp_str = m.group(1), m.group(2)
+        if exp_str is None:
+            out_tokens.append(token)
+        else:
+            exp = int(exp_str)
+            if exp == -1:
+                out_tokens.append("/" + token)
+            elif exp < -1:
+                out_tokens.append("/" + token + f"<sup>{abs(exp)}</sup>")
+            else:  # exp > 0
+                out_tokens.append(token + f"<sup>{exp}</sup>")
+        pos = end
+    if pos < len(unit_str):
+        out_tokens.append(unit_str[pos:])
+    return "".join(out_tokens)
+
+
 #####################
 #END HELPER FUNCTIONS
