@@ -330,6 +330,8 @@ class AdfData:
         da = (ds[variablename]).squeeze()
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         da = da * scale_factor + add_offset
+        da.attrs['scale_factor'] = scale_factor
+        da.attrs['add_offset'] = add_offset
         da = self.update_unit(variablename, da)
         return da
 
@@ -337,6 +339,7 @@ class AdfData:
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
             da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+            da.attrs['original_unit'] = da.attrs.get('units', 'none')
         else:
             da.attrs['units'] = 'none'
         return da
