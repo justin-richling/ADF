@@ -224,7 +224,7 @@ def amwg_table(adf):
 
             #Load model variable data from file:
             if case_name == baseline_name:
-                data = adf.data.load_reference_timeseries_da(var)
+                data = adf.data.load_reference_timeseries_da(baseline_name, var)
             else:
                 data = adf.data.load_timeseries_da(case_name, var)
             #ds = utils.load_dataset(ts_files)
