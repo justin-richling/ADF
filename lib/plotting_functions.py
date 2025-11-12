@@ -129,6 +129,7 @@ def make_polar_plot(wks, case_nickname,
         + `diff_colormap`
         + `units`
     """
+    
     if difference is None:
         dif = d2 - d1
     else:
@@ -176,6 +177,7 @@ def make_polar_plot(wks, case_nickname,
 
     # -- deal with optional plotting arguments that might provide variable-dependent choices
 
+    """
     # determine levels & color normalization:
     minval    = np.min([np.min(d1), np.min(d2)])
     maxval    = np.max([np.max(d1), np.max(d2)])
@@ -258,6 +260,23 @@ def make_polar_plot(wks, case_nickname,
     else:
         cmappct = "PuOr_r"
     #End if
+    """
+
+    #, **cp_info['colorbar_opt'])
+    # generate dictionary of contour plot settings:
+    cp_info = plot_utils.prep_contour_plot(d1, d2, dif, pct, **kwargs)
+
+    levelsdiff = cp_info['levelsdiff']
+    cmapdiff = cp_info['cmapdiff']
+    normdiff = cp_info['normdiff']
+
+    levelspctdiff = cp_info['levelspctdiff']
+    cmappctdiff  = cp_info['cmappct']
+    normpctdiff  = cp_info['pctnorm']
+
+    levels = cp_info['levels1']
+    cmap = cp_info['cmap1']
+    norm = cp_info['norm1']
 
     # -- end options
     lons, lats = plot_utils.transform_coordinates_for_projection(proj, lon_cyclic, d1.lat) # Explicit coordinate transform
@@ -270,32 +289,32 @@ def make_polar_plot(wks, case_nickname,
     ax3 = plt.subplot(gs[1, :2], projection=proj)
     ax4 = plt.subplot(gs[1, 2:], projection=proj)
 
-    levs = np.unique(np.array(levels1))
+    levs = np.unique(np.array(levels))
     levs_diff = np.unique(np.array(levelsdiff))
     levs_pctdiff = np.unique(np.array(levelspctdiff))
 
     # BPM: removing `transform=ccrs.PlateCarree()` from contourf calls & transform_first=True
     if len(levs) < 2:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, colors="w", norm=norm1)
+        img1 = ax1.contourf(lons, lats, d1_cyclic, colors="w", norm=norm)
         ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
 
-        img2 = ax2.contourf(lons, lats, d2_cyclic, colors="w", norm=norm1)
+        img2 = ax2.contourf(lons, lats, d2_cyclic, colors="w", norm=norm)
         ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
     else:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
-        img2 = ax2.contourf(lons, lats, d2_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
+        img1 = ax1.contourf(lons, lats, d1_cyclic, cmap=cmap, norm=norm, levels=levels)
+        img2 = ax2.contourf(lons, lats, d2_cyclic, cmap=cmap, norm=norm, levels=levels)
 
     if len(levs_pctdiff) < 2:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, colors="w", norm=pctnorm)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, colors="w", norm=normpctdiff)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, cmap=cmappctdiff, norm=normpctdiff, levels=levelspctdiff)
 
     if len(levs_diff) < 2:
-        img4 = ax4.contourf(lons, lats, dif_cyclic, colors="w", norm=dnorm)
+        img4 = ax4.contourf(lons, lats, dif_cyclic, colors="w", norm=normdiff)
         ax4.text(0.4, 0.4, empty_message, transform=ax4.transAxes, bbox=props)
     else:
-        img4 = ax4.contourf(lons, lats, dif_cyclic, cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        img4 = ax4.contourf(lons, lats, dif_cyclic, cmap=cmapdiff, norm=normdiff, levels=levelsdiff)
         
     #Set Main title for subplots:
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
@@ -353,7 +372,7 @@ def make_polar_plot(wks, case_nickname,
                     bbox_transform=ax2.transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img1, cax=cb_mean_ax)
+    fig.colorbar(img1, cax=cb_mean_ax, **cp_info['colorbar_opt'])
     
     cb_pct_ax = inset_axes(ax3,
                     width="5%",  # width = 5% of parent_bbox width
@@ -373,9 +392,9 @@ def make_polar_plot(wks, case_nickname,
                     borderpad=0,
                     )      
                     
-    fig.colorbar(img3, cax=cb_pct_ax)
+    fig.colorbar(img3, cax=cb_pct_ax, **cp_info['colorbar_opt'])
     
-    fig.colorbar(img4, cax=cb_diff_ax)
+    fig.colorbar(img4, cax=cb_diff_ax, **cp_info['colorbar_opt'])
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
@@ -437,6 +456,9 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
     # specify the central longitude for the plot:
     cent_long = kwargs.get('central_longitude', 180)
+
+    # generate dictionary of contour plot settings:
+    #cp_info = plot_utils.prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
 
     # generate projection:
     proj = ccrs.PlateCarree(central_longitude=cent_long)
