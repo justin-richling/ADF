@@ -336,6 +336,7 @@ class AdfData:
         da = self.update_unit(variablename, da, units)
         da.attrs['original_unit'] = units
         print("['units'] ",da.attrs['units'])
+        print("\t da.attrs",da.attrs)
         return da
 
     def update_unit(self, variablename, da, units):
