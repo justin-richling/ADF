@@ -107,7 +107,7 @@ class AdfData:
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find time series file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, type="tseries")
     
     def load_timeseries_da(self, case, variablename):
         """Return DataArray from time series file(s).
@@ -137,7 +137,7 @@ class AdfData:
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find time series file(s) for case: {case}, variable: {field}")
             return None
-        return self.load_dataset(fils)
+        return self.load_dataset(fils, type="tseries")
     
     def load_reference_timeseries_da(self, case, field):
         """Return a DataArray time series to be used as reference 
@@ -290,7 +290,7 @@ class AdfData:
     #---------------------------
 
     # Load DataSet
-    def load_dataset(self, fils):
+    def load_dataset(self, fils, type=None):
         """Return xarray DataSet from file(s)"""
         if (len(fils) == 0):
             warnings.warn("\t    WARNING: Input file list is empty.")
@@ -315,7 +315,8 @@ class AdfData:
             t.attrs = ds['time'].attrs
             ds = ds.assign_coords({'time':t})
         else:
-            warnings.warn("\t    INFO: dataset does not have time bounds info.")
+            if type == "tseries":
+                warnings.warn("\t    INFO: dataset does not have time bounds info.")
         return ds
 
     # Load DataArray
