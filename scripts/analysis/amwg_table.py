@@ -244,7 +244,7 @@ def amwg_table(adf):
                     unit_str = data.units
             else:
                 unit_str = '--'
-
+            print("unit_str",unit_str)
             #Check if variable has a vertical coordinate:
             if 'lev' in data.coords or 'ilev' in data.coords:
                 print(f"\t    WARNING: Variable '{var}' has a vertical dimension, "+\
