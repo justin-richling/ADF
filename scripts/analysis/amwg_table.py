@@ -254,6 +254,8 @@ def amwg_table(adf):
             else:
                 unit_str = '--'
             print("USING unit_str from adf.data.da_func",unit_str)
+            unit_str_oww = utils.latex_unit_to_html(unit_str)
+            print("USING FORMATTED (TRY) unit_str from adf.data.da_func",unit_str_oww)
 
 
             examples = ["Wm$^{-2}$", "ms$^{-1}$", "kgm$^{-3}$", "Pa$^{-1}$", "m s$^{2}$"]
