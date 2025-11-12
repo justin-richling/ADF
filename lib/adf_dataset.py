@@ -327,19 +327,21 @@ class AdfData:
             warnings.warn(f"\t    WARNING: Load failed for {variablename}")
             return None
         da = (ds[variablename]).squeeze()
-        print("['units'] ",da.attrs['units'])
+        units = da.attrs.get('units', 'none')
         add_offset, scale_factor = self.get_value_converters(case, variablename)
         da = da * scale_factor + add_offset
         da.attrs['scale_factor'] = scale_factor
         da.attrs['add_offset'] = add_offset
-        da = self.update_unit(variablename, da)
+        #da.attrs['units'] = units
+        da = self.update_unit(variablename, da, units)
+        da.attrs['original_unit'] = units
+        print("['units'] ",da.attrs['units'])
         return da
 
-    def update_unit(self, variablename, da):
+    def update_unit(self, variablename, da, units):
         if variablename in self.adf.variable_defaults:
             vres = self.adf.variable_defaults[variablename]
-            print("['units'] ",da.attrs['units'])
-            da.attrs['units'] = vres.get("new_unit", da.attrs.get('units', 'none'))
+            da.attrs['units'] = vres.get("new_unit", units)
             da.attrs['original_unit'] = da.attrs.get('units', 'none')
         else:
             da.attrs['units'] = 'none'
