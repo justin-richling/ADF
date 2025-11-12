@@ -318,6 +318,17 @@ class AdfData:
             ds = xr.open_dataset(sfil)
         if ds is None:
             warnings.warn(f"\t    WARNING: invalid data on load_dataset")
+        # assign time to midpoint of interval (even if it is already)
+        if 'time_bnds' in ds:
+            t = ds['time_bnds'].mean(dim='nbnd')
+            t.attrs = ds['time'].attrs
+            ds = ds.assign_coords({'time':t})
+        elif 'time_bounds' in ds:
+            t = ds['time_bounds'].mean(dim='nbnd')
+            t.attrs = ds['time'].attrs
+            ds = ds.assign_coords({'time':t})
+        else:
+            warnings.warn("\t    INFO: Timeseries file does not have time bounds info.")
         return ds
 
     # Load DataArray
