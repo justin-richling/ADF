@@ -139,11 +139,11 @@ class AdfData:
             return None
         return self.load_dataset(fils)
     
-    def load_reference_timeseries_da(self, field):
+    def load_reference_timeseries_da(self, case, field):
         """Return a DataArray time series to be used as reference 
           (aka baseline) for variable field.
         """
-        case = self.ref_case_label
+        #case = self.ref_case_label
         fils = self.get_ref_timeseries_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find reference time series file(s), variable: {field}")
@@ -205,9 +205,9 @@ class AdfData:
             return None
         return self.load_dataset(fils)
 
-    def load_reference_climo_da(self, field):
+    def load_reference_climo_da(self, case, field):
         """Return DataArray from reference (aka baseline) climo file"""
-        case = self.ref_case_label
+        #case = self.ref_case_label
         fils = self.get_reference_climo_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
