@@ -1034,6 +1034,7 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         levs = np.unique(np.array(cp_info['levels1']))
 
         levs_diff = np.unique(np.array(cp_info['levelsdiff']))
+        print("zonal levs_diff:",levs_diff)
         levs_pct_diff = np.unique(np.array(cp_info['levelspctdiff']))
 
         if len(levs) < 2:
