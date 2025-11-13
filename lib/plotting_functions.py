@@ -1309,7 +1309,9 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(0.85)
         ax[-1].set_xlabel("LONGITUDE")
-        if cp_info['plot_log_p']:
+        #if cp_info['plot_log_p']:
+        #    [a.set_yscale("log") for a in ax]
+        if log_p:
             [a.set_yscale("log") for a in ax]
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
 
