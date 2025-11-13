@@ -346,7 +346,7 @@ class AdfData:
             vres = self.adf.variable_defaults[variablename]
             da.attrs['units'] = vres.get("new_unit", units)
         else:
-            da.attrs['units'] = 'none'
+            da.attrs['units'] = '--'
         return da
 
     # Get variable conversion defaults, if applicable
