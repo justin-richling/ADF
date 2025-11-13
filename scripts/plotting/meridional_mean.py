@@ -134,11 +134,13 @@ def meridional_mean(adfobj):
             vres = {}
         #End if
 
+        """
         # load reference data (observational or baseline)
         if not adfobj.compare_obs:
             base_name = adfobj.data.ref_case_label
         else:
             base_name = adfobj.data.ref_labels[data_var]
+        """
 
         #loop over different data sets to plot model against:
         for data_src in data_list:
