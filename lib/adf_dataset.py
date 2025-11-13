@@ -134,7 +134,7 @@ class AdfData:
     def load_reference_timeseries_dataset(self, field):
         """Return a data set for variable field."""
         case = self.ref_case_label
-        fils = self.get_timeseries_file(case, field)
+        fils = self.get_ref_timeseries_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find time series file(s) for case: {case}, variable: {field}")
             return None
@@ -201,7 +201,7 @@ class AdfData:
     def load_reference_climo_dataset(self, field):
         """Return Dataset for climo of field"""
         case = self.ref_case_label
-        fils = self.get_reference_climo_file(case, field)
+        fils = self.get_reference_climo_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find climo file(s) for case: {case}, variable: {field}")
             return None
@@ -267,7 +267,7 @@ class AdfData:
     def load_reference_regrid_dataset(self, field):
         """Return a data set to be used as reference (aka baseline) for variable field."""
         case = self.ref_case_label
-        fils = self.get_ref_regrid_file(case, field)
+        fils = self.get_ref_regrid_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
@@ -277,7 +277,7 @@ class AdfData:
     def load_reference_regrid_da(self, field):
         """Return a data array to be used as reference (aka baseline) for variable field."""
         case = self.ref_case_label
-        fils = self.get_ref_regrid_file(case, field)
+        fils = self.get_ref_regrid_file(field)
         if not fils:
             warnings.warn(f"\t    WARNING: Did not find regridded file(s) for case: {case}, variable: {field}")
             return None
