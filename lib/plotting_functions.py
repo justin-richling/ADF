@@ -175,89 +175,20 @@ def make_polar_plot(wks, case_nickname,
     pct_cyclic, _ = add_cyclic_point(pct, coord=pct.lon)
 
     # -- deal with optional plotting arguments that might provide variable-dependent choices
+    # generate dictionary of contour plot settings:
+    cp_info = plot_utils.prep_contour_plot(d1, d2, dif, pct, **kwargs)
 
-    # determine levels & color normalization:
-    minval    = np.min([np.min(d1), np.min(d2)])
-    maxval    = np.max([np.max(d1), np.max(d2)])
-    absmaxdif = np.max(np.abs(dif))
-    absmaxpct = np.max(np.abs(pct))
+    levelsdiff = cp_info['levelsdiff']
+    cmapdiff = cp_info['cmapdiff']
+    normdiff = cp_info['normdiff']
 
-    if 'colormap' in kwargs:
-        cmap1 = kwargs['colormap']
-    else:
-        cmap1 = 'coolwarm'
+    levelspctdiff = cp_info['levelspctdiff']
+    cmappctdiff  = cp_info['cmappct']
+    normpctdiff  = cp_info['pctnorm']
 
-    if 'contour_levels' in kwargs:
-        levels1 = kwargs['contour_levels']
-        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    elif 'contour_levels_range' in kwargs:
-        assert len(kwargs['contour_levels_range']) == 3, "contour_levels_range must have exactly three entries: min, max, step"
-        levels1 = np.arange(*kwargs['contour_levels_range'])
-        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    else:
-        levels1 = np.linspace(minval, maxval, 12)
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-
-    if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-        norm1, cmap1 = plot_utils.get_difference_colors(levels1)  # maybe these are better defaults if nothing else is known.
-
-    if "diff_contour_levels" in kwargs:
-        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-    elif "diff_contour_range" in kwargs:
-            assert len(kwargs['diff_contour_range']) == 3, "diff_contour_range must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*kwargs['diff_contour_range'])
-    else:
-        # set levels for difference plot (with a symmetric color bar):
-        levelsdiff = np.linspace(-1*absmaxdif.data, absmaxdif.data, 12)
-    #End if
-    
-    if "pct_diff_contour_levels" in kwargs:
-        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
-    elif "pct_diff_contour_range" in kwargs:
-            assert len(kwargs['pct_diff_contour_range']) == 3, "pct_diff_contour_range must have exactly three entries: min, max, step"
-            levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
-    else:
-        levelspctdiff = [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
-    pctnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
-
-    #NOTE: Sometimes the contour levels chosen in the defaults file
-    #can result in the "contourf" software stack generating a
-    #'TypologyException', which should manifest itself as a
-    #"PredicateError", but due to bugs in the stack itself
-    #will also sometimes raise an AttributeError.
-
-    #To prevent this from happening, the polar max and min values
-    #are calculated, and if the default contour values are significantly
-    #larger then the min-max values, then the min-max values are used instead:
-    #-------------------------------
-    if max(levels1) > 10*maxval:
-        levels1 = np.linspace(minval, maxval, 12)
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    elif minval < 0 and min(levels1) < 10*minval:
-        levels1 = np.linspace(minval, maxval, 12)
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    #End if
-
-    if max(np.abs(levelsdiff)) > 10*absmaxdif:
-        levelsdiff = np.linspace(-1*absmaxdif.data, absmaxdif.data, 12)
-    
-    
-    #End if
-    #-------------------------------
-
-    # Difference options -- Check in kwargs for colormap and levels
-    if "diff_colormap" in kwargs:
-        cmapdiff = kwargs["diff_colormap"]
-        dnorm, _ = plot_utils.get_difference_colors(levelsdiff)  # color map output ignored
-    else:
-        dnorm, cmapdiff = plot_utils.get_difference_colors(levelsdiff)  
-        
-    # Pct Difference options -- Check in kwargs for colormap and levels
-    if "pct_diff_colormap" in kwargs:
-        cmappct = kwargs["pct_diff_colormap"]        
-    else:
-        cmappct = "PuOr_r"
-    #End if
+    levels = cp_info['levels1']
+    cmap = cp_info['cmap1']
+    norm = cp_info['norm1']
 
     # -- end options
     lons, lats = plot_utils.transform_coordinates_for_projection(proj, lon_cyclic, d1.lat) # Explicit coordinate transform
@@ -270,32 +201,32 @@ def make_polar_plot(wks, case_nickname,
     ax3 = plt.subplot(gs[1, :2], projection=proj)
     ax4 = plt.subplot(gs[1, 2:], projection=proj)
 
-    levs = np.unique(np.array(levels1))
+    levs = np.unique(np.array(levels))
     levs_diff = np.unique(np.array(levelsdiff))
     levs_pctdiff = np.unique(np.array(levelspctdiff))
 
     # BPM: removing `transform=ccrs.PlateCarree()` from contourf calls & transform_first=True
     if len(levs) < 2:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, colors="w", norm=norm1)
+        img1 = ax1.contourf(lons, lats, d1_cyclic, colors="w", norm=norm)
         ax1.text(0.4, 0.4, empty_message, transform=ax1.transAxes, bbox=props)
 
-        img2 = ax2.contourf(lons, lats, d2_cyclic, colors="w", norm=norm1)
+        img2 = ax2.contourf(lons, lats, d2_cyclic, colors="w", norm=norm)
         ax2.text(0.4, 0.4, empty_message, transform=ax2.transAxes, bbox=props)
     else:
-        img1 = ax1.contourf(lons, lats, d1_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
-        img2 = ax2.contourf(lons, lats, d2_cyclic, cmap=cmap1, norm=norm1, levels=levels1)
+        img1 = ax1.contourf(lons, lats, d1_cyclic, cmap=cmap, norm=norm, levels=levels)
+        img2 = ax2.contourf(lons, lats, d2_cyclic, cmap=cmap, norm=norm, levels=levels)
 
     if len(levs_pctdiff) < 2:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, colors="w", norm=pctnorm)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, colors="w", norm=normpctdiff)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, cmap=cmappct, norm=pctnorm, levels=levelspctdiff)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, cmap=cmappctdiff, norm=normpctdiff, levels=levelspctdiff)
 
     if len(levs_diff) < 2:
-        img4 = ax4.contourf(lons, lats, dif_cyclic, colors="w", norm=dnorm)
+        img4 = ax4.contourf(lons, lats, dif_cyclic, colors="w", norm=normdiff)
         ax4.text(0.4, 0.4, empty_message, transform=ax4.transAxes, bbox=props)
     else:
-        img4 = ax4.contourf(lons, lats, dif_cyclic, cmap=cmapdiff, norm=dnorm, levels=levelsdiff)
+        img4 = ax4.contourf(lons, lats, dif_cyclic, cmap=cmapdiff, norm=normdiff, levels=levelsdiff)
         
     #Set Main title for subplots:
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
@@ -353,7 +284,7 @@ def make_polar_plot(wks, case_nickname,
                     bbox_transform=ax2.transAxes,
                     borderpad=0,
                     )
-    fig.colorbar(img1, cax=cb_mean_ax)
+    fig.colorbar(img1, cax=cb_mean_ax, **cp_info['colorbar_opt'])
     
     cb_pct_ax = inset_axes(ax3,
                     width="5%",  # width = 5% of parent_bbox width
@@ -373,9 +304,9 @@ def make_polar_plot(wks, case_nickname,
                     borderpad=0,
                     )      
                     
-    fig.colorbar(img3, cax=cb_pct_ax)
+    fig.colorbar(img3, cax=cb_pct_ax, **cp_info['colorbar_opt'])
     
-    fig.colorbar(img4, cax=cb_diff_ax)
+    fig.colorbar(img4, cax=cb_diff_ax, **cp_info['colorbar_opt'])
 
     # Save files
     fig.savefig(wks, bbox_inches='tight', dpi=300)
@@ -1287,7 +1218,7 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(0.85)
         ax[-1].set_xlabel("LONGITUDE")
-        if cp_info['plot_log_p']:
+        if log_p:
             [a.set_yscale("log") for a in ax]
         fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
 
