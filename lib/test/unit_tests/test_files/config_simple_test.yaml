@@ -1,0 +1,58 @@
+diag_basic_info:
+    compare_obs: false
+    create_html: true
+    obs_data_loc: /glade/campaign/cgd/amp/amwg/ADF_obs
+    cam_regrid_loc: /glade/derecho/scratch/${user}/ADF/regrid
+    cam_overwrite_regrid: false
+    cam_diag_plot_loc: /glade/derecho/scratch/${user}/ADF/plots
+    #defaults_file: /some/path/to/defaults/file.yaml
+    plot_press_levels: [] #[200,850]
+    central_longitude: 180
+    num_procs: 8
+    redo_plot: false
+
+diag_cam_climo:
+    hist_str: cam.h0a
+    calc_cam_climo: true
+    cam_overwrite_climo: false
+    cam_case_name: b.e23_alpha17f.BLT1850.ne30_t232.098
+    case_nickname: #cool nickname
+    cam_hist_loc: /glade/campaign/cgd/amp/amwg/ADF_test_cases/${diag_cam_climo.cam_case_name}
+    cam_climo_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/climo
+    start_year: 10
+    end_year: 11
+    cam_ts_done: false
+    cam_ts_save: true
+    cam_overwrite_ts: false
+    cam_ts_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_climo.cam_case_name}/ts
+
+diag_cam_baseline_climo:
+    hist_str: cam.h0a
+    calc_cam_climo: true
+    cam_overwrite_climo: false
+    cam_case_name: b.e23_alpha17f.BLT1850.ne30_t232.093
+    case_nickname: #cool nickname
+    cam_hist_loc: /glade/campaign/cgd/amp/amwg/ADF_test_cases/${diag_cam_baseline_climo.cam_case_name}
+    cam_climo_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/climo
+    start_year: 10
+    end_year: 11
+    cam_ts_done: false
+    cam_ts_save: true
+    cam_overwrite_ts: false
+    cam_ts_loc: /glade/derecho/scratch/${user}/ADF/${diag_cam_baseline_climo.cam_case_name}/ts
+time_averaging_scripts:
+    - create_climo_files
+#regridding_scripts:
+#    - regrid_and_vert_interp
+#analysis_scripts:
+#    - amwg_table
+#plotting_scripts:
+#    - global_latlon_map
+#    - global_latlon_vect_map
+#    - zonal_mean
+#    - polar_map
+#    - cam_taylor_diagram
+#    - ozone_diagnostics
+diag_var_list:
+   - PS
+
