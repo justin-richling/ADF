@@ -1108,10 +1108,8 @@ class AdfDiag(AdfWeb):
             # End for
         # End with
 
-        from shutil import which
         # Check if NCL is available
-        if which("ncl") is None:
-            #raise RuntimeError("NCL is not in your PATH. Make sure the module is loaded.")
+        if shutil.which("ncl") is None:
             print("NCL is not in your PATH. Make sure the module is loaded:  module load ncl")
             return 0
 
