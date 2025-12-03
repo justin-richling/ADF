@@ -1108,21 +1108,14 @@ class AdfDiag(AdfWeb):
             # End for
         # End with
 
-        # Submit the CVDP driver script in background mode, send output to cvdp.out file
-        with open(os.path.join(cvdp_dir, "cvdp.out"), "w", encoding="utf-8") as subout:
-            _ = subprocess.Popen(
-                [
-                    f"cd {cvdp_dir}; ncl -Q "
-                    + os.path.join(cvdp_dir, f"driver.{case_names[0]}.ncl")
-                ],
-                shell=True,
-                stdout=subout,
-                close_fds=True,
-            )
-        # End with
+        from shutil import which
+        # Check if NCL is available
+        if which("ncl") is None:
+            #raise RuntimeError("NCL is not in your PATH. Make sure the module is loaded.")
+            print("NCL is not in your PATH. Make sure the module is loaded:  module load ncl")
+            return 0
 
         print("   ")
-        print("CVDP is running in background. ADF continuing.")
         print(f"CVDP terminal output is located in {cvdp_dir}/cvdp.out")
         if self.get_cvdp_info("cvdp_tar"):
             print(
@@ -1144,6 +1137,30 @@ class AdfDiag(AdfWeb):
             "For CVDP information visit: https://www.cesm.ucar.edu/working_groups/CVC/cvdp/"
         )
         print("   ")
+
+        # Path to output file
+        out_file = os.path.join(cvdp_dir, "cvdp.out")
+        script_name = os.path.join(cvdp_dir, f"driver.{case_names[0]}.ncl")
+        with open(out_file, "w", encoding="utf-8") as f:
+            # Start the NCL process
+            process = subprocess.Popen(
+                ["ncl", script_name],
+                cwd=cvdp_dir,
+                stdout=f,            # Normal output goes to file
+                stderr=subprocess.PIPE,  # Capture errors
+                text=True
+        )
+
+            # Print any errors in real-time to the terminal
+            for line in process.stderr:
+                print(line, end="")
+
+            # Wait for process to finish
+            process.wait()
+
+        # Optionally, check return code
+        if process.returncode != 0:
+            print(f"NCL script exited with errors (return code {process.returncode})")
 
     #########
 
