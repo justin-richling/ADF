@@ -145,10 +145,6 @@ if __name__ == "__main__":
     #Initalize CAM diagnostics object:
     diag = AdfDiag(config_yaml, debug=config_debug)
 
-    #Call the CVDP:
-    if diag.get_cvdp_info('cvdp_run'):
-       diag.setup_run_cvdp()
-
     #Create model time series.
     #Please note that this is an internal ADF function:
     diag.create_time_series()
@@ -194,6 +190,10 @@ if __name__ == "__main__":
     #Please note that this is an internal ADF function:
     if diag.create_html:
         diag.create_website()
+
+    #Call the CVDP:
+    if diag.get_cvdp_info('cvdp_run'):
+       diag.setup_run_cvdp()
 
     # Check if sub-processes are still running (CVDP, MDTF)
     if mdtf_proc:
