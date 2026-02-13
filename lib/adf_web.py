@@ -430,6 +430,9 @@ class AdfWeb(AdfObs):
         multi_case_plots = self.read_config_var('multi_case_plots')
         print("FIRST TIME multi_case_plots:",multi_case_plots,"\n\n")
 
+        multi_plots = {}
+        multi_case_dict = None
+
         if multi_case_plots:
             #Grab all variables for each multi-case plot type
             mvars = []
@@ -734,6 +737,7 @@ class AdfWeb(AdfObs):
                 if self.num_cases > 1:
                     table_pages_dir = self.__case_web_paths['multi-case']['table_pages_dir']
                     table_pages_dir_indv = self.__case_web_paths[web_data.case]['table_pages_dir']
+                    #multi_case_dict[] = table_pages_dir / web_data.html_file[0].name
 
                 else:
                     table_pages_dir = self.__case_web_paths[web_data.case]['table_pages_dir']
@@ -1164,74 +1168,75 @@ class AdfWeb(AdfObs):
 
                         #Loop over any non multi-case multi-plot scenarios
                         #ie multi-case Taylor Diagrams and multi-case QBO
-                        if multi_plot_ext not in multi_case_dict:
-                            print("multi_case_dict",multi_case_dict,"\n--------------\n")
-                            #print("ext not in multi_case_dict",ext)
-                            #Move file to assets directory:
-                            if not web_data.data.is_file():
-                                shutil.copy(web_data.data, web_data.asset_path)
+                        if multi_case_dict:
+                            if multi_plot_ext not in multi_case_dict:
+                                print("multi_case_dict",multi_case_dict,"\n--------------\n")
+                                #print("ext not in multi_case_dict",ext)
+                                #Move file to assets directory:
+                                if not web_data.data.is_file():
+                                    shutil.copy(web_data.data, web_data.asset_path)
 
-                            #Create output HTML file path:
-                            img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
-                            multi_plot_page = f"{var}_{season}_{ptype}_{ext}_multi_plot.png"
+                                #Create output HTML file path:
+                                img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
+                                multi_plot_page = f"{var}_{season}_{ptype}_{ext}_multi_plot.png"
 
-                            img_data = [os.path.relpath(main_site_assets_path / multi_plot_page, start=main_site_img_path),
-                                web_data.asset_path.stem]
-                            #print("SPECIAL CALSINED PE: multi_mean_html_info[ptype]",multi_mean_html_info[ptype],"\n")
-                            multi_plots[ptype] = f"html_img/multi_case_mean_diag_{ptype}.html"
+                                img_data = [os.path.relpath(main_site_assets_path / multi_plot_page, start=main_site_img_path),
+                                    web_data.asset_path.stem]
+                                #print("SPECIAL CALSINED PE: multi_mean_html_info[ptype]",multi_mean_html_info[ptype],"\n")
+                                multi_plots[ptype] = f"html_img/multi_case_mean_diag_{ptype}.html"
 
-                            #print("seasons", seasons)
-                            #print("non_seasons", non_seasons[web_data.plot_type])
-                            rend_kwarg_dict = {"title": main_title,
-                                                "var_title": var,
-                                                "season_title": season,
-                                                "case_yrs": case_yrs,
-                                                "base_name": data_name,
-                                                "baseline_yrs": baseline_yrs,
-                                                "plottype_title": ptype,
-                                                "imgs": img_data,
-                                                #"mydata": multi_mean_html_info[ptype],
-                                                "mydata": multi_plot_html_info[ptype],
-                                                "plot_types": multi_plot_type_html,
-                                                "multi": multi_layout,
-                                                "case_sites": case_sites,
-                                                "seasons": seasons,
-                                                "non_seasons": non_seasons[web_data.plot_type]}
+                                #print("seasons", seasons)
+                                #print("non_seasons", non_seasons[web_data.plot_type])
+                                rend_kwarg_dict = {"title": main_title,
+                                                    "var_title": var,
+                                                    "season_title": season,
+                                                    "case_yrs": case_yrs,
+                                                    "base_name": data_name,
+                                                    "baseline_yrs": baseline_yrs,
+                                                    "plottype_title": ptype,
+                                                    "imgs": img_data,
+                                                    #"mydata": multi_mean_html_info[ptype],
+                                                    "mydata": multi_plot_html_info[ptype],
+                                                    "plot_types": multi_plot_type_html,
+                                                    "multi": multi_layout,
+                                                    "case_sites": case_sites,
+                                                    "seasons": seasons,
+                                                    "non_seasons": non_seasons[web_data.plot_type]}
 
-                            multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                            #print("adf_web multimean 2",multimean)
+                                multimean = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
+                                #print("adf_web multimean 2",multimean)
 
-                            tmpl = jinenv.get_template('template_multi_case.html')
+                                tmpl = jinenv.get_template('template_multi_case.html')
 
-                            rndr = tmpl.render(rend_kwarg_dict)
+                                rndr = tmpl.render(rend_kwarg_dict)
 
-                            #Write HTML file:
-                            with open(img_pages_dir / multimean,
-                                                'w', encoding='utf-8') as ofil:
-                                ofil.write(rndr)
+                                #Write HTML file:
+                                with open(img_pages_dir / multimean,
+                                                    'w', encoding='utf-8') as ofil:
+                                    ofil.write(rndr)
 
 
-                            #Check if the mean plot type and var page exists for this case:
-                            img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
+                                #Check if the mean plot type and var page exists for this case:
+                                img_pages_dir = self.__case_web_paths["multi-case"]['img_pages_dir']
 
-                            multi_mean = f"multi_case_mean_diag_{ptype}.html"
-                            mean_ptype_file = main_site_img_path / multi_mean
+                                multi_mean = f"multi_case_mean_diag_{ptype}.html"
+                                mean_ptype_file = main_site_img_path / multi_mean
 
-                            #Remove keys from main dictionary for this html page
-                            #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
+                                #Remove keys from main dictionary for this html page
+                                #templ_rend_kwarg_dict = {k: rend_kwarg_dict[k] for k in rend_kwarg_dict.keys() - {'imgs', 'var_title', 'season_title'}}
 
-                            #Construct individual plot type mean_diag
-                            #html files, if they don't already exist:
-                            tmp = jinenv.get_template('template_multi_case_mean_diag.html')
-                            rend_kwarg_dict["enumerate"] = jinja_enumerate
-                            rend_kwarg_dict["list"] = jinja_list
+                                #Construct individual plot type mean_diag
+                                #html files, if they don't already exist:
+                                tmp = jinenv.get_template('template_multi_case_mean_diag.html')
+                                rend_kwarg_dict["enumerate"] = jinja_enumerate
+                                rend_kwarg_dict["list"] = jinja_list
 
-                            mean_rndr = tmp.render(rend_kwarg_dict)
+                                mean_rndr = tmp.render(rend_kwarg_dict)
 
-                            #Write mean diagnostic plots HTML file:
-                            with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
-                                ofil.write(mean_rndr)
-                            #End with
+                                #Write mean diagnostic plots HTML file:
+                                with open(mean_ptype_file,'w', encoding='utf-8') as ofil:
+                                    ofil.write(mean_rndr)
+                                #End with
 
                     #End if (ext not in multi_case_dict)
                 #End if (web_data.data_frame)
