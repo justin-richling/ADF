@@ -593,6 +593,12 @@ class AdfInfo(AdfConfig):
             self.__plot_location.append(os.path.join(plot_dir, first_case_dir))
         #End if
 
+        #Save list of all diagnostic plot locations
+        cleaned_plot_locations = [np.unique(self.__plot_location)]
+        with open(f"./plot_locs_list_{data_name}_{self.datetime_str}.txt", "w") as f:
+            for item in cleaned_plot_locations:
+                f.write(item[0] + "\n")
+
         #-------------------------------------------------------------------------
 
         #Initialize "num_procs" variable:
