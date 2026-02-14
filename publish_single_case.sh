@@ -92,38 +92,22 @@ while IFS= read -r item; do
     [[ -z "$item" ]] && continue
 
     SOURCE="$item"
-    # extract everything after "diag-plot/"
-    CASE="${SOURCE##*/diag-plot/}"
-    # everything before "diag-plot/"
-    prefix="${SOURCE%/diag-plot/*}"
-    echo 
-    echo "PREFIX" "$prefix"
-    echo
-    echo "list item" $SOURCE
-    echo
-    echo "Oh boy" "${SOURCE##*/}"
-    echo
-    echo "Everything after diag loc?: Case name: $CASE"
-    echo
 
     if [[ "$MODE" == "local" ]]; then
         TARGET="${DEST}/"
 
         mkdir -p "$TARGET"
 
+        log "Copying "$SOURCE/website/" "contents" -> $TARGET"
+        $TRANSFER_TOOL "$SOURCE/website/." "$TARGET"
+
     else
         TARGET="${HOST}:${DEST}/"
 
+        log "Copying "$SOURCE/website/" "contents" -> $TARGET"
+        $TRANSFER_TOOL "$SOURCE/website/." "$TARGET"
     fi
 
-    echo
-    log "Copying "$prefix/diag-plot/main_website/" "contents" -> $TARGET"
-    $TRANSFER_TOOL "$prefix/diag-plot/main_website/." "$TARGET"
-    echo
-    log "Copying "$SOURCE/website/" "contents" -> $TARGET/$CASE"
-    $TRANSFER_TOOL "$SOURCE/website/." "$TARGET/$CASE"
-
 done < "$LIST_FILE"
-echo
-log "Transfer complete."
 
+log "Transfer complete."
