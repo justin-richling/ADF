@@ -50,12 +50,14 @@ class AdfBase:
 
         self.__debug_fname = ''
 
+        # Get the current date and time
+        current_timestamp = datetime.now()
+        # Format the datetime object to a string without microseconds
+        dt_str = current_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        self.__datetime_str = dt_str
+
         # Create debug log, if requested:
         if debug:
-            # Get the current date and time
-            current_timestamp = datetime.now()
-            # Format the datetime object to a string without microseconds
-            dt_str = current_timestamp.strftime('%Y-%m-%d %H:%M:%S')
             ext = f'{str(dt_str).replace(" ","-")}'
             debug_fname = f"ADF_debug_{ext}.log"
             self.__debug_fname = debug_fname
@@ -67,6 +69,12 @@ class AdfBase:
         
 
     #########
+
+    # Create property for grabbing ADF execution date time string to return to user:
+    @property
+    def datetime_str(self):
+        """Return the ADF execution date time string "dt_str" to the user."""
+        return self.__datetime_str
 
     # Create property needed to return the name of the debug log file (debug_fname) to user:
     @property
