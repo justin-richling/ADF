@@ -733,13 +733,6 @@ class AdfInfo(AdfConfig):
 
     #########
 
-    # Example usage
-    branch = get_git_branch()
-    # Create property needed to return "user" name to user:
-    #@property
-    #def git_branch(self):
-    #    """Return the "user" name if requested."""
-    #    return self.__user
 
     # Create property needed to return "user" name to user:
     @property
