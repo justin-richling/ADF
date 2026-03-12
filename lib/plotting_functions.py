@@ -18,10 +18,6 @@ plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
                       mdlfld, obsfld, diffld, **kwargs):
     Map plots of `mdlfld`, `obsfld`, and their difference, `diffld`.
-
-zonal_mean_xr(fld)
-    Average over all dimensions except `lev` and `lat`.
-
 zonal_plot(lat, data, ax=None, color=None, **kwargs)
     Make a line plot or pressure-latitude plot of `data`.
 meridional_plot(lon, data, ax=None, color=None, **kwargs)
@@ -34,21 +30,6 @@ plot_meridional_mean_and_save
     meridioanl mean plot
 square_contour_difference
     Produce filled contours of fld1, fld2, and their difference with square axes.
-
-Notes
------
-This module includes several "private" methods intended for internal use only.
-
-_plot_line(axobject, xdata, ydata, color, **kwargs)
-    Create a generic line plot
-_meridional_plot_line
-
-_zonal_plot_line
-
-_zonal_plot_preslat
-
-_meridional_plot_preslon
-
 """
 
 #import statements:
@@ -172,6 +153,10 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
     d2_region_mean, d2_region_max, d2_region_min = utils.domain_stats(d2, domain)
     dif_region_mean, dif_region_max, dif_region_min = utils.domain_stats(dif, domain)
     pct_region_mean, pct_region_max, pct_region_min = utils.domain_stats(pct, domain)
+    d1_region_mean, d1_region_max, d1_region_min = utils.domain_stats(d1, domain)
+    d2_region_mean, d2_region_max, d2_region_min = utils.domain_stats(d2, domain)
+    dif_region_mean, dif_region_max, dif_region_min = utils.domain_stats(dif, domain)
+    pct_region_mean, pct_region_max, pct_region_min = utils.domain_stats(pct, domain)
 
     #downsize to the specified region; makes plotting/rendering/saving much faster
     d1 = d1.sel(lat=slice(domain[2],domain[3]))
@@ -210,7 +195,7 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
         norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
 
     if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-        norm1, cmap1 = get_difference_colors(levels1)  # maybe these are better defaults if nothing else is known.
+        norm1, cmap1 = plot_utils.get_difference_colors(levels1)  # maybe these are better defaults if nothing else is known.
 
     if "diff_contour_levels" in kwargs:
         levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
@@ -259,9 +244,9 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
     # Difference options -- Check in kwargs for colormap and levels
     if "diff_colormap" in kwargs:
         cmapdiff = kwargs["diff_colormap"]
-        dnorm, _ = get_difference_colors(levelsdiff)  # color map output ignored
+        dnorm, _ = plot_utils.get_difference_colors(levelsdiff)  # color map output ignored
     else:
-        dnorm, cmapdiff = get_difference_colors(levelsdiff)  
+        dnorm, cmapdiff = plot_utils.get_difference_colors(levelsdiff)  
         
     # Pct Difference options -- Check in kwargs for colormap and levels
     if "pct_diff_colormap" in kwargs:
@@ -414,6 +399,7 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
 
     # Close figures to avoid memory issues:
     plt.close(fig)
+
 
 #######
 
@@ -761,6 +747,7 @@ def plot_map_and_save(adfobj, wks, case_nickname, base_nickname,
 
     # generate dictionary of contour plot settings:
     cp_info = plot_utils.prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
+    cp_info = plot_utils.prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
 
     # specify the central longitude for the plot
     central_longitude = kwargs.get('central_longitude', 180)
@@ -910,7 +897,7 @@ def plot_map_and_save(adfobj, wks, case_nickname, base_nickname,
     plt.close()
 
 
-
+#######
 
 def zonal_plot(lat, data, ax=None, color=None, **kwargs):
     """Make zonal plot
@@ -940,8 +927,10 @@ def zonal_plot(lat, data, ax=None, color=None, **kwargs):
         ax = plt.gca()
     if 'lev' in data.dims:
         img, ax = plot_utils.zonal_plot_preslat(ax, lat, data['lev'], data, **kwargs)
+        img, ax = plot_utils.zonal_plot_preslat(ax, lat, data['lev'], data, **kwargs)
         return img, ax
     else:
+        ax = plot_utils.zonal_plot_line(ax, lat, data, color, **kwargs)
         ax = plot_utils.zonal_plot_line(ax, lat, data, color, **kwargs)
         return ax
 
@@ -974,8 +963,10 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
         ax = plt.gca()
     if 'lev' in data.dims:
         img, ax = plot_utils.meridional_plot_preslon(ax, lon, data['lev'], data, **kwargs)
+        img, ax = plot_utils.meridional_plot_preslon(ax, lon, data['lev'], data, **kwargs)
         return img, ax
     else:
+        ax = plot_utils.meridional_plot_line(ax, lon,  data, color, **kwargs)
         ax = plot_utils.meridional_plot_line(ax, lon,  data, color, **kwargs)
         return ax
 
@@ -1059,7 +1050,6 @@ def plot_zonal_mean_and_save(adfobj, wks, case_nickname, base_nickname,
 
         # generate dictionary of contour plot settings:
         cp_info = plot_utils.prep_contour_plot(azm, bzm, diff, pct, **kwargs)
-        #print("zonal mean plot cmap:",cp_info['cmap1'])
 
         # Generate zonal plot:
         fig, ax = plt.subplots(figsize=(10,10),nrows=4, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
@@ -1171,6 +1161,7 @@ def plot_zonal_mean_and_save(adfobj, wks, case_nickname, base_nickname,
     plt.close()
 
 
+#######
 
 def plot_meridional_mean_and_save(adfobj, wks, case_nickname, base_nickname,
                              case_climo_yrs, baseline_climo_yrs,
@@ -1402,9 +1393,8 @@ def plot_meridional_mean_and_save(adfobj, wks, case_nickname, base_nickname,
     #Close plots:
     plt.close()
 
-#
-#  -- zonal mean annual cycle --
-#
+
+#######
 
 def square_contour_difference(fld1, fld2, **kwargs):
     """Produce filled contours of fld1, fld2, and their difference with square axes.

@@ -11,7 +11,6 @@ from types import NoneType
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
-import plotting_functions as pf
 import matplotlib.ticker as ticker
 
 

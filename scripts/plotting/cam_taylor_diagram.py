@@ -21,8 +21,9 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.legend_handler import HandlerTuple
 
-import warnings  # use to warn user about missing files.
 import adf_utils as utils
+
+import warnings  # use to warn user about missing files.
 warnings.formatwarning = utils.my_formatwarning
 
 #

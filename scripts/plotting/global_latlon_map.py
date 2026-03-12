@@ -22,10 +22,8 @@ import adf_utils as utils
 import plotting_utils as plot_utils
 import plotting_functions as pf
 
-# Format warning messages:
 # Warnings
 import warnings  # use to warn user about missing files.
-#     - Format warning messages:
 warnings.formatwarning = utils.my_formatwarning
 
 #########

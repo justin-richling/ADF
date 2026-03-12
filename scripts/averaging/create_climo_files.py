@@ -2,11 +2,10 @@
 Module to create (monthly) climatology files.
 """
 
-##################
-#Warnings function
-##################
-import warnings  # use to warn user about missing files.
+from adf_base import AdfError
 import adf_utils as utils
+
+import warnings  # use to warn user about missing files.
 warnings.formatwarning = utils.my_formatwarning
 
 import numpy as np

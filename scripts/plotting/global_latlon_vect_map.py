@@ -37,14 +37,13 @@ def global_latlon_vect_map(adfobj):
     import xarray as xr
     import numpy as np
 
-    #ADF diagnostic utility functions:
+    #ADF utility functions:
     import adf_utils as utils
     import plotting_utils as plot_utils
     import plotting_functions as pf
 
     # Warnings
     import warnings  # use to warn user about missing files.
-    #     - Format warning messages:
     warnings.formatwarning = utils.my_formatwarning
     #-------------------------
 

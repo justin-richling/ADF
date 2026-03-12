@@ -31,8 +31,8 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
 from plotting_utils import prep_contour_plot
-
 import adf_utils as utils
+
 import warnings  # use to warn user about missing files.
 warnings.formatwarning = utils.my_formatwarning
 

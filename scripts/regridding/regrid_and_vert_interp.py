@@ -29,7 +29,6 @@ def regrid_and_vert_interp(adf):
     """
 
     #Import necessary modules:
-    import numpy as np
 
     from pathlib import Path
 

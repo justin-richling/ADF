@@ -8,9 +8,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 import adf_utils as utils
-# Warnings
+
 import warnings  # use to warn user about missing files.
-#     - Format warning messages:
 warnings.formatwarning = utils.my_formatwarning
 
 def enso_comparison_plots(adfobj):
