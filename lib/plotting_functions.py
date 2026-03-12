@@ -18,14 +18,12 @@ plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
                       mdlfld, obsfld, diffld, **kwargs):
     Map plots of `mdlfld`, `obsfld`, and their difference, `diffld`.
-
-zonal_mean_xr(fld)
-    Average over all dimensions except `lev` and `lat`.
-
 zonal_plot(lat, data, ax=None, color=None, **kwargs)
     Make a line plot or pressure-latitude plot of `data`.
 meridional_plot(lon, data, ax=None, color=None, **kwargs)
     Make a line plot or pressure-longitude plot of `data`.
+prep_contour_plot
+    Preparation for making contour plots.
 plot_zonal_mean_and_save
     zonal mean plot
 plot_meridional_mean_and_save
@@ -169,15 +167,6 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
     pct_cyclic, _ = add_cyclic_point(pct, coord=pct.lon)
 
     # -- deal with optional plotting arguments that might provide variable-dependent choices
-
-    # determine levels & color normalization:
-    minval    = np.min([np.min(d1), np.min(d2)])
-    maxval    = np.max([np.max(d1), np.max(d2)])
-    absmaxdif = np.max(np.abs(dif))
-    absmaxpct = np.max(np.abs(pct))
-
-    
-
     kwargs["adfobj"] = adfobj
     cp_info = plot_utils.prep_contour_plot(d1, d2, dif, pct, **kwargs)
 
@@ -225,10 +214,16 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
                             )
 
     if len(levs_pctdiff) < 2:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm, transform_first=True)
+        img3 = ax3.contourf(lons, lats, pct_cyclic, colors="w", norm=pctnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, transform_first=True, extend=cp_info["extend"])
+        img3 = ax3.contourf(lons, lats, pct_cyclic,  cmap=cmappct, norm=pctnorm, levels=levelspctdiff, extend=cp_info["extend"])
+
+    if len(levs_pctdiff) < 2:
+        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
+        ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
+    else:
+        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, extend=cp_info["extend"])
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
