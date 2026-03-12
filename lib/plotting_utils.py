@@ -30,6 +30,7 @@ _plot_line(axobject, xdata, ydata, color, **kwargs)
 import numpy as np
 import xarray as xr
 import matplotlib as mpl
+import cartopy.crs as ccrs
 import os
 
 import urllib
@@ -466,12 +467,12 @@ def try_load_ncl_cmap(adfobj, cmap_case):
         if isinstance(data, np.ndarray):
             cm, cmr = ncl_to_mpl(data, cmap_case)
             adfobj.debug_log(msg)
-            return cm
+            return cm, msg
     except Exception:
         pass
 
     adfobj.debug_log(msg)
-    return "coolwarm"
+    return "coolwarm", msg
 
 
 def get_cmap(adfobj, plotty, plot_type_dict, kwargs, polar_names):
@@ -566,7 +567,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
         }
         contour_levels, contour_range, contour_linspace = key_map.get(plotty, (None, None, None))
 
-        def process_entry(entry, kind):
+        def process_entry(entry, kind, msg):
             """Handle lists and dicts for levels/ranges/linspace."""
             if isinstance(entry, list):
                 if len(entry) == 3:
@@ -617,7 +618,7 @@ def resolve_levels(adfobj, plotty, plot_type_dict, kwargs, polar_names):
                 entry = kwargs[key]
 
             if entry is not None:
-                levels1 = process_entry(entry, kind)
+                levels1 = process_entry(entry, kind, msg)
                 if levels1 is not None:
                     break  # stop once a valid setting is found
         adfobj.debug_log(msg)
