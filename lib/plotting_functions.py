@@ -208,7 +208,7 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
                             cmap=cmap1, norm=norm1, levels=levels1, extend=cp_info["extend"]
                             #**cp_info['contourf_opt']
                             )
-        img2 = ax2.contourf(lons, lats, d2_cyclic, transform=ccrs.PlateCarree(),
+        img2 = ax2.contourf(lons, lats, d2_cyclic,# transform=ccrs.PlateCarree(),
                             cmap=cmap1, norm=norm1, levels=levels1, extend=cp_info["extend"]
                             #**cp_info['contourf_opt']
                             )
