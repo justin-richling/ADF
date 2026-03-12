@@ -219,11 +219,11 @@ def make_polar_plot(adfobj, wks, case_nickname, base_nickname,
     else:
         img3 = ax3.contourf(lons, lats, pct_cyclic,  cmap=cmappct, norm=pctnorm, levels=levelspctdiff, extend=cp_info["extend"])
 
-    if len(levs_pctdiff) < 2:
+    """if len(levs_pctdiff) < 2:
         img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=pctnorm)
         ax3.text(0.4, 0.4, empty_message, transform=ax3.transAxes, bbox=props)
     else:
-        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, extend=cp_info["extend"])
+        img3 = ax3.contourf(lons, lats, pct_cyclic, transform=ccrs.PlateCarree(), cmap=cmappct, norm=pctnorm, levels=levelspctdiff, extend=cp_info["extend"])"""
 
     if len(levs_diff) < 2:
         img4 = ax4.contourf(lons, lats, dif_cyclic, transform=ccrs.PlateCarree(), colors="w", norm=dnorm)
