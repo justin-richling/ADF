@@ -11,6 +11,7 @@ from types import NoneType
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
+import plotting_functions as pf
 import matplotlib.ticker as ticker
 
 
@@ -50,6 +51,8 @@ def global_mean_timeseries(adfobj):
         else:
             vres = {}
         #End if
+
+        vres["plot_type"] = __name__
 
         # reference time series (DataArray)
         ref_ts_da = adfobj.data.load_reference_timeseries_da(field)

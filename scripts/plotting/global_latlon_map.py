@@ -83,6 +83,7 @@ def global_latlon_map(adfobj):
 
     msg = "\n  Generating lat/lon maps..."
     print(f"{msg}\n  {'-' * (len(msg)-3)}")
+    
 
     # Get configuration
     config = get_plot_config(adfobj)
@@ -101,6 +102,7 @@ def global_latlon_map(adfobj):
 
 def process_variable(adfobj, var, seasons, pres_levs, plot_type, redo_plot):
     vres = adfobj.variable_defaults.get(var, {})
+    vres["plot_type"] = __name__
     web_category = vres.get("category", None)
 
     # For global maps, also set the central longitude:
@@ -378,7 +380,7 @@ def process_2d_plots(adfobj, mdata, odata, case_name, case_nickname,
             process_seasonal_data(mdata, odata, s)
 
         # Generate plot
-        pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+        pf.plot_map_and_save(adfobj, plot_name, case_nickname, adfobj.data.ref_nickname,
                             [syear_case, eyear_case],
                             [syear_baseline, eyear_baseline],
                             mseasons[s], oseasons[s], dseasons[s], pseasons[s],
@@ -412,8 +414,10 @@ def process_3d_plots(adfobj, mdata, odata, case_name, case_nickname,
             mseasons[s], oseasons[s], dseasons[s], pseasons[s] = \
                 process_seasonal_data(mdata, odata, s)
 
+            vres['lev'] = int(pres)
+
             # Generate plot
-            pf.plot_map_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+            pf.plot_map_and_save(adfobj, plot_name, case_nickname, adfobj.data.ref_nickname,
                                 [syear_case, eyear_case],
                                 [syear_baseline, eyear_baseline],
                                 mseasons[s].sel(lev=pres), 
