@@ -87,7 +87,6 @@ taylor_plot_finalize(wks, casenames, casecolors, syear_cases, eyear_cases, SubZo
 #Import modules:
 import numpy as np
 import xarray as xr
-import warnings  # use to warn user about missing files.
 import os
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -102,11 +101,13 @@ from matplotlib.legend_handler import HandlerTuple
 from scipy.stats import pearsonr
 import sys
 
-def my_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
-    return str(msg) + '\n'
+import adf_utils as utils
+import warnings  # use to warn user about missing files.
+warnings.formatwarning = utils.my_formatwarning
 
-warnings.formatwarning = my_formatwarning
+#Notify user that script has started:
+msg = "\n  Generating ozone plots..."
+print(f"{msg}\n  {'-' * (len(msg)-3)}")
 
 #-----------------------------------------------------------------------------------------
 #Lookup pertinent region info
