@@ -1,0 +1,186 @@
+#climo_loc: /glade/scratch/richling/adf-output/ADF-data/climos/ #/glade/campaign/cgd/amp/amwg/climo/
+#ts_loc: /glade/scratch/richling/adf-output/ADF-data/timeseries/
+user: 'richling'
+
+#diag_loc: /glade/derecho/scratch/richling/adf-output/tests/derived-class-adf-main/${diag_cam_climo.cam_case_name}_vs_${diag_cam_baseline_climo.cam_case_name}/
+#diag_loc: /glade/derecho/scratch/richling/adf-output/tests/derived-class-adf-main/
+
+#old_diag_loc: /glade/derecho/scratch/richling/adf-output/tests/derived-class-2025/
+#diag_loc: /glade/derecho/scratch/richling/adf-output/tests/derived-class-2025-main-adf/
+#diag_loc: /glade/derecho/scratch/richling/adf-output/tests/derived-class-2025-no-aerosols/
+diag_loc: /glade/derecho/scratch/richling/adf-output/tests/derived-class-2025-no-aerosols-jesse-changes/
+
+old_diag_loc: /glade/derecho/scratch/richling/adf-output/tests/derived-class/${diag_cam_climo.cam_case_name}_vs_${diag_cam_baseline_climo.cam_case_name}/
+my_hist_loc: /glade/work/richling/ADF/adf-tutorials/data/
+
+climo_loc: ${diag_loc}/climo/
+ts_loc: ${diag_loc}/timeseries/
+
+
+diag_basic_info:
+    compare_obs: false
+    create_html: true
+    obs_data_loc: /glade/campaign/cgd/amp/amwg/ADF_obs
+    cam_regrid_loc: ${diag_loc}regrid/
+    cam_overwrite_regrid: false
+    cam_diag_plot_loc: ${diag_loc}diag-plot/
+    plot_press_levels: [200,850]
+    central_longitude: 180
+    num_procs: 8
+    redo_plot: true
+
+
+diag_cam_climo: 
+    hist_str: cam.h0
+    calc_cam_climo: true
+    cam_overwrite_climo: false
+    #cam_case_name: FCnudged_f09.mam.mar27.2000_2021.001 # has aerosols
+    cam_case_name: f.cam6_3_106.FLTHIST_v0a.ne30.dcs_non-ogw_ubcF.001 # has no aerosols
+    case_nickname: #FMTHIST_ne30.sponge
+    cam_hist_loc: ${my_hist_loc}${diag_cam_climo.cam_case_name}/
+    cam_climo_loc: ${climo_loc}${diag_cam_climo.cam_case_name}/${diag_cam_climo.yrs}/
+    start_year: 1996
+    end_year: 1997 #2000
+    
+    yrs: ${diag_cam_climo.start_year}-${diag_cam_climo.end_year}
+    cam_ts_done: false
+    cam_ts_save: true
+    cam_overwrite_ts: false
+    cam_ts_loc: ${ts_loc}${diag_cam_climo.cam_case_name}/
+
+
+diag_cam_baseline_climo:
+    hist_str:
+        - cam.h0
+        #- cam.h0i
+    calc_cam_climo: true
+    cam_overwrite_climo: false
+    #cam_case_name: FCnudged_f09.carmats16_cesm2.2.carma_trop_strat.2010_2021_cams5.3_so2_cams6.2 # has aerosols
+    cam_case_name: f.cam6_3_106.FLTHIST_v0a.ne30.dcs_effgw_rdg.001 # has no aerosols
+    case_nickname: #104.jet_tuning
+    cam_hist_loc: ${my_hist_loc}${diag_cam_baseline_climo.cam_case_name}/
+    cam_climo_loc: ${climo_loc}${diag_cam_baseline_climo.cam_case_name}/${diag_cam_baseline_climo.yrs}/
+    start_year: 1996
+    end_year: 1997 #2000
+    yrs: ${diag_cam_baseline_climo.start_year}-${diag_cam_baseline_climo.end_year}
+    cam_ts_done: false
+    cam_ts_save: true
+    cam_overwrite_ts: false
+    cam_ts_loc: ${ts_loc}${diag_cam_baseline_climo.cam_case_name}/
+
+
+diag_cvdp_info:
+
+    # Run the CVDP on the listed run(s)?
+    cvdp_run: false
+
+    # CVDP code path, sets the location of the CVDP codebase
+    #  CGD systems path = /home/asphilli/CESM-diagnostics/CVDP/Release/v5.2.0/
+    #  CISL systems path = /glade/u/home/asphilli/CESM-diagnostics/CVDP/Release/v5.2.0/
+    #  github location = https://github.com/NCAR/CVDP-ncl
+    cvdp_codebase_loc: /glade/u/home/asphilli/CESM-diagnostics/CVDP/Release/v5.2.0/
+
+    # Location where cvdp codebase will be copied to and diagnostic plots will be stored
+    cvdp_loc: ${diag_loc}
+
+    # tar up CVDP results?
+    #cvdp_tar: false
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+#These variables below only matter if you are using
+#a non-standard method, or are adding your own
+#diagnostic scripts.
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+time_averaging_scripts:
+    - create_climo_files
+    #- create_TEM_files
+
+#Name of regridding scripts being used.
+#These scripts must be located in "scripts/regridding":
+regridding_scripts:
+    - regrid_and_vert_interp
+
+#List of analysis scripts being used.
+#These scripts must be located in "scripts/analysis":
+analysis_scripts:
+    - amwg_table
+
+#List of plotting scripts being used.
+#These scripts must be located in "scripts/plotting":
+plotting_scripts:
+    - global_latlon_map
+    - zonal_mean
+    - meridional_mean
+    - polar_map
+    - global_latlon_vect_map
+    - cam_taylor_diagram
+    - qbo
+    #- seasonal_cycle
+    #- tem
+    - tape_recorder
+    #- ozone_diagnostics
+    #- enso_comparison_plots
+    - adf_histogram
+
+#List of CAM variables that will be processesd:
+#If CVDP is to be run PSL, TREFHT, TS and PRECT (or PRECC and PRECL) should be listed
+diag_var_list:
+   - AODDUSTdn
+   - AODVISdn
+   - CLDHGH
+   - CLDICE
+   - CLDLIQ
+   - CLDLOW
+   - CLDMED
+   - CLDTOT
+   - CLOUD
+   - FLNS
+   - FLNT
+   - FLNTC
+   - FSNS
+   - FSNT
+   - FSNTC
+   - LHFLX
+   - LWCF
+   - OMEGA500
+   - PBLH
+   - PRECL
+   - PRECT
+   - PRECSL
+   - PRECSC
+   - PRECC
+   - PS
+   - PSL
+   - QFLX
+   - Q
+   - RELHUM
+   - SHFLX
+   - SST
+   - SWCF
+   - T
+   - TAUX
+   - TAUY
+   - TGCLDIWP
+   - TGCLDLWP
+   - TMQ
+   - TREFHT
+   - TS
+   - U
+   - U10
+   - ICEFRAC
+   - OCNFRAC
+   - LANDFRAC
+   - RESTOM
+   - BC
+   - POM
+   - SO4
+   - SOA
+   - NH4HSO4
+   - DUST
+   - SeaSalt
+   #- O3
+
+#<Add more variables here.>
+
+#END OF FILE

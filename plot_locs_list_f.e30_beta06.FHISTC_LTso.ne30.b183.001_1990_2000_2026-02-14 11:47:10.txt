@@ -1,0 +1,1 @@
+/glade/derecho/scratch/richling/adf-output/tests/multi-new/regular-adf/diag-plot/f.e30_cam6_4_097.FHISTC_MTso.ne30.001_1996_2004_vs_f.e30_beta06.FHISTC_LTso.ne30.b183.001_1990_2000

@@ -1,0 +1,259 @@
+#!/bin/csh -fv
+
+#------------------
+# User sets options in this section
+#------------------
+
+### Full path of cesm source code and case (output) directories (see examples)
+
+set CESMDIR=${HOME}/collections/cam6_4_120_ESCOMP
+set CASEDIR=${SCRATCH}/cases
+
+### Case Name
+
+set CASETITLE=f.e30.cam6_4_120
+set CASEID=SOCRATES_nudgeUVTQwindow_withCOSP_tau6h_3days_camiop
+
+### Standard Run Settings
+set WALLTIME=00:40:00
+set RES=ne30_ne30_mg17
+set COMPSET=FHIST_BGC
+set COMPILER=intel
+set QUEUE=main
+#set PES='--pecount 32'
+set PES=''   # use default number of processors
+set EXP=rf01.cosp
+
+set RUN_TYPE=hybrid
+set RUN_STARTDATE=2018-01-18
+set STOP_OPTION=ndays
+set STOP_N=3
+set REST_OPTION=${STOP_OPTION}
+set REST_N=${STOP_N}
+set RUN_REFCASE=f.e30.cam6_4_120.FHIST_BGC.ne30_ne30_mg17.SOCRATES_nudgeUVTQsoc_full_withCOSP_tau6h_2months_inithist.100.cosp
+set RUN_REFDATE=2018-01-18
+set RUN_REFDIR=/glade/derecho/scratch/$USER/cases/${RUN_REFCASE}/run
+set GET_REFCASE=TRUE
+
+### SOCRATES FLIGHT TIMES
+#Flight  	Date (UTC)	Time Period (UTC)
+#RF01	18 Jan 2018	01:21–09:12
+#RF02	19 Jan 2018	21:56–05:43
+#RF03	22 Jan 2018	00:04–06:21
+#RF04	24 Jan 2018	00:46–07:07
+#RF05	25 Jan 2018	01:54–06:50
+#RF06	29 Jan 2018	23:25–05:59
+#RF07	01 Feb 2018	00:30–06:05
+#RF08	04 Feb 2018	01:10–06:40
+#RF09	05 Feb 2018	01:20–07:05
+#RF10	07 Feb 2018	22:58–05:27
+#RF11	09 Feb 2018	01:14–06:54
+#RF12	15 Feb 2018	22:15–03:52
+#RF13	18 Feb 2018	02:40–08:44
+#RF14	22 Feb 2018	00:30–07:14
+
+#------------------
+# User should not need to set any options in this section
+#------------------
+
+cd  $CASEDIR
+
+#Create full casename
+set CASENAME=${CASETITLE}.${COMPSET}.${RES}.${CASEID}.${EXP}
+
+#------------------
+# create case
+#------------------
+
+$CESMDIR/cime/scripts/create_newcase -compset $COMPSET  -res $RES -compiler $COMPILER -case $CASEDIR/$CASENAME  --run-unsupported --walltime ${WALLTIME} --queue ${QUEUE} ${PES} 
+
+cd  $CASEDIR/$CASENAME
+
+### Set build and run directories to be under case directory.
+
+set RUNDIR=${CASEDIR}/${CASENAME}/run
+
+./xmlchange RUNDIR=$RUNDIR
+./xmlchange EXEROOT=${CASEDIR}/${CASENAME}/bld
+
+./xmlchange ROF_NCPL=`./xmlquery  --value "ATM_NCPL"`
+./xmlchange GLC_NCPL=`./xmlquery  --value "ATM_NCPL"`
+./xmlchange GMAKE_J=32
+./xmlchange DOUT_S=FALSE
+
+### Append to CAM configure options
+./xmlchange --append CAM_CONFIG_OPTS='-camiop -cosp'
+
+#------------------
+# XMLCHANGE OPTIONS HERE from settings at beginning of file
+#------------------
+./xmlchange RUN_TYPE=${RUN_TYPE}
+./xmlchange RUN_STARTDATE=${RUN_STARTDATE}
+./xmlchange STOP_N=${STOP_N}
+./xmlchange STOP_OPTION=${STOP_OPTION}
+./xmlchange REST_OPTION=${REST_OPTION}
+./xmlchange REST_N=${REST_N}
+./xmlchange JOB_WALLCLOCK_TIME=${WALLTIME} --subgroup=case.run
+./xmlchange RUN_REFDATE=${RUN_REFDATE}
+./xmlchange RUN_REFCASE=${RUN_REFCASE}
+./xmlchange RUN_REFDIR=${RUN_REFDIR}
+./xmlchange GET_REFCASE=${GET_REFCASE}
+ 
+### DEBUG
+### ./xmlchange DEBUG='TRUE'
+
+#------------------
+# Setup Case
+#------------------
+
+./*setup
+
+#------------------
+# Namelist setup
+#------------------
+
+cat >> user_nl_cam << EOF
+inithist = 'CAMIOP'
+avgflag_pertape = 'I','I','I'
+mfilt               =       48,     48,     48
+nhtfrq              =        1,     1,     1
+write_nstep0           = .true.
+ncdata='/glade/derecho/scratch/jet/f.e30.cam6_4_120.FHIST_BGC.ne30_ne30_mg17.SOCRATES_nudgeUVTQsoc_full_withCOSP_tau6h_2months_inithist.100.cosp.cam.i.2018-01-18-00000.nc'
+inithist_all = .true.
+
+interpolate_output  =  .true.,  .false., .false.,  .false., .false.,   .false.,     .false.
+interpolate_nlat    =     192,     192,    192,     192,      192,     192,      192
+interpolate_nlon    =     288,     288,    288,     288,      288,     288,      288
+
+docosp=.true.
+cosp_histfile_num = 3
+
+Nudge_Model            =.true.
+Nudge_Path             ='/glade/campaign/cgd/amp/jet/data/ERA5_nudging_input_1h/SOCRATES/ne30np4/L32/'
+Nudge_File_Template    ='ERA5_x_ne30np4_L32_rgC2_WO.%y-%m-%d-%s.nc'
+Nudge_Force_Opt        = 1
+Nudge_Times_Per_Day    = 24
+Model_Times_Per_Day    = 48
+Nudge_Uprof  =2
+Nudge_Ucoef  =0.1667
+Nudge_Vprof  =2
+Nudge_Vcoef  =0.1667
+Nudge_Tprof  =2
+Nudge_Tcoef  =0.1667
+Nudge_Qprof  =2
+Nudge_Qcoef  =0.1667
+Nudge_PSprof =0
+Nudge_PScoef =0
+Nudge_Beg_Year =2018
+Nudge_Beg_Month=1
+Nudge_Beg_Day  =1
+Nudge_End_Year =2018
+Nudge_End_Month=2
+Nudge_End_Day  =28
+
+Nudge_Hwin_lat0    =-50.0
+Nudge_Hwin_latWidth=30.
+Nudge_Hwin_latDelta=3.
+Nudge_Hwin_lon0    = 150
+Nudge_Hwin_lonWidth=40.
+Nudge_Hwin_lonDelta=3.
+Nudge_Hwin_Invert  =.true.
+
+Nudge_Vwin_Hindex  =33.
+Nudge_Vwin_Hdelta  =0.001
+Nudge_Vwin_Lindex  =32.
+Nudge_Vwin_Ldelta  =0.001
+Nudge_Vwin_Invert  =.false.
+
+ext_frc_specifier              = 'H2O    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/elev/H2OemissionCH4oxidationx2_3D_L70_1849-2101_CMIP6ensAvg_SSP3-7.0_c190403.nc',
+         'num_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a1_anthro-ene_vertical_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_num_a1_so4_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
+         'num_a2 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_num_a2_so4_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
+         'SO2    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_SO2_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
+         'so4_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a1_anthro-ene_vertical_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'so4_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_so4_a1_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
+         'so4_a2 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_so4_a2_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc'
+ srf_emis_specifier             = 'bc_a4    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_bc_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'bc_a4    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'DMS      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_DMS_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'DMS      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-SSP_DMS_other_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a1_anthro-ag-ship_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a2   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a2_anthro-res_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_bc_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_pom_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'pom_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_pom_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'pom_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SO2_anthro-ag-ship-res_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SO2_anthro-ene_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SO2_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'so4_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a1_anthro-ag-ship_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'so4_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'so4_a2   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a2_anthro-res_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SOAGx1.5_anthro_surface_mol_175001-210101_0.9x1.25_c20200403.nc',
+         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SOAGx1.5_bb_surface_mol_175001-210101_0.9x1.25_c20200403.nc',
+         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp/emissions-cmip6-SOAGx1.5_biogenic_surface_mol_175001-210101_0.9x1.25_c20190329.nc'
+tracer_cnst_file               = 'tracer_cnst_halons_3D_L70_1849-2101_CMIP6ensAvg_SSP3-7.0_c190403.nc'
+&chem_surfvals_nl
+ flbc_file              = '/glade/p/cesmdata/cseg/inputdata/atm/waccm/lb/LBC_2014-2500_CMIP6_SSP370_0p5degLat_GlobAnnAvg_c190301.nc'
+ flbc_list              = 'CO2','CH4','N2O','CFC11eq','CFC12'
+ flbc_type              = 'SERIAL'
+ scenario_ghg           = 'CHEM_LBC_FILE'
+/
+&prescribed_ozone_nl
+ prescribed_ozone_datapath              = '/glade/p/cesmdata/cseg/inputdata/atm/cam/ozone_strataero'
+ prescribed_ozone_file          = 'ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP370_c190403.nc'
+ prescribed_ozone_name          = 'O3'
+ prescribed_ozone_type          = 'SERIAL'
+/
+&prescribed_strataero_nl
+ prescribed_strataero_datapath          = '/glade/p/cesmdata/cseg/inputdata/atm/cam/ozone_strataero'
+ prescribed_strataero_file              = 'ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP370_c190403.nc'
+ prescribed_strataero_type              = 'SERIAL'
+ prescribed_strataero_use_chemtrop              =  .true.
+EOF
+
+
+cat >> user_nl_clm << EOFclm
+ model_year_align_ndep = 2015
+ ndep_taxmode = 'cycle'
+ ndep_varlist = 'NDEP_month'
+ ndepmapalgo = 'bilinear'
+ stream_fldfilename_ndep = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP3-7.0-WACCM_1849-2101_monthly_c191007.nc'
+ stream_year_first_ndep = 2015
+ stream_year_last_ndep = 2101
+ model_year_align_popdens = 2015
+ popdensmapalgo = 'bilinear'
+ stream_fldfilename_popdens = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/firedata/clmforc.Li_2018_SSP3_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2100_c181205.nc'
+ stream_year_first_popdens = 2015
+ stream_year_last_popdens = 2100
+ model_year_align_urbantv = 2015
+ stream_fldfilename_urbantv = '/glade/campaign/cesm/cesmdata/inputdata/lnd/clm2/urbandata/CLM50_tbuildmax_Oleson_2016_0.9x1.25_simyr1849-2106_c160923.nc'
+ stream_meshfile_urbantv = '/glade/campaign/cesm/cesmdata/inputdata/lnd/clm2/urbandata/CLM50_tbuildmax_Oleson_2016_0.9x1_ESMFmesh_cdf5_100621.nc'
+ stream_year_first_urbantv = 2015
+ stream_year_last_urbantv = 2106
+ urbantvmapalgo = 'nn'
+do_harvest = .true.
+do_transient_crops = .true.
+do_transient_pfts = .true.
+flanduse_timeseries = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/surfdata_esmf/ctsm5.3.0/landuse.timeseries_ne30np4_SSP2-4.5_1850-2100_78pfts_c240905.nc'
+use_init_interp=.true.
+EOFclm
+
+#cat >> user_nl_cpl << EOFcpl
+#reprosum_diffmax=1.0e-14
+#reprosum_recompute=.true.
+#EOFcpl
+#------------------
+# Build
+#------------------
+
+./*.build
+
+mkdir -p $RUNDIR/timing/checkpoints
+
+### Submit to Queue (If you have one)
+./case.submit
+

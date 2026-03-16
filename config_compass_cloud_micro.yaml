@@ -1,0 +1,24 @@
+# TEST
+# Configuration file for COMPASS Cloud Microphysics
+# 
+user: 'richling'
+diag_loc: /glade/derecho/scratch/richling/adf-output/tests/compass-diags-new/
+composited_data: /glade/derecho/scratch/richling/inform/composited_data/
+#composited_data: /glade/derecho/scratch/richling/inform/composited_data/
+extent: [130, 165, -35, -65]
+sdate: "2018-02-19"
+stime_hs: "16:30"
+edate: "2018-02-20"
+etime_hs: "07:00"
+
+# Add research campaigns
+campaigns:
+    'SOCRATES':
+        #composited_data: ${composited_data}
+        composited_data: /glade/derecho/scratch/richling/inform/composited_data/
+        redo_composited: false
+        rf_data_dir: /glade/derecho/scratch/richling/ADF/ADF_dev/Justin_ADF_2/ADF/data/observations/SOCRATES/rf_data/
+    'CSET':
+        #composited_data: /glade/derecho/scratch/${user}/inform/composited_data/
+        composited_data: /glade/derecho/scratch/richling/inform/composited_data/
+        rf_data_dir: /glade/derecho/scratch/richling/ADF/ADF_dev/Justin_ADF_2/ADF/data/observations/CSET/rf_data/

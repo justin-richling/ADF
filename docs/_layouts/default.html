@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title | default: "INFORM-COMPASS cookbook" }}</title>
+
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/github-markdown.min.css">
+
+</head>
+<body>
+    <article class="markdown-body">
+
+    <header>
+        <h1>INFORM-COMPASS cookbook</h1>
+        <nav>
+            <a href="{{ site.baseurl }}/">Cookbook</a> |
+            <a href="{{ site.baseurl }}/derecho/">Accessing Derecho</a> |
+            <a href="{{ site.baseurl }}/jupyter_notebook/">Viewing a Jupyter Notebook</a> |
+            <a href="{{ site.baseurl }}/scam/">Configure SCAM</a> |
+            <a href="{{ site.baseurl }}/scam_nudge/">Run SCAM nudging</a> |
+            <a href="{{ site.baseurl }}/scam_test/">Run SCAMtest</a> |
+            <a href="{{ site.baseurl }}/scam_tips/">SCAM Tips</a> |
+            <a href="{{ site.baseurl }}/git_tips/">Git Tips</a>
+        </nav>
+        <br>
+        <a href="https://github.com/NCAR/INFORM-COMPASS-cookbook/blob/main/LICENSE">
+          <img src="https://img.shields.io/github/license/NCAR/INFORM-COMPASS-cookbook?color=2043a1" alt="GitHub License">
+        </a> &nbsp; &nbsp;
+        <a href="https://github.com/NCAR/INFORM-COMPASS-cookbook/blob/main/CHANGELOG.md">
+          <img src="https://img.shields.io/badge/updates-CHANGELOG-4a69bd" alt="Changelog">
+        </a> &nbsp; &nbsp;
+        <img src="https://img.shields.io/badge/Status-under%20development-yellow" alt="Status Badge">
+        <br>
+        <p style="color: #d29922"> This repository is under development and may not include most recent work. Please contact the project PI <a href="mailto:cmcclus@ucar.edu?subject=INFORM-COMPASS%20cookbook%20inquiry">Christina McCluskey</a> for questions.</p>
+
+        <!-- Placeholder for a future DOI badge
+        [![DOI](https://img.shields.io/badge/DOI-10.#####)](https://doi.org/10.#####)
+        -->
+    </header>
+
+    <main>
+        {{ content }}
+    </main>
+
+    <footer>
+        <hr>
+        <p>Citation: As this repository is under development, please reach out to us before citing this work and we will provide a DOI and guidance at that time.
+        <br>
+        <p>&copy; {{ "now" | date: "%Y" }} NSF National Center for Atmospheric Research . All rights reserved.
+        </p>
+    </footer>
+
+    </article>
+</body>
+</html>

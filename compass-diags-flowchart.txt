@@ -1,0 +1,11 @@
+Pipeline
+ ├── Step 1: Model State Assessment Evaluate nudged CESM vs Reanalysis
+ |       ├── Evaluate nudged CESM vs Reanalysis
+ │           ├── run()
+ │           ├── produce diagnostics
+ │           └── return result + metadata
+ ├── Gate 1: User approval needed
+ ├── Step 2: Evaluate COSP vs MODIS/ISCCP
+ ├── Gate 2: User approval needed
+ ├── Step 3: Final diagnostics
+ └── ...

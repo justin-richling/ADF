@@ -1,0 +1,162 @@
+#!/bin/csh -fv
+
+#**********************************************************************
+# Run SCAM with a single IOP
+#    This script will build and run one IOP
+#    If a user wishes to run more than one IOP, use create_scam6_iop_multi
+#
+# Usage:
+#   ./create_scam6_iop <IOP>    # where IOP name is from list below
+#      - or -
+#   ./create_scam6_iop          # IOP is specified in the script below
+#**********************************************************************
+
+#------------------
+# User sets options in this section
+#------------------
+
+### Full path of cesm source code and case (output) directories (see examples)
+
+set CESMDIR=/project/amp/$USER/collections/cam6_4_100_cesm3_0_alpha07c
+set CASEDIR=/project/amp/$USER/cases
+
+### Case Name
+
+set CASETITLE=scamtest
+
+### Set location of user source mods (if any)
+setenv this_dir  `pwd`
+#set usrsrc=/project/amp/jet/cases/scam_test.FSCAM.ne3pg3_ne3pg3_mg37.gnu.cam63109.scamdev.06
+
+### Standard Run Settings
+set RES=ne3_ne3_mg37
+set COMPSET=2000_CAM60_CLM50%SP_CICE%PRES_DOCN%DOM_SROF_SGLC_SWAV_SESP
+#set COMPSET=F2000climo
+set COMPILER=intel
+set PES=1
+
+### Set Desired IOP
+### $1 means read from command line. Or put one of the names in:
+###     arm95 arm97 atex bomex cgilsS11 cgilsS12 cgilsS6 dycomsRF01 dycomsRF02 gateIII mpace rico sparticus togaII twp06
+
+set IOP = arm97
+
+#------------------
+# User should not need to set any options in this section
+#------------------
+
+cd  $CASEDIR
+
+set IOPNAME = scam_$IOP
+
+## location of IOP data in CESM Tag
+#if( -d $CESMDIR/components/cam/cime_config/usermods_dirs ) then
+#  set MODSDIR = $CESMDIR/components/cam/cime_config/usermods_dirs
+#else if ( -d $CESMDIR/cime_config/usermods_dirs) then
+#  set MODSDIR = $CESMDIR/cime_config/usermods_dirs
+#else
+#  echo "Can't find usermods_dirs directory.  Please double-check $CESMDIR path."
+#  exit 1
+#endif
+
+#Create full casename
+set CASENAME=${CASETITLE}.F2000.${RES}.005.new.cold_off
+
+#------------------
+# create case
+#------------------
+
+$CESMDIR/cime/scripts/create_newcase -mach izumi -compset $COMPSET  -res $RES -compiler $COMPILER -case $CASEDIR/$CASENAME  -pecount ${PES} --run-unsupported
+
+cd  $CASEDIR/$CASENAME
+
+### Set build and run directories to be under case directory.
+
+set RUNDIR=${CASEDIR}/${CASENAME}/run
+./xmlchange RUNDIR=$RUNDIR
+
+./xmlchange EXEROOT=${CASEDIR}/${CASENAME}/bld
+
+#------------------
+# XMLCHANGE OPTIONS HERE
+#------------------
+./xmlchange LND_DOMAIN_FILE='domain.lnd.ne3np4_gx3v7.230718.nc'
+
+### Append to CAM configure options
+# ./xmlchange --append CAM_CONFIG_OPTS=' '
+./xmlchange --append CAM_CONFIG_OPTS='-camiop'
+./xmlchange ROF_NCPL=`./xmlquery  --value "ATM_NCPL"`
+./xmlchange GLC_NCPL=`./xmlquery  --value "ATM_NCPL"`
+./xmlchange STOP_OPTION=nsteps,STOP_N=9
+### DEBUG
+./xmlchange DEBUG='TRUE'
+
+#------------------
+# Setup Case
+#------------------
+
+./*setup
+# ./case.setup -d -v    #-d -v for verbose and debug file
+
+#------------------
+#  source mods: copy them into case directory
+#------------------
+
+# cd ${usrsrc}
+# tar cf $CASEDIR/$CASENAME/mods.tar SourceMods
+# cd $CASEDIR/$CASENAME
+# tar xf mods.tar
+# rm mods.tar
+
+cat >> user_nl_cam << EOF
+inithist = 'CAMIOP'
+inithist_all = .true.
+NDENS    = 1,1
+MFILT    = 1,10
+nhtfrq   = 0,1
+scale_dry_air_mass              =   0.0D0
+write_nstep0           = .true.
+EOF
+
+cat >> user_nl_clm << EOFclm
+fsurdat = '/fs/cgd/csm/inputdata/lnd/clm2/surfdata_esmf/ctsm5.3.0/surfdata_ne3np4_hist_2000_78pfts_c240925.nc'
+hist_nhtfrq = 0,1
+hist_mfilt  = 1,10
+hist_ndens  = 1,1
+EOFclm
+cat >> user_nl_cpl << EOFcpl
+reprosum_diffmax=1.0e-14
+reprosum_recompute=.true.
+EOFcpl
+#------------------
+# Build
+#------------------
+
+./*.build
+# ./case.build -d -v   #-d -v for verbose and debug file
+
+### make timing dir kludge  [REMOVE WHEN FIXED]
+mkdir -p $RUNDIR/timing/checkpoints
+
+#------------------
+# Add all user specific cam namelist changes here
+#
+# Users should add all user specific namelist changes below in the form of
+#    namelist_var = new_namelist_value
+# Namelist settings which appear in usermods_dir and here will use the values
+#    specified below
+# Other namelist settings from usermods_dirs will be unchanged
+# Output can also be specified here (e.g. fincl1)
+#------------------
+
+
+#------------------
+# Choose type of job submission (batch or interactive)
+#------------------
+
+### Submit to Queue (If you have one)
+#./case.submit
+
+###  OR you can run interactively instead of going through the queue
+#cd $RUNDIR
+#../bld/cesm.exe

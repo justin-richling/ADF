@@ -1,0 +1,58 @@
+user: 'richling'
+diag_loc: /glade/derecho/scratch/richling/adf-output/tests/compass-diags/
+extent: [130, 165, -35, -65]
+sdate: "2018-02-19"
+stime_hs: "16:30"
+edate: "2018-02-20"
+etime_hs: "07:00"
+compass_cases:
+    'f.e21.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull': 
+        - '/glade/derecho/scratch/islas/archive/f.e21.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_tau12h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e21.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_tau24h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e21.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_tau48h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e21.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_tau6h.001'
+    'f.e30_cam6_4_120.FHISTC_LTso.ne30pg3_ne30pg3_mg17.SOCRATES_nudgeUVTfull_withCOSP':
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHISTC_LTso.ne30pg3_ne30pg3_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau12h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHISTC_LTso.ne30pg3_ne30pg3_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau24h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHISTC_LTso.ne30pg3_ne30pg3_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau48h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHISTC_LTso.ne30pg3_ne30pg3_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau6h.001'
+    'f.e30_cam6_4_120.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_withCOSP':
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau12h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau24h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau48h.001'
+        - '/glade/derecho/scratch/islas/archive/f.e30_cam6_4_120.FHIST_BGC.f09_f09_mg17.SOCRATES_nudgeUVTfull_withCOSP_tau6h.001'
+
+
+campaigns:
+    'SOCRATES': 
+        rf_data_dir: /glade/derecho/scratch/richling/ADF/ADF_dev/Justin_ADF_2/ADF/data/observations/SOCRATES/rf_data/
+        rf_filenames:
+            - 'RF02_20180219_R0.csv'
+            - 'RF03_20180220_R0.csv'
+        rf_time_var: 'time'
+        rf_height_var: 'height'
+        rf_lwc_var: 'LWC'
+        rf_nd_var: 'Nd'
+        rf_w_var: 'W'
+        rf_temp_var: 'ATX'
+        rf_qc_vars:
+            - 'LWC_QC'
+            - 'Nd_QC'
+            - 'W_QC'
+            - 'ATX_QC'
+    'CSET': 
+        rf_data_dir: /glade/derecho/scratch/richling/ADF/ADF_dev/Justin_ADF_2/ADF/data/observations/CSET/rf_data/
+        rf_filenames:
+            - 'RF01_20151022_R0.csv'
+            - 'RF02_20151023_R0.csv'
+        rf_time_var: 'time'
+        rf_height_var: 'height'
+        rf_lwc_var: 'LWC'
+        rf_nd_var: 'Nd'
+        rf_w_var: 'W'
+        rf_temp_var: 'ATX'
+        rf_qc_vars:
+            - 'LWC_QC'
+            - 'Nd_QC'
+            - 'W_QC'
+            - 'ATX_QC'

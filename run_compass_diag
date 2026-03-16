@@ -1,0 +1,234 @@
+#!/usr/bin/env python3
+
+"""
+script: run_adf_diag
+
+goal:  To allow a user to easily run the CAM diagnostics package from
+       the command line.
+
+Inputs:  The ADF diagnostics config file (in YAML format).  If the file is
+         located in a different directory then the system path must also be
+         included.
+
+Any problems or issues with this script should be posted on the
+ADF Github Discussions page located online here:
+
+https://github.com/NCAR/ADF/discussions
+
+Please note that registration may be required before a message can
+be posted.  However, feel free to search the forums for similar issues
+(and possible solutions) without needing to register or sign in.
+
+Good luck, and may all your plots be helpful!
+"""
+
+#++++++++++++++++++++++++++++++
+#Import standard python modules
+#++++++++++++++++++++++++++++++
+
+import os.path
+import sys
+import argparse
+
+#+++++++++++++++++++++++++++++
+#Import ADF diagnostics module
+#+++++++++++++++++++++++++++++
+
+#Determine local directory path:
+_LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
+
+#Add lib directory to path:
+_DIAG_LIB_PATH = os.path.join(_LOCAL_PATH,"lib")
+
+#Check that path actually exists:
+if os.path.isdir(_DIAG_LIB_PATH):
+    #If true, then add to Python path:
+    sys.path.append(_DIAG_LIB_PATH)
+else:
+    #If not, then raise error:
+    raise FileNotFoundError("'./lib' directory not found. Has 'run_adf_diag' been moved?")
+
+#Import ADF diagnostics object:
+from adf_diag import AdfDiag
+
+#Import ADF diagnostics error class:
+from adf_base import AdfError
+
+#################
+#Helper functions
+#################
+
+#++++++++++++++++++++++++++++++
+#Input argument parser function
+#++++++++++++++++++++++++++++++
+
+def parse_arguments():
+
+    """
+    Parses command-line input arguments using the argparse
+    python module and outputs the final argument object.
+    """
+
+    #Create parser object:
+    parser = argparse.ArgumentParser(description='Command-line wrapper to run the ADF diagnostics package.')
+
+    #Add input arguments to be parsed:
+    #--------------------------------
+
+    #Config file:
+    #parser.add_argument('configure_file', nargs='?', action='store', type=str,
+    #                    help="YAML file used to configure CAM diagnostics.")
+
+    #Flag methods to point to a COMPASS config files.
+    parser.add_argument('--model-state', '--model_state', action='store', type=str,
+                        help="YAML file used to configure CAM/COMPASS diagnostics for model state assessment.")
+    parser.add_argument('--model-cloud-state', '--model_cloud_state', action='store', type=str,
+                        help="YAML file used to configure CAM/COMPASS diagnostics for cloud state assessment.")
+    #parser.add_argument('--composite-data', '--composite_data', action='store', type=str,
+    #                    help="YAML file used to configure CAM/COMPASS diagnostics for cloud microphysics assessment.")
+    parser.add_argument('--campaign-cloud-micro', '--campaign_cloud_micro', action='store', type=str,
+                        help="YAML file used to configure CAM/COMPASS diagnostics for cloud microphysics assessment.")
+
+    #Flag method to point to config file.  Will be removed at some point in the future.
+    #parser.add_argument('--config-file', '--config_file', metavar='<DIAG_YAML_FILE>', action='store', type=str,
+    #                   help="YAML file used to configure CAM diagnostics (deprecated).")
+
+    #Debug setting:
+    parser.add_argument('--debug', action='store_true', help="Turn on debug output.")
+
+    #--------------------------------
+
+    #Parse Argument inputs
+    args = parser.parse_args()
+
+    #If no config file argument is present, then throw an error:
+    if (not args.campaign_cloud_micro) and (not args.model_cloud_state) and (not args.model_state):
+        emsg = "No Config file found, please run 'run_compass_diag <DIAG_YAML_FILE>'.\n"
+        emsg +="Where <DIAG_YAML_FILE> is the name of the yaml file used to configure for one of the INFORM-COMPASS steps"
+        parser.error(emsg)
+
+    return args
+
+############################
+#Main CAM diagnostics script
+############################
+
+#Run code below if command is called
+#directly from the command line:
+if __name__ == "__main__":
+
+    #+++++++++++++++++++++
+    #Begin ADF diag script
+    #+++++++++++++++++++++
+    print('INFORM-COMPASS diagnostics is starting...')
+
+    #+++++++++++++++++++++++++++++++++++++++++++
+    #Check that python is version 3.6 or greater
+    #+++++++++++++++++++++++++++++++++++++++++++
+
+    if sys.version_info[0] < 3:
+        raise AdfError("Script only works with Python 3. Please switch python versions.")
+
+    if sys.version_info[1] < 6:
+        raise AdfError("Script only works with Python version 3.6 or greater.  Please update python.")
+
+    #++++++++++++++++++++++++++++
+    #Parse command-line arguments
+    #++++++++++++++++++++++++++++
+
+    args = parse_arguments()
+    """#Extract YAML config file name/path:
+    if args.configure_file:
+      config_yaml = args.configure_file
+    #else:
+    #  config_yaml = args.config_file"""
+
+    #Extract debug flag:
+    config_debug = args.debug
+
+    #Initalize CAM diagnostics object:
+    #diag = AdfDiag(config_yaml, debug=config_debug)
+
+
+    #if any([args.campaign_cloud_micro, args.model_state, args.model_cloud_state]):
+    #    diag.create_composited_dataset()
+    """if args.composite_data:
+        composite_data_yaml = args.composite_data
+        diag.create_composited_dataset(composite_data_yaml)
+        print('\nCOMPASS campaign-model compositing data has completed successfully.')
+        sys.exit(0)"""
+
+    #Extract YAML config file name/path:
+    if args.model_state:
+        model_state_yaml = args.model_state
+        from scripts.plotting.model_state_analysis import model_state_analysis
+        model_state_analysis(model_state_yaml)
+        print('\nCOMPASS model state assessment has completed successfully.')
+        sys.exit(0)
+
+    if args.model_cloud_state:
+        model_cloud_state_yaml = args.model_cloud_state
+        from scripts.plotting.model_cloud_state_analysis import model_cloud_state_analysis
+        model_cloud_state_analysis(model_cloud_state_yaml)
+        print('\nCOMPASS model cloud state assessment has completed successfully.')
+        print('\t - Things like COSP analysis, cloud fraction, satellite obs/simulator, etc.')
+        sys.exit(0)
+
+    if args.campaign_cloud_micro:
+        cloud_micro_yaml = args.campaign_cloud_micro
+        from scripts.plotting.campaign_cloud_micro_analysis import campaign_cloud_micro_analysis
+        from scripts.averaging.create_composited_dataset import create_composited_dataset
+        campaign_cloud_micro_analysis(cloud_micro_yaml, create_composited_dataset)
+        print('\nCOMPASS flight cloud microphysics assessment has completed successfully.')
+        sys.exit(0)
+    
+    """#Extract debug flag:
+    config_debug = args.debug
+
+    #Extract YAML config file name/path:
+    if args.configure_file:
+      config_yaml = args.configure_file
+    #else:
+    #  config_yaml = args.config_file
+
+    #Initalize CAM diagnostics object:
+    diag = AdfDiag(config_yaml, debug=config_debug)"""
+
+    #+++++++++++++++++++++++++++++++++
+    #Call main ADF diagnostics methods
+    #+++++++++++++++++++++++++++++++++
+    #Create model time series.
+    #Please note that this is an internal ADF function:
+    #diag.create_time_series()
+
+    """#Call the MDTF:
+    if diag.get_mdtf_info('mdtf_run'):
+        mdtf_proc = diag.setup_run_mdtf()  #returns mdtf_proc for subprocess control
+    else:
+        mdtf_proc = None"""
+
+    #Create model climatology (climo) files.
+    #This call uses the "time_averaging_scripts" specified
+    #in the config file:
+    #diag.create_climo()
+
+    #Perform analyses on the simulation(s).
+    #This call uses the "analysis_scripts" specified in the
+    #config file:
+    #diag.perform_analyses()
+
+    #Create plots.
+    #This call uses the "plotting_scripts" specified
+    #in the config file:
+    #diag.create_plots()
+
+    #Create website.
+    #Please note that this is an internal ADF function:
+    #if diag.create_html:
+    #    diag.create_website()
+
+    #+++++++++++++++
+    #End diag script
+    #+++++++++++++++
+    print('\INFORM-COMPASS diagnostics has completed successfully.')
+    sys.exit(0)

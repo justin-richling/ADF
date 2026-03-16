@@ -1,0 +1,160 @@
+#!/bin/csh -fv
+
+#**********************************************************************
+# Run SCAM with a single IOP
+#**********************************************************************
+
+#------------------
+# User sets options in this section
+# case parameters
+#------------------
+
+set CASETITLE=scamtest
+set CAMDIRNAME=cam6_4_100_cesm3_0_alpha07c  # this is the source directory name under collections
+set RES=ne3_ne3_mg37
+set COMPSET=2000_CAM60%SCAM_CLM50%SP_CICE%PRES_DOCN%DOM_SROF_SGLC_SWAV_SESP
+set COMPILER=intel
+set PES=1
+
+### Set Desired IOP  if using a CAM generated IOP then add ./xmlchange --append CAM_CONFIG_OPTS='-scam camfrc'
+###     arm95 arm97 atex bomex cgilsS11 cgilsS12 cgilsS6 dycomsRF01 dycomsRF02 gateIII mpace rico sparticus togaII twp06
+### set IOP = arm97
+
+## set filesystem either glade or project
+if( -d /glade/campaign/cgd ) then
+  set FSROOT = /glade/campaign/cgd
+else if ( -d /project/amp/$USER) then
+  set FSROOT = /project
+else
+  echo "Can't find filesystem root .. looking for /glade/campaign/cgd or /project/amp/$USER"
+  exit 1
+endif
+
+### Full path of cesm/cam source code and case (output) directories (see examples)
+
+set CESMDIR=${FSROOT}/amp/$USER/collections/$CAMDIRNAME
+set CASEDIR=${FSROOT}/amp/$USER/cases
+
+cd  $CASEDIR
+
+
+#------------------
+# Uncomment this if running a standard IOP case
+# case parameters
+#------------------
+# set IOPNAME = scam_${IOP}
+## location of IOP data in CESM Tag
+#if( -d $CESMDIR/components/cam/cime_config/usermods_dirs ) then
+#  set MODSDIR = $CESMDIR/components/cam/cime_config/usermods_dirs/${IOPNAME}
+#else if ( -d $CESMDIR/cime_config/usermods_dirs) then
+#  set MODSDIR = $CESMDIR/cime_config/usermods_dirs/${IOPNAME}
+#else
+#  echo "Can't find usermods_dirs directory.  Please double-check $CESMDIR path."
+#  exit 1
+#endif
+
+#Create full casename
+set CASENAME=${CASETITLE}.F2000.${RES}.005.scm.new.cold_off
+
+#------------------
+# create case
+#------------------
+
+$CESMDIR/cime/scripts/create_newcase -compset $COMPSET  -res $RES -compiler $COMPILER -case $CASEDIR/$CASENAME  -pecount ${PES} --run-unsupported
+
+cd  $CASEDIR/$CASENAME
+
+#------------------
+### Set build and run directories to be under case directory and turn off archiving so history and logs stay under the rundir ($CASEDIR/$CASENAME/run)
+#------------------
+set RUNDIR=${CASEDIR}/${CASENAME}/run
+./xmlchange RUNDIR=$RUNDIR
+./xmlchange EXEROOT=${CASEDIR}/${CASENAME}/bld
+./xmlchange DOUT_S=FALSE
+
+#------------------
+# XMLCHANGE OPTIONS HERE
+#------------------
+./xmlchange STOP_OPTION=nsteps,STOP_N=4
+./xmlchange RUN_STARTDATE=00010101,START_TOD=0
+./xmlchange BFBFLAG='TRUE'
+./xmlchange PTS_DOMAINFILE='/fs/cgd/csm/inputdata/share/domains/domain.lnd.ne3np4_gx3v7.230718.nc'
+./xmlchange LND_DOMAIN_FILE='domain.lnd.ne3np4_gx3v7.230718.nc'
+./xmlchange CLM_FORCE_COLDSTART='off'
+### Append parameter to CAM configure options for running with cam generated IOP
+./xmlchange --append CAM_CONFIG_OPTS='-scam camfrc'
+
+# User should set the Lat and Lon for SCAM
+./xmlchange PTS_LON=276.7082039324993
+./xmlchange PTS_LAT=44.80320177421346
+
+./xmlchange ROF_NCPL=`./xmlquery  --value "ATM_NCPL"`
+./xmlchange GLC_NCPL=`./xmlquery  --value "ATM_NCPL"`
+
+### DEBUG  FOR BFB SCAMIOP need to set DEBUG TO true and run on 1 processor
+### DEBUG  This is not needed for production answers will be roundoff different for no dbg
+./xmlchange DEBUG='TRUE'
+
+#------------------
+# Setup Case
+#------------------
+
+./*setup
+
+#------------------
+#  source mods: copy them into case directory if needed
+#------------------
+###rsync -av ${USERMODSDIR}/SourceMods/ SourceMods/
+
+#------------------
+#  set user specific namelist settings
+#------------------
+
+cat >> user_nl_cam << EOF
+NDENS    = 1,1
+MFILT    = 10,10
+nhtfrq   = 1,1
+fincl2='T','Q','TDIFF','QDIFF','LANDFRAC'
+iopfile ='/scratch/cluster/jet/scamtest.F2000.ne3_ne3_mg37.005.new.cold_off.cam.h1i.0001-01-01-00000.nc'
+ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/se/cam6_QPC6_topo_ne3pg3_mg37_L32_01-01-31_c221214.nc'
+inithist = 'YEARLY'
+scm_cambfb_mode  = .true.
+scm_use_obs_uv   = .true.
+scm_use_3dfrc   = .true.
+scm_relaxation   = .false.
+scale_dry_air_mass              =   0.0D0
+write_nstep0           = .true.
+EOF
+
+cat >> user_nl_clm << EOFclm
+use_init_interp = .true.
+init_interp_method = 'general'
+finidat = '/fs/cgd/csm/inputdata/lnd/clm2/initdata_map/clmi.F2000.2000-01-01.ne120pg3_mt13_simyr2000_c200728.nc'
+hist_nhtfrq = 1,1
+hist_mfilt  = 1,10
+hist_ndens  = 1,1
+EOFclm
+
+cat >> user_nl_cpl << EOFcpl
+reprosum_diffmax=1.0e-14
+reprosum_recompute=.true.
+EOFcpl
+
+#------------------
+# Build
+#------------------
+
+./*.build
+
+### make timing dir kludge  [REMOVE WHEN FIXED]
+mkdir -p $RUNDIR/timing/checkpoints
+
+#------------------
+# Choose type of job submission (batch or interactive)
+#------------------
+
+./case.submit
+
+###  OR you can run interactively instead of going through the queue
+#cd $RUNDIR
+#../bld/cesm.exe

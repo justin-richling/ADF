@@ -1,0 +1,130 @@
+#!/bin/csh -fv
+
+#**********************************************************************
+# Run CAM creating an IOP for SCAM
+#**********************************************************************
+
+#------------------
+# User sets options in this section
+# case parameters
+#------------------
+
+
+set CASETITLE=scamtest
+set CAMDIRNAME=cam6_4_100_cesm3_0_alpha07c  # this is the source directory name under collections
+set RES=ne3_ne3_mg37
+set COMPSET=2000_CAM60_CLM50%SP_CICE%PRES_DOCN%DOM_SROF_SGLC_SWAV_SESP
+set COMPILER=intel
+set PES=1
+
+
+## set filesystem either glade or project
+if( -d /glade/campaign/cgd ) then
+  set FSROOT = /glade/campaign/cgd
+else if ( -d /project/amp/$USER) then
+  set FSROOT = /project
+else
+  echo "Can't find filesystem root .. looking for /glade/campaign/cgd or /project/amp/$USER"
+  exit 1
+endif
+
+### Full path of cesm/cam source code and case (output) directories (see examples)
+
+set CESMDIR=${FSROOT}/amp/$USER/collections/$CAMDIRNAME
+set CASEDIR=${FSROOT}/amp/$USER/cases
+
+#------------------
+# User should not need to set any options in this section
+#------------------
+
+cd  $CASEDIR
+
+#Create full casename
+set CASENAME=${CASETITLE}.F2000.${RES}.005.new.cold_off
+
+#------------------
+# create case
+#------------------
+
+$CESMDIR/cime/scripts/create_newcase -compset $COMPSET  -res $RES -compiler $COMPILER -case $CASEDIR/$CASENAME  -pecount ${PES} --run-unsupported
+
+cd  $CASEDIR/$CASENAME
+
+#------------------
+### Set build and run directories to be under case directory and turn off archiving so history and logs stay under the rundir ($CASEDIR/$CASENAME/run)
+#------------------
+set RUNDIR=${CASEDIR}/${CASENAME}/run
+./xmlchange RUNDIR=$RUNDIR
+./xmlchange EXEROOT=${CASEDIR}/${CASENAME}/bld
+./xmlchange DOUT_S=FALSE
+
+#------------------
+# XMLCHANGE OPTIONS HERE
+#------------------
+./xmlchange LND_DOMAIN_FILE='domain.lnd.ne3np4_gx3v7.230718.nc'
+
+### Append to CAM configure options  ADD CAMIOP option
+./xmlchange --append CAM_CONFIG_OPTS='-camiop'
+./xmlchange ROF_NCPL=`./xmlquery  --value "ATM_NCPL"`
+./xmlchange GLC_NCPL=`./xmlquery  --value "ATM_NCPL"`
+./xmlchange STOP_OPTION=nsteps,STOP_N=9
+
+### DEBUG  FOR BFB SCAMIOP need to set DEBUG TO true and run on 1 processor
+### DEBUG  This is not needed for production answers will be roundoff different for no dbg
+./xmlchange DEBUG='TRUE'
+
+#------------------
+# Setup Case
+#------------------
+
+./*setup
+
+#------------------
+#  source mods: copy them into case directory if needed
+#------------------
+###rsync -av ${USERMODSDIR}/SourceMods/ SourceMods/
+
+#------------------
+#  set user specific namelist settings
+#------------------
+
+cat >> user_nl_cam << EOF
+inithist = 'CAMIOP'
+inithist_all = .true.
+NDENS    = 1,1
+MFILT    = 1,10
+nhtfrq   = 0,1
+scale_dry_air_mass              =   0.0D0
+write_nstep0           = .true.
+EOF
+
+cat >> user_nl_clm << EOFclm
+fsurdat = '/glade/p/cesmdata/inputdata/lnd/clm2/surfdata_esmf/ctsm5.3.0/surfdata_ne3np4_hist_2000_78pfts_c240925.nc'
+hist_nhtfrq = 0,1
+hist_mfilt  = 1,10
+hist_ndens  = 1,1
+EOFclm
+
+cat >> user_nl_cpl << EOFcpl
+reprosum_diffmax=1.0e-14
+reprosum_recompute=.true.
+EOFcpl
+
+#------------------
+# Build
+#------------------
+
+./*.build
+
+### make timing dir kludge  [REMOVE WHEN FIXED]
+mkdir -p $RUNDIR/timing/checkpoints
+
+#------------------
+# Choose type of job submission (batch or interactive)
+#------------------
+
+./case.submit
+
+###  OR you can run interactively instead of going through the queue
+#cd $RUNDIR
+#../bld/cesm.exe
