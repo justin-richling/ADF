@@ -14,6 +14,7 @@ from metpy.units import units
 #import metpy.constants as mconst
 
 import plotting_functions as pf
+import plotting_utils as plot_utils
 
 #Format warning messages:
 def my_formatwarning(msg, *args, **kwargs):
@@ -135,13 +136,13 @@ def tem(adf):
     #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
     if "qbo" in adf.plotting_scripts:
         var_list = ['uzm', 'thzm', 'tzm', 'epfy','epfz','vtem','wtem',
-                    'psitem','utendepfd','utendvtem','utendwtem']
+                    'psitem','delf','utendvtem','utendwtem']
         var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem',
         #            'psitem','utendepfd','utendvtem','utendwtem']
     #Otherwise keep it simple
     else:
-        var_list = ['uzm','thzm', 'tzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = ['uzm','thzm', 'tzm','epfy','epfz','vtem','wtem','psitem','delf']
         var_list = [i.upper() for i in var_list]
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
@@ -281,6 +282,8 @@ def tem(adf):
                     mdata = ds[var].squeeze()
                     if adf.compare_obs:
                         odata = ds_base[var.lower()].squeeze()
+                    else:
+                        odata = ds_base[var].squeeze()
                 if regrid_tem_files == False:
                     mdata['time'] = xr.conventions.times.decode_cf_datetime(mdata.time, mdata.time.attrs['units'])
                     odata['time'] = xr.conventions.times.decode_cf_datetime(odata.time, odata.time.attrs['units'])
@@ -370,8 +373,8 @@ def tem(adf):
                     #weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
                     if s == 'ANN':
                         print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
-                        print("PMID BEFORE SEAONS:",pmid,"\n\n")
-                        print("mseasons BEFORE THERMO:",mseasons,"\n\n---------------------------------------\n")
+                        #print("PMID BEFORE SEAONS:",pmid,"\n\n")
+                        #print("mseasons BEFORE THERMO:",mseasons,"\n\n---------------------------------------\n")
                         #Calculate annual weights (i.e. don't group by season):
                         weights_ann = month_length / month_length.sum()
 
@@ -384,14 +387,14 @@ def tem(adf):
                         pmid = pmid / wgt_denom
 
                     #pmid = pmid.mean(dim="lon")
-                    print("PMID AFTER SEAONS:",pmid,"\n\n")
+                    #print("PMID AFTER SEAONS:",pmid,"\n\n")
                     mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
                                                                              mseasons* units.kelvin)
 
                     oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
                                                                              oseasons* units.kelvin)
-                    if s == 'ANN':
-                        print("mseasons AFTER THERMO:",mseasons,"\n\n---------------------------------------\n")
+                    #if s == 'ANN':
+                    #    print("mseasons AFTER THERMO:",mseasons,"\n\n---------------------------------------\n")
                     #mseasons = mseasons[:,:,0]
                     #oseasons = oseasons[:,:,0]
                     #mseasons = mseasons.isel(lat=0, drop=True)
@@ -401,7 +404,7 @@ def tem(adf):
 
                     #print("mseasons in plotting:",mseasons)
 
-                if var == "UTENDEPFD":
+                if var == "DELF":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
@@ -427,7 +430,7 @@ def tem(adf):
                     dseasons = None
                 
                 #Gather contour plot options
-                cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
+                cp_info = plot_utils.prep_contour_plot(mseasons, oseasons, dseasons, None, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
 
                 norm = cp_info['norm1']
