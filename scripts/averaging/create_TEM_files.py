@@ -39,13 +39,13 @@ def create_TEM_files(adf):
         #var_list = ['uzm','epfy','epfz','vtem','wtem',
         #            'psitem','utendepfd','utendvtem','utendwtem']
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
-                    'psitem','utendepfd','utendvtem','utendwtem']
+                    'psitem','delf','utendvtem','utendwtem']
         var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
-                    "PSITEM","UTENDEPFD","UTENDVTEM","UTENDWTEM"]
+                    "PSITEM","DLEF","UTENDVTEM","UTENDWTEM"]
     else:
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
         #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
-        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","UTENDEPFD"]
+        var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","DELF"]
 
     tem_locs = []
     
@@ -146,7 +146,7 @@ def create_TEM_files(adf):
                                 'vtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.vtem.data),
                                 'wtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.wtem.data),
                                 'psitem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.psitem.data),
-                                'utendepfd': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendepfd.data),
+                                'delf': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendepfd.data),
                                 'utendvtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendvtem.data),
                                 'utendwtem': xr.Variable(('time', 'lev', 'zalat'), ds_obs.utendwtem.data),
                                 'lev': xr.Variable('lev', ds_obs.level.values),
@@ -326,7 +326,7 @@ def create_TEM_files(adf):
             zonal_mean_PS = ds_h0_lats['PS'].mean(dim='lon').compute()
             zonal_mean_PMID = ds_h0_lats['PMID'].mean(dim='lon').compute()
             #dstem0['PMID'] = zonal_mean_PMID
-            print("zonal_mean_PMID",zonal_mean_PMID,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+            #print("zonal_mean_PMID",zonal_mean_PMID,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
             #print("dstem0['lev']",dstem0['lev'].values,"\n")
 
@@ -449,7 +449,7 @@ def calc_tem(ds):
     # vtem      Transformed Eulerian mean northward wind [m s−1]
     # wtem      Transformed Eulerian mean upward wind [m s−1]
     # psitem    Transformed Eulerian mean mass stream function [kg s−1]
-    # utendepfd tendency of eastward wind due to Eliassen–Palm flux divergence [m s−2]
+    # delf tendency of eastward wind due to Eliassen–Palm flux divergence [m s−2]
     # utendvtem tendency of eastward wind due to TEM northward wind advection and the Coriolis term [m s−2]
     # utendwtem tendency of eastward wind due to TEM upward wind advection [m s−2]
 
@@ -552,8 +552,8 @@ def calc_tem(ds):
                           pre,
                           axis=0)
 
-    utendepfd = (depfydphi + depfzdp)/(a*coslat2d)
-    utendepfd = xr.DataArray(utendepfd, coords = ds.Uzm.coords, name='utendepfd')
+    delf = (depfydphi + depfzdp)/(a*coslat2d)
+    delf = xr.DataArray(delf, coords = ds.Uzm.coords, name='delf')
 
     # TEM stream function, Eq A8
     topvzm = np.zeros([1,nlat])
@@ -596,8 +596,8 @@ def calc_tem(ds):
     psitem.attrs['long_name'] = 'Transformed Eulerian mean mass stream function'
     psitem.attrs['units'] = 'kg/s'
 
-    utendepfd.attrs['long_name'] = 'tendency of eastward wind due to Eliassen-Palm flux divergence'
-    utendepfd.attrs['units'] = 'm/s2'
+    delf.attrs['long_name'] = 'tendency of eastward wind due to Eliassen-Palm flux divergence'
+    delf.attrs['units'] = 'm/s2'
 
     utendvtem.attrs['long_name'] = 'tendency of eastward wind due to TEM northward wind advection and the coriolis term'
     utendvtem.attrs['units'] = 'm/s2'
@@ -609,7 +609,7 @@ def calc_tem(ds):
     epfz.values = np.float32(epfz.values)
     wtem.values = np.float32(wtem.values)
     psitem.values = np.float32(psitem.values)
-    utendepfd.values = np.float32(utendepfd.values)
+    delf.values = np.float32(delf.values)
     utendvtem.values = np.float32(utendvtem.values)
     utendwtem.values = np.float32(utendwtem.values)
 
@@ -635,7 +635,7 @@ def calc_tem(ds):
                                       VTEM = vtem,
                                       WTEM = wtem,
                                       PSITEM = psitem,
-                                      UTENDEPFD = utendepfd,
+                                      DELF = delf,
                                       UTENDVTEM = utendvtem,
                                       UTENDWTEM = utendwtem
                                       ))
