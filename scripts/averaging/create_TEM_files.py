@@ -41,7 +41,7 @@ def create_TEM_files(adf):
         var_list = ['uzm','thzm','epfy','epfz','vtem','wtem',
                     'psitem','delf','utendvtem','utendwtem']
         var_list = ["UZM","THZM","EPFY","EPFZ","VTEM","WTEM",
-                    "PSITEM","DLEF","UTENDVTEM","UTENDWTEM"]
+                    "PSITEM","DELF","UTENDVTEM","UTENDWTEM"]
     else:
         #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
         #var_list = ['uzm','thzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
