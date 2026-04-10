@@ -4,10 +4,16 @@ import numpy as np
 import xarray as xr
 import warnings  # use to warn user about missing files.
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 import matplotlib as mpl
+import matplotlib.cm as cm
+import pandas as pd
+from scipy.interpolate import RegularGridInterpolator
 import metpy.calc.thermo as thermo
 from metpy.units import units
-import plotting_utils as plot_utils
+#import metpy.constants as mconst
+
+import plotting_functions as pf
 
 #Format warning messages:
 def my_formatwarning(msg, *args, **kwargs):
@@ -30,9 +36,8 @@ def tem(adf):
 
     """
 
-    #Notify user that script has started:
-    msg = "\n  Generating TEM plots..."
-    print(f"{msg}\n  {'-' * (len(msg)-3)}")
+    # Notify user that script has started:
+    print("\n  Generating TEM plots ...")
 
     #Special ADF variable which contains the output paths for
     #all generated plots and tables for each case:
@@ -81,8 +86,10 @@ def tem(adf):
     redo_plot = adf.get_basic_info('redo_plot')
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
     #-----------------------------------------
+    
 
     tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
+    #tem_base_loc = adf.get_baseline_info("cam_tem_loc")
     #Initialize list of input TEM file locations
     tem_locs = []
 
@@ -92,9 +99,11 @@ def tem(adf):
     kwargs = {}
     if Path(f"{output_loc}/tem").is_dir():
         regrid_tem_files = True
+        #rg_tem_case_locs = [f"{output_loc}/tem"]
         tem_case_locs = [f"{output_loc}/tem"]
         if not adf.compare_obs:
             tem_base_loc = f"{output_loc}/tem"
+        #rg_tem_base_loc = f"{output_loc}/tem"
     else:
         tem_case_locs = adf.get_cam_info("cam_tem_loc",required=True)
         tem_base_loc = adf.get_baseline_info("cam_tem_loc")
@@ -114,7 +123,7 @@ def tem(adf):
             #End if
             tem_locs.append(tem_case_loc)
         #End for
-
+    print("tem_locs",tem_locs,"\n")
     #Set seasonal ranges:
     seasons = {"ANN": np.arange(1,13,1),
                "DJF": [12, 1, 2],
@@ -124,7 +133,17 @@ def tem(adf):
                }
 
     #Suggestion from Rolando, if QBO is being produced, add utendvtem and utendwtem?
-    var_list = ["UZM","THZM","TZM","EPFY","EPFZ","VTEM","WTEM","PSITEM","DELF"]
+    if "qbo" in adf.plotting_scripts:
+        var_list = ['uzm', 'thzm', 'tzm', 'epfy','epfz','vtem','wtem',
+                    'psitem','utendepfd','utendvtem','utendwtem']
+        var_list = [i.upper() for i in var_list]
+        #var_list = ['uzm','epfy','epfz','vtem','wtem',
+        #            'psitem','utendepfd','utendvtem','utendwtem']
+    #Otherwise keep it simple
+    else:
+        var_list = ['uzm','thzm', 'tzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
+        var_list = [i.upper() for i in var_list]
+        #var_list = ['uzm','epfy','epfz','vtem','wtem','psitem','utendepfd']
 
     #Check if comparing against obs
     if adf.compare_obs:
@@ -142,12 +161,15 @@ def tem(adf):
             base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
         else:
             base_file_name = f'{base_name}.TEMdiag_{syear_baseline}-{eyear_baseline}.nc'
+        #base_file_name = f'{base_name}.TEMdiag_regridded_baseline.nc'
 
     #Baseline TEM location
     input_loc_idx = Path(tem_base_loc)
     
     #Set full path for baseline/obs file
     tem_base = input_loc_idx / base_file_name
+
+    print("tem_base FOR OBS",tem_base,"\n")
 
     #Check to see if baseline/obs TEM file exists    
     if tem_base.is_file():
@@ -211,7 +233,8 @@ def tem(adf):
 
             #Open the TEM file
             output_loc_idx = Path(tem_loc)
-
+            #case_file_name = f'{case_name}.TEMdiag_{start_year}-{end_year}.nc'
+            #case_file_name = f'{base_name}_{case_name}.TEMdiag_regridded.nc'
             if regrid_tem_files:
                 case_file_name = f'{base_name}_{case_name}.TEMdiag_regridded.nc'
             else:
@@ -237,6 +260,7 @@ def tem(adf):
                     adf.debug_log(f"'{plot_name}' exists and clobber is false.")
                     adf.add_website_data(plot_name, var, None, season=s, plot_type="WACCM",ext="SeasonalCycle_Mean",category="TEM",multi_case=True)
 
+                #plot_name = plot_loc / f"CPT_ANN_WACCM_SeasonalCycle_Mean.{plot_type}"
                 elif ((redo_plot) and plot_name.is_file()) or (not plot_name.is_file()):
                     if plot_name.is_file():
                         plot_name.unlink()
@@ -257,8 +281,6 @@ def tem(adf):
                     mdata = ds[var].squeeze()
                     if adf.compare_obs:
                         odata = ds_base[var.lower()].squeeze()
-                    else:
-                        odata = ds_base[var].squeeze()
                 if regrid_tem_files == False:
                     mdata['time'] = xr.conventions.times.decode_cf_datetime(mdata.time, mdata.time.attrs['units'])
                     odata['time'] = xr.conventions.times.decode_cf_datetime(odata.time, odata.time.attrs['units'])
@@ -326,6 +348,7 @@ def tem(adf):
                         wgt_denom_base = (od_ones*weights_base).groupby("time.season").sum(dim="time").sel(season=s)
                         oseasons = oseasons / wgt_denom_base
 
+                #if var == "THZM":
                 if var == "TZM":
                     """
                     from metpy.calc import temperature_from_potential_temperature
@@ -335,6 +358,7 @@ def tem(adf):
                     T = temperature_from_potential_temperature(p, theta)
                     """
 
+                    #print("ds in plotting:",ds)
                     pmid = ds["PMID"].squeeze()
                     if regrid_tem_files == False:
                         pmid['time'] = xr.conventions.times.decode_cf_datetime(pmid.time, pmid.time.attrs['units'])
@@ -342,8 +366,12 @@ def tem(adf):
                     #Create array to avoid weighting missing values:
                     pmid_ones = xr.where(pmid.isnull(), 0.0, 1.0)
 
+                    #month_length = pmid.time.dt.days_in_month
+                    #weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
                     if s == 'ANN':
                         print(f"\t       INFO: deriving zonal mean temperature from potential temperature")
+                        print("PMID BEFORE SEAONS:",pmid,"\n\n")
+                        print("mseasons BEFORE THERMO:",mseasons,"\n\n---------------------------------------\n")
                         #Calculate annual weights (i.e. don't group by season):
                         weights_ann = month_length / month_length.sum()
 
@@ -355,19 +383,36 @@ def tem(adf):
                         wgt_denom = (pmid_ones*weights).groupby("time.season").sum(dim="time").sel(season=s)
                         pmid = pmid / wgt_denom
 
+                    #pmid = pmid.mean(dim="lon")
+                    print("PMID AFTER SEAONS:",pmid,"\n\n")
                     mseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
                                                                              mseasons* units.kelvin)
 
                     oseasons = thermo.temperature_from_potential_temperature(pmid* units.Pa,
                                                                              oseasons* units.kelvin)
-
+                    if s == 'ANN':
+                        print("mseasons AFTER THERMO:",mseasons,"\n\n---------------------------------------\n")
+                    #mseasons = mseasons[:,:,0]
+                    #oseasons = oseasons[:,:,0]
+                    #mseasons = mseasons.isel(lat=0, drop=True)
+                    #oseasons = oseasons.isel(lat=0, drop=True)
                     mseasons.attrs['units'] = "K"
                     oseasons.attrs['units'] = "K"
 
-                if var == "DELF":
+                    #print("mseasons in plotting:",mseasons)
+
+                if var == "UTENDEPFD":
                     mseasons = mseasons*1000
                     oseasons = oseasons*1000
 
+                #if s ==list(seasons.keys())[0] and var==var_list[0]:
+                if s ==list(seasons.keys())[0]:
+                    #print("\n\nmseasons",mseasons,"\n\n")
+
+                    print("mseasons.shape",mseasons.shape)
+                    print("oseasons.shape",oseasons.shape,"\n-- - - - - - - - - - - - - - - - - - - - - \n")
+                    #print("mseasons['zalat']",mseasons['zalat'])
+                
                 mlat = mseasons['zalat']
                 mlev = mseasons['lev']
 
@@ -382,7 +427,7 @@ def tem(adf):
                     dseasons = None
                 
                 #Gather contour plot options
-                cp_info = plot_utils.prep_contour_plot(mseasons, oseasons, dseasons, None, **vres)
+                cp_info = pf.prep_contour_plot(mseasons, oseasons, dseasons, **vres)
                 clevs = np.unique(np.array(cp_info['levels1']))
 
                 norm = cp_info['norm1']
@@ -397,6 +442,7 @@ def tem(adf):
                 prev_major_ticks = []
                 prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(mlevs)))))
                 prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(olevs)))))
+                #prev_major_ticks.append(10 ** (np.floor(np.log10(np.min(mlevs)))))
                 prev_major_tick = min(prev_major_ticks)
                 # Set padding for colorbar form axis
                 cmap_pad = 0.005
@@ -499,18 +545,30 @@ def tem(adf):
                         a.set_ylim(a.get_ylim()[::-1])
 
                 # Format color bars
+                #print("cp_info['colorbar_opt']",cp_info['colorbar_opt'],"\n")
                 plt.colorbar(img1, ax=ax[1], location='right', pad=cmap_pad,**cp_info['colorbar_opt'])
                 # Remove the colorbar label for baseline
                 cp_info['colorbar_opt'].pop("label", None)
                 plt.colorbar(img0, ax=ax[0], location='right', pad=cmap_pad,**cp_info['colorbar_opt'])
 
+                #Set titles of subplots
+                #Set figure title
+                #plt.suptitle(f'TEM Diagnostics: {s}', fontsize=20, y=.98)
+
                 #Variable plot title name
                 longname = vres["long_name"]
+                #plt.text(0.5, 0.915, f"{longname}\n", fontsize=12, ha='center',
+                #            transform=fig.transFigure)
+
                 plt.suptitle(f'{longname}: {s}', fontsize=20, y=.97)
 
                 test_yrs = f"{start_year}-{end_year}"
+                #ax[0].set_title(f"{test_nicknames[idx]}\n{test_yrs}",fontsize=10)
+
+                
                 plot_title = "$\mathbf{Test}:$"+f"{test_nicknames[idx]}\nyears: {test_yrs}"
                 ax[0].set_title(plot_title, loc='left', fontsize=10)
+                #ax[idx].set_title(plot_title, loc='left', fontsize=10)
 
                 if obs:
                     obs_title = Path(vres["obs_name"]).stem

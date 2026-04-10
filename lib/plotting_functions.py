@@ -37,6 +37,7 @@ from typing import Optional
 import numpy as np
 import xarray as xr
 import matplotlib as mpl
+import matplotlib.cm as cm
 import cartopy.crs as ccrs
 #nice formatting for tick labels
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
@@ -45,6 +46,8 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.lines import Line2D
 from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import MultipleLocator
+import matplotlib.cm as cm
+from pathlib import Path
 
 from adf_base import AdfError
 import plotting_utils as plot_utils
@@ -1527,7 +1530,7 @@ def square_contour_difference(fld1, fld2, **kwargs):
     else:
         dnorm = mpl.colors.TwoSlopeNorm(vmin=dmin, vcenter=0, vmax=dmax)
         cmap = mpl.cm.RdBu_r
-        
+
     img3 = ax3.contourf(xx, yy, diff.transpose(), cmap=cmap, norm=dnorm)
     if (coord1 == 'month') and (fld1.shape[0] ==12):
         ax3.set_xticks(np.arange(1,13))
