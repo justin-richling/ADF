@@ -48,7 +48,8 @@ class AdfBase:
         if not isinstance(debug, bool):
             raise TypeError("'debug' must be a boolean type (True or False)")
 
-        self.__debug_fname = ''
+        # Format the datetime object to a string without microseconds
+        self.__debug_fname = f"ADF_debug_{datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}.log"
 
         # Get the current date and time
         current_timestamp = datetime.now()
@@ -66,7 +67,7 @@ class AdfBase:
         else:
             self.__debug_log = None
 
-        
+
 
     #########
 

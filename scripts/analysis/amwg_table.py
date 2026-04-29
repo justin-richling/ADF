@@ -22,9 +22,6 @@ except ImportError:
     sys.exit(1)
 #End except
 
-#Import ADF-specific modules:
-import plotting_functions as pf
-
 def amwg_table(adf):
 
     """
@@ -60,6 +57,7 @@ def amwg_table(adf):
 
     #Import necessary modules:
     from adf_base import AdfError
+    import adf_utils as utils
 
     #Additional information:
     #----------------------
@@ -233,7 +231,7 @@ def amwg_table(adf):
             #End if
 
             #Load model variable data from file:
-            ds = pf.load_dataset(ts_files)
+            ds = utils.load_dataset(ts_files)
             data = ds[var]
 
             #Extract units string, if available:
@@ -265,7 +263,7 @@ def amwg_table(adf):
                         ofrac = xr.where(ofrac<0,0,ofrac)
 
                         # apply ocean fraction mask to variable
-                        data = pf.mask_land_or_ocean(data, ofrac, use_nan=True)
+                        data = utils.mask_land_or_ocean(data, ofrac, use_nan=True)
                         #data = var_tmp
                     else:
                         print(f"\t    WARNING: OCNFRAC not found, unable to apply mask to '{var}'")
@@ -288,10 +286,10 @@ def amwg_table(adf):
                 # flags that we have spatial dimensions
                 # Note: that could be 'lev' which should trigger different behavior
                 # Note: we should be able to handle (lat, lon) or (ncol,) cases, at least
-                data = pf.spatial_average(data)  # changes data "in place"
+                data = utils.spatial_average(data)  # changes data "in place"
 
             # In order to get correct statistics, average to annual or seasonal
-            data = pf.annual_mean(data, whole_years=True, time_name='time')
+            data = utils.annual_mean(data, whole_years=True, time_name='time')
 
             # Set values for columns
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
