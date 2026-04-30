@@ -38,7 +38,6 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import cartopy.crs as ccrs
 #nice formatting for tick labels
@@ -46,6 +45,8 @@ from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy.util import add_cyclic_point
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.lines import Line2D
+import matplotlib.cm as cm
+import matplotlib.ticker as ticker
 
 from adf_base import AdfError
 import plotting_utils as plot_utils
@@ -57,6 +58,9 @@ warnings.formatwarning = utils.my_formatwarning
 
 #Set non-X-window backend for matplotlib:
 mpl.use('Agg')
+
+#Now import pyplot:
+import matplotlib.pyplot as plt
 
 empty_message = "No Valid\nData Points"
 props = {'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.9}
@@ -168,98 +172,32 @@ def make_polar_plot(wks, case_nickname,
     dif = dif.sel(lat=slice(domain[2],domain[3]))
     pct = pct.sel(lat=slice(domain[2],domain[3]))
 
+    cp_info = plot_utils.prep_contour_plot(d1, d2, dif, **kwargs)
+
     # add cyclic point to the data for better-looking plot
     d1_cyclic, lon_cyclic = add_cyclic_point(d1, coord=d1.lon)
     d2_cyclic, _ = add_cyclic_point(d2, coord=d2.lon)  # since we can take difference, assume same longitude coord.
     dif_cyclic, _ = add_cyclic_point(dif, coord=dif.lon)
     pct_cyclic, _ = add_cyclic_point(pct, coord=pct.lon)
 
-    # -- deal with optional plotting arguments that might provide variable-dependent choices
+    levelsdiff = cp_info['levelsdiff']
+    cmapdiff = cp_info['cmapdiff']
+    dnorm = cp_info['normdiff']
 
-    # determine levels & color normalization:
-    minval    = np.min([np.min(d1), np.min(d2)])
-    maxval    = np.max([np.max(d1), np.max(d2)])
-    absmaxdif = np.max(np.abs(dif))
-    absmaxpct = np.max(np.abs(pct))
+    levels1 = cp_info['levels1']
+    cmap1 = cp_info['cmap1']
+    norm1 = cp_info['norm1']
 
-    if 'colormap' in kwargs:
-        cmap1 = kwargs['colormap']
-    else:
-        cmap1 = 'coolwarm'
-
-    if 'contour_levels' in kwargs:
-        levels1 = kwargs['contour_levels']
-        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    elif 'contour_levels_range' in kwargs:
-        assert len(kwargs['contour_levels_range']) == 3, "contour_levels_range must have exactly three entries: min, max, step"
-        levels1 = np.arange(*kwargs['contour_levels_range'])
-        norm1 = mpl.colors.Normalize(vmin=min(levels1), vmax=max(levels1))
-    else:
-        levels1 = np.linspace(minval, maxval, 12)
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-
-    if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-        norm1, cmap1 = plot_utils.get_difference_colors(levels1)  # maybe these are better defaults if nothing else is known.
-
-    if "diff_contour_levels" in kwargs:
-        levelsdiff = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-    elif "diff_contour_range" in kwargs:
-            assert len(kwargs['diff_contour_range']) == 3, "diff_contour_range must have exactly three entries: min, max, step"
-            levelsdiff = np.arange(*kwargs['diff_contour_range'])
-    else:
-        # set levels for difference plot (with a symmetric color bar):
-        levelsdiff = np.linspace(-1*absmaxdif.data, absmaxdif.data, 12)
-    #End if
-    
-    if "pct_diff_contour_levels" in kwargs:
-        levelspctdiff = kwargs["pct_diff_contour_levels"]  # a list of explicit contour levels
-    elif "pct_diff_contour_range" in kwargs:
-            assert len(kwargs['pct_diff_contour_range']) == 3, "pct_diff_contour_range must have exactly three entries: min, max, step"
-            levelspctdiff = np.arange(*kwargs['pct_diff_contour_range'])
-    else:
-        levelspctdiff = [-100,-75,-50,-40,-30,-20,-10,-8,-6,-4,-2,0,2,4,6,8,10,20,30,40,50,75,100]
-    pctnorm = mpl.colors.BoundaryNorm(levelspctdiff,256)
-
-    #NOTE: Sometimes the contour levels chosen in the defaults file
-    #can result in the "contourf" software stack generating a
-    #'TypologyException', which should manifest itself as a
-    #"PredicateError", but due to bugs in the stack itself
-    #will also sometimes raise an AttributeError.
-
-    #To prevent this from happening, the polar max and min values
-    #are calculated, and if the default contour values are significantly
-    #larger then the min-max values, then the min-max values are used instead:
-    #-------------------------------
-    if max(levels1) > 10*maxval:
-        levels1 = np.linspace(minval, maxval, 12)
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    elif minval < 0 and min(levels1) < 10*minval:
-        levels1 = np.linspace(minval, maxval, 12)
-        norm1 = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-    #End if
-
-    if max(np.abs(levelsdiff)) > 10*absmaxdif:
-        levelsdiff = np.linspace(-1*absmaxdif.data, absmaxdif.data, 12)
-    
-    
-    #End if
-    #-------------------------------
-
-    # Difference options -- Check in kwargs for colormap and levels
-    if "diff_colormap" in kwargs:
-        cmapdiff = kwargs["diff_colormap"]
-        dnorm, _ = plot_utils.get_difference_colors(levelsdiff)  # color map output ignored
-    else:
-        dnorm, cmapdiff = plot_utils.get_difference_colors(levelsdiff)  
-        
-    # Pct Difference options -- Check in kwargs for colormap and levels
-    if "pct_diff_colormap" in kwargs:
-        cmappct = kwargs["pct_diff_colormap"]        
-    else:
-        cmappct = "PuOr_r"
-    #End if
+    levelspctdiff = cp_info['levelspctdiff']
+    cmappct = cp_info['cmappct']
+    pctnorm = cp_info['pctnorm']
 
     # -- end options
+
+    wgt = np.cos(np.radians(d1.lat))
+    # get statistics (from non-wrapped)
+    d_rmse = utils.wgt_rmse(d1, d2, wgt)
+    
     lons, lats = plot_utils.transform_coordinates_for_projection(proj, lon_cyclic, d1.lat) # Explicit coordinate transform
 
     fig = plt.figure(figsize=(10,10))
@@ -273,6 +211,8 @@ def make_polar_plot(wks, case_nickname,
     levs = np.unique(np.array(levels1))
     levs_diff = np.unique(np.array(levelsdiff))
     levs_pctdiff = np.unique(np.array(levelspctdiff))
+
+    multi = {}
 
     # BPM: removing `transform=ccrs.PlateCarree()` from contourf calls & transform_first=True
     if len(levs) < 2:
@@ -382,6 +322,22 @@ def make_polar_plot(wks, case_nickname,
 
     # Close figures to avoid memory issues:
     plt.close(fig)
+
+    # Multi plots
+    if "multi_plots" in kwargs:
+        #print("\n\n\ncp_info",cp_info,"\n\n\n")
+        multi[f"{case_nickname} - test"] = {"da":d1_cyclic, "lons":lons, "lats":lats, "levels":levels1, "cmap":cmap1,
+                        "norm": norm1, "contourf_opt": cp_info, "wgt": wgt,
+                        "mean": d1_region_mean, "max": d1_region_max, "min": d1_region_min}
+        multi[f"{case_nickname} - base"] = {"da":d2_cyclic, "lons":lons, "lats":lats, "levels":levels1, "cmap":cmap1,
+                        "norm": norm1, "contourf_opt": cp_info, "wgt": wgt,
+                        "mean": d2_region_mean, "max": d2_region_max, "min": d2_region_min}
+        multi[f"{case_nickname} - diff"] = {"da":dif_cyclic, "lons":lons, "lats":lats, "levels":levelsdiff, "cmap":cmapdiff,
+                        "norm": dnorm, "contourf_opt": cp_info, "d_rmse": d_rmse, "wgt": wgt,
+                        "mean": dif_region_mean, "max": dif_region_max, "min": dif_region_min}
+
+    return multi
+
 
 
 #######
@@ -624,7 +580,7 @@ def plot_map_vect_and_save(wks, case_nickname, base_nickname,
 
 
 #######
-#multi_plot_dict = {}
+
 def plot_map_and_save(wks, case_nickname, base_nickname,
                       case_climo_yrs, baseline_climo_yrs,
                       mdlfld, obsfld, diffld, pctld, obs=False, multi_plot_dict=None, **kwargs):
@@ -699,7 +655,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     lon2, lat2 = np.meshgrid(mdlfld['lon'], mdlfld['lat'])
 
     # get statistics (from non-wrapped)
-    fields = (mdlfld, obsfld, diffld, pctld)
+    fields = (mdlfld, obsfld, pctld, diffld)
     area_avg = [utils.spatial_average(x, weights=wgt, spatial_dims=None) for x in fields]
 
     d_rmse = utils.wgt_rmse(mdlfld, obsfld, wgt)  # correct weighted RMSE for (lat,lon) fields.
@@ -719,7 +675,7 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     #End if
 
     # generate dictionary of contour plot settings:
-    cp_info = plot_utils.prep_contour_plot(mdlfld, obsfld, diffld, pctld, **kwargs)
+    cp_info = plot_utils.prep_contour_plot(mdlfld, obsfld, diffld, **kwargs)
 
     # specify the central longitude for the plot
     central_longitude = kwargs.get('central_longitude', 180)
@@ -730,10 +686,10 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     # LAYOUT WITH GRIDSPEC
     gs = mpl.gridspec.GridSpec(3, 6, wspace=2.0,hspace=0.0) # 2 rows, 4 columns, but each map will take up 2 columns
     proj = ccrs.PlateCarree(central_longitude=central_longitude)
-    ax1 = plt.subplot(gs[0:2, :3], projection=proj, **cp_info['subplots_opt'])
-    ax2 = plt.subplot(gs[0:2, 3:], projection=proj, **cp_info['subplots_opt'])
-    ax3 = plt.subplot(gs[2, :3], projection=proj, **cp_info['subplots_opt'])
-    ax4 = plt.subplot(gs[2, 3:], projection=proj, **cp_info['subplots_opt'])
+    ax1 = plt.subplot(gs[0:2, :3], projection=proj)#**cp_info['subplots_opt']
+    ax2 = plt.subplot(gs[0:2, 3:], projection=proj)
+    ax3 = plt.subplot(gs[2, :3], projection=proj)
+    ax4 = plt.subplot(gs[2, 3:], projection=proj)
     ax = [ax1,ax2,ax3,ax4]
 
     img = [] # contour plots
@@ -746,14 +702,13 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
                                         dateline_direction_label=False)
     lat_formatter = LatitudeFormatter(number_format='0.0f',
                                         degree_symbol='')
-
+    multi = {}
     for i, a in enumerate(wrap_fields):
-
-        if i == len(wrap_fields)-1:
+        if i == 3:
             levels = cp_info['levelsdiff']
             cmap = cp_info['cmapdiff']
             norm = cp_info['normdiff']
-        elif i == len(wrap_fields)-2:
+        elif i == 2:
             levels = cp_info['levelspctdiff']
             cmap = cp_info['cmappct']
             norm = cp_info['pctnorm']
@@ -761,15 +716,13 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
             levels = cp_info['levels1']
             cmap = cp_info['cmap1']
             norm = cp_info['norm1']
-
         levs = np.unique(np.array(levels))
         if len(levs) < 2:
             img.append(ax[i].contourf(lons,lats,a,colors="w",transform=ccrs.PlateCarree(),transform_first=True))
             ax[i].text(0.4, 0.4, empty_message, transform=ax[i].transAxes, bbox=props)
         else:
-            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True, **cp_info['contourf_opt']))
+            img.append(ax[i].contourf(lons, lats, a, levels=levels, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), transform_first=True)) #, **cp_info
         #End if
-
         ax[i].set_title("AVG: {0:.3f}".format(area_avg[i]), loc='right', fontsize=11)
 
         # add contour lines <- Unused for now -JN
@@ -778,6 +731,27 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
         #ax[i].clabel(cs[i], cs[i].levels, inline=True, fontsize=tiFontSize-2, fmt='%1.1f')
         #ax[i].text( 10, -140, "CONTOUR FROM {} to {} by {}".format(min(cs[i].levels), max(cs[i].levels), cs[i].levels[1]-cs[i].levels[0]),
         #bbox=dict(facecolor='none', edgecolor='black'), fontsize=tiFontSize-2)
+
+        #print("plotting functions try: multi_plot_dict", multi_plot_dict)
+        if multi_plot_dict:
+            #multi[i] = {"da":a, "lons":lons, "lats":lats, "levels":levels, "cmap":cmap,
+            #            "norm": norm, "contourf_opt": cp_info}
+            if i == 0:
+                kizzey = f"{case_nickname} - test"
+            elif i == 1:
+                kizzey = f"{case_nickname} - base"
+            elif i == 3:#diff_idx:
+                kizzey = f"{case_nickname} - diff"
+            elif i == 2:#else:
+                kizzey = f"{case_nickname} - prctdiff"
+            multi[kizzey] = {"da":a, "lons":lons, "lats":lats, "levels":levels, "cmap":cmap,
+                            "norm": norm, "contourf_opt": cp_info, "wgt": wgt,
+                            "mean": fields[i].weighted(wgt).mean().item(),
+                            "max": fields[i].max(),
+                            "min": fields[i].min()}
+
+            if i == 3:#diff_idx:
+                multi[f"{case_nickname} - diff"]["d_rmse"] = d_rmse
 
     st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=18)
     st.set_y(0.85)
@@ -859,9 +833,42 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     #Close plots:
     plt.close()
 
+    return multi
+
+
 
 #######
+'''
+def zonal_plot_line(ax, lat, data, color, **kwargs):
+    """Create line plot with latitude as the X-axis."""
+    ax = _plot_line(ax, lat, data, color, **kwargs)
+    ax.set_xlim([max([lat.min(), -90.]), min([lat.max(), 90.])])
+    #
+    # annotate
+    #
+    ax.set_xlabel("LATITUDE")
+    if hasattr(data, "units"):
+        ax.set_ylabel("{units}".format(units=getattr(data,"units")))
+    elif "units" in kwargs:
+        ax.set_ylabel("{units}".format(kwargs["units"]))
+    return ax
 
+def zonal_plot_preslat(ax, lat, lev, data, **kwargs):
+    """Create plot with latitude as the X-axis, and pressure as the Y-axis."""
+    mlev, mlat = np.meshgrid(lev, lat)
+    if 'cmap' in kwargs:
+        cmap = kwargs.pop('cmap')
+    else:
+        cmap = 'Spectral_r'
+
+    img = ax.contourf(mlat, mlev, data.transpose('lat', 'lev'), cmap=cmap, **kwargs)
+
+    minor_locator = mpl.ticker.FixedLocator(lev)
+    ax.yaxis.set_minor_locator(minor_locator)
+    ax.tick_params(which='minor', length=4, color='r')
+    ax.set_ylim([np.max(lev), np.min(lev)])
+    return img, ax
+'''
 def zonal_plot(lat, data, ax=None, color=None, **kwargs):
     """Make zonal plot
 
@@ -933,8 +940,8 @@ def meridional_plot(lon, data, ax=None, color=None, **kwargs):
 #######
 
 def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
-                             case_climo_yrs, baseline_climo_yrs,
-                             adata, bdata, has_lev, log_p=False, obs=False, **kwargs):
+                             case_climo_yrs, baseline_climo_yrs, adata, bdata, has_lev,
+                             log_p=False, obs=False, multi_plot_dict=None, **kwargs):
 
     """This is the default zonal mean plot
 
@@ -972,6 +979,8 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
           ```
     """
 
+    multi = {}
+
     # style the plot:
     # We should think about how to do plot customization and defaults.
     # Here I'll just pop off a few custom ones, and then pass the rest into mpl.
@@ -990,8 +999,18 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
     else:
         base_title = "$\mathbf{Baseline}:$"+f"{base_nickname}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
-    if has_lev:
 
+    norm1 = None
+    cmap1 = None
+    levels1 = None
+    levelsdiff = None
+    cmapdiff = None
+    normdiff = None
+    cp_info = None
+
+    lats = adata['lat']
+    blats = bdata['lat']
+    if has_lev:
         # calculate zonal average:
         azm = utils.zonal_mean_xr(adata)
         bzm = utils.zonal_mean_xr(bdata)
@@ -1006,39 +1025,45 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         pct = pct.fillna(0.0)
 
         # generate dictionary of contour plot settings:
-        cp_info = plot_utils.prep_contour_plot(azm, bzm, diff, pct, **kwargs)
+        cp_info = plot_utils.prep_contour_plot(azm, bzm, diff, **kwargs)
+        norm1 = cp_info['norm1']
+        cmap1 = cp_info['cmap1']
+        levels1 = cp_info['levels1']
+        levelsdiff = cp_info['levelsdiff']
+        cmapdiff = cp_info['cmapdiff']
+        normdiff = cp_info['normdiff']
 
         # Generate zonal plot:
         fig, ax = plt.subplots(figsize=(10,10),nrows=4, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
-        levs = np.unique(np.array(cp_info['levels1']))
+        levs = np.unique(np.array(levels1))
 
-        levs_diff = np.unique(np.array(cp_info['levelsdiff']))
+        levs_diff = np.unique(np.array(levelsdiff))
         levs_pct_diff = np.unique(np.array(cp_info['levelspctdiff']))
 
         if len(levs) < 2:
-            img0, ax[0] = zonal_plot(adata['lat'], azm, ax=ax[0])
+            img0, ax[0] = zonal_plot(lats, azm, ax=ax[0])
             ax[0].text(0.4, 0.4, empty_message, transform=ax[0].transAxes, bbox=props)
-            img1, ax[1] = zonal_plot(bdata['lat'], bzm, ax=ax[1])
+            img1, ax[1] = zonal_plot(blats, bzm, ax=ax[1])
             ax[1].text(0.4, 0.4, empty_message, transform=ax[1].transAxes, bbox=props)
         else:
-            img0, ax[0] = zonal_plot(adata['lat'], azm, ax=ax[0], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
-            img1, ax[1] = zonal_plot(bdata['lat'], bzm, ax=ax[1], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
+            img0, ax[0] = zonal_plot(lats, azm, ax=ax[0], norm=norm1,cmap=cmap1,levels=levels1)#**cp_info
+            img1, ax[1] = zonal_plot(blats, bzm, ax=ax[1], norm=norm1,cmap=cmap1,levels=levels1)#**cp_info
             fig.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
             fig.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
         #End if
 
         if len(levs_diff) < 2:
-            img2, ax[2] = zonal_plot(adata['lat'], diff, ax=ax[2])
+            img2, ax[2] = zonal_plot(lats, diff, ax=ax[2])
             ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
         else:
-            img2, ax[2] = zonal_plot(adata['lat'], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
+            img2, ax[2] = zonal_plot(lats, diff, ax=ax[2], norm=normdiff,cmap=cmapdiff,levels=levelsdiff)#**cp_info
             fig.colorbar(img2, ax=ax[2], location='right',**cp_info['diff_colorbar_opt'])
             
         if len(levs_pct_diff) < 2:
-            img3, ax[3] = zonal_plot(adata['lat'], pct, ax=ax[3])
+            img3, ax[3] = zonal_plot(lats, pct, ax=ax[3])
             ax[3].text(0.4, 0.4, empty_message, transform=ax[3].transAxes, bbox=props)
         else:
-            img3, ax[3] = zonal_plot(adata['lat'], pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],**cp_info['contourf_opt'])
+            img3, ax[3] = zonal_plot(lats, pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'])#**cp_info
             fig.colorbar(img3, ax=ax[3], location='right',**cp_info['pct_colorbar_opt'])
 
         ax[0].set_title(case_title, loc='left', fontsize=tiFontSize)
@@ -1081,16 +1106,16 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
         st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
         st.set_y(1.02)
 
-        zonal_plot(adata['lat'], azm, ax=ax[0],color="#1f77b4") # #1f77b4 -> matplotlib standard blue
-        zonal_plot(bdata['lat'], bzm, ax=ax[0],color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
+        zonal_plot(lats, azm, ax=ax[0],color="#1f77b4") # #1f77b4 -> matplotlib standard blue
+        zonal_plot(blats, bzm, ax=ax[0],color="#ff7f0e") # #ff7f0e -> matplotlib standard orange
 
         fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
                    borderaxespad=0.0,fontsize=6,frameon=False)
 
-        zonal_plot(adata['lat'], diff, ax=ax[1], color="k")
+        zonal_plot(lats, diff, ax=ax[1], color="k")
         ax[1].set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
         
-        zonal_plot(adata['lat'], pct, ax=ax[2], color="k")
+        zonal_plot(lats, pct, ax=ax[2], color="k")
         ax[2].set_title("Test % Diff Baseline", loc='left', fontsize=10,fontweight="bold")
 
         for a in ax:
@@ -1107,6 +1132,22 @@ def plot_zonal_mean_and_save(wks, case_nickname, base_nickname,
 
     #Close plots:
     plt.close()
+
+    # Multi plots
+    #diff = azm - bzm
+    if "multi_plots" in kwargs:
+        multi[f"{case_nickname} - test"] = {"da":azm, "lons":None, "lats":lats, "levels":levels1, "cmap":cmap1,
+                        "norm": norm1, "contourf_opt": cp_info, "wgt": None,
+                        "mean": None, "max": None, "min": None}
+        
+        multi[f"{case_nickname} - base"] = {"da":bzm, "lons":None, "lats":blats, "levels":levels1, "cmap":cmap1,
+                        "norm": norm1, "contourf_opt": cp_info, "wgt": None,
+                        "mean": None, "max": None, "min": None}
+        
+        multi[f"{case_nickname} - diff"] = {"da":diff, "lons":None, "lats":lats, "levels":levelsdiff, "cmap":cmapdiff,
+                        "norm": normdiff, "contourf_opt": cp_info, "d_rmse": None, "wgt": None,
+                        "mean": None, "max": None, "min": None}
+    return multi
 
 
 #######
@@ -1243,7 +1284,7 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
 
     if has_lev:
         # generate dictionary of contour plot settings:
-        cp_info = plot_utils.prep_contour_plot(adata, bdata, diff, pct, **kwargs)
+        cp_info = plot_utils.prep_contour_plot(adata, bdata, diff, **kwargs)
 
         # generate plot objects:
         fig, ax = plt.subplots(figsize=(10,10),nrows=4, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
@@ -1257,8 +1298,8 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
             img1, ax[1] = pltfunc(bdata[xdim], bdata, ax=ax[1])
             ax[1].text(0.4, 0.4, empty_message, transform=ax[1].transAxes, bbox=props)
         else:
-            img0, ax[0] = pltfunc(adata[xdim], adata, ax=ax[0], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
-            img1, ax[1] = pltfunc(bdata[xdim], bdata, ax=ax[1], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info['contourf_opt'])
+            img0, ax[0] = pltfunc(adata[xdim], adata, ax=ax[0], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info)
+            img1, ax[1] = pltfunc(bdata[xdim], bdata, ax=ax[1], norm=cp_info['norm1'],cmap=cp_info['cmap1'],levels=cp_info['levels1'],**cp_info)
             cb0 = fig.colorbar(img0, ax=ax[0], location='right',**cp_info['colorbar_opt'])
             cb1 = fig.colorbar(img1, ax=ax[1], location='right',**cp_info['colorbar_opt'])
         #End if
@@ -1267,14 +1308,14 @@ def plot_meridional_mean_and_save(wks, case_nickname, base_nickname,
             img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2])
             ax[2].text(0.4, 0.4, empty_message, transform=ax[2].transAxes, bbox=props)
         else:
-            img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info['contourf_opt'])
+            img2, ax[2] = pltfunc(adata[xdim], diff, ax=ax[2], norm=cp_info['normdiff'],cmap=cp_info['cmapdiff'],levels=cp_info['levelsdiff'],**cp_info)
             cb2 = fig.colorbar(img2, ax=ax[2], location='right',**cp_info['colorbar_opt'])
             
         if len(levs_pctdiff) < 2:
             img3, ax[3] = pltfunc(adata[xdim], pct, ax=ax[3])
             ax[3].text(0.4, 0.4, empty_message, transform=ax[3].transAxes, bbox=props)
         else:
-            img3, ax[3] = pltfunc(adata[xdim], pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],**cp_info['contourf_opt'])
+            img3, ax[3] = pltfunc(adata[xdim], pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],**cp_info)
             cb3 = fig.colorbar(img3, ax=ax[3], location='right',**cp_info['colorbar_opt'])
 
         #Set plot titles
@@ -1511,7 +1552,8 @@ def square_contour_difference(fld1, fld2, **kwargs):
     cb3 = fig.colorbar(img4, cax=cbax_bot, orientation='horizontal')
     return fig
 
-#####
+#####################
+#END HELPER FUNCTIONS
 
 ###############################
 # Multi-Case Multi-Plot Section
@@ -1540,546 +1582,1262 @@ def calculate_figsize_from_width_ratios(width_ratios, num_plot_columns, plot_wid
     fig_height = num_rows * height_per_row
     return (fig_width, fig_height)
 
-#def multi_latlon_plots(wks, ptype, case_names, nicknames, multi_dict, web_category, adfobj, **kwargs):
-def multi_latlon_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, web_category, adfobj, **kwargs):
-    """ This is a multi-case comparison of test minus baseline for each test case:
-        wks: path for saved image.
-                Should be assets directory inside of the main_website directory
-        ptype: ADF shortname for plot type.
-                For this plot it will be either LatLon or LatLon_Vector
-        case_names: list of test case names only
-        nicknames: list of test case nicknames
-                First entry of list will be list of test case nicknames
-                Second entry will be string object of baseline nickname
-        multi_dict: ordered dictionary of difference data for each var, test case, and season
-                multi_dict[var][case_name][s]
-        web_category:
-                variable category
-        adfobj: ADF object
-                Needed to test if redo_plot is called in config yaml file
-    """
 
 
-    #Check redo_plot. If set to True: remove old plot, if it already exists:
+
+
+
+
+
+
+
+#"""
+def multi_map_plots(
+    wks, var, ptype,
+    case_names, nicknames,
+    case_climo_yrs, baseline_climo_yrs,
+    multi_dict_var,
+    web_category, adfobj,
+    **kwargs
+):
+
     redo_plot = adfobj.get_basic_info('redo_plot')
+    normfunc, _ = plot_utils.use_this_norm()
 
-    #Determine needed matplotlib normalization function:
-    normfunc,_ = use_this_norm()
+    # Check redo_plot. If set to True: remove old plot, if it already exists:
+    if wks.is_file():
+        if redo_plot:
+            wks.unlink()
+            return True
+        else:
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(wks, var, case_name, category=web_category,
+                                    season=season, plot_type=plot_type,script=__file__)
 
-    #Format spacing
-    hspace = 0.2
+    # -----------------------------
+    # Projection Setup
+    # -----------------------------
+    if ptype == "LatLon":
+        central_longitude = plot_utils.get_central_longitude(adfobj)
+        proj = ccrs.PlateCarree(central_longitude=central_longitude)
+
+        lon_formatter = LongitudeFormatter(number_format='0.0f',
+                                           degree_symbol='',
+                                           dateline_direction_label=False)
+        lat_formatter = LatitudeFormatter(number_format='0.0f',
+                                           degree_symbol='')
+        domain = None
+
+    elif ptype == "NHPolar":
+        proj = ccrs.NorthPolarStereo()
+        domain = [-180, 180, 45, 90]
+        lon_formatter = lat_formatter = None
+
+    elif ptype == "SHPolar":
+        proj = ccrs.SouthPolarStereo()
+        domain = [-180, 180, -90, -45]
+        lon_formatter = lat_formatter = None
+
+    else:
+        raise AdfError(f"ptype must be LatLon, NHPolar, or SHPolar (got {ptype})")
+
+    # -----------------------------
+    # Skip if missing data
+    # -----------------------------
+    if case_names[0] not in multi_dict_var:
+        print(f"Skipping variable {var}: no data found")
+        return
+
+    # Normalize level handling
+    lev_list = kwargs["levs"] if "levs" in kwargs else [None]
+    logp_list = kwargs["logp"] if "logp" in kwargs else [None]
+
     nrows = len(case_names)
     n_plot_cols = 3
-    n_plot_spaces = 2 # should be one less than num of cols
+    n_plot_spaces = 2
+    ncols = n_plot_cols + n_plot_spaces
 
-    # specify the central longitude for the plot
-    central_longitude = get_central_longitude(adfobj)
-    proj = ccrs.PlateCarree(central_longitude=central_longitude)
-    # formatting for tick labels
-    lon_formatter = LongitudeFormatter(number_format='0.0f',
-                                        degree_symbol='',
-                                        dateline_direction_label=False)
-    lat_formatter = LatitudeFormatter(number_format='0.0f',
-                                        degree_symbol='')
-    
-    if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
-        if case_names[0] not in multi_dict_var.keys():
-            print(f"Skipping variable {var} since case {case_names[0]} not found in multi_dict_var")
-            return
-        print("LAT LON MULTI PLOTS BOI:")
-        print("var",var)
-        print("multi_dict_var[case_names[0]].keys()",multi_dict_var[case_names[0]].keys(),"*******\n")
+    grid_col_map = {0: 0, 1: 2, 2: 4}
+
+    #for season in multi_dict_var[case_names[0]].keys():
+    for lev in lev_list:
+
+        #for lev in lev_list:
         for season in multi_dict_var[case_names[0]].keys():
-            file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
+
+            base_filename = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
+
+            if lev is None:
+                file_name = base_filename
+            if lev:
+                #var = f"{var}_{lev}hpa" -> dont use this replaces the main var since var is not iterated over here!!!s
+                file_name = base_filename.replace(
+                    f"{var}",
+                    f"{var}_{lev}hpa"
+                )
+            #file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
             if (not redo_plot) and Path(wks / file_name).is_file():
-                #Continue to next iteration:
                 continue
-            elif (redo_plot) or (not Path(wks / file_name).is_file()):
 
-                # Define rows and columns
-                ncols = n_plot_cols+n_plot_spaces  # m_data, space, o_data, space, diff_data
-                height_ratios = []
+            # -----------------------------
+            # Figure Layout
+            # -----------------------------
+            height_ratios = []
+            plot_height = 1.25 if ptype == "LatLon" else 1.0
+            cbar_height = 0.05
+            spacing_height = 0.1
 
-                # Define height for each row and its colorbars
-                plot_height = 1
-                cbar_height = 0.05  # relative to row
-                spacing_height = 0.1  # vertical space between plot rows
+            for _ in range(nrows):
+                height_ratios.extend([plot_height, cbar_height, spacing_height])
 
-                # Create height ratios for all rows
-                for _ in range(nrows):
-                    height_ratios.extend([plot_height, cbar_height, spacing_height])
+            height_ratios = height_ratios[:-1]
 
-                # Remove last spacing row
-                height_ratios = height_ratios[:-1]
+            if ptype == "LatLon":
+                width_ratios = [1, 0.015, 1, 0.15, 1]
+                #fig_height = 3.5 + (2.5 * nrows)
+                if nrows == 2:
+                    fig_height = 2+(2.5*nrows)
+                if nrows == 3:
+                    fig_height = 2.775+(2.5*nrows)
+                if nrows == 4:
+                    fig_height = 3.5+(2.5*nrows)
+                if nrows > 4:
+                    fig_height = 3.5+(2.5*nrows)
+            else:
+                width_ratios = [2, 0.015, 2, 0.15, 2]
+                fig_height = 5 * nrows
 
-                # Create figure and GridSpec
-                width_ratios = [1, 0.015, 1, 0.15, 1]  # m | space | o | space | diff
-                fig_width, fig_height = calculate_figsize_from_width_ratios(
-                        width_ratios, num_plot_columns=3,
-                        plot_width=15,  # desired width of each plot
-                        num_rows=nrows,
-                        height_per_row=3
+            fig = plt.figure(figsize=(16, fig_height))
+            gs = gridspec.GridSpec(
+                nrows=len(height_ratios),
+                ncols=ncols,
+                height_ratios=height_ratios,
+                width_ratios=width_ratios,
+                figure=fig
+            )
+
+            # -----------------------------
+            # Title
+            # -----------------------------
+            if lev:
+                title_var = f"{var}_{lev}hpa"
+            else:
+                title_var = var
+            plt.suptitle(
+                f'All Case Comparison for {title_var}: {season}\n',
+                fontsize=16
+            )
+
+            plt.subplots_adjust(
+                top=0.825 if ptype == "LatLon" else 0.875
+            )
+
+            # -----------------------------
+            # Plot Panels
+            # -----------------------------
+            for r in range(nrows):
+
+                row_base = r * 3
+
+                for c, key in enumerate(["m_data", "o_data", "diff_data"]):
+
+                    # Resolve correct case dict
+                    if lev is None:
+                        case = multi_dict_var[case_names[r]][season][ptype][key]
+                    else:
+                        case = multi_dict_var[case_names[r]][season][ptype][lev][key]
+
+                    ax = fig.add_subplot(
+                        gs[row_base, grid_col_map[c]],
+                        projection=proj
                     )
 
-                fig = plt.figure(figsize=(fig_width, fig_height))
-                gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols,
-                                           height_ratios=height_ratios,
-                                           width_ratios=width_ratios,
-                                           figure=fig)
-                    
-                grid_col_map = {0: 0, 1: 2, 2: 4}
+                    data = case["da"]
 
-                #Set figure title
-                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
-                # Adjust value to control spacing from title
-                plt.subplots_adjust(top=0.875)
+                    cf = ax.contourf(
+                        case["lons"],
+                        case["lats"],
+                        data,
+                        levels=case["levels"],
+                        cmap=case["cmap"],
+                        norm=case["norm"],
+                        transform=ccrs.PlateCarree() if ptype == "LatLon" else None
+                    )
 
-                # Store axes
-                axes = []
-                for r in range(nrows):
-                    #print(f"Plotting row {r} for case {case_names[r]}")
-                    row_base = r * 3  # Because each row uses 3 grid rows (plot, cbar, space)
-                    cbar_axs = {}
-                    row_axes = []
+                    ax.coastlines()
 
-                    for c, key in enumerate(["m_data", "o_data", "diff_data"]):
-
-                        # Create subplot
-                        gs_col = grid_col_map[c]
-                        ax = fig.add_subplot(gs[row_base, gs_col], projection=proj)
-
-                        fld = multi_dict_var[case_names[r]][season][key]
-                        lat = fld['lat']
-                        data, lon = add_cyclic_point(fld, coord=fld['lon'])
-                        lons, lats = np.meshgrid(lon, lat)
-
-                        if key == "diff_data":
-                            # Difference options -- Check in kwargs for colormap and levels
-                            if "diff_colormap" in kwargs:
-                                cmap = kwargs["diff_colormap"]
-                            else:
-                                cmap = 'coolwarm'
-                            #End if
-
-                            if "diff_contour_levels" in kwargs:
-                                levels = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-                            elif "diff_contour_range" in kwargs:
-                                assert len(kwargs['diff_contour_range']) == 3, \
-                                "diff_contour_range must have exactly three entries: min, max, step"
-
-                                levels = np.arange(*kwargs['diff_contour_range'])
-                            else:
-                                # set a symmetric color bar for diff:
-                                absmaxdif = np.max(np.abs(data.data))
-                                # set levels for difference plot:
-                                levels = np.linspace(-1*absmaxdif, absmaxdif, 12)
-
-                            # color normalization for difference
-                            if ((np.min(levels) < 0) and (0 < np.max(levels))) and mplv > 2:
-                                norm = normfunc(vmin=np.min(levels), vmax=np.max(levels), vcenter=0.0)
-                            else:
-                                norm = mpl.colors.Normalize(vmin=np.min(levels), vmax=np.max(levels))
-                        else:
-                            adata = multi_dict_var[case_names[r]][season]["m_data"]
-                            bdata = multi_dict_var[case_names[r]][season]["o_data"]
-                            # determine levels & color normalization:
-                            minval = np.min([np.min(adata), np.min(bdata)])
-                            maxval = np.max([np.max(adata), np.max(bdata)])
-
-                            # determine norm to use (deprecate this once minimum MPL version is high enough)
-                            normfunc, mplv = use_this_norm()
-
-                            if 'colormap' in kwargs:
-                                cmap = kwargs['colormap']
-                            else:
-                                cmap = 'coolwarm'
-                            #End if
-
-                            if 'contour_levels' in kwargs:
-                                levels = kwargs['contour_levels']
-                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                    cmap_obj = cm.get_cmap(cmap)
-                                    norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
-                                else:
-                                    norm = mpl.colors.Normalize(vmin=min(levels), vmax=max(levels))
-                            elif 'contour_levels_range' in kwargs:
-                                assert len(kwargs['contour_levels_range']) == 3, \
-                                "contour_levels_range must have exactly three entries: min, max, step"
-
-                                levels = np.arange(*kwargs['contour_levels_range'])
-                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                    cmap_obj = cm.get_cmap(cmap)
-                                    norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
-                                else:
-                                    norm = mpl.colors.Normalize(vmin=min(levels), vmax=max(levels))
-                            else:
-                                levels = np.linspace(minval, maxval, 12)
-                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                    cmap_obj = cm.get_cmap(cmap)
-                                    norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
-                                else:
-                                    norm = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-                            #End if
-
-                            #Check if the minval and maxval are actually different.  If not,
-                            #then set "levels1" to be an empty list, which will cause the
-                            #plotting scripts to add a label instead of trying to plot a variable
-                            #with no contours:
-                            if minval == maxval:
-                                levels = []
-                            #End if
-
-                            if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-                                if ((minval < 0) and (0 < maxval)) and mplv > 2:
-                                    norm = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
-                                else:
-                                        orm = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-                                #End if
-                            #End if
-
-                            if key == "m_data":
-                                c = 0
-                            if key == "o_data":
-                                c = 1
-
-                        # Plot to the correct subplot
-                        cf = ax.contourf(lons, lats, data, levels=levels, cmap=cmap,
-                                            norm=norm, transform=ccrs.PlateCarree())
-        
-                        ax.coastlines()
+                    # -------------------------
+                    # Map formatting
+                    # -------------------------
+                    if ptype == "LatLon":
                         ax.spines['geo'].set_linewidth(1.5)
                         ax.set_xticks(np.linspace(-180, 120, 6), crs=proj)
                         ax.set_yticks(np.linspace(-90, 90, 7), crs=proj)
-                        ax.tick_params('both', length=5, width=1.5, which='major')
+                        ax.tick_params(labelsize=8)
                         ax.xaxis.set_major_formatter(lon_formatter)
                         ax.yaxis.set_major_formatter(lat_formatter)
-
-                        # Add title
-                        if c == 0:
-                            ax.set_title(f"{nicknames[0][r]}", fontsize=10)
-                        elif c == 1:
-                            ax.set_title(f"{nicknames[1]}", fontsize=10)
-                            # Optional: colorbar to the right of ax3
-                            pos = ax.get_position()
-                            cbar_ax = fig.add_axes([
-                                pos.x1 + 0.01,  # right of ax3
-                                pos.y0,
-                                0.015,
-                                pos.height
-                            ])
-                            fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
-                        else:
-                            ax.set_title("Difference", fontsize=10)
-                            # Optional: colorbar to the right of ax3
-                            pos = ax.get_position()
-                            cbar_ax = fig.add_axes([
-                                pos.x1 + 0.01,  # right of ax3
-                                pos.y0,
-                                0.015,
-                                pos.height
-                            ])
-                            fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
-                        # End if
-
-                        # Store for colorbars
-                        row_axes.append((ax, cf))  # Save both axis and contour
-                        cbar_axs[key] = ax
-                    axes.append(row_axes)
-                    
-                #Clean up the spacing a bit
-                #plt.subplots_adjust(wspace=0.3, hspace=hspace)
-                hspace = 0.2
-                plt.subplots_adjust(hspace=hspace)
-                #plt.subplots_adjust(wspace=0.3)
-
-                fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
-
-                adfobj.add_website_data(wks / file_name, var, case_names[0], multi_plot_ext="global_latlon_map",
-                                                            category=web_category, season=season, plot_type="LatLon",multi_case=True)
-
-                #Close plots:
-                plt.close()
-
-
-#def make_polar_plot
-
-def multi_polar_plots(wks, var, ptype, case_names, nicknames, multi_dict_var, web_category, adfobj, **kwargs):
-    """ This is a multi-case comparison of test minus baseline for each test case:
-        wks: path for saved image.
-                Should be assets directory inside of the main_website directory
-        ptype: ADF shortname for plot type.
-                For this plot it will be either LatLon or LatLon_Vector
-        case_names: list of test case names only
-        nicknames: list of test case nicknames
-                First entry of list will be list of test case nicknames
-                Second entry will be string object of baseline nickname
-        multi_dict: ordered dictionary of difference data for each var, test case, and season
-                multi_dict[var][case_name][s]
-        web_category:
-                variable category
-        adfobj: ADF object
-                Needed to test if redo_plot is called in config yaml file
-    """
-
-
-    #Check redo_plot. If set to True: remove old plot, if it already exists:
-    redo_plot = adfobj.get_basic_info('redo_plot')
-
-    #Determine needed matplotlib normalization function:
-    normfunc,_ = use_this_norm()
-
-    #Format spacing
-    hspace = 0.2
-    nrows = len(case_names)
-    n_plot_cols = 3
-    n_plot_spaces = 2 # should be one less than num of cols
-
-    if ptype == "NHPolar":
-        proj = ccrs.NorthPolarStereo()
-    elif ptype == "SHPolar":
-        proj = ccrs.SouthPolarStereo()
-    else:
-        raise AdfError(f'[make_polar_plot] hemisphere not specified, must be NHPolar or SHPolar; hemisphere set as {ptype}')
-
-    #if domain is None:
-    if ptype == "NHPolar":
-        domain = [-180, 180, 45, 90]
-    else:
-        domain = [-180, 180, -90, -45]
-    #End if
-
-    if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
-        if case_names[0] not in multi_dict_var.keys():
-            print(f"Skipping variable {var} since case {case_names[0]} not found in multi_dict_var")
-            return
-        for season in multi_dict_var[case_names[0]].keys():
-            file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
-            print("file_name in polar in plotting_functions",file_name)
-            if (not redo_plot) and Path(wks / file_name).is_file():
-                #Continue to next iteration:
-                continue
-            elif (redo_plot) or (not Path(wks / file_name).is_file()):
-
-                # Define rows and columns
-                ncols = n_plot_cols+n_plot_spaces  # m_data, space, o_data, space, diff_data
-                height_ratios = []
-
-                # Define height for each row and its colorbars
-                plot_height = 1
-                cbar_height = 0.05  # relative to row
-                spacing_height = 0.1  # vertical space between plot rows
-
-                # Create height ratios for all rows
-                for _ in range(nrows):
-                    height_ratios.extend([plot_height, cbar_height, spacing_height])
-
-                # Remove last spacing row
-                height_ratios = height_ratios[:-1]
-
-                # Create figure and GridSpec
-                width_ratios = [2, 0.015, 2, 0.15, 2]  # m | space | o | space | diff
-                fig_width, fig_height = calculate_figsize_from_width_ratios(
-                        width_ratios, num_plot_columns=3,
-                        plot_width=10,  # desired width of each plot
-                        num_rows=nrows,
-                        height_per_row=3
-                    )
-
-                fig = plt.figure(figsize=(fig_width, fig_height))
-                gs = gridspec.GridSpec(nrows=len(height_ratios), ncols=ncols,
-                                           height_ratios=height_ratios,
-                                           width_ratios=width_ratios,
-                                           figure=fig)
-                    
-                grid_col_map = {0: 0, 1: 2, 2: 4}
-
-                #Set figure title
-                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=0.95)#  y=y_title #y=0.325 y=0.225
-                # Adjust value to control spacing from title
-                plt.subplots_adjust(top=0.875)
-
-                # Store axes
-                axes = []
-                for r in range(nrows):
-                    #print(f"Plotting row {r} for case {case_names[r]}")
-                    row_base = r * 3  # Because each row uses 3 grid rows (plot, cbar, space)
-                    cbar_axs = {}
-                    row_axes = []
-
-                    for c, key in enumerate(["m_data", "o_data", "diff_data"]):
-
-                        # Create subplot
-                        gs_col = grid_col_map[c]
-                        ax = fig.add_subplot(gs[row_base, gs_col], projection=proj)
-
-                        fld = multi_dict_var[case_names[r]][season][ptype][key]
-                        #downsize to the specified region; makes plotting/rendering/saving much faster
-                        fld = fld.sel(lat=slice(domain[2],domain[3]))
-
-                        # add cyclic point to the data for better-looking plot
-                        data, lon_cyclic = add_cyclic_point(fld, coord=fld.lon)
-                        
-                        lons, lats = transform_coordinates_for_projection(proj, lon_cyclic, fld.lat) # Explicit coordinate transform
-
-                        if key == "diff_data":
-                            # Difference options -- Check in kwargs for colormap and levels
-                            if "diff_colormap" in kwargs:
-                                cmap = kwargs["diff_colormap"]
-                            else:
-                                cmap = 'coolwarm'
-                            #End if
-
-                            if "diff_contour_levels" in kwargs:
-                                levels = kwargs["diff_contour_levels"]  # a list of explicit contour levels
-                            elif "diff_contour_range" in kwargs:
-                                assert len(kwargs['diff_contour_range']) == 3, \
-                                "diff_contour_range must have exactly three entries: min, max, step"
-
-                                levels = np.arange(*kwargs['diff_contour_range'])
-                            else:
-                                # set a symmetric color bar for diff:
-                                absmaxdif = np.max(np.abs(data.data))
-                                # set levels for difference plot:
-                                levels = np.linspace(-1*absmaxdif, absmaxdif, 12)
-
-                            # color normalization for difference
-                            if ((np.min(levels) < 0) and (0 < np.max(levels))) and mplv > 2:
-                                norm = normfunc(vmin=np.min(levels), vmax=np.max(levels), vcenter=0.0)
-                            else:
-                                norm = mpl.colors.Normalize(vmin=np.min(levels), vmax=np.max(levels))
-                        else:
-                            adata = multi_dict_var[case_names[r]][season][ptype]["m_data"]
-                            bdata = multi_dict_var[case_names[r]][season][ptype]["o_data"]
-                            # determine levels & color normalization:
-                            minval = np.min([np.min(adata), np.min(bdata)])
-                            maxval = np.max([np.max(adata), np.max(bdata)])
-
-                            # determine norm to use (deprecate this once minimum MPL version is high enough)
-                            normfunc, mplv = use_this_norm()
-
-                            if 'colormap' in kwargs:
-                                cmap = kwargs['colormap']
-                            else:
-                                cmap = 'coolwarm'
-                            #End if
-
-                            if 'contour_levels' in kwargs:
-                                levels = kwargs['contour_levels']
-                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                    cmap_obj = cm.get_cmap(cmap)
-                                    norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
-                                else:
-                                    norm = mpl.colors.Normalize(vmin=min(levels), vmax=max(levels))
-                            elif 'contour_levels_range' in kwargs:
-                                assert len(kwargs['contour_levels_range']) == 3, \
-                                "contour_levels_range must have exactly three entries: min, max, step"
-
-                                levels = np.arange(*kwargs['contour_levels_range'])
-                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                    cmap_obj = cm.get_cmap(cmap)
-                                    norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
-                                else:
-                                    norm = mpl.colors.Normalize(vmin=min(levels), vmax=max(levels))
-                            else:
-                                levels = np.linspace(minval, maxval, 12)
-                                if ('non_linear' in kwargs) and (kwargs['non_linear']):
-                                    cmap_obj = cm.get_cmap(cmap)
-                                    norm = mpl.colors.BoundaryNorm(levels, cmap_obj.N)
-                                else:
-                                    norm = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-                            #End if
-
-                            #Check if the minval and maxval are actually different.  If not,
-                            #then set "levels1" to be an empty list, which will cause the
-                            #plotting scripts to add a label instead of trying to plot a variable
-                            #with no contours:
-                            if minval == maxval:
-                                levels = []
-                            #End if
-
-                            if ('colormap' not in kwargs) and ('contour_levels' not in kwargs):
-                                if ((minval < 0) and (0 < maxval)) and mplv > 2:
-                                    norm = normfunc(vmin=minval, vmax=maxval, vcenter=0.0)
-                                else:
-                                    norm = mpl.colors.Normalize(vmin=minval, vmax=maxval)
-                                #End if
-                            #End if
-
-                            if key == "m_data":
-                                c = 0
-                            if key == "o_data":
-                                c = 1
-
-                        # Plot to the correct subplot
-                        cf = ax.contourf(lons, lats, data, levels=levels, cmap=cmap,
-                                            norm=norm)
-        
-                        # __Follow the cartopy gallery example to make circular__:
-                        # Compute a circle in axes coordinates, which we can use as a boundary
-                        # for the map. We can pan/zoom as much as we like - the boundary will be
-                        # permanently circular.
+                    else:
                         theta = np.linspace(0, 2*np.pi, 100)
                         center, radius = [0.5, 0.5], 0.5
                         verts = np.vstack([np.sin(theta), np.cos(theta)]).T
                         circle = mpl.path.Path(verts * radius + center)
                         ax.set_boundary(circle, transform=ax.transAxes)
                         ax.set_extent(domain, ccrs.PlateCarree())
-                        ax.coastlines()
-                        #ax.spines['geo'].set_linewidth(1.5)
-                        #ax.set_xticks(np.linspace(-180, 120, 6), crs=proj)
-                        #ax.set_yticks(np.linspace(-90, 90, 7), crs=proj)
-                        #ax.tick_params('both', length=5, width=1.5, which='major')
-                        #ax.xaxis.set_major_formatter(lon_formatter)
-                        #ax.yaxis.set_major_formatter(lat_formatter)
 
-                        # Add title
-                        if c == 0:
-                            ax.set_title(f"{nicknames[0][r]}", fontsize=10)
-                        elif c == 1:
-                            ax.set_title(f"{nicknames[1]}", fontsize=10)
-                            # Optional: colorbar to the right of ax3
-                            pos = ax.get_position()
-                            cbar_ax = fig.add_axes([
-                                pos.x1 + 0.01,  # right of ax3
-                                pos.y0,
-                                0.015,
-                                pos.height
-                            ])
-                            fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
+                    # -------------------------
+                    # Titles & Text
+                    # -------------------------
+                    tiFontSize = 8
+                    mean_val = case["mean"]
+                    max_val  = case["max"]
+                    min_val  = case["min"]
+
+                    mean_str = rf"$\mathbf{{Mean:}}$ {mean_val:5.2f}"
+                    max_str  = rf"$\mathbf{{Max:}}$ {max_val:5.2f}"
+                    min_str  = rf"$\mathbf{{Min:}}$ {min_val:5.2f}"
+
+                    if c == 0:
+                        ax.set_title(f"{nicknames[0][r]}", fontsize=tiFontSize)
+
+                    elif c == 1:
+                        ax.set_title(f"{nicknames[1]}", fontsize=tiFontSize)
+
+                    else:
+                        ax.set_title("Difference", fontsize=tiFontSize)
+                        rmse = case["d_rmse"]
+                        ax.text(
+                            0.5 if ptype=="LatLon" else 0.15,
+                            1.02 if ptype=="LatLon" else 0.0,
+                            rf"$\mathbf{{RMSE:}}$ {rmse:.3f}",
+                            transform=ax.transAxes,
+                            ha='center',
+                            fontsize=tiFontSize
+                        )
+
+                    if c in (0, 1):
+                        text = (
+                            f"{mean_str}   {max_str}   {min_str}"
+                            if ptype == "LatLon"
+                            else f"{mean_str}\n{max_str}\n{min_str}"
+                        )
+                        ax.text(
+                            0.0,
+                            1.02 if ptype=="LatLon" else 0.0,
+                            text,
+                            transform=ax.transAxes,
+                            fontsize=tiFontSize
+                        )
+
+                    # -------------------------
+                    # Colorbars
+                    # -------------------------
+                    if c in (1, 2):
+                        pos = ax.get_position()
+                        offset = 0.01 if ptype=="LatLon" else 0.015
+
+                        cbar_ax = fig.add_axes([
+                            pos.x1 + offset,
+                            pos.y0,
+                            0.015,
+                            pos.height
+                        ])
+
+                        cbar = fig.colorbar(
+                            cf,
+                            cax=cbar_ax,
+                            orientation='vertical',
+                            **case["contourf_opt"]['colorbar_opt']
+                        )
+                        cbar.ax.tick_params(labelsize=tiFontSize)
+
+            # Force scientific notation with 2 decimal places
+            formatter = ticker.FormatStrFormatter('%.2e')
+            cbar.ax.yaxis.set_major_formatter(formatter)
+            # -----------------------------
+            # Layout Adjust
+            # -----------------------------
+            if ptype == "LatLon":
+                plt.subplots_adjust(hspace=0.2)
+                multi_plot_ext = "global_latlon_map"
+            else:
+                plt.subplots_adjust(wspace=0.05)
+                multi_plot_ext = (
+                    "nh_polar_map" if ptype=="NHPolar"
+                    else "sh_polar_map"
+                )
+
+            # -----------------------------
+            # Save
+            # -----------------------------
+            fig.savefig(
+                wks / file_name,
+                bbox_inches='tight',
+                dpi=300
+            )
+
+            adfobj.add_website_data(
+                wks / file_name,
+                title_var,
+                case_names[0],
+                multi_plot_ext=multi_plot_ext,
+                category=web_category,
+                season=season,
+                plot_type=ptype,
+                multi_case=True,script=__file__
+            )
+
+            plt.close()
+
+
+#"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+def multi_zonal_plots(wks, var, ptype, case_names, nicknames, case_climo_yrs, baseline_climo_yrs,
+                      multi_dict_var, web_category, adfobj, **kwargs):
+
+    #Check redo_plot. If set to True: remove old plot, if it already exists:
+    redo_plot = adfobj.get_basic_info('redo_plot')
+
+    # Check redo_plot. If set to True: remove old plot, if it already exists:
+    if wks.is_file():
+        if redo_plot:
+            wks.unlink()
+            return True
+        else:
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(wks, var, case_name, category=web_category,
+                                    season=season, plot_type=plot_type,script=__file__)
+
+    #Determine needed matplotlib normalization function:
+    normfunc,_ = plot_utils.use_this_norm()
+
+    nsim = len(case_names)
+    ncols = 2
+    nrows = int(np.ceil(nsim / ncols))
+    nrows_bottom = int(np.ceil(nsim / ncols))
+    total_rows = 1 + nrows_bottom   # 1 row for summary block
+
+    case_colors = [mpl.cm.tab20(i) for i, case in enumerate(case_names)]
+
+
+    if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
+        if case_names[0] not in multi_dict_var.keys():
+            print(f"Skipping variable {var} since case {case_names[0]} not found in multi_dict_var")
+            return
+
+        for season in multi_dict_var[case_names[0]].keys():
+            file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
+
+            if (not redo_plot) and Path(wks / file_name).is_file():
+                #Continue to next iteration:
+                continue
+            elif (redo_plot) or (not Path(wks / file_name).is_file()):
+
+                if ptype == "LatLon":
+                    plot_height = 1.25
+                else:
+                    plot_height = 1.0
+
+                if nrows == 2:
+                    suptitle_y = 0.925
+                if nrows == 3:
+                    suptitle_y = 0.9125
+                if nrows == 4:
+                    suptitle_y = 0.9#25
+
+                cbar_height = 0.05  # relative to row
+                spacing_height = 0.1  # vertical space between plot rows
+
+                #WORKS>>
+                """fig = plt.figure(figsize=(15, (4 * nrows)+0.15))
+                outer_gs = fig.add_gridspec(
+                    nrows=nrows,
+                    ncols=ncols,
+                    hspace=0.3,
+                    wspace=0.2
+                )"""
+
+                o_data = multi_dict_var[case_names[0]][season][ptype]["o_data"]
+                bzm = o_data["da"]
+                blats = o_data["lats"]
+
+
+                if "levs" in kwargs:
+                    fig = plt.figure(figsize=(18, (7 * nsim)+0.15))
+                    outer_gs2 = fig.add_gridspec(
+                                nrows=nsim,
+                                ncols=1,
+                                #hspace=0.3,
+                                #wspace=0.2
+                            )
+                    """
+                    gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5, hspace=0.0)
+                    ax1 = plt.subplot(gs[0:2, :3], projection=proj)
+                    ax2 = plt.subplot(gs[0:2, 3:], projection=proj)
+                    ax3 = plt.subplot(gs[2, 1:5], projection=proj)
+                    """
+                else:
+                    #THIS WOULD BUILD WITH SUMMARY PLOT
+                    fig = plt.figure(figsize=(17, (4 * total_rows)+0.15))
+                    outer_gs = fig.add_gridspec(
+                        nrows=total_rows,
+                        ncols=ncols,
+                        height_ratios=[1.3] + [1] * nrows_bottom,
+                        hspace=0.35,
+                        wspace=0.2
+                    )
+
+                    summary_gs = outer_gs[0, :].subgridspec(
+                                2, 1,
+                                height_ratios=[3, 1],
+                                hspace=0.05
+                            )
+
+                    ax_summary_main = fig.add_subplot(summary_gs[0])
+                    zonal_plot(blats, bzm, ax=ax_summary_main,color="k",linestyle='dashed',alpha=0.55,#"#ff7f0e"
+                            label="$\mathbf{Baseline}:$"+f"{nicknames[1]} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}")
+
+                    ax_summary_diff = fig.add_subplot(summary_gs[1], sharex=ax_summary_main)
+                #ax_summary_main.set_ylim([0, 65])
+                #if "levs" in kwargs:
+                #    o_data = multi_dict_var[case_names[0]][season][ptype]["logp"]["o_data"]
+                #else:
+                
+    
+
+                # Store axes
+                axes = []
+                diffmin = 0
+                diffmax = 0
+                summmin = 0
+                summmax = 0
+                for r in range(nsim):
+                    row = r // ncols
+                    col = r % ncols
+
+                    m_data = multi_dict_var[case_names[r]][season][ptype]["m_data"]
+                    azm = m_data["da"]
+                    lats = m_data["lats"]
+                    diff_data = multi_dict_var[case_names[r]][season][ptype]["diff_data"]
+                    diff = diff_data["da"]
+
+
+                    if "levs" in kwargs:
+                        print("THIS THING HAS VERETINCAL LEVELS")
+                        #Set plot titles
+                        case_title = "$\mathbf{Test}:$"+f"{nicknames[0][r]}\nyears: {case_climo_yrs[0][r]}-{case_climo_yrs[-1][r]}"
+
+                        '''if obs:
+                            obs_var = kwargs["obs_var_name"]
+                            obs_title = kwargs["obs_file"][:-3]
+                            base_title = "$\mathbf{Baseline}:$"+obs_title+"\n"+"$\mathbf{Variable}:$"+f"{obs_var}"
                         else:
-                            ax.set_title("Difference", fontsize=10)
-                            # Optional: colorbar to the right of ax3
-                            pos = ax.get_position()
-                            cbar_ax = fig.add_axes([
-                                pos.x1 + 0.01,  # right of ax3
-                                pos.y0,
-                                0.015,
-                                pos.height
-                            ])
-                            fig.colorbar(cf, cax=cbar_ax, orientation='vertical')
-                        # End if
+                            base_title = "$\mathbf{Baseline}:$"+f"{nicknames[1]}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"'''
 
-                        # Store for colorbars
-                        row_axes.append((ax, cf))  # Save both axis and contour
-                        cbar_axs[key] = ax
-                    axes.append(row_axes)
+                        base_title = "$\mathbf{Baseline}:$"+f"{nicknames[1]}\nyears: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}"
+
+                        
+                        m_logp_data = multi_dict_var[case_names[r]][season][ptype]["m_data"]
+                        o_logp_data = multi_dict_var[case_names[r]][season][ptype]["o_data"]
+                        azm_logp = m_logp_data["da"]
+                        lats_logp = m_logp_data["lats"]
+                        bzm_logp = o_logp_data["da"]
+                        blats_logp = o_logp_data["lats"]
+                        diff_logp_data = multi_dict_var[case_names[r]][season][ptype]["diff_data"]
+                        diff_logp = diff_logp_data["da"]
+
+                        #levels=case["levels"]
+                        #cmap=case["cmap"]
+                        #norm=case["norm"]
+
+                        # generate dictionary of contour plot settings:
+                        cp_info = plot_utils.prep_contour_plot(azm, bzm, diff, **kwargs)
+                        norm1 = cp_info['norm1']
+                        cmap1 = cp_info['cmap1']
+                        levels1 = cp_info['levels1']
+                        levelsdiff = cp_info['levelsdiff']
+                        cmapdiff = cp_info['cmapdiff']
+                        normdiff = cp_info['normdiff']
+
+                        # Generate zonal plot:
+                        #fig, ax = plt.subplots(figsize=(10,10),nrows=4, constrained_layout=True, sharex=True, sharey=True,**cp_info['subplots_opt'])
+
+                        """inner_gs = outer_gs2[r].subgridspec(
+                            nrows=4,
+                            ncols=6,
+                            #height_ratios=[1, 1.1],  # bottom slightly larger if desired
+                            hspace=0.5,
+                            wspace=0.25
+                        )"""
+
+                        inner_gs = outer_gs2[r].subgridspec(
+                            nrows=2,
+                            ncols=8,
+                            hspace=0.3,
+                            wspace=0.5
+                        )
+
+                        """
+                        gs = mpl.gridspec.GridSpec(3, 6, wspace=0.5, hspace=0.0)
+                        ax1 = plt.subplot(gs[0:2, :3], projection=proj)
+                        ax2 = plt.subplot(gs[0:2, 3:], projection=proj)
+                        ax3 = plt.subplot(gs[2, 1:5], projection=proj)
+                        """
+
+                        # Top row
+                        """ax_top_left  = fig.add_subplot(inner_gs[0:2, :3])
+                        ax_top_right = fig.add_subplot(inner_gs[0:2, 3:])
+
+                        # Bottom row (centered by spanning both columns)
+                        ax_bottom = fig.add_subplot(inner_gs[2:, 1:5])"""
+
+                        # Top row
+                        ax_top_left  = fig.add_subplot(inner_gs[0, 0:4])
+                        ax_top_right = fig.add_subplot(inner_gs[0, 4:])
+
+                        # Bottom row (same width as one top plot, centered)
+                        ax_bottom = fig.add_subplot(inner_gs[1, 2:6])
+                        
+
+                        levs = np.unique(np.array(levels1))
+
+                        levs_diff = np.unique(np.array(levelsdiff))
+                        #levs_pct_diff = np.unique(np.array(cp_info['levelspctdiff']))
+
+                        if len(levs) < 2:
+                            img0, ax_top_left = zonal_plot(lats, azm, ax=ax_top_left)
+                            ax_top_left.text(0.4, 0.4, empty_message, transform=ax_top_left.transAxes, bbox=props)
+                            img1, ax_top_right = zonal_plot(blats, bzm, ax=ax_top_right)
+                            ax_top_right.text(0.4, 0.4, empty_message, transform=ax_top_right.transAxes, bbox=props)
+                        else:
+                            img0, ax_top_left = zonal_plot(lats, azm, ax=ax_top_left, norm=norm1,cmap=cmap1,levels=levels1,**cp_info)
+                            img1, ax_top_right = zonal_plot(blats, bzm, ax=ax_top_right, norm=norm1,cmap=cmap1,levels=levels1,**cp_info)
+                            fig.colorbar(img0, ax=ax_top_left, location='right',**cp_info['colorbar_opt'], pad=0.0)
+                            fig.colorbar(img1, ax=ax_top_right, location='right',**cp_info['colorbar_opt'], pad=-0.0)
+                        #End if
+
+                        if len(levs_diff) < 2:
+                            img2, ax_bottom = zonal_plot(lats, diff, ax=ax_bottom)
+                            ax_bottom.text(0.4, 0.4, empty_message, transform=ax_bottom.transAxes, bbox=props)
+                        else:
+                            img2, ax_bottom = zonal_plot(lats, diff, ax=ax_bottom, norm=normdiff,cmap=cmapdiff,levels=levelsdiff,**cp_info)
+                            fig.colorbar(img2, ax=ax_bottom, location='right',**cp_info['diff_colorbar_opt'], pad=-0.0)
+                            
+                        """if len(levs_pct_diff) < 2:
+                            img3, ax[3] = zonal_plot(lats, pct, ax=ax[3])
+                            ax[3].text(0.4, 0.4, empty_message, transform=ax[3].transAxes, bbox=props)
+                        else:
+                            img3, ax[3] = zonal_plot(lats, pct, ax=ax[3], norm=cp_info['pctnorm'],cmap=cp_info['cmappct'],levels=cp_info['levelspctdiff'],**cp_info)
+                            fig.colorbar(img3, ax=ax[3], location='right',**cp_info['pct_colorbar_opt'])"""
+
+                        ax_top_left.set_title(case_title, loc='left') #fontsize=tiFontSize
+                        ax_top_right.set_title(base_title, loc='left') #fontsize=tiFontSize
+                        ax_bottom.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left') #fontsize=tiFontSize
+                        #ax[3].set_title("Test % Diff Baseline", loc='left', fontsize=tiFontSize,fontweight="bold")
+
+
+                        # style the plot:
+                        #Set Main title for subplots:
+                        st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
+                        st.set_y(0.85)
+                        ax_bottom.set_xlabel("LATITUDE")
+
+                        #if log_p:
+                        #    [a.set_yscale("log") for a in ax]
+
+                        #fig.text(-0.03, 0.5, 'PRESSURE [hPa]', va='center', rotation='vertical')
+
+                    else:
+                        #Set figure title
+                        plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=suptitle_y)
+                        splot_top = 0.875
+                        plt.subplots_adjust(top=splot_top)
+
+
+                        zonal_plot(lats, azm, ax=ax_summary_main,color=case_colors[r],zorder=100,#color="#1f77b4"
+                                    label="$\mathbf{Test}:$"+f"{nicknames[0][r]} - years: {case_climo_yrs[0][r]}-{case_climo_yrs[-1][r]}")
+
+
+                        #print(f"season: {season}\summmin: {summmin}\summmax: {summmax}")
+                        if np.min(azm) < summmin:
+                            summmin = np.min(azm.values)
+
+                        if np.max(azm) > summmax:
+                            summmax = np.max(azm.values)
+                        #print(f"summmin: {summmin}\summmax: {summmax}\n")
+
+                        ax_summary_diff = zonal_plot(lats, diff, ax=ax_summary_diff, color=case_colors[r])
+                        #print(f"season: {season}\ndiffmin: {diffmin}\ndiffmax: {diffmax}")
+                        if np.min(diff) < diffmin:
+                            diffmin = np.min(diff.values)
+
+                        if np.max(diff) > diffmax:
+                            diffmax = np.max(diff.values)
+                        #print(f"diffmin: {diffmin}\ndiffmax: {diffmax}\n")
+
+                        #ax_summary_diff.set_ylim([diffmin, diffmax*1.33])
+                        #ax_summary_diff.set_ylim([-2, 2])
+
+                        #ax_summary_diff.axhline(0, linestyle="--", linewidth=1)
+
+                        # Create a 2-row inner GridSpec inside this outer cell
+                        inner_gs = outer_gs[row+1, col].subgridspec(
+                            nrows=2,
+                            ncols=1,
+                            height_ratios=[3, 1],  # main plot bigger than diff
+                            hspace=0.05
+                        )
+
+                        ax_main = fig.add_subplot(inner_gs[0])
+                        ax_diff = fig.add_subplot(inner_gs[1], sharex=ax_main)
+
+
+
+                        zonal_plot(lats, azm, ax=ax_main,color=case_colors[r],zorder=100,#color="#1f77b4"
+                                    label="$\mathbf{Test}:$"+f"{nicknames[0][r]} - years: {case_climo_yrs[0][r]}-{case_climo_yrs[-1][r]}") # #1f77b4 -> matplotlib standard blue
+                        zonal_plot(blats, bzm, ax=ax_main,color="k",linestyle='dashed',alpha=0.55,#"#ff7f0e"
+                                    label="$\mathbf{Baseline}:$"+f"{nicknames[1]} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}") # #ff7f0e -> matplotlib standard orange
+
+                        #fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+                        #            borderaxespad=0.0,fontsize=6,frameon=False)
+
+                        zonal_plot(lats, diff, ax=ax_diff, color="k")
+                        ax_diff.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
+
+                        # Add vertical padding (10–20% works well)
+                        ax_main.margins(y=0.15)
+
+                        """leg = ax_main.legend(
+                            loc="upper left",
+                            bbox_to_anchor=(0.0, 1.0),
+                            frameon=False,
+                            fontsize=9
+                        )"""
+
+                        for a in [ax_main, ax_diff]:
+                            try:
+                                a.label_outer()
+                            except:
+                                pass
+                            #End except
+                        #End for
+
+                        #ax_main.set_title(f"{sim.name}")
+                        #ax_diff.axhline(0, linestyle="--")
+
+                        #Set Main title for subplots:
+                        #st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
+                        #st.set_y(1.02)
+
+                        """#Write the figure to provided workspace/file:
+                        fig.savefig(wks, bbox_inches='tight', dpi=300)
+
+                        #Close plots:
+                        plt.close()"""
+
+
+                    """#Clean up the spacing a bit
+                    #plt.subplots_adjust(wspace=0.3, hspace=hspace)
+                    if ptype == "LatLon":
+                        hspace = 0.2
+                        plt.subplots_adjust(hspace=hspace)
+                        multi_plot_ext = "global_latlon_map"
+                    else:
+                        #hspace = 0.05
+                        plt.subplots_adjust(wspace=0.05)"""
+
+                    if ptype == "Zonal":
+                        multi_plot_ext = "zonal_mean"
+
+                    if "levs" not in kwargs:
+                        ax_summary_diff.set_ylim([diffmin, diffmax*1.33])
+                        ax_summary_main.set_ylim([summmin, summmax+summmax*(1/6)*nsim])
+                        #ax_summary_main.set_ylim([0, 65])
+                        leg = ax_summary_main.legend(
+                                loc="upper left",
+                                bbox_to_anchor=(0.0, 1.0),
+                                frameon=False,
+                                fontsize=9
+                            )
+                    """else:
+                        #Clean up the spacing a bit
+                        #plt.subplots_adjust(wspace=0.3, hspace=hspace)
+                        if ptype == "LatLon":
+                            hspace = 0.2
+                            plt.subplots_adjust(hspace=hspace)
+                            multi_plot_ext = "global_latlon_map"
+                        else:
+                            #hspace = 0.05
+                            plt.subplots_adjust(wspace=0.05)"""
+
+                    fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
+
+                    adfobj.add_website_data(wks / file_name, var, case_names[0], multi_plot_ext=multi_plot_ext,
+                                            category=web_category, season=season, plot_type=ptype,multi_case=True)
+
+                    #Close plots:
+                    plt.close()
+
+
+
+
+
+
+
+
+
+'''
+def multi_zonal_plots(wks, var, ptype, case_names, nicknames, case_climo_yrs, baseline_climo_yrs,
+                      multi_dict_var, web_category, adfobj, **kwargs):
+
+    #Check redo_plot. If set to True: remove old plot, if it already exists:
+    redo_plot = adfobj.get_basic_info('redo_plot')
+
+    # Check redo_plot. If set to True: remove old plot, if it already exists:
+    if wks.is_file():
+        if redo_plot:
+            wks.unlink()
+            return True
+        else:
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(wks, var, case_name, category=web_category,
+                                    season=season, plot_type=plot_type,script=__file__)
+
+    #Determine needed matplotlib normalization function:
+    normfunc,_ = plot_utils.use_this_norm()
+
+    #Format spacing
+    #hspace = 0.2
+    #nrows = len(case_names)
+    #n_plot_cols = 3
+    #n_plot_spaces = 2 # should be one less than num of cols
+
+    nsim = len(case_names)
+    ncols = 2
+    nrows = int(np.ceil(nsim / ncols))
+    case_colors = [mpl.cm.tab20(i) for i, case in enumerate(case_names)]
+
+   
+
+    if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
+        if case_names[0] not in multi_dict_var.keys():
+            print(f"Skipping variable {var} since case {case_names[0]} not found in multi_dict_var")
+            return
+
+        for season in multi_dict_var[case_names[0]].keys():
+            file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
+
+            if (not redo_plot) and Path(wks / file_name).is_file():
+                #Continue to next iteration:
+                continue
+            elif (redo_plot) or (not Path(wks / file_name).is_file()):
+
+                # Define rows and columns
+                #ncols = n_plot_cols+n_plot_spaces  # m_data, space, o_data, space, diff_data
+                #height_ratios = []
+
+                if ptype == "LatLon":
+                    plot_height = 1.25
+                else:
+                    plot_height = 1.0
+
+                if nrows == 2:
+                    suptitle_y = 0.925
+                if nrows == 3:
+                    suptitle_y = 0.9125
+                if nrows == 4:
+                    suptitle_y = 0.9#25
+
+                cbar_height = 0.05  # relative to row
+                spacing_height = 0.1  # vertical space between plot rows
+
+                # Create height ratios for all rows
+                #for _ in range(nrows):
+                #    height_ratios.extend([plot_height, cbar_height, spacing_height])
+
+                #print("len(height_ratios)",len(height_ratios))
+
+                # Remove last spacing row
+                #height_ratios = height_ratios[:-1]
+
+                """if ptype == "LatLon":
+                    width_ratios = [1, 0.015, 1, 0.15, 1]  # m | space | o | space | diff                    
+                    if nrows == 2:
+                        fig_height = 2+(2.5*nrows) #10 #7.
+                    if nrows == 3:
+                        fig_height = 2.775+(2.5*nrows) #10 #7.5
+                    if nrows == 4:
+                        fig_height = 3.5+(2.5*nrows) #10 #7.5
+                    if nrows > 4:
+                        fig_height = 3.5+(2.5*nrows) #10 #7.5
+                else:
+                    width_ratios = [2, 0.015, 2, 0.15, 2]  # m | space | o | space | diff
+                    fig_height = (5*nrows)#+0.5 #10
+                
+                fig_width = 16"""
+
+                #WORKS>>
+                """fig = plt.figure(figsize=(15, (4 * nrows)+0.15))
+
+                outer_gs = fig.add_gridspec(
+                    nrows=nrows,
+                    ncols=ncols,
+                    hspace=0.3,
+                    wspace=0.2
+                )
+
+                #Set figure title
+                plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=suptitle_y)
+                if ptype == "LatLon":
+                    splot_top = 0.825
+                else:
+                    splot_top = 0.875
+                plt.subplots_adjust(top=splot_top)
+                """
+
+
+                # Store axes
+                axes = []
+                for r in range(nsim):
+                    row = r // ncols
+                    col = r % ncols
+
+                    m_data = multi_dict_var[case_names[r]][season][ptype]["m_data"]
+                    o_data = multi_dict_var[case_names[r]][season][ptype]["o_data"]
+                    azm = m_data["da"]
+                    lats = m_data["lats"]
+                    bzm = o_data["da"]
+                    blats = o_data["lats"]
+                    diff_data = multi_dict_var[case_names[r]][season][ptype]["diff_data"]
+                    diff = diff_data["da"]
+
                     
-                #Clean up the spacing a bit
-                #plt.subplots_adjust(wspace=0.3, hspace=hspace)
-                hspace = 0.2
-                plt.subplots_adjust(hspace=hspace)
-                #plt.subplots_adjust(wspace=0.3)
 
-                fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
-                if ptype == "NHPolar":
-                    hemi_ext = "nh"
-                if ptype == "SHPolar":
-                    hemi_ext = "sh"
-                adfobj.add_website_data(wks / file_name, var, case_names[0], multi_plot_ext=f"{hemi_ext}_polar_map",
-                                                            category=web_category, season=season, plot_type=ptype,multi_case=True)
 
-                #Close plots:
-                plt.close()
+                    #row_base = r * 3  # Because each row uses 3 grid rows (plot, cbar, space)
+                    #cbar_axs = {}
+                    #row_axes = []
+                    if "levs" in kwargs:
+                        print("THIS THING HAS VERETINCAL LEVELS")
+                        m_logp_data = multi_dict_var[case_names[r]][season][ptype]["m_data"]
+                        o_logp_data = multi_dict_var[case_names[r]][season][ptype]["o_data"]
+                        azm_logp = m_logp_data["da"]
+                        lats_logp = m_logp_data["lats"]
+                        bzm_logp = o_logp_data["da"]
+                        blats_logp = o_logp_data["lats"]
+                        diff_logp_data = multi_dict_var[case_names[r]][season][ptype]["diff_data"]
+                        diff_logp = diff_logp_data["da"]
+
+
+                    else:
+                        
+                        fig = plt.figure(figsize=(15, (4 * nrows)+0.15))
+
+                        outer_gs = fig.add_gridspec(
+                            nrows=nrows,
+                            ncols=ncols,
+                            hspace=0.3,
+                            wspace=0.2
+                        )
+
+                        #Set figure title
+                        plt.suptitle(f'All Case Comparison for {var}: {season}\n', fontsize=16,y=suptitle_y)
+                        if ptype == "LatLon":
+                            splot_top = 0.825
+                        else:
+                            splot_top = 0.875
+                        plt.subplots_adjust(top=splot_top)
+
+                        """nsim = len(case_names)
+                        ncols = 2
+                        nrows_bottom = int(np.ceil(nsim / ncols))
+
+                        total_rows = 1 + nrows_bottom   # 1 row for summary block
+
+                        fig = plt.figure(figsize=(14, 4 * total_rows))
+
+                        outer_gs = fig.add_gridspec(
+                            nrows=total_rows,
+                            ncols=2,
+                            height_ratios=[1.2] + [1]*nrows_bottom,
+                            hspace=0.35,
+                            wspace=0.25
+                        )
+
+                        summary_gs = outer_gs[0, :].subgridspec(
+                            2, 1,
+                            height_ratios=[3, 1],
+                            hspace=0.05
+                        )"""
+
+
+
+
+
+                        """m_data = multi_dict_var[case_names[r]][season][ptype]["m_data"]
+                        o_data = multi_dict_var[case_names[r]][season][ptype]["o_data"]
+                        azm = m_data["da"]
+                        lats = m_data["lats"]
+                        bzm = o_data["da"]
+                        blats = o_data["lats"]
+                        diff_data = multi_dict_var[case_names[r]][season][ptype]["diff_data"]
+                        diff = diff_data["da"]"""
+
+
+
+
+
+
+                        """ax_summary_main = fig.add_subplot(summary_gs[0])
+                        ax_summary_diff = fig.add_subplot(summary_gs[1], sharex=ax_summary_main)
+
+                        ax_summary_main.plot(blats, bzm, label="$\mathbf{Test}:$"+f"{nicknames[0][r]} - years: {case_climo_yrs[0][r]}-{case_climo_yrs[-1][r]}",
+                                            linewidth=2)
+
+                        for sim in m_data:
+                            ax_summary_main.plot(lats, azm, label="$\mathbf{Baseline}:$"+f"{nicknames[1]} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}")
+
+                        for sim in diff_data:
+                            ax_summary_diff.plot(lats, diff)
+
+                        ax_summary_diff.axhline(0, linestyle="--", linewidth=1)"""
+
+
+
+
+
+
+                        #levels=case["levels"]
+                        #cmap=case["cmap"]
+                        #norm=case["norm"]
+
+
+                        row = r // ncols
+                        col = r % ncols
+
+                        # Create a 2-row inner GridSpec inside this outer cell
+                        inner_gs = outer_gs[row, col].subgridspec(
+                            nrows=2,
+                            ncols=1,
+                            height_ratios=[3, 1],  # main plot bigger than diff
+                            hspace=0.05
+                        )
+
+                        ax_main = fig.add_subplot(inner_gs[0])
+                        ax_diff = fig.add_subplot(inner_gs[1], sharex=ax_main)
+
+
+                        zonal_plot(lats, azm, ax=ax_main,color=case_colors[r],zorder=100,#color="#1f77b4"
+                                    label="$\mathbf{Test}:$"+f"{nicknames[0][r]} - years: {case_climo_yrs[0][r]}-{case_climo_yrs[-1][r]}") # #1f77b4 -> matplotlib standard blue
+                        zonal_plot(blats, bzm, ax=ax_main,color="k",linestyle='dashed',alpha=0.55,#"#ff7f0e"
+                                    label="$\mathbf{Baseline}:$"+f"{nicknames[1]} - years: {baseline_climo_yrs[0]}-{baseline_climo_yrs[-1]}") # #ff7f0e -> matplotlib standard orange
+
+                        #fig.legend(handles=[line,line2],bbox_to_anchor=(-0.15, 0.87, 1.05, .102),loc="right",
+                        #            borderaxespad=0.0,fontsize=6,frameon=False)
+
+                        zonal_plot(lats, diff, ax=ax_diff, color="k")
+                        ax_diff.set_title("$\mathbf{Test} - \mathbf{Baseline}$", loc='left', fontsize=10)
+
+                        # Add vertical padding (10–20% works well)
+                        ax_main.margins(y=0.15)
+
+                        leg = ax_main.legend(
+                            loc="upper left",
+                            bbox_to_anchor=(0.0, 1.0),
+                            frameon=False,
+                            fontsize=9
+                        )
+
+                        for a in [ax_main, ax_diff]:
+                            try:
+                                a.label_outer()
+                            except:
+                                pass
+                            #End except
+                        #End for
+
+                        #ax_main.set_title(f"{sim.name}")
+                        #ax_diff.axhline(0, linestyle="--")
+
+                        #Set Main title for subplots:
+                        #st = fig.suptitle(wks.stem[:-5].replace("_"," - "), fontsize=15)
+                        #st.set_y(1.02)
+
+                        #Write the figure to provided workspace/file:
+                        fig.savefig(wks, bbox_inches='tight', dpi=300)
+
+                        #Close plots:
+                        plt.close()
+
+
+                    #Clean up the spacing a bit
+                    #plt.subplots_adjust(wspace=0.3, hspace=hspace)
+                    if ptype == "LatLon":
+                        hspace = 0.2
+                        plt.subplots_adjust(hspace=hspace)
+                        multi_plot_ext = "global_latlon_map"
+                    else:
+                        #hspace = 0.05
+                        plt.subplots_adjust(wspace=0.05)
+
+                    if ptype == "Zonal":
+                        multi_plot_ext = "zonal_mean"
+
+                    fig.savefig(wks / file_name, bbox_inches='tight', dpi=300)
+
+                    adfobj.add_website_data(wks / file_name, var, case_names[0], multi_plot_ext=multi_plot_ext,
+                                            category=web_category, season=season, plot_type=ptype,multi_case=True)
+
+                    #Close plots:
+                    plt.close()
+'''
+
+
+
+
+
+
+
+
+"""
+def multi_zonal_plots(wks, var, ptype, case_names, nicknames, case_climo_yrs, baseline_climo_yrs,
+                      multi_dict_var, web_category, adfobj, **kwargs):
+
+    #Check redo_plot. If set to True: remove old plot, if it already exists:
+    redo_plot = adfobj.get_basic_info('redo_plot')
+
+    # Check redo_plot. If set to True: remove old plot, if it already exists:
+    if wks.is_file():
+        if redo_plot:
+            wks.unlink()
+            return True
+        else:
+            #Add already-existing plot to website (if enabled):
+            adfobj.add_website_data(wks, var, case_name, category=web_category,
+                                    season=season, plot_type=plot_type,script=__file__)
+
+    #Determine needed matplotlib normalization function:
+    normfunc,_ = plot_utils.use_this_norm()
+
+    #Format spacing
+    #hspace = 0.2
+    #nrows = len(case_names)
+    #n_plot_cols = 3
+    #n_plot_spaces = 2 # should be one less than num of cols
+
+    #nsim = len(case_names)
+    #ncols = 2
+    #nrows = int(np.ceil(nsim / ncols))
+
+    nsim = len(case_names)
+    ncols = 2
+    nrows_bottom = int(np.ceil(nsim / ncols))
+    total_rows = 1 + nrows_bottom   # +1 for summary row
+
+   
+
+    if ((adfobj.compare_obs) and (var in adfobj.var_obs_dict)) or (not adfobj.compare_obs):
+        if case_names[0] not in multi_dict_var.keys():
+            print(f"Skipping variable {var} since case {case_names[0]} not found in multi_dict_var")
+            return
+
+        for season in multi_dict_var[case_names[0]].keys():
+            file_name = f"{var}_{season}_{ptype}_Mean_multi_plot.png"
+
+            if (not redo_plot) and Path(wks / file_name).is_file():
+                #Continue to next iteration:
+                continue
+            elif (redo_plot) or (not Path(wks / file_name).is_file()):
+
+                # Define rows and columns
+                #ncols = n_plot_cols+n_plot_spaces  # m_data, space, o_data, space, diff_data
+                #height_ratios = []
+
+                if ptype == "LatLon":
+                    plot_height = 1.25
+                else:
+                    plot_height = 1.0
+
+                if nrows == 2:
+                    suptitle_y = 0.925
+                if nrows == 3:
+                    suptitle_y = 0.9125
+                if nrows == 4:
+                    suptitle_y = 0.9#25
+
+                cbar_height = 0.05  # relative to row
+                spacing_height = 0.1  # vertical space between plot rows
+
+    
+
+
+                # -----------------------------------------
+                # 1. Setup figure and outer GridSpec
+                # -----------------------------------------
+
+
+                fig = plt.figure(figsize=(14, 4 * total_rows))
+
+                outer_gs = fig.add_gridspec(
+                    nrows=total_rows,
+                    ncols=ncols,
+                    height_ratios=[1.3] + [1] * nrows_bottom,
+                    hspace=0.35,
+                    wspace=0.25
+                )
+
+                # -----------------------------------------
+                # 2. Create Summary (full-width) axes
+                # -----------------------------------------
+
+                summary_gs = outer_gs[0, :].subgridspec(
+                    2, 1,
+                    height_ratios=[3, 1],
+                    hspace=0.05
+                )
+
+                ax_summary_main = fig.add_subplot(summary_gs[0])
+                ax_summary_diff = fig.add_subplot(summary_gs[1], sharex=ax_summary_main)
+
+                # -----------------------------------------
+                # 3. Get Baseline ONCE
+                # -----------------------------------------
+
+                # Use first case to extract baseline (assuming shared baseline)
+                first_case = case_names[0]
+
+                o_data = multi_dict_var[first_case][season][ptype]["o_data"]
+                bzm = o_data["da"]
+                blats = o_data["lats"]
+
+                # Plot baseline once on summary
+                zonal_plot(
+                    blats,
+                    bzm,
+                    ax=ax_summary_main,
+                    color="#ff7f0e",
+                    label=f"$\\mathbf{{Baseline}}$: {nicknames[1]} "
+                        f"{baseline_climo_yrs[0]}–{baseline_climo_yrs[-1]}"
+                )
+
+                # -----------------------------------------
+                # 4. Loop Over Simulations
+                # -----------------------------------------
+
+                for r, case in enumerate(case_names):
+
+                    m_data = multi_dict_var[case][season][ptype]["m_data"]
+                    diff_data = multi_dict_var[case][season][ptype]["diff_data"]
+
+                    azm = m_data["da"]
+                    lats = m_data["lats"]
+                    diff = diff_data["da"]
+
+                    # ---- Add to summary ----
+                    zonal_plot(
+                        lats,
+                        azm,
+                        ax=ax_summary_main,
+                        label=f"$\\mathbf{{Test}}$: {nicknames[0][r]} "
+                            f"{case_climo_yrs[0][r]}–{case_climo_yrs[-1][r]}"
+                    )
+
+                    zonal_plot(
+                        lats,
+                        diff,
+                        ax=ax_summary_diff
+                    )
+
+                    # ---- Create bottom panel position ----
+                    row = 1 + (r // ncols)   # offset by 1 for summary row
+                    col = r % ncols
+
+                    inner_gs = outer_gs[row, col].subgridspec(
+                        2, 1,
+                        height_ratios=[3, 1],
+                        hspace=0.05
+                    )
+
+                    ax_main = fig.add_subplot(inner_gs[0])
+                    ax_diff = fig.add_subplot(inner_gs[1], sharex=ax_main)
+
+                    # ---- Plot individual panel ----
+                    zonal_plot(
+                        lats,
+                        azm,
+                        ax=ax_main,
+                        color="#1f77b4",
+                        label=f"$\\mathbf{{Test}}$: {nicknames[0][r]} "
+                            f"{case_climo_yrs[0][r]}–{case_climo_yrs[-1][r]}"
+                    )
+
+                    zonal_plot(
+                        blats,
+                        bzm,
+                        ax=ax_main,
+                        color="#ff7f0e",
+                        label=f"$\\mathbf{{Baseline}}$: {nicknames[1]} "
+                            f"{baseline_climo_yrs[0]}–{baseline_climo_yrs[-1]}"
+                    )
+
+                    zonal_plot(
+                        lats,
+                        diff,
+                        ax=ax_diff,
+                        color="k"
+                    )
+
+                    ax_diff.axhline(0, linestyle="--", linewidth=1)
+                    ax_diff.set_title("$\\mathbf{Test - Baseline}$", loc='left', fontsize=10)
+
+                    # Headroom for legend
+                    ax_main.margins(y=0.15)
+
+                    ax_main.legend(
+                        loc="upper left",
+                        bbox_to_anchor=(0, 1.0),
+                        frameon=False,
+                        fontsize=8
+                    )
+
+                    for a in [ax_main, ax_diff]:
+                        a.label_outer()
+
+
+                # -----------------------------------------
+                # 5. Final Summary Formatting
+                # -----------------------------------------
+
+                ax_summary_main.margins(y=0.15)
+                ax_summary_main.legend(
+                    loc="upper left",
+                    bbox_to_anchor=(0, 1.0),
+                    frameon=False,
+                    fontsize=9
+                )
+
+                ax_summary_diff.axhline(0, linestyle="--", linewidth=1)
+                ax_summary_main.set_title("All Simulations vs Baseline", fontsize=14)
+
+                # -----------------------------------------
+                # 6. Save Figure
+                # -----------------------------------------
+
+                fig.savefig(wks, bbox_inches='tight', dpi=300)
+                plt.close(fig)
+"""
+
 
 #####################
 #END HELPER FUNCTIONS

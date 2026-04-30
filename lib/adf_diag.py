@@ -181,6 +181,7 @@ class AdfDiag(AdfWeb):
 
         #Add multi plots info to object:
         self.__multi_case_plots = self.read_config_var('multi_case_plots')
+        print("self.__multi_case_plots",self.__multi_case_plots)
 
     # Create property needed to return "plotting_scripts" variable to user:
     @property
@@ -190,15 +191,16 @@ class AdfDiag(AdfWeb):
         # modify this variable:
         return copy.copy(self.__plotting_scripts)
 
-    def get_multi_case_info(self, var_str, required=False):
+    @property
+    def get_multi_case_info(self):
         """
         Return the config variable from 'multi_case_plots' as requested by
         the user.
         """
-
-        return self.read_config_var(var_str,
-                                    conf_dict=self.__multi_case_plots,
-                                    required=required)
+        return copy.copy(self.__multi_case_plots)
+        #return self.read_config_var(var_str,
+        #                            conf_dict=self.__multi_case_plots,
+        #                           required=required)
 
     #########
     # Script-running functions
@@ -1042,11 +1044,9 @@ class AdfDiag(AdfWeb):
         else:
             cvdp_dir = self.get_cvdp_info("cvdp_loc", required=True) + case_names[0]
         # end if
-
-        cvdp_dir = os.path.abspath(cvdp_dir)
         if not os.path.isdir(cvdp_dir):
             shutil.copytree(
-                self.get_cvdp_info("cvdp_codebase_loc"), cvdp_dir
+                self.get_cvdp_info("cvdp_codebase_loc", required=True), cvdp_dir
             )
         # End if
 
@@ -1563,7 +1563,6 @@ def _load_dataset(fils):
     -----
     When just one entry is provided, use `open_dataset`, otherwise `open_mfdatset`
     """
-
     import adf_utils as utils
     import warnings # use to warn user about missing files
     warnings.formatwarning = utils.my_formatwarning

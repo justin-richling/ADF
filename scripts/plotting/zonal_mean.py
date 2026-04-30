@@ -1,6 +1,8 @@
 from pathlib import Path
 import numpy as np
 import xarray as xr
+from collections import OrderedDict
+
 import plotting_functions as pf
 
 import adf_utils as utils
@@ -56,6 +58,43 @@ def zonal_mean(adfobj):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
     eyear_baseline = adfobj.climo_yrs["eyear_baseline"]
 
+    #CAM simulation variables (this is always assumed to be a list):
+    case_names = adfobj.get_cam_info("cam_case_name", required=True)
+
+    multi_plots = False
+    if len(case_names) > 1:
+        if adfobj.get_multi_case_info and "zonal_mean" in adfobj.get_multi_case_info:
+            print("did it come here?")
+            multi_plots = True
+            multi_dict = OrderedDict()
+
+    # RTHIS ALL WRONG< BUT KEEP FOR REFERENCE?
+    """multi_plots = False
+    if len(case_names) > 1:
+        #Check if multi-plots are desired from yaml file
+        if adfobj.get_multi_case_info("polar_map"):
+            multi_plots = True
+            result = OrderedDict()
+            for multi_var in adfobj.get_multi_case_info("polar_map"):
+                if multi_var not in multi_dict:
+                    multi_dict[multi_var] = OrderedDict()"""
+
+    # KEEP BUT USE A CHECK IN YAML TO TURN THIS ON
+    """
+    if "zonal_map" in adfobj.multi_case_plots:
+        if isinstance(adfobj.multi_case_plots,dict):
+            multi_case_latlon = adfobj.multi_case_plots.get("zonal_map",[])
+        else:
+            multi_case_latlon = True
+
+    multi_plots = False
+    if len(case_names) > 1:
+        #Check if multi-plots are desired from yaml file
+        if multi_case_latlon:
+            multi_plots = True
+            multi_dict = OrderedDict()
+    """
+
     res = adfobj.variable_defaults # will be dict of variable-specific plot preferences
     # or an empty dictionary if use_defaults was not specified in YAML.
 
@@ -98,7 +137,16 @@ def zonal_mean(adfobj):
 
         #Loop over the variables for each season
         for var in var_list:
+            #Grab data for desired multi-plots (from yaml file)
+            if multi_plots:
+                #for multi_var in adfobj.get_multi_case_info("polar_map"):
+                if var not in multi_dict:
+                    multi_dict[var] = OrderedDict()
+                multi_dict[var][case_name] = OrderedDict()
             for s in seasons:
+                if multi_plots:
+                    multi_dict[var][case_name][s] = {}
+                    multi_dict[var][case_name][s]["Zonal"] = {}
                 #Check zonal log-p:
                 plot_name_log = plot_loc / f"{var}_{s}_Zonal_logp_Mean.{plot_type}"
 
@@ -158,6 +206,9 @@ def zonal_mean(adfobj):
             vres = {}
         #End if
 
+        if multi_plots:
+            vres["multi_plots"] = True
+
         # load reference data (observational or baseline)
         if not adfobj.compare_obs:
             base_name = adfobj.data.ref_case_label
@@ -184,12 +235,14 @@ def zonal_mean(adfobj):
             )
             continue
         # End if
-
+        test_nicknames = []
+        base_nickname = adfobj.data.ref_nickname
         #Loop over model cases:
         for case_idx, case_name in enumerate(adfobj.data.case_names):
 
             #Set case nickname:
             case_nickname = adfobj.data.test_nicknames[case_idx]
+            test_nicknames.append(case_nickname)
 
             #Set output plot location:
             plot_loc = Path(plot_locations[case_idx])
@@ -219,6 +272,7 @@ def zonal_mean(adfobj):
             #Notify user of level dimension:
             if has_lev:
                 print(f"\t    INFO: {var} has lev dimension.")
+                vres["levs"] = True
 
             #Check to make sure each case has vertical levels if one of the cases does
             if (has_lev) and (not has_lev_ref):
@@ -238,7 +292,7 @@ def zonal_mean(adfobj):
 
             #Loop over season dictionary:
             for s in seasons:
-
+                
                 # time to make plot; here we'd probably loop over whatever plots we want for this variable
                 # I'll just call this one "Zonal_Mean"  ... would this work as a pattern [operation]_[AxesDescription] ?
                 # NOTE: Up to this point, nothing really differs from global_latlon_map,
@@ -269,29 +323,84 @@ def zonal_mean(adfobj):
                 if plot_name not in zonal_skip:
 
                     #Create new plot:
-                    pf.plot_zonal_mean_and_save(plot_name, case_nickname, adfobj.data.ref_nickname,
+                    result = pf.plot_zonal_mean_and_save(plot_name, case_nickname, base_nickname,
                                                     [syear_cases[case_idx],eyear_cases[case_idx]],
                                                     [syear_baseline,eyear_baseline],
                                                     mseasons[s], oseasons[s], has_lev, log_p=False, obs=adfobj.compare_obs, **vres)
+
+                    #print(f"var: {var}\ncasename: {case_name}\nseason: {s}\nresult: {result}")
+                    if result and multi_plots:
+                        check_str = f'{case_name} - test'
+                        if check_str in result:
+                            multi_dict[var][case_name][s]["Zonal"]["m_data"] = result[check_str]
+
+                        check_str = f'{case_name} - base'
+                        if check_str in result:
+                            multi_dict[var][case_name][s]["Zonal"]["o_data"] = result[check_str]
+
+                        check_str = f'{case_name} - diff'
+                        if check_str in result:
+                            multi_dict[var][case_name][s]["Zonal"]["diff_data"] = result[check_str]
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name, var, case_name, season=s, plot_type="Zonal")
                 #End if
 
-                #Create log-pressure plots as well (if applicable)
+                """#Create log-pressure plots as well (if applicable)
                 if (plot_name_log) and (plot_name_log not in logp_zonal_skip):
 
-                    pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, adfobj.data.ref_nickname,
+                    result = pf.plot_zonal_mean_and_save(plot_name_log, case_nickname, base_nickname,
                                                         [syear_cases[case_idx],eyear_cases[case_idx]],
                                                         [syear_baseline,eyear_baseline],
                                                         mseasons[s], oseasons[s], has_lev, log_p=True, obs=adfobj.compare_obs, **vres)
 
+                    print(result,"\n\n")
+                    if result:
+                        check_str = f'{case_name} - test'
+                        if check_str in result:
+                            multi_dict[var][case_name][s]["Zonal"]["logp"]["m_data"] = result[check_str]
+
+                        check_str = f'{case_name} - base'
+                        if check_str in result:
+                            multi_dict[var][case_name][s]["Zonal"]["logp"]["o_data"] = result[check_str]
+
+                        check_str = f'{case_name} - diff'
+                        if check_str in result:
+                            multi_dict[var][case_name][s]["Zonal"]["logp"]["diff_data"] = result[check_str]
+
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_name_log, f"{var}_logp", case_name, season=s, plot_type="Zonal", category="Log-P")
-                #End if
+                #End if"""
 
             #End for (seasons loop)
         #End for (case names loop)
+        
+    #This will be a list of variables for multi-case plotting based off LatLon plot type
+    if multi_plots:
+        #Notify user that script has started:
+        print("\n     Generating zonal multi-case plots...")
+
+        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+        for var in multi_dict.keys():
+            print("VAR:",var)
+                
+            vres = res.get(var, {})
+            #print("vres",vres)
+            web_category = vres.get("category", None)
+
+            pf.multi_zonal_plots(
+                                main_site_assets_path,
+                                var,
+                                "Zonal",
+                                case_names,
+                                [test_nicknames,base_nickname],
+                                [syear_cases,eyear_cases],
+                                [syear_baseline,eyear_baseline],
+                                multi_dict[var],
+                                web_category,
+                                adfobj,
+                                **vres
+                                )
     #End for (variables loop)
 
     #Notify user that script has ended:

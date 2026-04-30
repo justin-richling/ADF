@@ -93,13 +93,14 @@ class AdfInfo(AdfConfig):
         self.__mdtf_info = self.read_config_var("diag_mdtf_info")
 
         if self.__mdtf_info is not None:
-            if 'mdtf_run' in self.__mdtf_info:
-                if self.__mdtf_info['mdtf_run']:
-                    self.expand_references(self.__mdtf_info)
-            else:
-                # If mdtf_run is not in the config, then assume MDTF is not being run
-                self.__mdtf_info = None
+            self.expand_references(self.__mdtf_info)
         # End if
+
+        #Initialize ADF variable list:
+        self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
+
+        #Initialize multi-case list
+        self.__multi_case_plots = self.read_config_var("multi_case_plots")
 
         # Get the current system user
         self.__user = getpass.getuser()
@@ -134,9 +135,6 @@ class AdfInfo(AdfConfig):
                 self.__cam_climo_info[conf_var] = [conf_val]
             #End if
         #End for
-
-        #Initialize ADF variable list:
-        self.__diag_var_list = self.read_config_var('diag_var_list', required=True)
 
         #Case names:
         case_names = self.get_cam_info('cam_case_name', required=True)
@@ -385,7 +383,7 @@ class AdfInfo(AdfConfig):
         #Get cleaned nested list of hist_str for test case(s) (component.hist_num, eg cam.h0)
         cam_hist_str = self.__cam_climo_info.get('hist_str', None)
 
-         # Check if this is multi-case and adjust appropriately
+        # Check if this is multi-case and adjust appropriately
         if len(case_names) > 1:
             cam_hist_str = [[i] for i in cam_hist_str[0]]
 
@@ -466,7 +464,6 @@ class AdfInfo(AdfConfig):
                     #    hist_str = hist_strs
                     hist_str = hist_strs
                 print("hist_str",hist_str,"\n")
-
 
                 #Get climo years for verification or assignment if missing
                 starting_location = Path(cam_hist_locs[case_idx])
@@ -592,13 +589,6 @@ class AdfInfo(AdfConfig):
         if not self.compare_obs:
             self.__plot_location.append(os.path.join(plot_dir, first_case_dir))
         #End if
-
-        #Save list of all diagnostic plot locations
-        cleaned_plot_locations = [np.unique(self.__plot_location)]
-        with open(f"./plot_locs_list_{data_name}_{self.datetime_str}.txt", "w") as f:
-            for item in cleaned_plot_locations[0]:
-                f.write(item + "\n")
-
         #-------------------------------------------------------------------------
 
         #Initialize "num_procs" variable:
@@ -670,7 +660,6 @@ class AdfInfo(AdfConfig):
                 conf_val
             ]
         self.__cam_climo_info[conf_var] = [hist_str]
-    
     #########
 
     # Create property needed to return "user" name to user:
@@ -768,7 +757,7 @@ class AdfInfo(AdfConfig):
             base_hist_strs = ""
         hist_strs = {"test_hist_str":cam_hist_strs, "base_hist_str":base_hist_strs}
         return hist_strs
-
+    
     # Create property needed to return the multi-case directories to scripts:
     @property
     def main_site_paths(self):
@@ -777,6 +766,13 @@ class AdfInfo(AdfConfig):
         return {"main_site_path":self.__main_site_path,
                 "main_site_assets_path":self.__main_site_assets_path,
                 "main_site_img_path":self.__main_site_img_path}
+    
+    @property
+    def multi_case_plots(self):
+        """Return a copy of the "multi_case_plots" list to the user if requested."""
+        #Note that a copy is needed in order to avoid having a script mistakenly
+        #modify this variable, as it is mutable and thus passed by reference:
+        return copy.copy(self.__multi_case_plots)
 
     #########
 

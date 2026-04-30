@@ -56,12 +56,12 @@ class AdfBase:
         # Format the datetime object to a string without microseconds
         dt_str = current_timestamp.strftime('%Y-%m-%d %H:%M:%S')
         self.__datetime_str = dt_str
+        ext = f'{str(dt_str).replace(" ","-")}'
+        debug_fname = f"ADF_debug_{ext}.log"
+        self.__debug_fname = debug_fname
 
         # Create debug log, if requested:
         if debug:
-            ext = f'{str(dt_str).replace(" ","-")}'
-            debug_fname = f"ADF_debug_{ext}.log"
-            self.__debug_fname = debug_fname
             logging.basicConfig(filename=debug_fname, level=logging.DEBUG)
             self.__debug_log = logging.getLogger("ADF")
         else:

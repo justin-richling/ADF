@@ -71,34 +71,37 @@ def polar_map(adfobj):
     #CAM simulation variables (this is always assumed to be a list):
     case_names = adfobj.get_cam_info("cam_case_name", required=True)
 
+    """if "polar_map" in adfobj.multi_case_plots:
+        if isinstance(adfobj.multi_case_plots,dict):
+            multi_case_latlon = adfobj.multi_case_plots.get("polar_map",[])
+        else:
+            multi_case_latlon = True
+
     multi_plots = False
-    print("adfobj.get_multi_case_info",adfobj.get_multi_case_info)
-    #read_config_var('multi_case_plots')
-    print('adfobj.get_multi_case_info("polar_map")',adfobj.get_multi_case_info("polar_map"))
     if len(case_names) > 1:
         #Check if multi-plots are desired from yaml file
-        if adfobj.get_multi_case_info("polar_map"):
-        #if "polar_map" in adfobj.get_multi_case_info.keys():
+        if multi_case_latlon:
             multi_plots = True
             multi_dict = OrderedDict()
-            for multi_var in adfobj.get_multi_case_info("polar_map"):
-                if multi_var not in multi_dict:
-                    multi_dict[multi_var] = OrderedDict()
-    #End if (check for multiple cases)
+            #for multi_var in adfobj.get_multi_case_info("polar_map"):
+            #    if multi_var not in multi_dict:
+            #        multi_dict[multi_var] = OrderedDict()
+    #End if (check for multiple cases)"""
 
-    if multi_plots:
+    """if multi_plots:
         #if not adfobj.get_multi_case_info("global_latlon_map"):
         #        multi_dict[var] = OrderedDict()
         if adfobj.get_multi_case_info("polar_map"):
             for multi_var in adfobj.get_multi_case_info("polar_map"):
                 if multi_var not in multi_dict:
-                    multi_dict[multi_var] = OrderedDict()
+                    multi_dict[multi_var] = OrderedDict()"""
 
-    """# probably want to do this one variable at a time:
-    for var in var_list:
-        if multi_plots:
-            if not adfobj.get_multi_case_info("global_latlon_map"):
-                    multi_dict[var] = OrderedDict()"""
+    multi_plots = False
+    if len(case_names) > 1:
+        if adfobj.get_multi_case_info and "polar_map" in adfobj.get_multi_case_info:
+            print("did it come here?")
+            multi_plots = True
+            multi_dict = OrderedDict()
 
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]
@@ -110,7 +113,6 @@ def polar_map(adfobj):
         if not var_obs_dict:
             print("\t No observations found to plot against, so no polar maps will be generated.")
             return
-
 
     #Grab baseline years (which may be empty strings if using Obs):
     syear_baseline = adfobj.climo_yrs["syear_baseline"]
@@ -135,7 +137,6 @@ def polar_map(adfobj):
     print(f"\t NOTE: redo_plot is set to {redo_plot}")
     #-----------------------------------------
 
-
     #Determine if user wants to plot 3-D variables on
     #pressure levels:
     pres_levs = adfobj.get_basic_info("plot_press_levels")
@@ -147,14 +148,16 @@ def polar_map(adfobj):
                "MAM": [3, 4, 5],
                "SON": [9, 10, 11]
                }
-
+    results = None
+    has_levs = {}
     # probably want to do this one variable at a time:
     for var in var_list:
         print(f"\t - polar maps for {var}")
 
-        #multi_dict[var] = {}
-        #multi_dict[var] = {}
-        #multi_dict[var] = {}
+        if multi_plots:
+            #for multi_var in adfobj.get_multi_case_info("polar_map"):
+            if var not in multi_dict:
+                multi_dict[var] = OrderedDict()
 
         if var not in adfobj.data.ref_var_nam:
             dmsg = f"\t    WARNING: No reference data found for variable `{var}`, polar lat/lon mean plotting skipped."
@@ -172,6 +175,9 @@ def polar_map(adfobj):
         vres = res.get(var, {})
         web_category = vres.get("category", None)
 
+        if multi_plots:
+            vres["multi_plots"] = True
+
         # Get all plot info and check existence
         plot_info = []
         all_plots_exist = True
@@ -180,8 +186,11 @@ def polar_map(adfobj):
 
             #Grab data for desired multi-plots (from yaml file)
             if multi_plots:
-                if var in adfobj.get_multi_case_info("polar_map"):
+                multi_dict[var][case_name] = OrderedDict()
+                """if var in adfobj.get_multi_case_info("polar_map"):
                     multi_dict[var][case_name] = OrderedDict()
+                else:
+                    continue"""
 
             plot_loc = Path(plot_locations[case_idx])
 
@@ -191,12 +200,19 @@ def polar_map(adfobj):
 
             has_lev = "lev" in tmp_ds.dims
 
+            if has_lev:
+                has_levs[var] = adfobj.get_basic_info("plot_press_levels")
+            else:
+                has_levs[var] = None
+
             for s in seasons:
-                if var in adfobj.get_multi_case_info("polar_map"):
-                    multi_dict[var][case_name][s] = {}
+                #if var in adfobj.get_multi_case_info("polar_map"):
+                #    multi_dict[var][case_name][s] = {}
+                multi_dict[var][case_name][s] = {}
                 for hemi_type in ["NHPolar", "SHPolar"]:
-                    if var in adfobj.get_multi_case_info("polar_map"):
-                        multi_dict[var][case_name][s][hemi_type] = {}
+                    #if var in adfobj.get_multi_case_info("polar_map"):
+                    #    multi_dict[var][case_name][s][hemi_type] = {}
+                    multi_dict[var][case_name][s][hemi_type] = {}
                     if pres_levs and has_lev: # 3-D variable & pressure levels specified
                         for pres in pres_levs:
                             plot_name = plot_loc / f"{var}_{pres}hpa_{s}_{hemi_type}_Mean.{plot_type}"
@@ -210,14 +226,12 @@ def polar_map(adfobj):
                                 'pressure': pres,
                                 'exists': plot_name.is_file()
                             }
-                            #multi_dict[var][case_name][s] = {}
-                            #multi_dict[var][case_name][s] = {}
-                            #multi_dict[var][case_name][s] = {}
+
                             plot_info.append(info)
                             if (redo_plot is False) and info['exists']:
                                 adfobj.add_website_data(info['path'], info['var'],
                                                     info['case'], category=web_category,
-                                                    season=s, plot_type=hemi_type)
+                                                    season=s, plot_type=hemi_type,script=__file__)
                             else:
                                 all_plots_exist = False
                     elif (not has_lev): # 2-D variable
@@ -235,7 +249,7 @@ def polar_map(adfobj):
                         if (redo_plot is False) and info['exists']:
                             adfobj.add_website_data(info['path'], info['var'],
                                                   info['case'], category=web_category,
-                                                  season=s, plot_type=hemi_type)
+                                                  season=s, plot_type=hemi_type,script=__file__)
                         else:
                             all_plots_exist = False
 
@@ -251,8 +265,9 @@ def polar_map(adfobj):
         # Process each case
         for plot in plot_info:
             if plot['exists'] and not redo_plot:
+                print("plot['exists'] and not redo_plot - DTFYTGUYHIUJOK")
                 continue
-                
+
             case_name = plot['case']
             case_idx = plot['case_idx']
             plot_loc = Path(plot_locations[case_idx])
@@ -287,16 +302,12 @@ def polar_map(adfobj):
                 use_odata,
                 plot['season']
             )
-            if var in adfobj.get_multi_case_info("polar_map"):
-                multi_dict[var][case_name][plot['season']][plot['type']]["m_data"] = mseason
-                multi_dict[var][case_name][plot['season']][plot['type']]["o_data"] = oseason
-                multi_dict[var][case_name][plot['season']][plot['type']]["diff_data"] = dseason
 
             # Create plot
             if plot['path'].exists():
                 plot['path'].unlink()
 
-            pf.make_polar_plot(
+            result = pf.make_polar_plot(
                 plot['path'], test_nicknames[case_idx], base_nickname,
                 [syear_cases[case_idx], eyear_cases[case_idx]],
                 [syear_baseline, eyear_baseline],
@@ -305,14 +316,48 @@ def polar_map(adfobj):
                 obs=adfobj.compare_obs, **vres
             )
 
+
+            test_str = f'{case_name} - test'
+            base_str = f'{case_name} - base'
+            diff_str = f'{case_name} - diff'
+            press = plot.get('pressure', None)
+            if press:
+                if press not in multi_dict[var][case_name][plot['season']][plot['type']]:
+                    multi_dict[var][case_name][plot['season']][plot['type']][plot['pressure']] = {}
+                multi_dict[var][case_name][plot['season']][plot['type']][plot['pressure']]["m_data"] = result[test_str]
+                multi_dict[var][case_name][plot['season']][plot['type']][plot['pressure']]["o_data"] = result[base_str]
+                multi_dict[var][case_name][plot['season']][plot['type']][plot['pressure']]["diff_data"] = result[diff_str]
+            else:
+                multi_dict[var][case_name][plot['season']][plot['type']]["m_data"] = result[test_str]
+                multi_dict[var][case_name][plot['season']][plot['type']]["o_data"] = result[base_str]
+                multi_dict[var][case_name][plot['season']][plot['type']]["diff_data"] = result[diff_str]
+
+
+            """test_str = f'{case_name} - test'
+            base_str = f'{case_name} - base'
+            diff_str = f'{case_name} - diff'
+
+            if plot['pressure']:
+                multi_dict[var][case_name][plot['season']][plot['type']][plot['pressure']]["m_data"] = result[test_str]
+            else:
+                multi_dict[var][case_name][plot['season']][plot['type']]["m_data"] = result[test_str]
+
+            if plot['pressure']:
+                multi_dict[var][case_name][plot['season']][plot['type']][plot['pressure']]["o_data"] = result[base_str]
+            else:
+                multi_dict[var][case_name][plot['season']][plot['type']]["o_data"] = result[base_str]
+
+            if plot['pressure']:
+                multi_dict[var][case_name][plot['season']][plot['type']][plot['pressure']]["diff_data"] = result[diff_str]
+            else:
+                multi_dict[var][case_name][plot['season']][plot['type']]["diff_data"] = result[diff_str]"""
+
             # Add to website
             adfobj.add_website_data(
                 plot['path'], plot['var'], case_name,
                 category=web_category, season=plot['season'],
-                plot_type=plot['type']
+                plot_type=plot['type'],script=__file__
             )
-    
-
 
     #This will be a list of variables for multi-case plotting based off LatLon plot type
     if multi_plots:
@@ -322,19 +367,58 @@ def polar_map(adfobj):
         hemis = ["NHPolar", "SHPolar"]
         main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
         for var in multi_dict.keys():
+            print("polar plotting sscript VAR:",var)
+            
+            vres = res.get(var, {})
+            #print("vres",vres)
+            web_category = vres.get("category", None)
+
+            if has_levs[var]:
+                print(f"DOES {var} have dims????")
+                vres["levs"] = adfobj.get_basic_info("plot_press_levels")
+
+            for hemi in hemis:
+                #pf.multi_polar_plots(main_site_assets_path, var, hemi, case_names,
+                #                    [test_nicknames,base_nickname], 
+                #                    [syear_cases,eyear_cases], [syear_baseline,eyear_baseline], multi_dict[var],
+                #                    web_category, adfobj, multi_case=True, **vres)
+                pf.multi_map_plots(
+                                main_site_assets_path,
+                                var,
+                                hemi,
+                                case_names,
+                                [test_nicknames,base_nickname],
+                                [syear_cases,eyear_cases],
+                                [syear_baseline,eyear_baseline],
+                                multi_dict[var],
+                                web_category,
+                                adfobj,
+                                **vres
+                            )
+
+        print("     ...polar lat/lon multi-case plots have been generated successfully.")
+    
+    """if not all(x is None for x in results):
+        #Notify user that script has started:
+        print("\n     Generating polar lat/lon multi-case plots...")
+
+        hemis = ["NHPolar", "SHPolar"]
+        main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
+        for var in multi_dict.keys():
             print("VAR:",var)
-            #("multi_dict",multi_dict[var],"\n\n")
+            print("multi_dict",multi_dict[var].keys(),"\n\n")
             
             vres = res.get(var, {})
             print("vres",vres)
             web_category = vres.get("category", None)
             for hemi in hemis:
-
+                
                 pf.multi_polar_plots(main_site_assets_path, var, hemi, case_names,
-                                    [test_nicknames,base_nickname], multi_dict[var],
+                                    [test_nicknames,base_nickname], 
+                                    [syear_cases,eyear_cases], [syear_baseline,eyear_baseline], multi_dict[var],
                                     web_category, adfobj, multi_case=True, **vres)
 
-        print("     ...polar lat/lon multi-case plots have been generated successfully.")
+        print("     ...polar lat/lon multi-case plots have been generated successfully.")"""
 
     print("  ...polar maps have been generated successfully.")
 

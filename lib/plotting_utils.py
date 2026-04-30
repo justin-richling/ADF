@@ -307,7 +307,7 @@ def meridional_plot_preslon(ax, lon, lev, data, **kwargs):
     ax.set_ylim([np.max(lev), np.min(lev)])
     return img, ax
 
-def prep_contour_plot(adata, bdata, diffdata, pctdata, **kwargs):
+def prep_contour_plot(adata, bdata, diffdata, pctdata=None, **kwargs):
     """Preparation for making contour plots.
 
     Prepares for making contour plots of adata, bdata, diffdata, and pctdata, which is
