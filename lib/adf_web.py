@@ -22,12 +22,13 @@ file or pandas dataframe to the website.
 
 import os
 import os.path
-import markdown
 from pathlib import Path
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #import non-standard python modules, including ADF
 #+++++++++++++++++++++++++++++++++++++++++++++++++
+
+import markdown
 
 #ADF modules:
 from adf_obs import AdfObs
@@ -123,7 +124,6 @@ class AdfWeb(AdfObs):
 
         #Extract needed variables from yaml file:
         case_names = self.get_cam_info('cam_case_name', required=True)
-
         #Also extract baseline case (if applicable), and append to case_names list:
         if not self.compare_obs:
             baseline_name = self.get_baseline_info('cam_case_name', required=True)
@@ -188,19 +188,17 @@ class AdfWeb(AdfObs):
                                                    'table_pages_dir': table_pages_dir,
                                                    'css_files_dir': css_files_dir}
         #End if
-
+        
         # Gather ADF run env info
         active_env = self.get_active_conda_environment()
         if not active_env:
             active_env = "--"
 
         run_info = ''
-        print("\n\nself.debug_log",self.debug_log,"\n\n")
         if self.debug_log:
             log_name = self.debug_fname
             run_info = f"{log_name}".replace("debug","run_info").replace(".log",".md")
             self.run_info = run_info
-            print("\n\nself.run_info",self.run_info,"\n\n")
             self._write_run_info_to_log(config_file, active_env)
         #Do nothing if user is not requesting a website to be generated:
         if self.create_html and self.debug_log:
@@ -530,6 +528,7 @@ class AdfWeb(AdfObs):
             baseline_yrs = ""
             syear_baseline = ""
             eyear_baseline = ""
+
         else:
             data_name = self.get_baseline_info('cam_case_name', required=True)
 
@@ -542,35 +541,10 @@ class AdfWeb(AdfObs):
         #Extract variable defaults dictionary (for categories):
         var_defaults_dict = self.variable_defaults
 
-        #Create multi-case site:
-        #Make a dictionary for plot type extensions for given plot type
-        #This can probably be populated in the for-loops during html creation...
-        #Or it should be declared somewhere higher up, like adf_info or something
-
-        #Extract requested multi-case multi-plots
-        #multi_case_plots = self.read_config_var('multi_case_plots')
+        #Extract requested multi-case multi-plots if applicable
         multi_case_plots = self.multi_case_plots
         if not multi_case_plots:
             multi_case_plots = []
-
-        multi_default_dict = {"tape_recorder":"Special",
-                               "cam_taylor_diagram":"Special",
-                               "qbo":"Special"}
-
-        multi_case_dict = {"global_latlon_map":"LatLon",
-                               "nh_polar_map":"NHPolar",
-                               "sh_polar_map":"SHPolar",
-                               "zonal_mean":"Zonal",
-                               "meridional":"Meridional",
-                               "global_latlon_vect_map":"LatLon_Vector",
-                               "tape_recorder":"Special",
-                               "cam_taylor_diagram":"Special",
-                               "qbo":"Special"
-                               }
-
-        #Dictionary for multi-case website plot types
-        multi_plots = {}
-        multi_ptypes = ["TimeSeries","Special", "LatLon", "Zonal", "NHPolar", "SHPolar"]
 
         if multi_case_plots:
             #Grab all variables for each multi-case plot type
@@ -585,29 +559,10 @@ class AdfWeb(AdfObs):
                             if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
                                 if var not in mvars:
                                     mvars.append(var)
-
-            #else:
-            #    multi_case_plots.append(ext)
-            #print("BEFORE multi_case_plots",multi_case_plots)
-            """else:
-                for multi_var in multi_case_plots:
-                    #if multi_var_list:
-                    if 1==1:
-                        for var in multi_var_list:
-                            if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
-                                if var not in mvars:
-                                    mvars.append(var)"""
-                #else:
-                #    for var in self.diag_var_list:
-                #        if ((self.compare_obs) and (var in self.var_obs_dict)) or (not self.compare_obs):
-                #            mvars.append(var)
-            if "polar_map" in multi_case_plots:#.keys():
-                #multi_case_plots["nh_polar_map"] = multi_case_plots["polar_map"]
-                #multi_case_plots["sh_polar_map"] = multi_case_plots["polar_map"]
-                #del multi_case_plots["polar_map"]
+            if "polar_map" in multi_case_plots:
                 multi_case_plots = ["nh_polar_map", "sh_polar_map"]
-        
-            """multi_case_dict = {"global_latlon_map":"LatLon",
+
+            multi_case_dict = {"global_latlon_map":"LatLon",
                                "nh_polar_map":"NHPolar",
                                "sh_polar_map":"SHPolar",
                                "zonal_mean":"Zonal",
@@ -619,12 +574,9 @@ class AdfWeb(AdfObs):
                                }
 
             #Dictionary for multi-case website plot types
-            multi_plots = {#"Tables": "html_table/mean_tables.html",
-                        #"Special":"html_img/multi_case_mean_diag_Special.html"
-                        }
-            multi_ptypes = ["TimeSeries","Special"]
-            for typee in ["LatLon", "NHPolar", "SHPolar"]:
-                multi_ptypes.append(typee)"""
+            multi_plots = {}
+            multi_ptypes = set(multi_case_dict.values())
+            #["TimeSeries","Special", "LatLon", "Zonal", "NHPolar", "SHPolar"]
 
         #Set plot type html dictionary (for Jinja templating):
         plot_type_html = OrderedDict()
@@ -644,11 +596,11 @@ class AdfWeb(AdfObs):
                     multi_plot_type_html[plot_type] = os.path.join("html_table",
                                                                    "mean_tables.html")
                 else:
-                    #print('\nf"multi_case_mean_diag_{plot_type}.html"',f"multi_case_mean_diag_{plot_type}.html")
                     multi_plot_type_html[plot_type] = os.path.join("html_img",
-                                                        f"multi_case_mean_diag_{plot_type}.html")
+                                                                   f"multi_case_mean_diag_{plot_type}.html")
                 #End if
             #End for
+        #End if
 
         #Set main title for website:
         main_title = "CAM Diagnostics"
@@ -676,11 +628,11 @@ class AdfWeb(AdfObs):
         #so that we only had to do the web_data loop once,
         #but for now this will do. -JN
         mean_html_info = OrderedDict()
+
         #Use this for multi-case diagnostic plots only
-        #multi_mean_html_info = OrderedDict()
-        #Use this for multi-case with multi-plots
         multi_plot_html_info = OrderedDict()
 
+        # Set up any non-traditonal season "seasons"
         non_seasons = OrderedDict()
 
         #Create another dictionary needed for HTML pages that render tables:
@@ -844,12 +796,10 @@ class AdfWeb(AdfObs):
                                 multi_plot_html_info[ptype][category][var] = OrderedDict()
                             #End if
                             p = f"plot_page_multi_case_{var}_{season}_{ptype}_Mean.html"
-                            print(f"p: {p}\n")
 
                             if season not in multi_plot_html_info[ptype][category][var]:
                                 multi_plot_html_info[ptype][category][var][season] = p
                             #End if
-                            #print("OH BOY:",multi_plot_html_info,"\n- - - - - - - - - - -  - - - -- - - - - - - --   \n")
 
                             #Initialize Ordered Dictionary for non season kwarg:
                             if ptype not in non_seasons:
@@ -955,7 +905,6 @@ class AdfWeb(AdfObs):
                                   "multi_head": False,
                                   "multi": multi_layout,
                                   "case_sites": case_sites}
-
                 table_tmpl = jinenv.get_template('template_table.html')
 
                 if main_site_path:
@@ -1076,10 +1025,16 @@ class AdfWeb(AdfObs):
             #Also check if index page exists for this case:
             index_html_file = \
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
-            
+
             # Create run info web page
-            run_info_md_file = \
-                self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
+            if multi_case:
+                run_info_md_file = \
+                    self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
+                copy.copy(run_info_md_file,)
+            else:
+                run_info_md_file = \
+                    self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
+
             print("run_info_md_file",run_info_md_file)
             # Read the markdown file
             with open(run_info_md_file, "r", encoding="utf-8") as mdfile:
@@ -1108,8 +1063,6 @@ class AdfWeb(AdfObs):
                 plot_types = plot_type_html
             plot_types = plot_type_html
             #End if
-
-            #run_info_html = ""
 
             #List of ADF default plot types
             avail_plot_types = res["default_ptypes"]
@@ -1149,7 +1102,6 @@ class AdfWeb(AdfObs):
         # - - - - - - - - - - - - - - - - - - - - - -
         # --- End single-case diagnostics ---
         # - - - - - - - - - - - - - - - - - - - - - -
-
 
 
         # - - - - - - - - - - - - - - - - - - - - - -
@@ -1274,7 +1226,6 @@ class AdfWeb(AdfObs):
                         #End for (case_names)
                     #End if (baseline_name)
 
-
                 #Starting multi-case plots if requested
                 # - - - - - - - - - - - - - - - - - - -
                 if not web_data.data_frame:
@@ -1284,7 +1235,7 @@ class AdfWeb(AdfObs):
                     ptype = web_data.plot_type
                     var = web_data.name
                     multi_plot_ext = web_data.multi_plot_ext
-                    #print("multi_case_plots",multi_case_plots,"\n")
+
                     ext = web_data.ext
                     multi_case = web_data.multi_case
 

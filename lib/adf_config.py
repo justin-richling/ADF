@@ -373,20 +373,7 @@ class AdfConfig(AdfBase):
         --------
         env_name (str or None): Name of the active conda environment, or None if not found.
         """
-        """env_name = None
-        try:
-            # Execute 'conda env list' and capture output
-            result = subprocess.run(['conda', 'env', 'list'],
-                                    capture_output=True, text=True, check=True)
-            output_lines = result.stdout.splitlines()
-            for line in output_lines:
-                # The active environment is marked with an asterisk (*)
-                if '*' in line.strip():
-                    # Extract the environment name (first part of the line)
-                    env_name = line.strip().split()[0]
-        except subprocess.CalledProcessError as e:
-            print(f"Error executing conda command: {e}")
-        return env_name"""
+
         # 'CONDA_DEFAULT_ENV' is the most reliable and direct way to get the env name.
         env_name = os.environ.get('CONDA_DEFAULT_ENV')
         if env_name:
