@@ -7,8 +7,8 @@ banner-button-url: https://github.com/NCAR/ADF
 ---
 
 <div markdown="0">
-<a href="https://github.com/NCAR/INFORM-COMPASS-cookbook/blob/main/LICENSE" style="margin-right: 8px;"><img src="https://img.shields.io/github/license/NCAR/INFORM-COMPASS-cookbook?color=2043a1" alt="GitHub License"></a>
-<a href="https://github.com/NCAR/INFORM-COMPASS-cookbook/blob/main/CHANGELOG.md" style="margin-right: 8px;"><img src="https://img.shields.io/badge/updates-CHANGELOG-4a69bd" alt="Changelog"></a>
+<a href="https://github.com/NCAR/ADF/blob/main/LICENSE" style="margin-right: 8px;"><img src="https://img.shields.io/github/license/NCAR/ADF?color=2043a1" alt="GitHub License"></a>
+<a href="https://github.com/NCAR/ADF/blob/main/CHANGELOG.md" style="margin-right: 8px;"><img src="https://img.shields.io/badge/updates-CHANGELOG-4a69bd" alt="Changelog"></a>
 <img src="https://img.shields.io/badge/Status-under%20development-yellow" alt="Status Badge">
 <!-- Placeholder for a future DOI badge
         [![DOI](https://img.shields.io/badge/DOI-10.#####)](https://doi.org/10.#####)-->

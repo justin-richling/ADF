@@ -17,8 +17,8 @@ title: NCAR-ADF
 email: richling@ucar.edu
 description: >- # this means to ignore newlines until "baseurl:"
     This repository is under development and may not include most recent work. Please contact the project PI <a href="mailto:richling@ucar.edu?subject=ADF%20inquiry">Justin Richling</a> for questions.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://justin-richling.github.io/ADF" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/ADF" # the subpath of your site, e.g. /blog
+url: "https://justin-richling.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:
 analytics:
 
@@ -33,11 +33,20 @@ plugins:
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - lib/
+  - scripts/
+  - env/
+  - docs/
+  - config_*.yaml
+  - jupyter_sample.ipynb
+  - run_adf_diag
+  - .github/
+  - .pre-commit-config.yaml
