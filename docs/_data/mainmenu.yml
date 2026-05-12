@@ -1,64 +1,64 @@
 menu:
   - title: Accessing Derecho/Casper
-    url: /ADF/pages/hpc_access
+    url: /pages/hpc_access
   - title: What is the ADF?
     submenu:
         - title: Intro to the ADF
-          url: /ADF/pages/adf_intro
+          url: /pages/adf_intro
         - title: What do you get?
-          url: /ADF/pages/adf_outputs
+          url: /pages/adf_outputs
   - title: ADF Basics
     submenu:
         - title: Intro
-          url: /ADF/pages/adf_basics_intro
+          url: /pages/adf_basics_intro
         - title: YAML Files
-          url: /ADF/pages/yaml_files
+          url: /pages/yaml_files
         - title: Setting up YOUR ADF Run - Optional
-          url: /ADF/pages/your_adf_run
+          url: /pages/your_adf_run
   - title: Guided Examples
     submenu:
         - title: ADF Setup
-          url: /ADF/pages/adf_setup
+          url: /pages/adf_setup
         - title: CAM vs CAM
-          url: /ADF/pages/model_vs_model
+          url: /pages/model_vs_model
         - title: CAM vs Obs/Reanalysis
-          url: /ADF/pages/model_vs_obs
+          url: /pages/model_vs_obs
         - title: Multiple Test Simulations
-          url: /ADF/pages/multi_case
+          url: /pages/multi_case
         - title: ADF in Jupyter Notebooks
-          url: /ADF/pages/adf_jupyter
+          url: /pages/adf_jupyter
         - title: ADF Customization
           submenu:
             - title: Custom Variable Defualts
-              url: /ADF/pages/custom_variable_defaults
+              url: /pages/custom_variable_defaults
             - title: Custom Observation Datasets
-              url: /ADF/pages/custom_obs_datasets
+              url: /pages/custom_obs_datasets
             - title: Adding Custom Script to ADF
-              url: /ADF/pages/adding_script
+              url: /pages/adding_script
   
   - title: ADF Resources
     overview: Helpoful Documentation Related to the ADF
     submenu:
       - title: ADF Basics
-        url: /ADF/pages/adf_help_basics
+        url: /pages/adf_help_basics
       - title: YAML Config Files
         overview: Related to YAML files used in the ADF
         submenu:
           - title: YAML Basics
-            url: /ADF/pages/yaml_basics
+            url: /pages/yaml_basics
           - title: Run Time Config YAML
-            url: /ADF/pages/runtime_config_yaml
+            url: /pages/runtime_config_yaml
           - title: Variables Config YAML
-            url: /ADF/pages/variable_config_yaml
+            url: /pages/variable_config_yaml
   
   - title: Troubleshooting
     overview: Useful tips when running scam and using git
 #    url: /INFORM-COMPASS-cookbook/pages/...
     submenu:
       - title: Contact
-        url: /ADF/pages/adf_contacts
+        url: /pages/adf_contacts
       - title: FAQs
-        url: /ADF/pages/faqs
+        url: /pages/faqs
   
   
   - title: Help
@@ -66,6 +66,6 @@ menu:
 #    url: /INFORM-COMPASS-cookbook/pages/...
     submenu:
       - title: SCAM Tips
-        url: /ADF/pages/scam_tips
+        url: /pages/scam_tips
       - title: Git Tips
-        url: /ADF/pages/git_tips
+        url: /pages/git_tips
