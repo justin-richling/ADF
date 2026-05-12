@@ -1,0 +1,36 @@
+{% assign level = include.level | default: 0 %}
+{% if level == 0 %}
+  {% assign link_class = "text-center" %}
+{% else %}
+  {% assign link_class = "text-left" %}
+{% endif %}
+
+{% for item in include.items %}
+  <li aria-label="{{ item.title }}">
+    {% if item.url %}
+      <a class="{{ link_class }}" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+    {% else %}
+      <span class="{{ link_class }}">{{ item.title }}</span>
+    {% endif %}
+
+    {% if item.submenu %}
+      <ul class="menu">
+        {% if item.url %}
+          <li aria-label="{{ item.title }}">
+            <a class="{{ link_class }}" href="{{ item.url | relative_url }}">Overview</a>
+            {% if item.overview %}
+              <p>{{ item.overview }}</p>
+            {% endif %}
+          </li>
+        {% elsif item.overview %}
+          <li aria-label="{{ item.title }}">
+            <span class="{{ link_class }}">Overview</span>
+            <p>{{ item.overview }}</p>
+          </li>
+        {% endif %}
+        {% assign next_level = level | plus: 1 %}
+        {% include menu-list.html items=item.submenu level=next_level %}
+      </ul>
+    {% endif %}
+  </li>
+{% endfor %}
