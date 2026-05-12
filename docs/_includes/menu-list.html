@@ -9,18 +9,11 @@
   <li aria-label="{{ item.title }}">
     {% if item.url %}
       <a class="{{ link_class }}" href="{{ item.url | relative_url }}">{{ item.title }}</a>
-    {% else %}
-      <span class="{{ link_class }}">{{ item.title }}</span>
-    {% endif %}
-
-    {% if item.submenu %}
-      <ul class="menu">
-        {% if item.url %}
-          <li aria-label="{{ item.title }}">
-            <a class="{{ link_class }}" href="{{ item.url | relative_url }}">Overview</a>
-            {% if item.overview %}
-              <p>{{ item.overview }}</p>
-            {% endif %}
+        {% if item.overview %}
+          <li aria-label="{{ item.title }} overview">
+            <p class="menu-overview">{{ item.overview }}</p>
+          </li>
+        {% endif %}
           </li>
         {% elsif item.overview %}
           <li aria-label="{{ item.title }}">
