@@ -30,7 +30,22 @@
                 <div class="grid-x align-center bg-blue">
                 <nav class="cell center mlarge-10 large-9">
                     <ul class="menu icons icon-left" data-responsive-menu="accordion mlarge-dropdown">
-                        {% include menu-list.html items=site.data.mainmenu.menu %}
+                        {% for link in site.data.mainmenu.menu %}
+                        <li aria-label="{{ link.title }}">
+                            <a class="text-center" href="{{ link.url | relative_url }}">{{ link.title }}</a>
+                            {% if link.submenu %}
+                            <ul class="menu">
+                                <li aria-label="{{ link.title }}">
+                                    <a class="text-center" href="{{ link.url | relative_url }}">Overview</a>
+                                    <p>{{link.overview}}</p>
+                                </li>
+                                {% for sublink in link.submenu %}
+                                <li aria-label="{{ sublink.title }}"><a class="text-left" href="{{ sublink.url | relative_url }}">{{ sublink.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
                     </ul>
                 </nav>
                 </div>
