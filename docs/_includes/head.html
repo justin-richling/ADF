@@ -1,0 +1,25 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="title" content="{{ page.title }}">
+  <meta name="description" content="NCAR ADF Diagnostics Framework">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta class="foundation-mq">
+  <link rel="canonical" href="{{ site.url }}{{ site.baseurl }}{{ page.url }}">
+  <link rel="shortcut icon" href="{{ 'assets/koru-base/img/app-favicons/ncar/favicon.ico' | relative_url }}">
+  <title>{{ page.title }} | {{ site.title }}</title>
+
+  <link rel="stylesheet" href="{{ 'assets/koru-base/lib/fontawesome/css/all.min.css' | relative_url }}" media="all">
+  <link rel="stylesheet" href="{{ 'assets/koru-base/lib/icomoon/style.css' | relative_url }}" media="all">
+  <link rel="stylesheet" href="{{ 'assets/koru-base/css/foundation.min.css' | relative_url }}" media="all">
+  <link rel="stylesheet" href="{{ 'assets/koru-base/css/main.min.css' | relative_url }}" media="all">
+  <link rel="stylesheet" href="{{ 'assets/css/styles.css' | relative_url }}" media="all">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics }}"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ site.analytics }}');
+  </script>
+</head>

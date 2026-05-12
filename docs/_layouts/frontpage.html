@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include head.html %}
+
+<body class="ncar with-sidebar test">
+    <div class="content-wrapper">
+    {% include header.html %}
+
+        <div class="body-content" id="main-content">
+            {% include banner.html %}
+            {% include content.html %}
+        </div>
+
+    {% include footer.html %}
+    </div>
+</body>
+
+<script src="{{ 'assets/koru-base/lib/jquery/dist/jquery.js' | relative_url }}"></script>
+<script src="{{ 'assets/koru-base/lib/foundation-sites/dist/js/foundation.js' | relative_url }}"></script>
+<script src="{{ 'assets/koru-base/js/main.min.js' | relative_url }}"></script>
+</html>
