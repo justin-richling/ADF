@@ -24,7 +24,7 @@ analytics:
 
 # Build settings
 markdown: kramdown
-remote_theme: ncar/koru-jekyll@1.1.0
+remote_theme: ncar/koru-jekyll
 plugins:
   - jekyll-feed
   - jekyll-remote-theme
