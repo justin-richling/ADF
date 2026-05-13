@@ -145,7 +145,7 @@ The Jupyter Notebooks and SCAM scripts available in this repo can be run from /g
 </pre></div>
 </div>
 </section>
-<section id="adf-setup">
+
 <!--<h3>ADF Setup<a class="headerlink" href="#adf-setup" title="Permalink to this headline">#</a></h3>-->
 <h3>ADF Setup</h3>
 <p>A simple look at the steps for using the ADF</p>
