@@ -47,6 +47,29 @@
       padding: 0.5rem;
       white-space: nowrap;
     }
+    .main-nav .custom-main-menu > li {
+      position: relative;
+    }
+    .main-nav .custom-main-menu li > ul.menu {
+      display: none !important;
+      position: absolute !important;
+      top: 100% !important;
+      left: 0 !important;
+      z-index: 10 !important;
+      min-width: max-content !important;
+      width: auto !important;
+      padding: 0.5rem !important;
+      white-space: nowrap !important;
+      background-color: #fff !important;
+      box-shadow: 0 10px 20px rgba(0,0,0,.15) !important;
+    }
+    .main-nav .custom-main-menu li:hover > ul.menu {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      height: auto !important;
+      max-height: none !important;
+    }
     .main-nav .menu .menu li a {
       text-align: left !important;
       padding-left: 1.5rem !important;
