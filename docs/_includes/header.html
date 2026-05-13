@@ -39,6 +39,7 @@
                             {% endif %}
                             {% if link.submenu %}
                             <ul class="menu">
+                                <li class="submenu-placeholder"><a href="#"></a></li>
                                 {% for sublink in link.submenu %}
                                 <li aria-label="{{ sublink.title }}"><a class="text-left" href="{{ sublink.url | relative_url }}">{{ sublink.title }}</a></li>
                                 {% endfor %}
