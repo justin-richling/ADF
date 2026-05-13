@@ -29,6 +29,13 @@ plugins:
   - jekyll-feed
   - jekyll-remote-theme
   - jekyll-sitemap
+  - jekyll-toc
+
+jekyll-toc:
+  min_level: 2
+  max_level: 3
+  ordered: false
+  separator: "-"
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
