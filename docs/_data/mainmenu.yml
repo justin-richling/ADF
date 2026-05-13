@@ -1,9 +1,9 @@
 menu:
   - title: Accessing Derecho/Casper
-    #url: /pages/hpc_access
-    submenu:
-        - title: Loggin In
-          url: /pages/hpc_access
+    url: /pages/hpc_access
+    #submenu:
+    #    - title: Loggin In
+    #      url: /pages/hpc_access
   - title: What is the ADF?
     submenu:
         - title: Intro to the ADF
