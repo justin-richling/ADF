@@ -35,7 +35,7 @@
                             {% if link.url %}
                             <a class="text-center" href="{{ link.url | relative_url }}">{{ link.title }}</a>
                             {% else %}
-                            <a class="text-center" href="#" onclick="event.preventDefault();">{{ link.title }}</a>
+                            <span class="text-center menu-parent">{{ link.title }}</span>
                             {% endif %}
                             {% if link.submenu %}
                             <ul class="menu">
