@@ -32,10 +32,16 @@
     .submenu-placeholder {
       display: none !important;
     }
-    .main-nav .menu .menu {
-      min-width: auto;
-      width: auto;
-      white-space: nowrap;
+    .main-nav .menu > li {
+      position: relative;
+    }
+    .main-nav .menu > li > .menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 10;
+      min-width: 200px;
+      padding: 0.5rem;
     }
   </style>
 
