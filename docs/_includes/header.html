@@ -32,7 +32,11 @@
                     <ul class="menu icons icon-left" data-responsive-menu="accordion mlarge-dropdown">
                         {% for link in site.data.mainmenu.menu %}
                         <li aria-label="{{ link.title }}">
+                            {% if link.url %}
                             <a class="text-center" href="{{ link.url | relative_url }}">{{ link.title }}</a>
+                            {% else %}
+                            <span class="text-center">{{ link.title }}</span>
+                            {% endif %}
                             {% if link.submenu %}
                             <ul class="menu">
                                 {% for sublink in link.submenu %}
