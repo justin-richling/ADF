@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="{{ 'assets/koru-base/css/main.min.css' | relative_url }}" media="all">
   <link rel="stylesheet" href="{{ 'assets/css/styles.css' | relative_url }}" media="all">
   <style>
+    .main-nav .menu.icons.icon-left > li > a,
     .main-nav .menu.icons.icon-left > li > .menu-parent {
       display: inline-block;
       color: #fff;
@@ -24,11 +25,17 @@
       text-decoration: none;
       cursor: default;
     }
+    .main-nav .menu.icons.icon-left > li > a:hover,
     .main-nav .menu.icons.icon-left > li > .menu-parent:hover {
       color: #fff;
     }
     .submenu-placeholder {
       display: none !important;
+    }
+    .main-nav .menu .menu {
+      min-width: auto;
+      width: auto;
+      white-space: nowrap;
     }
   </style>
 
