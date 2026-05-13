@@ -35,10 +35,6 @@
                             <a class="text-center" href="{{ link.url | relative_url }}">{{ link.title }}</a>
                             {% if link.submenu %}
                             <ul class="menu">
-                                <li aria-label="{{ link.title }}">
-                                    <a class="text-center" href="{{ link.url | relative_url }}">Overview</a>
-                                    <p>{{link.overview}}</p>
-                                </li>
                                 {% for sublink in link.submenu %}
                                 <li aria-label="{{ sublink.title }}"><a class="text-left" href="{{ sublink.url | relative_url }}">{{ sublink.title }}</a></li>
                                 {% endfor %}
