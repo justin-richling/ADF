@@ -36,6 +36,7 @@ square_contour_difference
 from typing import Optional
 from pathlib import Path
 import numpy as np
+import numpy.ma as ma
 import xarray as xr
 import matplotlib as mpl
 from matplotlib import gridspec
@@ -179,6 +180,11 @@ def make_polar_plot(wks, case_nickname,
     d2_cyclic, _ = add_cyclic_point(d2, coord=d2.lon)  # since we can take difference, assume same longitude coord.
     dif_cyclic, _ = add_cyclic_point(dif, coord=dif.lon)
     pct_cyclic, _ = add_cyclic_point(pct, coord=pct.lon)
+    # Mask invalid values to prevent matplotlib errors
+    d1_cyclic = ma.masked_invalid(d1_cyclic)
+    d2_cyclic = ma.masked_invalid(d2_cyclic)
+    dif_cyclic = ma.masked_invalid(dif_cyclic)
+    pct_cyclic = ma.masked_invalid(pct_cyclic)
 
     levelsdiff = cp_info['levelsdiff']
     cmapdiff = cp_info['cmapdiff']
@@ -649,6 +655,8 @@ def plot_map_and_save(wks, case_nickname, base_nickname,
     dwrap, _ = add_cyclic_point(diffld, coord=diffld['lon'])
     pwrap, _ = add_cyclic_point(pctld, coord=pctld['lon'])
     wrap_fields = (mwrap, owrap, pwrap, dwrap)
+    # Mask invalid values (NaN, Inf) to prevent matplotlib colorbar errors
+    wrap_fields = tuple(ma.masked_invalid(arr) for arr in wrap_fields)
     # mesh for plots:
     lons, lats = np.meshgrid(lon, lat)
     # Note: using wrapped data makes spurious lines across plot (maybe coordinate dependent)
@@ -1753,6 +1761,7 @@ def multi_map_plots(
                     )
 
                     data = case["da"]
+                    data = ma.masked_invalid(data)
 
                     cf = ax.contourf(
                         case["lons"],
