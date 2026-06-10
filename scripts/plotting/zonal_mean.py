@@ -4,6 +4,8 @@ import xarray as xr
 from collections import OrderedDict
 
 import plotting_functions as pf
+from collections import OrderedDict
+import adf_utils as utils
 
 import adf_utils as utils
 import warnings  # use to warn user about missing files.
@@ -63,10 +65,8 @@ def zonal_mean(adfobj):
 
     multi_plots = False
     if len(case_names) > 1:
-        if adfobj.get_multi_case_info and "zonal_mean" in adfobj.get_multi_case_info:
-            print("did it come here?")
-            multi_plots = True
-            multi_dict = OrderedDict()
+        multi_plots = True
+        multi_dict = OrderedDict()
 
     # RTHIS ALL WRONG< BUT KEEP FOR REFERENCE?
     """multi_plots = False

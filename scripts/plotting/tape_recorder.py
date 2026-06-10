@@ -32,7 +32,7 @@ def tape_recorder(adfobj):
 
     #Special ADF variable which contains the output paths for plots:
     plot_location = adfobj.plot_location
-    plot_loc = Path(plot_location[0])
+    #plot_loc = Path(plot_location[0])
 
     #Grab test case name(s)
     case_names = adfobj.get_cam_info('cam_case_name', required=True)
@@ -60,8 +60,8 @@ def tape_recorder(adfobj):
                break
 
     #Grab test case climo years
-    start_years = adfobj.climo_yrs["syears"]
-    end_years = adfobj.climo_yrs["eyears"]
+    test_start_years = adfobj.climo_yrs["syears"]
+    test_end_years = adfobj.climo_yrs["eyears"]
 
     #Grab test case nickname(s)
     test_nicknames = adfobj.case_nicknames['test_nicknames']
@@ -89,8 +89,8 @@ def tape_recorder(adfobj):
         data_end_year = adfobj.climo_yrs["eyear_baseline"]
         #start_years = start_years+[data_start_year]
         #end_years = end_years+[data_end_year]
-        start_years = [data_start_year]+start_years
-        end_years = [data_end_year]+end_years
+        start_years = [data_start_year]+test_start_years
+        end_years = [data_end_year]+test_end_years
 
         #Grab history string:
         baseline_hist_strs = adfobj.hist_string["base_hist_str"]
@@ -285,11 +285,12 @@ def tape_recorder(adfobj):
             
             plot_loc = Path(plot_loc)
             plot_name = plot_loc / f"{var}_TapeRecorder_ANN_Special_Mean.{plot_type}"
+            print("plot_name",plot_name,"\n\n")
             fig.savefig(plot_name, bbox_inches='tight', facecolor='white')
 
             #Add plot to website (if enabled):
-            adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[idx], category=None, season="ANN",
-                                    multi_case=True,plot_type = "Special")
+            adfobj.add_website_data(plot_name, f"{var}_TapeRecorder", case_names[idx], category=None, season="ANN", #multi_plot_ext=None
+                                    multi_case=True,plot_type = "Special",script=__file__)
 
     
     if multi_case:
@@ -315,7 +316,7 @@ def tape_recorder(adfobj):
             plot_pre_mon(fig, dat_mon,
                             plot_step, plot_min, plot_max, runname_LT[i],
                             x1[i+2],x2[i+2],y1[i+2],y2[i+2],cmap=cmap, paxis='lev',
-                            taxis='month',climo_yrs=f"{start_years[idx]}-{end_years[idx]}")
+                            taxis='month',climo_yrs=f"{start_years[i]}-{end_years[i]}")
             
         if len(runname_LT) == 1:
             x1_loc = (x1[1]-x1[0])/2
@@ -338,8 +339,8 @@ def tape_recorder(adfobj):
         fig.savefig(plot_name_multi, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_name_multi, f"{var}_TapeRecorder", None, category=None, season="ANN",
-                                multi_case=True,plot_type = "Special")
+        adfobj.add_website_data(plot_name_multi, f"{var}_TapeRecorder", None, multi_plot_ext="tape_recorder", category=None, season="ANN",
+                                multi_case=True,plot_type = "Special",script=__file__)
 
     #Notify user that script has ended:
     print("  ...Tape recorder plots have been generated successfully.")

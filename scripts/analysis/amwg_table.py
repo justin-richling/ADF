@@ -131,6 +131,7 @@ def amwg_table(adf):
     test_case_names = adf.get_cam_info("cam_case_name", required=True)
     case_names = adf.get_cam_info("cam_case_name", required=True)
     input_ts_locs = adf.get_cam_info("cam_ts_loc", required=True)
+
     #Grab case years
     syear_cases = adf.climo_yrs["syears"]
     eyear_cases = adf.climo_yrs["eyears"]
@@ -153,11 +154,11 @@ def amwg_table(adf):
         eyear_cases.append(eyear_baseline)
 
         #Save the baseline to the first case's plots directory:
-        #output_locs.append(output_locs[0])
         if len(test_case_names) == 1:
             output_locs.append(output_locs[0])
+
     else:
-        print("AMWG table doesn't currently work with obs, so obs table won't be created.")
+        print("\t WARNING: AMWG table doesn't currently work with obs, so obs table won't be created.")
     #End if
     base_nickname = adf.case_nicknames["base_nickname"]
     nicknames = test_nicknames + [base_nickname]
@@ -294,10 +295,11 @@ def amwg_table(adf):
             # Set values for columns
             cols = ['variable', 'unit', 'mean', 'sample size', 'standard dev.',
                     'standard error', '95% CI', 'trend', 'trend p-value']
-
-            # These get written to our output file:
-            stats_list = _get_row_vals(data)
-            row_values = [var, unit_str] + stats_list
+            if not calc_stats:
+                row_values = [var, unit_str] + [data.data.mean()] + ["-","-","-","-","-","-"]
+            else:
+                stats_list = _get_row_vals(data)
+                row_values = [var, unit_str] + stats_list
 
             # Format entries:
             dfentries = {c:[row_values[i]] for i,c in enumerate(cols)}
@@ -412,7 +414,6 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
         - Read in table data and create side by side comparison table
         - Write output to csv file and add to website
     """
-
     import pandas as pd
 
     output_csv_file_comp = output_location / "amwg_table_comp.csv"
@@ -440,7 +441,7 @@ def _df_comp_table(adf, output_location, base_output_location, case_names):
     df_comp['diff'] = [f'{i:.3g}' if np.abs(i) < 1 else f'{i:.3f}' for i in diffs]
 
     #Write the comparison dataframe to a new CSV file:
-    cols_comp = ['variable', 'unit', 'test', 'baseline', 'diff']
+    cols_comp = ['variable', 'unit', 'test', 'control', 'diff']
     df_comp.to_csv(output_csv_file_comp, header=cols_comp, index=False)
 
     #Add comparison table dataframe to website (if enabled):
@@ -477,7 +478,7 @@ def _df_multi_comp_table(adf, csv_locs, case_names, test_nicknames):
         #If no custom nicknames, shorten column name to case number
         if test_nicknames[i] == case_names[i]:
             df_comp[['variable','unit',f"case {i+1}"]] = df_case[['variable','unit','mean']]
-            cols_comp.append(f"case {i+1}")
+            cols_comp.append(f"case {i+1} (diff from baseline)")
         #Else, name columns after nicknames
         else:
             df_comp[['variable','unit',f"{test_nicknames[i]}"]] = df_case[['variable','unit','mean']]

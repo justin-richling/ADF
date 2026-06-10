@@ -2,6 +2,7 @@
 from pathlib import Path
 from collections import OrderedDict
 import numpy as np
+import adf_utils as utils
 
 # ADF library
 import plotting_functions as pf
@@ -98,10 +99,8 @@ def polar_map(adfobj):
 
     multi_plots = False
     if len(case_names) > 1:
-        if adfobj.get_multi_case_info and "polar_map" in adfobj.get_multi_case_info:
-            print("did it come here?")
-            multi_plots = True
-            multi_dict = OrderedDict()
+        multi_plots = True
+        multi_dict = OrderedDict()
 
     #Grab case years
     syear_cases = adfobj.climo_yrs["syears"]

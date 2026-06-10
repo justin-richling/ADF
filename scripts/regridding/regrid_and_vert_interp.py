@@ -423,9 +423,6 @@ def _regrid_and_interpolate_levs(model_dataset, var_name, regrid_dataset=None, *
         and/or vertically-interpolated model variable.
     """
 
-    #Import ADF-specific functions:
-    import plotting_functions as pf
-
     #Extract keyword arguments:
     if 'ps_file' in kwargs:
         ps_file = kwargs['ps_file']

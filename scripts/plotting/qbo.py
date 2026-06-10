@@ -81,8 +81,8 @@ def qbo(adfobj):
     if (not redo_plot) and plot_loc_ts.is_file() and plot_loc_amp.is_file():
         #Add already-existing plot to website (if enabled):
         adfobj.debug_log(f"'{plot_loc_ts}' and '{plot_loc_amp}' exist and clobber is false.")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
+        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True,script=__file__)
+        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True,script=__file__)
 
         #Continue to next iteration:
         return
@@ -237,7 +237,7 @@ def qbo(adfobj):
 
                     #Add plot to website (if enabled):
                     adfobj.add_website_data(plot_loc_ts_idx, "QBO", case_names[icase], category=None, season="TimeSeries",
-                                            multi_case=True,plot_type="Special", non_season=True)
+                                            multi_case=True,plot_type="Special", non_season=True,script=__file__)
             #End if (multi-case)
 
             #Check if compared vs baseline obs, alter x-positions
@@ -262,8 +262,9 @@ def qbo(adfobj):
 
         plot_loc_ts_multi = main_site_assets_path / f'QBO_TimeSeries_Special_Mean_multi_plot.{plot_type}'
         fig.savefig(plot_loc_ts_multi, bbox_inches='tight', facecolor='white')
-        adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, category=None, season="TimeSeries",
-                                multi_case=True,plot_type="Special", non_season=True)
+        print("HERE TIMESERIES??")
+        adfobj.add_website_data(plot_loc_ts_multi, "QBO", None, multi_plot_ext="qbo", category=None, season="TimeSeries",
+                                multi_case=True,plot_type="Special", non_season=True,script=__file__)
     
     else:
         #Save figure to file:
@@ -273,7 +274,7 @@ def qbo(adfobj):
         #adfobj.add_website_data(plot_loc_ts, "QBO", None, season="QBOts", multi_case=True,plot_type = "Special") #multi_case=True
         #adfobj.add_website_data(plot_loc_ts, "QBO", case_names[0], category=None, season="QBOts",
         #                        multi_case=True,plot_type="Special")
-        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True)
+        adfobj.add_website_data(plot_loc_ts, "QBO", None, season="TimeSeries", multi_case=True, non_season=True,script=__file__)
     #-----------------
 
     #---Dunkerton and Delisi QBO amplitude
@@ -310,7 +311,8 @@ def qbo(adfobj):
                 fig.savefig(plot_loc_amp_idx, bbox_inches='tight', facecolor='white')
                 plt.close()
                 #Add plot to website (if enabled):
-                adfobj.add_website_data(plot_loc_amp_idx, "QBO", case_names[icase], category = None, season="Amplitude", multi_case=True,plot_type = "Special", non_season=True)
+                adfobj.add_website_data(plot_loc_amp_idx, "QBO", case_names[icase], category = None, season="Amplitude",
+                multi_case=True,plot_type = "Special", non_season=True,script=__file__)
             #End if (not baseline)
         #End for (cases)
     #End if (multi-case)
@@ -341,14 +343,14 @@ def qbo(adfobj):
         fig.savefig(plot_loc_amp_multi, bbox_inches='tight', facecolor='white')
 
         #Add plot to website (if enabled):
-        adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, category=None, season="Amplitude",
-                                multi_case=True,plot_type = "Special", non_season=True)
+        adfobj.add_website_data(plot_loc_amp_multi, "QBO", None, multi_plot_ext="qbo", category=None, season="Amplitude",
+                                multi_case=True,plot_type = "Special", non_season=True,script=__file__)
     else:
         fig.savefig(plot_loc_amp, bbox_inches='tight', facecolor='white')
         
         #Add plot to website (if enabled):
         #adfobj.add_website_data(plot_loc_amp, "QBO", case_names[0], category = None, season="QBOamp", multi_case=True,plot_type = "Special")
-        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True)
+        adfobj.add_website_data(plot_loc_amp, "QBO", None, season="Amplitude", multi_case=True, non_season=True,script=__file__)
     
     #Close main fig
     plt.close()

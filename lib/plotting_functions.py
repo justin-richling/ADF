@@ -220,6 +220,8 @@ def make_polar_plot(wks, case_nickname,
 
     multi = {}
 
+    multi = {}
+
     # BPM: removing `transform=ccrs.PlateCarree()` from contourf calls & transform_first=True
     if len(levs) < 2:
         img1 = ax1.contourf(lons, lats, d1_cyclic, colors="w", norm=norm1)
