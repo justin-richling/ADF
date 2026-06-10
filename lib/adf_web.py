@@ -1027,10 +1027,13 @@ class AdfWeb(AdfObs):
                 self.__case_web_paths[web_data.case]['website_dir'] / "index.html"
 
             # Create run info web page
-            if multi_case:
+            # If a main multi-case site path exists, treat this as a multi-case build
+            if main_site_path:
                 run_info_md_file = \
                     self.__case_web_paths[web_data.case]['website_dir'] / self.run_info
-                copy.copy(run_info_md_file,)
+                # For multi-case builds we may want to copy or handle differently;
+                # no-op here to avoid undefined 'copy' import or accidental exceptions
+                pass
             else:
                 run_info_md_file = \
                     self.__case_web_paths[web_data.case]['website_dir'] / self.run_info

@@ -1851,17 +1851,33 @@ def multi_map_plots(
                             pos.height
                         ])
 
-                        cbar = fig.colorbar(
-                            cf,
-                            cax=cbar_ax,
-                            orientation='vertical',
-                            **case["contourf_opt"]['colorbar_opt']
-                        )
-                        cbar.ax.tick_params(labelsize=tiFontSize)
+                        cbar = None
+                        cf_arr = None
+                        if hasattr(cf, 'get_array'):
+                            try:
+                                cf_arr = cf.get_array()
+                            except Exception:
+                                cf_arr = None
+
+                        if cf_arr is not None and np.isfinite(cf_arr).any():
+                            cbar = fig.colorbar(
+                                cf,
+                                cax=cbar_ax,
+                                orientation='vertical',
+                                **case["contourf_opt"]['colorbar_opt']
+                            )
+                            cbar.ax.tick_params(labelsize=tiFontSize)
+                        else:
+                            # No finite data to display in colorbar; skip creating it.
+                            cbar = None
 
             # Force scientific notation with 2 decimal places
             formatter = ticker.FormatStrFormatter('%.2e')
-            cbar.ax.yaxis.set_major_formatter(formatter)
+            if 'cbar' in locals() and cbar is not None:
+                try:
+                    cbar.ax.yaxis.set_major_formatter(formatter)
+                except Exception:
+                    pass
             # -----------------------------
             # Layout Adjust
             # -----------------------------

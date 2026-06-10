@@ -151,10 +151,8 @@ def global_latlon_map(adfobj):
                 main_site_assets_path = adfobj.main_site_paths["main_site_assets_path"]
                 #for var in multi_dict.keys():
                 if 1==1:
-                    print("VAR:",var)
                     vres = res.get(var, {})
                     if has_dims['has_lev']:
-                        print(f"DOES {var} have dims????")
                         vres["levs"] = adfobj.get_basic_info("plot_press_levels")
                     web_category = vres.get("category", None)
                     
